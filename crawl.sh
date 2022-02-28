@@ -5,6 +5,10 @@ set -euxo pipefail
 path=$(pwd)/$(printf "%s/" "$@")
 mkdir -p $path
 
+if [[ $# -eq 0 ]] ; then
+    gcloud version > version
+fi
+
 groups=$(gcloud help $@ | go run ./ -print=groups)
 commands=$(gcloud help $@ | go run ./ -print=commands)
 
