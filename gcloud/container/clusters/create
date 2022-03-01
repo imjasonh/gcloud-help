@@ -19,15 +19,16 @@ SYNOPSIS
         [--disk-type=DISK_TYPE] [--enable-autorepair] [--no-enable-autoupgrade]
         [--enable-binauthz] [--enable-cloud-logging]
         [--enable-cloud-monitoring] [--enable-cloud-run-alpha]
-        [--enable-dataplane-v2] [--enable-gvnic] [--enable-image-streaming]
-        [--enable-intra-node-visibility] [--enable-ip-alias]
-        [--enable-kubernetes-alpha] [--enable-l4-ilb-subsetting]
-        [--enable-legacy-authorization] [--enable-master-global-access]
-        [--enable-network-policy] [--enable-service-externalips]
-        [--enable-shielded-nodes] [--enable-stackdriver-kubernetes]
-        [--enable-vertical-pod-autoscaling] [--image-type=IMAGE_TYPE]
-        [--issue-client-certificate] [--labels=[KEY=VALUE,...]]
-        [--local-ssd-count=LOCAL_SSD_COUNT] [--logging=[COMPONENT,...]]
+        [--enable-dataplane-v2] [--enable-gvnic] [--enable-identity-service]
+        [--enable-image-streaming] [--enable-intra-node-visibility]
+        [--enable-ip-alias] [--enable-kubernetes-alpha]
+        [--enable-l4-ilb-subsetting] [--enable-legacy-authorization]
+        [--enable-master-global-access] [--enable-network-policy]
+        [--enable-service-externalips] [--enable-shielded-nodes]
+        [--enable-stackdriver-kubernetes] [--enable-vertical-pod-autoscaling]
+        [--image-type=IMAGE_TYPE] [--issue-client-certificate]
+        [--labels=[KEY=VALUE,...]] [--local-ssd-count=LOCAL_SSD_COUNT]
+        [--logging=[COMPONENT,...]]
         [--machine-type=MACHINE_TYPE, -m MACHINE_TYPE]
         [--max-nodes-per-pool=MAX_NODES_PER_POOL]
         [--max-pods-per-node=MAX_PODS_PER_NODE]
@@ -369,6 +370,16 @@ FLAGS
         Enable the use of GVNIC for this cluster. Requires re-creation of nodes
         using either a node-pool upgrade or node-pool creation.
 
+     --enable-identity-service
+        Enable Identity Service component on the cluster.
+
+        When enabled, users can authenticate to Kubernetes cluster with
+        external identity providers.
+
+        Identity Service is by default disabled when creating a new cluster. To
+        disable Identity Service in an existing cluster, explicitly set flag
+        --no-enable-identity-service.
+
      --enable-image-streaming
         Specifies whether to enable image streaming on cluster.
 
@@ -615,7 +626,7 @@ FLAGS
 
      --monitoring=[COMPONENT,...]
         Set the components that have monitoring enabled. Valid component values
-        are: SYSTEM, NONE
+        are: SYSTEM, WORKLOAD (Deprecated), NONE
 
         For more information, look at
         https://cloud.google.com/stackdriver/docs/solutions/gke/installing#available-metrics

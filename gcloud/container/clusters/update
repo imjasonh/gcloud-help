@@ -10,14 +10,14 @@ SYNOPSIS
           | --database-encryption-key=DATABASE_ENCRYPTION_KEY
           | --disable-database-encryption | --disable-default-snat
           | --disable-workload-identity | --enable-autoscaling
-          | --enable-binauthz | --enable-image-streaming
-          | --enable-intra-node-visibility | --enable-l4-ilb-subsetting
-          | --enable-legacy-authorization | --enable-master-authorized-networks
-          | --enable-master-global-access | --enable-network-policy
-          | --enable-service-externalips | --enable-shielded-nodes
-          | --enable-stackdriver-kubernetes | --enable-vertical-pod-autoscaling
-          | --generate-password | --maintenance-window=START_TIME
-          | --node-locations=ZONE,[ZONE,...]
+          | --enable-binauthz | --enable-identity-service
+          | --enable-image-streaming | --enable-intra-node-visibility
+          | --enable-l4-ilb-subsetting | --enable-legacy-authorization
+          | --enable-master-authorized-networks | --enable-master-global-access
+          | --enable-network-policy | --enable-service-externalips
+          | --enable-shielded-nodes | --enable-stackdriver-kubernetes
+          | --enable-vertical-pod-autoscaling | --generate-password
+          | --maintenance-window=START_TIME | --node-locations=ZONE,[ZONE,...]
           | --notification-config=[pubsub=ENABLED|DISABLED,
           pubsub-topic=TOPIC,...]
           | --private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE
@@ -172,6 +172,16 @@ REQUIRED FLAGS
 
        --enable-binauthz
           Enable Binary Authorization for this cluster.
+
+       --enable-identity-service
+          Enable Identity Service component on the cluster.
+
+          When enabled, users can authenticate to Kubernetes cluster with
+          external identity providers.
+
+          Identity Service is by default disabled when creating a new cluster.
+          To disable Identity Service in an existing cluster, explicitly set
+          flag --no-enable-identity-service.
 
        --enable-image-streaming
           Specifies whether to enable image streaming on cluster.
@@ -823,7 +833,7 @@ REQUIRED FLAGS
 
        --monitoring=[COMPONENT,...]
           Set the components that have monitoring enabled. Valid component
-          values are: SYSTEM, NONE
+          values are: SYSTEM, WORKLOAD (Deprecated), NONE
 
           For more information, look at
           https://cloud.google.com/stackdriver/docs/solutions/gke/installing#available-metrics
