@@ -17,7 +17,7 @@ EXAMPLES
     "product" variable whenever any request executes line 123 of the file
     product.py:
 
-        $ gcloud beta debug logpoints create product.py:123               \
+        $ gcloud beta debug logpoints create product.py:123 \
           "No description for {product.name}"
 
     The log output will appear wherever explicit logging output from your
@@ -27,8 +27,8 @@ EXAMPLES
     If you want to log output only when certain runtime conditions are met, you
     can add a "--condition" option:
 
-        $ gcloud beta debug logpoints create product.py:123               \
-          "Suspicious price: {product.name} costs {price}"               \
+        $ gcloud beta debug logpoints create product.py:123 \
+          "Suspicious price: {product.name} costs {price}" \
           --condition "price < .50"
 
     Logpoints remain active for 24 hours after creation. If you want to disable
@@ -41,9 +41,8 @@ EXAMPLES
     first determine the logpoint ID using the logpoints list command, then
     delete that specific ID:
 
-        $ gcloud beta debug logpoints list
-        ID                        LOCATION    ...
-        567890abcdef1-1234-56789  product.py:123  ...
+        $ gcloud beta debug logpoints list ID LOCATION ... \
+          567890abcdef1-1234-56789 product.py:123 ...
         $ gcloud beta debug logpoints delete 567890abcdef1-1234-56789
 
     For App Engine services, logpoint resources include the "logQuery"
@@ -51,9 +50,8 @@ EXAMPLES
     command. You can save this property's value and use it to read logs from
     the command line:
 
-        $ log_query=$(gcloud beta debug logpoints create product.py:123    \
-                     "No description for {product.name}" \
-          --format="value(logQuery)")
+        $ log_query=$(gcloud beta debug logpoints create product.py:123 \
+          "No description for {product.name}" --format="value(logQuery)")
         $ gcloud logging read "$log_query"
 
 FLAGS

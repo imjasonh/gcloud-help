@@ -5,9 +5,9 @@ NAME
 SYNOPSIS
     gcloud alpha pubsub subscriptions create SUBSCRIPTION [SUBSCRIPTION ...]
         (--topic=TOPIC : --topic-project=TOPIC_PROJECT)
-        [--ack-deadline=ACK_DEADLINE] [--enable-message-ordering]
-        [--expiration-period=EXPIRATION_PERIOD] [--labels=[KEY=VALUE,...]]
-        [--message-filter=MESSAGE_FILTER]
+        [--ack-deadline=ACK_DEADLINE] [--enable-exactly-once-delivery]
+        [--enable-message-ordering] [--expiration-period=EXPIRATION_PERIOD]
+        [--labels=[KEY=VALUE,...]] [--message-filter=MESSAGE_FILTER]
         [--message-retention-duration=MESSAGE_RETENTION_DURATION]
         [--push-auth-service-account=SERVICE_ACCOUNT_EMAIL]
         [--push-auth-token-audience=OPTIONAL_AUDIENCE_OVERRIDE]
@@ -69,6 +69,14 @@ OPTIONAL FLAGS
      --ack-deadline=ACK_DEADLINE
         The number of seconds the system will wait for a subscriber to
         acknowledge receiving a message before re-attempting delivery.
+
+     --enable-exactly-once-delivery
+        Whether or not to enble exactly once delivery on the subscription. If
+        true, Pub/Sub provides the following guarantees for the delivery of a
+        message with a given value of message_id on this subscription: The
+        message sent to a subscriber is guaranteed not to be resent before the
+        message's acknowledgement deadline expires. An acknowledged message
+        will not be resent to a subscriber.
 
      --enable-message-ordering
         Whether to receive messages with the same ordering key in order. If
