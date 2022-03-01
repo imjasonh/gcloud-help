@@ -1,0 +1,126 @@
+NAME
+    gcloud alpha compute network-firewall-policies rules create - creates a
+        Compute Engine network firewall policy rule
+
+SYNOPSIS
+    gcloud alpha compute network-firewall-policies rules create PRIORITY
+        --action=ACTION --firewall-policy=FIREWALL_POLICY
+        [--description=DESCRIPTION] [--dest-ip-ranges=[DEST_IP_RANGE,...]]
+        [--direction=DIRECTION] [--[no-]disabled] [--[no-]enable-logging]
+        [--layer4-configs=[LAYER4_CONFIG,...]]
+        [--src-ip-ranges=[SRC_IP_RANGE,...]]
+        [--src-secure-tags=[SOURCE_SECURE_TAGS,...]]
+        [--target-secure-tags=[TARGET_SECURE_TAGS,...]]
+        [--target-service-accounts=[TARGET_SERVICE_ACCOUNTS,...]]
+        [--firewall-policy-region=FIREWALL_POLICY_REGION
+          | --global-firewall-policy] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) gcloud alpha compute network-firewall-policies rules create is used
+    to create network firewall policy rules.
+
+EXAMPLES
+    To create a rule with priority 10 in a global network firewall policy with
+    name my-policy and description example rule, run:
+
+        $ gcloud alpha compute network-firewall-policies rules create 10 \
+          --firewall-policy=my-policy --action=allow \
+          --description="example rule" --global-firewall-policy
+
+    To create a rule with priority 10 in a regional network firewall policy
+    with name my-region-policy and description example rule, in region
+    region-a, run:
+
+        $ gcloud alpha compute network-firewall-policies rules create 10 \
+          --firewall-policy=my-policy --action=allow \
+          --description="example rule"
+
+POSITIONAL ARGUMENTS
+     PRIORITY
+        Priority of the rule to be inserted. Valid in [0, 65535].
+
+REQUIRED FLAGS
+     --action=ACTION
+        Action to take if the request matches the match condition. ACTION must
+        be one of: allow, deny, goto_next.
+
+     --firewall-policy=FIREWALL_POLICY
+        Firewall policy ID with which to create rule.
+
+OPTIONAL FLAGS
+     --description=DESCRIPTION
+        An optional, textual description for the rule.
+
+     --dest-ip-ranges=[DEST_IP_RANGE,...]
+        Destination IP ranges to match for this rule. Can only be specified if
+        DIRECTION is egress.
+
+     --direction=DIRECTION
+        Direction of the traffic the rule is applied. The default is to apply
+        on incoming traffic. DIRECTION must be one of: INGRESS, EGRESS.
+
+     --[no-]disabled
+        Use this flag to disable the rule. Disabled rules will not affect
+        traffic. Use --disabled to enable and --no-disabled to disable.
+
+     --[no-]enable-logging
+        Use this flag to enable logging of connections that allowed or denied
+        by this rule. Use --enable-logging to enable and --no-enable-logging to
+        disable.
+
+     --layer4-configs=[LAYER4_CONFIG,...]
+        A list of destination protocols and ports to which the firewall rule
+        will apply.
+
+     --src-ip-ranges=[SRC_IP_RANGE,...]
+        A list of IP address blocks that are allowed to make inbound
+        connections that match the firewall rule to the instances on the
+        network. The IP address blocks must be specified in CIDR format:
+        http://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing.Either
+        --src-ip-ranges or --src-secure-tags must be specified for INGRESS
+        traffic. If both --src-ip-ranges and --src-secure-tags are specified,
+        the rule matches if either the range of the source matches
+        --src-ip-ranges or the secure tag of the source matches
+        --src-secure-tags.Multiple IP address blocks can be specified if they
+        are separated by commas.
+
+     --src-secure-tags=[SOURCE_SECURE_TAGS,...]
+        A list of instance secure tags indicating the set of instances on the
+        network to which the rule applies if all other fields match. Either
+        --src-ip-ranges or --src-secure-tags must be specified for ingress
+        traffic. If both --src-ip-ranges and --src-secure-tags are specified,
+        an inbound connection is allowed if either the range of the source
+        matches --src-ip-ranges or the tag of the source matches
+        --src-secure-tags. Secure Tags can be assigned to instances during
+        instance creation.
+
+     --target-secure-tags=[TARGET_SECURE_TAGS,...]
+        An optional, list of target secure tags with a name of the format
+        tagValues/ or full namespaced name
+
+     --target-service-accounts=[TARGET_SERVICE_ACCOUNTS,...]
+        List of target service accounts for the rule.
+
+     At most one of these can be specified:
+
+       --firewall-policy-region=FIREWALL_POLICY_REGION
+          Region of the firewall policy to create. Overrides the default
+          compute/region property value for this command invocation.
+
+       --global-firewall-policy
+          If set, the firewall policy is global.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

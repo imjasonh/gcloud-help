@@ -1,0 +1,191 @@
+NAME
+    gcloud compute instance-groups managed create - create a Compute Engine
+        managed instance group
+
+SYNOPSIS
+    gcloud compute instance-groups managed create NAME --size=SIZE
+        --template=TEMPLATE [--base-instance-name=BASE_INSTANCE_NAME]
+        [--description=DESCRIPTION] [--initial-delay=INITIAL_DELAY]
+        [--instance-redistribution-type=TYPE]
+        [--stateful-disk=[auto-delete=AUTO-DELETE],[device-name=DEVICE-NAME]]
+        [--target-distribution-shape=SHAPE] [--target-pool=[TARGET_POOL,...]]
+        [--zones=ZONE,[ZONE,...]]
+        [--health-check=HEALTH_CHECK | --http-health-check=HTTP_HEALTH_CHECK
+          | --https-health-check=HTTPS_HEALTH_CHECK]
+        [--region=REGION | --zone=ZONE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    gcloud compute instance-groups managed create creates a Compute Engine
+    managed instance group.
+
+    For example, running:
+
+        $ gcloud compute instance-groups managed create \
+        example-managed-instance-group --zone us-central1-a \
+        --template example-instance-template --size 1
+
+    will create one managed instance group called
+    'example-managed-instance-group' in the us-central1-a zone.
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the managed instance group to create.
+
+REQUIRED FLAGS
+     --size=SIZE
+        The initial number of instances you want in this group.
+
+     --template=TEMPLATE
+        Specifies the instance template to use when creating new instances.
+
+OPTIONAL FLAGS
+     --base-instance-name=BASE_INSTANCE_NAME
+        The base name to use for the Compute Engine instances that will be
+        created with the managed instance group. If not provided base instance
+        name will be the prefix of instance group name.
+
+     --description=DESCRIPTION
+        An optional description for this group.
+
+     --initial-delay=INITIAL_DELAY
+        Specifies the length of time during which the instance is known to be
+        initializing and should not be autohealed even if unhealthy. This value
+        cannot be greater than 1 hour. See $ gcloud topic datetimes for
+        information on duration formats.
+
+     --instance-redistribution-type=TYPE
+        Specifies the type of the instance redistribution policy. An instance
+        redistribution type lets you enable or disable automatic instance
+        redistribution across zones to meet the group's target distribution
+        shape.
+
+        An instance redistribution type can be specified only for a
+        non-autoscaled regional managed instance group. By default it is set to
+        PROACTIVE.
+
+        The following types are available:
+
+        ◆ NONE - The managed instance group does not redistribute instances
+          across zones.
+
+        ◆ PROACTIVE - The managed instance group proactively redistributes
+          instances to meet its target distribution.
+
+        TYPE must be one of: NONE, PROACTIVE.
+
+     --stateful-disk=[auto-delete=AUTO-DELETE],[device-name=DEVICE-NAME]
+        Disks considered stateful by the instance group. Managed instance
+        groups preserve and reattach stateful disks on VM autohealing, update,
+        and recreate events.
+
+        Use this argument multiple times to attach more disks.
+
+         device-name
+            (Required) Device name of the disk to mark stateful.
+
+         auto-delete
+            (Optional) Specifies the auto deletion policy of the stateful disk.
+            The following options are available:
+            ▸ never: (Default) Never delete this disk. Instead, detach the
+              disk when its instance is deleted.
+            ▸ on-permanent-instance-deletion: Delete the stateful disk when
+              the instance that it's attached to is permanently deleted from
+              the group; for example, when the instance is deleted manually or
+              when the group size is decreased.
+
+     --target-distribution-shape=SHAPE
+        Specifies how a regional managed instance group distributes its
+        instances across zones within the region. The default shape is EVEN.
+        SHAPE must be one of:
+
+         ANY
+            The group picks zones for creating VM instances to fulfill the
+            requested number of VMs within present resource constraints and to
+            maximize utilization of unused zonal reservations. Recommended for
+            batch workloads that do not require high availability.
+         BALANCED
+            The group prioritizes acquisition of resources, scheduling VMs in
+            zones where resources are available while distributing VMs as
+            evenly as possible across selected zones to minimize the impact of
+            zonal failure. Recommended for highly available serving or batch
+            workloads that do not require autoscaling.
+         EVEN
+            The group schedules VM instance creation and deletion to achieve
+            and maintain an even number of managed instances across the
+            selected zones. The distribution is even when the number of managed
+            instances does not differ by more than 1 between any two zones.
+            Recommended for highly available serving workloads.
+
+     --target-pool=[TARGET_POOL,...]
+        Specifies any target pools you want the instances of this managed
+        instance group to be part of.
+
+     --zones=ZONE,[ZONE,...]
+        If this flag is specified a regional managed instance group will be
+        created. The managed instance group will be in the same region as
+        specified zones and will spread instances in it between specified
+        zones.
+
+        All zones must belong to the same region. You may specify --region flag
+        but it must be the region to which zones belong. This flag is mutually
+        exclusive with --zone flag.
+
+     At most one of these can be specified:
+
+       --health-check=HEALTH_CHECK
+          Name of the health check to operate on.
+
+       --http-health-check=HTTP_HEALTH_CHECK
+          (DEPRECATED) HTTP health check object used for autohealing instances
+          in this group.
+
+          HttpHealthCheck is deprecated. Use --health-check instead.
+
+       --https-health-check=HTTPS_HEALTH_CHECK
+          (DEPRECATED) HTTPS health check object used for autohealing instances
+          in this group.
+
+          HttpsHealthCheck is deprecated. Use --health-check instead.
+
+     At most one of these can be specified:
+
+       --region=REGION
+          Region of the managed instance group to create. If not specified, you
+          might be prompted to select a region (interactive mode only).
+
+          A list of regions can be fetched by running:
+
+              $ gcloud compute regions list
+
+     If you specify --zones flag this flag must be unspecified or specify the
+     region to which the zones you listed belong.
+
+     Overrides the default compute/region property value for this command
+     invocation.
+
+       --zone=ZONE
+          Zone of the managed instance group to create. If not specified, you
+          might be prompted to select a zone (interactive mode only).
+
+          A list of zones can be fetched by running:
+
+              $ gcloud compute zones list
+
+          Overrides the default compute/zone property value for this command
+          invocation.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha compute instance-groups managed create
+
+        $ gcloud beta compute instance-groups managed create
+

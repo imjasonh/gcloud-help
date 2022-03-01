@@ -1,0 +1,165 @@
+NAME
+    gcloud beta compute instance-groups managed rolling-action start-update -
+        updates instances in a managed instance group
+
+SYNOPSIS
+    gcloud beta compute instance-groups managed rolling-action start-update
+        NAME --version=[template=TEMPLATE,[name=NAME],...]
+        [--canary-version=[template=TEMPLATE,
+          target-size=FIXED_OR_PERCENT,[name=NAME],...]]
+        [--type=TYPE; default="proactive"] [--force] [--max-surge=MAX_SURGE]
+        [--max-unavailable=MAX_UNAVAILABLE] [--min-ready=MIN_READY]
+        [--minimal-action=MINIMAL_ACTION]
+        [--most-disruptive-allowed-action=MOST_DISRUPTIVE_ALLOWED_ACTION]
+        [--replacement-method=REPLACEMENT_METHOD]
+        [--region=REGION | --zone=ZONE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) gcloud beta compute instance-groups managed rolling-action
+    start-update updates instances in a managed instance group, according to
+    the given versions and the given update policy.
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the managed instance group to operate on.
+
+REQUIRED FLAGS
+     --version=[template=TEMPLATE,[name=NAME],...]
+        Original instance template resource to be used. Each version has the
+        following format: template=TEMPLATE,[name=NAME]
+
+COMMONLY USED FLAGS
+     --canary-version=[template=TEMPLATE,target-size=FIXED_OR_PERCENT,[name=NAME],...]
+        New instance template resource to be used. Each version has the
+        following format:
+        template=TEMPLATE,target-size=FIXED_OR_PERCENT,[name=NAME]
+
+     --type=TYPE; default="proactive"
+        Desired update type. TYPE must be one of:
+
+         opportunistic
+            Do not proactively replace instances. Create new instances and
+            delete old on resizes of the group.
+         proactive
+            Replace instances proactively.
+
+OTHER FLAGS
+     --force
+        If set, accepts any original or new version configurations without
+        validation.
+
+     --max-surge=MAX_SURGE
+        Maximum additional number of instances that can be created during the
+        update process. This can be a fixed number (e.g. 5) or a percentage of
+        size to the managed instance group (e.g. 10%). Defaults to 0 if the
+        managed instance group has stateful configuration, or to the number of
+        zones in which it operates otherwise.
+
+     --max-unavailable=MAX_UNAVAILABLE
+        Maximum number of instances that can be unavailable during the update
+        process. This can be a fixed number (e.g. 5) or a percentage of size to
+        the managed instance group (e.g. 10%). Defaults to the number of zones
+        in which the managed instance group operates.
+
+     --min-ready=MIN_READY
+        Minimum time for which a newly created instance should be ready to be
+        considered available. For example 10s for 10 seconds. See $ gcloud
+        topic datetimes for information on duration formats.
+
+     --minimal-action=MINIMAL_ACTION
+        Use this flag to minimize disruption as much as possible or to apply a
+        more disruptive action than is strictly necessary. The MIG performs at
+        least this action on each instance while updating. If the update
+        requires a more disruptive action than the one specified here, then the
+        more disruptive action is performed. If you omit this flag, the update
+        uses the minimal-action value from the MIG's update policy, unless it
+        is not set in which case the default is replace.
+
+        MINIMAL_ACTION must be one of:
+
+         refresh
+            Apply the new configuration without stopping instances, if
+            possible. For example, use refresh to apply changes that only
+            affect metadata or additional disks.
+         restart
+            Apply the new configuration without replacing instances, if
+            possible. For example, stopping instances and starting them again
+            is sufficient to apply changes to machine type.
+         replace
+            Replace old instances according to the --replacement-method flag.
+
+     --most-disruptive-allowed-action=MOST_DISRUPTIVE_ALLOWED_ACTION
+        Use this flag to prevent an update if it requires more disruption than
+        you can afford. At most, the MIG performs the specified action on each
+        instance while updating. If the update requires a more disruptive
+        action than the one specified here, then the update fails and no
+        changes are made. If you omit this flag, the update uses the
+        most-disruptive-allowed-action value from the MIG's update policy,
+        unless it is not set in which case the default is replace.
+
+        MOST_DISRUPTIVE_ALLOWED_ACTION must be one of:
+
+         refresh
+            Apply the new configuration without stopping instances, if
+            possible. For example, use refresh to apply changes that only
+            affect metadata or additional disks.
+         restart
+            Apply the new configuration without replacing instances, if
+            possible. For example, stopping instances and starting them again
+            is sufficient to apply changes to machine type.
+         replace
+            Replace old instances according to the --replacement-method flag.
+
+     --replacement-method=REPLACEMENT_METHOD
+        Type of replacement method. Specifies what action will be taken to
+        update instances. Defaults to recreate if the managed instance group
+        has stateful configuration, or to substitute otherwise.
+        REPLACEMENT_METHOD must be one of:
+
+         recreate
+            Recreate instances and preserve the instance names. The instance
+            IDs and creation timestamps might change.
+         substitute
+            Delete old instances and create instances with new names.
+
+     At most one of these can be specified:
+
+       --region=REGION
+          Region of the managed instance group to operate on. If not specified,
+          you might be prompted to select a region (interactive mode only).
+
+          A list of regions can be fetched by running:
+
+              $ gcloud compute regions list
+
+          Overrides the default compute/region property value for this command
+          invocation.
+
+       --zone=ZONE
+          Zone of the managed instance group to operate on. If not specified,
+          you might be prompted to select a zone (interactive mode only).
+
+          A list of zones can be fetched by running:
+
+              $ gcloud compute zones list
+
+          Overrides the default compute/zone property value for this command
+          invocation.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud compute instance-groups managed rolling-action start-update
+
+        $ gcloud alpha compute instance-groups managed rolling-action \
+            start-update
+

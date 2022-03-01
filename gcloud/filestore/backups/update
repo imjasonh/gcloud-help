@@ -1,0 +1,88 @@
+NAME
+    gcloud filestore backups update - update a Filestore backup
+
+SYNOPSIS
+    gcloud filestore backups update BACKUP --region=REGION [--async]
+        [--description=DESCRIPTION] [--update-labels=[KEY=VALUE,...]]
+        [--clear-labels | --remove-labels=[KEY,...]] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Update the metadata of a Filestore backup.
+
+    This command can fail for the following reasons:
+      ▪ The backup specified does not exist.
+      ▪ The active account does not have permission to update the given
+        backup.
+
+EXAMPLES
+    The following command updates the Filestore Backup named 'my-backup' in
+    region us-central1 to change the description to 'A new description.'
+
+        $ gcloud filestore backups update my-backup --region=us-central1 \
+            --description="A new description."
+
+POSITIONAL ARGUMENTS
+     BACKUP
+        Arguments and flags that specify the Filestore backup you want to
+        update.
+
+REQUIRED FLAGS
+     --region=REGION
+        Compute region (e.g. us-central1) for the backup.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --description=DESCRIPTION
+        Description of the backup.
+
+     --update-labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to update. If a label exists, its value
+        is modified. Otherwise, a new label is created.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     At most one of these can be specified:
+
+       --clear-labels
+          Remove all labels. If --update-labels is also specified then
+          --clear-labels is applied first.
+
+          For example, to remove all labels:
+
+              $ gcloud filestore backups update --clear-labels
+
+          To remove all existing labels and create two new labels, foo and baz:
+
+              $ gcloud filestore backups update --clear-labels \
+                --update-labels foo=bar,baz=qux
+
+       --remove-labels=[KEY,...]
+          List of label keys to remove. If a label does not exist it is
+          silently ignored. If --update-labels is also specified then
+          --update-labels is applied first.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the file/v1 API. The full documentation for this API can
+    be found at: https://cloud.google.com/filestore/
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha filestore backups update
+
+        $ gcloud beta filestore backups update
+

@@ -1,0 +1,83 @@
+NAME
+    gcloud beta ml translate batch-translate-text - translates a large volume
+        of text in asynchronous batch mode
+
+SYNOPSIS
+    gcloud beta ml translate batch-translate-text --destination=DESTINATION
+        --source=[SOURCE,...] --source-language=SOURCE_LANGUAGE
+        --target-language-codes=[TARGET_LANGUAGE_CODES,...]
+        [--glossaries=[GLOSSARIES,...]] [--models=[MODELS,...]]
+        [--zone=ZONE; default="global"] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Translates a large volume of text in asynchronous batch mode. This
+    command provides real-time output as the inputs are being processed.
+
+EXAMPLES
+    The following command translates 'input.txt' file into French and Spanish:
+
+        $ gcloud beta ml translate batch-translate-text \
+            --source=gs://input.txt=text/plain --zone=us-central1 \
+            --target-language-codes=fr-CA,es-ES --source-language=en-US \
+            --models=fr-CA=TRL321456,es-ES=general/base \
+            --destination=gs://output
+
+REQUIRED FLAGS
+     --destination=DESTINATION
+        Location to which the results should be written. Must be a Google Cloud
+        Storage URI.
+
+     --source=[SOURCE,...]
+        Comma-separated list of entries of the form FILE_PATH[=FILE_TYPE]
+        specifying source files and files types for the translation. FILE_PATH
+        must be a Google Cloud Storage URI. FILE_TYPE defaults to 'text/html'
+        if not present. Possible FILE_TYPES are 'text/html', 'text/plain'.
+
+        Usage:
+
+        '--source gs://input/input.txt=text/plain,gs://input/my.html=text/html'
+
+     --source-language=SOURCE_LANGUAGE
+        Source language code of the text.
+
+     --target-language-codes=[TARGET_LANGUAGE_CODES,...]
+        The languages to which the text is to be translated. Specify up to 10
+        language codes here.
+
+OPTIONAL FLAGS
+     --glossaries=[GLOSSARIES,...]
+        Glossaries to be applied for translation. Comma-separated dictionary
+        where map's key is target language code, map's value is glossary name.
+
+     --models=[MODELS,...]
+        Models to use for translation. Comma-separated dictionary where map's
+        key is target language code, map's value is model name. Value can be a
+        built-in general model, or an AutoML Translation model.
+
+        Usage:
+
+        '--models es-ES=TRL321456789,en-US=general/nmt'
+
+     --zone=ZONE; default="global"
+        Location to make calls. Non-global location is required for requests
+        using AutoML models. Currently, only 'us-central1' is supported as a
+        non-global location. Defaults to 'global'.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the translate/v3 API. The full documentation for this API
+    can be found at: https://cloud.google.com/translate/docs/quickstarts
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud alpha ml translate batch-translate-text
+

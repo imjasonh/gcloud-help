@@ -1,0 +1,134 @@
+NAME
+    gcloud compute reservations create - create a Compute Engine reservation
+
+SYNOPSIS
+    gcloud compute reservations create RESERVATION
+        (--machine-type=MACHINE_TYPE --vm-count=VM_COUNT
+          : --accelerator=[count=COUNT],[type=TYPE]
+          --local-ssd=[interface=INTERFACE],[size=SIZE]
+          --min-cpu-platform=MIN_CPU_PLATFORM --require-specific-reservation)
+        [--description=DESCRIPTION] [--zone=ZONE]
+        [--share-setting=SHARE_SETTING
+          --share-with=SHARE_WITH,[SHARE_WITH,...]] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Create a Compute Engine reservation.
+
+EXAMPLES
+    To create a Compute Engine reservation, run:
+
+        $ gcloud compute reservations create my-reservation \
+          --zone=fake-zone --vm-count=1 --machine-type=n1-standard-1 \
+          --min-cpu-platform="Intel Haswell"
+
+POSITIONAL ARGUMENTS
+     RESERVATION
+        Name of the reservation to create.
+
+REQUIRED FLAGS
+     Manage the specific SKU reservation properties.
+
+     This must be specified.
+
+       --machine-type=MACHINE_TYPE
+          The type of machine (name only) which has a fixed number of vCPUs and
+          a fixed amount of memory. This also includes specifying custom
+          machine type following custom-number_of_CPUs-amount_of_memory
+          pattern, e.g. custom-32-29440.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --vm-count=VM_COUNT
+          The number of VM instances that are allocated to this reservation.
+          The value of this field must be an int in the range [1, 1000].
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --accelerator=[count=COUNT],[type=TYPE]
+          Manage the configuration of the type and number of accelerator cards
+          attached.
+           count
+              The number of accelerators to attach to each instance in the
+              reservation.
+           type
+              The specific type (e.g. nvidia-tesla-k80 for nVidia Tesla K80) of
+              accelerator to attach to instances in the reservation. Use gcloud
+              compute accelerator-types list to learn about all available
+              accelerator types.
+
+       --local-ssd=[interface=INTERFACE],[size=SIZE]
+          Manage the size and the interface of local SSD to use. See
+          https://cloud.google.com/compute/docs/disks/local-ssd for more
+          information.
+           interface
+              The kind of disk interface exposed to the VM for this SSD. Valid
+              values are scsi and nvme. SCSI is the default and is supported by
+              more guest operating systems. NVME may provide higher
+              performance.
+           size
+              The size of the local SSD in base-2 GB.
+
+       --min-cpu-platform=MIN_CPU_PLATFORM
+          Optional minimum CPU platform of the reservation to create.
+
+       --require-specific-reservation
+          Indicates whether the reservation can be consumed by VMs with "any
+          reservation" defined. If enabled, then only VMs that target this
+          reservation by name using --reservation-affinity=specific can consume
+          from this reservation.
+
+OPTIONAL FLAGS
+     --description=DESCRIPTION
+        An optional description of the reservation to create.
+
+     --zone=ZONE
+        Zone of the reservation to create. If not specified and the
+        compute/zone property isn't set, you might be prompted to select a zone
+        (interactive mode only).
+
+        To avoid prompting when this flag is omitted, you can set the
+        compute/zone property:
+
+            $ gcloud config set compute/zone ZONE
+
+        A list of zones can be fetched by running:
+
+            $ gcloud compute zones list
+
+        To unset the property, run:
+
+            $ gcloud config unset compute/zone
+
+        Alternatively, the zone can be stored in the environment variable
+        CLOUDSDK_COMPUTE_ZONE.
+
+     Manage the properties of a shared reservation.
+
+       --share-setting=SHARE_SETTING
+          Specify if this reservation is shared, and if so, the type of
+          sharing. If you omit this flag, this value is local (not shared) by
+          default. SHARE_SETTING must be one of: local, projects, folders.
+
+       --share-with=SHARE_WITH,[SHARE_WITH,...]
+          If this reservation is shared (--share-setting is not local), provide
+          a list of all of the specific projects or folders that this
+          reservation is shared with. List must contain project IDs or project
+          numbers or folder IDs.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha compute reservations create
+
+        $ gcloud beta compute reservations create
+

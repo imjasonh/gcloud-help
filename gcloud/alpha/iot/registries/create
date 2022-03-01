@@ -1,0 +1,121 @@
+NAME
+    gcloud alpha iot registries create - create a new device registry
+
+SYNOPSIS
+    gcloud alpha iot registries create (REGISTRY : --region=REGION)
+        [--no-enable-http-config] [--no-enable-mqtt-config]
+        [--event-notification-config=[subfolder=SUBFOLDER],[topic=TOPIC]]
+        [--log-level=LOG_LEVEL] [--public-key-path=PUBLIC_KEY_PATH]
+        [--state-pubsub-topic=STATE_PUBSUB_TOPIC] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Create a new device registry.
+
+EXAMPLES
+    To create a new device registry 'my-registry' in region 'us-central1', run:
+
+        $ gcloud alpha iot registries create --region=us-central1 my-registry
+
+    The following command creates a new device registry 'my-registry' in region
+    'us-central1', enables MQTT and HTTP connections, and sets
+    'pubsub-topic-name' as the Cloud Pub/Sub topic for state notifications.
+
+        $ gcloud alpha iot registries create my-registry \
+            --region=us-central1 --enable-http-config --enable-mqtt-config \
+            --state-pubsub-topic=pubsub-topic-name
+
+POSITIONAL ARGUMENTS
+     Registry resource - The registry you want to create. The arguments in this
+     group can be used to specify the attributes of this resource. (NOTE) Some
+     attributes are not given arguments in this group but can be set in other
+     ways. To set the project attribute:
+      ◆ provide the argument registry on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       REGISTRY
+          ID of the registry or fully qualified identifier for the registry. To
+          set the registry attribute:
+          ▸ provide the argument registry on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --region=REGION
+          The name of the Cloud IoT region. To set the region attribute:
+          ▸ provide the argument registry on the command line with a fully
+            specified name;
+          ▸ provide the argument --region on the command line.
+
+FLAGS
+     --enable-http-config
+        Whether to allow device connections to the HTTP bridge. Enabled by
+        default, use --no-enable-http-config to disable.
+
+     --enable-mqtt-config
+        Whether to allow MQTT connections to this device registry. Enabled by
+        default, use --no-enable-mqtt-config to disable.
+
+     --event-notification-config=[subfolder=SUBFOLDER],[topic=TOPIC]
+        The configuration for notification of telemetry events received from
+        the device. This flag can be specified multiple times to add multiple
+        configs to the device registry. Configs are added to the registry in
+        the order the flags are specified. Only one config with an empty
+        subfolder field is allowed and must be specified last.
+
+         topic
+            A Google Cloud Pub/Sub topic name for event notifications
+
+         subfolder
+            If the subfolder name matches this string exactly, this
+            configuration will be used to publish telemetry events. If empty
+            all strings are matched.
+
+     --log-level=LOG_LEVEL
+        The default logging verbosity for activity from devices in this
+        registry. The verbosity level can be overridden by setting a specific
+        device's log level. LOG_LEVEL must be one of:
+
+         debug
+            All events will be logged.
+         error
+            Error events will be logged.
+         info
+            Informational events will be logged, such as connections and
+            disconnections. Also includes error events.
+         none
+            Disables logging.
+
+     --public-key-path=PUBLIC_KEY_PATH
+        Path to a file containing an X.509v3 certificate (RFC5280
+        (https://www.ietf.org/rfc/rfc5280.txt)), encoded in base64, and wrapped
+        by -----BEGIN CERTIFICATE----- and -----END CERTIFICATE-----.
+
+     --state-pubsub-topic=STATE_PUBSUB_TOPIC
+        A Google Cloud Pub/Sub topic name for state notifications.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the cloudiot/v1 API. The full documentation for this API
+    can be found at: https://cloud.google.com/iot
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud iot registries create
+
+        $ gcloud beta iot registries create
+

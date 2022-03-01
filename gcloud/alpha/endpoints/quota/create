@@ -1,0 +1,81 @@
+NAME
+    gcloud alpha endpoints quota create - create a quota override for a
+        consumer
+
+SYNOPSIS
+    gcloud alpha endpoints quota create --consumer=CONSUMER --metric=METRIC
+        --service=SERVICE --unit=UNIT --value=VALUE
+        [--dimensions=[KEY=VALUE,...]] [--force] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) This command creates a quota override for a consumer. The supported
+    consumers are projects, folders, and organizations.
+
+EXAMPLES
+    To create a quota override for a project with project number, run:
+
+        $ gcloud alpha endpoints quota create \
+            --service=example.googleapis.com --consumer=projects/12321
+        --metric=example.googleapis.com/default_requests
+        --unit=1/min/{project} --value=360
+
+    To create a quota override for a project with project ID, run:
+
+        $ gcloud alpha endpoints quota create \
+            --service=example.googleapis.com --consumer=projects/hello
+        --metric=example.googleapis.com/default_requests
+        --unit=1/min/{project} --value=360
+
+    To create a quota override for an organization, run:
+
+        $ gcloud alpha endpoints quota create \
+            --service=example.googleapis.com --consumer=organizations/555
+        --metric=example.googleapis.com/default_requests
+        --unit=1/min/{project} --value=360
+
+    To force the creation of a quota override with dimensions, run:
+
+        $ gcloud alpha endpoints quota create \
+            --service=example.googleapis.com --consumer=projects/12321
+        metric=example.googleapis.com/default_requests
+        --unit=1/min/{project} --dimensions=regions=us-central1
+        --dimensions=zones=us-central1-c --value=360 --force
+
+REQUIRED FLAGS
+     --consumer=CONSUMER
+        The consumer to create a quota override for.
+
+     --metric=METRIC
+        The metric to create a quota override for.
+
+     --service=SERVICE
+        The service to create a quota override for.
+
+     --unit=UNIT
+        The unit of a metric to create a quota override for.
+
+     --value=VALUE
+        The value of the override.
+
+OPTIONAL FLAGS
+     --dimensions=[KEY=VALUE,...]
+        The dimensions of the override, e.g. for specific locations.
+
+     --force
+        Force override creation even if the change results in a substantial
+        decrease in available quota.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

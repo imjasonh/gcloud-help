@@ -1,0 +1,123 @@
+NAME
+    gcloud scc assets group - filter an organization's assets and groups them
+        by their specified properties
+
+SYNOPSIS
+    gcloud scc assets group [PARENT] [--compare-duration=COMPARE_DURATION]
+        [--filter=FILTER] [--group-by=GROUP_BY] [--page-size=PAGE_SIZE]
+        [--page-token=PAGE_TOKEN] [--read-time=READ_TIME]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Filter an organization's assets and groups them by their specified
+    properties.
+
+EXAMPLES
+    Group assets under organization 123456 by their type (e.g. project, disk,
+    compute instance, service etc):
+
+        $ gcloud scc assets group 123456 \
+            --group-by="security_center_properties.resource_type"
+
+    Group assets under project example-project by their type (e.g. project,
+    disk, compute instance, service etc):
+
+        $ gcloud scc assets group projects/example-project \
+            --group-by="security_center_properties.resource_type"
+
+    Group assets under folder 456 by their type (e.g. project, disk, compute
+    instance, service etc):
+
+        $ gcloud scc assets group folders/456 \
+            --group-by="security_center_properties.resource_type"
+
+    Group compute instances (assets) under organization 123456 by their
+    respective projects:
+
+        $ gcloud scc assets group 123456 \
+            --filter="security_center_properties.resource_type=\"google.comp\
+        ute.Instance\"" \
+        --group-by="security_center_properties.resource_project"
+
+    Group assets that were updated on or after 2019-01-01T01:00:00 GMT by their
+    types.
+
+        $ gcloud scc assets group 123456 \
+            --filter="update_time >= 1546304400000" \
+            --group-by="security_center_properties.resource_type"
+
+    Group assets into following 3 state_changes (ADDED/DELETED/ACTIVE) based on
+    the activity during past 24 hours:
+
+        $ gcloud scc assets group 123456 --compare-duration=86400s \
+            --group-by="state_change"
+
+POSITIONAL ARGUMENTS
+     Parent resource - The parent to be used for the SCC (Security Command
+     Center) command. This represents a Cloud resource.
+
+       [PARENT]
+          ID of the parent or fully qualified identifier for the parent. To set
+          the organization attribute:
+          ▸ provide the argument parent on the command line;
+          ▸ Set the parent property in configuration using gcloud config set
+            scc/parent if it is not specified in command line..
+
+FLAGS
+     --compare-duration=COMPARE_DURATION
+        GroupAssetsResult's "state_change" attribute is updated to indicate
+        whether the asset was added, removed, or remained present during the
+        compare_duration period of time that precedes the read_time. Example
+        duration: "100000s"
+
+     --filter=FILTER
+        Expression is a list of one or more restrictions combined via logical
+        operators 'AND' and 'OR'. Parentheses are not supported, and 'OR' has
+        higher precedence than 'AND'. For example, 'update_time > 100 AND
+        security_center_properties.resource_type=\"google.cloud.resourcemanager.Organization\"'
+        is a valid filter string.
+
+     --group-by=GROUP_BY
+        Expression that defines what asset fields to use for grouping
+        (including 'state'). String value should follow SQL syntax: comma
+        separated list of fields. For example: "parent,resource_name". The
+        following fields are supported:
+        ◆ security_center_properties.resource_project
+        ◆ security_center_properties.resource_type
+        ◆ security_center_properties.resource_parent
+        ◆ state_change
+
+     --page-size=PAGE_SIZE
+        The maximum number of results to return in a single response. Default
+        is 10, minimum is 1, maximum is 1000.
+
+     --page-token=PAGE_TOKEN
+        Value returned by the last 'GroupAssetsResponse'; indicates that this
+        is a continuation of a prior 'GroupAssets' call, and that the system
+        should return the next page of data.
+
+     --read-time=READ_TIME
+        Time used as a reference point when filtering assets. Filter is limited
+        to assets existing at the supplied time and their values are those at
+        that specific time. For example: 2019-02-28T07:00:00Z. Absence of this
+        field will default to the API's version of NOW.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the securitycenter/v1 API. The full documentation for
+    this API can be found at: https://cloud.google.com/security-command-center
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha scc assets group
+
+        $ gcloud beta scc assets group
+

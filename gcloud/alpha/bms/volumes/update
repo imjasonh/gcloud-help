@@ -1,0 +1,143 @@
+NAME
+    gcloud alpha bms volumes update - update a Bare Metal Solution volume
+
+SYNOPSIS
+    gcloud alpha bms volumes update (VOLUME : --region=REGION)
+        [--snapshot-auto-delete=SNAPSHOT_AUTO_DELETE]
+        [--update-labels=[KEY=VALUE,...]]
+        [--clear-labels | --remove-labels=[KEY,...]]
+        [--snapshot-schedule-policy=SNAPSHOT_SCHEDULE_POLICY
+          : --remove-snapshot-schedule-policy] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Update a Bare Metal Solution volume.
+
+    This call returns immediately, but the update operation may take several
+    minutes to complete. To check if the operation is complete, use the
+    describe command for the volume.
+
+EXAMPLES
+    To update a volume called my-volume in region us-central1 with a new
+    snapshot schedule policy my-policy and snapshot auto delete behavior
+    oldest-first, run:
+
+        $ gcloud alpha bms volumes update my-volume --region=us-central1 \
+            --snapshot-schedule-policy=my-policy \
+            --snapshot-auto-delete=oldest-first
+
+    To add the label 'key1=value1' to a policy, run:
+
+        $ gcloud alpha bms volumes update my-volume \
+            --update-labels=key1=value1
+
+    To clear all labels, run:
+
+        $ gcloud alpha bms volumes update my-volume --clear-labels
+
+POSITIONAL ARGUMENTS
+     Volume resource - volume. The arguments in this group can be used to
+     specify the attributes of this resource. (NOTE) Some attributes are not
+     given arguments in this group but can be set in other ways. To set the
+     project attribute:
+      ◆ provide the argument volume on the command line with a fully
+        specified name;
+      ◆ set the property core/project;
+      ◆ provide the argument --project on the command line.
+
+     This must be specified.
+
+       VOLUME
+          ID of the volume or fully qualified identifier for the volume. To set
+          the volume attribute:
+          ▸ provide the argument volume on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --region=REGION
+          Region of the resource. To set the region attribute:
+          ▸ provide the argument volume on the command line with a fully
+            specified name;
+          ▸ provide the argument --region on the command line.
+
+FLAGS
+     --snapshot-auto-delete=SNAPSHOT_AUTO_DELETE
+        Behavior of the disk when snapshot reserved space is full.
+        SNAPSHOT_AUTO_DELETE must be one of:
+
+         disabled
+            Don't delete any snapshots. This disables new snapshot creation as
+            long as the snapshot reserved space is full.
+         newest-first
+            Delete the newest snapshot first.
+         oldest-first
+            Delete the oldest snapshot first.
+
+     --update-labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to update. If a label exists, its value
+        is modified. Otherwise, a new label is created.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     At most one of these can be specified:
+
+       --clear-labels
+          Remove all labels. If --update-labels is also specified then
+          --clear-labels is applied first.
+
+          For example, to remove all labels:
+
+              $ gcloud alpha bms volumes update --clear-labels
+
+          To remove all existing labels and create two new labels, foo and baz:
+
+              $ gcloud alpha bms volumes update --clear-labels \
+                --update-labels foo=bar,baz=qux
+
+       --remove-labels=[KEY,...]
+          List of label keys to remove. If a label does not exist it is
+          silently ignored. If --update-labels is also specified then
+          --update-labels is applied first.
+
+     At most one of these can be specified:
+
+       Snapshot schedule policy resource - snapshot_schedule_policy. This
+       represents a Cloud resource. (NOTE) Some attributes are not given
+       arguments in this group but can be set in other ways. To set the project
+       attribute:
+        ▸ provide the argument --snapshot-schedule-policy on the command line
+          with a fully specified name;
+        ▸ set the property core/project;
+        ▸ provide the argument --project on the command line. To set the
+          region attribute:
+        ▸ provide the argument --snapshot-schedule-policy on the command line
+          with a fully specified name;
+        ▸ global is the only supported location.
+
+         --snapshot-schedule-policy=SNAPSHOT_SCHEDULE_POLICY
+            ID of the snapshot_schedule_policy or fully qualified identifier
+            for the snapshot_schedule_policy. To set the
+            snapshot_schedule_policy attribute:
+            ▫ provide the argument --snapshot-schedule-policy on the command
+              line.
+
+       --remove-snapshot-schedule-policy
+          Remove any existing snapshot schedule policy.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

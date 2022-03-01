@@ -1,0 +1,180 @@
+NAME
+    gcloud beta datapipelines pipeline create - creates Data Pipelines Pipeline
+
+SYNOPSIS
+    gcloud beta datapipelines pipeline create (PIPELINE : --region=REGION)
+        --pipeline-type=PIPELINE_TYPE
+        [--additional-experiments=[ADDITIONAL_EXPERIMENTS,...]]
+        [--additional-user-labels=[ADDITIONAL_USER_LABELS,...]]
+        [--dataflow-kms-key=DATAFLOW_KMS_KEY]
+        [--dataflow-service-account-email=DATAFLOW_SERVICE_ACCOUNT_EMAIL]
+        [--disable-public-ips] [--display-name=DISPLAY_NAME]
+        [--enable-streaming-engine] [--flexrs-goal=FLEXRS_GOAL]
+        [--max-workers=MAX_WORKERS] [--network=NETWORK]
+        [--num-workers=NUM_WORKERS] [--parameters=[PARAMETERS,...]]
+        [--schedule=SCHEDULE] [--subnetwork=SUBNETWORK]
+        [--temp-location=TEMP_LOCATION]
+        [--template-file-gcs-location=TEMPLATE_FILE_GCS_LOCATION]
+        [--template-type=TEMPLATE_TYPE; default="FLEX"] [--time-zone=TIME_ZONE]
+        [--worker-machine-type=WORKER_MACHINE_TYPE]
+        [--transform-name-mappings=[TRANSFORM_NAME_MAPPINGS,...] --[no-]update]
+        [--worker-region=WORKER_REGION | --worker-zone=WORKER_ZONE]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Creates Data Pipelines Pipeline.
+
+EXAMPLES
+    To create a BATCH Data Pipeline PIPELINE_NAME in project example in region
+    us-central1, run:
+
+        $ gcloud beta datapipelines pipeline create PIPELINE_NAME \
+             --project=example --region=us-central1
+            --pipeline-type=BATCH
+            --template-file-gcs-location='gs://path_to_template_file'
+            --parameters=inputFile="gs://path_to_input_file",output="gs://path_to_output_file"
+            --schedule="0 * * * *" --temp-location="gs://path_to_temp_location"
+
+POSITIONAL ARGUMENTS
+     Pipeline resource - Name for the Data Pipelines Pipeline. The arguments in
+     this group can be used to specify the attributes of this resource. (NOTE)
+     Some attributes are not given arguments in this group but can be set in
+     other ways. To set the project attribute:
+      ◆ provide the argument pipeline on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       PIPELINE
+          ID of the pipeline or fully qualified identifier for the pipeline. To
+          set the pipeline attribute:
+          ▸ provide the argument pipeline on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --region=REGION
+          The Cloud region for the pipeline. To set the region attribute:
+          ▸ provide the argument pipeline on the command line with a fully
+            specified name;
+          ▸ provide the argument --region on the command line.
+
+REQUIRED FLAGS
+     --pipeline-type=PIPELINE_TYPE
+        Type of the pipeline. One of 'BATCH' or 'STREAMING'. PIPELINE_TYPE must
+        be one of:
+
+         batch
+            Specifies a Batch pipeline.
+         streaming
+            Specifies a Streaming pipeline.
+
+OPTIONAL FLAGS
+     --additional-experiments=[ADDITIONAL_EXPERIMENTS,...]
+        Default experiment flags for the job.
+
+     --additional-user-labels=[ADDITIONAL_USER_LABELS,...]
+        Default user labels to be specified for the job. Keys and values must
+        follow the restrictions specified in
+        https://cloud.google.com/compute/docs/labeling-resources#restrictions.
+
+     --dataflow-kms-key=DATAFLOW_KMS_KEY
+        Default Cloud KMS key to protect the job resources. The key must be in
+        same location as the job.
+
+     --dataflow-service-account-email=DATAFLOW_SERVICE_ACCOUNT_EMAIL
+        Default service account to run the dataflow workers as.
+
+     --disable-public-ips
+        Specifies that Cloud Dataflow workers must not use public IP addresses
+        by default. Overrides the default datapipelines/disable_public_ips
+        property value for this command invocation.
+
+     --display-name=DISPLAY_NAME
+        Display name of the Data Pipelines pipeline.
+
+     --enable-streaming-engine
+        Specifies that enabling Streaming Engine for the job by default.
+        Overrides the default datapipelines/enable_streaming_engine property
+        value for this command invocation.
+
+     --flexrs-goal=FLEXRS_GOAL
+        FlexRS goal for the flex template job. FLEXRS_GOAL must be one of:
+        COST_OPTIMIZED, SPEED_OPTIMIZED.
+
+     --max-workers=MAX_WORKERS
+        Maximum number of workers to run by default. Must be between 1 and
+        1000.
+
+     --network=NETWORK
+        Default Compute Engine network for launching instances to run your
+        pipeline. If not specified here, defaults to the network 'default'.
+
+     --num-workers=NUM_WORKERS
+        Initial number of workers to run by default. Must be between 1 and
+        1000. If not specified here, defaults to server-specified value.
+
+     --parameters=[PARAMETERS,...]
+        User defined parameters for the template.
+
+     --schedule=SCHEDULE
+        Unix-cron format of the schedule for scheduling recurrent jobs.
+
+     --subnetwork=SUBNETWORK
+        Default Compute Engine subnetwork for launching instances to run your
+        pipeline.
+
+     --temp-location=TEMP_LOCATION
+        Default Google Cloud Storage location to stage temporary files. If not
+        set, defaults to the value for staging-location (Must be a URL
+        beginning with 'gs://'.)
+
+     --template-file-gcs-location=TEMPLATE_FILE_GCS_LOCATION
+        Location of the template file or container spec file in Google Cloud
+        Storage.
+
+     --template-type=TEMPLATE_TYPE; default="FLEX"
+        Type of the template. Defaults to flex template. One of 'FLEX' or
+        'CLASSIC'. TEMPLATE_TYPE must be one of:
+
+         classic
+            Specifies a Classic template
+         flex
+            Specifies a Flex template.
+
+     --time-zone=TIME_ZONE
+        Timezone ID. This matches the timezone IDs used by the Cloud Scheduler
+        API.
+
+     --worker-machine-type=WORKER_MACHINE_TYPE
+        Default type of machine to use for workers. If not specified here,
+        defaults to server-specified value.
+
+     --transform-name-mappings=[TRANSFORM_NAME_MAPPINGS,...]
+        Transform name mappings for the streaming update job.
+
+     --[no-]update
+        Set this to true for streaming update jobs. Use --update to enable and
+        --no-update to disable.
+
+     At most one of these can be specified:
+
+       --worker-region=WORKER_REGION
+          Default Compute Engine region in which worker processing will occur.
+
+       --worker-zone=WORKER_ZONE
+          Default Compute Engine zone in which worker processing will occur.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice.
+

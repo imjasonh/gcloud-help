@@ -1,0 +1,99 @@
+NAME
+    gcloud compute networks create - create a Compute Engine network
+
+SYNOPSIS
+    gcloud compute networks create NAME
+        [--bgp-routing-mode=MODE; default="regional"]
+        [--description=DESCRIPTION] [--mtu=MTU] [--range=RANGE]
+        [--subnet-mode=MODE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    gcloud compute networks create is used to create virtual networks. A
+    network performs the same function that a router does in a home network: it
+    describes the network range and gateway IP address, handles communication
+    between instances, and serves as a gateway between instances and callers
+    outside the network.
+
+EXAMPLES
+    To create a regional auto subnet mode network with the name 'network-name',
+    run:
+
+        $ gcloud compute networks create network-name
+
+    To create a global custom subnet mode network with the name 'network-name',
+    run:
+
+        $ gcloud compute networks create network-name \
+          --bgp-routing-mode=global \
+          --subnet-mode=custom
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the network to create.
+
+FLAGS
+     --bgp-routing-mode=MODE; default="regional"
+        The BGP routing mode for this network. If not specified, defaults to
+        regional.
+
+        MODE must be one of:
+
+         global
+            Cloud Routers in this network advertise subnetworks from all
+            regions to their BGP peers, and program instances in all regions
+            with the router's best learned BGP routes.
+         regional
+            Cloud Routers in this network advertise subnetworks from their
+            local region only to their BGP peers, and program instances in
+            their local region only with the router's best learned BGP routes.
+
+     --description=DESCRIPTION
+        An optional, textual description for the network.
+
+     --mtu=MTU
+        Maximum transmission unit (MTU) is the size of the largest IP packet
+        that can be transmitted on this network. Default value is 1460 bytes,
+        and the maximum is 1500 bytes. The MTU advertised via DHCP to all
+        instances attached to this network.
+
+     --range=RANGE
+        Specifies the IPv4 address range of legacy mode networks. The range
+        must be specified in CIDR format:
+        http://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing
+
+        This flag only works if mode is legacy
+        (https://cloud.google.com/compute/docs/vpc/legacy).
+
+        Using legacy networks is **DEPRECATED**, given that many newer Google
+        Cloud Platform features are not supported on legacy networks. Please be
+        advised that legacy networks may not be supported in the future.
+
+     --subnet-mode=MODE
+        The subnet mode of the network. If not specified, defaults to AUTO.
+
+        MODE must be one of:
+
+         auto
+            Subnets are created automatically. This is the recommended
+            selection.
+         custom
+            Create subnets manually.
+         legacy
+            [Deprecated] Create an old style network that has a range and
+            cannot have subnets. This is not recommended for new networks.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha compute networks create
+
+        $ gcloud beta compute networks create
+

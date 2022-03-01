@@ -1,0 +1,91 @@
+NAME
+    gcloud beta builds worker-pools create - create a worker pool for use by
+        Google Cloud Build
+
+SYNOPSIS
+    gcloud beta builds worker-pools create WORKER_POOL --region=REGION
+        [--config-from-file=CONFIG_FROM_FILE | --peered-network=PEERED_NETWORK
+          --no-public-egress --worker-disk-size=WORKER_DISK_SIZE
+          --worker-machine-type=WORKER_MACHINE_TYPE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Create a worker pool for use by Google Cloud Build.
+
+EXAMPLES
+    To create a worker pool named wp1 in region us-central1, run:
+
+        $ gcloud beta builds worker-pools create wp1 --region=us-central1
+
+    To create a worker pool in project p1 in region us-central1 where workers
+    are of machine type e2-standard-2 and are peered to the VPC network
+    projects/123/global/networks/default and have a disk size of 64GB, run:
+
+        $ gcloud beta builds worker-pools create wp1 --project=p1 \
+            --region=us-central1                 \
+            --peered-network=projects/123/global/networks/default          \
+                   --worker-machine-type=e2-standard-2                 \
+            --worker-disk-size=64GB
+
+POSITIONAL ARGUMENTS
+     WORKER_POOL
+        Unique identifier for the worker pool to create. This value should be
+        1-63 characters, and valid characters are [a-z][0-9]-
+
+REQUIRED FLAGS
+     --region=REGION
+        Cloud region where the worker pool is created. See
+        https://cloud.google.com/build/docs/locations for available locations.
+
+OPTIONAL FLAGS
+     At most one of these can be specified:
+
+       --config-from-file=CONFIG_FROM_FILE
+          File that contains the configuration for the worker pool to be
+          created. See
+          https://cloud.google.com/build/docs/private-pools/worker-pool-config-file-schema
+          for options.
+
+       Command-line flags to configure the private pool:
+
+         --peered-network=PEERED_NETWORK
+            Existing network to which workers are peered. The network is
+            specified in resource URL format
+            projects/{network_project}/global/networks/{network_name}.
+
+            If not specified, the workers are not peered to any network.
+
+         --no-public-egress
+            If set, workers in the worker pool are created without an external
+            IP address.
+
+            If the worker pool is within a VPC Service Control perimeter, use
+            this flag.
+
+         Configuration to be used for creating workers in the worker pool:
+
+           --worker-disk-size=WORKER_DISK_SIZE
+              Size of the disk attached to the worker.
+
+              If not given, Cloud Build will use a standard disk size.
+
+           --worker-machine-type=WORKER_MACHINE_TYPE
+              Compute Engine machine type for a worker pool.
+
+              If unspecified, Cloud Build uses a standard machine type.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud builds worker-pools create
+
+        $ gcloud alpha builds worker-pools create
+

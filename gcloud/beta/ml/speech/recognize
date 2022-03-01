@@ -1,0 +1,183 @@
+NAME
+    gcloud beta ml speech recognize - get transcripts of short
+        (less than 60 seconds) audio from an audio file
+
+SYNOPSIS
+    gcloud beta ml speech recognize AUDIO --language-code=LANGUAGE_CODE
+        [--additional-language-codes=[LANGUAGE_CODE,...]]
+        [--enable-automatic-punctuation]
+        [--encoding=ENCODING; default="encoding-unspecified"]
+        [--filter-profanity] [--hints=[HINT,...]] [--include-word-confidence]
+        [--include-word-time-offsets]
+        [--max-alternatives=MAX_ALTERNATIVES; default=1] [--model=MODEL]
+        [--sample-rate=SAMPLE_RATE]
+        [--audio-channel-count=AUDIO_CHANNEL_COUNT
+          --separate-channel-recognition]
+        [--enable-speaker-diarization
+          : --max-diarization-speaker-count=MAX_DIARIZATION_SPEAKER_COUNT
+          --min-diarization-speaker-count=MIN_DIARIZATION_SPEAKER_COUNT]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Get a transcript of an audio file that is less than 60 seconds. You
+    can use an audio file that is on your local drive or a Google Cloud Storage
+    URL.
+
+    If the audio is longer than 60 seconds, you will get an error. Please use
+    gcloud beta ml speech recognize-long-running instead.
+
+EXAMPLES
+    To get a transcript of an audio file 'my-recording.wav':
+
+        $ gcloud beta ml speech recognize 'my-recording.wav' \
+          --language-code=en-US
+
+    To get a transcript of an audio file in bucket 'gs://bucket/myaudio' with a
+    custom sampling rate and encoding that uses hints and filters profanity:
+
+        $ gcloud beta ml speech recognize 'gs://bucket/myaudio' \
+            --language-code=es-ES --sample-rate=2200 --hints=Bueno \
+            --encoding=OGG_OPUS --filter-profanity
+
+POSITIONAL ARGUMENTS
+     AUDIO
+        The location of the audio file to transcribe. Must be a local path or a
+        Google Cloud Storage URL (in the format gs://bucket/object).
+
+REQUIRED FLAGS
+     --language-code=LANGUAGE_CODE
+        The language of the supplied audio as a BCP-47
+        (https://www.rfc-editor.org/rfc/bcp/bcp47.txt) language tag. Example:
+        "en-US". See https://cloud.google.com/speech/docs/languages for a list
+        of the currently supported language codes.
+
+OPTIONAL FLAGS
+     --additional-language-codes=[LANGUAGE_CODE,...]
+        The BCP-47 language tags of other languages that the speech may be in.
+        Up to 3 can be provided.
+
+        If alternative languages are listed, recognition result will contain
+        recognition in the most likely language detected including the main
+        language-code.
+
+     --enable-automatic-punctuation
+        Adds punctuation to recognition result hypotheses.
+
+     --encoding=ENCODING; default="encoding-unspecified"
+        The type of encoding of the file. Required if the file format is not
+        WAV or FLAC. ENCODING must be one of: amr, amr-wb,
+        encoding-unspecified, flac, linear16, mp3, mulaw, ogg-opus,
+        speex-with-header-byte, webm-opus.
+
+     --filter-profanity
+        If True, the server will attempt to filter out profanities, replacing
+        all but the initial character in each filtered word with asterisks,
+        e.g. "f**".
+
+     --hints=[HINT,...]
+        A list of strings containing word and phrase "hints" so that the speech
+        recognition is more likely to recognize them. This can be used to
+        improve the accuracy for specific words and phrases, for example, if
+        specific commands are typically spoken by the user. This can also be
+        used to add additional words to the vocabulary of the recognizer. See
+        https://cloud.google.com/speech/limits#content.
+
+     --include-word-confidence
+        Include a list of words and the confidence for those words in the top
+        result.
+
+     --include-word-time-offsets
+        If True, the top result includes a list of words with the start and end
+        time offsets (timestamps) for those words. If False, no word-level time
+        offset information is returned.
+
+     --max-alternatives=MAX_ALTERNATIVES; default=1
+        Maximum number of recognition hypotheses to be returned. The server may
+        return fewer than max_alternatives. Valid values are 0-30. A value of 0
+        or 1 will return a maximum of one.
+
+     --model=MODEL
+        Select the model best suited to your domain to get best results. If you
+        do not explicitly specify a model, Speech-to-Text will auto-select a
+        model based on your other specified parameters. Some models are premium
+        and cost more than standard models (although you can reduce the price
+        by opting into
+        https://cloud.google.com/speech-to-text/docs/data-logging). MODEL must
+        be one of:
+
+         command_and_search
+            short queries such as voice commands or voice search.
+         default
+            audio that is not one of the specific audio models. For example,
+            long-form audio. Ideally the audio is high-fidelity, recorded at a
+            16khz or greater sampling rate.
+         phone_call
+            audio that originated from a phone call (typically recorded at an
+            8khz sampling rate).
+         phone_call_enhanced
+            audio that originated from a phone call (typically recorded at an
+            8khz sampling rate). This is a premium model and can produce better
+            results but costs more than the standard rate.
+         video_enhanced
+            audio that originated from video or includes multiple speakers.
+            Ideally the audio is recorded at a 16khz or greater sampling rate.
+            This is a premium model that costs more than the standard rate.
+
+     --sample-rate=SAMPLE_RATE
+        The sample rate in Hertz. For best results, set the sampling rate of
+        the audio source to 16000 Hz. If that's not possible, use the native
+        sample rate of the audio source (instead of re-sampling).
+
+     Audio channel settings.
+
+       --audio-channel-count=AUDIO_CHANNEL_COUNT
+          The number of channels in the input audio data. Set this for
+          separate-channel-recognition. Valid values are: 1)LINEAR16 and FLAC
+          are 1-8 2)OGG_OPUS are 1-254 3) MULAW, AMR, AMR_WB and
+          SPEEX_WITH_HEADER_BYTE is only 1.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --separate-channel-recognition
+          Recognition result will contain a channel_tag field to state which
+          channel that result belongs to. If this is not true, only the first
+          channel will be recognized.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+     --enable-speaker-diarization
+        Enable speaker detection for each recognized word in the top
+        alternative of the recognition result using an integer speaker_tag
+        provided in the WordInfo.
+
+     --max-diarization-speaker-count=MAX_DIARIZATION_SPEAKER_COUNT
+        Maximum estimated number of speakers in the conversation being
+        recognized.
+
+     --min-diarization-speaker-count=MIN_DIARIZATION_SPEAKER_COUNT
+        Minimum estimated number of speakers in the conversation being
+        recognized.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the speech/v1p1beta1 API. The full documentation for this
+    API can be found at:
+    https://cloud.google.com/speech-to-text/docs/quickstart-protocol
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud ml speech recognize
+
+        $ gcloud alpha ml speech recognize
+

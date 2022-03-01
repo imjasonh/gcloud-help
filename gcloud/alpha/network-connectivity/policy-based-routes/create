@@ -1,0 +1,128 @@
+NAME
+    gcloud alpha network-connectivity policy-based-routes create - create a new
+        policy based route
+
+SYNOPSIS
+    gcloud alpha network-connectivity policy-based-routes create
+        POLICY_BASED_ROUTE --network=NETWORK --next-hop-ilb-ip=NEXT_HOP_ILB_IP
+        [--async] [--description=DESCRIPTION]
+        [--destination-range=DESTINATION_RANGE]
+        [--interconnect-attachment-region=INTERCONNECT_ATTACHMENT_REGION]
+        [--ip-protocol=IP_PROTOCOL] [--labels=[KEY=VALUE,...]]
+        [--priority=PRIORITY]
+        [--protocol-version=PROTOCOL_VERSION; default="IPv4"]
+        [--source-range=SOURCE_RANGE] [--tags=[TAGS,...]]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Create a new policy based route with the given name.
+
+EXAMPLES
+    To create a policy based route with the name my-pbr to route all l4 traffic
+    in default network to a ilb with vip 10.0.0.1, run:
+
+        $ gcloud alpha network-connectivity policy-based-routes create \
+            my-pbr --network="projects/my-project/global/networks/default"
+          --next-hop-ilb-ip=10.0.0.1
+
+POSITIONAL ARGUMENTS
+     Policy based route resource - Name of the policy based route to be
+     created. This represents a Cloud resource. (NOTE) Some attributes are not
+     given arguments in this group but can be set in other ways. To set the
+     project attribute:
+      ◆ provide the argument policy_based_route on the command line with a
+        fully specified name;
+      ◆ set the property core/project;
+      ◆ provide the argument --project on the command line.
+
+     This must be specified.
+
+       POLICY_BASED_ROUTE
+          ID of the policy based route or fully qualified identifier for the
+          policy based route. To set the policy_based_route attribute:
+          ▸ provide the argument policy_based_route on the command line.
+
+REQUIRED FLAGS
+     --network=NETWORK
+        Fully-qualified URL of the network that this route applies to. E.g.
+        projects/my-project/global/networks/my-network
+
+     --next-hop-ilb-ip=NEXT_HOP_ILB_IP
+        IP of a global access enabled L4 ILB that should be the next hop to
+        handle packets.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --description=DESCRIPTION
+        Optional description of this resource. Provide this field when you
+        create the resource.
+
+     --destination-range=DESTINATION_RANGE
+        Destination IP range of outgoing packets that this policy based route
+        applies to.
+
+     --interconnect-attachment-region=INTERCONNECT_ATTACHMENT_REGION
+        Cloud region to install this policy based route on interconnect
+        attachment. Use all to install it on all interconnect attachments. Note
+        if both --tags and --interconnect-attachment-region are not set, then
+        the policy based route will be installed in all network endpoints,
+        including VMs, VPNs, and Interconnects, in the network.
+
+     --ip-protocol=IP_PROTOCOL
+        IP protocol that this policy based route applies to. Valid values are
+        TCP, UDP, and ALL. Default is ALL.
+
+     --labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     --priority=PRIORITY
+        Priority of this policy based route. Priority is used to break ties in
+        cases where there are more than one matching policy based routes found.
+        In cases where multiple policy based routes are matched, the one with
+        the lowest-numbered priority value wins. The default value is 1000. The
+        priority value must be from 1 to 65535, inclusive. Note the priority of
+        policy based route is always higher than other types of route (e.g.
+        static routes/advanced routes)
+
+     --protocol-version=PROTOCOL_VERSION; default="IPv4"
+        Internet protocol versions this policy based route applies to. For this
+        version, only IPV4 is supported. PROTOCOL_VERSION must be one of: ipv4,
+        protocol-version-unspecified.
+
+     --source-range=SOURCE_RANGE
+        Source IP range of outgoing packets that this policy based route
+        applies to.
+
+     --tags=[TAGS,...]
+        List of VM instance tags to which this route applies to. Note if both
+        --tags and --interconnect-attachment-region are not set, then the
+        policy based route will be installed in all endpoints, including VMs,
+        VPNs, and Interconnects, in the network.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the networkconnectivity/v1 API. The full documentation
+    for this API can be found at:
+    https://cloud.google.com/network-connectivity/docs/reference/networkconnectivity/rest
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

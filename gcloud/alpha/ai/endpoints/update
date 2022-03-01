@@ -1,0 +1,109 @@
+NAME
+    gcloud alpha ai endpoints update - update an existing Vertex AI endpoint
+
+SYNOPSIS
+    gcloud alpha ai endpoints update (ENDPOINT : --region=REGION)
+        [--description=DESCRIPTION] [--display-name=DISPLAY_NAME]
+        [--update-labels=[KEY=VALUE,...]]
+        [--clear-labels | --remove-labels=[KEY,...]]
+        [--clear-traffic-split | --traffic-split=[DEPLOYED_MODEL_ID=VALUE,...]]
+        [GCLOUD_WIDE_FLAG ...]
+
+EXAMPLES
+    To update an endpoint 123 under project example in region us-central1, run:
+
+        $ gcloud alpha ai endpoints update 123 --project=example \
+            --region=us-central1
+        --display-name=new_name
+
+POSITIONAL ARGUMENTS
+     Endpoint resource - The endpoint to update. The arguments in this group
+     can be used to specify the attributes of this resource. (NOTE) Some
+     attributes are not given arguments in this group but can be set in other
+     ways. To set the project attribute:
+      ◆ provide the argument endpoint on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       ENDPOINT
+          ID of the endpoint or fully qualified identifier for the endpoint. To
+          set the name attribute:
+          ▸ provide the argument endpoint on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --region=REGION
+          Cloud region for the endpoint. To set the region attribute:
+          ▸ provide the argument endpoint on the command line with a fully
+            specified name;
+          ▸ provide the argument --region on the command line;
+          ▸ set the property ai/region;
+          ▸ choose one from the prompted list of available regions.
+
+FLAGS
+     --description=DESCRIPTION
+        Description of the endpoint.
+
+     --display-name=DISPLAY_NAME
+        Display name of the endpoint.
+
+     --update-labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to update. If a label exists, its value
+        is modified. Otherwise, a new label is created.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     At most one of these can be specified:
+
+       --clear-labels
+          Remove all labels. If --update-labels is also specified then
+          --clear-labels is applied first.
+
+          For example, to remove all labels:
+
+              $ gcloud alpha ai endpoints update --clear-labels
+
+          To remove all existing labels and create two new labels, foo and baz:
+
+              $ gcloud alpha ai endpoints update --clear-labels \
+                --update-labels foo=bar,baz=qux
+
+       --remove-labels=[KEY,...]
+          List of label keys to remove. If a label does not exist it is
+          silently ignored. If --update-labels is also specified then
+          --update-labels is applied first.
+
+     At most one of these can be specified:
+
+       --clear-traffic-split
+          Clears the traffic split map. If the map is empty, the endpoint is to
+          not accept any traffic at the moment.
+
+       --traffic-split=[DEPLOYED_MODEL_ID=VALUE,...]
+          List of pairs of deployed model id and value to set as traffic split.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud ai endpoints update
+
+        $ gcloud beta ai endpoints update
+

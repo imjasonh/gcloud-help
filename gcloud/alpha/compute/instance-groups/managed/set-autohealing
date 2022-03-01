@@ -1,0 +1,96 @@
+NAME
+    gcloud alpha compute instance-groups managed set-autohealing - set
+        autohealing policy for managed instance group
+
+SYNOPSIS
+    gcloud alpha compute instance-groups managed set-autohealing NAME
+        [--initial-delay=INITIAL_DELAY]
+        [--health-check=HEALTH_CHECK | --http-health-check=HTTP_HEALTH_CHECK
+          | --https-health-check=HTTPS_HEALTH_CHECK]
+        [--region=REGION | --zone=ZONE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) (DEPRECATED) Set autohealing policy for managed instance group.
+
+    This command is deprecated and will not be promoted to GA. Please use
+    gcloud beta instance-groups managed update instead.
+
+    gcloud alpha compute instance-groups managed set-autohealing updates the
+    autohealing policy for an existing managed instance group.
+
+    If health check is specified, the resulting autohealing policy will be
+    triggered by the health-check signal i.e. the autohealing action (RECREATE)
+    on an instance will be performed if the health-check signals that the
+    instance is UNHEALTHY. If no health check is specified, the resulting
+    autohealing policy will be triggered by instance's status i.e. the
+    autohealing action (RECREATE) on an instance will be performed if the
+    instance.status is not RUNNING.
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the managed instance group to operate on.
+
+FLAGS
+     --initial-delay=INITIAL_DELAY
+        Specifies the length of time during which the instance is known to be
+        initializing and should not be autohealed even if unhealthy. This value
+        cannot be greater than 1 hour. See $ gcloud topic datetimes for
+        information on duration formats.
+
+     At most one of these can be specified:
+
+       --health-check=HEALTH_CHECK
+          Name of the health check to operate on.
+
+       --http-health-check=HTTP_HEALTH_CHECK
+          (DEPRECATED) HTTP health check object used for autohealing instances
+          in this group.
+
+          HttpHealthCheck is deprecated. Use --health-check instead.
+
+       --https-health-check=HTTPS_HEALTH_CHECK
+          (DEPRECATED) HTTPS health check object used for autohealing instances
+          in this group.
+
+          HttpsHealthCheck is deprecated. Use --health-check instead.
+
+     At most one of these can be specified:
+
+       --region=REGION
+          Region of the managed instance group to operate on. If not specified,
+          you might be prompted to select a region (interactive mode only).
+
+          A list of regions can be fetched by running:
+
+              $ gcloud compute regions list
+
+          Overrides the default compute/region property value for this command
+          invocation.
+
+       --zone=ZONE
+          Zone of the managed instance group to operate on. If not specified,
+          you might be prompted to select a zone (interactive mode only).
+
+          A list of zones can be fetched by running:
+
+              $ gcloud compute zones list
+
+          Overrides the default compute/zone property value for this command
+          invocation.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. This variant is also available:
+
+        $ gcloud beta compute instance-groups managed set-autohealing
+

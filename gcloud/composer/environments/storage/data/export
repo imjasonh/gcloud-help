@@ -1,0 +1,140 @@
+NAME
+    gcloud composer environments storage data export - export data from an
+        environment into local storage or Cloud Storage
+
+SYNOPSIS
+    gcloud composer environments storage data export --destination=DESTINATION
+        (--environment=ENVIRONMENT : --location=LOCATION) [--source=SOURCE]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    If the SOURCE is a directory, it and its contents are are exported
+    recursively. If no SOURCE is provided, the entire contents of the
+    environment's data directory will be exported. Colliding files in the
+    DESTINATION will be overwritten. If a file exists in the DESTINATION but
+    there is no corresponding file to overwrite it, it is untouched.
+
+EXAMPLES
+    Suppose the environment myenv's Cloud Storage bucket has the following
+    structure:
+
+        gs://the-bucket
+        |
+        +-- data
+        |   |
+        |   +-- file1.txt
+        |   +-- file2.txt
+        |   |
+        |   +-- subdir1
+        |   |   |
+        |   |   +-- file3.txt
+        |   |   +-- file4.txt
+
+    And the local directory '/foo' has the following structure:
+
+        /foo
+        |
+        +-- file1.txt
+        +-- fileX.txt
+        |   |
+        |   +-- subdir1
+        |   |   |
+        |   |   +-- file3.txt
+        |   |   +-- fileY.txt
+
+    The following command:
+
+        gcloud composer environments storage data export myenv --destination=/foo
+
+    would result in the following structure in the local '/foo' directory:
+
+        /foo
+        |
+        +-- file1.txt
+        +-- file2.txt
+        +-- fileX.txt
+        |   |
+        |   +-- subdir1
+        |   |   |
+        |   |   +-- file3.txt
+        |   |   +-- file4.txt
+        |   |   +-- fileY.txt
+
+    The local files '/foo/file1.txt' and '/foo/subdir1/file3.txt' will be
+    overwritten with the contents of the corresponding files in the Cloud
+    Storage bucket.
+
+    If instead we had run
+
+        gcloud composer environments storage data export myenv --source=subdir1/file3.txt --destination=/foo
+
+    the resulting local directory structure would be the following:
+
+        /foo
+        |
+        +-- file1.txt
+        +-- file3.txt
+        +-- fileX.txt
+        |   |
+        |   +-- subdir1
+        |   |   |
+        |   |   +-- file3.txt
+        |   |   +-- fileY.txt
+
+    No local files would be overwritten since
+    'gs://the-bucket/dags/subdir1/file3.txt' was written to '/foo/file3.txt'
+    instead of 'foo/subdir1/file3.txt'.
+
+REQUIRED FLAGS
+     --destination=DESTINATION
+        The path to an existing local directory or a Cloud Storage
+        bucket/directory into which to export files.
+
+     Environment resource - The environment from whose Cloud Storage bucket to
+     export data.. The arguments in this group can be used to specify the
+     attributes of this resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways. To set the project
+     attribute:
+      ◆ provide the argument --environment on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       --environment=ENVIRONMENT
+          ID of the environment or fully qualified identifier for the
+          environment. To set the environment attribute:
+          ▸ provide the argument --environment on the command line.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --location=LOCATION
+          Compute Engine region in which to create the environment. To set the
+          location attribute:
+          ▸ provide the argument --environment on the command line with a
+            fully specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property composer/location.
+
+OPTIONAL FLAGS
+     --source=SOURCE
+        An optional relative path to a file or directory to be exported from
+        the data/ subdirectory in the environment's Cloud Storage bucket.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha composer environments storage data export
+
+        $ gcloud beta composer environments storage data export
+

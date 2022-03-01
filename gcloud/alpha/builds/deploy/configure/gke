@@ -1,0 +1,186 @@
+NAME
+    gcloud alpha builds deploy configure gke - configure automated build and
+        deployment to a target Google Kubernetes Engine cluster
+
+SYNOPSIS
+    gcloud alpha builds deploy configure gke --cluster=CLUSTER
+        --location=LOCATION --repo-name=REPO_NAME --repo-type=REPO_TYPE
+        (--branch-pattern=REGEX | --tag-pattern=REGEX
+          | [--pull-request-pattern=REGEX --pull-request-preview
+          : --comment-control --preview-expiry=PREVIEW_EXPIRY; default=3])
+        [--app-name=APP_NAME] [--config=CONFIG] [--dockerfile=DOCKERFILE]
+        [--expose=EXPOSE] [--gcs-config-staging-dir=GCS_CONFIG_STAGING_DIR]
+        [--namespace=NAMESPACE] [--repo-owner=REPO_OWNER] [--timeout=TIMEOUT]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Configure automated build and deployment from a repository. This
+    can be triggered by a Git branch or tag push.
+
+REQUIRED FLAGS
+     --cluster=CLUSTER
+        Name of the target cluster to deploy to.
+
+     --location=LOCATION
+        Region or zone of the target cluster to deploy to.
+
+     --repo-name=REPO_NAME
+        Name of the repository.
+
+     --repo-type=REPO_TYPE
+        Type of repository.
+
+        --repo-owner must be provided if one of the following choices is
+        selected:
+
+        github - A GitHub (Cloud Build GitHub App) repository connected to
+        Cloud Build triggers. The deployed image will have the format
+        'gcr.io/[PROJECT_ID]/github.com/[REPO_OWNER]/[REPO_NAME]:$COMMIT_SHA'.
+
+        bitbucket_mirrored - A Bitbucket repository connected to Cloud Source
+        Repositories. The deployed image will have the format
+        'gcr.io/[PROJECT_ID]/bitbucket.org/[REPO_OWNER]/[REPO_NAME]:$COMMIT_SHA'.
+
+        github_mirrored - A GitHub repository connected to Cloud Source
+        Repositories. The deployed image will have the format
+        'gcr.io/[PROJECT_ID]/github.com/[REPO_OWNER]/[REPO_NAME]:$COMMIT_SHA'.
+
+        --repo-owner must not be provided if the following is selected:
+
+        csr - A repository on Cloud Source Repositories. The deployed image
+        will have the format 'gcr.io/[PROJECT_ID]/[REPO_NAME]:$COMMIT_SHA'.
+
+        Connect repositories at
+        https://console.cloud.google.com/cloud-build/triggers/connect.
+
+        REPO_TYPE must be one of: github, bitbucket_mirrored, github_mirrored,
+        csr.
+
+     Exactly one of these must be specified:
+
+       --branch-pattern=REGEX
+          A regular expression specifying which Git branches to match.
+
+          This pattern is used as a regex search for any incoming pushes. For
+          example, --branch-pattern=foo will match "foo", "foobar", and
+          "barfoo". Events on a branch that does not match will be ignored.
+
+          The syntax of the regular expressions accepted is the syntax accepted
+          by RE2 and described at https://github.com/google/re2/wiki/Syntax.
+
+       --tag-pattern=REGEX
+          A regular expression specifying which Git tags to match.
+
+          This pattern is used as a regex search for any incoming pushes. For
+          example, --tag-pattern=foo will match "foo", "foobar", and "barfoo".
+          Events on a tag that does not match will be ignored.
+
+          The syntax of the regular expressions accepted is the syntax accepted
+          by RE2 and described at https://github.com/google/re2/wiki/Syntax.
+
+       Pull request preview deployment settings
+
+         --pull-request-pattern=REGEX
+            A regular expression specifying which base Git branch to match for
+            pull request events.
+
+            This pattern is used as a regex search for the base branch (the
+            branch you are trying to merge into) for pull request updates. For
+            example, --pull-request-pattern=foo will match "foo", "foobar", and
+            "barfoo".
+
+            The syntax of the regular expressions accepted is the syntax
+            accepted by RE2 and described at
+            https://github.com/google/re2/wiki/Syntax.
+
+            This flag must be specified if any of the other arguments in this
+            group are specified.
+
+         --pull-request-preview
+            Enables previewing your application for each pull request.
+
+            This configures your application to deploy to a target cluster when
+            a pull request is created or updated against a branch specified by
+            the --pull-request-pattern argument. The application will be
+            deployed to the namespace 'preview-[REPO_NAME]-[PR_NUMBER]'. This
+            namespace will be deleted after a number of days specified by the
+            --preview-expiry argument.
+
+            The deployed preview application will still exist even after the
+            pull request is merged or closed. The preview application will
+            eventually get cleaned up by a Cloud Scheduler job after the
+            namespace expires. You can also delete the namespace manually.
+
+            This flag must be specified if any of the other arguments in this
+            group are specified.
+
+         --comment-control
+            Require a repo collaborator to add '/gcbrun' as a comment in the
+            pull request in order to run the build.
+
+         --preview-expiry=PREVIEW_EXPIRY; default=3
+            Number of days before a pull request preview deployment's namespace
+            is considered to be expired. An expired namespace will eventually
+            be deleted. Defaults to 3 days.
+
+OPTIONAL FLAGS
+     --app-name=APP_NAME
+        If specified, the following label is added to the Kubernetes manifests:
+        'app.kubernetes.io/name: APP_NAME'. Defaults to the repository name
+        provided by --repo-name.
+
+     --config=CONFIG
+        Path to the Kubernetes YAML, or directory containing multiple
+        Kubernetes YAML files, used to deploy the container image. The path is
+        relative to the repository root. The files must reference the provided
+        container image or tag.
+
+        If this field is not set, a default Deployment config and Horizontal
+        Pod Autoscaler config are used to deploy the image.
+
+     --dockerfile=DOCKERFILE
+        Path to the Dockerfile to build from, relative to the repository.
+
+        Defaults to './Dockerfile'.
+
+     --expose=EXPOSE
+        Port that the deployed application listens on. If set, a Kubernetes
+        Service of type 'LoadBalancer' is created with a single TCP port
+        mapping that exposes this port.
+
+     --gcs-config-staging-dir=GCS_CONFIG_STAGING_DIR
+        Path to the Google Cloud Storage subdirectory into which to copy the
+        configs (suggested base and expanded Kubernetes YAML files) that are
+        used to stage and deploy your app. If the bucket in this path doesn't
+        exist, Cloud Build creates it.
+
+        If this field is not set, the configs are written to
+        gs://[PROJECT_ID]_cloudbuild/deploy/config.
+
+     --namespace=NAMESPACE
+        Namespace of the target cluster to deploy to. If this field is not set,
+        the 'default' namespace is used.
+
+     --repo-owner=REPO_OWNER
+        Owner of the repository.
+
+     --timeout=TIMEOUT
+        Maximum time a build is run before it times out. For example, "2h15m5s"
+        is two hours, fifteen minutes, and five seconds. If you do not specify
+        a unit, seconds is assumed. Overrides the default builds/timeout
+        property value for this command invocation.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

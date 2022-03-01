@@ -1,0 +1,131 @@
+NAME
+    gcloud compute url-maps add-path-matcher - add a path matcher to a URL map
+
+SYNOPSIS
+    gcloud compute url-maps add-path-matcher URL_MAP
+        --path-matcher-name=PATH_MATCHER_NAME
+        (--default-backend-bucket=DEFAULT_BACKEND_BUCKET
+          | --default-service=DEFAULT_SERVICE)
+        [--backend-bucket-path-rules=PATH=BUCKET,[PATH=BUCKET,...]]
+        [--backend-service-path-rules=PATH=SERVICE,[...]]
+        [--delete-orphaned-path-matcher] [--description=DESCRIPTION]
+        [--path-rules=PATH=SERVICE,[...]]
+        [--existing-host=EXISTING_HOST | --new-hosts=NEW_HOST,[NEW_HOST,...]]
+        [--global | --region=REGION] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    gcloud compute url-maps add-path-matcher is used to add a path matcher to a
+    URL map. A path matcher maps HTTP request paths to backend services or
+    backend buckets. Each path matcher must be referenced by at least one host
+    rule. This command can create a new host rule through the --new-hosts flag
+    or it can reconfigure an existing host rule to point to the newly added
+    path matcher using --existing-host. In the latter case, if a path matcher
+    is orphaned as a result of the operation, this command will fail unless
+    --delete-orphaned-path-matcher is provided. Path matcher constraints can be
+    found here
+    (https://cloud.google.com/load-balancing/docs/url-map-concepts#pm-constraints).
+
+EXAMPLES
+    To create a rule for mapping the path /search/* to the hypothetical
+    search-service, /static/* to the static-bucket backend bucket and /images/*
+    to the images-service under the hosts example.com and *.example.com, run:
+
+        $ gcloud compute url-maps add-path-matcher MY-URL-MAP \
+            --path-matcher-name=MY-MATCHER \
+            --default-service=MY-DEFAULT-SERVICE \
+            --backend-service-path-rules='/search/*=search_service,/images/*\
+        =images-service' \
+            --backend-bucket-path-rules='/static/*=static-bucket' \
+            --new-hosts=example.com '*.example.com'
+
+    Note that a default service or default backend bucket must be provided to
+    handle paths for which there is no mapping.
+
+POSITIONAL ARGUMENTS
+     URL_MAP
+        Name of the URL map to operate on.
+
+REQUIRED FLAGS
+     --path-matcher-name=PATH_MATCHER_NAME
+        The name to assign to the path matcher.
+
+     Exactly one of these must be specified:
+
+       --default-backend-bucket=DEFAULT_BACKEND_BUCKET
+          A backend bucket that will be used for requests that the path matcher
+          cannot match. Exactly one of --default-service or
+          --default-backend-bucket is required.
+
+       --default-service=DEFAULT_SERVICE
+          A backend service that will be used for requests that the path
+          matcher cannot match. Exactly one of --default-service or
+          --default-backend-bucket is required.
+
+OPTIONAL FLAGS
+     --backend-bucket-path-rules=PATH=BUCKET,[PATH=BUCKET,...]
+        Rules for mapping request paths to backend buckets.
+
+     --backend-service-path-rules=PATH=SERVICE,[...]
+        Rules for mapping request paths to services.
+
+     --delete-orphaned-path-matcher
+        If provided and a path matcher is orphaned as a result of this command,
+        the command removes the orphaned path matcher instead of failing.
+
+     --description=DESCRIPTION
+        An optional, textual description for the path matcher.
+
+     --path-rules=PATH=SERVICE,[...]
+        Rules for mapping request paths to services.
+
+     At most one of these can be specified:
+
+       --existing-host=EXISTING_HOST
+          An existing host rule to tie the new path matcher to. Although host
+          rules can contain more than one host, only a single host is needed to
+          uniquely identify the host rule.
+
+       --new-hosts=NEW_HOST,[NEW_HOST,...]
+          If specified, a new host rule with the given hosts is created and the
+          path matcher is tied to the new host rule.
+
+     At most one of these can be specified:
+
+       --global
+          If set, the URL map is global.
+
+       --region=REGION
+          Region of the URL map to operate on. If not specified, you might be
+          prompted to select a region (interactive mode only).
+
+          To avoid prompting when this flag is omitted, you can set the
+          compute/region property:
+
+              $ gcloud config set compute/region REGION
+
+          A list of regions can be fetched by running:
+
+              $ gcloud compute regions list
+
+          To unset the property, run:
+
+              $ gcloud config unset compute/region
+
+          Alternatively, the region can be stored in the environment variable
+          CLOUDSDK_COMPUTE_REGION.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha compute url-maps add-path-matcher
+
+        $ gcloud beta compute url-maps add-path-matcher
+

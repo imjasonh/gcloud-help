@@ -1,0 +1,80 @@
+NAME
+    gcloud beta access-approval settings update - update Access Approval
+        settings
+
+SYNOPSIS
+    gcloud beta access-approval settings update
+        [--enrolled_services=ENROLLED_SERVICES]
+        [--notification_emails=NOTIFICATION_EMAILS]
+        [--folder=FOLDER | --organization=ORGANIZATION | --project=PROJECT]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Update the Access Approval settings associated with a project, a
+    folder, or organization. Partial updates are supported (for example, you
+    can update the notification emails without modifying the enrolled
+    services).
+
+EXAMPLES
+    Update notification emails associated with project 'p1', run:
+
+        $ gcloud beta access-approval settings update --project=p1 \
+          --notification_emails='foo@example.com, bar@example.com'
+
+    Enable Access Approval enforcement for folder 'f1':
+
+        $ gcloud beta access-approval settings update --folder=f1 \
+          --enrolled_services=all
+
+    Enable Access Approval enforcement for organization 'org1' for only Cloud
+    Storage and Compute products and set the notification emails at the same
+    time:
+
+        $ gcloud beta access-approval settings update --organization=org1 \
+          --enrolled_services='storage.googleapis.com,compute.googleapis.c\
+        om' --notification_emails='security_team@example.com'
+
+FLAGS
+     --enrolled_services=ENROLLED_SERVICES
+        Comma-separated list of services to enroll for Access Approval or 'all'
+        for all supported services. Note for project and folder enrollments,
+        only 'all' is supported. Use '' to clear all enrolled services.
+
+     --notification_emails=NOTIFICATION_EMAILS
+        Comma-separated list of email addresses to which notifications relating
+        to approval requests should be sent or '' to clear all saved
+        notification emails.
+
+     At most one of these can be specified:
+
+       --folder=FOLDER
+          Folder number. Only one of --project, --folder, or --organization can
+          be provided. If none are provided then it uses config property
+          [core/project].
+
+       --organization=ORGANIZATION
+          Organization number. Either --project, --folder, or --organization
+          must be provided. If none are provided then it uses config property
+          [core/project].
+
+       --project=PROJECT
+          Project number or id. Only one of --project, --folder, or
+          --organization can be provided. If none are provided then it uses
+          config property [core/project].
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud access-approval settings update
+
+        $ gcloud alpha access-approval settings update
+

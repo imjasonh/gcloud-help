@@ -1,0 +1,207 @@
+NAME
+    gcloud beta privateca certificates create - create a new certificate
+
+SYNOPSIS
+    gcloud beta privateca certificates create
+        [[CERTIFICATE] --issuer=ISSUER --issuer-location=ISSUER_LOCATION]
+        (--csr=CSR | [(--dns-san=[DNS_SAN,...] --email-san=[EMAIL_SAN,...]
+          --ip-san=[IP_SAN,...] --subject=[SUBJECT,...]
+          --uri-san=[URI_SAN,...])
+          (--generate-key --key-output-file=KEY_OUTPUT_FILE)
+          : [--reusable-config=REUSABLE_CONFIG
+          : --extended-key-usages=[EXTENDED_KEY_USAGES,...] --is-ca-cert
+          --key-usages=[KEY_USAGES,...] --max-chain-length=MAX_CHAIN_LENGTH]])
+        [--cert-output-file=CERT_OUTPUT_FILE] [--labels=[KEY=VALUE,...]]
+        [--validity=VALIDITY; default="P30D"] [GCLOUD_WIDE_FLAG ...]
+
+EXAMPLES
+    To create a certificate using a CSR:
+
+        $ gcloud beta privateca certificates create frontend-server-tls \
+          --issuer=server-tls-1 --issuer-location=us \
+          --csr=./csr.pem \
+          --cert-output-file=./cert.pem \
+          --validity=P30D
+
+        To create a certificate using a client-generated key:
+
+        $ gcloud beta privateca certificates create frontend-server-tls \
+          --issuer=server-tls-1 --issuer-location=us \
+          --generate-key \
+          --key-output-file=./key \
+          --cert-output-file=./cert.pem \
+          --dns-san=www.joonix.net \
+          --reusable-config=server-tls
+
+POSITIONAL ARGUMENTS
+     CERTIFICATE resource - The name of the certificate to issue. If the
+     certificate ID is omitted, a random identifier will be generated according
+     to the following format: {YYYYMMDD}-{3 random alphanumeric characters}-{3
+     random alphanumeric characters}. The certificate ID is not required when
+     the issuing CA is in the DevOps tier. The arguments in this group can be
+     used to specify the attributes of this resource. (NOTE) Some attributes
+     are not given arguments in this group but can be set in other ways. To set
+     the project attribute:
+      ◆ provide the argument CERTIFICATE on the command line with a fully
+        specified name;
+      ◆ certificate id will default to an automatically generated id with a
+        fully specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+       [CERTIFICATE]
+          ID of the CERTIFICATE or fully qualified identifier for the
+          CERTIFICATE. To set the certificate attribute:
+          ▸ provide the argument CERTIFICATE on the command line;
+          ▸ certificate id will default to an automatically generated id.
+
+       --issuer=ISSUER
+          The issuing certificate authority of the CERTIFICATE. To set the
+          issuer attribute:
+          ▸ provide the argument CERTIFICATE on the command line with a fully
+            specified name;
+          ▸ certificate id will default to an automatically generated id with
+            a fully specified name;
+          ▸ provide the argument --issuer on the command line.
+
+       --issuer-location=ISSUER_LOCATION
+          The location of the CERTIFICATE. To set the issuer-location
+          attribute:
+          ▸ provide the argument CERTIFICATE on the command line with a fully
+            specified name;
+          ▸ certificate id will default to an automatically generated id with
+            a fully specified name;
+          ▸ provide the argument --issuer-location on the command line;
+          ▸ set the property privateca/location.
+
+REQUIRED FLAGS
+     Certificate generation method.
+
+     Exactly one of these must be specified:
+
+       --csr=CSR
+          A PEM-encoded certificate signing request file path.
+
+       Alternatively, you may describe the certificate and key to use.
+
+         The subject names for the certificate.
+
+         At least one of these must be specified:
+
+           --dns-san=[DNS_SAN,...]
+              One or more comma-separated DNS Subject Alternative Names.
+
+           --email-san=[EMAIL_SAN,...]
+              One or more comma-separated email Subject Alternative Names.
+
+           --ip-san=[IP_SAN,...]
+              One or more comma-separated IP Subject Alternative Names.
+
+           --subject=[SUBJECT,...]
+              X.501 name of the certificate subject. Example: --subject
+              "C=US,ST=California,L=Mountain View,O=Google LLC,CN=google.com"
+
+           --uri-san=[URI_SAN,...]
+              One or more comma-separated URI Subject Alternative Names.
+
+         To describe the key that will be used for this certificate, use one of
+         the following options.
+
+         This must be specified.
+
+           To generate a new key pair, use the following:
+
+             --generate-key
+                Use this flag to have a new RSA-2048 private key securely
+                generated on your machine.
+
+                This flag must be specified if any of the other arguments in
+                this group are specified.
+
+             --key-output-file=KEY_OUTPUT_FILE
+                The path where the generated private key file should be written
+                (in PEM format).
+
+                Note: possession of this key file could allow anybody to act as
+                this certificate's subject. Please make sure that you store
+                this key file in a secure location at all times, and ensure
+                that only authorized users have access to it.
+
+                This flag must be specified if any of the other arguments in
+                this group are specified.
+
+         The x509 configuration used for this certificate.
+
+         At most one of these can be specified:
+
+           Reusable config resource - The Reusable Config containing X.509
+           values for this certificate. This represents a Cloud resource.
+           (NOTE) Some attributes are not given arguments in this group but can
+           be set in other ways. To set the project attribute:
+            ◇ provide the argument --reusable-config on the command line with
+              a fully specified name;
+            ◇ project will default to privateca-data. To set the location
+              attribute:
+            ◇ provide the argument --reusable-config on the command line with
+              a fully specified name;
+            ◇ location will default to the same location as the certificate.
+
+             --reusable-config=REUSABLE_CONFIG
+                ID of the reusable config or fully qualified identifier for the
+                reusable config. To set the reusable_config attribute:
+                ▹ provide the argument --reusable-config on the command line.
+
+           --extended-key-usages=[EXTENDED_KEY_USAGES,...]
+              The list of extended key usages for this certificate. This can
+              only be provided if --reusable-config is not provided.
+              EXTENDED_KEY_USAGES must be one of: server_auth, client_auth,
+              code_signing, email_protection, time_stamping, ocsp_signing.
+
+           --is-ca-cert
+              Whether this certificate is for a CertificateAuthority or not.
+              Indicates the Certificate Authority field in the x509 basic
+              constraints extension.
+
+           --key-usages=[KEY_USAGES,...]
+              The list of key usages for this certificate. This can only be
+              provided if --reusable-config is not provided. KEY_USAGES must be
+              one of: digital_signature, content_commitment, key_encipherment,
+              data_encipherment, key_agreement, cert_sign, crl_sign,
+              encipher_only, decipher_only.
+
+           --max-chain-length=MAX_CHAIN_LENGTH
+              Maximum depth of subordinate CAs allowed under this CA for a CA
+              certificate. This can only be provided if --reusable-config is
+              not provided.
+
+OPTIONAL FLAGS
+     --cert-output-file=CERT_OUTPUT_FILE
+        The path where the resulting PEM-encoded certificate chain file should
+        be written (ordered from leaf to root).
+
+     --labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     --validity=VALIDITY; default="P30D"
+        The validity of this certificate, as an ISO8601 duration. Defaults to
+        30 days.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud privateca certificates create
+

@@ -1,0 +1,137 @@
+NAME
+    gcloud compute instances set-scheduling - set scheduling options for
+        Compute Engine virtual machines
+
+SYNOPSIS
+    gcloud compute instances set-scheduling INSTANCE_NAME
+        [--clear-min-node-cpu] [--maintenance-policy=MAINTENANCE_POLICY]
+        [--min-node-cpu=MIN_NODE_CPU] [--preemptible]
+        [--[no-]restart-on-failure] [--zone=ZONE]
+        [--clear-node-affinities | --node=NODE
+          | --node-affinity-file=NODE_AFFINITY_FILE | --node-group=NODE_GROUP]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    $gcloud compute instances set-scheduling is used to configure scheduling
+    options for Compute Engine virtual machines.
+
+EXAMPLES
+    To set instance to be terminated during maintenance, run:
+
+        $ gcloud compute instances set-scheduling example-instance  \
+            --maintenance-policy=TERMINATE --zone=us-central1-b
+
+POSITIONAL ARGUMENTS
+     INSTANCE_NAME
+        Name of the instance to operate on. For details on valid instance
+        names, refer to the criteria documented under the field 'name' at:
+        https://cloud.google.com/compute/docs/reference/rest/v1/instances
+
+FLAGS
+     --clear-min-node-cpu
+        Removes the min-node-cpu field from the instance. If specified, the
+        instance min-node-cpu will be cleared. The instance will not be
+        overcommitted and utilize the full CPU count assigned.
+
+     --maintenance-policy=MAINTENANCE_POLICY
+        Specifies the behavior of the VMs when their host machines undergo
+        maintenance. The default is MIGRATE. For more information, see
+        https://cloud.google.com/compute/docs/instances/setting-instance-scheduling-options.
+        MAINTENANCE_POLICY must be one of:
+
+         MIGRATE
+            The instances should be migrated to a new host. This will
+            temporarily impact the performance of instances during a migration
+            event.
+         TERMINATE
+            The instances should be terminated.
+
+     --min-node-cpu=MIN_NODE_CPU
+        Minimum number of virtual CPUs this instance will consume when running
+        on a sole-tenant node.
+
+     --preemptible
+        If provided, instances will be preemptible and time-limited. Instances
+        might be preempted to free up resources for standard VM instances, and
+        will only be able to run for a limited amount of time. Preemptible
+        instances can not be restarted and will not migrate.
+
+     --[no-]restart-on-failure
+        The instances will be restarted if they are terminated by Compute
+        Engine. This does not affect terminations performed by the user. This
+        option is mutually exclusive with --preemptible. Use
+        --restart-on-failure to enable and --no-restart-on-failure to disable.
+
+     --zone=ZONE
+        Zone of the instance to operate on. If not specified, you might be
+        prompted to select a zone (interactive mode only). gcloud attempts to
+        identify the appropriate zone by searching for resources in your
+        currently active project. If the zone cannot be determined, gcloud
+        prompts you for a selection with all available Google Cloud Platform
+        zones.
+
+        To avoid prompting when this flag is omitted, the user can set the
+        compute/zone property:
+
+            $ gcloud config set compute/zone ZONE
+
+        A list of zones can be fetched by running:
+
+            $ gcloud compute zones list
+
+        To unset the property, run:
+
+            $ gcloud config unset compute/zone
+
+        Alternatively, the zone can be stored in the environment variable
+        CLOUDSDK_COMPUTE_ZONE.
+
+     Sole Tenancy.
+
+     At most one of these can be specified:
+
+       --clear-node-affinities
+          Removes the node affinities field from the instance. If specified,
+          the instance node settings will be cleared. The instance will not be
+          scheduled onto a sole-tenant node.
+
+       --node=NODE
+          The name of the node to schedule this instance on.
+
+       --node-affinity-file=NODE_AFFINITY_FILE
+          The JSON/YAML file containing the configuration of desired nodes onto
+          which this instance could be scheduled. These rules filter the nodes
+          according to their node affinity labels. A node's affinity labels
+          come from the node template of the group the node is in.
+
+          The file should contain a list of a JSON/YAML objects with the
+          following fields:
+
+           key
+              Corresponds to the node affinity label keys of the Node resource.
+           operator
+              Specifies the node selection type. Must be one of: IN: Requires
+              Compute Engine to seek for matched nodes. NOT_IN: Requires
+              Compute Engine to avoid certain nodes.
+           values
+              Optional. A list of values which correspond to the node affinity
+              label values of the Node resource.
+
+       --node-group=NODE_GROUP
+          The name of the node group to schedule this instance on.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha compute instances set-scheduling
+
+        $ gcloud beta compute instances set-scheduling
+

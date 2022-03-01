@@ -1,0 +1,125 @@
+NAME
+    gcloud beta eventarc triggers create - create an Eventarc trigger
+
+SYNOPSIS
+    gcloud beta eventarc triggers create (TRIGGER : --location=LOCATION)
+        --matching-criteria=[ATTRIBUTE=VALUE,...]
+        ([--destination-run-service=DESTINATION_RUN_SERVICE
+          : --destination-run-path=DESTINATION_RUN_PATH
+          --destination-run-region=DESTINATION_RUN_REGION])
+        --transport-topic=TRANSPORT_TOPIC [--async]
+        [--service-account=SERVICE_ACCOUNT] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Create an Eventarc trigger.
+
+EXAMPLES
+    To create a new trigger my-trigger for events of type
+    google.cloud.pubsub.topic.v1.messagePublished with destination Cloud Run
+    service my-service, run:
+
+        $ gcloud beta eventarc triggers create my-trigger \
+             --matching-criteria="type=google.cloud.pubsub.topic.v1.messagePu\
+         blished" --destination-run-service=my-service
+
+POSITIONAL ARGUMENTS
+     Trigger resource - The trigger to create. The arguments in this group can
+     be used to specify the attributes of this resource. (NOTE) Some attributes
+     are not given arguments in this group but can be set in other ways. To set
+     the project attribute:
+      ◆ provide the argument trigger on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       TRIGGER
+          ID of the trigger or fully qualified identifier for the trigger. To
+          set the trigger attribute:
+          ▸ provide the argument trigger on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --location=LOCATION
+          The location for the Eventarc trigger, which should be either global
+          or one of the supported regions. Alternatively, set the
+          [eventarc/location] property. To set the location attribute:
+          ▸ provide the argument trigger on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property eventarc/location.
+
+REQUIRED FLAGS
+     --matching-criteria=[ATTRIBUTE=VALUE,...]
+        The criteria by which events are filtered for the trigger, specified as
+        a comma-separated list of CloudEvents attribute names and values. This
+        flag can also be repeated to add more criteria to the list. Only events
+        that match with this criteria will be sent to the destination. The
+        criteria must include the type attribute, as well as any other
+        attributes that are expected for the chosen type.
+
+     Flags for specifying the destination to which events should be sent.
+
+     This must be specified.
+
+       Flags for specifying a Cloud Run fully-managed resource destination.
+
+         --destination-run-service=DESTINATION_RUN_SERVICE
+            Name of the Cloud Run fully-managed service that receives the
+            events for the trigger. The service must be in the same project as
+            the trigger.
+
+            This flag must be specified if any of the other arguments in this
+            group are specified.
+
+         --destination-run-path=DESTINATION_RUN_PATH
+            Relative path on the destination Cloud Run service to which the
+            events for the trigger should be sent. Examples: /route, route,
+            route/subroute.
+
+         --destination-run-region=DESTINATION_RUN_REGION
+            Region in which the destination Cloud Run service can be found. If
+            not specified, it is assumed that the service is in the same region
+            as the trigger.
+
+OPTIONAL FLAGS
+     Pub/Sub topic resource - The Cloud Pub/Sub topic to use for the trigger's
+     transport intermediary. This feature is currently only available for
+     triggers of event type google.cloud.pubsub.topic.v1.messagePublished. The
+     topic must be in the same project as the trigger. If not specified, a
+     transport topic will be created. This represents a Cloud resource. (NOTE)
+     Some attributes are not given arguments in this group but can be set in
+     other ways. To set the project attribute:
+      ◆ provide the argument --transport-topic on the command line with a
+        fully specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+       --transport-topic=TRANSPORT_TOPIC
+          ID of the Pub/Sub topic or fully qualified identifier for the Pub/Sub
+          topic. To set the transport-topic attribute:
+          ▸ provide the argument --transport-topic on the command line.
+
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --service-account=SERVICE_ACCOUNT
+        The IAM service account email associated with the trigger.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud eventarc triggers create
+

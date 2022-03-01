@@ -1,0 +1,118 @@
+NAME
+    gcloud beta compute instances network-interfaces update - update a Compute
+        Engine virtual machine network interface
+
+SYNOPSIS
+    gcloud beta compute instances network-interfaces update INSTANCE_NAME
+        [--aliases=ALIASES] [--ipv6-network-tier=IPV6_NETWORK_TIER]
+        [--network=NETWORK]
+        [--network-interface=NETWORK_INTERFACE; default="nic0"]
+        [--private-network-ip=PRIVATE_NETWORK_IP] [--stack-type=STACK_TYPE]
+        [--subnetwork=SUBNETWORK] [--zone=ZONE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) gcloud beta compute instances network-interfaces update updates
+    network interfaces of a Compute Engine virtual machine. For example:
+
+        $ gcloud beta compute instances network-interfaces update \
+            example-instance --zone us-central1-a --aliases r1:172.16.0.1/32
+
+    sets 172.16.0.1/32 from range r1 of the default interface's subnetwork as
+    the interface's alias IP.
+
+POSITIONAL ARGUMENTS
+     INSTANCE_NAME
+        Name of the instance to operate on. For details on valid instance
+        names, refer to the criteria documented under the field 'name' at:
+        https://cloud.google.com/compute/docs/reference/rest/v1/instances
+
+FLAGS
+     --aliases=ALIASES
+        The IP alias ranges to allocate for this interface. If there are
+        multiple IP alias ranges, they are separated by semicolons.
+
+        Can be specified together with --network and/or --subnetwork to choose
+        IP alias ranges in the new subnetwork. If unspecified, then the
+        previous IP alias ranges will be allocated in the new subnetwork. If
+        the previous IP alias ranges are not available in the new subnetwork,
+        then other available IP alias ranges of the same size will be allocated
+        in the new subnetwork.
+
+        For example:
+
+            --aliases="10.128.1.0/24;r1:/32"
+
+     --ipv6-network-tier=IPV6_NETWORK_TIER
+        Specifies the IPv6 network tier that will be used to configure the
+        instance network interface IPv6 access config. IPV6_NETWORK_TIER must
+        be (currently only one value is supported):
+
+         PREMIUM
+            High quality, Google-grade network tier.
+
+     --network=NETWORK
+        Specifies the network this network interface belongs to.
+
+     --network-interface=NETWORK_INTERFACE; default="nic0"
+        The name of the network interface to update.
+
+     --private-network-ip=PRIVATE_NETWORK_IP
+        Assign the given IP address to the interface. Can be specified only
+        together with --network and/or --subnetwork to choose the IP address in
+        the new subnetwork. If unspecified, then the previous IP address will
+        be allocated in the new subnetwork. If the previous IP address is not
+        available in the new subnetwork, then another available IP address will
+        be allocated automatically from the new subnetwork CIDR range.
+
+     --stack-type=STACK_TYPE
+        The stack type for the default network interface. Determines if IPv6 is
+        enabled on the default network interface. STACK_TYPE must be one of:
+
+         IPV4_IPV6
+            The network interface can have both IPv4 and IPv6 addresses.
+         IPV4_ONLY
+            The network interface will be assigned IPv4 addresses.
+
+     --subnetwork=SUBNETWORK
+        Specifies the subnetwork this network interface belongs to.
+
+     --zone=ZONE
+        Zone of the instance to operate on. If not specified, you might be
+        prompted to select a zone (interactive mode only). gcloud attempts to
+        identify the appropriate zone by searching for resources in your
+        currently active project. If the zone cannot be determined, gcloud
+        prompts you for a selection with all available Google Cloud Platform
+        zones.
+
+        To avoid prompting when this flag is omitted, the user can set the
+        compute/zone property:
+
+            $ gcloud config set compute/zone ZONE
+
+        A list of zones can be fetched by running:
+
+            $ gcloud compute zones list
+
+        To unset the property, run:
+
+            $ gcloud config unset compute/zone
+
+        Alternatively, the zone can be stored in the environment variable
+        CLOUDSDK_COMPUTE_ZONE.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud compute instances network-interfaces update
+
+        $ gcloud alpha compute instances network-interfaces update
+

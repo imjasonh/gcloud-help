@@ -1,0 +1,177 @@
+NAME
+    gcloud container aws node-pools create - create a node pool in an Anthos
+        cluster on AWS
+
+SYNOPSIS
+    gcloud container aws node-pools create
+        (NODE_POOL : --cluster=CLUSTER --location=LOCATION)
+        --config-encryption-kms-key-arn=CONFIG_ENCRYPTION_KMS_KEY_ARN
+        --iam-instance-profile=IAM_INSTANCE_PROFILE --node-version=NODE_VERSION
+        --subnet-id=SUBNET_ID [--async] [--instance-type=INSTANCE_TYPE]
+        [--max-pods-per-node=MAX_PODS_PER_NODE]
+        [--node-labels=NODE_LABEL,[NODE_LABEL,...]]
+        [--node-taints=NODE_TAINT,[NODE_TAINT,...]]
+        [--root-volume-iops=ROOT_VOLUME_IOPS]
+        [--root-volume-kms-key-arn=ROOT_VOLUME_KMS_KEY_ARN]
+        [--root-volume-size=ROOT_VOLUME_SIZE]
+        [--root-volume-type=ROOT_VOLUME_TYPE]
+        [--security-group-ids=[SECURITY_GROUP_ID,...]]
+        [--ssh-ec2-key-pair=SSH_EC2_KEY_PAIR] [--tags=TAG,[TAG,...]]
+        [--validate-only] [--max-nodes=MAX_NODES --min-nodes=MIN_NODES]
+        [--proxy-secret-arn=PROXY_SECRET_ARN
+          --proxy-secret-version-id=PROXY_SECRET_VERSION_ID]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Create a node pool in an Anthos cluster on AWS.
+
+EXAMPLES
+    To create a node pool named my-node-pool in a cluster named my-cluster
+    managed in location us-west1, run:
+
+        $ gcloud container aws node-pools create my-node-pool \
+            --cluster=my-cluster --location=us-west1 \
+            --iam-instance-profile=IAM_INSTANCE_PROFILE \
+            --node-version=NODE_VERSION --subnet-id=SUBNET_ID
+
+POSITIONAL ARGUMENTS
+     Node pool resource - node pool to create. The arguments in this group can
+     be used to specify the attributes of this resource. (NOTE) Some attributes
+     are not given arguments in this group but can be set in other ways. To set
+     the project attribute:
+      ◆ provide the argument node_pool on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       NODE_POOL
+          ID of the node_pool or fully qualified identifier for the node_pool.
+          To set the node_pool attribute:
+          ▸ provide the argument node_pool on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --cluster=CLUSTER
+          cluster of the node_pool. To set the cluster attribute:
+          ▸ provide the argument node_pool on the command line with a fully
+            specified name;
+          ▸ provide the argument --cluster on the command line.
+
+       --location=LOCATION
+          Google Cloud location for the node_pool. To set the location
+          attribute:
+          ▸ provide the argument node_pool on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property container_aws/location;
+          ▸ set the property aws/location (deprecated).
+
+REQUIRED FLAGS
+     --config-encryption-kms-key-arn=CONFIG_ENCRYPTION_KMS_KEY_ARN
+        Amazon Resource Name (ARN) of the AWS KMS key to encrypt the user data.
+
+     --iam-instance-profile=IAM_INSTANCE_PROFILE
+        Name of the IAM instance profile associated with the cluster.
+
+     --node-version=NODE_VERSION
+        Kubernetes version to use for the node pool.
+
+     --subnet-id=SUBNET_ID
+        Subnet ID of an existing VNET to use for the node pool.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --instance-type=INSTANCE_TYPE
+        AWS EC2 instance type.
+
+     --max-pods-per-node=MAX_PODS_PER_NODE
+        Maximum number of pods per node.
+
+     --node-labels=NODE_LABEL,[NODE_LABEL,...]
+        Labels assigned to nodes of the node pool.
+
+     --node-taints=NODE_TAINT,[NODE_TAINT,...]
+        Taints assigned to nodes of the node pool. Node taint is of format
+        key=value:effect. Effect must be one of: NoExecute, NoSchedule,
+        PreferNoSchedule.
+
+     --root-volume-iops=ROOT_VOLUME_IOPS
+        Number of I/O operations per second (IOPS) to provision for the root
+        volume.
+
+     --root-volume-kms-key-arn=ROOT_VOLUME_KMS_KEY_ARN
+        Amazon Resource Name (ARN) of the AWS KMS key to encrypt the root
+        control plane volume.
+
+     --root-volume-size=ROOT_VOLUME_SIZE
+        Size of the root volume. The value must be a whole number followed by a
+        size unit of GB for gigabyte, or TB for terabyte. If no size unit is
+        specified, GB is assumed.
+
+     --root-volume-type=ROOT_VOLUME_TYPE
+        Type of the root volume. ROOT_VOLUME_TYPE must be one of: gp2, gp3.
+
+     --security-group-ids=[SECURITY_GROUP_ID,...]
+        IDs of additional security groups to add to nodes.
+
+     --ssh-ec2-key-pair=SSH_EC2_KEY_PAIR
+        Name of the EC2 key pair to log in into control plane nodes.
+
+     --tags=TAG,[TAG,...]
+        Applies the given tags (comma separated) on the node pool. Example:
+
+            $ gcloud container aws node-pools create EXAMPLE_NODE_POOL \
+                --tags=tag1=one,tag2=two
+
+     --validate-only
+        Validate the node pool to create, but don't actually perform it.
+
+     Node pool autoscaling
+
+       --max-nodes=MAX_NODES
+          Maximum number of nodes in the node pool.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --min-nodes=MIN_NODES
+          Minimum number of nodes in the node pool.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+     Proxy config
+
+       --proxy-secret-arn=PROXY_SECRET_ARN
+          ARN of the AWS Secrets Manager secret that contains a proxy
+          configuration.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --proxy-secret-version-id=PROXY_SECRET_VERSION_ID
+          Version ID string of the AWS Secrets Manager secret that contains a
+          proxy configuration.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This variant is also available:
+
+        $ gcloud alpha container aws node-pools create
+

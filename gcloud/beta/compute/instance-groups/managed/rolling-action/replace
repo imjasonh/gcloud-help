@@ -1,0 +1,90 @@
+NAME
+    gcloud beta compute instance-groups managed rolling-action replace -
+        replaces instances in a managed instance group
+
+SYNOPSIS
+    gcloud beta compute instance-groups managed rolling-action replace NAME
+        [--max-surge=MAX_SURGE] [--max-unavailable=MAX_UNAVAILABLE]
+        [--min-ready=MIN_READY] [--replacement-method=REPLACEMENT_METHOD]
+        [--region=REGION | --zone=ZONE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Deletes the existing instance and creates a new instance from the
+    target template. The Updater creates a brand new instance with all new
+    instance properties, such as new internal and external IP addresses.
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the managed instance group to operate on.
+
+FLAGS
+     --max-surge=MAX_SURGE
+        Maximum additional number of instances that can be created during the
+        update process. This can be a fixed number (e.g. 5) or a percentage of
+        size to the managed instance group (e.g. 10%). Defaults to 0 if the
+        managed instance group has stateful configuration, or to the number of
+        zones in which it operates otherwise.
+
+     --max-unavailable=MAX_UNAVAILABLE
+        Maximum number of instances that can be unavailable during the update
+        process. This can be a fixed number (e.g. 5) or a percentage of size to
+        the managed instance group (e.g. 10%). Defaults to the number of zones
+        in which the managed instance group operates.
+
+     --min-ready=MIN_READY
+        Minimum time for which a newly created instance should be ready to be
+        considered available. For example 10s for 10 seconds. See $ gcloud
+        topic datetimes for information on duration formats.
+
+     --replacement-method=REPLACEMENT_METHOD
+        Type of replacement method. Specifies what action will be taken to
+        update instances. Defaults to recreate if the managed instance group
+        has stateful configuration, or to substitute otherwise.
+        REPLACEMENT_METHOD must be one of:
+
+         recreate
+            Recreate instances and preserve the instance names. The instance
+            IDs and creation timestamps might change.
+         substitute
+            Delete old instances and create instances with new names.
+
+     At most one of these can be specified:
+
+       --region=REGION
+          Region of the managed instance group to operate on. If not specified,
+          you might be prompted to select a region (interactive mode only).
+
+          A list of regions can be fetched by running:
+
+              $ gcloud compute regions list
+
+          Overrides the default compute/region property value for this command
+          invocation.
+
+       --zone=ZONE
+          Zone of the managed instance group to operate on. If not specified,
+          you might be prompted to select a zone (interactive mode only).
+
+          A list of zones can be fetched by running:
+
+              $ gcloud compute zones list
+
+          Overrides the default compute/zone property value for this command
+          invocation.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud compute instance-groups managed rolling-action replace
+
+        $ gcloud alpha compute instance-groups managed rolling-action replace
+

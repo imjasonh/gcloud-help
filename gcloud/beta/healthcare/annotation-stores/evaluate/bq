@@ -1,0 +1,105 @@
+NAME
+    gcloud beta healthcare annotation-stores evaluate bq - evaluate a Cloud
+        Healthcare API Annotation store and report to BigQuery
+
+SYNOPSIS
+    gcloud beta healthcare annotation-stores evaluate bq
+        (ANNOTATION_STORE : --dataset=DATASET --location=LOCATION)
+        --bq-table=BQ_TABLE --golden-store=GOLDEN_STORE [--async]
+        [--write-disposition=WRITE_DISPOSITION] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Evaluate Cloud Healthcare API Annotation store against a ground
+    truth store and report the results to BigQuery.
+
+EXAMPLES
+    To evaluate the annotation-store 'eval-annotation-store' against a ground
+    truth annotation-store
+    projects/my-project/locations/my-location/datasets/test-dataset/annotationStores/golden-annotation-store,
+    and report the metric to the BigQuery table bqtable in the BigQuery dataset
+    bqdataset, run:
+
+        $ gcloud beta healthcare annotation-stores evaluate bq \
+            eval-annotation-store \
+            --golden-store=projects/my-project/locations/my-location/\
+        datasets/test-dataset/annotationStores/golden-annotation-store \
+            --bq-table=bq://my-project.bqdataset.bqtable \
+            --dataset=test-dataset
+
+POSITIONAL ARGUMENTS
+     AnnotationStore resource - Cloud Healthcare API Annotation store to be
+     evaluated. The arguments in this group can be used to specify the
+     attributes of this resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways. To set the project
+     attribute:
+      ◆ provide the argument annotation_store on the command line with a
+        fully specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       ANNOTATION_STORE
+          ID of the annotationStore or fully qualified identifier for the
+          annotationStore. To set the annotation_store attribute:
+          ▸ provide the argument annotation_store on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --dataset=DATASET
+          Cloud Healthcare dataset. To set the dataset attribute:
+          ▸ provide the argument annotation_store on the command line with a
+            fully specified name;
+          ▸ provide the argument --dataset on the command line.
+
+       --location=LOCATION
+          Google Cloud location. To set the location attribute:
+          ▸ provide the argument annotation_store on the command line with a
+            fully specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property healthcare/location.
+
+REQUIRED FLAGS
+     --bq-table=BQ_TABLE
+        BigQuery table where evaluation results are written.
+
+     --golden-store=GOLDEN_STORE
+        Ground truth AnnotationStore to compare against.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --write-disposition=WRITE_DISPOSITION
+        Determines whether existing table in the destination dataset are
+        overwritten or appended to. WRITE_DISPOSITION must be one of:
+
+         write-append
+            Append data to the existing table.
+
+         write-empty
+            Only export data if the destination table is empty.
+
+         write-truncate
+            Erase all existing data in a table before writing the instances.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the healthcare/v1beta1 API. The full documentation for
+    this API can be found at: https://cloud.google.com/healthcare
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud alpha healthcare annotation-stores evaluate bq
+

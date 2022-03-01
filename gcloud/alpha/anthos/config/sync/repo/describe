@@ -1,0 +1,87 @@
+NAME
+    gcloud alpha anthos config sync repo describe - describe a repository that
+        is synced across clusters in Config Sync
+
+SYNOPSIS
+    gcloud alpha anthos config sync repo describe [--cluster=CLUSTER]
+        [--managed-resources=MANAGED_RESOURCES; default="failed"]
+        [--source=SOURCE] [--sync-name=SYNC_NAME]
+        [--sync-namespace=SYNC_NAMESPACE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Describe a repository that is synced across clusters in Config
+    Sync.
+
+EXAMPLES
+    To describe a repository with source as <SOURCE> where the source is from
+    the output of the list command:
+
+        $ gcloud alpha anthos config sync repo describe describe \
+          --source=<SOURCE>
+
+    To describe the repository that is synced by a RootSync or RepoSync CR in
+    the namespace <NAMESPACE> with the name <NAME>:
+
+        $ gcloud alpha anthos config sync repo describe describe \
+          --sync-namespace=<NAMESPACE> --sync-name=<NAME>
+
+    To describe the repository that is synced by a RootSync or RepoSync CR in
+    the namespace <NAMESPACE> with the name <NAME> from a specific cluster
+    <CLUSTER>:
+
+        $ gcloud alpha anthos config sync repo describe describe \
+          --sync-namespace=<NAMESPACE> --sync-name=<NAME> \
+          --cluster=<CLUSTER>
+
+    To describe a repository with source as <SOURCE> and list all the managed
+    resources from this repositry:
+
+        $ gcloud alpha anthos config sync repo describe describe \
+          --source=<SOURCE> --managed-resources=all
+
+    To describe a repository with source as <SOURCE> and only print the failed
+    managed resources from this repositry:
+
+        $ gcloud alpha anthos config sync repo describe describe \
+          --source=<SOURCE> --managed-resources=failed \
+          --format="multi(statuses:format=none,managed_resources:format='t\
+        able[box](group,kind,name,namespace,conditions)')"
+
+FLAGS
+     --cluster=CLUSTER
+        The cluster name or the membership name that a repository is synced to.
+
+     --managed-resources=MANAGED_RESOURCES; default="failed"
+        Specify the managed resource status that should beincluded in the
+        describe output.The supported values areall, current, failed,
+        inprogress, notfound, unknown.
+
+     --source=SOURCE
+        The source of the repository. It should be copied fromthe output of the
+        listing repo command.
+
+     --sync-name=SYNC_NAME
+        Name of the RootSync or RepoSync CR to sync a repository.
+
+     --sync-namespace=SYNC_NAMESPACE
+        Namespace of the RootSync or RepoSync CR to sync a repository.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+PREREQUISITES
+    Please setup Connect Gateway for the registered clusters in order to use
+    this command. The instructions can be found at
+    https://cloud.google.com/anthos/multicluster-management/gateway/setup.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

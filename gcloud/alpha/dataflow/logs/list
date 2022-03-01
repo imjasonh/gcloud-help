@@ -1,0 +1,83 @@
+NAME
+    gcloud alpha dataflow logs list - retrieve the job logs for a specific job
+
+SYNOPSIS
+    gcloud alpha dataflow logs list JOB_ID [--after=AFTER] [--before=BEFORE]
+        [--importance=IMPORTANCE; default="warning"] [--region=REGION_ID]
+        [--filter=EXPRESSION] [--limit=LIMIT] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Retrieves the job logs from a specified job using the Dataflow
+    Messages API with at least the specified importance level. Can also be used
+    to display logs between a given time period using the --before and --after
+    flags. These logs are produced by the service and are distinct from worker
+    logs. Worker logs can be found in Cloud Logging.
+
+EXAMPLES
+    Retrieve only error logs:
+
+        $ gcloud alpha dataflow logs list --importance=error
+
+    Retrieve all logs after some date:
+
+        $ gcloud alpha dataflow logs list --after="2016-08-12 00:00:00"
+
+    Retrieve logs from this year:
+
+        $ gcloud alpha dataflow logs list --after=2018-01-01
+
+    Retrieve logs more than a week old:
+
+        $ gcloud alpha dataflow logs list --before=-P1W
+
+POSITIONAL ARGUMENTS
+     JOB_ID
+        The job ID to operate on.
+
+FLAGS
+     --after=AFTER
+        Only display messages logged after the given time. See $ gcloud topic
+        datetimes for information on time formats. For example, 2018-01-01 is
+        the first day of the year, and -P2W is 2 weeks ago.
+
+     --before=BEFORE
+        Only display messages logged before the given time. See $ gcloud topic
+        datetimes for information on time formats.
+
+     --importance=IMPORTANCE; default="warning"
+        Minimum importance a message must have to be displayed. IMPORTANCE must
+        be one of: debug, detailed, warning, error.
+
+     --region=REGION_ID
+        The region ID of the job's regional endpoint. Defaults to
+        'us-central1'.
+
+LIST COMMAND FLAGS
+     --filter=EXPRESSION
+        Apply a Boolean filter EXPRESSION to each resource item to be listed.
+        If the expression evaluates True, then that item is listed. For more
+        details and examples of filter expressions, run $ gcloud topic filters.
+        This flag interacts with other flags that are applied in this order:
+        --flatten, --sort-by, --filter, --limit.
+
+     --limit=LIMIT
+        Maximum number of resources to list. The default is unlimited. This
+        flag interacts with other flags that are applied in this order:
+        --flatten, --sort-by, --filter, --limit.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. This variant is also available:
+
+        $ gcloud beta dataflow logs list
+

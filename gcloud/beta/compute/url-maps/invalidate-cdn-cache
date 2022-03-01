@@ -1,0 +1,92 @@
+NAME
+    gcloud beta compute url-maps invalidate-cdn-cache - invalidate specified
+        objects for a URL map in Cloud CDN caches
+
+SYNOPSIS
+    gcloud beta compute url-maps invalidate-cdn-cache URLMAP --path=PATH
+        [--async] [--host=HOST] [--global | --region=REGION]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) gcloud beta compute url-maps invalidate-cdn-cache requests that
+    Cloud CDN stop using cached content for resources at a particular URL path
+    or set of URL paths.
+
+    gcloud beta compute url-maps invalidate-cdn-cache may succeed even if no
+    content is cached for some or all URLs with the given path.
+
+POSITIONAL ARGUMENTS
+     URLMAP
+        Name of the URL map to operate on.
+
+REQUIRED FLAGS
+     --path=PATH
+        A path specifying which objects to invalidate. PATH must start with
+        ``/'' and the only place a ``*'' is allowed is at the end following a
+        ``/''. It will be matched against URL paths, which do not include
+        scheme, host, or any text after the first ``?'' or ``#'' (and those
+        characters are not allowed here). For example, for the URL
+        https://example.com/whatever/x.html?a=b, the path is /whatever/x.html.
+
+        If PATH ends with ``*'', the preceding string is a prefix, and all URLs
+        whose paths begin with it will be invalidated. If PATH doesn't end with
+        ``*'', then only URLs with exactly that path will be invalidated.
+
+        Examples:
+        ◆ ``'', ``*'', anything that doesn't start with ``/'': error
+        ◆ ``/'': just the root URL
+        ◆ ``/*'': everything
+        ◆ ``/x/y'': ``/x/y'' only (and not ``/x/y/'')
+        ◆ ``/x/y/'': ``/x/y/'' only (and not ``/x/y'')
+        ◆ ``/x/y/*'': ``/x/y/'' and everything under it
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --host=HOST
+        If set, this invalidation will apply only to requests to the specified
+        host.
+
+     At most one of these can be specified:
+
+       --global
+          If set, the URL map is global.
+
+       --region=REGION
+          Region of the URL map to operate on. If not specified, you might be
+          prompted to select a region (interactive mode only).
+
+          To avoid prompting when this flag is omitted, you can set the
+          compute/region property:
+
+              $ gcloud config set compute/region REGION
+
+          A list of regions can be fetched by running:
+
+              $ gcloud compute regions list
+
+          To unset the property, run:
+
+              $ gcloud config unset compute/region
+
+          Alternatively, the region can be stored in the environment variable
+          CLOUDSDK_COMPUTE_REGION.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud compute url-maps invalidate-cdn-cache
+
+        $ gcloud alpha compute url-maps invalidate-cdn-cache
+

@@ -1,0 +1,75 @@
+NAME
+    gcloud alpha pubsub subscriptions set-iam-policy - set the IAM policy for a
+        Cloud Pub/Sub Subscription
+
+SYNOPSIS
+    gcloud alpha pubsub subscriptions set-iam-policy SUBSCRIPTION POLICY_FILE
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) This command replaces the existing IAM policy for a subscription,
+    given a subscription and a file encoded in JSON or YAML that contains the
+    IAM policy.
+
+    If the given policy file specifies an "etag" value, then the replacement
+    will succeed only if the policy already in place matches that etag. (An
+    etag obtained via get-iam-policy will prevent the replacement if the policy
+    for the subscription has been subsequently updated.) A policy file that
+    does not contain an etag value will replace any existing policy for the
+    subscription.
+
+EXAMPLES
+    The following command will read an IAM policy defined in 'policy.json' and
+    set it for a subscription 'my-sub'
+
+        $ gcloud alpha pubsub subscriptions set-iam-policy my-sub policy.json
+
+    See https://cloud.google.com/iam/docs/managing-policies for details of the
+    policy file format and contents.
+
+POSITIONAL ARGUMENTS
+     Subscription resource - The subscription for which to set the IAM policy.
+     This represents a Cloud resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways. To set the project
+     attribute:
+      ◆ provide the argument subscription on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       SUBSCRIPTION
+          ID of the subscription or fully qualified identifier for the
+          subscription. To set the subscription attribute:
+          ▸ provide the argument subscription on the command line.
+
+     POLICY_FILE
+        Path to a local JSON or YAML formatted file containing a valid policy.
+
+        The output of the get-iam-policy command is a valid file, as is any
+        JSON or YAML file conforming to the structure of a Policy
+        (https://cloud.google.com/iam/reference/rest/v1/Policy).
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the pubsub/v1 API. The full documentation for this API
+    can be found at: https://cloud.google.com/pubsub/docs
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud pubsub subscriptions set-iam-policy
+
+        $ gcloud beta pubsub subscriptions set-iam-policy
+

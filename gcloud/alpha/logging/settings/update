@@ -1,0 +1,133 @@
+NAME
+    gcloud alpha logging settings update - updates the settings for the Cloud
+        Logging Logs Router
+
+SYNOPSIS
+    gcloud alpha logging settings update
+        (--folder=FOLDER_ID | --organization=ORGANIZATION_ID)
+        [--disable-default-sink] [--storage-location=STORAGE_LOCATION]
+        [--clear-kms-key | [--kms-key-name=KMS_KEY_NAME
+          : --kms-keyring=KMS_KEYRING
+          --kms-location=KMS_LOCATION --kms-project=KMS_PROJECT]]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Use this command to update the --kms-key-name, --storage-location
+    and --disable-default-sink associated with the Cloud Logging Logs Router.
+
+    The Cloud KMS key must already exist and Cloud Logging must have permission
+    to access it.
+
+    The storage location must be allowed by Org Policy.
+
+    Customer-managed encryption keys (CMEK) for the Logs Router can currently
+    only be configured at the organization-level and will apply to all projects
+    in the organization.
+
+EXAMPLES
+    To enable CMEK for the Logs Router for an organization, run:
+
+        $ gcloud alpha logging settings update \
+            --organization=[ORGANIZATION_ID]
+        --kms-key-name='projects/my-project/locations/my-location/keyRings/my-keyring/cryptoKeys/key'
+
+    To disable CMEK for the Logs Router for an organization, run:
+
+        $ gcloud alpha logging settings update \
+            --organization=[ORGANIZATION_ID] --clear-kms-key
+
+    To update storage location for the Logs Router for an organization, run:
+
+        $ gcloud alpha logging settings update \
+            --organization=[ORGANIZATION_ID]
+        --storage-location=[LOCATION_ID]
+
+    To update storage location for the Logs Router for a folder, run:
+
+        $ gcloud alpha logging settings update --folder=[FOLDER_ID] \
+            --storage-location=[LOCATION_ID]
+
+    To disable default sink for the Logs Router for an organization, run:
+
+        $ gcloud alpha logging settings update \
+            --organization=[ORGANIZATION_ID] --disable-default-sink=true
+
+    To enable default sink for the Logs Router for an organization, run:
+
+        $ gcloud alpha logging settings update \
+            --organization=[ORGANIZATION_ID] --disable-default-sink=false
+
+REQUIRED FLAGS
+     Exactly one of these must be specified:
+
+       --folder=FOLDER_ID
+          Folder to update Logs Router settings for.
+
+       --organization=ORGANIZATION_ID
+          Organization to update Logs Router settings for.
+
+OPTIONAL FLAGS
+     --disable-default-sink
+        Enable or disable Default sink for the Default bucket. Specify
+        --no-disable-default-sink to enable a disabled Default sink. Note: It
+        only applies to the newly created projects and will not affect the
+        projects created before.
+
+     --storage-location=STORAGE_LOCATION
+        Update the storage location for Default bucket and Required bucket.
+        Note: It only applies to the newly created projects and will not affect
+        the projects created before.
+
+     At most one of these can be specified:
+
+       --clear-kms-key
+          Disable CMEK for the Logs Router by clearing out Cloud KMS cryptokey
+          in the organization's CMEK settings.
+
+       Key resource - The Cloud KMS (Key Management Service) cryptokey that
+       will be used to protect the logs being processed by the Cloud Logging
+       Logs Router. The Cloud KMS CryptoKey Encrypter/Decryper role must be
+       assigned to the Cloud Logging Logs Router service account. The arguments
+       in this group can be used to specify the attributes of this resource.
+
+         --kms-key-name=KMS_KEY_NAME
+            ID of the key or fully qualified identifier for the key. To set the
+            kms-key attribute:
+            ▫ provide the argument --kms-key-name on the command line.
+
+            This flag must be specified if any of the other arguments in this
+            group are specified.
+
+         --kms-keyring=KMS_KEYRING
+            The KMS keyring of the key. To set the kms-keyring attribute:
+            ▫ provide the argument --kms-key-name on the command line with a
+              fully specified name;
+            ▫ provide the argument --kms-keyring on the command line.
+
+         --kms-location=KMS_LOCATION
+            The Cloud location for the key. To set the kms-location attribute:
+            ▫ provide the argument --kms-key-name on the command line with a
+              fully specified name;
+            ▫ provide the argument --kms-location on the command line.
+
+         --kms-project=KMS_PROJECT
+            The Cloud project for the key. To set the kms-project attribute:
+            ▫ provide the argument --kms-key-name on the command line with a
+              fully specified name;
+            ▫ provide the argument --kms-project on the command line;
+            ▫ set the property core/project.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

@@ -1,0 +1,193 @@
+NAME
+    gcloud beta pubsub subscriptions create - creates one or more Cloud Pub/Sub
+        subscriptions
+
+SYNOPSIS
+    gcloud beta pubsub subscriptions create SUBSCRIPTION [SUBSCRIPTION ...]
+        (--topic=TOPIC : --topic-project=TOPIC_PROJECT)
+        [--ack-deadline=ACK_DEADLINE] [--enable-message-ordering]
+        [--expiration-period=EXPIRATION_PERIOD] [--labels=[KEY=VALUE,...]]
+        [--message-filter=MESSAGE_FILTER]
+        [--message-retention-duration=MESSAGE_RETENTION_DURATION]
+        [--push-auth-service-account=SERVICE_ACCOUNT_EMAIL]
+        [--push-auth-token-audience=OPTIONAL_AUDIENCE_OVERRIDE]
+        [--push-endpoint=PUSH_ENDPOINT] [--retain-acked-messages]
+        [--max-delivery-attempts=MAX_DELIVERY_ATTEMPTS
+          [--dead-letter-topic=DEAD_LETTER_TOPIC
+          : --dead-letter-topic-project=DEAD_LETTER_TOPIC_PROJECT]]
+        [--max-retry-delay=MAX_RETRY_DELAY --min-retry-delay=MIN_RETRY_DELAY]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Creates one or more Cloud Pub/Sub subscriptions for a given topic.
+    The new subscription defaults to a PULL subscription unless a push endpoint
+    is specified.
+
+POSITIONAL ARGUMENTS
+     Subscription resource - One or more subscriptions to create. This
+     represents a Cloud resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways. To set the project
+     attribute:
+      ◆ provide the argument subscription on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       SUBSCRIPTION [SUBSCRIPTION ...]
+          IDs of the subscriptions or fully qualified identifiers for the
+          subscriptions. To set the subscription attribute:
+          ▸ provide the argument subscription on the command line.
+
+REQUIRED FLAGS
+     Topic resource - Name of the topic from which this subscription is
+     receiving messages. Each subscription is attached to a single topic. The
+     arguments in this group can be used to specify the attributes of this
+     resource.
+
+     This must be specified.
+
+       --topic=TOPIC
+          ID of the topic or fully qualified identifier for the topic. To set
+          the topic attribute:
+          ▸ provide the argument --topic on the command line.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --topic-project=TOPIC_PROJECT
+          Project ID of the Google Cloud project for the topic. To set the
+          project attribute:
+          ▸ provide the argument --topic on the command line with a fully
+            specified name;
+          ▸ provide the argument --topic-project on the command line;
+          ▸ provide the argument --project on the command line;
+          ▸ set the property core/project.
+
+OPTIONAL FLAGS
+     --ack-deadline=ACK_DEADLINE
+        The number of seconds the system will wait for a subscriber to
+        acknowledge receiving a message before re-attempting delivery.
+
+     --enable-message-ordering
+        Whether to receive messages with the same ordering key in order. If
+        set, messages with the same ordering key are sent to subscribers in the
+        order that Pub/Sub receives them.
+
+     --expiration-period=EXPIRATION_PERIOD
+        The subscription will expire if it is inactive for the given period.
+        Valid values are strings of the form INTEGER[UNIT], where UNIT is one
+        of "s", "m", "h", and "d" for seconds, minutes, hours, and days,
+        respectively. If the unit is omitted, seconds is assumed. This flag
+        additionally accepts the special value "never" to indicate that the
+        subscription will never expire.
+
+     --labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     --message-filter=MESSAGE_FILTER
+        Expression to filter messages. If set, Pub/Sub only delivers the
+        messages that match the filter. The expression must be a non-empty
+        string in the Pub/Sub filtering language
+        (https://cloud.google.com/pubsub/docs/filtering).
+
+     --message-retention-duration=MESSAGE_RETENTION_DURATION
+        How long to retain unacknowledged messages in the subscription's
+        backlog, from the moment a message is published. If
+        --retain-acked-messages is true, this also configures the retention of
+        acknowledged messages. The default value is 7 days, the minimum is 10
+        minutes, and the maximum is 7 days. Valid values are strings of the
+        form INTEGER[UNIT], where UNIT is one of "s", "m", "h", and "d" for
+        seconds, minutes, hours, and days, respectively. If the unit is
+        omitted, seconds is assumed.
+
+     --push-auth-service-account=SERVICE_ACCOUNT_EMAIL
+        Service account email used as the identity for the generated Open ID
+        Connect token for authenticated push.
+
+     --push-auth-token-audience=OPTIONAL_AUDIENCE_OVERRIDE
+        Audience used in the generated Open ID Connect token for authenticated
+        push. If not specified, it will be set to the push-endpoint.
+
+     --push-endpoint=PUSH_ENDPOINT
+        A URL to use as the endpoint for this subscription. This will also
+        automatically set the subscription type to PUSH.
+
+     --retain-acked-messages
+        Whether or not to retain acknowledged messages. If true, messages are
+        not expunged from the subscription's backlog until they fall out of the
+        --message-retention-duration window. Acknowledged messages are not
+        retained by default.
+
+     Dead Letter Queue Options. The Cloud Pub/Sub service account associated
+     with the enclosing subscription's parent project (i.e.,
+     service-{project_number}@gcp-sa-pubsub.iam.gserviceaccount.com) must have
+     permission to Publish() to this topic and Acknowledge() messages on this
+     subscription.
+
+       --max-delivery-attempts=MAX_DELIVERY_ATTEMPTS
+          Maximum number of delivery attempts for any message. The value must
+          be between 5 and 100. Defaults to 5. --dead-letter-topic must also be
+          specified.
+
+       Dead letter topic resource - Name of the topic to publish dead letter
+       messages to. The arguments in this group can be used to specify the
+       attributes of this resource.
+
+         --dead-letter-topic=DEAD_LETTER_TOPIC
+            ID of the dead-letter-topic or fully qualified identifier for the
+            dead-letter-topic. To set the topic attribute:
+            ▫ provide the argument --dead-letter-topic on the command line.
+
+            This flag must be specified if any of the other arguments in this
+            group are specified.
+
+         --dead-letter-topic-project=DEAD_LETTER_TOPIC_PROJECT
+            Project ID of the Google Cloud project for the dead-letter-topic.
+            To set the project attribute:
+            ▫ provide the argument --dead-letter-topic on the command line
+              with a fully specified name;
+            ▫ provide the argument --dead-letter-topic-project on the command
+              line;
+            ▫ provide the argument --project on the command line;
+            ▫ set the property core/project.
+
+     Retry Policy Options. Retry policy specifies how Cloud Pub/Sub retries
+     message delivery for this subscription.
+
+       --max-retry-delay=MAX_RETRY_DELAY
+          The maximum delay between consecutive deliveries of a given message.
+          Value should be between 0 and 600 seconds. Defaults to 10 seconds.
+          Valid values are strings of the form INTEGER[UNIT], where UNIT is one
+          of "s", "m", "h", and "d" for seconds, minutes, hours, and days,
+          respectively. If the unit is omitted, seconds is assumed.
+
+       --min-retry-delay=MIN_RETRY_DELAY
+          The minimum delay between consecutive deliveries of a given message.
+          Value should be between 0 and 600 seconds. Defaults to 10 seconds.
+          Valid values are strings of the form INTEGER[UNIT], where UNIT is one
+          of "s", "m", "h", and "d" for seconds, minutes, hours, and days,
+          respectively. If the unit is omitted, seconds is assumed.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud pubsub subscriptions create
+
+        $ gcloud alpha pubsub subscriptions create
+

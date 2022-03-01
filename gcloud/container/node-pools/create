@@ -1,0 +1,639 @@
+NAME
+    gcloud container node-pools create - create a node pool in a running
+        cluster
+
+SYNOPSIS
+    gcloud container node-pools create NAME
+        [--accelerator=[type=TYPE,[count=COUNT],...]]
+        [--boot-disk-kms-key=BOOT_DISK_KMS_KEY] [--cluster=CLUSTER]
+        [--disk-size=DISK_SIZE] [--disk-type=DISK_TYPE]
+        [--enable-autoprovisioning] [--enable-autorepair]
+        [--no-enable-autoupgrade] [--enable-gvnic] [--enable-image-streaming]
+        [--image-type=IMAGE_TYPE] [--local-ssd-count=LOCAL_SSD_COUNT]
+        [--machine-type=MACHINE_TYPE, -m MACHINE_TYPE]
+        [--max-pods-per-node=MAX_PODS_PER_NODE]
+        [--max-surge-upgrade=MAX_SURGE_UPGRADE]
+        [--max-unavailable-upgrade=MAX_UNAVAILABLE_UPGRADE]
+        [--metadata=KEY=VALUE,[KEY=VALUE,...]]
+        [--metadata-from-file=KEY=LOCAL_FILE_PATH,[...]]
+        [--min-cpu-platform=PLATFORM] [--node-group=NODE_GROUP]
+        [--node-labels=[NODE_LABEL,...]] [--node-locations=ZONE,[ZONE,...]]
+        [--node-taints=[NODE_TAINT,...]] [--node-version=NODE_VERSION]
+        [--num-nodes=NUM_NODES; default=3] [--preemptible]
+        [--sandbox=[type=TYPE]] [--shielded-integrity-monitoring]
+        [--shielded-secure-boot] [--spot]
+        [--system-config-from-file=SYSTEM_CONFIG_FROM_FILE]
+        [--tags=TAG,[TAG,...]] [--threads-per-core=THREADS_PER_CORE]
+        [--workload-metadata=WORKLOAD_METADATA]
+        [--create-pod-ipv4-range=[KEY=VALUE,...] | --pod-ipv4-range=NAME]
+        [--enable-autoscaling --max-nodes=MAX_NODES --min-nodes=MIN_NODES]
+        [--region=REGION | --zone=ZONE, -z ZONE]
+        [--reservation=RESERVATION --reservation-affinity=RESERVATION_AFFINITY]
+        [--scopes=[SCOPE,...];
+          default="gke-default" --service-account=SERVICE_ACCOUNT]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    gcloud container node-pools create facilitates the creation of a node pool
+    in a Google Kubernetes Engine cluster. A variety of options exists to
+    customize the node configuration and the number of nodes created.
+
+EXAMPLES
+    To create a new node pool "node-pool-1" with the default options in the
+    cluster "sample-cluster", run:
+
+        $ gcloud container node-pools create node-pool-1 \
+            --cluster=sample-cluster
+
+    The new node pool will show up in the cluster after all the nodes have been
+    provisioned.
+
+    To create a node pool with 5 nodes, run:
+
+        $ gcloud container node-pools create node-pool-1 \
+            --cluster=sample-cluster --num-nodes=5
+
+POSITIONAL ARGUMENTS
+     NAME
+        The name of the node pool to create.
+
+FLAGS
+     --accelerator=[type=TYPE,[count=COUNT],...]
+        Attaches accelerators (e.g. GPUs) to all nodes.
+
+         type
+            (Required) The specific type (e.g. nvidia-tesla-k80 for nVidia
+            Tesla K80) of accelerator to attach to the instances. Use gcloud
+            compute accelerator-types list to learn about all available
+            accelerator types.
+
+         count
+            (Optional) The number of accelerators to attach to the instances.
+            The default value is 1.
+
+     --boot-disk-kms-key=BOOT_DISK_KMS_KEY
+        The Customer Managed Encryption Key used to encrypt the boot disk
+        attached to each node in the node pool. This should be of the form
+        projects/[KEY_PROJECT_ID]/locations/[LOCATION]/keyRings/[RING_NAME]/cryptoKeys/[KEY_NAME].
+        For more information about protecting resources with Cloud KMS Keys
+        please see:
+        https://cloud.google.com/compute/docs/disks/customer-managed-encryption
+
+     --cluster=CLUSTER
+        The cluster to add the node pool to. Overrides the default
+        container/cluster property value for this command invocation.
+
+     --disk-size=DISK_SIZE
+        Size for node VM boot disks in GB. Defaults to 100GB.
+
+     --disk-type=DISK_TYPE
+        Type of the node VM boot disk. Defaults to pd-standard. DISK_TYPE must
+        be one of: pd-standard, pd-ssd, pd-balanced.
+
+     --enable-autoprovisioning
+        Enables Cluster Autoscaler to treat the node pool as if it was
+        autoprovisioned.
+
+        Cluster Autoscaler will be able to delete the node pool if it's
+        unneeded.
+
+     --enable-autorepair
+        Enable node autorepair feature for a node pool.
+
+            $ gcloud container node-pools create node-pool-1 \
+                --cluster=example-cluster --enable-autorepair
+
+        Node autorepair is enabled by default for node pools using COS,
+        COS_CONTAINERD, UBUNTU or UBUNTU_CONTAINERD as a base image, use
+        --no-enable-autorepair to disable.
+
+        See
+        https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair
+        for more info.
+
+     --enable-autoupgrade
+        Sets autoupgrade feature for a node pool.
+
+            $ gcloud container node-pools create node-pool-1 \
+                --cluster=example-cluster --enable-autoupgrade
+
+        See https://cloud.google.com/kubernetes-engine/docs/node-auto-upgrades
+        for more info.
+
+        Enabled by default, use --no-enable-autoupgrade to disable.
+
+     --enable-gvnic
+        Enable the use of GVNIC for this cluster. Requires re-creation of nodes
+        using either a node-pool upgrade or node-pool creation.
+
+     --enable-image-streaming
+        Specifies whether to enable image streaming on node pool.
+
+     --image-type=IMAGE_TYPE
+        The image type to use for the node pool. Defaults to server-specified.
+
+        Image Type specifies the base OS that the nodes in the node pool will
+        run on. If an image type is specified, that will be assigned to the
+        node pool and all future upgrades will use the specified image type. If
+        it is not specified the server will pick the default image type.
+
+        The default image type and the list of valid image types are available
+        using the following command.
+
+            $ gcloud container get-server-config
+
+     --local-ssd-count=LOCAL_SSD_COUNT
+        The number of local SSD disks to provision on each node, formatted and
+        mounted in the filesystem.
+
+        Local SSDs have a fixed 375 GB capacity per device. The number of disks
+        that can be attached to an instance is limited by the maximum number of
+        disks available on a machine, which differs by compute zone. See
+        https://cloud.google.com/compute/docs/disks/local-ssd for more
+        information.
+
+     --machine-type=MACHINE_TYPE, -m MACHINE_TYPE
+        The type of machine to use for nodes. Defaults to e2-medium. The list
+        of predefined machine types is available using the following command:
+
+            $ gcloud compute machine-types list
+
+        You can also specify custom machine types with the string
+        "custom-CPUS-RAM" where "CPUS" is the number of virtual CPUs and "RAM"
+        is the amount of RAM in MiB.
+
+        For example, to create a node pool using custom machines with 2 vCPUs
+        and 12 GB of RAM:
+
+            $ gcloud container node-pools create high-mem-pool \
+                --machine-type=custom-2-12288
+
+     --max-pods-per-node=MAX_PODS_PER_NODE
+        The max number of pods per node for this node pool.
+
+        This flag sets the maximum number of pods that can be run at the same
+        time on a node. This will override the value given with
+        --default-max-pods-per-node flag set at the cluster level.
+
+        Must be used in conjunction with '--enable-ip-alias'.
+
+     --max-surge-upgrade=MAX_SURGE_UPGRADE
+        Number of extra (surge) nodes to be created on each upgrade of the node
+        pool.
+
+        Specifies the number of extra (surge) nodes to be created during this
+        node pool's upgrades. For example, running the following command will
+        result in creating an extra node each time the node pool is upgraded:
+
+            $ gcloud container node-pools create node-pool-1 \
+                --cluster=example-cluster --max-surge-upgrade=1   \
+                --max-unavailable-upgrade=0
+
+        Must be used in conjunction with '--max-unavailable-upgrade'.
+
+     --max-unavailable-upgrade=MAX_UNAVAILABLE_UPGRADE
+        Number of nodes that can be unavailable at the same time on each
+        upgrade of the node pool.
+
+        Specifies the number of nodes that can be unavailable at the same time
+        during this node pool's upgrades. For example, running the following
+        command will result in having 3 nodes being upgraded in parallel (1 +
+        2), but keeping always at least 3 (5 - 2) available each time the node
+        pool is upgraded:
+
+            $ gcloud container node-pools create node-pool-1 \
+                --cluster=example-cluster --num-nodes=5   \
+                --max-surge-upgrade=1 --max-unavailable-upgrade=2
+
+        Must be used in conjunction with '--max-surge-upgrade'.
+
+     --metadata=KEY=VALUE,[KEY=VALUE,...]
+        Compute Engine metadata to be made available to the guest operating
+        system running on nodes within the node pool.
+
+        Each metadata entry is a key/value pair separated by an equals sign.
+        Metadata keys must be unique and less than 128 bytes in length. Values
+        must be less than or equal to 32,768 bytes in length. The total size of
+        all keys and values must be less than 512 KB. Multiple arguments can be
+        passed to this flag. For example:
+
+        --metadata key-1=value-1,key-2=value-2,key-3=value-3
+
+        Additionally, the following keys are reserved for use by Kubernetes
+        Engine:
+
+        ◆ cluster-location
+        ◆ cluster-name
+        ◆ cluster-uid
+        ◆ configure-sh
+        ◆ enable-os-login
+        ◆ gci-update-strategy
+        ◆ gci-ensure-gke-docker
+        ◆ instance-template
+        ◆ kube-env
+        ◆ startup-script
+        ◆ user-data
+
+        Google Kubernetes Engine sets the following keys by default:
+
+        ◆ serial-port-logging-enable
+
+        See also Compute Engine's documentation
+        (https://cloud.google.com/compute/docs/storing-retrieving-metadata) on
+        storing and retrieving instance metadata.
+
+     --metadata-from-file=KEY=LOCAL_FILE_PATH,[...]
+        Same as --metadata except that the value for the entry will be read
+        from a local file.
+
+     --min-cpu-platform=PLATFORM
+        When specified, the nodes for the new node pool will be scheduled on
+        host with specified CPU architecture or a newer one.
+
+        Examples:
+
+            $ gcloud container node-pools create node-pool-1 \
+                --cluster=example-cluster --min-cpu-platform=PLATFORM
+
+        To list available CPU platforms in given zone, run:
+
+            $ gcloud beta compute zones describe ZONE \
+                --format="value(availableCpuPlatforms)"
+
+        CPU platform selection is available only in selected zones.
+
+     --node-group=NODE_GROUP
+        Assign instances of this pool to run on the specified Google Compute
+        Engine node group. This is useful for running workloads on sole tenant
+        nodes.
+
+        To see available sole tenant node-groups, run:
+
+            $ gcloud compute sole-tenancy node-groups list
+
+        To create a sole tenant node group, run:
+
+            $ gcloud compute sole-tenancy node-groups create [GROUP_NAME]     \
+                --zone [ZONE] --node-template [TEMPLATE_NAME] \
+                --target-size [TARGET_SIZE]
+
+        See https://cloud.google.com/compute/docs/nodes for more information on
+        sole tenancy and node groups.
+
+     --node-labels=[NODE_LABEL,...]
+        Applies the given Kubernetes labels on all nodes in the new node pool.
+
+        Examples:
+
+            $ gcloud container node-pools create node-pool-1 \
+                --cluster=example-cluster \
+                --node-labels=label1=value1,label2=value2
+
+        New nodes, including ones created by resize or recreate, will have
+        these labels on the Kubernetes API node object and can be used in
+        nodeSelectors. See http://kubernetes.io/docs/user-guide/node-selection/
+        for examples.
+
+        Note that Kubernetes labels, intended to associate cluster components
+        and resources with one another and manage resource lifecycles, are
+        different from Google Kubernetes Engine labels that are used for the
+        purpose of tracking billing and usage information.
+
+     --node-locations=ZONE,[ZONE,...]
+        The set of zones in which the node pool's nodes should be located.
+
+        Multiple locations can be specified, separated by commas. For example:
+
+            $ gcloud container node-pools create node-pool-1 \
+                --node-locations=us-central1-a,us-central1-b
+
+     --node-taints=[NODE_TAINT,...]
+        Applies the given kubernetes taints on all nodes in the new node pool,
+        which can be used with tolerations for pod scheduling.
+
+        Examples:
+
+            $ gcloud container node-pools create node-pool-1 \
+                --cluster=example-cluster \
+                --node-taints=key1=val1:NoSchedule,key2=val2:PreferNoSchedule
+
+        To read more about node-taints, see
+        https://cloud.google.com/kubernetes-engine/docs/node-taints.
+
+     --node-version=NODE_VERSION
+        The Kubernetes version to use for nodes. Defaults to server-specified.
+
+        The default Kubernetes version is available using the following
+        command.
+
+            $ gcloud container get-server-config
+
+     --num-nodes=NUM_NODES; default=3
+        The number of nodes in the node pool in each of the cluster's zones.
+
+     --preemptible
+        Create nodes using preemptible VM instances in the new node pool.
+
+            $ gcloud container node-pools create node-pool-1 \
+                --cluster=example-cluster --preemptible
+
+        New nodes, including ones created by resize or recreate, will use
+        preemptible VM instances. See
+        https://cloud.google.com/kubernetes-engine/docs/preemptible-vm for more
+        information on how to use Preemptible VMs with Kubernetes Engine.
+
+     --sandbox=[type=TYPE]
+        Enables the requested sandbox on all nodes in the node pool.
+
+        Examples:
+
+            $ gcloud container node-pools create node-pool-1 \
+                --cluster=example-cluster --sandbox="type=gvisor"
+
+        The only supported type is 'gvisor'.
+
+     --shielded-integrity-monitoring
+        Enables monitoring and attestation of the boot integrity of the
+        instance. The attestation is performed against the integrity policy
+        baseline. This baseline is initially derived from the implicitly
+        trusted boot image when the instance is created.
+
+     --shielded-secure-boot
+        The instance will boot with secure boot enabled.
+
+     --spot
+        Create nodes using spot VM instances in the new node pool.
+
+            $ gcloud container node-pools create node-pool-1 \
+                --cluster=example-cluster --spot
+
+        New nodes, including ones created by resize or recreate, will use spot
+        VM instances.
+
+     --system-config-from-file=SYSTEM_CONFIG_FROM_FILE
+        Path of the YAML/JSON file that contains the node configuration,
+        including Linux kernel parameters (sysctls) and kubelet configs.
+
+        Examples:
+
+            kubeletConfig:
+              cpuManagerPolicy: static
+            linuxConfig:
+              sysctl:
+                net.core.somaxconn: '2048'
+                net.ipv4.tcp_rmem: '4096 87380 6291456'
+
+        List of supported kubelet configs in 'kubeletConfig'.
+
+          KEY                VALUE
+          cpuManagerPolicy   either 'static' or 'none'
+          cpuCFSQuota        true or false (enabled by default)
+          cpuCFSQuotaPeriod  interval (e.g., '100ms')
+
+        List of supported sysctls in 'linuxConfig'.
+
+          KEY                                         VALUE
+          net.core.netdev_max_backlog                 Any positive integer, less
+                                                      than 2147483647
+          net.core.rmem_max                           Any positive integer, less
+                                                      than 2147483647
+          net.core.wmem_default                       Any positive integer, less
+                                                      than 2147483647
+          net.core.wmem_max                           Any positive integer, less
+                                                      than 2147483647
+          net.core.optmem_max                         Any positive integer, less
+                                                      than 2147483647
+          net.core.somaxconn                          Must be [128, 2147483647]
+          net.ipv4.tcp_rmem                           Any positive integer tuple
+          net.ipv4.tcp_wmem                           Any positive integer tuple
+          net.ipv4.tcp_tw_reuse                       Must be {0, 1}
+
+        Note, updating the system configuration of an existing node pool
+        requires recreation of the nodes which which might cause a disruption.
+
+     --tags=TAG,[TAG,...]
+        Applies the given Compute Engine tags (comma separated) on all nodes in
+        the new node-pool. Example:
+
+            $ gcloud container node-pools create node-pool-1 \
+                --cluster=example-cluster --tags=tag1,tag2
+
+        New nodes, including ones created by resize or recreate, will have
+        these tags on the Compute Engine API instance object and can be used in
+        firewall rules. See
+        https://cloud.google.com/sdk/gcloud/reference/compute/firewall-rules/create
+        for examples.
+
+     --threads-per-core=THREADS_PER_CORE
+        The number of visible threads per physical core for each node. To
+        disable simultaneous multithreading (SMT) set this to 1.
+
+     --workload-metadata=WORKLOAD_METADATA
+        Type of metadata server available to pods running in the node pool.
+        WORKLOAD_METADATA must be one of:
+
+         GCE_METADATA
+            Pods running in this node pool have access to the node's underlying
+            Compute Engine Metadata Server.
+         GKE_METADATA
+            Run the Kubernetes Engine Metadata Server on this node. The
+            Kubernetes Engine Metadata Server exposes a metadata API to
+            workloads that is compatible with the V1 Compute Metadata APIs
+            exposed by the Compute Engine and App Engine Metadata Servers. This
+            feature can only be enabled if Workload Identity is enabled at the
+            cluster level.
+
+     At most one of these can be specified:
+
+       --create-pod-ipv4-range=[KEY=VALUE,...]
+          Create a new pod range for the node pool. The name and range of the
+          pod range can be customized via optional name and range keys.
+
+          name specifies the name of the secondary range to be created.
+
+          range specifies the IP range for the new secondary range. This can
+          either be a netmask size (e.g. "/20") or a CIDR range (e.g.
+          "10.0.0.0/20"). If a netmask size is specified, the IP is
+          automatically taken from the free space in the cluster's network.
+
+          Must be used in VPC native clusters. Can not be used in conjunction
+          with the --pod-ipv4-range option.
+
+          Examples:
+
+          Create a new pod range with a default name and size.
+
+              $ gcloud container node-pools create --create-pod-ipv4-range ""
+
+          Create a new pod range named my-range with netmask of size 21.
+
+              $ gcloud container node-pools create \
+                  --create-pod-ipv4-range name=my-range,range=/21
+
+          Create a new pod range with a default name with the primary range of
+          10.100.0.0/16.
+
+              $ gcloud container node-pools create \
+                  --create-pod-ipv4-range range=10.100.0.0/16
+
+          Create a new pod range with the name my-range with a default range.
+
+              $ gcloud container node-pools create \
+                  --create-pod-ipv4-range name=my-range
+
+          Must be used in VPC native clusters. Can not be used in conjunction
+          with the --pod-ipv4-range option.
+
+       --pod-ipv4-range=NAME
+          Set the pod range to be used as the source for pod IPs for the pods
+          in this node pool. NAME must be the name of an existing subnetwork
+          secondary range in the subnetwork for this cluster.
+
+          Must be used in VPC native clusters. Cannot be used with
+          --create-ipv4-pod-range.
+
+          Examples:
+
+          Specify a pod range called other-range
+
+              $ gcloud container node-pools create --pod-ipv4-range other-range
+
+     Cluster autoscaling
+
+       --enable-autoscaling
+          Enables autoscaling for a node pool.
+
+          Enables autoscaling in the node pool specified by --node-pool or the
+          default node pool if --node-pool is not provided.
+
+       --max-nodes=MAX_NODES
+          Maximum number of nodes per zone in the node pool.
+
+          Maximum number of nodes per zone to which the node pool specified by
+          --node-pool (or default node pool if unspecified) can scale. Ignored
+          unless --enable-autoscaling is also specified.
+
+       --min-nodes=MIN_NODES
+          Minimum number of nodes per zone in the node pool.
+
+          Minimum number of nodes per zone to which the node pool specified by
+          --node-pool (or default node pool if unspecified) can scale. Ignored
+          unless --enable-autoscaling is also specified.
+
+     At most one of these can be specified:
+
+       --region=REGION
+          Compute region (e.g. us-central1) for the cluster.
+
+       --zone=ZONE, -z ZONE
+          Compute zone (e.g. us-central1-a) for the cluster. Overrides the
+          default compute/zone property value for this command invocation.
+
+     Specifies the reservation for the node pool.
+
+       --reservation=RESERVATION
+          The name of the reservation, required when
+          --reservation-affinity=specific.
+
+       --reservation-affinity=RESERVATION_AFFINITY
+          The type of the reservation for the node pool. RESERVATION_AFFINITY
+          must be one of: any, none, specific.
+
+     Options to specify the node identity.
+
+       Scopes options.
+
+         --scopes=[SCOPE,...]; default="gke-default"
+            Specifies scopes for the node instances.
+
+            Examples:
+
+                $ gcloud container node-pools create node-pool-1 \
+                    --cluster=example-cluster \
+                    --scopes=https://www.googleapis.com/auth/devstorage.read_only
+
+                $ gcloud container node-pools create node-pool-1 \
+                    --cluster=example-cluster \
+                    --scopes=bigquery,storage-rw,compute-ro
+
+            Multiple scopes can be specified, separated by commas. Various
+            scopes are automatically added based on feature usage. Such scopes
+            are not added if an equivalent scope already exists.
+
+            ▫ monitoring-write: always added to ensure metrics can be written
+            ▫ logging-write: added if Cloud Logging is enabled
+              (--enable-cloud-logging/--logging)
+            ▫ monitoring: added if Cloud Monitoring is enabled
+              (--enable-cloud-monitoring/--monitoring)
+            ▫ gke-default: added for Autopilot clusters that use the default
+              service account
+            ▫ cloud-platform: added for Autopilot clusters that use any other
+              service account
+
+            SCOPE can be either the full URI of the scope or an alias. Default
+            scopes are assigned to all instances. Available aliases are:
+
+              Alias                  URI
+              bigquery               https://www.googleapis.com/auth/bigquery
+              cloud-platform         https://www.googleapis.com/auth/cloud-platform
+              cloud-source-repos     https://www.googleapis.com/auth/source.full_control
+              cloud-source-repos-ro  https://www.googleapis.com/auth/source.read_only
+              compute-ro             https://www.googleapis.com/auth/compute.readonly
+              compute-rw             https://www.googleapis.com/auth/compute
+              datastore              https://www.googleapis.com/auth/datastore
+              default                https://www.googleapis.com/auth/devstorage.read_only
+                                     https://www.googleapis.com/auth/logging.write
+                                     https://www.googleapis.com/auth/monitoring.write
+                                     https://www.googleapis.com/auth/pubsub
+                                     https://www.googleapis.com/auth/service.management.readonly
+                                     https://www.googleapis.com/auth/servicecontrol
+                                     https://www.googleapis.com/auth/trace.append
+              gke-default            https://www.googleapis.com/auth/devstorage.read_only
+                                     https://www.googleapis.com/auth/logging.write
+                                     https://www.googleapis.com/auth/monitoring
+                                     https://www.googleapis.com/auth/service.management.readonly
+                                     https://www.googleapis.com/auth/servicecontrol
+                                     https://www.googleapis.com/auth/trace.append
+              logging-write          https://www.googleapis.com/auth/logging.write
+              monitoring             https://www.googleapis.com/auth/monitoring
+              monitoring-read        https://www.googleapis.com/auth/monitoring.read
+              monitoring-write       https://www.googleapis.com/auth/monitoring.write
+              pubsub                 https://www.googleapis.com/auth/pubsub
+              service-control        https://www.googleapis.com/auth/servicecontrol
+              service-management     https://www.googleapis.com/auth/service.management.readonly
+              sql (deprecated)       https://www.googleapis.com/auth/sqlservice
+              sql-admin              https://www.googleapis.com/auth/sqlservice.admin
+              storage-full           https://www.googleapis.com/auth/devstorage.full_control
+              storage-ro             https://www.googleapis.com/auth/devstorage.read_only
+              storage-rw             https://www.googleapis.com/auth/devstorage.read_write
+              taskqueue              https://www.googleapis.com/auth/taskqueue
+              trace                  https://www.googleapis.com/auth/trace.append
+              userinfo-email         https://www.googleapis.com/auth/userinfo.email
+
+            DEPRECATION WARNING: https://www.googleapis.com/auth/sqlservice
+            account scope and sql alias do not provide SQL instance management
+            capabilities and have been deprecated. Please, use
+            https://www.googleapis.com/auth/sqlservice.admin or sql-admin to
+            manage your Google SQL Service instances.
+
+       --service-account=SERVICE_ACCOUNT
+          The Google Cloud Platform Service Account to be used by the node VMs.
+          If a service account is specified, the cloud-platform and
+          userinfo.email scopes are used. If no Service Account is specified,
+          the project default service account is used.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha container node-pools create
+
+        $ gcloud beta container node-pools create
+

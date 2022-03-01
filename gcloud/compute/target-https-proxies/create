@@ -1,0 +1,153 @@
+NAME
+    gcloud compute target-https-proxies create - create a target HTTPS proxy
+
+SYNOPSIS
+    gcloud compute target-https-proxies create NAME
+        --ssl-certificates=SSL_CERTIFICATE,[...] --url-map=URL_MAP
+        [--description=DESCRIPTION]
+        [--quic-override=QUIC_OVERRIDE; default="NONE"]
+        [--ssl-policy=SSL_POLICY] [--global | --region=REGION]
+        [--global-ssl-certificates
+          | --ssl-certificates-region=SSL_CERTIFICATES_REGION]
+        [--global-url-map | --url-map-region=URL_MAP_REGION]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    gcloud compute target-https-proxies create is used to create target HTTPS
+    proxies. A target HTTPS proxy is referenced by one or more forwarding rules
+    which specify the network traffic that the proxy is responsible for
+    routing. The target HTTPS proxy points to a URL map that defines the rules
+    for routing the requests. The URL map's job is to map URLs to backend
+    services which handle the actual requests. The target HTTPS proxy also
+    points to at most 15 SSL certificates used for server-side authentication.
+    The target HTTPS proxy can be associated with at most one SSL policy.
+
+EXAMPLES
+    If there is an already-created URL map with the name URL_MAP and a SSL
+    certificate named SSL_CERTIFICATE, create a global target HTTPS proxy
+    pointing to this map by running:
+
+        $ gcloud compute target-https-proxies create PROXY_NAME \
+            --url-map=URL_MAP --ssl-certificates=SSL_CERTIFIFCATE
+
+    Create a regional target HTTPS proxy by running:
+
+        $ gcloud compute target-https-proxies create PROXY_NAME \
+            --url-map=URL_MAP --ssl-certificates=SSL_CERTIFIFCATE \
+            --region=REGION_NAME
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the target HTTPS proxy to create.
+
+REQUIRED FLAGS
+     --ssl-certificates=SSL_CERTIFICATE,[...]
+        References to at most 15 SSL certificate resources that are used for
+        server-side authentication. The first SSL certificate in this list is
+        considered the primary SSL certificate associated with the load
+        balancer. The SSL certificates must exist and cannot be deleted while
+        referenced by a target HTTPS proxy.
+
+     --url-map=URL_MAP
+        A reference to a URL map resource. A URL map defines the mapping of
+        URLs to backend services. Before you can refer to a URL map, you must
+        create the URL map. To delete a URL map that a target proxy is
+        referring to, you must first delete the target HTTPS proxy.
+
+OPTIONAL FLAGS
+     --description=DESCRIPTION
+        An optional, textual description for the target HTTPS proxy.
+
+     --quic-override=QUIC_OVERRIDE; default="NONE"
+        Controls whether load balancer may negotiate QUIC with clients. QUIC is
+        a new transport which reduces latency compared to that of TCP. See
+        https://www.chromium.org/quic for more details. QUIC_OVERRIDE must be
+        one of:
+
+         DISABLE
+            Disallows load balancer to negotiate QUIC with clients.
+         ENABLE
+            Allows load balancer to negotiate QUIC with clients.
+         NONE
+            Allows Google to control when QUIC is rolled out.
+
+     --ssl-policy=SSL_POLICY
+        A reference to an SSL policy resource that defines the server-side
+        support for SSL features and affects the connections between clients
+        and the HTTPS proxy load balancer. The SSL policy must exist and cannot
+        be deleted while referenced by a target HTTPS proxy.
+
+     At most one of these can be specified:
+
+       --global
+          If set, the target HTTPS proxy is global.
+
+       --region=REGION
+          Region of the target HTTPS proxy to create. If not specified, you
+          might be prompted to select a region (interactive mode only).
+
+          To avoid prompting when this flag is omitted, you can set the
+          compute/region property:
+
+              $ gcloud config set compute/region REGION
+
+          A list of regions can be fetched by running:
+
+              $ gcloud compute regions list
+
+          To unset the property, run:
+
+              $ gcloud config unset compute/region
+
+          Alternatively, the region can be stored in the environment variable
+          CLOUDSDK_COMPUTE_REGION.
+
+     At most one of these can be specified:
+
+       --global-ssl-certificates
+          If set, the ssl certificates are global.
+
+       --ssl-certificates-region=SSL_CERTIFICATES_REGION
+          Region of the ssl certificates to operate on. If not specified, you
+          might be prompted to select a region (interactive mode only).
+
+          To avoid prompting when this flag is omitted, you can set the
+          compute/region property:
+
+              $ gcloud config set compute/region REGION
+
+          A list of regions can be fetched by running:
+
+              $ gcloud compute regions list
+
+          To unset the property, run:
+
+              $ gcloud config unset compute/region
+
+          Alternatively, the region can be stored in the environment variable
+          CLOUDSDK_COMPUTE_REGION.
+
+     At most one of these can be specified:
+
+       --global-url-map
+          If set, the URL map is global.
+
+       --url-map-region=URL_MAP_REGION
+          Region of the URL map to operate on. Overrides the default
+          compute/region property value for this command invocation.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha compute target-https-proxies create
+
+        $ gcloud beta compute target-https-proxies create
+

@@ -1,0 +1,84 @@
+NAME
+    gcloud alpha asset query - query the CloudAssets
+
+SYNOPSIS
+    gcloud alpha asset query
+        (--folder=FOLDER_ID | --organization=ORGANIZATION_ID
+          | --project=PROJECT_ID) [--job-reference=JOB_REFERENCE]
+        [--page-size=PAGE_SIZE] [--page-token=PAGE_TOKEN]
+        [--statement=STATEMENT] [--timeout=TIMEOUT] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Issue an analytical query on Cloud assets using BigQuery Standard
+    SQL compatible statement.
+
+EXAMPLES
+    To count the number of compute instance, run:
+
+        $ gcloud alpha asset query --project='test-project' \
+            --statement='SELECT * FROM compute_googleapis_com_Instance'
+
+    To see the query result of previous job, pass the job-reference from
+    previous response:
+
+        $ gcloud alpha asset query --project='test-project' \
+            --job-reference=<job-reference-from>
+
+REQUIRED FLAGS
+     Exactly one of these must be specified:
+
+       --folder=FOLDER_ID
+          The ID of the folder which is the root asset.
+
+       --organization=ORGANIZATION_ID
+          The ID of the organization which is the root asset.
+
+       --project=PROJECT_ID
+          The project which is the root asset.
+
+          The Google Cloud project ID to use for this invocation. If omitted,
+          then the current project is assumed; the current project can be
+          listed using gcloud config list --format='text(core.project)' and can
+          be set using gcloud config set project PROJECTID.
+
+          --project and its fallback core/project property play two roles in
+          the invocation. It specifies the project of the resource to operate
+          on. It also specifies the project for API enablement check, quota,
+          and billing. To specify a different project for quota and billing,
+          use --billing-project or billing/quota_project property.
+
+OPTIONAL FLAGS
+     --job-reference=JOB_REFERENCE
+        Reference to the query job, which is from the previous call.
+
+     --page-size=PAGE_SIZE
+        The maximum number of rows to return in the results. Other than that,
+        one page is also limited to 10 MB.
+
+     --page-token=PAGE_TOKEN
+        A page token received from previous call.
+
+     --statement=STATEMENT
+        A BigQuery Standard SQL compatible statement. If the query
+        executionfinishes within timeout and there is no pagination, the full
+        queryresults will be returned. Otherwise, pass job_reference from
+        previous call as --job-referrence to obtain the full results.
+
+     --timeout=TIMEOUT
+        Maximum amount of time that the client is willing to wait for the query
+        to complete.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

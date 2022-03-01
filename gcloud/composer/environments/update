@@ -1,0 +1,312 @@
+NAME
+    gcloud composer environments update - update properties of a Cloud Composer
+        environment
+
+SYNOPSIS
+    gcloud composer environments update (ENVIRONMENT : --location=LOCATION)
+        (--cloud-sql-machine-type=CLOUD_SQL_MACHINE_TYPE
+          | --environment-size=ENVIRONMENT_SIZE | --node-count=NODE_COUNT
+          | --web-server-machine-type=WEB_SERVER_MACHINE_TYPE
+          | --max-workers=MAX_WORKERS --min-workers=MIN_WORKERS
+          --scheduler-count=SCHEDULER_COUNT --scheduler-cpu=SCHEDULER_CPU
+          --scheduler-memory=SCHEDULER_MEMORY
+          --scheduler-storage=SCHEDULER_STORAGE --web-server-cpu=WEB_SERVER_CPU
+          --web-server-memory=WEB_SERVER_MEMORY
+          --web-server-storage=WEB_SERVER_STORAGE --worker-cpu=WORKER_CPU
+          --worker-memory=WORKER_MEMORY --worker-storage=WORKER_STORAGE
+          | --update-airflow-configs=[KEY=VALUE,...] --clear-airflow-configs
+          | --remove-airflow-configs=[KEY,...]
+          | --update-env-variables=[NAME=VALUE,...] --clear-env-variables
+          | --remove-env-variables=[NAME,...]
+          | --update-labels=[KEY=VALUE,...] --clear-labels
+          | --remove-labels=[KEY,...]
+          | --update-pypi-packages-from-file=UPDATE_PYPI_PACKAGES_FROM_FILE
+          | --update-pypi-package=PACKAGE[EXTRAS_LIST]VERSION_SPECIFIER
+          --clear-pypi-packages | --remove-pypi-packages=[PACKAGE,...]
+          | --update-web-server-allow-ip=[description=DESCRIPTION],
+          [ip_range=IP_RANGE] | --web-server-allow-all | --web-server-deny-all)
+        [--async] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Update properties of a Cloud Composer environment.
+
+EXAMPLES
+    To update the Cloud Composer environment named env-1 to have 8 Airflow
+    workers, and not have the production label, run:
+
+        $ gcloud composer environments update env-1 --node-count=8 \
+            --remove-labels=production
+
+POSITIONAL ARGUMENTS
+     Environment resource - The environment to update. The arguments in this
+     group can be used to specify the attributes of this resource. (NOTE) Some
+     attributes are not given arguments in this group but can be set in other
+     ways. To set the project attribute:
+      ◆ provide the argument environment on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       ENVIRONMENT
+          ID of the environment or fully qualified identifier for the
+          environment. To set the environment attribute:
+          ▸ provide the argument environment on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --location=LOCATION
+          Compute Engine region in which to create the environment. To set the
+          location attribute:
+          ▸ provide the argument environment on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property composer/location.
+
+REQUIRED FLAGS
+     The update type.
+
+     Exactly one of these must be specified:
+
+       --cloud-sql-machine-type=CLOUD_SQL_MACHINE_TYPE
+          Cloud SQL machine type used by the Airflow database.
+
+       --environment-size=ENVIRONMENT_SIZE
+          Size of the environment. Unspecified means that the default option
+          will be chosen. ENVIRONMENT_SIZE must be one of: large, medium,
+          small, unspecified.
+
+       --node-count=NODE_COUNT
+          The new number of nodes running the environment. Must be >= 3.
+
+       --web-server-machine-type=WEB_SERVER_MACHINE_TYPE
+          machine type used by the Airflow web server. The list of available
+          machine types is available here:
+          https://cloud.google.com/composer/pricing.
+
+       Group of arguments for setting workloads configuration in Composer 2.X
+       or greater (--scheduler-count flag is available for Composer 1.X as
+       well).
+
+         --max-workers=MAX_WORKERS
+            Maximum number of workers in the Environment.
+
+         --min-workers=MIN_WORKERS
+            Minimum number of workers in the Environment.
+
+         --scheduler-count=SCHEDULER_COUNT
+            Number of schedulers, supported in the Environments with Airflow
+            2.0.1 and later.
+
+         --scheduler-cpu=SCHEDULER_CPU
+            CPU allocated to Airflow scheduler.
+
+         --scheduler-memory=SCHEDULER_MEMORY
+            Memory allocated to Airflow scheduler, ex. 600MB, 3GB, 2. If units
+            are not provided, defaults to GB.
+
+         --scheduler-storage=SCHEDULER_STORAGE
+            Storage allocated to Airflow scheduler, ex. 600MB, 3GB, 2. If units
+            are not provided, defaults to GB.
+
+         --web-server-cpu=WEB_SERVER_CPU
+            CPU allocated to each Airflow web server
+
+         --web-server-memory=WEB_SERVER_MEMORY
+            Memory allocated to Airflow web server, ex. 600MB, 3GB, 2. If units
+            are not provided, defaults to GB.
+
+         --web-server-storage=WEB_SERVER_STORAGE
+            Storage allocated to Airflow web server, ex. 600MB, 3GB, 2. If
+            units are not provided, defaults to GB.
+
+         --worker-cpu=WORKER_CPU
+            CPU allocated to each Airflow worker
+
+         --worker-memory=WORKER_MEMORY
+            Memory allocated to Airflow worker, ex. 600MB, 3GB, 2. If units are
+            not provided, defaults to GB.
+
+         --worker-storage=WORKER_STORAGE
+            Storage allocated to Airflow worker, ex. 600MB, 3GB, 2. If units
+            are not provided, defaults to GB.
+
+       Group of arguments for modifying the Airflow configuration.
+
+         --update-airflow-configs=[KEY=VALUE,...]
+            A list of Airflow config override KEY=VALUE pairs to set. If a
+            config override exists, its value is updated; otherwise, a new
+            config override is created.
+
+            KEYs should specify the configuration section and property name,
+            separated by a hyphen, for example core-print_stats_interval. The
+            section may not contain a closing square brace or period. The
+            property name must be non-empty and may not contain an equals sign,
+            semicolon, or period. By convention, property names are spelled
+            with snake_case. VALUEs may contain any character.
+
+         Arguments available for item removal.
+
+         At most one of these can be specified:
+
+           --clear-airflow-configs
+              Removes all Airflow config overrides from the environment.
+
+           --remove-airflow-configs=[KEY,...]
+              A list of Airflow config override keys to remove.
+
+       Group of arguments for modifying environment variables.
+
+         --update-env-variables=[NAME=VALUE,...]
+            A list of environment variable NAME=VALUE pairs to set and provide
+            to the Airflow scheduler, worker, and webserver processes. If an
+            environment variable exists, its value is updated; otherwise, a new
+            environment variable is created.
+
+            NAMEs are the environment variable names and may contain upper and
+            lowercase letters, digits, and underscores; they must not begin
+            with a digit.
+
+            User-specified environment variables should not be used to set
+            Airflow configuration properties. Instead use the
+            --update-airflow-configs flag.
+
+         Arguments available for item removal.
+
+         At most one of these can be specified:
+
+           --clear-env-variables
+              Removes all environment variables from the environment.
+
+              Environment variables that have system-provided defaults cannot
+              be unset with the --remove-env-variables or --clear-env-variables
+              flags; only the user-supplied overrides will be removed.
+
+           --remove-env-variables=[NAME,...]
+              A list of environment variables to remove.
+
+              Environment variables that have system-provided defaults cannot
+              be unset with the --remove-env-variables or --clear-env-variables
+              flags; only the user-supplied overrides will be removed.
+
+       Group of arguments for modifying environment labels.
+
+         --update-labels=[KEY=VALUE,...]
+            List of label KEY=VALUE pairs to update. If a label exists, its
+            value is modified. Otherwise, a new label is created.
+
+            Keys must start with a lowercase character and contain only hyphens
+            (-), underscores (_), lowercase characters, and numbers. Values
+            must contain only hyphens (-), underscores (_), lowercase
+            characters, and numbers.
+
+         At most one of these can be specified:
+
+           --clear-labels
+              Remove all labels. If --update-labels is also specified then
+              --clear-labels is applied first.
+
+              For example, to remove all labels:
+
+                  $ gcloud composer environments update --clear-labels
+
+              To remove all existing labels and create two new labels, foo and
+              baz:
+
+                  $ gcloud composer environments update --clear-labels \
+                    --update-labels foo=bar,baz=qux
+
+           --remove-labels=[KEY,...]
+              List of label keys to remove. If a label does not exist it is
+              silently ignored. If --update-labels is also specified then
+              --update-labels is applied first.
+
+       Group of arguments for modifying the PyPI package configuration.
+
+       At most one of these can be specified:
+
+         --update-pypi-packages-from-file=UPDATE_PYPI_PACKAGES_FROM_FILE
+            The path to a file containing a list of PyPI packages to install in
+            the environment. Each line in the file should contain a package
+            specification in the format of the update-pypi-package argument
+            defined above. The path can be a local file path or a Google Cloud
+            Storage file path (Cloud Storage file path starts with 'gs://').
+
+         --update-pypi-package=PACKAGE[EXTRAS_LIST]VERSION_SPECIFIER
+            A PyPI package to add to the environment. If a package exists, its
+            value is updated; otherwise, a new package is installed.
+
+            The value takes the form of: PACKAGE[EXTRAS_LIST]VERSION_SPECIFIER,
+            as one would specify in a pip requirements file.
+
+            PACKAGE is specified as a package name, such as numpy. EXTRAS_LIST
+            is a comma-delimited list of PEP 508 distribution extras that may
+            be empty, in which case the enclosing square brackets may be
+            omitted. VERSION_SPECIFIER is an optional PEP 440 version
+            specifier. If both EXTRAS_LIST and VERSION_SPECIFIER are omitted,
+            the = and everything to the right may be left empty.
+
+            This is a repeated argument that can be specified multiple times to
+            update multiple packages. If PACKAGE appears more than once, the
+            last value will be used.
+
+         Arguments available for item removal.
+
+         At most one of these can be specified:
+
+           --clear-pypi-packages
+              Removes all PyPI packages from the environment.
+
+              PyPI packages that are required by the environment's core
+              software cannot be uninstalled with the --remove-pypi-packages or
+              --clear-pypi-packages flags.
+
+           --remove-pypi-packages=[PACKAGE,...]
+              A list of PyPI package names to remove.
+
+              PyPI packages that are required by the environment's core
+              software cannot be uninstalled with the --remove-pypi-packages or
+              --clear-pypi-packages flags.
+
+       At most one of these can be specified:
+
+         --update-web-server-allow-ip=[description=DESCRIPTION],[ip_range=IP_RANGE]
+            Specifies a list of IPv4 or IPv6 ranges that will be allowed to
+            access the Airflow web server. By default, all IPs are allowed to
+            access the web server.
+
+             ip_range
+                IPv4 or IPv6 range of addresses allowed to access the Airflow
+                web server.
+
+             description
+                An optional description of the IP range.
+
+         --web-server-allow-all
+            Allows all IP addresses to access the Airflow web server.
+
+         --web-server-deny-all
+            Denies all incoming traffic to the Airflow web server.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha composer environments update
+
+        $ gcloud beta composer environments update
+

@@ -1,0 +1,146 @@
+NAME
+    gcloud alpha scc findings update - update a Cloud Security Command Center
+        finding
+
+SYNOPSIS
+    gcloud alpha scc findings update
+        (FINDING : --organization=ORGANIZATION --source=SOURCE)
+        [--event-time=EVENT_TIME] [--external-uri=EXTERNAL_URI]
+        [--source-properties=[SOURCE_PROPERTIES,...]] [--state=STATE]
+        [--update-mask=UPDATE_MASK] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Update a Cloud Security Command Center finding.
+
+EXAMPLES
+    Update my-finding's state from ACTIVE to INACTIVE:
+
+        $ gcloud alpha scc findings update my-finding \
+            --organization=123456 --source=5678 --state=INACTIVE
+
+    Update my-finding's state from ACTIVE to INACTIVE using project name for
+    example-project:
+
+        $ gcloud alpha scc findings update \
+            projects/example-project/sources/5678/findings/my-finding \
+            --state=INACTIVE
+
+    Update my-finding's state from ACTIVE to INACTIVE using folder name 456:
+
+        $ gcloud alpha scc findings update \
+            folders/456/sources/5678/findings/my-finding --state=INACTIVE
+
+    Override all source properties on my-finding:
+
+        $ gcloud alpha scc findings update my-finding \
+            --organization=123456 --source=5678 \
+            --source-properties="propKey1=propVal1,propKey2=propVal2"
+
+    Selectively update a specific source property on my-finding:
+
+        $ gcloud alpha scc findings update my-finding \
+            --organization=123456 --source=5678 \
+            --source-properties="propKey1=propVal1,propKey2=propVal2" \
+            --update-mask="source_properties.propKey1"
+
+POSITIONAL ARGUMENTS
+     Finding resource - The finding to be used for the SCC (Security Command
+     Center) command. The arguments in this group can be used to specify the
+     attributes of this resource.
+
+     This must be specified.
+
+       FINDING
+          ID of the finding or fully qualified identifier for the finding. To
+          set the finding attribute:
+          ▸ provide the argument finding on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --organization=ORGANIZATION
+          (Optional) If the full resource name isn't provided e.g.
+          organizations/123, then provide the organization id which is the
+          suffix of the organization. Example: organizations/123, the id is
+          123.
+
+          To set the organization attribute:
+          ▸ provide the argument finding on the command line with a fully
+            specified name;
+          ▸ provide the argument --organization on the command line;
+          ▸ Set the organization property in configuration using gcloud
+            config set scc/organization if it is not specified in command
+            line..
+
+       --source=SOURCE
+          (Optional) If the full resource name isn't provided e.g.
+          organizations/123/sources/456, then provide the source id which is
+          the suffix of the source. Example: organizations/123/sources/456, the
+          id is 456.
+
+          To set the source attribute:
+          ▸ provide the argument finding on the command line with a fully
+            specified name;
+          ▸ provide the argument --source on the command line.
+
+FLAGS
+     --event-time=EVENT_TIME
+        Time at which the event took place. For example, if the finding
+        represents an open firewall it would capture the time the open firewall
+        was detected. If event-time is not provided, it will default to UTC
+        version of NOW. For example 2019-02-28T07:00:00Z
+
+     --external-uri=EXTERNAL_URI
+        URI that, if available, points to a web page outside of Cloud SCC
+        (Security Command Center) where additional information about the
+        finding can be found. This field is guaranteed to be either empty or a
+        well formed URL.
+
+     --source-properties=[SOURCE_PROPERTIES,...]
+        Source specific properties. These properties are managed by the source
+        that writes the finding. The key names in the source_properties map
+        must be between 1 and 255 characters, and must start with a letter and
+        contain alphanumeric characters or underscores only. For example
+        "key1=val1,key2=val2"
+
+     --state=STATE
+        State is one of: [ACTIVE, INACTIVE]. STATE must be one of: active,
+        inactive, state-unspecified.
+
+     --update-mask=UPDATE_MASK
+        Optional: If left unspecified (default), an update-mask is
+        automatically created using the flags specified in the command and only
+        those values are updated. For example: --external-uri='<some-uri>'
+        --event-time='<some-time>' would automatically generate
+        --update-mask='external_uri,event_time'. Note that as a result, only
+        external-uri and event-time are updated for the given finding and
+        everything else remains untouched. If you want to delete
+        attributes/properties (that are not being changed in the update
+        command) use an empty update-mask (''). That will delete all the
+        mutable properties/attributes that aren't specified as flags in the
+        update command. In the above example it would delete source-properties.
+        State can be toggled from ACTIVE to INACTIVE and vice-versa but it
+        cannot be deleted.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the securitycenter/v1 API. The full documentation for
+    this API can be found at: https://cloud.google.com/security-command-center
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud scc findings update
+
+        $ gcloud beta scc findings update
+

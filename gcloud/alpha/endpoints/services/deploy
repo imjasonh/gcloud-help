@@ -1,0 +1,84 @@
+NAME
+    gcloud alpha endpoints services deploy - deploys a service configuration
+        for the given service name
+
+SYNOPSIS
+    gcloud alpha endpoints services deploy SERVICE_CONFIG_FILE
+        [SERVICE_CONFIG_FILE ...] [--async] [--force, -f] [--validate-only]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) This command is used to deploy a service configuration for a
+    service to Google Service Management. As input, it takes one or more paths
+    to service configurations that should be uploaded. These configuration
+    files can be Proto Descriptors, Open API (Swagger) specifications, or
+    Google Service Configuration files in JSON or YAML formats.
+
+    If a service name is present in multiple configuration files (given in the
+    host field in OpenAPI specifications or the name field in Google Service
+    Configuration files), the first one will take precedence.
+
+    When deploying a new service configuration to an already-existing service,
+    some safety checks will be made comparing the new configuration to the
+    active configuration. If any actionable advice is provided, it will be
+    printed out to the log, and the deployment will be halted. It is
+    recommended that these warnings be addressed before proceeding, but they
+    can be overridden with the --force flag.
+
+    This command will block until deployment is complete unless the --async
+    flag is passed.
+
+EXAMPLES
+    To deploy a single Open API service configuration, run:
+
+        $ gcloud alpha endpoints services deploy ~/my_app/openapi.json
+
+    To run the deployment asynchronously (non-blocking), run:
+
+        $ gcloud alpha endpoints services deploy ~/my_app/openapi.json \
+            --async
+
+    To deploy a service config with a Proto, run:
+
+        $ gcloud alpha endpoints services deploy \
+            ~/my_app/service-config.yaml ~/my_app/service-protos.pb
+
+POSITIONAL ARGUMENTS
+     SERVICE_CONFIG_FILE [SERVICE_CONFIG_FILE ...]
+        The service configuration file (or files) containing the API
+        specification to upload. Proto Descriptors, Open API (Swagger)
+        specifications, and Google Service Configuration files in JSON and YAML
+        formats are acceptable.
+
+FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --force, -f
+        Force the deployment even if any hazardous changes to the service
+        configuration are detected.
+
+     --validate-only
+        If included, the command validates the service configuration(s), but
+        does not deploy them. The service must exist in order to validate the
+        configuration(s).
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud endpoints services deploy
+
+        $ gcloud beta endpoints services deploy
+

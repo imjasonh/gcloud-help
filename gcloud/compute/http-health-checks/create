@@ -1,0 +1,89 @@
+NAME
+    gcloud compute http-health-checks create - create a legacy HTTP health
+        check
+
+SYNOPSIS
+    gcloud compute http-health-checks create NAME
+        [--check-interval=CHECK_INTERVAL; default="5s"]
+        [--description=DESCRIPTION]
+        [--healthy-threshold=HEALTHY_THRESHOLD; default=2] [--host=HOST]
+        [--port=PORT; default=80] [--request-path=REQUEST_PATH; default="/"]
+        [--timeout=TIMEOUT; default="5s"]
+        [--unhealthy-threshold=UNHEALTHY_THRESHOLD; default=2]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Legacy HTTP health checks are required if you want to implement health
+    checking of a target pool for a Network TCP/UDP Load Balancer. Though you
+    can use legacy HTTP health checks in certain other Google Cloud Platform
+    load balancing configurations and for managed instance group autohealing,
+    you should consider a non-legacy HTTP health check created with
+    health-checks create http instead.
+
+    For more information about the differences between legacy and non-legacy
+    health checks see:
+    https://cloud.google.com/load-balancing/docs/health-check-concepts#category_and_protocol
+
+    For information about what type of health check to use for a particular
+    load balancer, see:
+    https://cloud.google.com/load-balancing/docs/health-check-concepts#lb_guide
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the HTTP health check to create.
+
+FLAGS
+     --check-interval=CHECK_INTERVAL; default="5s"
+        How often to perform a health check for an instance. For example,
+        specifying 10s will run the check every 10 seconds. The default value
+        is 5s. See $ gcloud topic datetimes for information on duration
+        formats.
+
+     --description=DESCRIPTION
+        An optional, textual description for the HTTP health check.
+
+     --healthy-threshold=HEALTHY_THRESHOLD; default=2
+        The number of consecutive successful health checks before an unhealthy
+        instance is marked as healthy. The default is 2.
+
+     --host=HOST
+        The value of the host header used in this HTTP health check request. By
+        default, this is empty and Compute Engine automatically sets the host
+        header in health requests to the same external IP address as the
+        forwarding rule associated with the target pool.
+
+     --port=PORT; default=80
+        The TCP port number that this health check monitors. The default value
+        is 80.
+
+     --request-path=REQUEST_PATH; default="/"
+        The request path that this health check monitors. For example,
+        /healthcheck. The default value is ``/''.
+
+     --timeout=TIMEOUT; default="5s"
+        If Compute Engine doesn't receive an HTTP 200 response from the
+        instance by the time specified by the value of this flag, the health
+        check request is considered a failure. For example, specifying 10s will
+        cause the check to wait for 10 seconds before considering the request a
+        failure. The default value is 5s. See $ gcloud topic datetimes for
+        information on duration formats.
+
+     --unhealthy-threshold=UNHEALTHY_THRESHOLD; default=2
+        The number of consecutive health check failures before a healthy
+        instance is marked as unhealthy. The default is 2.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha compute http-health-checks create
+
+        $ gcloud beta compute http-health-checks create
+

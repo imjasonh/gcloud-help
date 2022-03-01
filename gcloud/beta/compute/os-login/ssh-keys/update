@@ -1,0 +1,63 @@
+NAME
+    gcloud beta compute os-login ssh-keys update - update an SSH public key in
+        an OS Login profile
+
+SYNOPSIS
+    gcloud beta compute os-login ssh-keys update --ttl=TTL
+        (--key=KEY | --key-file=KEY_FILE) [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) gcloud beta compute os-login ssh-keys update accepts either a string
+    containing an SSH public key or a filename for an SSH public key, and
+    updates the key in the user's OS Login profile. Currently, only the
+    expiration time, --ttl, can be updated.
+
+EXAMPLES
+    To update the SSH public key found in /home/user/.ssh/id_rsa.pub with an
+    expiration time of one week from now, run:
+
+        $ gcloud beta compute os-login ssh-keys update --ttl=7d \
+            --key-file=/home/user/.ssh/id_rsa.pub
+
+    To update the SSH public key with a fingerprint of
+    'e0d96d6fad35a61a0577f467940509b5aa08b6dea8d99456ec19a6e47126bc52' and an
+    expiration time of five years from now, run:
+
+        $ gcloud beta compute os-login ssh-keys update --ttl=5y \
+            --key='e0d96d6fad35a61a0577f467940509b5aa08b6dea8d99456ec19a6e47\
+        126bc52'
+
+REQUIRED FLAGS
+     --ttl=TTL
+        The amount of time before the SSH key expires. For example, specifying
+        30m will set the expiration time on the SSH key for 30 minutes from the
+        current time. A value of 0 will result in no expiration time. See $
+        gcloud topic datetimes for information on duration formats.
+
+     Exactly one of these must be specified:
+
+       --key=KEY
+          The SSH public key to update the OS Login Profile. Key value can
+          either be the SSH key or the OS Login fingerprint of the key.
+
+       --key-file=KEY_FILE
+          The path to a file containing an SSH public key to update the OS
+          Login Profile. Key value can either be the SSH key or the OS Login
+          fingerprint of the key.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud compute os-login ssh-keys update
+
+        $ gcloud alpha compute os-login ssh-keys update
+

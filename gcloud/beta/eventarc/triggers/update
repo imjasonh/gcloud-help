@@ -1,0 +1,111 @@
+NAME
+    gcloud beta eventarc triggers update - update an Eventarc trigger
+
+SYNOPSIS
+    gcloud beta eventarc triggers update (TRIGGER : --location=LOCATION)
+        [--async] [--matching-criteria=[ATTRIBUTE=VALUE,...]]
+        [--clear-service-account | --service-account=SERVICE_ACCOUNT]
+        [--destination-run-region=DESTINATION_RUN_REGION
+          --destination-run-service=DESTINATION_RUN_SERVICE
+          --clear-destination-run-path
+          | --destination-run-path=DESTINATION_RUN_PATH] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Update an Eventarc trigger.
+
+EXAMPLES
+    To update the trigger my-trigger by setting its destination Cloud Run
+    service to my-service, run:
+
+        $ gcloud beta eventarc triggers update my-trigger \
+             --destination-run-service=my-service
+
+POSITIONAL ARGUMENTS
+     Trigger resource - The trigger to update. The arguments in this group can
+     be used to specify the attributes of this resource. (NOTE) Some attributes
+     are not given arguments in this group but can be set in other ways. To set
+     the project attribute:
+      ◆ provide the argument trigger on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       TRIGGER
+          ID of the trigger or fully qualified identifier for the trigger. To
+          set the trigger attribute:
+          ▸ provide the argument trigger on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --location=LOCATION
+          The location for the Eventarc trigger, which should be either global
+          or one of the supported regions. Alternatively, set the
+          [eventarc/location] property. To set the location attribute:
+          ▸ provide the argument trigger on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property eventarc/location.
+
+FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --matching-criteria=[ATTRIBUTE=VALUE,...]
+        The criteria by which events are filtered for the trigger, specified as
+        a comma-separated list of CloudEvents attribute names and values. This
+        flag can also be repeated to add more criteria to the list. Only events
+        that match with this criteria will be sent to the destination. The
+        criteria must include the type attribute, as well as any other
+        attributes that are expected for the chosen type.
+
+     At most one of these can be specified:
+
+       --clear-service-account
+          Clear the IAM service account associated with the trigger.
+
+       --service-account=SERVICE_ACCOUNT
+          The IAM service account email associated with the trigger.
+
+     Flags for updating the destination to which events should be sent.
+
+       Flags for updating a Cloud Run fully-managed resource destination.
+
+         --destination-run-region=DESTINATION_RUN_REGION
+            Region in which the destination Cloud Run service can be found. If
+            not specified, it is assumed that the service is in the same region
+            as the trigger.
+
+         --destination-run-service=DESTINATION_RUN_SERVICE
+            Name of the Cloud Run fully-managed service that receives the
+            events for the trigger. The service must be in the same project as
+            the trigger.
+
+         At most one of these can be specified:
+
+           --clear-destination-run-path
+              Clear the relative path on the destination Cloud Run service to
+              which the events for the trigger should be sent.
+
+           --destination-run-path=DESTINATION_RUN_PATH
+              Relative path on the destination Cloud Run service to which the
+              events for the trigger should be sent. Examples: /route, route,
+              route/subroute.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud eventarc triggers update
+

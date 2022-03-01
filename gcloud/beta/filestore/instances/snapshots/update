@@ -1,0 +1,92 @@
+NAME
+    gcloud beta filestore instances snapshots update - update the description
+        or labels of a Filestore snapshot
+
+SYNOPSIS
+    gcloud beta filestore instances snapshots update SNAPSHOT
+        --instance=INSTANCE --instance-region=INSTANCE_REGION [--async]
+        [--description=DESCRIPTION] [--update-labels=[KEY=VALUE,...]]
+        [--clear-labels | --remove-labels=[KEY,...]] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Update the metadata of a Filestore snapshot.
+
+    This command can fail for the following reasons:
+      ▪ The snapshot or instance specified does not exist.
+      ▪ The active account does not have permission to update the given
+        snapshot.
+
+EXAMPLES
+    To update the description of a snapshot named my-snapshot for the instance
+    my-instance from us-central1, run:
+
+        $ gcloud beta filestore instances snapshots update my-snapshot \
+            --instance=my-instance --instance-region=us-central1 \
+            --description="A new description."
+
+POSITIONAL ARGUMENTS
+     SNAPSHOT
+        Name of the Filestore snapshot to be updated.
+
+REQUIRED FLAGS
+     --instance=INSTANCE
+        Name of the Filestore instance the snapshot belongs to.
+
+     --instance-region=INSTANCE_REGION
+        Region of the Filestore instance.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --description=DESCRIPTION
+        Description of the snapshot.
+
+     --update-labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to update. If a label exists, its value
+        is modified. Otherwise, a new label is created.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     At most one of these can be specified:
+
+       --clear-labels
+          Remove all labels. If --update-labels is also specified then
+          --clear-labels is applied first.
+
+          For example, to remove all labels:
+
+              $ gcloud beta filestore instances snapshots update --clear-labels
+
+          To remove all existing labels and create two new labels, foo and baz:
+
+              $ gcloud beta filestore instances snapshots update --clear-labels \
+                --update-labels foo=bar,baz=qux
+
+       --remove-labels=[KEY,...]
+          List of label keys to remove. If a label does not exist it is
+          silently ignored. If --update-labels is also specified then
+          --update-labels is applied first.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the file/v1beta1 API. The full documentation for this API
+    can be found at: https://cloud.google.com/filestore/
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud filestore instances snapshots update
+

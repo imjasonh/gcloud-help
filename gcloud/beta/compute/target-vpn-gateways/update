@@ -1,0 +1,98 @@
+NAME
+    gcloud beta compute target-vpn-gateways update - update a Compute Engine
+        Cloud VPN Classic Target VPN Gateway
+
+SYNOPSIS
+    gcloud beta compute target-vpn-gateways update NAME [--region=REGION]
+        [--update-labels=[KEY=VALUE,...]]
+        [--clear-labels | --remove-labels=[KEY,...]] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) gcloud beta compute target-vpn-gateways update updates labels for a
+    Compute Engine Cloud VPN Classic Target VPN gateway. For example:
+
+        $ gcloud beta compute target-vpn-gateways update example-gateway \
+            --region us-central1 \
+          --update-labels=k0=value1,k1=value2 --remove-labels=k3
+
+    will add/update labels k0 and k1 and remove labels with key k3.
+
+    Labels can be used to identify the target VPN gateway and to filter them as
+    in
+
+        $ gcloud beta compute target-vpn-gateways list \
+            --filter='labels.k1:value2'
+
+    To list existing labels
+
+        $ gcloud beta compute target-vpn-gateways describe example-gateway \
+            --format="default(labels)"
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the Target VPN Gateway to operate on.
+
+FLAGS
+     --region=REGION
+        Region of the Target VPN Gateway to operate on. If not specified, you
+        might be prompted to select a region (interactive mode only).
+
+        To avoid prompting when this flag is omitted, you can set the
+        compute/region property:
+
+            $ gcloud config set compute/region REGION
+
+        A list of regions can be fetched by running:
+
+            $ gcloud compute regions list
+
+        To unset the property, run:
+
+            $ gcloud config unset compute/region
+
+        Alternatively, the region can be stored in the environment variable
+        CLOUDSDK_COMPUTE_REGION.
+
+     --update-labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to update. If a label exists, its value
+        is modified. Otherwise, a new label is created.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     At most one of these can be specified:
+
+       --clear-labels
+          Remove all labels. If --update-labels is also specified then
+          --clear-labels is applied first.
+
+          For example, to remove all labels:
+
+              $ gcloud beta compute target-vpn-gateways update --clear-labels
+
+          To remove all existing labels and create two new labels, foo and baz:
+
+              $ gcloud beta compute target-vpn-gateways update --clear-labels \
+                --update-labels foo=bar,baz=qux
+
+       --remove-labels=[KEY,...]
+          List of label keys to remove. If a label does not exist it is
+          silently ignored. If --update-labels is also specified then
+          --update-labels is applied first.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud alpha compute target-vpn-gateways update
+

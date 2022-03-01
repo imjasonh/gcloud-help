@@ -1,0 +1,105 @@
+NAME
+    gcloud beta compute routers nats rules update - update a Rule in a Compute
+        Engine NAT
+
+SYNOPSIS
+    gcloud beta compute routers nats rules update RULE_NUMBER --nat=NAT
+        --router=ROUTER [--async] [--match=MATCH] [--region=REGION]
+        [--source-nat-active-ips=IP_ADDRESS,[IP_ADDRESS,...]]
+        [--clear-source-nat-drain-ips
+          | --source-nat-drain-ips=IP_ADDRESS,[IP_ADDRESS,...]]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) gcloud beta compute routers nats rules update is used to update a
+    Rule in a Compute Engine NAT.
+
+EXAMPLES
+    To drain connections established using address-1 and use address-2 for all
+    new connections matching Rule 1 in NAT nat-1, run:
+
+        $ gcloud beta compute routers nats rules update 1 --nat=nat1 \
+            --router=my-router --region=us-central1
+          --source-nat-drain-ips=address-1
+          --source-nat-active-ips=address-2
+
+POSITIONAL ARGUMENTS
+     RULE_NUMBER
+        Number that uniquely identifies the Rule to update
+
+REQUIRED FLAGS
+     --nat=NAT
+        Name of the NAT that contains the Rule
+
+     --router=ROUTER
+        The Router to use for NAT.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --match=MATCH
+        CEL Expression used to identify traffic to which this rule applies.
+        ◆ Supported attributes: destination.ip
+        ◆ Supported operators: ||, ==
+        ◆ Supported methods: inIpRange
+
+        Examples of allowed Match expressions:
+        ◆ 'inIpRange(destination.ip, "203.0.113.0/24")''
+        ◆ 'destination.ip == "203.0.113.7"'
+        ◆ 'destination.ip == "203.0.113.7" || inIpRange(destination.ip,
+          "203.0.113.16/25")'
+
+     --region=REGION
+        Region of the NAT containing the Rule to update. If not specified, you
+        might be prompted to select a region (interactive mode only).
+
+        To avoid prompting when this flag is omitted, you can set the
+        compute/region property:
+
+            $ gcloud config set compute/region REGION
+
+        A list of regions can be fetched by running:
+
+            $ gcloud compute regions list
+
+        To unset the property, run:
+
+            $ gcloud config unset compute/region
+
+        Alternatively, the region can be stored in the environment variable
+        CLOUDSDK_COMPUTE_REGION.
+
+     --source-nat-active-ips=IP_ADDRESS,[IP_ADDRESS,...]
+        External IP Addresses to use for connections matching this rule.
+
+        These must be valid reserved external IPs in the same region.
+
+     At most one of these can be specified:
+
+       --clear-source-nat-drain-ips
+          Clear drained IPs from the Rule
+
+       --source-nat-drain-ips=IP_ADDRESS,[IP_ADDRESS,...]
+          External IP Addresses to drain connections on.
+
+          These must be external IPs previously used as active IPs on this
+          rule. No new connections will be established using these IPs.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud compute routers nats rules update
+
+        $ gcloud alpha compute routers nats rules update
+

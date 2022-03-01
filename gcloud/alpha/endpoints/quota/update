@@ -1,0 +1,83 @@
+NAME
+    gcloud alpha endpoints quota update - update a quota override for a
+        consumer
+
+SYNOPSIS
+    gcloud alpha endpoints quota update --consumer=CONSUMER --metric=METRIC
+        --service=SERVICE --unit=UNIT --value=VALUE
+        [--dimensions=[KEY=VALUE,...]] [--force] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) This command updates a quota override for a consumer. The supported
+    consumers are projects, folders, and organizations. The override ID can be
+    found from list command output.
+
+EXAMPLES
+    To update a quota override for project with project number, run:
+
+        $ gcloud alpha endpoints quota update \
+            --service=example.googleapis.com --consumer=projects/12321
+          --metric=example.googleapis.com/default_requests
+          --unit=1/min/{project} --override-id=hello123 --value=360
+
+    To update a quota override for project with project ID, run:
+
+        $ gcloud alpha endpoints quota update \
+            --service=example.googleapis.com --consumer=projects/hello
+          --metric=example.googleapis.com/default_requests
+          --unit=1/min/{project} --override-id=hello123 --value=360
+
+    To update a quota override for an organization, run:
+
+        $ gcloud alpha endpoints quota update \
+            --service=example.googleapis.com --consumer=organizations/555
+          --metric=example.googleapis.com/default_requests
+          --unit=1/min/{project} --override-id=hello123 --value=360
+
+    To force the update of a quota override, run:
+
+        $ gcloud alpha endpoints quota update \
+            --service=example.googleapis.com --consumer=projects/12321
+          --metric=example.googleapis.com/default_requests
+          --unit=1/min/{project}  --override-id=hello123
+          --dimensions=regions=us-central1
+          --dimensions=zones=us-central1-c --value=360 --force
+
+REQUIRED FLAGS
+     --consumer=CONSUMER
+        The consumer to update override for.
+
+     --metric=METRIC
+        The metric to update a quota override for.
+
+     --service=SERVICE
+        The service to update a quota override for.
+
+     --unit=UNIT
+        The unit of a metric to update a quota override for.
+
+     --value=VALUE
+        The value of the override.
+
+OPTIONAL FLAGS
+     --dimensions=[KEY=VALUE,...]
+        The dimensions of the override, e.g. for specific locations.
+
+     --force
+        Force override update even if the change results in a substantial
+        decrease in available quota.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

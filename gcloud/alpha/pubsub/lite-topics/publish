@@ -1,0 +1,102 @@
+NAME
+    gcloud alpha pubsub lite-topics publish - publish Pub/Sub Lite messages
+
+SYNOPSIS
+    gcloud alpha pubsub lite-topics publish (TOPIC : --location=LOCATION)
+        [--attributes=[KEY=VALUE,...]] [--event-time=DATETIME]
+        [--message=MESSAGE] [--ordering-key=ORDERING_KEY]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Publishes a message to the specified Pub/Sub Lite topic. This
+    command requires Python 3.6 or greater, and requires the grpcio Python
+    package to be installed.
+
+    For MacOS, Linux, and Cloud Shell users, to install the gRPC client
+    libraries, run:
+
+        $ sudo pip3 install grpcio
+        $ export CLOUDSDK_PYTHON_SITEPACKAGES=1
+
+EXAMPLES
+    To publish a message to a Pub/Sub Lite topic, run:
+
+        $ gcloud alpha pubsub lite-topics publish mytopic \
+            --location=us-central1-a --message="Hello World!"
+
+    To publish a message to a Pub/Sub Lite topic with an ordering key and
+    attributes, run:
+
+        $ gcloud alpha pubsub lite-topics publish mytopic \
+            --location=us-central1-a --message="Hello World!" \
+            --ordering-key="key" --attributes=KEY1=VAL1,KEY2=VAL2
+
+    To publish a message to a Pub/Sub Lite topic with an event time, run:
+
+        $ gcloud alpha pubsub lite-topics publish mytopic \
+            --location=us-central1-a --message="Hello World!" \
+            --event-time="2021-01-01T12:00:00Z"
+
+POSITIONAL ARGUMENTS
+     Topic resource - The pubsub lite topic to publish to. The arguments in
+     this group can be used to specify the attributes of this resource. (NOTE)
+     Some attributes are not given arguments in this group but can be set in
+     other ways. To set the project attribute:
+      ◆ provide the argument topic on the command line with a fully specified
+        name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       TOPIC
+          ID of the topic or fully qualified identifier for the topic. To set
+          the topic attribute:
+          ▸ provide the argument topic on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --location=LOCATION
+          ID of the location of the Pub/Sub Lite resource.
+
+          To set the location attribute:
+          ▸ provide the argument topic on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line.
+
+FLAGS
+     --attributes=[KEY=VALUE,...]
+        Comma-separated list of attributes. Each ATTRIBUTE has the form
+        name="value". You can specify up to 100 attributes.
+
+     --event-time=DATETIME
+        A user-specified event time. Run gcloud topic datetimes for information
+        on time formats.
+
+     --message=MESSAGE
+        The body of the message to publish to the given topic name.
+
+     --ordering-key=ORDERING_KEY
+        A string key, used for ordering delivery to subscribers. All messages
+        with the same ordering key will be assigned to the same partition for
+        ordered delivery.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud pubsub lite-topics publish
+
+        $ gcloud beta pubsub lite-topics publish
+

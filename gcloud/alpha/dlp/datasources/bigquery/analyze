@@ -1,0 +1,100 @@
+NAME
+    gcloud alpha dlp datasources bigquery analyze - schedule a risk analysis
+        job for content in a BigQuery table
+
+SYNOPSIS
+    gcloud alpha dlp datasources bigquery analyze INPUT_TABLE
+        (--categorical-stat-field=CATEGORICAL_STAT_FIELD
+          | --numerical-stat-field=NUMERICAL_STAT_FIELD
+          | [--quasi-ids=[QUASI_IDS,...]
+          : --sensitive-attribute=SENSITIVE_ATTRIBUTE])
+        (--output-table=[OUTPUT_TABLE,...]
+          | --output-topics=[OUTPUT_TOPICS,...]) [--job-id=JOB_ID]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Schedules a job to compute risk analysis metrics on content in a
+    BigQuery table.
+
+EXAMPLES
+    To create a job my-bq-analysis to analyze records in a BigQuery table
+    myproject.myds.mytable, run:
+
+        $ gcloud alpha dlp datasources bigquery analyze  \
+            `myproject.myds.mytable` --job-id my-ds-job \
+            --output-topics my-topic --numerical-stat-field col2
+
+POSITIONAL ARGUMENTS
+     INPUT_TABLE
+        BigQuery table to scan. BigQuery tables are uniquely identified by
+        their project_id, dataset_id, and table_id in the format
+        <project_id>.<dataset_id>.<table_id>.
+
+REQUIRED FLAGS
+     Privacy analysis metrics.
+
+     Exactly one of these must be specified:
+
+       --categorical-stat-field=CATEGORICAL_STAT_FIELD
+          An individual column to compute numerical stats on, including number
+          of distinct values and value count distribution.
+
+       --numerical-stat-field=NUMERICAL_STAT_FIELD
+          Individual column to compute numerical stats on. Supported types are
+          integer, float, date, datetime, timestamp, time.
+
+       l-diversity analysis options.
+
+         --quasi-ids=[QUASI_IDS,...]
+            A set of quasi-identifiers indicating how equivalence classes are
+            defined for the l-diversity computation. When multiple fields are
+            specified, they are considered a single composite key.
+
+            This flag must be specified if any of the other arguments in this
+            group are specified.
+
+         --sensitive-attribute=SENSITIVE_ATTRIBUTE
+            Sensitive field for computing the l-diversity value.
+
+     Exactly one of these must be specified:
+
+       --output-table=[OUTPUT_TABLE,...]
+          Publishes results of a Cloud DLP job to a BigQuery table. BigQuery
+          tables are uniquely identified by their project_id, dataset_id, and
+          table_id in the format <project_id>.<dataset_id>.<table_id>. If no
+          table_id is specified, DLP will create a new table.
+
+       --output-topics=[OUTPUT_TOPICS,...]
+          Publishes the results of a Cloud DLP job to one or more Cloud Pub/Sub
+          topics.
+
+          Note: The topic must have given publishing access rights to the DLP
+          API service account executing the Cloud DLP job.
+
+OPTIONAL FLAGS
+     --job-id=JOB_ID
+        Optional job ID to use for the created job. If not provided, a job ID
+        will automatically be generated. Must be unique within the project. The
+        job ID can contain uppercase and lowercase letters, numbers, and
+        hyphens; that is, it must match the regular expression: [a-zA-Z\\d-]+.
+        The maximum length is 100 characters. Can be empty to allow the system
+        to generate one.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the dlp/v2 API. The full documentation for this API can
+    be found at: https://cloud.google.com/dlp/docs/
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

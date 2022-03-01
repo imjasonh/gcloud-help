@@ -1,0 +1,189 @@
+NAME
+    gcloud beta events triggers create - create a trigger
+
+SYNOPSIS
+    gcloud beta events triggers create (TRIGGER : --namespace=NAMESPACE)
+        --target-service=TARGET_SERVICE
+        [--platform=PLATFORM; default="managed"] [--type=TYPE]
+        [--broker=BROKER; default="default" --trigger-filters=[KEY=VALUE,...]]
+        [--cluster=CLUSTER --cluster-location=CLUSTER_LOCATION
+          | --context=CONTEXT --kubeconfig=KUBECONFIG]
+        [--custom-type | --resources=PARAMETER=NAME:KEY
+          --secrets=[PARAMETER=NAME:KEY,...]
+          --source=SOURCE --parameters=[PARAMETER=VALUE,...]
+          | --parameters-from-file=PARAMETERS_FROM_FILE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Create a trigger.
+
+EXAMPLES
+    To create a trigger for a Cloud Pub/Sub event type:
+
+        $ gcloud beta events triggers create TRIGGER \
+          --type=google.cloud.pubsub.topic.v1.messagePublished
+            --parameters="topic=my-topic" --target-service=my-service
+
+POSITIONAL ARGUMENTS
+     Trigger resource - Name of the trigger to create The arguments in this
+     group can be used to specify the attributes of this resource.
+
+     This must be specified.
+
+       TRIGGER
+          ID of the Trigger or fully qualified identifier for the Trigger. To
+          set the trigger attribute:
+          ▸ provide the argument trigger on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --namespace=NAMESPACE
+          Specific to Cloud Run for Anthos: Kubernetes namespace for the
+          Trigger. To set the namespace attribute:
+          ▸ provide the argument trigger on the command line with a fully
+            specified name;
+          ▸ provide the argument --namespace on the command line;
+          ▸ set the property run/namespace;
+          ▸ For Cloud Run on Kubernetes Engine, defaults to "default".
+            Otherwise, defaults to project ID.;
+          ▸ provide the argument project on the command line;
+          ▸ set the property core/project.
+
+REQUIRED FLAGS
+     --target-service=TARGET_SERVICE
+        Name or absolute uri of the Cloud Run service at which events should be
+        received. (e.g. service-name or
+        http://service-name.default.svc.cluster.local)
+
+OPTIONAL FLAGS
+     --platform=PLATFORM; default="managed"
+        Target platform for running commands. Alternatively, set the property
+        [run/platform]. PLATFORM must be one of:
+
+         managed
+            Fully managed version of Cloud Run. Not supported by this command.
+         gke
+            Cloud Run for Anthos on Google Cloud. Use with the --cluster and
+            --cluster-location flags or set the [run/cluster] and
+            [run/cluster_location] properties to specify a cluster in a given
+            zone.
+         kubernetes
+            Use a Knative-compatible kubernetes cluster. Use with the
+            --kubeconfig and --context flags to specify a kubeconfig file and
+            the context for connecting.
+
+     --type=TYPE
+        Type of event (e.g. google.cloud.audit.log.v1.written). Required for
+        all sources, except optional for ApiServerSource.
+
+     Only applicable if connecting to Cloud Run for Anthos deployed on Google
+     Cloud or Cloud Run for Anthos deployed on VMware. Specify --platform=gke
+     or --platform=kubernetes to use:
+
+       --broker=BROKER; default="default"
+          Name of the Broker to send events to. Defaults to 'default' if not
+          specified.
+
+       --trigger-filters=[KEY=VALUE,...]
+          Filters to apply before forwarding events for the target service.
+          Events must contain all KEY=VALUE pairs to be forwarded.
+
+     Arguments to locate resources, depending on the platform used.
+
+     At most one of these can be specified:
+
+       Only applicable if connecting to Cloud Run for Anthos deployed on Google
+       Cloud. Specify --platform=gke to use:
+
+         Cluster resource - Kubernetes Engine cluster to connect to. The
+         arguments in this group can be used to specify the attributes of this
+         resource. (NOTE) Some attributes are not given arguments in this group
+         but can be set in other ways. To set the project attribute:
+          ▫ provide the argument --cluster on the command line with a fully
+            specified name;
+          ▫ set the property run/cluster with a fully specified name;
+          ▫ specify the cluster from a list of available clusters with a
+            fully specified name;
+          ▫ provide the argument --project on the command line;
+          ▫ set the property core/project.
+
+           --cluster=CLUSTER
+              ID of the cluster or fully qualified identifier for the cluster.
+              To set the cluster attribute:
+              ◇ provide the argument --cluster on the command line;
+              ◇ set the property run/cluster;
+              ◇ specify the cluster from a list of available clusters.
+
+           --cluster-location=CLUSTER_LOCATION
+              Zone in which the cluster is located. Alternatively, set the
+              property [run/cluster_location]. To set the location attribute:
+              ◇ provide the argument --cluster on the command line with a
+                fully specified name;
+              ◇ set the property run/cluster with a fully specified name;
+              ◇ specify the cluster from a list of available clusters with a
+                fully specified name;
+              ◇ provide the argument --cluster-location on the command line;
+              ◇ set the property run/cluster_location;
+              ◇ specify the cluster location from a list of available zones.
+
+       Only applicable if connecting to Cloud Run for Anthos deployed on
+       VMware. Specify --platform=kubernetes to use:
+
+         --context=CONTEXT
+            The name of the context in your kubectl config file to use for
+            connecting.
+
+         --kubeconfig=KUBECONFIG
+            The absolute path to your kubectl config file. If not specified,
+            the colon- or semicolon-delimited list of paths specified by
+            $KUBECONFIG will be used. If $KUBECONFIG is unset, this defaults to
+            ~/.kube/config.
+
+     At most one of these can be specified:
+
+       --custom-type
+          If specified, the provided event type should be interpreted as a
+          custom event type.
+
+       Configuration parameters for the event source.
+
+         --resources=PARAMETER=NAME:KEY
+            Comma-separated list of secret parameter names and secrets. Specify
+            secret parameters and the secret name and key to reference.
+            Parameter names must be one of the secret parameters shown when
+            describing the event type.
+
+         --secrets=[PARAMETER=NAME:KEY,...]
+            Comma-separated list of secret parameter names and secrets. Specify
+            secret parameters and the secret name and key to reference.
+            Parameter names must be one of the secret parameters shown when
+            describing the event type.
+
+         --source=SOURCE
+            Events source kind by which to filter results.
+
+         At most one of these can be specified:
+
+           --parameters=[PARAMETER=VALUE,...]
+              Comma-separated list of parameter names and values. Names must be
+              one of the parameters shown when describing the event type. Only
+              simple values can be specified with this flag. To specify more
+              complex types like lists and nested objects, use
+              --parameters-from-file.
+
+           --parameters-from-file=PARAMETERS_FROM_FILE
+              Path to a local JSON or YAML file that defines a dictionary of
+              parameters and their values. Parameters must match the items
+              shown when describing the event type.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice.
+

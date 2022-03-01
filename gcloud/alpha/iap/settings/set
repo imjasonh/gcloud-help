@@ -1,0 +1,150 @@
+NAME
+    gcloud alpha iap settings set - set the setting for an IAP resource
+
+SYNOPSIS
+    gcloud alpha iap settings set SETTING_FILE
+        [--folder=FOLDER --organization=ORGANIZATION --project=PROJECT
+          --region=REGION
+          --resource-type=RESOURCE_TYPE --service=SERVICE --version=VERSION]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Set the setting for an IAP resource.
+
+EXAMPLES
+    To set the IAP setting for the resources within an organization, run:
+
+        $ gcloud alpha iap settings set SETTING_FILE \
+            --organization=ORGANIZATION_ID
+
+    To set the IAP setting for the resources within a folder, run:
+
+        $ gcloud alpha iap settings set SETTING_FILE --folder=FOLDER_ID
+
+    To set the IAP setting for the resources within a project, run:
+
+        $ gcloud alpha iap settings set SETTING_FILE --project=PROJECT_ID
+
+    To set the IAP setting for web type resources within a project, run:
+
+        $ gcloud alpha iap settings set SETTING_FILE --project=PROJECT_ID \
+            --resource-type=iap_web
+
+    To set the IAP setting for all app engine services within a project, run:
+
+        $ gcloud alpha iap settings set SETTING_FILE --project=PROJECT_ID \
+            --resource-type=app-engine
+
+    To set the IAP setting for an app engine service within a project, run:
+
+        $ gcloud alpha iap settings set SETTING_FILE --project=PROJECT_ID \
+            --resource-type=app-engine --service=SERVICE_ID
+
+    To set the IAP setting for an app engine service version within a project,
+    run:
+
+        $ gcloud alpha iap settings set SETTING_FILE --project=PROJECT_ID \
+            --resource-type=app-engine --service=SERVICE_ID
+            --version=VERSION_ID
+
+    To set the IAP setting for all backend services within a project, run:
+
+        $ gcloud alpha iap settings set SETTING_FILE --project=PROJECT_ID \
+            --resource-type=compute
+
+    To set the IAP setting for a backend service within a project, run:
+
+        $ gcloud alpha iap settings set SETTING_FILE --project=PROJECT_ID \
+            --resource-type=compute --service=SERVICE_ID
+
+POSITIONAL ARGUMENTS
+     SETTING_FILE
+        JSON or YAML file containing the IAP resource settings.
+
+            JSON example:
+              {
+                "access_settings" : {
+                  "oauth_settings" : {
+                     "login_hint" : {
+                        "value": "test_hint"
+                     }
+                  },
+                  "gcip_settings" : {
+                     "tenant_ids": ["tenant1-p9puj", "tenant2-y8rxc"],
+                     "login_page_uri" : {
+                        "value" : "https://test.com/?apiKey=abcd_efgh"
+                     }
+                  },
+                  "cors_settings": {
+                     "allow_http_options" : {
+                        "value": true
+                     }
+                  }
+               },
+               "application_settings" : {
+                  "csm_settings" : {
+                    "rctoken_aud" : {
+                       "value" : "test_aud"
+                    }
+                  }
+               }
+             }
+
+            YAML example:
+            accessSettings :
+               oauthSettings:
+                 loginHint: test_hint
+               gcipSettings:
+                 tenantIds:
+                 - tenant1-p9puj
+                 - tenant2-y8rxc
+                 loginPageUri: https://test.com/?apiKey=abcd_efgh
+               corsSettings:
+                 allowHttpOptions: true
+            applicationSettings:
+               csmSettings:
+                 rctokenAud: test_aud
+
+FLAGS
+     --folder=FOLDER
+        Folder ID.
+
+     --organization=ORGANIZATION
+        Organization ID.
+
+     --project=PROJECT
+        Project ID.
+
+     --region=REGION
+        Region name. Not applicable for app-engine. Optional when resource-type
+        is compute.
+
+     --resource-type=RESOURCE_TYPE
+        Resource type of the IAP resource. RESOURCE_TYPE must be one of:
+        app-engine, iap_web, compute, organization, folder.
+
+     --service=SERVICE
+        Service name. Optional when resource-type is compute or app-engine.
+
+     --version=VERSION
+        Version name. Not applicable for compute. Optional when resource-type
+        is app-engine.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud iap settings set
+
+        $ gcloud beta iap settings set
+

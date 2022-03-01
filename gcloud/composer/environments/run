@@ -1,0 +1,96 @@
+NAME
+    gcloud composer environments run - run an Airflow sub-command remotely in a
+        Cloud Composer environment
+
+SYNOPSIS
+    gcloud composer environments run (ENVIRONMENT : --location=LOCATION)
+        SUBCOMMAND [SUBCOMMAND_NESTED] [GCLOUD_WIDE_FLAG ...] [-- CMD_ARGS ...]
+
+DESCRIPTION
+    Executes an Airflow CLI sub-command remotely in an environment. If the
+    sub-command takes flags, separate the environment name from the sub-command
+    and its flags with ``--''. This command waits for the sub-command to
+    complete; its exit code will match the sub-command's exit code.
+
+EXAMPLES
+    The following command:
+
+        gcloud composer environments run myenv trigger_dag -- some_dag --run_id=foo
+
+    is equivalent to running the following command from a shell inside the
+    my-environment environment:
+
+        airflow trigger_dag some_dag --run_id=foo
+
+POSITIONAL ARGUMENTS
+     Environment resource - The environment in which to run an Airflow command.
+     The arguments in this group can be used to specify the attributes of this
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways. To set the project attribute:
+      ◆ provide the argument environment on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       ENVIRONMENT
+          ID of the environment or fully qualified identifier for the
+          environment. To set the environment attribute:
+          ▸ provide the argument environment on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --location=LOCATION
+          Compute Engine region in which to create the environment. To set the
+          location attribute:
+          ▸ provide the argument environment on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property composer/location.
+
+     SUBCOMMAND
+        The Airflow CLI subcommand to run. Available subcommands include
+        (listed with Airflow versions that support): backfill [**, 2.0.0),
+        clear [**, 2.0.0), connections [**, 3.0.0), dag_state [**, 2.0.0), dags
+        [2.0.0, 3.0.0), delete_dag [1.10.1, 2.0.0), kerberos [**, 3.0.0),
+        kubernetes [2.1.4, 3.0.0), list_dag_runs [1.10.2, 2.0.0), list_dags
+        [**, 2.0.0), list_tasks [**, 2.0.0), next_execution [1.10.2, 2.0.0),
+        pause [**, 2.0.0), pool [**, 2.0.0), pools [2.0.0, 3.0.0), render [**,
+        2.0.0), roles [2.0.0, 3.0.0), run [**, 2.0.0), sync-perm [2.0.0,
+        3.0.0), sync_perm [1.10.2, 2.0.0), task_failed_deps [**, 2.0.0),
+        task_state [**, 2.0.0), tasks [2.0.0, 3.0.0), test [**, 2.0.0),
+        trigger_dag [**, 2.0.0), unpause [**, 2.0.0), upgrade_check [1.10.15,
+        2.0.0), users [2.0.0, 3.0.0), variables [**, 3.0.0), version [**,
+        3.0.0) (see
+        https://airflow.apache.org/docs/apache-airflow/stable/cli-and-env-variables-ref.html
+        for more info).
+
+     [SUBCOMMAND_NESTED]
+        Additional subcommand in case it is nested.
+
+     [-- CMD_ARGS ...]
+        Command line arguments to the subcommand.
+
+        The '--' argument must be specified between gcloud specific args on the
+        left and CMD_ARGS on the right. Example:
+
+        gcloud composer environments run myenv trigger_dag -- some_dag
+        --run_id=foo
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha composer environments run
+
+        $ gcloud beta composer environments run
+

@@ -1,0 +1,126 @@
+NAME
+    gcloud beta compute instances add-access-config - create a Compute Engine
+        virtual machine access configuration
+
+SYNOPSIS
+    gcloud beta compute instances add-access-config INSTANCE_NAME
+        [--access-config-name=ACCESS_CONFIG_NAME; default="external-nat"]
+        [--address=ADDRESS]
+        [--network-interface=NETWORK_INTERFACE; default="nic0"]
+        [--network-tier=NETWORK_TIER] [--zone=ZONE]
+        [--public-ptr | --no-public-ptr]
+        [--public-ptr-domain=PUBLIC_PTR_DOMAIN | --no-public-ptr-domain]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) gcloud beta compute instances add-access-config is used to create
+    access configurations for network interfaces of Compute Engine virtual
+    machines. This allows you to assign a public, external IP to a virtual
+    machine.
+
+EXAMPLES
+    To assign an public, externally accessible IP to a virtual machine named
+    example-instance in zone us-central1-a, run:
+
+        $ gcloud beta compute instances add-access-config example-instance \
+            --zone=us-central1-a
+
+    To assign the specific, reserved public IP address 123.456.789.123 to the
+    virtual machine, run:
+
+        $ gcloud beta compute instances add-access-config example-instance \
+            --zone=us-central1-a --address=123.456.789.123
+
+POSITIONAL ARGUMENTS
+     INSTANCE_NAME
+        Name of the instance to operate on. For details on valid instance
+        names, refer to the criteria documented under the field 'name' at:
+        https://cloud.google.com/compute/docs/reference/rest/v1/instances
+
+FLAGS
+     --access-config-name=ACCESS_CONFIG_NAME; default="external-nat"
+        Specifies the name of the new access configuration. external-nat is
+        used as the default if this flag is not provided. Since ONE_TO_ONE_NAT
+        is currently the only access-config type, it is not recommended that
+        you change this value.
+
+     --address=ADDRESS
+        Specifies the external IP address of the new access configuration. If
+        this is not specified, then the service will choose an available
+        ephemeral IP address. If an explicit IP address is given, then that IP
+        address must be reserved by the project and not be in use by another
+        resource.
+
+     --network-interface=NETWORK_INTERFACE; default="nic0"
+        Specifies the name of the network interface which contains the access
+        configuration. If this is not provided, then "nic0" is used as the
+        default.
+
+     --network-tier=NETWORK_TIER
+        Specifies the network tier of the access configuration. NETWORK_TIER
+        must be one of: PREMIUM, STANDARD, FIXED_STANDARD. The default value is
+        PREMIUM.
+
+     --zone=ZONE
+        Zone of the instance to operate on. If not specified, you might be
+        prompted to select a zone (interactive mode only). gcloud attempts to
+        identify the appropriate zone by searching for resources in your
+        currently active project. If the zone cannot be determined, gcloud
+        prompts you for a selection with all available Google Cloud Platform
+        zones.
+
+        To avoid prompting when this flag is omitted, the user can set the
+        compute/zone property:
+
+            $ gcloud config set compute/zone ZONE
+
+        A list of zones can be fetched by running:
+
+            $ gcloud compute zones list
+
+        To unset the property, run:
+
+            $ gcloud config unset compute/zone
+
+        Alternatively, the zone can be stored in the environment variable
+        CLOUDSDK_COMPUTE_ZONE.
+
+     At most one of these can be specified:
+
+       --public-ptr
+          Creates a DNS PTR record for the external IP in the access
+          configuration. This option can only be specified for the default
+          network-interface, "nic0".
+
+       --no-public-ptr
+          If provided, no DNS PTR record is created for the external IP in the
+          access configuration. Mutually exclusive with public-ptr-domain.
+
+     At most one of these can be specified:
+
+       --public-ptr-domain=PUBLIC_PTR_DOMAIN
+          Assigns a custom PTR domain for the external IP in the access
+          configuration. Mutually exclusive with no-public-ptr. This option can
+          only be specified for the default network-interface, "nic0".
+
+       --no-public-ptr-domain
+          If both this flag and --public-ptr are specified, creates a DNS PTR
+          record for the external IP in the access configuration with the PTR
+          domain name being the DNS name of the instance.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud compute instances add-access-config
+
+        $ gcloud alpha compute instances add-access-config
+

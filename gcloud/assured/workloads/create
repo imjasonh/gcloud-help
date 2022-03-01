@@ -1,0 +1,115 @@
+NAME
+    gcloud assured workloads create - create a new Assured Workloads
+        environment
+
+SYNOPSIS
+    gcloud assured workloads create --billing-account=BILLING_ACCOUNT
+        --compliance-regime=COMPLIANCE_REGIME --display-name=DISPLAY_NAME
+        --location=LOCATION --organization=ORGANIZATION
+        [--enable-sovereign-controls=ENABLE_SOVEREIGN_CONTROLS]
+        [--external-identifier=EXTERNAL_IDENTIFIER] [--labels=[KEY=VALUE,...]]
+        [--next-rotation-time=NEXT_ROTATION_TIME]
+        [--provisioned-resources-parent=PROVISIONED_RESOURCES_PARENT]
+        [--resource-settings=[KEY=VALUE,...]]
+        [--rotation-period=ROTATION_PERIOD] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Create a new Assured Workloads environment
+
+EXAMPLES
+    The following example command creates a new Assured Workloads environment
+    with these properties:
+
+      ▪ belonging to an organization with ID 123
+      ▪ located in the us-central1 region
+      ▪ display name Test-Workload
+      ▪ compliance regime FEDRAMP_MODERATE
+      ▪ billing account billingAccounts/456
+      ▪ first key rotation set for 10:15am on the December 30, 2020
+      ▪ key rotation interval set for every 48 hours
+      ▪ with the label: key = 'LabelKey1', value = 'LabelValue1'
+      ▪ with the label: key = 'LabelKey2', value = 'LabelValue2'
+      ▪ provisioned resources parent 'folders/789'
+      ▪ with custom project id 'my-custom-id' for consumer project
+
+        $ gcloud assured workloads create --organization=123 \
+            --location=us-central1 --display-name=Test-Workload \
+            --compliance-regime=FEDRAMP_MODERATE \
+            --billing-account=billingAccounts/456 \
+            --next-rotation-time=2020-12-30T10:15:00.00Z \
+            --rotation-period=172800s \
+            --labels=LabelKey1=LabelValue1,LabelKey2=LabelValue2 \
+            --provisioned-resources-parent=folders/789 \
+            --resource-settings=consumer-project-id=my-custom-id
+
+REQUIRED FLAGS
+     --billing-account=BILLING_ACCOUNT
+        The billing account of the new Assured Workloads environment, for
+        example, billingAccounts/0000AA-AAA00A-A0A0A0
+
+     --compliance-regime=COMPLIANCE_REGIME
+        The compliance regime of the new Assured Workloads environment.
+        COMPLIANCE_REGIME must be one of: CJIS, FEDRAMP_HIGH, FEDRAMP_MODERATE,
+        IL4, US_REGIONAL_ACCESS, HIPAA, HITRUST, EU_REGIONS_AND_SUPPORT,
+        CA_REGIONS_AND_SUPPORT.
+
+     --display-name=DISPLAY_NAME
+        The display name of the new Assured Workloads environment
+
+     --location=LOCATION
+        The location of the new Assured Workloads environment. For a current
+        list of supported LOCATION values, see Assured Workloads locations
+        (http://cloud/assured-workloads/docs/locations).
+
+     --organization=ORGANIZATION
+        The parent organization of the new Assured Workloads environment,
+        provided as an organization ID
+
+OPTIONAL FLAGS
+     --enable-sovereign-controls=ENABLE_SOVEREIGN_CONTROLS
+        If true, enable sovereign controls for the new Assured Workloads
+        environment, currently only supported by EU_REGIONS_AND_SUPPORT
+
+     --external-identifier=EXTERNAL_IDENTIFIER
+        The external identifier of the new Assured Workloads environment
+
+     --labels=[KEY=VALUE,...]
+        The labels of the new Assured Workloads environment, for example,
+        LabelKey1=LabelValue1,LabelKey2=LabelValue2
+
+     --next-rotation-time=NEXT_ROTATION_TIME
+        The next rotation time of the KMS settings of new Assured Workloads
+        environment, for example, 2020-12-30T10:15:30.00Z
+
+     --provisioned-resources-parent=PROVISIONED_RESOURCES_PARENT
+        The parent of the provisioned projects, for example,
+        folders/{FOLDER_ID}
+
+     --resource-settings=[KEY=VALUE,...]
+        A comma-separated, key=value map of custom resource settings such as
+        custom project ids, for example:
+        consumer-project-id={CONSUMER_PROJECT_ID} Note: Currently only
+        consumer-project-id, consumer-project-name, encryption-keys-project-id,
+        encryption-keys-project-name and keyring-id are supported. The
+        encryption-keys-project-id, encryption-keys-project-name and keyring-id
+        settings can be specified only if KMS settings are provided
+
+     --rotation-period=ROTATION_PERIOD
+        The rotation period of the KMS settings of the new Assured Workloads
+        environment, for example, 172800s
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha assured workloads create
+
+        $ gcloud beta assured workloads create
+

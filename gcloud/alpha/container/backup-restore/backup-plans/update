@@ -1,0 +1,188 @@
+NAME
+    gcloud alpha container backup-restore backup-plans update - update a backup
+        plan
+
+SYNOPSIS
+    gcloud alpha container backup-restore backup-plans update
+        (BACKUP_PLAN : --location=LOCATION) [--async] [--deactivated]
+        [--description=DESCRIPTION] [--etag=ETAG]
+        [--update-labels=[KEY=VALUE,...]]
+        [--all-namespaces | --selected-applications=SELECTED_APPLICATIONS
+          | --selected-namespaces=[SELECTED_NAMESPACES,...]]
+        [--backup-delete-lock-days=BACKUP_DELETE_LOCK_DAYS
+          --backup-retain-days=BACKUP_RETAIN_DAYS --locked]
+        [--clear-labels | --remove-labels=[KEY,...]]
+        [--cron-schedule=CRON_SCHEDULE --paused]
+        [--encryption-key=ENCRYPTION_KEY
+          --include-secrets --include-volume-data] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Update a Backup for GKE backup plan.
+
+EXAMPLES
+    To update a backup plan my-backup-plan in project my-project in location
+    us-central1 to add new description, run:
+
+        $ gcloud alpha container backup-restore backup-plans update \
+            my-backup-plan --project=my-project --location=us-central1 \
+            --description="New description"
+
+POSITIONAL ARGUMENTS
+     Backup plan resource - Name of the backup plan to update. The name may be
+     provided either as a relative name, e.g.
+     projects/<project>/locations/<location>/backupPlans/<backupPlan> or as a
+     single ID name (with the parent resources provided via options or through
+     properties), e.g. BACKUP_PLAN --project=<project> --location=<location>.
+     The arguments in this group can be used to specify the attributes of this
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways. To set the project attribute:
+      ◆ provide the argument backup_plan on the command line with a fully
+        specified name;
+      ◆ set the property core/project;
+      ◆ provide the argument --project on the command line.
+
+     This must be specified.
+
+       BACKUP_PLAN
+          ID of the backup plan or fully qualified identifier for the backup
+          plan. To set the backup_plan attribute:
+          ▸ provide the argument backup_plan on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --location=LOCATION
+          Google Cloud location. To set the location attribute:
+          ▸ provide the argument backup_plan on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property gkebackup/location.
+
+FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --deactivated
+        If set, no further changes may be made to this backup plan and no
+        further backups may be created for this plan. Backup deletion is still
+        allowed.
+
+     --description=DESCRIPTION
+        Optional text description for the backup plan.
+
+     --etag=ETAG
+        The etag is used for optimistic concurrency control as a way to help
+        prevent simultaneous updates or deletes of a resource from overwriting
+        each other.
+
+     --update-labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to update. If a label exists, its value
+        is modified. Otherwise, a new label is created.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     At most one of these can be specified:
+
+       --all-namespaces
+          Scope of the backup includes resources from all namespaces. Mutually
+          exclusive with --selected-namespaces and --selected-applications.
+
+       --selected-applications=SELECTED_APPLICATIONS
+          List of ProtectedApplication instances whose resources are included
+          in the backup. Mutually exclusive with --all-namespaces and
+          --selected-namespaces. e.g:
+          --selected-applications=namespace1/foo,namespace2/bar
+
+       --selected-namespaces=[SELECTED_NAMESPACES,...]
+          List of namespaces whose resources are included in the backup.
+          Mutually exclusive with --all-namespaces and --selected-applications.
+          e.g: --selected-namespaces=foo,bar
+
+     --backup-delete-lock-days=BACKUP_DELETE_LOCK_DAYS
+        Number of days a backup produced via this plan cannot be deleted.
+
+        Must be less than or equal to 90 days. If 0, delete operations are
+        allowed.
+
+     --backup-retain-days=BACKUP_RETAIN_DAYS
+        Number of days after which a backup produced via this plan is
+        automatically deleted.
+
+        If not set (value is 0), backups are not automatically deleted. If set,
+        must be greater than the value for backup_delete_lock_days.
+
+     --locked
+        If set, subsequent updates are not allowed to the backup plan's
+        retention policy and this value cannot be changed.
+
+     At most one of these can be specified:
+
+       --clear-labels
+          Remove all labels. If --update-labels is also specified then
+          --clear-labels is applied first.
+
+          For example, to remove all labels:
+
+              $ gcloud alpha container backup-restore backup-plans update \
+                --clear-labels
+
+          To remove all existing labels and create two new labels, foo and baz:
+
+              $ gcloud alpha container backup-restore backup-plans update \
+                --clear-labels --update-labels foo=bar,baz=qux
+
+       --remove-labels=[KEY,...]
+          List of label keys to remove. If a label does not exist it is
+          silently ignored. If --update-labels is also specified then
+          --update-labels is applied first.
+
+     --cron-schedule=CRON_SCHEDULE
+        Schedule on which backups will be automatically created.
+
+        Use standard cron (http://en.wikipedia.org/wiki/Cron#Overview) syntax.
+        For example, "10 3 * * " will automatically create a backup at 0310
+        every day. All times are interpreted as UTC. The minimum interval
+        between scheduled backups is 10 minutes.
+
+     --paused
+        If set, automatic backup creation is suppressed. When unset, automatic
+        backup creation resumes with the next scheduled create event.
+
+     --encryption-key=ENCRYPTION_KEY
+        Encryption key used for encrypting the backup.
+
+        At this time, only the Cloud Key Management Service (Cloud KMS) is
+        supported. Value must be entered as a relative name, e.g.:
+        projects/<project>/locations/<location>/keyRings/<key-ring>/cryptoKeys/<key>.
+
+     --include-secrets
+        If true, secret resources are included in the backup if they fall
+        within the scope. If unset, the default is false.
+
+     --include-volume-data
+        If true, snapshots are created for PD volumes corresponding to
+        PersistentVolumeClaims that fall within the scope. If unset, the
+        default is false.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the gkebackup/v1 API. The full documentation for this API
+    can be found at: https://cloud.google.com/kubernetes-engine
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

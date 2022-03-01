@@ -1,0 +1,184 @@
+NAME
+    gcloud beta access-context-manager perimeters dry-run update - update the
+        dry-run mode configuration for a Service Perimeter
+
+SYNOPSIS
+    gcloud beta access-context-manager perimeters dry-run update
+        (PERIMETER : --policy=POLICY) [--async]
+        [--add-access-levels=[ACCESS-LEVELS,...] | --clear-access-levels
+          | --remove-access-levels=[ACCESS-LEVELS,...]]
+        [--add-resources=[RESOURCES,...] | --clear-resources
+          | --remove-resources=[RESOURCES,...]]
+        [--add-restricted-services=[RESTRICTED-SERVICES,...]
+          | --clear-restricted-services
+          | --remove-restricted-services=[RESTRICTED-SERVICES,...]]
+        [--clear-egress-policies | --set-egress-policies=YAML_FILE]
+        [--clear-ingress-policies | --set-ingress-policies=YAML_FILE]
+        [--enable-vpc-accessible-services
+          --add-vpc-allowed-services=[VPC-ALLOWED-SERVICES,...]
+          | --clear-vpc-allowed-services
+          | --remove-vpc-allowed-services=[VPC-ALLOWED-SERVICES,...]]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) This command updates the dry-run mode configuration (spec) for a
+    Service Perimeter.
+
+    For Service Perimeters with an explicitly defined dry-run mode
+    configuration (i.e. an explicit spec), this operation updates that
+    configuration directly, ignoring enforcement mode configuration.
+
+    Service Perimeters that do not have explict dry-run mode configuration will
+    inherit the enforcement mode configuration in the dry-run mode. Therefore,
+    this command effectively clones the enforcement mode configuration, then
+    applies the update on that configuration, and uses that as the explicit
+    dry-run mode configuration.
+
+EXAMPLES
+    To update the dry-run mode configuration for a Service Perimeter:
+
+        $ gcloud beta access-context-manager perimeters dry-run update \
+            my-perimeter --add-resources="projects/123,projects/456" \
+            --remove-restricted-services="storage.googleapis.com" \
+            --add-access-levels="accessPolicies/123/accessLevels/a_level" \
+            --enable-vpc-accessible-services --clear-vpc-allowed-services
+
+POSITIONAL ARGUMENTS
+     Perimeter resource - The service perimeter to update. The arguments in
+     this group can be used to specify the attributes of this resource.
+
+     This must be specified.
+
+       PERIMETER
+          ID of the perimeter or fully qualified identifier for the perimeter.
+          To set the perimeter attribute:
+          ▸ provide the argument perimeter on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --policy=POLICY
+          The ID of the access policy. To set the policy attribute:
+          ▸ provide the argument perimeter on the command line with a fully
+            specified name;
+          ▸ provide the argument --policy on the command line;
+          ▸ set the property access_context_manager/policy.
+
+FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     These flags modify the member Access Level of this Service Perimeter.
+
+     At most one of these can be specified:
+
+       --add-access-levels=[ACCESS-LEVELS,...]
+          Append the given values to the current Access Level.
+
+       --clear-access-levels
+          Empty the current Access Level.
+
+       --remove-access-levels=[ACCESS-LEVELS,...]
+          Remove the given values from the current Access Level.
+
+     These flags modify the member Resources of this Service Perimeter.
+
+     At most one of these can be specified:
+
+       --add-resources=[RESOURCES,...]
+          Append the given values to the current Resources.
+
+       --clear-resources
+          Empty the current Resources.
+
+       --remove-resources=[RESOURCES,...]
+          Remove the given values from the current Resources.
+
+     These flags modify the member Restricted Services of this Service
+     Perimeter.
+
+     At most one of these can be specified:
+
+       --add-restricted-services=[RESTRICTED-SERVICES,...]
+          Append the given values to the current Restricted Services.
+
+       --clear-restricted-services
+          Empty the current Restricted Services.
+
+       --remove-restricted-services=[RESTRICTED-SERVICES,...]
+          Remove the given values from the current Restricted Services.
+
+     These flags modify the enforced EgressPolicies of this ServicePerimeter.
+
+     At most one of these can be specified:
+
+       --clear-egress-policies
+          Empties existing enforced Egress Policies.
+
+       --set-egress-policies=YAML_FILE
+          Path to a file containing a list of Egress Policies.
+
+          This file contains a list of YAML-compliant objects representing
+          Egress Policies described in the API reference.
+
+          For more information about the alpha version, see:
+          https://cloud.google.com/access-context-manager/docs/reference/rest/v1alpha/accessPolicies.servicePerimeters
+          For more information about non-alpha versions, see:
+          https://cloud.google.com/access-context-manager/docs/reference/rest/v1/accessPolicies.servicePerimeters
+
+     These flags modify the enforced IngressPolicies of this ServicePerimeter.
+
+     At most one of these can be specified:
+
+       --clear-ingress-policies
+          Empties existing enforced Ingress Policies.
+
+       --set-ingress-policies=YAML_FILE
+          Path to a file containing a list of Ingress Policies.
+
+          This file contains a list of YAML-compliant objects representing
+          Ingress Policies described in the API reference.
+
+          For more information about the alpha version, see:
+          https://cloud.google.com/access-context-manager/docs/reference/rest/v1alpha/accessPolicies.servicePerimeters
+          For more information about non-alpha versions, see:
+          https://cloud.google.com/access-context-manager/docs/reference/rest/v1/accessPolicies.servicePerimeters
+
+     Arguments for configuring VPC accessible service restrictions.
+
+       --enable-vpc-accessible-services
+          When specified restrict API calls within the Service Perimeter to the
+          set of vpc allowed services. To disable use
+          '--no-enable-vpc-accessible-services'.
+
+       These flags modify the member VPC Allowed Services of this Service
+       Perimeter.
+
+       At most one of these can be specified:
+
+         --add-vpc-allowed-services=[VPC-ALLOWED-SERVICES,...]
+            Append the given values to the current VPC Allowed Services.
+
+         --clear-vpc-allowed-services
+            Empty the current VPC Allowed Services.
+
+         --remove-vpc-allowed-services=[VPC-ALLOWED-SERVICES,...]
+            Remove the given values from the current VPC Allowed Services.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud access-context-manager perimeters dry-run update
+
+        $ gcloud alpha access-context-manager perimeters dry-run update
+

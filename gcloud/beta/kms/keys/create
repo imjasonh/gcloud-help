@@ -1,0 +1,239 @@
+NAME
+    gcloud beta kms keys create - create a new key
+
+SYNOPSIS
+    gcloud beta kms keys create (KEY : --keyring=KEYRING --location=LOCATION)
+        --purpose=PURPOSE [--crypto-key-backend=CRYPTO_KEY_BACKEND]
+        [--default-algorithm=DEFAULT_ALGORITHM]
+        [--destroy-scheduled-duration=DESTROY_SCHEDULED_DURATION]
+        [--import-only] [--labels=[KEY=VALUE,...]]
+        [--next-rotation-time=NEXT_ROTATION_TIME]
+        [--protection-level=PROTECTION_LEVEL; default="software"]
+        [--rotation-period=ROTATION_PERIOD] [--skip-initial-version-creation]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Creates a new key within the given keyring.
+
+    The flag --purpose is always required when creating a key. The flag
+    --default-algorithm is required when creating a symmetric signing key, an
+    asymmetric key, or an external key. Algorithm and purpose should be
+    compatible.
+
+    The optional flags --rotation-period and --next-rotation-time define a
+    rotation schedule for the key. A schedule can also be defined by the
+    --create-rotation-schedule command.
+
+    The flag --next-rotation-time must be in ISO 8601 or RFC3339 format, and
+    rotation-period must be in the form INTEGER[UNIT], where units can be one
+    of seconds (s), minutes (m), hours (h) or days (d).
+
+    The optional flag --protection-level specifies the physical environment
+    where crypto operations with the key happen. The default is software; use
+    hsm to create a hardware-backed key, external to create an externally
+    backed key, or external-vpc to create an external key over vpc.
+
+    The optional flag --labels defines a user specified key/value pair for the
+    given key.
+
+    The flag --skip-initial-version-creation creates a CryptoKey with no
+    versions. If you import into the CryptoKey, or create a new version in that
+    CryptoKey, there will be no primary version until one is set using the
+    --set-primary-version command. You must include
+    --skip-initial-version-creation when creating a CryptoKey with protection
+    level external or external-vpc.
+
+    The optional flag --import-only restricts the key to imported key versions
+    only. To do so, the flag --skip-initial-version-creation must also be set.
+
+    The optional flag --destroy-scheduled-duration defines the destroy schedule
+    for the key, and must be in the form INTEGER[UNIT], where units can be one
+    of seconds (s), minutes (m), hours (h) or days (d).
+
+    The flag --crypto-key-backend defines the resource name for the backend
+    where the key resides. Required for external-vpc keys.
+
+EXAMPLES
+    The following command creates a key named frodo with protection level
+    software within the keyring fellowship and location us-east1:
+
+        $ gcloud beta kms keys create frodo \
+            --location=us-east1 \
+            --keyring=fellowship \
+            --purpose=encryption
+
+    The following command creates a key named strider with protection level
+    software within the keyring rangers and location global with a specified
+    rotation schedule:
+
+        $ gcloud beta kms keys create strider \
+            --location=global --keyring=rangers \
+            --purpose=encryption \
+            --rotation-period=30d \
+            --next-rotation-time=2017-10-12T12:34:56.1234Z
+
+    The following command creates a key named foo with protection level
+    software within the keyring fellowship and location us-east1 with two
+    specified labels:
+
+        $ gcloud beta kms keys create foo \
+            --location=us-east1 \
+            --keyring=fellowship \
+            --purpose=encryption \
+            --labels=env=prod,team=kms
+
+    The following command creates an asymmetric key named samwise with
+    protection level software and default algorithm ec-sign-p256-sha256 within
+    the keyring fellowship and location us-east1:
+
+        $ gcloud beta kms keys create samwise \
+            --location=us-east1 \
+            --keyring=fellowship \
+            --purpose=asymmetric-signing \
+            --default-algorithm=ec-sign-p256-sha256
+
+    The following command creates a key named gimli with protection level hsm
+    and default algorithm google-symmetric-encryption within the keyring
+    fellowship and location us-east1:
+
+        $ gcloud beta kms keys create gimli \
+            --location=us-east1 \
+            --keyring=fellowship \
+            --purpose=encryption \
+            --protection-level=hsm
+
+    The following command creates a key named legolas with protection level
+    external and default algorithm external-symmetric-encryption within the
+    keyring fellowship and location us-central1:
+
+        $ gcloud beta kms keys create legolas \
+            --location=us-central1 \
+            --keyring=fellowship \
+            --purpose=encryption \
+            --default-algorithm=external-symmetric-encryption \
+            --protection-level=external
+            --skip-initial-version-creation
+
+    The following command creates a key named bilbo with protection level
+    external-vpc and default algorithm external-symmetric-encryption and an
+    EkmConnection of eagles within the keyring fellowship and location
+    us-central1:
+
+        $ gcloud beta kms keys create bilbo \
+            --location=us-central1 \
+            --keyring=fellowship \
+            --purpose=encryption \
+            --default-algorithm=external-symmetric-encryption \
+            --protection-level=external-vpc
+            --skip-initial-version-creation
+            --crypto-key-backend="projects/$(gcloud config get project)/
+            locations/us-central1/ekmConnections/eagles"
+
+POSITIONAL ARGUMENTS
+     Key resource - The KMS key resource. The arguments in this group can be
+     used to specify the attributes of this resource. (NOTE) Some attributes
+     are not given arguments in this group but can be set in other ways. To set
+     the project attribute:
+      ◆ provide the argument key on the command line with a fully specified
+        name;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       KEY
+          ID of the key or fully qualified identifier for the key. To set the
+          key attribute:
+          ▸ provide the argument key on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --keyring=KEYRING
+          The KMS keyring of the key. To set the keyring attribute:
+          ▸ provide the argument key on the command line with a fully
+            specified name;
+          ▸ provide the argument --keyring on the command line.
+
+       --location=LOCATION
+          The Cloud location for the key. To set the location attribute:
+          ▸ provide the argument key on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line.
+
+REQUIRED FLAGS
+     --purpose=PURPOSE
+        The "purpose" of the key. PURPOSE must be one of:
+        asymmetric-encryption, asymmetric-signing, encryption, mac.
+
+OPTIONAL FLAGS
+     --crypto-key-backend=CRYPTO_KEY_BACKEND
+        The resource name of the backend environment where the key material for
+        all CryptoKeyVersions associated with this CryptoKey reside and where
+        all related cryptographic operations are performed. Currently only
+        applicable for EXTERNAL_VPC and EkmConnection resource names.
+
+     --default-algorithm=DEFAULT_ALGORITHM
+        The default algorithm for the crypto key. For more information about
+        choosing an algorithm, see
+        https://cloud.google.com/kms/docs/algorithms. DEFAULT_ALGORITHM must be
+        one of: ec-sign-p256-sha256, ec-sign-p384-sha384,
+        ec-sign-secp256k1-sha256, external-symmetric-encryption,
+        google-symmetric-encryption, hmac-sha256, rsa-decrypt-oaep-2048-sha1,
+        rsa-decrypt-oaep-2048-sha256, rsa-decrypt-oaep-3072-sha1,
+        rsa-decrypt-oaep-3072-sha256, rsa-decrypt-oaep-4096-sha1,
+        rsa-decrypt-oaep-4096-sha256, rsa-decrypt-oaep-4096-sha512,
+        rsa-sign-pkcs1-2048-sha256, rsa-sign-pkcs1-3072-sha256,
+        rsa-sign-pkcs1-4096-sha256, rsa-sign-pkcs1-4096-sha512,
+        rsa-sign-pss-2048-sha256, rsa-sign-pss-3072-sha256,
+        rsa-sign-pss-4096-sha256, rsa-sign-pss-4096-sha512,
+        rsa-sign-raw-pkcs1-2048, rsa-sign-raw-pkcs1-3072,
+        rsa-sign-raw-pkcs1-4096.
+
+     --destroy-scheduled-duration=DESTROY_SCHEDULED_DURATION
+        The amount of time that versions of the key should spend in the
+        DESTROY_SCHEDULED state before transitioning to DESTROYED. See $ gcloud
+        topic datetimes for information on duration formats.
+
+     --import-only
+        Restrict this key to imported versions only.
+
+     --labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     --next-rotation-time=NEXT_ROTATION_TIME
+        Next automatic rotation time of the key. See $ gcloud topic datetimes
+        for information on time formats.
+
+     --protection-level=PROTECTION_LEVEL; default="software"
+        Protection level of the key. PROTECTION_LEVEL must be one of: software,
+        hsm, external, external-vpc.
+
+     --rotation-period=ROTATION_PERIOD
+        Automatic rotation period of the key. See $ gcloud topic datetimes for
+        information on duration formats.
+
+     --skip-initial-version-creation
+        Skip creating the first version in a key and setting it as primary
+        during creation.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud kms keys create
+
+        $ gcloud alpha kms keys create
+

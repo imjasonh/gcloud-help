@@ -1,0 +1,113 @@
+NAME
+    gcloud beta dataproc jobs submit hive - submit a Hive job to a cluster
+
+SYNOPSIS
+    gcloud beta dataproc jobs submit hive
+        (--cluster=CLUSTER | --cluster-labels=[KEY=VALUE,...])
+        (--execute=QUERY, -e QUERY | --file=FILE, -f FILE) [--async]
+        [--bucket=BUCKET] [--continue-on-failure] [--jars=[JAR,...]]
+        [--labels=[KEY=VALUE,...]]
+        [--max-failures-per-hour=MAX_FAILURES_PER_HOUR]
+        [--max-failures-total=MAX_FAILURES_TOTAL] [--params=[PARAM=VALUE,...]]
+        [--properties=[PROPERTY=VALUE,...]] [--region=REGION]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Submit a Hive job to a cluster.
+
+EXAMPLES
+    To submit a Hive job with a local script, run:
+
+        $ gcloud beta dataproc jobs submit hive --cluster=my_cluster \
+            --file=my_queries.q
+
+    To submit a Hive job with inline queries, run:
+
+        $ gcloud beta dataproc jobs submit hive --cluster=my_cluster
+            -e="CREATE EXTERNAL TABLE foo(bar int) LOCATION 'gs://my_bucket/'"
+            -e="SELECT * FROM foo WHERE bar > 2"
+
+REQUIRED FLAGS
+     Exactly one of these must be specified:
+
+       --cluster=CLUSTER
+          The Dataproc cluster to submit the job to.
+
+       --cluster-labels=[KEY=VALUE,...]
+          List of label KEY=VALUE pairs to add.
+
+          Keys must start with a lowercase character and contain only hyphens
+          (-), underscores (_), lowercase characters, and numbers. Values must
+          contain only hyphens (-), underscores (_), lowercase characters, and
+          numbers.
+
+          Labels of Dataproc cluster on which to place the job.
+
+     Exactly one of these must be specified:
+
+       --execute=QUERY, -e QUERY
+          A Hive query to execute as part of the job.
+
+       --file=FILE, -f FILE
+          HCFS URI of file containing Hive script to execute as the job.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --bucket=BUCKET
+        The Cloud Storage bucket to stage files in. Defaults to the cluster's
+        configured bucket.
+
+     --continue-on-failure
+        Whether to continue if a single query fails.
+
+     --jars=[JAR,...]
+        Comma separated list of jar files to be provided to the Hive and MR.
+        May contain UDFs.
+
+     --labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     --max-failures-per-hour=MAX_FAILURES_PER_HOUR
+        Specifies the maximum number of times a job can be restarted per hour
+        in event of failure. Default is 0 (no retries after job failure).
+
+     --max-failures-total=MAX_FAILURES_TOTAL
+        Specifies the maximum total number of times a job can be restarted
+        after the job fails. Default is 0 (no retries after job failure).
+
+     --params=[PARAM=VALUE,...]
+        A list of key value pairs to set variables in the Hive queries.
+
+     --properties=[PROPERTY=VALUE,...]
+        A list of key value pairs to configure Hive.
+
+     --region=REGION
+        Dataproc region to use. Each Dataproc region constitutes an independent
+        resource namespace constrained to deploying instances into Compute
+        Engine zones inside the region. Overrides the default dataproc/region
+        property value for this command invocation.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud dataproc jobs submit hive
+
+        $ gcloud alpha dataproc jobs submit hive
+

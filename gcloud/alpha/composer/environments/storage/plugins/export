@@ -1,0 +1,144 @@
+NAME
+    gcloud alpha composer environments storage plugins export - export plugins
+        from an environment into local storage or Cloud Storage
+
+SYNOPSIS
+    gcloud alpha composer environments storage plugins export
+        --destination=DESTINATION
+        (--environment=ENVIRONMENT : --location=LOCATION) [--source=SOURCE]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) If the SOURCE is a directory, it and its contents are are exported
+    recursively. If no SOURCE is provided, the entire contents of the
+    environment's plugins directory will be exported. Colliding files in the
+    DESTINATION will be overwritten. If a file exists in the DESTINATION but
+    there is no corresponding file to overwrite it, it is untouched.
+
+EXAMPLES
+    Suppose the environment myenv's Cloud Storage bucket has the following
+    structure:
+
+        gs://the-bucket
+        |
+        +-- plugins
+        |   |
+        |   +-- file1.py
+        |   +-- file2.py
+        |   |
+        |   +-- subdir1
+        |   |   |
+        |   |   +-- file3.py
+        |   |   +-- file4.py
+
+    And the local directory '/foo' has the following structure:
+
+        /foo
+        |
+        +-- file1.py
+        +-- fileX.py
+        |   |
+        |   +-- subdir1
+        |   |   |
+        |   |   +-- file3.py
+        |   |   +-- fileY.py
+
+    The following command:
+
+        gcloud alpha composer environments storage plugins export myenv --destination=/foo
+
+    would result in the following structure in the local '/foo' directory:
+
+        /foo
+        |
+        +-- file1.py
+        +-- file2.py
+        +-- fileX.py
+        |   |
+        |   +-- subdir1
+        |   |   |
+        |   |   +-- file3.py
+        |   |   +-- file4.py
+        |   |   +-- fileY.py
+
+    The local files '/foo/file1.py' and '/foo/subdir1/file3.py' will be
+    overwritten with the contents of the corresponding files in the Cloud
+    Storage bucket.
+
+    If instead we had run
+
+        gcloud alpha composer environments storage plugins export myenv file2.py subdir1/file3.py --destination=/foo
+
+    the resulting local directory structure would be the following:
+
+        /foo
+        |
+        +-- file1.py
+        +-- file3.py
+        +-- fileX.py
+        |   |
+        |   +-- subdir1
+        |   |   |
+        |   |   +-- file3.py
+        |   |   +-- fileY.py
+
+    No local files would be overwritten since
+    'gs://the-bucket/dags/subdir1/file3.py' was written to '/foo/file3.py'
+    instead of 'foo/subdir1/file3.py'.
+
+REQUIRED FLAGS
+     --destination=DESTINATION
+        The path to an existing local directory or a Cloud Storage
+        bucket/directory into which to export files.
+
+     Environment resource - The environment from whose Cloud Storage bucket to
+     export plugins.. The arguments in this group can be used to specify the
+     attributes of this resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways. To set the project
+     attribute:
+      ◆ provide the argument --environment on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       --environment=ENVIRONMENT
+          ID of the environment or fully qualified identifier for the
+          environment. To set the environment attribute:
+          ▸ provide the argument --environment on the command line.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --location=LOCATION
+          Compute Engine region in which to create the environment. To set the
+          location attribute:
+          ▸ provide the argument --environment on the command line with a
+            fully specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property composer/location.
+
+OPTIONAL FLAGS
+     --source=SOURCE
+        An optional relative path to a file or directory to be exported from
+        the plugins/ subdirectory in the environment's Cloud Storage bucket.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud composer environments storage plugins export
+
+        $ gcloud beta composer environments storage plugins export
+

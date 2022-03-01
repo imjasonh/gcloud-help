@@ -1,0 +1,57 @@
+NAME
+    gcloud alpha trace sinks create - creates a sink
+
+SYNOPSIS
+    gcloud alpha trace sinks create SINK_NAME DESTINATION [--project=PROJECT]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Creates a sink used to export trace spans to a destination.
+
+    The sink's destination must be a BigQuery dataset. The destination must
+    already exist. The identity created with the sink will need permission to
+    write to the destination dataset. After creating a sink look for the
+    [writer_identity] to be populated in the response. With that identity run
+    the following command to give it permission:
+
+    gcloud projects add-iam-policy-binding {bigquery_project_id} \ --member
+    serviceAccount:{writer_identity from trace_sink} \ --role
+    roles/bigquery.dataEditor
+
+    You may also find an existing writer identity by describing a sink.
+
+    It may take several minutes before trace spans are exported after the sink
+    is created.
+
+EXAMPLES
+        $ gcloud alpha trace sinks create my-sink
+    bigquery.googleapis.com/projects/my-project/datasets/my_dataset
+
+POSITIONAL ARGUMENTS
+     SINK_NAME
+        The name for the sink.
+
+     DESTINATION
+        The destination must be a fully qualified BigQuery resource name. The
+        destination can be for the same Google Cloud project or for a different
+        Google Cloud project in the same organization.
+
+FLAGS
+     --project=PROJECT
+        Create a sink associated with this project. This will override the
+        default project.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

@@ -1,0 +1,92 @@
+NAME
+    gcloud privateca templates replicate - replicate a certificate template to
+        multiple locations
+
+SYNOPSIS
+    gcloud privateca templates replicate
+        (CERTIFICATE_TEMPLATE : --location=LOCATION)
+        (--all-locations | --target-locations=[LOCATION,...])
+        [--continue-on-error] [--overwrite] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Replicate a certificate template to multiple locations.
+
+EXAMPLES
+    To replicate a certificate templates to all supported locations, run:
+
+        $ gcloud privateca templates replicate my-template \
+            --location=us-west1 --all-locations
+
+    To replicate a certificate template to 'us-west2' and 'us-east1', run:
+
+        $ gcloud privateca templates replicate my-template \
+            --location=us-west1 --target-locations=us-west2,us-east1
+
+    To overwrite existing templates with the same resource ID in the target
+    locations, use the --overwrite flag:
+
+        $ gcloud privateca templates replicate my-template \
+            --location=us-west1 --target-locations=us-west2,us-east1 \
+            --overwrite
+
+    To continue replicating templates in other locations in the event of a
+    failure in one or more locations, use the --continue-on-error flag:
+
+        $ gcloud privateca templates replicate my-template \
+            --location=us-west1 --all-locations --continue-on-error
+
+POSITIONAL ARGUMENTS
+     CERTIFICATE TEMPLATE resource - The template to replicate. The arguments
+     in this group can be used to specify the attributes of this resource.
+     (NOTE) Some attributes are not given arguments in this group but can be
+     set in other ways. To set the project attribute:
+      ◆ provide the argument CERTIFICATE_TEMPLATE on the command line with a
+        fully specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       CERTIFICATE_TEMPLATE
+          ID of the CERTIFICATE_TEMPLATE or fully qualified identifier for the
+          CERTIFICATE_TEMPLATE. To set the certificate template attribute:
+          ▸ provide the argument CERTIFICATE_TEMPLATE on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --location=LOCATION
+          The location of the CERTIFICATE_TEMPLATE. To set the location
+          attribute:
+          ▸ provide the argument CERTIFICATE_TEMPLATE on the command line
+            with a fully specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property privateca/location.
+
+REQUIRED FLAGS
+     Specify where the certificate template should be replicated.
+
+     Exactly one of these must be specified:
+
+       --all-locations
+          Replicate this template to all supported locations.
+
+       --target-locations=[LOCATION,...]
+          Replicate this template to the given locations.
+
+OPTIONAL FLAGS
+     --continue-on-error
+        Continue replicating the template to other locations even if an error
+        is encountered. If this is set, an error in one location will be logged
+        but will not prevent replication to other locations.
+
+     --overwrite
+        Overwrite any existing templates with the same name, if they exist.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.

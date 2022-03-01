@@ -1,0 +1,108 @@
+NAME
+    gcloud deployment-manager deployments create - create a deployment
+
+SYNOPSIS
+    gcloud deployment-manager deployments create DEPLOYMENT_NAME
+        (--composite-type=COMPOSITE_TYPE | --config=CONFIG
+          | --template=TEMPLATE) [--description=DESCRIPTION]
+        [--labels=[KEY=VALUE,...]] [--preview] [--properties=[PROPERTIES,...]]
+        [--async | --automatic-rollback-on-error] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    This command inserts (creates) a new deployment based on a provided config
+    file.
+
+EXAMPLES
+    To create a new deployment from a top-level YAML file, run:
+
+        $ gcloud deployment-manager deployments create my-deployment \
+            --config=config.yaml --description="My deployment"
+
+    To create a new deployment from a top-level template file, run:
+
+        $ gcloud deployment-manager deployments create my-deployment   \
+            --template=template.{jinja|py}   \
+            --properties="string-key:'string-value',integer-key:12345"
+
+    To create a new deployment directly from a composite type, run:
+
+        $ gcloud deployment-manager deployments create my-deployment   \
+            --composite-type=<project-id>/composite:<type-name>   \
+            --properties="string-key:'string-value',integer-key:12345"
+
+    To preview a deployment without actually creating resources, run:
+
+        $ gcloud deployment-manager deployments create my-new-deployment \
+            --config=config.yaml --preview
+
+    To instantiate a deployment that has been previewed, issue an update
+    command for that deployment without specifying a config file.
+
+    More information is available at
+    https://cloud.google.com/deployment-manager/docs/configuration/.
+
+POSITIONAL ARGUMENTS
+     DEPLOYMENT_NAME
+        Deployment name.
+
+REQUIRED FLAGS
+     Exactly one of these must be specified:
+
+       --composite-type=COMPOSITE_TYPE
+          Name of a composite type to deploy. For an example of creating and
+          deploying a composite type, see:
+          https://cloud.google.com/deployment-manager/docs/configuration/templates/create-composite-types#examplecompositetype
+
+       --config=CONFIG
+          Filename of a top-level yaml config that specifies resources to
+          deploy. For a guide to creating a configuration, refer to
+          https://cloud.google.com/deployment-manager/docs/configuration/create-basic-configuration
+
+       --template=TEMPLATE
+          Filename of a top-level jinja or python config template.
+
+OPTIONAL FLAGS
+     --description=DESCRIPTION
+        Optional description of the deployment to insert.
+
+     --labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     --preview
+        Preview the requested create without actually instantiating the
+        underlying resources. (default=False)
+
+     --properties=[PROPERTIES,...]
+        A comma separated, key:value, map to be used when deploying a template
+        file or composite type directly.
+
+     At most one of these can be specified:
+
+       --async
+          Return immediately, without waiting for the operation in progress to
+          complete.
+
+       --automatic-rollback-on-error
+          If the create request results in a deployment with resource errors,
+          delete that deployment immediately after creation. (default=False)
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha deployment-manager deployments create
+
+        $ gcloud beta deployment-manager deployments create
+

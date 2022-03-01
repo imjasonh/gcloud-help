@@ -1,0 +1,130 @@
+NAME
+    gcloud alpha identity groups create - create a new group
+
+SYNOPSIS
+    gcloud alpha identity groups create EMAIL --organization=ORGANIZATION
+        [--description=DESCRIPTION] [--display-name=DISPLAY_NAME]
+        [--dynamic-user-query=DYNAMIC_USER_QUERY] [--posix-group=POSIX_GROUP]
+        [--with-initial-owner=WITH_INITIAL_OWNER]
+        [--group-type=GROUP_TYPE; default="discussion" | --labels=LABELS]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Create a new group.
+
+EXAMPLES
+    To quickly create a new Google Groups discussion group with default
+    settings:
+
+        $ gcloud alpha identity groups create eng-discuss@example.com \
+            --organization="example.com"
+
+    To create a new Google Groups discussion group with a display name and
+    descripton:
+
+        $ gcloud alpha identity groups create eng-discuss@example.com \
+            --organization="example.com" \
+            --display-name="Engineer Discuss" \
+            --description="Group for engineering discussions"
+
+    To create a new security group:
+
+        $ gcloud alpha identity groups create security-group@example.com  \
+            --organization="example.com"  \
+            --group-type="security" \
+            --display-name="Security Group"  \
+            --description="Description of Security Group"
+
+    To create a new POSIX group:
+
+        $ gcloud alpha identity groups create eng-discuss@example.com \
+            --organization="example.com" \
+            --posix-group=name=eng,gid=1005
+
+POSITIONAL ARGUMENTS
+     EMAIL
+        The email address of the group to be created.
+
+REQUIRED FLAGS
+     --organization=ORGANIZATION
+        The organization the Group being created belongs to. This can be
+        specified either as an ID ("123456789") or as the associated domain
+        ("example.com").
+
+OPTIONAL FLAGS
+     --description=DESCRIPTION
+        An extended description to help users determine the purpose of a Group.
+        For example, you can include information about who should join the
+        Group, the types of messages to send to the Group, links to FAQs about
+        the Group, or related Groups. Maximum length is 4,096 characters.
+
+     --display-name=DISPLAY_NAME
+        The Group's display name.
+
+     --dynamic-user-query=DYNAMIC_USER_QUERY
+        Query that determines the memberships of the dynamic group.
+
+        Example of a query:
+        --dynamic-user-query="user.organizations.exists(org,org.title=='SWE')"
+
+     --posix-group=POSIX_GROUP
+        Group ID (gid) and name of the POSIX group that you want to associate
+        with the specified Cloud Identity group. You can specify multiple POSIX
+        groups with multiple instances of this flag.
+
+        For example, use '--posix-group=gid=1005,name=eng' to add a single
+        group, or '--posix-group=gid=1005,name=eng
+        --posix-group=gid=1006,name=docs' to add multiple groups.
+
+     --with-initial-owner=WITH_INITIAL_OWNER
+        If specified the user making the request will be added as the initial
+        owner of the group being created. WITH_INITIAL_OWNER must be one of:
+
+         empty
+            The creator of the group will not be the owner of the group. This
+            is the default for dynamic groups.
+
+         with-initial-owner
+            The creator of the group will be the owner of the group. This is
+            the default for non-dynamic groups.
+
+     At most one of these can be specified:
+
+       --group-type=GROUP_TYPE; default="discussion"
+          The type of group to create. Setting group-type will add the
+          appropriate labels for the type of group being created. GROUP_TYPE
+          must be one of:
+
+           discussion
+              Creates a Google Groups discussion group.
+           dynamic
+              Creates a dynamic group.
+           security
+              Creates a security group.
+
+       --labels=LABELS
+          Labels for group resource. Example of labels "--labels
+          cloudidentity.googleapis.com/groups.discussion_forum"
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the cloudidentity/v1alpha1 API. The full documentation
+    for this API can be found at: https://cloud.google.com/identity/
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud identity groups create
+
+        $ gcloud beta identity groups create
+

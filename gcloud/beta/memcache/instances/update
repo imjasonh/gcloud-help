@@ -1,0 +1,171 @@
+NAME
+    gcloud beta memcache instances update - update a Memorystore Memcached
+        instance
+
+SYNOPSIS
+    gcloud beta memcache instances update (INSTANCE : --region=REGION)
+        (--parameters=KEY=VALUE | --display-name=DISPLAY_NAME
+          --labels=KEY=VALUE --node-count=NODE_COUNT) [--async]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Update a Memcached instance with one or more of the following
+    actions:
+      ▪ Scale up or down the number of nodes in the instance.
+      ▪ Stage an update to instance configuration parameters.
+      ▪ Update the instance metadata (display name, labels).
+
+    Updating parameters cannot be combined with any other update actions in the
+    same call. All other update actions can be combined in the same call.
+
+EXAMPLES
+    To scale a Memcached instance named 'my-memcache-instance' in region
+    'us-central1' to have 3 nodes, run:
+
+        $ gcloud beta memcache instances update my-memcache-instance \
+            --node-count=3 --region=us-central1
+
+    To stage an update to the parameters 'protocol' and 'track-sizes' for a
+    Memcached instance named 'my-memcache-instance' in region 'us-central1',
+    run:
+
+        $ gcloud beta memcache instances update my-memcache-instance \
+            --parameters="protocol=ascii,track-sizes=true" \
+            --region=us-central1
+
+    To update a Memcached instance named 'my-memcache-instance' in region
+    'us-central1' to have the display name "Foo Cache Service" and the labels
+    'env' and 'service', run:
+
+        $ gcloud beta memcache instances update my-memcache-instance \
+            --display-name="Foo Cache Service" \
+            --labels="env=test,service=foo"
+
+POSITIONAL ARGUMENTS
+     Instance resource - Arguments and flags that specify the Memcached
+     instance to update. The arguments in this group can be used to specify the
+     attributes of this resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways. To set the project
+     attribute:
+      ◆ provide the argument instance on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       INSTANCE
+          ID of the instance or fully qualified identifier for the instance. To
+          set the instance attribute:
+          ▸ provide the argument instance on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --region=REGION
+          The name of the Memcached region of the instance. Overrides the
+          default memcache/region property value for this command invocation.
+
+          To set the region attribute:
+          ▸ provide the argument instance on the command line with a fully
+            specified name;
+          ▸ provide the argument --region on the command line;
+          ▸ set the property memcache/region.
+
+REQUIRED FLAGS
+     Exactly one of these must be specified:
+
+       --parameters=KEY=VALUE
+          User defined parameters to apply to the memcached process on each
+          node. Possible attributes include:
+
+           listen-backlog
+              The backlog queue limit for the instance.
+
+           disable-flush-all
+              If enabled, flush_all command will be disabled. Applicable to
+              1.4.24 and higher.
+
+           max-item-size
+              Max bytes of the instnace. Must at least be equal to
+              slab_chunk_max (which defaults to 524288 bytes) and less than
+              134217728 bytes. Additionally it must be a multiple of
+              slab_chunk_max.
+
+           slab-min-size
+              This is an integer in the range [1, 1024].
+
+           slab-growth-factor
+              This is a float in the range [1.01, 100].
+
+           protocol
+              This is an enum with acceptable values of ["ascii", "auto"].
+
+           disable-cas
+              This is a boolean value.
+
+           disable-evictions
+              This is a boolean value.
+
+           max-reqs-per-event
+              This is an integer in the range [1, 1000].
+
+           track-sizes
+              This is a boolean value.
+
+           worker-logbuf-size
+              This is an integer in the range [48, 524288].
+
+           watcher-logbuf-size
+              This is an integer in the range [0, 2097151].
+
+           lru-crawler
+              This is a boolean value.
+
+           idle-timeout
+              This is an integer in the range [1,86400].
+
+           lru-maintainer
+              This is a boolean value.
+
+           maxconns-fast
+              This is a boolean value.
+
+           hash-algorithm
+              This is an enum with accepted values of ["jenkins", "murmur3"].
+
+       --display-name=DISPLAY_NAME
+          An arbitrary and optional user provided name for the instance.
+
+       --labels=KEY=VALUE
+          List of label KEY=VALUE pairs to add.
+
+       --node-count=NODE_COUNT
+          Number of memcache nodes in this instance. Valid values range from 1
+          to 20.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the memcache/v1beta2 API. The full documentation for this
+    API can be found at: https://cloud.google.com/memorystore/
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud memcache instances update
+
+        $ gcloud alpha memcache instances update
+

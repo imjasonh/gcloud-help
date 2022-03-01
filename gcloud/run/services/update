@@ -1,0 +1,488 @@
+NAME
+    gcloud run services update - update Cloud Run environment variables and
+        other configuration settings
+
+SYNOPSIS
+    gcloud run services update [[SERVICE] --namespace=NAMESPACE]
+        [--args=[ARG,...]] [--async] [--command=[COMMAND,...]]
+        [--concurrency=CONCURRENCY] [--cpu=CPU] [--image=IMAGE]
+        [--ingress=INGRESS; default="all"] [--max-instances=MAX_INSTANCES]
+        [--memory=MEMORY] [--min-instances=MIN_INSTANCES]
+        [--platform=PLATFORM; default="managed"] [--port=PORT]
+        [--service-account=SERVICE_ACCOUNT] [--tag=TAG] [--timeout=TIMEOUT]
+        [--no-traffic] [--[no-]use-http2]
+        [--breakglass=JUSTIFICATION --clear-vpc-connector --[no-]cpu-throttling
+          --revision-suffix=REVISION_SUFFIX --vpc-connector=VPC_CONNECTOR
+          --vpc-egress=VPC_EGRESS
+          --add-cloudsql-instances=[CLOUDSQL-INSTANCES,...]
+          | --clear-cloudsql-instances
+          | --remove-cloudsql-instances=[CLOUDSQL-INSTANCES,...]
+          | --set-cloudsql-instances=[CLOUDSQL-INSTANCES,...]
+          --binary-authorization=POLICY
+          | --clear-binary-authorization --clear-key
+          | --key=KEY --clear-post-key-revocation-action-type
+          | --post-key-revocation-action-type=POST_KEY_REVOCATION_ACTION_TYPE]
+        [--clear-env-vars | --set-env-vars=[KEY=VALUE,...]
+          | --remove-env-vars=[KEY,...] --update-env-vars=[KEY=VALUE,...]]
+        [--clear-labels | --remove-labels=[KEY,...] --labels=[KEY=VALUE,...]
+          | --update-labels=[KEY=VALUE,...]]
+        [--clear-secrets | --set-secrets=[KEY=VALUE,...]
+          | --remove-secrets=[KEY,...] --update-secrets=[KEY=VALUE,...]]
+        [--connectivity=CONNECTIVITY --clear-config-maps
+          | --set-config-maps=[KEY=VALUE,...] | --remove-config-maps=[KEY,...]
+          --update-config-maps=[KEY=VALUE,...]]
+        [--region=REGION
+          | --cluster=CLUSTER --cluster-location=CLUSTER_LOCATION
+          | --context=CONTEXT --kubeconfig=KUBECONFIG] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Update Cloud Run environment variables and other configuration settings.
+
+EXAMPLES
+    To update one or more env vars:
+
+        $ gcloud run services update myservice \
+          --update-env-vars=KEY1=VALUE1,KEY2=VALUE2
+
+POSITIONAL ARGUMENTS
+     Service resource - Service to update the configuration of. The arguments
+     in this group can be used to specify the attributes of this resource.
+
+       [SERVICE]
+          ID of the service or fully qualified identifier for the service. To
+          set the service attribute:
+          ▸ provide the argument SERVICE on the command line;
+          ▸ specify the service name from an interactive prompt.
+
+       --namespace=NAMESPACE
+          Specific to Cloud Run for Anthos: Kubernetes namespace for the
+          service. To set the namespace attribute:
+          ▸ provide the argument SERVICE on the command line with a fully
+            specified name;
+          ▸ specify the service name from an interactive prompt with a fully
+            specified name;
+          ▸ provide the argument --namespace on the command line;
+          ▸ set the property run/namespace;
+          ▸ For Cloud Run on Kubernetes Engine, defaults to "default".
+            Otherwise, defaults to project ID.;
+          ▸ provide the argument project on the command line;
+          ▸ set the property core/project.
+
+FLAGS
+     --args=[ARG,...]
+        Comma-separated arguments passed to the command run by the container
+        image. If not specified and no '--command' is provided, the container
+        image's default Cmd is used. Otherwise, if not specified, no arguments
+        are passed. To reset this field to its default, pass an empty string.
+
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --command=[COMMAND,...]
+        Entrypoint for the container image. If not specified, the container
+        image's default Entrypoint is run. To reset this field to its default,
+        pass an empty string.
+
+     --concurrency=CONCURRENCY
+        Set the maximum number of concurrent requests allowed per container
+        instance. Leave concurrency unspecified or provide the special value
+        'default' to receive the server default value.
+
+     --cpu=CPU
+        Set a CPU limit in Kubernetes cpu units.
+
+        Cloud Run (fully managed) supports values 1, 2 and 4. For Cloud Run
+        (fully managed), 4 cpus also requires a minimum 2Gi --memory value.
+        Examples 2, 2.0, 2000m
+
+        Cloud Run for Anthos and Knative-compatible Kubernetes clusters support
+        fractional values. Examples .5, 500m, 2
+
+     --image=IMAGE
+        Name of the container image to deploy (e.g.
+        gcr.io/cloudrun/hello:latest).
+
+     --ingress=INGRESS; default="all"
+        Set the ingress traffic sources allowed to call the service. For Cloud
+        Run (fully managed) the --[no-]allow-unauthenticated flag separately
+        controls the identities allowed to call the service. INGRESS must be
+        one of:
+
+         all
+            Inbound requests from all sources are allowed.
+         internal
+            For Cloud Run (fully managed), only inbound requests from VPC
+            networks in the same project or VPC Service Controls perimeter, as
+            well as Pub/Sub subscriptions and Eventarc events in the same
+            project or VPC Service Controls perimeter are allowed. All other
+            requests are rejected. See
+            https://cloud.google.com/run/docs/securing/ingress for full details
+            on the definition of internal traffic for Cloud Run (fully
+            managed). For Cloud Run for Anthos, only inbound requests from the
+            same cluster are allowed.
+
+         internal-and-cloud-load-balancing
+            Only supported for Cloud Run (fully managed). Only inbound requests
+            from Google Cloud Load Balancing or a traffic source allowed by the
+            internal option are allowed.
+
+     --max-instances=MAX_INSTANCES
+        The maximum number of container instances of the Service to run. Use
+        'default' to unset the limit and use the platform default.
+
+     --memory=MEMORY
+        Set a memory limit. Ex: 1024Mi, 4Gi.
+
+     --min-instances=MIN_INSTANCES
+        The minimum number of container instances of the Service to run or
+        'default' to remove any minimum.
+
+     --platform=PLATFORM; default="managed"
+        Target platform for running commands. Alternatively, set the property
+        [run/platform]. PLATFORM must be one of:
+
+         managed
+            Fully managed version of Cloud Run. Use with the --region flag or
+            set the [run/region] property to specify a Cloud Run region.
+         gke
+            Cloud Run for Anthos on Google Cloud. Use with the --cluster and
+            --cluster-location flags or set the [run/cluster] and
+            [run/cluster_location] properties to specify a cluster in a given
+            zone.
+         kubernetes
+            Use a Knative-compatible kubernetes cluster. Use with the
+            --kubeconfig and --context flags to specify a kubeconfig file and
+            the context for connecting.
+
+     --port=PORT
+        Container port to receive requests at. Also sets the $PORT environment
+        variable. Must be a number between 1 and 65535, inclusive. To unset
+        this field, pass the special value "default".
+
+     --service-account=SERVICE_ACCOUNT
+        Service account associated with the revision of the service. The
+        service account represents the identity of the running revision, and
+        determines what permissions the revision has. For the managed platform,
+        this is the email address of an IAM service account. For the
+        Kubernetes-based platforms (gke, kubernetes), this is the name of a
+        Kubernetes service account in the same namespace as the service. If not
+        provided, the revision will use the default service account of the
+        project, or default Kubernetes namespace service account respectively.
+
+     --tag=TAG
+        Traffic tag to assign to the newly created revision.
+
+     --timeout=TIMEOUT
+        Set the maximum request execution time (timeout). It is specified as a
+        duration; for example, "10m5s" is ten minutes, and five seconds. If you
+        don't specify a unit, seconds is assumed. For example, "10" is 10
+        seconds.
+
+     --no-traffic
+        True to avoid sending traffic to the revision being deployed. Setting
+        this flag assigns any traffic assigned to the LATEST revision to the
+        specific revision bound to LATEST before the deployment. The effect is
+        that the revision being deployed will not receive traffic.
+
+        After a deployment with this flag the LATEST revision will not receive
+        traffic on future deployments. To restore sending traffic to the LATEST
+        revision by default, run the gcloud run services update-traffic command
+        with --to-latest.
+
+     --[no-]use-http2
+        Whether to use HTTP/2 for connections to the service. Use --use-http2
+        to enable and --no-use-http2 to disable.
+
+     Only applicable if connecting to Cloud Run (fully managed). Specify
+     --platform=managed to use:
+
+       --breakglass=JUSTIFICATION
+          Justification to bypass Binary Authorization policy constraints and
+          allow the operation. See
+          https://cloud.google.com/binary-authorization/docs/using-breakglass
+          for more information.
+
+       --clear-vpc-connector
+          Remove the VPC connector for this resource.
+
+       --[no-]cpu-throttling
+          Whether to throttle the CPU when the container is not actively
+          serving requests. Use --cpu-throttling to enable and
+          --no-cpu-throttling to disable.
+
+       --revision-suffix=REVISION_SUFFIX
+          Specify the suffix of the revision name. Revision names always start
+          with the service name automatically. For example, specifying
+          [--revision-suffix=v1] for a service named 'helloworld', would lead
+          to a revision named 'helloworld-v1'.
+
+       --vpc-connector=VPC_CONNECTOR
+          Set a VPC connector for this resource.
+
+       --vpc-egress=VPC_EGRESS
+          The outbound traffic to send through the VPC connector for this
+          resource. This resource must have a VPC connector to set VPC egress.
+          VPC_EGRESS must be one of:
+
+           all
+              (DEPRECATED) Sends all outbound traffic through the VPC
+              connector. Provides the same functionality as 'all-traffic'.
+              Prefer to use 'all-traffic' instead.
+           all-traffic
+              Sends all outbound traffic through the VPC connector.
+           private-ranges-only
+              Default option. Sends outbound traffic to private IP addresses
+              defined by RFC1918 through the VPC connector.
+
+       These flags modify the Cloud SQL instances this Service connects to. You
+       can specify a name of a Cloud SQL instance if it's in the same project
+       and region as your Cloud Run service; otherwise specify
+       <project>:<region>:<instance> for the instance.
+
+       At most one of these can be specified:
+
+         --add-cloudsql-instances=[CLOUDSQL-INSTANCES,...]
+            Append the given values to the current Cloud SQL instances.
+
+         --clear-cloudsql-instances
+            Empty the current Cloud SQL instances.
+
+         --remove-cloudsql-instances=[CLOUDSQL-INSTANCES,...]
+            Remove the given values from the current Cloud SQL instances.
+
+         --set-cloudsql-instances=[CLOUDSQL-INSTANCES,...]
+            Completely replace the current Cloud SQL instances with the given
+            values.
+
+       At most one of these can be specified:
+
+         --binary-authorization=POLICY
+            Binary Authorization policy to check against. This must be set to
+            "default".
+
+         --clear-binary-authorization
+            Remove any previously set Binary Authorization policy.
+
+       At most one of these can be specified:
+
+         --clear-key
+            Remove any previously set CMEK key reference.
+
+         --key=KEY
+            CMEK key reference to encrypt the container with.
+
+       At most one of these can be specified:
+
+         --clear-post-key-revocation-action-type
+            Remove any previously set post CMEK key revocation action type.
+
+         --post-key-revocation-action-type=POST_KEY_REVOCATION_ACTION_TYPE
+            Action type after CMEK key revocation.
+            POST_KEY_REVOCATION_ACTION_TYPE must be one of:
+
+             prevent-new
+                No new instances will be started after CMEK key revocation.
+             shut-down
+                No new instances will be started and the existing instances
+                will be shut down after CMEK key revocation.
+
+     At most one of these can be specified:
+
+       --clear-env-vars
+          Remove all environment variables.
+
+       --set-env-vars=[KEY=VALUE,...]
+          List of key-value pairs to set as environment variables. All existing
+          environment variables will be removed first.
+
+       Only --update-env-vars and --remove-env-vars can be used together. If
+       both are specified, --remove-env-vars will be applied first.
+
+         --remove-env-vars=[KEY,...]
+            List of environment variables to be removed.
+
+         --update-env-vars=[KEY=VALUE,...]
+            List of key-value pairs to set as environment variables.
+
+     At most one of these can be specified:
+
+       --clear-labels
+          Remove all labels. If --update-labels is also specified then
+          --clear-labels is applied first.
+
+          For example, to remove all labels:
+
+              $ gcloud run services update --clear-labels
+
+          To remove all existing labels and create two new labels, foo and baz:
+
+              $ gcloud run services update --clear-labels \
+                --update-labels foo=bar,baz=qux
+
+       --remove-labels=[KEY,...]
+          List of label keys to remove. If a label does not exist it is
+          silently ignored. If --update-labels is also specified then
+          --update-labels is applied first.
+
+     At most one of these can be specified:
+
+       --labels=[KEY=VALUE,...]
+          List of label KEY=VALUE pairs to add.
+
+          An alias to --update-labels.
+
+       --update-labels=[KEY=VALUE,...]
+          List of label KEY=VALUE pairs to update. If a label exists, its value
+          is modified. Otherwise, a new label is created.
+
+     Specify secrets to mount or provide as environment variables. Keys
+     starting with a forward slash '/' are mount paths. All other keys
+     correspond to environment variables. Values should be in the form
+     SECRET_NAME:SECRET_VERSION. For example:
+     '--update-secrets=/secrets/api/key=mysecret:latest,ENV=othersecret:1' will
+     mount a volume at '/secrets/api' containing a file 'key' with the latest
+     version of secret 'mysecret'. An environment variable named ENV will also
+     be created whose value is version 1 of secret 'othersecret'.
+
+     At most one of these can be specified:
+
+       --clear-secrets
+          Remove all secrets.
+
+       --set-secrets=[KEY=VALUE,...]
+          List of key-value pairs to set as secrets. All existing secrets will
+          be removed first.
+
+       Only --update-secrets and --remove-secrets can be used together. If both
+       are specified, --remove-secrets will be applied first.
+
+         --remove-secrets=[KEY,...]
+            List of secrets to be removed.
+
+         --update-secrets=[KEY=VALUE,...]
+            List of key-value pairs to set as secrets.
+
+     Only applicable if connecting to Cloud Run for Anthos deployed on Google
+     Cloud or Cloud Run for Anthos deployed on VMware. Specify --platform=gke
+     or --platform=kubernetes to use:
+
+       --connectivity=CONNECTIVITY
+          (DEPRECATED) Defaults to 'external'. If 'external', the service can
+          be invoked through the internet, in addition to through the cluster
+          network.
+
+          The --connectivity flag is deprecated but will continue to be
+          supported. Prefer to use the --ingress flag instead. CONNECTIVITY
+          must be one of:
+
+           external
+              Visible from outside the cluster.
+           internal
+              Visible only within the cluster.
+
+       Specify config map to mount or provide as environment variables. Keys
+       starting with a forward slash '/' are mount paths. All other keys
+       correspond to environment variables. The values associated with each of
+       these should be in the form CONFIG_MAP_NAME:KEY_IN_CONFIG_MAP; you may
+       omit the key within the config map to specify a mount of all keys within
+       the config map. For example:
+       '--update-config-maps=/my/path=myconfig,ENV=otherconfig:key.json' will
+       create a volume with config map 'myconfig' and mount that volume at
+       '/my/path'. Because no config map key was specified, all keys in
+       'myconfig' will be included. An environment variable named ENV will also
+       be created whose value is the value of 'key.json' in 'otherconfig. Not
+       supported on the fully managed version of Cloud Run.
+
+       At most one of these can be specified:
+
+         --clear-config-maps
+            Remove all config-maps.
+
+         --set-config-maps=[KEY=VALUE,...]
+            List of key-value pairs to set as config-maps. All existing
+            config-maps will be removed first.
+
+         Only --update-config-maps and --remove-config-maps can be used
+         together. If both are specified, --remove-config-maps will be applied
+         first.
+
+           --remove-config-maps=[KEY,...]
+              List of config-maps to be removed.
+
+           --update-config-maps=[KEY=VALUE,...]
+              List of key-value pairs to set as config-maps.
+
+     Arguments to locate resources, depending on the platform used.
+
+     At most one of these can be specified:
+
+       Only applicable if connecting to Cloud Run (fully managed). Specify
+       --platform=managed to use:
+
+         --region=REGION
+            Region in which the resource can be found. Alternatively, set the
+            property [run/region].
+
+       Only applicable if connecting to Cloud Run for Anthos deployed on Google
+       Cloud. Specify --platform=gke to use:
+
+         Cluster resource - Kubernetes Engine cluster to connect to. The
+         arguments in this group can be used to specify the attributes of this
+         resource. (NOTE) Some attributes are not given arguments in this group
+         but can be set in other ways. To set the project attribute:
+          ▫ provide the argument --cluster on the command line with a fully
+            specified name;
+          ▫ set the property run/cluster with a fully specified name;
+          ▫ specify the cluster from a list of available clusters with a
+            fully specified name;
+          ▫ provide the argument --project on the command line;
+          ▫ set the property core/project.
+
+           --cluster=CLUSTER
+              ID of the cluster or fully qualified identifier for the cluster.
+              To set the cluster attribute:
+              ◇ provide the argument --cluster on the command line;
+              ◇ set the property run/cluster;
+              ◇ specify the cluster from a list of available clusters.
+
+           --cluster-location=CLUSTER_LOCATION
+              Zone in which the cluster is located. Alternatively, set the
+              property [run/cluster_location]. To set the location attribute:
+              ◇ provide the argument --cluster on the command line with a
+                fully specified name;
+              ◇ set the property run/cluster with a fully specified name;
+              ◇ specify the cluster from a list of available clusters with a
+                fully specified name;
+              ◇ provide the argument --cluster-location on the command line;
+              ◇ set the property run/cluster_location;
+              ◇ specify the cluster location from a list of available zones.
+
+       Only applicable if connecting to Cloud Run for Anthos deployed on
+       VMware. Specify --platform=kubernetes to use:
+
+         --context=CONTEXT
+            The name of the context in your kubectl config file to use for
+            connecting.
+
+         --kubeconfig=KUBECONFIG
+            The absolute path to your kubectl config file. If not specified,
+            the colon- or semicolon-delimited list of paths specified by
+            $KUBECONFIG will be used. If $KUBECONFIG is unset, this defaults to
+            ~/.kube/config.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha run services update
+
+        $ gcloud beta run services update
+

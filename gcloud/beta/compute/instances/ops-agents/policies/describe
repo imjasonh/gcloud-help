@@ -1,0 +1,69 @@
+NAME
+    gcloud beta compute instances ops-agents policies describe - describe a
+        Google Cloud's operations suite agents (Ops Agents) policy
+
+SYNOPSIS
+    gcloud beta compute instances ops-agents policies describe POLICY_ID
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) gcloud beta compute instances ops-agents policies describe describes
+    a policy that facilitates agent management across Compute Engine instances
+    based on user specified instance filters. This policy installs, specifies
+    versioning, enables autoupgrade, and removes Ops Agents.
+
+    The command returns the content of one policy. For instance:
+
+        agent_rules:
+        - enable_autoupgrade: true
+          package_state: installed
+          type: ops-agent
+          version: latest
+        assignment:
+          group_labels:
+          - app: myapp
+            env: prod
+          os_types:
+          - short_name: ubuntu
+            version: '18.04'
+          zones:
+          - us-central1-a
+        create_time: '2021-02-02T02:10:25.344Z'
+        description: A test policy to install agents
+        etag: <ETAG>
+        id: projects/<PROJECT_NUMBER>/guestPolicies/ops-agents-test-policy
+        update_time: '2021-02-02T02:10:25.344Z'
+
+    If no policies are found, it returns a NOT_FOUND error.
+
+EXAMPLES
+    To describe an Ops Agents policy named ops-agents-test-policy in the
+    current project, run:
+
+        $ gcloud beta compute instances ops-agents policies describe \
+            ops-agents-test-policy
+
+POSITIONAL ARGUMENTS
+     POLICY_ID
+        ID of the policy.
+
+        This ID must start with ops-agents-, contain only lowercase letters,
+        numbers, and hyphens, end with a number or a letter, be between 1-63
+        characters, and be unique within the project. The goal of the prefix
+        ops-agents- is to easily distinguish these Ops Agents specific policies
+        from other generic policies and lower the chance of naming conflicts.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud alpha compute instances ops-agents policies describe
+

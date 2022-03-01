@@ -1,0 +1,95 @@
+NAME
+    gcloud active-directory domains update-ldaps-settings - update the LDAPS
+        settings for a domain
+
+SYNOPSIS
+    gcloud active-directory domains update-ldaps-settings DOMAIN
+        (--clear-certificates | [--certificate-pfx-file=CERTIFICATE_PFX_FILE
+          : --certificate-password=CERTIFICATE_PASSWORD]) [--async]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Update a Managed Microsoft AD domain's Lightweight Directory Access
+    Protocol over TLS/SSL (LDAPS) settings. You must be safelisted for the
+    Managed AD LDAPS Alpha in order to use this feature. Consult the API
+    documentation for a list of certificate requirements.
+
+    This command can fail for the following reasons:
+      ▪ The certificate is invalid.
+      ▪ The domain specified does not exist.
+      ▪ The active account does not have permission to view LDAPS settings
+        for the domain.
+
+EXAMPLES
+    To enable LDAPS for the first time or update the certificates being used:
+
+        $ gcloud active-directory domains update-ldaps-settings \
+            my-domain.com \
+            --certificate-pfx-file=certificate-chain-with-private-key.pfx \
+            --certificate-password="password"
+
+    To disable LDAPS:
+
+        $ gcloud active-directory domains update-ldaps-settings \
+            my-domain.com --clear-certificates
+
+POSITIONAL ARGUMENTS
+     Domain resource - Name of the managed Managed Microsoft AD domain you want
+     to update. This represents a Cloud resource. (NOTE) Some attributes are
+     not given arguments in this group but can be set in other ways. To set the
+     project attribute:
+      ◆ provide the argument domain on the command line with a fully
+        specified name;
+      ◆ set the property core/project;
+      ◆ provide the argument --project on the command line.
+
+     This must be specified.
+
+       DOMAIN
+          ID of the domain or fully qualified identifier for the domain. To set
+          the domain attribute:
+          ▸ provide the argument domain on the command line.
+
+REQUIRED FLAGS
+     Exactly one of these must be specified:
+
+       --clear-certificates
+          Disable LDAPS by deleting all existing certificates. Certificates
+          will need to be re-uploaded if LDAPS is to be re-enabled.
+
+       --certificate-pfx-file=CERTIFICATE_PFX_FILE
+          PKCS#12-formatted pfx file that specifies the certificate chain used
+          to configure LDAPS. If certificate-password is not specified, command
+          will prompt user for secret.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --certificate-password=CERTIFICATE_PASSWORD
+          Password used to encrypt the PKCS#12 certificate. If not specified,
+          command will prompt user for secret.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the managedidentities/v1 API. The full documentation for
+    this API can be found at: https://cloud.google.com/managed-microsoft-ad/
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha active-directory domains update-ldaps-settings
+
+        $ gcloud beta active-directory domains update-ldaps-settings
+

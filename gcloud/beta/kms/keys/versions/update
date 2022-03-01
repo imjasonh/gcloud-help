@@ -1,0 +1,89 @@
+NAME
+    gcloud beta kms keys versions update - update a key version
+
+SYNOPSIS
+    gcloud beta kms keys versions update VERSION
+        [--ekm-connection-key-path=EKM_CONNECTION_KEY_PATH]
+        [--external-key-uri=EXTERNAL_KEY_URI] [--key=KEY] [--keyring=KEYRING]
+        [--location=LOCATION] [--state=STATE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) gcloud beta kms keys versions update can be used to update the key
+    versions. Updates can be made to the the key versions's state (enabling or
+    disabling it), to its external key URI (if the key version has protection
+    level EXTERNAL), or to its ekm connection key path (if the key version has
+    protection level EXTERNAL_VPC).
+
+EXAMPLES
+    The following command enables the key version 8 of key frodo within keyring
+    fellowship and location us-east1:
+
+        $ gcloud beta kms keys versions update 8 --location=us-east1 \
+                      --keyring=fellowship \
+                      --key=frodo \
+                      --state=enabled
+
+    The following command disables the key version 8 of key frodo within
+    keyring fellowship and location us-east1:
+
+        $ gcloud beta kms keys versions update 8 --location=us-east1 \
+                      --keyring=fellowship \
+                      --key=frodo \
+                      --state=disabled
+
+    The following command updates the external key URI of version 8 of key
+    frodo within keyring fellowship and location us-east1:
+
+        $ gcloud beta kms keys versions update 8 --location=us-east1 \
+                      --keyring=fellowship \
+                      --key=frodo \
+                      --external-key-uri=https://example.kms/v0/some/key/path
+
+    The following command updates the ekm connection key path of version 8 of
+    key bilbo within keyring fellowship and location us-east1:
+
+        $ gcloud beta kms keys versions update 8 --location=us-east1 \
+                      --keyring=fellowship \
+                      --key=bilbo \
+                      --ekm-connection-key-path=v0/some/key/path
+
+POSITIONAL ARGUMENTS
+     VERSION
+        Name of the version to describe.
+
+FLAGS
+     --ekm-connection-key-path=EKM_CONNECTION_KEY_PATH
+        The path to the external key material on the EKM for keys with
+        protection level "external-vpc".
+
+     --external-key-uri=EXTERNAL_KEY_URI
+        The URI of the external key for keys with protection level "external".
+
+     --key=KEY
+        The containing key.
+
+     --keyring=KEYRING
+        Key ring of the key.
+
+     --location=LOCATION
+        Location of the keyring.
+
+     --state=STATE
+        State of the key version.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud kms keys versions update
+
+        $ gcloud alpha kms keys versions update
+

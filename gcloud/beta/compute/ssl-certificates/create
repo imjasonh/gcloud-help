@@ -1,0 +1,105 @@
+NAME
+    gcloud beta compute ssl-certificates create - create a Compute Engine SSL
+        certificate
+
+SYNOPSIS
+    gcloud beta compute ssl-certificates create NAME
+        (--domains=DOMAIN,[DOMAIN,...]
+          | --certificate=LOCAL_FILE_PATH --private-key=LOCAL_FILE_PATH)
+        [--description=DESCRIPTION] [--global | --region=REGION]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) gcloud beta compute ssl-certificates create creates SSL certificate
+    resources, which you can use in a target HTTPS or target SSL proxy. An SSL
+    certificate resource consists of a certificate and private key. The private
+    key is encrypted before it is stored.
+
+    You can create either a managed or a self-managed SslCertificate resource.
+    A managed SslCertificate is provisioned and renewed for you. A self-managed
+    certificate is created by passing the certificate obtained from Certificate
+    Authority through --certificate and --private-key flags.
+
+EXAMPLES
+    To create a self-managed certificate resource 'my-cert' from a certificate
+    placed under path 'foo/cert' and a private key placed under path 'foo/pk',
+    run:
+
+        $ gcloud beta compute ssl-certificates create my-cert \
+          --certificate=foo/cert --private-key=foo/pk
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the SSL certificate to create.
+
+REQUIRED FLAGS
+     Flags for managed or self-managed certificate.
+
+     Exactly one of these must be specified:
+
+       --domains=DOMAIN,[DOMAIN,...]
+          List of domains to create a managed certificate for.
+
+       Flags for self-managed certificate
+
+         --certificate=LOCAL_FILE_PATH
+            Path to a local certificate file to create a self-managed
+            certificate. The certificate must be in PEM format. The certificate
+            chain must be no greater than 5 certs long. The chain must include
+            at least one intermediate cert.
+
+            This flag must be specified if any of the other arguments in this
+            group are specified.
+
+         --private-key=LOCAL_FILE_PATH
+            Path to a local private key file. The private key must be in PEM
+            format and must use RSA or ECDSA encryption.
+
+            This flag must be specified if any of the other arguments in this
+            group are specified.
+
+OPTIONAL FLAGS
+     --description=DESCRIPTION
+        An optional, textual description for the SSL certificate.
+
+     At most one of these can be specified:
+
+       --global
+          If set, the SSL certificate is global.
+
+       --region=REGION
+          Region of the SSL certificate to create. If not specified, you might
+          be prompted to select a region (interactive mode only).
+
+          To avoid prompting when this flag is omitted, you can set the
+          compute/region property:
+
+              $ gcloud config set compute/region REGION
+
+          A list of regions can be fetched by running:
+
+              $ gcloud compute regions list
+
+          To unset the property, run:
+
+              $ gcloud config unset compute/region
+
+          Alternatively, the region can be stored in the environment variable
+          CLOUDSDK_COMPUTE_REGION.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud compute ssl-certificates create
+
+        $ gcloud alpha compute ssl-certificates create
+

@@ -1,0 +1,95 @@
+NAME
+    gcloud alpha redis instances failover - failover a standard tier Cloud
+        Memorystore for Redis instance from the master node to its replica
+
+SYNOPSIS
+    gcloud alpha redis instances failover (INSTANCE : --region=REGION)
+        [--async] [--data-protection-mode=DATA_PROTECTION_MODE]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Failover a standard tier Cloud Memorystore for Redis instance from
+    the master node to its replica.
+
+EXAMPLES
+    To failover an instance with the name 'my-redis-instance' in region
+    'us-central-1', run:
+
+        $ gcloud alpha redis instances failover my-redis-instance \
+            --region=us-central1
+
+    To failover an instance with the name 'my-redis-instance' in region
+    'us-central-1' without attempting to limit data loss, run:
+
+        $ gcloud alpha redis instances failover my-redis-instance \
+            --region=us-central1 --data-protection-mode=force-data-loss
+
+POSITIONAL ARGUMENTS
+     Instance resource - Arguments and flags that specify the standard tier
+     Cloud Memorystore for Redis instance you want to failover. The arguments
+     in this group can be used to specify the attributes of this resource.
+     (NOTE) Some attributes are not given arguments in this group but can be
+     set in other ways. To set the project attribute:
+      ◆ provide the argument instance on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       INSTANCE
+          ID of the instance or fully qualified identifier for the instance. To
+          set the instance attribute:
+          ▸ provide the argument instance on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --region=REGION
+          The name of the Redis region of the instance. Overrides the default
+          redis/region property value for this command invocation.
+
+          To set the region attribute:
+          ▸ provide the argument instance on the command line with a fully
+            specified name;
+          ▸ provide the argument --region on the command line;
+          ▸ set the property redis/region.
+
+FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --data-protection-mode=DATA_PROTECTION_MODE
+        Data protection mode to use for the failover. If not specified,
+        defaults to 'limited-data-loss'. DATA_PROTECTION_MODE must be one of:
+
+         force-data-loss
+            Failover without data loss protection. Can cause significant data
+            loss.
+         limited-data-loss
+            Failover with data loss protection that ensures loss is within
+            system thresholds.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the redis/v1 API. The full documentation for this API can
+    be found at: https://cloud.google.com/memorystore/docs/redis/
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud redis instances failover
+
+        $ gcloud beta redis instances failover
+

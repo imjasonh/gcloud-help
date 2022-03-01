@@ -1,0 +1,149 @@
+NAME
+    gcloud compute networks vpc-access connectors create - create a VPC Access
+        connector
+
+SYNOPSIS
+    gcloud compute networks vpc-access connectors create
+        (CONNECTOR : --region=REGION) [--async] [--machine-type=MACHINE_TYPE]
+        [--max-instances=MAX_INSTANCES;
+          default=10 --min-instances=MIN_INSTANCES; default=2
+          | --max-throughput=MAX_THROUGHPUT --min-throughput=MIN_THROUGHPUT]
+        [--network=NETWORK; default="default" --range=RANGE
+          | --subnet=SUBNET --subnet-project=SUBNET_PROJECT]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Create a new VPC Access connector with the given name.
+
+    This command can fail for the following reasons:
+      ▪ An instance with the same name already exists.
+      ▪ The active account does not have permission to create instances.
+
+EXAMPLES
+    The following command creates a VPC Access connector with name
+    'my-vpc-connector' in region 'us-central1' in network 'my-network' with IP
+    CIDR range of '10.132.0.0/28'.
+
+        $ gcloud compute networks vpc-access connectors create \
+            my-vpc-connector --region=us-central1 --network=my-network
+          --range=10.132.0.0/28
+
+POSITIONAL ARGUMENTS
+     Connector resource - Arguments and flags that specify the VPC Access
+     connector you want to create. The arguments in this group can be used to
+     specify the attributes of this resource. (NOTE) Some attributes are not
+     given arguments in this group but can be set in other ways. To set the
+     project attribute:
+      ◆ provide the argument connector on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       CONNECTOR
+          ID of the connector or fully qualified identifier for the connector.
+          To set the connector attribute:
+          ▸ provide the argument connector on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --region=REGION
+          Compute region (e.g. us-central1) for the connector.
+
+          To set the region attribute:
+          ▸ provide the argument connector on the command line with a fully
+            specified name;
+          ▸ provide the argument --region on the command line.
+
+FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --machine-type=MACHINE_TYPE
+        Machine type of VMs underlying the VPC Access connector. Accepted
+        values are e2-micro, f1-micro, and e2-standard-4. If left unspecified,
+        the e2-micro machine type is used.
+
+     At most one of these can be specified:
+
+       Scaling settings of a VPC Access Connector can be specified in terms of
+       number of Google Compute Engine VM instances underlying the connector
+       autoscaling group.
+
+         --max-instances=MAX_INSTANCES; default=10
+            Maximum number of instances within an autoscaling group underlying
+            the connector. Value must be between 2-10. Must be higher than the
+            value specified by --min-instances.
+
+         --min-instances=MIN_INSTANCES; default=2
+            Minimum number of instances within an autoscaling group underlying
+            the connector. Value must be between 1-9. Must be lower than the
+            value specified by --max-instances.
+
+       Scaling settings of a VPC Access Connector can be specified in terms of
+       throughput.
+
+         --max-throughput=MAX_THROUGHPUT
+            Maximum throughput in Mbps. Value must be a multiple of 100 from
+            300 through 1000. Must be higher than the value specified by
+            --min-throughput; the set value, if applicable, or the default
+            minimum throughput value.
+
+         --min-throughput=MIN_THROUGHPUT
+            Minimum throughput in Mbps. Value must be a multiple of 100 from
+            200 through 900. Must be lower than the value specified by
+            --max-throughput; the set value, if applicable, or the default
+            maximum throughput value.
+
+     At most one of these can be specified:
+
+       The Serverless VPC Access API can internally manage the creation of a
+       subnet to house the VPC connector. To create this subnet, the network ID
+       (--network) and an IP CIDR range (--range) for the subnet must be
+       provided.
+
+         --network=NETWORK; default="default"
+            Name of the Compute Engine network to which the connector will be
+            connected. If left unspecified, the default network will be used.
+
+         --range=RANGE
+            CIDR range of internal addresses that are reserved for this
+            connector. For example, 10.132.0.0/28. Range must be unique and
+            non-overlapping with existing ranges in the network.
+
+       You can specify a subnet in which to place the connector rather than
+       using an internally managed subnet. If you wish to use this connector to
+       attach your Serverless application to a Shared VPC, first share a subnet
+       to the project to which you are deploying your connector. Then, supply
+       the name of the subnet (--subnet) and the project ID (--subnet-project)
+       from which the subnet is hosted to connect to this VPC.
+
+         --subnet=SUBNET
+            User-provided subnet to house the connector. This field can be used
+            in favor of specifying the network and range fields. e.g.
+            "my-subnet"
+
+         --subnet-project=SUBNET_PROJECT
+            Project ID of the provided subnet. The default is the project of
+            the connector.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the vpcaccess/v1 API. The full documentation for this API
+    can be found at: http://cloud.google.com
+
+NOTES
+    This variant is also available:
+
+        $ gcloud beta compute networks vpc-access connectors create
+

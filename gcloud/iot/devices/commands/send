@@ -1,0 +1,96 @@
+NAME
+    gcloud iot devices commands send - sends a command to a device
+
+SYNOPSIS
+    gcloud iot devices commands send
+        (--command-data=COMMAND_DATA | --command-file=COMMAND_FILE)
+        (--device=DEVICE : --region=REGION --registry=REGISTRY)
+        [--subfolder=SUBFOLDER] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Sends a command to a device.
+
+EXAMPLES
+    To send a simple command to a device in 'my-registry' and region
+    'us-central1' using a special command subfolder, run:
+
+        $ gcloud iot devices commands send --region=us-central1 \
+            --registry=my-registry --device=my-device \
+            --command-data="restart job" \
+            --subfolder="/jobs/metric_collector"
+
+    To send a command containing special characters to a device in
+    'my-registry' and region 'us-central1', run:
+
+        $ gcloud iot devices commands send --region=us-central1 \
+            --registry=my-registry --device=my-device \
+            --command-file=/path/to/command.file
+
+REQUIRED FLAGS
+     Exactly one of these must be specified:
+
+       --command-data=COMMAND_DATA
+          The data for this command, as a string. For any values that contain
+          special characters (in the context of your shell), use the
+          --command-file flag instead.
+
+       --command-file=COMMAND_FILE
+          Path to a local file containing the data for this command.
+
+     Device resource - The device you want to send commands to. The arguments
+     in this group can be used to specify the attributes of this resource.
+     (NOTE) Some attributes are not given arguments in this group but can be
+     set in other ways. To set the project attribute:
+      ◆ provide the argument --device on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       --device=DEVICE
+          ID of the device or fully qualified identifier for the device. To set
+          the device attribute:
+          ▸ provide the argument --device on the command line.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --region=REGION
+          The name of the Cloud IoT region. To set the region attribute:
+          ▸ provide the argument --device on the command line with a fully
+            specified name;
+          ▸ provide the argument --region on the command line.
+
+       --registry=REGISTRY
+          The name of the Cloud IoT registry. To set the registry attribute:
+          ▸ provide the argument --device on the command line with a fully
+            specified name;
+          ▸ provide the argument --registry on the command line.
+
+OPTIONAL FLAGS
+     --subfolder=SUBFOLDER
+        The commands subfolder to append to the topic path.
+
+        This field must not have more than 256 characters, and must not contain
+        any MQTT wildcards ("+" or "#") or null characters.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the cloudiot/v1 API. The full documentation for this API
+    can be found at: https://cloud.google.com/iot
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha iot devices commands send
+
+        $ gcloud beta iot devices commands send
+

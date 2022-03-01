@@ -1,0 +1,182 @@
+NAME
+    gcloud beta deploy releases create - creates a new release, delivery
+        pipeline qualified
+
+SYNOPSIS
+    gcloud beta deploy releases create
+        (RELEASE : --delivery-pipeline=DELIVERY_PIPELINE --region=REGION)
+        [--annotations=[KEY=VALUE,...]] [--description=DESCRIPTION]
+        [--gcs-source-staging-dir=GCS_SOURCE_STAGING_DIR]
+        [--ignore-file=IGNORE_FILE] [--labels=[KEY=VALUE,...]]
+        [--skaffold-file=SKAFFOLD_FILE] [--skaffold-version=SKAFFOLD_VERSION]
+        [--source=SOURCE; default="."] [--to-target=TO_TARGET]
+        [--build-artifacts=BUILD_ARTIFACTS | --images=[NAME=TAG,...]]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Creates a new release, delivery pipeline qualified.
+
+EXAMPLES
+    To create a release with source located at storage URL
+    gs://bucket/object.zip and the first rollout in the first target of the
+    promotion sequence:
+
+        $ gcloud beta deploy releases create my-release \
+           --source=`gs://bucket/object.zip` \
+           --delivery-pipeline=my-pipeline --region=us-central1
+
+    To create a release with source located at current directory and deploy a
+    rollout to target prod :
+
+        $ gcloud beta deploy releases create my-release \
+            --delivery-pipeline=my-pipeline --region=us-central1 \
+            --to-target=prod
+
+    The current UTC date and time on the machine running the gcloud command can
+    also be included in the release name by adding $DATE and $TIME parameters:
+
+        $ gcloud beta deploy releases create 'my-release-$DATE-$TIME' \
+            --delivery-pipeline=my-pipeline --region=us-central1
+
+        If the current UTC date and time is set to 2021-12-21 12:02, then the created release
+        will have its name set as my-release-20211221-1202.
+
+        When using these parameters, please be sure to wrap the release name in single quotes
+        or else the template parameters will be overriden by environment variables.
+
+POSITIONAL ARGUMENTS
+     Release resource - The name of the Release. The arguments in this group
+     can be used to specify the attributes of this resource. (NOTE) Some
+     attributes are not given arguments in this group but can be set in other
+     ways. To set the project attribute:
+      ◆ provide the argument release on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       RELEASE
+          ID of the release or fully qualified identifier for the release. To
+          set the release attribute:
+          ▸ provide the argument release on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --delivery-pipeline=DELIVERY_PIPELINE
+          The delivery pipeline associated with the release. Alternatively, set
+          the property [deploy/delivery-pipeline]. To set the delivery-pipeline
+          attribute:
+          ▸ provide the argument release on the command line with a fully
+            specified name;
+          ▸ provide the argument --delivery-pipeline on the command line;
+          ▸ set the property deploy/delivery_pipeline.
+
+       --region=REGION
+          The Cloud region for the release. Alternatively, set the property
+          [deploy/region]. To set the region attribute:
+          ▸ provide the argument release on the command line with a fully
+            specified name;
+          ▸ provide the argument --region on the command line;
+          ▸ set the property deploy/region.
+
+FLAGS
+     --annotations=[KEY=VALUE,...]
+        Annotations to apply to the release. Annotations take the form of
+        key/value string pairs.
+
+        Examples:
+
+        Add annotations:
+
+            $ gcloud beta deploy releases create \
+                --annotations="from_target=test,status=stable"
+
+     --description=DESCRIPTION
+        Description of the release.
+
+     --gcs-source-staging-dir=GCS_SOURCE_STAGING_DIR
+        A directory in Google Cloud Storage to copy the source used for staging
+        the build. If the specified bucket does not exist, Cloud Deploy will
+        create one. If you don't set this field,
+        gs://[PROJECT_ID]_clouddeploy/source is used.
+
+     --ignore-file=IGNORE_FILE
+        Override the .gcloudignore file and use the specified file instead.
+
+     --labels=[KEY=VALUE,...]
+        Labels to apply to the release. Labels take the form of key/value
+        string pairs.
+
+        Examples:
+
+        Add labels:
+
+            $ gcloud beta deploy releases create \
+                --labels="commit=abc123,author=foo"
+
+     --skaffold-file=SKAFFOLD_FILE
+        Path of the skaffold file relative to the source directory.
+
+        Examples:
+
+        Use Skaffold file:
+
+            $ gcloud beta deploy releases create --source=/home/user/source \
+                --skaffold-file=config/skaffold.yaml
+
+            The skaffold file absolute file path is expected to be:
+            /home/user/source/config/skaffold.yaml
+
+     --skaffold-version=SKAFFOLD_VERSION
+        Version of the Skaffold binary.
+
+     --source=SOURCE; default="."
+        The location of the source that contains skaffold.yaml. The location
+        can be a directory on a local disk or a gzipped archive file (.tar.gz)
+        in Google Cloud Storage. If the source is a local directory, this
+        command skips the files specified in the --ignore-file. If
+        --ignore-file is not specified, use.gcloudignore file. If a
+        .gcloudignore file is absent and a .gitignore file is present in the
+        local source directory, gcloud will use a generated Git-compatible
+        .gcloudignore file that respects your .gitignored files. The global
+        .gitignore is not respected. For more information on .gcloudignore, see
+        gcloud topic gcloudignore.
+
+     --to-target=TO_TARGET
+        Specifies a target to deliver into upon release creation
+
+     At most one of these can be specified:
+
+       --build-artifacts=BUILD_ARTIFACTS
+          Reference to a Skaffold build artifacts output file from skaffold
+          build --file-output=BUILD_ARTIFACTS. If you aren't using Skaffold,
+          use the --images flag below to specify the
+          image-names-to-tagged-image references.
+
+       --images=[NAME=TAG,...]
+          Reference to a collection of individual image name to image full path
+          replacements.
+
+          For example:
+
+              $ gcloud deploy releases create foo \
+                  --images image1=path/to/image1:v1@sha256:45db24
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud deploy releases create
+
+        $ gcloud alpha deploy releases create
+

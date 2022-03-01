@@ -1,0 +1,95 @@
+NAME
+    gcloud metastore services export gcs - export metadata from a Dataproc
+        Metastore service to Google Cloud Storage
+
+SYNOPSIS
+    gcloud metastore services export gcs (SERVICE : --location=LOCATION)
+        --destination-folder=DESTINATION_FOLDER [--async]
+        [--dump-type=DUMP_TYPE; default="mysql"] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Export metadata from a Dataproc Metastore service to Google Cloud Storage.
+
+    If run asynchronously with --async, exits after printing the operation name
+    that can be used to poll the status of the export via:
+
+        gcloud metastore operations describe
+
+EXAMPLES
+    To export metadata from a Dataproc Metastore service with the name
+    my-metastore-service in location us-central1 to the destination folder
+    gs://my-bucket/destination-folder, run:
+
+        $ gcloud metastore services export gcs my-metastore-service \
+            --location=us-central1 \
+            --destination-folder=gs://my-bucket/destination-folder
+
+POSITIONAL ARGUMENTS
+     Service resource - Arguments and flags that specify the Dataproc Metastore
+     service you want to export. The arguments in this group can be used to
+     specify the attributes of this resource. (NOTE) Some attributes are not
+     given arguments in this group but can be set in other ways. To set the
+     project attribute:
+      ◆ provide the argument service on the command line with a fully
+        specified name;
+      ◆ set the property core/project;
+      ◆ provide the argument --project on the command line.
+
+     This must be specified.
+
+       SERVICE
+          ID of the service or fully qualified identifier for the service. To
+          set the service attribute:
+          ▸ provide the argument service on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --location=LOCATION
+          The location of the Dataproc Metastore service.
+
+          If not specified, will use default metastore/location.
+
+          To set the location attribute:
+          ▸ provide the argument service on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property metastore/location.
+
+REQUIRED FLAGS
+     --destination-folder=DESTINATION_FOLDER
+        A Cloud Storage URI of a folder that metadata is exported to, in the
+        format gs://<bucket_name>/<path_inside_bukcet>. A sub-folder containing
+        exported files will be created below it.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --dump-type=DUMP_TYPE; default="mysql"
+        The type of the database dump. If unspecified, defaults to mysql.
+        DUMP_TYPE must be (currently only one value is supported):
+
+         mysql
+            Database dump is a MYSQL dump file.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the metastore/v1 API. The full documentation for this API
+    can be found at: https://cloud.google.com/dataproc-metastore/docs
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha metastore services export gcs
+
+        $ gcloud beta metastore services export gcs
+

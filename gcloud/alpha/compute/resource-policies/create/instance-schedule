@@ -1,0 +1,102 @@
+NAME
+    gcloud alpha compute resource-policies create instance-schedule - create a
+        Compute Engine instance schedule resource policy
+
+SYNOPSIS
+    gcloud alpha compute resource-policies create instance-schedule NAME
+        [--description=DESCRIPTION] [--end-date=END_DATE]
+        [--initiation-date=INITIATION_DATE] [--region=REGION]
+        [--timezone=TIMEZONE] [--vm-start-schedule=VM_START_SCHEDULE]
+        [--vm-stop-schedule=VM_STOP_SCHEDULE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Create a Compute Engine instance schedule resource policy.
+
+EXAMPLES
+    To create an instance schedule resource policy that has a daily start
+    operation at 8 AM and a daily stop operation at 5 PM for the UTC timezone,
+    run:
+
+        $ gcloud alpha compute resource-policies create instance-schedule \
+            my-resource-policy --description="daily policy" \
+            --vm-start-schedule="0 8 * * *" \
+            --vm-stop-schedule="0 17 * * *" --timezone="UTC" --region=REGION
+
+    Use the initiation date and end date to limit when the policy is active. To
+    create an instance schedule resource policy with initiation and end dates,
+    run:
+
+        $ gcloud alpha compute resource-policies create instance-schedule \
+            my-resource-policy --description="limited daily policy" \
+            --vm-start-schedule="0 8 * * *" \
+            --vm-stop-schedule="0 17 * * *" --timezone="UTC" \
+            --region=REGION --initiation-date="2021-01-01T00:00:00.000Z" \
+            --end-date="2021-02-01T00:00:00.000Z"
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the resource policy to operate on.
+
+FLAGS
+     --description=DESCRIPTION
+        An optional, textual description for the backend.
+
+     --end-date=END_DATE
+        The expiration time of the schedule policy. The timestamp must be an
+        RFC3339 valid string.
+
+     --initiation-date=INITIATION_DATE
+        The start time of the schedule policy. The timestamp must be an RFC3339
+        valid string.
+
+     --region=REGION
+        Region of the resource policy to operate on. If not specified, you
+        might be prompted to select a region (interactive mode only).
+
+        To avoid prompting when this flag is omitted, you can set the
+        compute/region property:
+
+            $ gcloud config set compute/region REGION
+
+        A list of regions can be fetched by running:
+
+            $ gcloud compute regions list
+
+        To unset the property, run:
+
+            $ gcloud config unset compute/region
+
+        Alternatively, the region can be stored in the environment variable
+        CLOUDSDK_COMPUTE_REGION.
+
+     --timezone=TIMEZONE
+        Timezone used in interpreting schedule. The value of this field must be
+        a time zone name from the tz database
+        http://en.wikipedia.org/wiki/Tz_database
+
+     --vm-start-schedule=VM_START_SCHEDULE
+        Schedule for starting the instance, specified using standard CRON
+        format.
+
+     --vm-stop-schedule=VM_STOP_SCHEDULE
+        Schedule for stopping the instance, specified using standard CRON
+        format.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud compute resource-policies create instance-schedule
+
+        $ gcloud beta compute resource-policies create instance-schedule
+

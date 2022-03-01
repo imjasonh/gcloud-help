@@ -1,0 +1,160 @@
+NAME
+    gcloud alpha dns managed-zones create - create a Cloud DNS managed-zone
+
+SYNOPSIS
+    gcloud alpha dns managed-zones create ZONE_NAME --description=DESCRIPTION
+        --dns-name=DNS_NAME [--denial-of-existence=DENIAL_OF_EXISTENCE]
+        [--dnssec-state=DNSSEC_STATE] [--forwarding-targets=[IP_ADDRESSES,...]]
+        [--gkeclusters=[GKECLUSTERS,...]] [--ksk-algorithm=KSK_ALGORITHM]
+        [--ksk-key-length=KSK_KEY_LENGTH] [--labels=[KEY=VALUE,...]]
+        [--location=LOCATION] [--[no-]log-dns-queries]
+        [--managed-reverse-lookup] [--networks=[NETWORK,...]]
+        [--private-forwarding-targets=[IP_ADDRESSES,...]]
+        [--service-directory-namespace=SERVICE_DIRECTORY_NAMESPACE]
+        [--visibility=VISIBILITY; default="public"]
+        [--zsk-algorithm=ZSK_ALGORITHM] [--zsk-key-length=ZSK_KEY_LENGTH]
+        [--target-network=TARGET_NETWORK --target-project=TARGET_PROJECT]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) This command creates a Cloud DNS managed-zone.
+
+EXAMPLES
+    To create a managed-zone, run:
+
+        $ gcloud alpha dns managed-zones create my-zone \
+            --dns-name=my.zone.com. --description="My zone!"
+
+    To create a managed-zone with DNSSEC, run:
+
+        $ gcloud alpha dns managed-zones create my-zone-2 \
+            --description="Signed Zone" \
+            --dns-name=myzone.example \
+            --dnssec-state=on
+
+    To create a zonal managed-zone scoped to a GKE Cluster in us-east1-a, run:
+
+        $ gcloud alpha dns managed-zones create my-zonal-zone \
+            --description="Signed Zone" \
+            --dns-name=cluster.local
+            --visibiilty=private
+            --gkeclusters=cluster1
+            --location=us-east1-a
+
+POSITIONAL ARGUMENTS
+     ZONE_NAME
+        The name of the managed-zone to be created.
+
+REQUIRED FLAGS
+     --description=DESCRIPTION
+        Short description for the managed-zone.
+
+     --dns-name=DNS_NAME
+        The DNS name suffix that will be managed with the created zone.
+
+OPTIONAL FLAGS
+     --denial-of-existence=DENIAL_OF_EXISTENCE
+        Requires DNSSEC enabled. DENIAL_OF_EXISTENCE must be one of: nsec,
+        nsec3.
+
+     --dnssec-state=DNSSEC_STATE
+        The DNSSEC state for this managed zone. DNSSEC_STATE must be one of:
+
+         off
+            Disable DNSSEC for the managed zone.
+         on
+            Enable DNSSEC for the managed zone.
+         transfer
+            Enable DNSSEC and allow transferring a signed zone in or out.
+
+     --forwarding-targets=[IP_ADDRESSES,...]
+        List of IPv4 addresses of target name servers that the zone will
+        forward queries to. Ignored for public visibility. Non-RFC1918
+        addresses will forward to the target through the Internet. RFC1918
+        addresses will forward through the VPC.
+
+     --gkeclusters=[GKECLUSTERS,...]
+        List of GKE clusters that the zone should be visible in if the zone
+        visibility is [private].
+
+     --ksk-algorithm=KSK_ALGORITHM
+        String mnemonic specifying the DNSSEC algorithm of the key-signing key.
+        Requires DNSSEC enabled. KSK_ALGORITHM must be one of: ecdsap256sha256,
+        ecdsap384sha384, rsasha1, rsasha256, rsasha512.
+
+     --ksk-key-length=KSK_KEY_LENGTH
+        Length of the key-signing key in bits. Requires DNSSEC enabled.
+
+     --labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     --location=LOCATION
+        Specifies the desired service location the request is sent to. Default
+        to Cloud DNS global service.
+
+     --[no-]log-dns-queries
+        Specifies whether to enable query logging. Defaults to False. Use
+        --log-dns-queries to enable and --no-log-dns-queries to disable.
+
+     --managed-reverse-lookup
+        Specifies whether this zone is a managed reverse lookup zone, required
+        for Cloud DNS to correctly resolve Non-RFC1918 PTR records.
+
+     --networks=[NETWORK,...]
+        List of networks that the zone should be visible in if the zone
+        visibility is [private].
+
+     --private-forwarding-targets=[IP_ADDRESSES,...]
+        List of IPv4 addresses of target name servers that the zone will
+        forward queries to. Ignored for public visibility. All addresses
+        specified for this parameter will be reached through the VPC.
+
+     --service-directory-namespace=SERVICE_DIRECTORY_NAMESPACE
+        The fully qualified URL of the service directory namespace that should
+        be associated with the zone. Ignored for public visibility zones.
+
+     --visibility=VISIBILITY; default="public"
+        Visibility of the zone. Public zones are visible to the public
+        internet. Private zones are only visible in your internal networks
+        denoted by the --networks flag. VISIBILITY must be one of: public,
+        private.
+
+     --zsk-algorithm=ZSK_ALGORITHM
+        String mnemonic specifying the DNSSEC algorithm of the key-signing key.
+        Requires DNSSEC enabled. ZSK_ALGORITHM must be one of: ecdsap256sha256,
+        ecdsap384sha384, rsasha1, rsasha256, rsasha512.
+
+     --zsk-key-length=ZSK_KEY_LENGTH
+        Length of the zone-signing key in bits. Requires DNSSEC enabled.
+
+     --target-network=TARGET_NETWORK
+        Network ID of the Google Compute Engine private network to forward
+        queries to.
+
+     --target-project=TARGET_PROJECT
+        Project ID of the Google Compute Engine private network to forward
+        queries to.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud dns managed-zones create
+
+        $ gcloud beta dns managed-zones create
+

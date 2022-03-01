@@ -1,0 +1,169 @@
+NAME
+    gcloud asset feeds update - update an existing Cloud Asset Inventory Feed
+
+SYNOPSIS
+    gcloud asset feeds update FEED_ID
+        (--folder=FOLDER_ID | --organization=ORGANIZATION_ID
+          | --project=PROJECT_ID) [--pubsub-topic=PUBSUB_TOPIC]
+        [--add-asset-names=[ASSET-NAMES,...] | --clear-asset-names
+          | --remove-asset-names=[ASSET-NAMES,...]]
+        [--add-asset-types=[ASSET-TYPES,...] | --clear-asset-types
+          | --remove-asset-types=[ASSET-TYPES,...]]
+        [--add-relationship-types=[RELATIONSHIP-TYPES,...]
+          | --clear-relationship-types
+          | --remove-relationship-types=[RELATIONSHIP-TYPES,...]]
+        [--clear-condition-description
+          | --condition-description=CONDITION_DESCRIPTION]
+        [--clear-condition-expression
+          | --condition-expression=CONDITION_EXPRESSION]
+        [--clear-condition-title | --condition-title=CONDITION_TITLE]
+        [--clear-content-type | --content-type=CONTENT_TYPE]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Update an existing Cloud Asset Inventory Feed.
+
+EXAMPLES
+    To add an asset-type to an existing feed, run:
+
+        $ gcloud asset feeds update feed1 --project=p1
+        --add-asset-types=pubsub.googleapis.com/Topic
+
+POSITIONAL ARGUMENTS
+     FEED_ID
+        Identifier of the asset feed to update, which must be unique in its
+        parent resource. Parent resource can be a project, folder, or an
+        organization.
+
+REQUIRED FLAGS
+     Exactly one of these must be specified:
+
+       --folder=FOLDER_ID
+          Folder of the feed.
+
+       --organization=ORGANIZATION_ID
+          Organization of the feed.
+
+       --project=PROJECT_ID
+          project of the feed.
+
+          The Google Cloud project ID to use for this invocation. If omitted,
+          then the current project is assumed; the current project can be
+          listed using gcloud config list --format='text(core.project)' and can
+          be set using gcloud config set project PROJECTID.
+
+          --project and its fallback core/project property play two roles in
+          the invocation. It specifies the project of the resource to operate
+          on. It also specifies the project for API enablement check, quota,
+          and billing. To specify a different project for quota and billing,
+          use --billing-project or billing/quota_project property.
+
+OPTIONAL FLAGS
+     --pubsub-topic=PUBSUB_TOPIC
+        Name of the Cloud Pub/Sub topic to publish to, of the form
+        projects/PROJECT_ID/topics/TOPIC_ID. You can list existing topics with
+        gcloud pubsub topics list --format="text(name)"
+
+     These flags modify the member assetNames of this Feed. See
+     https://cloud.google.com/apis/design/resource_names#full_resource_name for
+     more information.
+
+     At most one of these can be specified:
+
+       --add-asset-names=[ASSET-NAMES,...]
+          Append the given values to the current assetNames.
+
+       --clear-asset-names
+          Empty the current assetNames.
+
+       --remove-asset-names=[ASSET-NAMES,...]
+          Remove the given values from the current assetNames.
+
+     These flags modify the member assetTypes of this Feed. See
+     https://cloud.google.com/resource-manager/docs/cloud-asset-inventory/overview
+     for all supported asset types.
+
+     At most one of these can be specified:
+
+       --add-asset-types=[ASSET-TYPES,...]
+          Append the given values to the current assetTypes.
+
+       --clear-asset-types
+          Empty the current assetTypes.
+
+       --remove-asset-types=[ASSET-TYPES,...]
+          Remove the given values from the current assetTypes.
+
+     These flags modify the member relationshipTypes of this Feed. See
+     https://cloud.google.com/resource-manager/docs/cloud-asset-inventory/overview
+     for all supported relationship types.
+
+     At most one of these can be specified:
+
+       --add-relationship-types=[RELATIONSHIP-TYPES,...]
+          Append the given values to the current relationshipTypes.
+
+       --clear-relationship-types
+          Empty the current relationshipTypes.
+
+       --remove-relationship-types=[RELATIONSHIP-TYPES,...]
+          Remove the given values from the current relationshipTypes.
+
+     At most one of these can be specified:
+
+       --clear-condition-description
+          Clear any existing condition description setting on the feed.
+          Condition description will be empty.
+
+       --condition-description=CONDITION_DESCRIPTION
+          Condition description to overwrite the existing one.
+
+     At most one of these can be specified:
+
+       --clear-condition-expression
+          Clear any existing condition expression setting on the feed. No
+          condition will be applied to feed.
+
+       --condition-expression=CONDITION_EXPRESSION
+          Condition expression to overwrite the existing one. For more
+          information, see:
+          https://cloud.google.com/asset-inventory/docs/monitoring-asset-changes#feed_with_condition
+
+     At most one of these can be specified:
+
+       --clear-condition-title
+          Clear any existing condition title setting on the feed. Condition
+          title will be empty.
+
+       --condition-title=CONDITION_TITLE
+          Condition title to overwrite the existing one.
+
+     At most one of these can be specified:
+
+       --clear-content-type
+          Clear any existing content type setting on the feed. Content type
+          will be unspecified, no content but the asset name and type will be
+          returned in the feed.
+
+       --content-type=CONTENT_TYPE
+          Asset content type to overwrite the existing one. For more
+          information, see:
+          https://cloud.google.com/resource-manager/docs/cloud-asset-inventory/overview#asset_content_type.
+          CONTENT_TYPE must be one of: resource, iam-policy, org-policy,
+          access-policy, os-inventory, relationship.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha asset feeds update
+
+        $ gcloud beta asset feeds update
+

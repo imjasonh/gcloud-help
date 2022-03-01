@@ -1,0 +1,66 @@
+NAME
+    gcloud alpha tasks create-pull-task - create and add a task to a pull queue
+
+SYNOPSIS
+    gcloud alpha tasks create-pull-task [TASK_ID] --queue=QUEUE
+        [--location=LOCATION] [--schedule-time=SCHEDULE_TIME] [--tag=TAG]
+        [--payload-content=PAYLOAD_CONTENT | --payload-file=PAYLOAD_FILE]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Create and add a task to a pull queue.
+
+POSITIONAL ARGUMENTS
+     [TASK_ID]
+        The task to create.
+
+        If not specified then the system will generate a random unique task ID.
+        Explicitly specifying a task ID enables task de-duplication. If a
+        task's ID is identical to that of an existing task or a task that was
+        deleted or completed recently then the call will fail.
+
+        Because there is an extra lookup cost to identify duplicate task names,
+        tasks created with IDs have significantly increased latency. Using
+        hashed strings for the task ID or for the prefix of the task ID is
+        recommended.
+
+REQUIRED FLAGS
+     --queue=QUEUE
+        The queue the task belongs to.
+
+OPTIONAL FLAGS
+     --location=LOCATION
+        The location where we want to manage the queue or task. If not
+        specified, uses the location of the current project's App Engine app if
+        there is an associated app.
+
+     --schedule-time=SCHEDULE_TIME
+        The time when the task is scheduled to be first attempted. Defaults to
+        "now" if not specified.
+
+     --tag=TAG
+        An optional label used to group similar tasks.
+
+     At most one of these can be specified:
+
+       --payload-content=PAYLOAD_CONTENT
+          Data payload used by the task worker to process the task.
+
+       --payload-file=PAYLOAD_FILE
+          File containing data payload used by the task worker to process the
+          task.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

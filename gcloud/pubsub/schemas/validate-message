@@ -1,0 +1,79 @@
+NAME
+    gcloud pubsub schemas validate-message - validate a message against a
+        Pub/Sub schema
+
+SYNOPSIS
+    gcloud pubsub schemas validate-message --message=MESSAGE
+        --message-encoding=MESSAGE_ENCODING
+        (--schema-name=SCHEMA_NAME | --type=TYPE (--definition=DEFINITION
+          | --definition-file=DEFINITION_FILE)) [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Validate a message against a Pub/Sub schema.
+
+EXAMPLES
+    To validate message against provided PROTOCOL_BUFFER schema, run:
+
+        $ gcloud pubsub schemas validate-message --message="{\"key\": \
+            \"my-key\"}" --message-encoding=JSON --definition="syntax = \
+            'proto3'; message Message { optional string key = 1; \
+            }" --type=PROTOCOL_BUFFER
+
+    To validate an equivalent AVRO schema, run:
+
+        $ gcloud pubsub schemas validate-message \
+            --definition='{ "type": "record", "namespace": "my.ns", "name":
+         "KeyMsg", "fields": [ { "name": "key", "type": "string" } ] }' \
+            --type=AVRO
+
+REQUIRED FLAGS
+     --message=MESSAGE
+        The message to validate against the schema.
+
+     --message-encoding=MESSAGE_ENCODING
+        The encoding of the message. MESSAGE_ENCODING must be one of: binary,
+        encoding-unspecified, json.
+
+     Schema definition.
+
+     Exactly one of these must be specified:
+
+       --schema-name=SCHEMA_NAME
+          Name or full path of an existing schema.
+
+       --type=TYPE
+          Type of inline schema. TYPE must be one of: avro, protocol-buffer,
+          type-unspecified.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       Schema specification.
+
+       Exactly one of these must be specified:
+
+         --definition=DEFINITION
+            Inline schema definition.
+
+         --definition-file=DEFINITION_FILE
+            File containing schema definition.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the pubsub/v1 API. The full documentation for this API
+    can be found at: https://cloud.google.com/pubsub/docs
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha pubsub schemas validate-message
+
+        $ gcloud beta pubsub schemas validate-message
+

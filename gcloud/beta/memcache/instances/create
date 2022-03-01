@@ -1,0 +1,181 @@
+NAME
+    gcloud beta memcache instances create - create a Memorystore Memcached
+        instance
+
+SYNOPSIS
+    gcloud beta memcache instances create (INSTANCE : --region=REGION)
+        --node-count=NODE_COUNT --node-cpu=NODE_CPU --node-memory=NODE_MEMORY
+        [--async] [--authorized-network=AUTHORIZED_NETWORK]
+        [--display-name=DISPLAY_NAME] [--labels=KEY=VALUE]
+        [--memcached-version=MEMCACHED_VERSION] [--parameters=KEY=VALUE]
+        [--zones=[ZONES,...]] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Create a new Memorystore Memcached instance.
+
+    This command can fail for the following reasons:
+      ▪ An instance with the same name already exists.
+      ▪ The active account does not have the necessary permissions to create
+        instances.
+
+EXAMPLES
+    To create a Memcached instance named 'my-memcache-instance' in region
+    'us-central1' with 3 nodes, each with 2 CPUs and 2GB of memory, run:
+
+        $ gcloud beta memcache instances create my-memcache-instance \
+            --region=us-central1 \
+            --node-count=3 --node-cpu=2 --node-memory=2GB
+
+POSITIONAL ARGUMENTS
+     Instance resource - Arguments and flags that specify the Memcached
+     instance to create. The arguments in this group can be used to specify the
+     attributes of this resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways. To set the project
+     attribute:
+      ◆ provide the argument instance on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       INSTANCE
+          ID of the instance or fully qualified identifier for the instance. To
+          set the instance attribute:
+          ▸ provide the argument instance on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --region=REGION
+          The name of the Memcached region of the instance. Overrides the
+          default memcache/region property value for this command invocation.
+
+          To set the region attribute:
+          ▸ provide the argument instance on the command line with a fully
+            specified name;
+          ▸ provide the argument --region on the command line;
+          ▸ set the property memcache/region.
+
+REQUIRED FLAGS
+     --node-count=NODE_COUNT
+        Number of memcache nodes in this instance. Valid values range from 1 to
+        20.
+
+     --node-cpu=NODE_CPU
+        Number of cpus per node in this instance. Valid values are 1 or even
+        number between 2-32. Value of 1 is not supported in all regions.
+
+     --node-memory=NODE_MEMORY
+        Amount of memory allocated per node in this instance. The value must be
+        a whole number followed by a size unit of 'MB' for megabyte, or 'GB'
+        for gigabyte, ie '3072MB' or '9GB'. The value must be between 1024MB
+        and 307200MB.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --authorized-network=AUTHORIZED_NETWORK
+        Full name of the Google Compute Engine network to which the instance is
+        connected. If unspecified, the default network will be used.
+
+     --display-name=DISPLAY_NAME
+        An arbitrary and optional user provided name for the instance.
+
+     --labels=KEY=VALUE
+        List of label KEY=VALUE pairs to add.
+
+     --memcached-version=MEMCACHED_VERSION
+        Optional major version of Memcached software to use with the instance.
+        If not provided, default of "1.5" will be used. MEMCACHED_VERSION must
+        be (currently only one value is supported):
+
+         1.5
+            Memcached major version 1.5
+
+     --parameters=KEY=VALUE
+        User defined parameters to apply to the memcached process on each node.
+        Possible attributes include:
+
+         listen-backlog
+            The backlog queue limit for the instance.
+
+         disable-flush-all
+            If enabled, flush_all command will be disabled. Applicable to
+            1.4.24 and higher.
+
+         max-item-size
+            Max bytes of the instnace. Must at least be equal to slab_chunk_max
+            (which defaults to 524288 bytes) and less than 134217728 bytes.
+            Additionally it must be a multiple of slab_chunk_max.
+
+         slab-min-size
+            This is an integer in the range [1, 1024].
+
+         slab-growth-factor
+            This is a float in the range [1.01, 100].
+
+         protocol
+            This is an enum with acceptable values of ["ascii", "auto"].
+
+         disable-cas
+            This is a boolean value.
+
+         disable-evictions
+            This is a boolean value.
+
+         max-reqs-per-event
+            This is an integer in the range [1, 1000].
+
+         track-sizes
+            This is a boolean value.
+
+         worker-logbuf-size
+            This is an integer in the range [48, 524288].
+
+         watcher-logbuf-size
+            This is an integer in the range [0, 2097151].
+
+         lru-crawler
+            This is a boolean value.
+
+         idle-timeout
+            This is an integer in the range [1,86400].
+
+         lru-maintainer
+            This is a boolean value.
+
+         maxconns-fast
+            This is a boolean value.
+
+         hash-algorithm
+            This is an enum with accepted values of ["jenkins", "murmur3"].
+
+     --zones=[ZONES,...]
+        List of zones for the memcache nodes. The nodes will be divided equally
+        across the given zones up to --node-count value. If not provided, the
+        service will by default create nodes in all zones in the region
+        specified by --region flag.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the memcache/v1beta2 API. The full documentation for this
+    API can be found at: https://cloud.google.com/memorystore/
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud memcache instances create
+
+        $ gcloud alpha memcache instances create
+

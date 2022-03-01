@@ -1,0 +1,194 @@
+NAME
+    gcloud compute security-policies rules create - create a Compute Engine
+        security policy rule
+
+SYNOPSIS
+    gcloud compute security-policies rules create PRIORITY --action=ACTION
+        (--expression=EXPRESSION | --src-ip-ranges=[SRC_IP_RANGE,...])
+        [--ban-duration-sec=BAN_DURATION_SEC]
+        [--ban-threshold-count=BAN_THRESHOLD_COUNT]
+        [--ban-threshold-interval-sec=BAN_THRESHOLD_INTERVAL_SEC]
+        [--conform-action=CONFORM_ACTION] [--description=DESCRIPTION]
+        [--enforce-on-key=ENFORCE_ON_KEY]
+        [--enforce-on-key-name=ENFORCE_ON_KEY_NAME]
+        [--exceed-action=EXCEED_ACTION]
+        [--exceed-redirect-target=EXCEED_REDIRECT_TARGET]
+        [--exceed-redirect-type=EXCEED_REDIRECT_TYPE] [--preview]
+        [--rate-limit-threshold-count=RATE_LIMIT_THRESHOLD_COUNT]
+        [--rate-limit-threshold-interval-sec=RATE_LIMIT_THRESHOLD_INTERVAL_SEC]
+        [--redirect-target=REDIRECT_TARGET] [--redirect-type=REDIRECT_TYPE]
+        [--request-headers-to-add=[REQUEST_HEADERS_TO_ADD,...]]
+        [--security-policy=SECURITY_POLICY] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    gcloud compute security-policies rules create is used to create security
+    policy rules.
+
+    For example to create a rule at priority 1000 to block the IP range
+    1.2.3.0/24, run:
+
+        $ gcloud compute security-policies rules create 1000 \
+            --action deny-403 \
+            --security-policy my-policy \
+            --description "block 1.2.3.0/24" \
+            --src-ip-ranges 1.2.3.0/24
+
+POSITIONAL ARGUMENTS
+     PRIORITY
+        The priority of the rule to add. Rules are evaluated in order from
+        highest priority to lowest priority where 0 is the highest priority and
+        2147483647 is the lowest priority.
+
+REQUIRED FLAGS
+     --action=ACTION
+        The action to take if the request matches the match condition. ACTION
+        must be one of:
+
+         allow
+            Allows the request from HTTP(S) Load Balancing.
+         deny-403
+            Denies the request from HTTP(S) Load Balancing, with an HTTP
+            response status code of 403.
+         deny-404
+            Denies the request from HTTP(S) Load Balancing, with an HTTP
+            response status code of 404.
+         deny-502
+            Denies the request from HTTP(S) Load Balancing, with an HTTP
+            response status code of 503.
+         rate-based-ban
+            Enforces rate-based ban action from HTTP(S) Load Balancing, based
+            on rate limit options.
+         redirect
+            Redirects the request from HTTP(S) Load Balancing, based on
+            redirect options.
+         redirect-to-recaptcha
+            (DEPRECATED) Redirects the request from HTTP(S) Load Balancing, for
+            reCAPTCHA Enterprise assessment. This flag choice is deprecated.
+            Use --action=redirect and --redirect-type=google-recaptcha instead.
+         throttle
+            Enforces throttle action from HTTP(S) Load Balancing, based on rate
+            limit options.
+
+     Security policy rule matcher.
+
+     Exactly one of these must be specified:
+
+       --expression=EXPRESSION
+          The Cloud Armor rules language expression to match for this rule.
+
+       --src-ip-ranges=[SRC_IP_RANGE,...]
+          The source IPs/IP ranges to match for this rule. To match all IPs
+          specify *.
+
+OPTIONAL FLAGS
+     --ban-duration-sec=BAN_DURATION_SEC
+        Can only be specified if the action for the rule is rate-based-ban. If
+        specified, determines the time (in seconds) the traffic will continue
+        to be banned by the rate limit after the rate falls below the
+        threshold.
+
+     --ban-threshold-count=BAN_THRESHOLD_COUNT
+        Number of HTTP(S) requests for calculating the threshold for banning
+        requests. Can only be specified if the action for the rule is
+        rate-based-ban. If specified, the key will be banned for the configured
+        BAN_DURATION_SEC when the number of requests that exceed the
+        RATE_LIMIT_THRESHOLD_COUNT also exceed this BAN_THRESHOLD_COUNT.
+
+     --ban-threshold-interval-sec=BAN_THRESHOLD_INTERVAL_SEC
+        Interval over which the threshold for banning requests is computed. Can
+        only be specified if the action for the rule is rate-based-ban. If
+        specified, the key will be banned for the configured BAN_DURATION_SEC
+        when the number of requests that exceed the RATE_LIMIT_THRESHOLD_COUNT
+        also exceed this BAN_THRESHOLD_COUNT.
+
+     --conform-action=CONFORM_ACTION
+        Action to take when requests are under the given threshold. When
+        requests are throttled, this is also the action for all requests which
+        are not dropped. CONFORM_ACTION must be (currently only one value is
+        supported): allow.
+
+     --description=DESCRIPTION
+        An optional, textual description for the rule.
+
+     --enforce-on-key=ENFORCE_ON_KEY
+        Different key types available to enforce the rate limit threshold limit
+        on:
+        ◆ ip: each client IP address has this limit enforced separately
+        ◆ all: a single limit is applied to all requests matching this rule
+        ◆ http-header: key type takes the value of the HTTP header configured
+          in enforce-on-key-name as the key value
+        ◆ xff-ip: takes the original IP address specified in the
+          X-Forwarded-For header as the key
+        ◆ http-cookie: key type takes the value of the HTTP cookie configured
+          in enforce-on-key-name as the key value
+
+        ENFORCE_ON_KEY must be one of: ip, all, http-header, xff-ip,
+        http-cookie.
+
+     --enforce-on-key-name=ENFORCE_ON_KEY_NAME
+        Determines the key name for the rate limit key. Applicable only for the
+        following rate limit key types:
+        ◆ http-header: The name of the HTTP header whose value is taken as
+          the key value.
+        ◆ http-cookie: The name of the HTTP cookie whose value is taken as
+          the key value.
+
+     --exceed-action=EXCEED_ACTION
+        Action to take when requests are above the given threshold. When a
+        request is denied, return the specified HTTP response code. When a
+        request is redirected, use the redirect options based on
+        --exceed-redirect-type and --exceed-redirect-target below.
+        EXCEED_ACTION must be one of: deny-403, deny-404, deny-429, deny-502,
+        redirect.
+
+     --exceed-redirect-target=EXCEED_REDIRECT_TARGET
+        URL target for the redirect action that is configured as the exceed
+        action when the redirect type is external-302.
+
+     --exceed-redirect-type=EXCEED_REDIRECT_TYPE
+        Type for the redirect action that is configured as the exceed action.
+        EXCEED_REDIRECT_TYPE must be one of: google-recaptcha, external-302.
+
+     --preview
+        If specified, the action will not be enforced.
+
+     --rate-limit-threshold-count=RATE_LIMIT_THRESHOLD_COUNT
+        Number of HTTP(S) requests for calculating the threshold for rate
+        limiting requests.
+
+     --rate-limit-threshold-interval-sec=RATE_LIMIT_THRESHOLD_INTERVAL_SEC
+        Interval over which the threshold for rate limiting requests is
+        computed.
+
+     --redirect-target=REDIRECT_TARGET
+        URL target for the redirect action. Must be specified if the redirect
+        type is external-302. Cannot be specified if the redirect type is
+        google-recaptcha.
+
+     --redirect-type=REDIRECT_TYPE
+        Type for the redirect action. Default to external-302 if unspecified
+        while --redirect-target is given. REDIRECT_TYPE must be one of:
+        google-recaptcha, external-302.
+
+     --request-headers-to-add=[REQUEST_HEADERS_TO_ADD,...]
+        A comma-separated list of header names and header values to add to
+        requests that match this rule.
+
+     --security-policy=SECURITY_POLICY
+        The security policy that this rule belongs to.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha compute security-policies rules create
+
+        $ gcloud beta compute security-policies rules create
+

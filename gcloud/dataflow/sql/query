@@ -1,0 +1,205 @@
+NAME
+    gcloud dataflow sql query - execute the user-specified SQL query on
+        Dataflow
+
+SYNOPSIS
+    gcloud dataflow sql query QUERY --job-name=JOB_NAME --region=REGION
+        ([--bigquery-table=BIGQUERY_TABLE : --bigquery-dataset=BIGQUERY_DATASET
+          --bigquery-project=BIGQUERY_PROJECT] [--pubsub-topic=PUBSUB_TOPIC
+          : --pubsub-project=PUBSUB_PROJECT])
+        [--bigquery-write-disposition=BIGQUERY_WRITE_DISPOSITION;
+          default="write-empty"] [--dataflow-kms-key=DATAFLOW_KMS_KEY]
+        [--disable-public-ips] [--dry-run] [--max-workers=MAX_WORKERS]
+        [--network=NETWORK] [--num-workers=NUM_WORKERS]
+        [--pubsub-create-disposition=PUBSUB_CREATE_DISPOSITION;
+          default="create-if-not-found"]
+        [--service-account-email=SERVICE_ACCOUNT_EMAIL]
+        [--subnetwork=SUBNETWORK] [--worker-machine-type=WORKER_MACHINE_TYPE]
+        [--parameter=PARAMETER | --parameters-file=PARAMETERS_FILE]
+        [--worker-region=WORKER_REGION | --worker-zone=WORKER_ZONE
+          | --zone=ZONE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Execute the user-specified SQL query on Dataflow. Queries must comply to
+    the ZetaSQL dialect (https://github.com/google/zetasql). Results may be
+    written to either BigQuery or Cloud Pub/Sub.
+
+EXAMPLES
+    To execute a simple SQL query on Dataflow that reads from and writes to
+    BigQuery, run:
+
+        $ gcloud dataflow sql query \
+            'SELECT word FROM
+         bigquery.table.`my-project`.input_dataset.input_table where count
+         > 3' --job-name=my-job --region=us-west1 \
+            --bigquery-dataset=my_output_dataset \
+            --bigquery-table=my_output_table
+
+    To execute a simple SQL query on Dataflow that reads from and writes to
+    Cloud Pub/Sub, run:
+
+        $ gcloud dataflow sql query \
+            'SELECT word FROM pubsub.topic.`my-project`.input_topic where
+         count > 3' --job-name=my-job --region=us-west1 \
+            --pubsub-topic=my_output_topic
+
+    To join data from BigQuery and Cloud Pub/Sub and write the result to Cloud
+    Pub/Sub, run:
+
+        $ gcloud dataflow sql query \
+            'SELECT bq.name AS name FROM
+         pubsub.topic.`my-project`.input_topic p INNER JOIN
+         bigquery.table.`my-project`.input_dataset.input_table bq ON p.id =
+         bq.id' --job-name=my-job --region=us-west1 \
+            --pubsub-topic=my_output_topic
+
+    To execute a parameterized SQL query that reads from and writes to
+    BigQuery, run:
+
+        $ gcloud dataflow sql query \
+            'SELECT word FROM
+         bigquery.table.`my-project`.input_dataset.input_table where count
+         > @threshold' --parameter=threshold:INT64:5 --job-name=my-job \
+            --region=us-west1 --bigquery-dataset=my_output_dataset \
+            --bigquery-table=my_output_table
+
+POSITIONAL ARGUMENTS
+     QUERY
+        The SQL query to execute.
+
+REQUIRED FLAGS
+     --job-name=JOB_NAME
+        The unique name to assign to the Cloud Dataflow job.
+
+     --region=REGION
+        The region ID of the job's regional endpoint. Defaults to
+        'us-central1'.
+
+     The destination(s) for the output of the query.
+
+     At least one of these must be specified:
+
+       BigQuery table resource - The BigQuery table to write query output to.
+       The arguments in this group can be used to specify the attributes of
+       this resource.
+
+         --bigquery-table=BIGQUERY_TABLE
+            ID of the BigQuery table or fully qualified identifier for the
+            BigQuery table. To set the bigquery-table attribute:
+            ▫ provide the argument --bigquery-table on the command line.
+
+            This flag must be specified if any of the other arguments in this
+            group are specified.
+
+         --bigquery-dataset=BIGQUERY_DATASET
+            The BigQuery dataset ID. To set the bigquery-dataset attribute:
+            ▫ provide the argument --bigquery-table on the command line with
+              a fully specified name;
+            ▫ provide the argument --bigquery-dataset on the command line.
+
+         --bigquery-project=BIGQUERY_PROJECT
+            The BigQuery project ID. To set the bigquery-project attribute:
+            ▫ provide the argument --bigquery-table on the command line with
+              a fully specified name;
+            ▫ provide the argument --bigquery-project on the command line.
+
+       Pub/Sub topic resource - The Cloud Pub/Sub topic to write query output
+       to. The arguments in this group can be used to specify the attributes of
+       this resource.
+
+         --pubsub-topic=PUBSUB_TOPIC
+            ID of the Pub/Sub topic or fully qualified identifier for the
+            Pub/Sub topic. To set the pubsub-topic attribute:
+            ▫ provide the argument --pubsub-topic on the command line.
+
+            This flag must be specified if any of the other arguments in this
+            group are specified.
+
+         --pubsub-project=PUBSUB_PROJECT
+            The Pub/Sub project ID. To set the pubsub-project attribute:
+            ▫ provide the argument --pubsub-topic on the command line with a
+              fully specified name;
+            ▫ provide the argument --pubsub-project on the command line.
+
+OPTIONAL FLAGS
+     --bigquery-write-disposition=BIGQUERY_WRITE_DISPOSITION; default="write-empty"
+        The behavior of the BigQuery write operation.
+        BIGQUERY_WRITE_DISPOSITION must be one of: write-empty, write-truncate,
+        write-append.
+
+     --dataflow-kms-key=DATAFLOW_KMS_KEY
+        The Cloud KMS key to protect the job resources.
+
+     --disable-public-ips
+        The Cloud Dataflow workers must not use public IP addresses. Overrides
+        the default dataflow/disable_public_ips property value for this command
+        invocation.
+
+     --dry-run
+        Construct but do not run the SQL pipeline, for smoke testing.
+
+     --max-workers=MAX_WORKERS
+        The maximum number of workers to run.
+
+     --network=NETWORK
+        The Compute Engine network for launching instances to run your
+        pipeline.
+
+     --num-workers=NUM_WORKERS
+        The initial number of workers to use.
+
+     --pubsub-create-disposition=PUBSUB_CREATE_DISPOSITION; default="create-if-not-found"
+        The behavior of the Pub/Sub create operation. PUBSUB_CREATE_DISPOSITION
+        must be one of: create-if-not-found, fail-if-not-found.
+
+     --service-account-email=SERVICE_ACCOUNT_EMAIL
+        The service account to run the workers as.
+
+     --subnetwork=SUBNETWORK
+        The Compute Engine subnetwork for launching instances to run your
+        pipeline.
+
+     --worker-machine-type=WORKER_MACHINE_TYPE
+        The type of machine to use for workers. Defaults to server-specified.
+
+     At most one of these can be specified:
+
+       --parameter=PARAMETER
+          Parameters to pass to a query. Parameters must use the format
+          name:type:value, for example min_word_count:INT64:250.
+
+       --parameters-file=PARAMETERS_FILE
+          Path to a file containing query parameters in JSON format. e.g.
+          [{"parameterType": {"type": "STRING"}, "parameterValue": {"value":
+          "foo"}, "name": "x"}, {"parameterType": {"type": "FLOAT64"},
+          "parameterValue": {"value": "1.0"}, "name": "y"}]
+
+     Worker location options.
+
+     At most one of these can be specified:
+
+       --worker-region=WORKER_REGION
+          The region to run the workers in.
+
+       --worker-zone=WORKER_ZONE
+          The zone to run the workers in.
+
+       --zone=ZONE
+          (DEPRECATED) The zone to run the workers in.
+
+          The --zone option is deprecated; use --worker-region or --worker-zone
+          instead.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This variant is also available:
+
+        $ gcloud beta dataflow sql query
+

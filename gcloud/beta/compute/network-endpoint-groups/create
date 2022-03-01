@@ -1,0 +1,298 @@
+NAME
+    gcloud beta compute network-endpoint-groups create - create a Google
+        Compute Engine network endpoint group
+
+SYNOPSIS
+    gcloud beta compute network-endpoint-groups create NAME
+        [--default-port=DEFAULT_PORT] [--network=NETWORK]
+        [--network-endpoint-type=NETWORK_ENDPOINT_TYPE;
+          default="gce-vm-ip-port"] [--psc-target-service=PSC_TARGET_SERVICE]
+        [--subnet=SUBNET]
+        [--cloud-function-name=CLOUD_FUNCTION_NAME
+          --cloud-function-url-mask=CLOUD_FUNCTION_URL_MASK
+          | --cloud-run-service=CLOUD_RUN_SERVICE
+          --cloud-run-tag=CLOUD_RUN_TAG --cloud-run-url-mask=CLOUD_RUN_URL_MASK
+          | --[no-]app-engine-app --app-engine-service=APP_ENGINE_SERVICE
+          --app-engine-url-mask=APP_ENGINE_URL_MASK
+          --app-engine-version=APP_ENGINE_VERSION
+          | --serverless-deployment-platform=SERVERLESS_DEPLOYMENT_PLATFORM
+          --serverless-deployment-resource=SERVERLESS_DEPLOYMENT_RESOURCE
+          --serverless-deployment-url-mask=SERVERLESS_DEPLOYMENT_URL_MASK
+          --serverless-deployment-version=SERVERLESS_DEPLOYMENT_VERSION]
+        [--global | --region=REGION | --zone=ZONE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Create a Google Compute Engine network endpoint group.
+
+EXAMPLES
+    To create a network endpoint group:
+
+        $ gcloud beta compute network-endpoint-groups create my-neg \
+            --zone=us-central1-a --network=my-network --subnet=my-subnetwork
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the network endpoint group to operate on.
+
+FLAGS
+     --default-port=DEFAULT_PORT
+        The default port to use if the port number is not specified in the
+        network endpoint.
+
+        If this flag isn't specified for a NEG with endpoint type
+        gce-vm-ip-port or non-gcp-private-ip-port, then every network endpoint
+        in the network endpoint group must have a port specified. For a NEG
+        with endpoint type internet-ip-port and internet-fqdn-port. If the
+        default port is not specified, the well-known port for your backend
+        protocol is used (80 for HTTP, 443 for HTTPS).
+
+        This flag is not supported for NEGs with endpoint type serverless.
+
+        This flag is not supported for NEGs with endpoint type
+        private-service-connect.
+
+     --network=NETWORK
+        Name of the network in which the NEG is created. default project
+        network is used if unspecified.
+
+        This is only supported for NEGs with endpoint type gce-vm-ip-port,
+        non-gcp-private-ip-port, or gce-vm-ip.
+
+     --network-endpoint-type=NETWORK_ENDPOINT_TYPE; default="gce-vm-ip-port"
+        Determines the spec of endpoints attached to this group.
+
+         gce-vm-ip-port
+            Endpoint IP address must belong to a VM in Compute Engine (either
+            the primary IP or as part of an aliased IP range). The
+            --default-port must be specified or every network endpoint in the
+            network endpoint group must have a port specified.
+
+         internet-ip-port
+            Endpoint IP address must be a publicly routable address. If
+            specified, the default port is used. If unspecified, the well-known
+            port for your backend protocol is used as the default port (80 for
+            HTTP, 443 for HTTPS).
+
+         internet-fqdn-port
+            Endpoint FQDN must be resolvable to a public IP address via public
+            DNS. The default port is used, if specified. If the default port is
+            not specified, the well-known port for your backend protocol is
+            used as the default port (80 for HTTP, 443 for HTTPS).
+
+            After creating a NEG of this type, you can use the gcloud compute
+            network-endpoint-groups update command with the --add-endpoint
+            flag. Example: --add-endpoint="fqdn=backend.example.com,port=443"
+
+         non-gcp-private-ip-port
+            Endpoint IP address must belong to a VM not in Compute Engine and
+            must be routable using a Cloud Router over VPN or an Interconnect
+            connection. In this case, the NEG must be zonal. The --default-port
+            must be specified or every network endpoint in the network endpoint
+            group must have a port specified.
+
+         serverless
+            The network endpoint is handled by specified serverless
+            infrastructure, such as Cloud Run, App Engine, or Cloud Function.
+            Default port, network, and subnet are not effective for serverless
+            endpoints.
+
+         gce-vm-ip
+            Endpoint must be the IP address of a VM's network interface in
+            Compute Engine. Instance reference is required. The IP address is
+            optional. If unspecified, the primary NIC address is used. A port
+            must not be specified.
+
+         private-service-connect
+            The network endpoint corresponds to a service outside the VPC,
+            accessed via Private Service Connect. The network, subnet, and
+            default port must not be set.
+
+            NETWORK_ENDPOINT_TYPE must be one of: gce-vm-ip-port,
+            internet-ip-port, internet-fqdn-port, non-gcp-private-ip-port,
+            serverless, gce-vm-ip, private-service-connect.
+
+     --psc-target-service=PSC_TARGET_SERVICE
+        PSC target service name to add to the private service connect network
+        endpoint groups (NEG).
+
+     --subnet=SUBNET
+        Name of the subnet to which all network endpoints belong.
+
+        If not specified, network endpoints may belong to any subnetwork in the
+        region where the network endpoint group is created.
+
+        This is only supported for NEGs with endpoint type gce-vm-ip-port or
+        gce-vm-ip.
+
+     The serverless routing configurations are only valid when endpoint type of
+     the network endpoint group is serverless.
+
+     At most one of these can be specified:
+
+       Configuration for a Cloud Function network endpoint group. Cloud
+       Function name must be provided explicitly or in the URL mask.
+
+         --cloud-function-name=CLOUD_FUNCTION_NAME
+            Cloud Function name to add to the Serverless NEG. The function must
+            be in the same project and the same region as the Serverless
+            network endpoint groups (NEG).
+
+         --cloud-function-url-mask=CLOUD_FUNCTION_URL_MASK
+            A template to parse function field from a request URL. URL mask
+            allows for routing to multiple Cloud Functions without having to
+            create multiple network endpoint groups and backend services.
+
+       Configuration for a Cloud Run network endpoint group. Cloud Run service
+       must be provided explicitly or in the URL mask. Cloud Run tag is
+       optional, and may be provided explicitly or in the URL mask.
+
+         --cloud-run-service=CLOUD_RUN_SERVICE
+            Cloud Run service name to add to the Serverless network endpoint
+            groups (NEG). The service must be in the same project and the same
+            region as the Serverless NEG.
+
+         --cloud-run-tag=CLOUD_RUN_TAG
+            Cloud Run tag represents the "named revision" to provide additional
+            fine-grained traffic routing configuration.
+
+         --cloud-run-url-mask=CLOUD_RUN_URL_MASK
+            A template to parse service and tag fields from a request URL. URL
+            mask allows for routing to multiple Run services without having to
+            create multiple network endpoint groups and backend services.
+
+       Configuration for an App Engine network endpoint group. Both App Engine
+       service and version are optional, and may be provided explicitly or in
+       the URL mask. The app-engine-app flag is only used for default routing.
+       The App Engine app must be in the same project as the Serverless network
+       endpoint groups (NEG).
+
+         --[no-]app-engine-app
+            If set, the default routing is used. Use --app-engine-app to enable
+            and --no-app-engine-app to disable.
+
+         --app-engine-service=APP_ENGINE_SERVICE
+            Optional serving service to add to the Serverless NEG.
+
+         --app-engine-url-mask=APP_ENGINE_URL_MASK
+            A template to parse service and version fields from a request URL.
+            URL mask allows for routing to multiple App Engine services without
+            having to create multiple network endpoint groups and backend
+            services.
+
+         --app-engine-version=APP_ENGINE_VERSION
+            Optional serving version to add to the Serverless NEG.
+
+       Configuration for a Serverless network endpoint group. Serverless NEGs
+       support all serverless backends and are the only way to setup a network
+       endpoint group for Cloud API Gateways.
+
+           To create a serverless NEG with a Cloud Run, Cloud Functions or App
+           Engine endpoint, you can either use the previously-listed Cloud Run,
+           Cloud Functions or App Engine-specific properties, OR, you can use the
+           following generic properties that are compatible with all serverless
+           platforms, including API Gateway: serverless-deployment-platform,
+           serverless-deployment-resource, serverless-deployment-url-mask, and
+           serverless-deployment-version.
+
+         --serverless-deployment-platform=SERVERLESS_DEPLOYMENT_PLATFORM
+            The platform of the NEG backend target(s). Possible values:
+
+            ▫ API Gateway: apigateway.googleapis.com
+            ▫ App Engine: appengine.googleapis.com
+            ▫ Cloud Functions: cloudfunctions.googleapis.com
+            ▫ Cloud Run: run.googleapis.com
+
+         --serverless-deployment-resource=SERVERLESS_DEPLOYMENT_RESOURCE
+            The user-defined name of the workload/instance. This value must be
+            provided explicitly or using the --serverless-deployment-url-mask
+            option. The resource identified by this value is platform-specific
+            and is as follows:
+
+            ▫ API Gateway: The gateway ID
+            ▫ App Engine: The service name
+            ▫ Cloud Functions: The function name
+            ▫ Cloud Run: The service name
+
+         --serverless-deployment-url-mask=SERVERLESS_DEPLOYMENT_URL_MASK
+            A template to parse platform-specific fields from a request URL.
+            URL mask allows for routing to multiple resources on the same
+            serverless platform without having to create multiple network
+            endpoint groups and backend resources. The fields parsed by this
+            template are platform-specific and are as follows:
+
+            ▫ API Gateway: The 'gateway' ID
+            ▫ App Engine: The 'service' and 'version'
+            ▫ Cloud Functions: The 'function' name
+            ▫ Cloud Run: The 'service' and 'tag'
+
+         --serverless-deployment-version=SERVERLESS_DEPLOYMENT_VERSION
+            The optional resource version. The version identified by this value
+            is platform-specific and is as follows:
+
+            ▫ API Gateway: Unused
+            ▫ App Engine: The service version
+            ▫ Cloud Functions: Unused
+            ▫ Cloud Run: The service tag
+
+     At most one of these can be specified:
+
+       --global
+          If set, the network endpoint group is global.
+
+       --region=REGION
+          Region of the network endpoint group to operate on. If not specified,
+          you might be prompted to select a region (interactive mode only).
+
+          To avoid prompting when this flag is omitted, you can set the
+          compute/region property:
+
+              $ gcloud config set compute/region REGION
+
+          A list of regions can be fetched by running:
+
+              $ gcloud compute regions list
+
+          To unset the property, run:
+
+              $ gcloud config unset compute/region
+
+          Alternatively, the region can be stored in the environment variable
+          CLOUDSDK_COMPUTE_REGION.
+
+       --zone=ZONE
+          Zone of the network endpoint group to operate on. If not specified
+          and the compute/zone property isn't set, you might be prompted to
+          select a zone (interactive mode only).
+
+          To avoid prompting when this flag is omitted, you can set the
+          compute/zone property:
+
+              $ gcloud config set compute/zone ZONE
+
+          A list of zones can be fetched by running:
+
+              $ gcloud compute zones list
+
+          To unset the property, run:
+
+              $ gcloud config unset compute/zone
+
+          Alternatively, the zone can be stored in the environment variable
+          CLOUDSDK_COMPUTE_ZONE.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud compute network-endpoint-groups create
+
+        $ gcloud alpha compute network-endpoint-groups create
+

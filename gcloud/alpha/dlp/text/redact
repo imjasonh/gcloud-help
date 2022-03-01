@@ -1,0 +1,80 @@
+NAME
+    gcloud alpha dlp text redact - redact potentially sensitive data from text
+        content
+
+SYNOPSIS
+    gcloud alpha dlp text redact --info-types=[INFOTYPE,...]
+        (--content=CONTENT | --content-file=CONTENT_FILE)
+        (--remove-findings | --replace-with-info-type
+          | --replacement-text=REPLACEMENT_TEXT)
+        [--min-likelihood=MIN_LIKELIHOOD; default="possible"]
+        [--output-file=OUTPUT_FILE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Redacts potentially sensitive data from text content.
+
+EXAMPLES
+    To redact email addresses from a file named my-data.csv and write the
+    redacted contents to my-redacted-data.csv, run:
+
+        $ gcloud alpha dlp text redact --info-types EMAIL_ADDRESS \
+            --replace-with-info-type \
+          --content-file my-data.csv --output-file my-redacted-data.csv
+
+REQUIRED FLAGS
+     --info-types=[INFOTYPE,...]
+        Which infoTypes to scan input for. The values must correspond to
+        infoType values found in documentation. For more information about
+        valid infoTypes, see infoTypes Reference
+        (https://cloud.google.com/dlp/docs/infotypes-reference)
+
+     Exactly one of these must be specified:
+
+       --content=CONTENT
+          Text content to redact sensitive data from.
+
+       --content-file=CONTENT_FILE
+          Text file to scan for sensitive data to redact. Can also be a CSV
+          file specifying tabular data. For CSV files, up to 50,000 values per
+          request are allowed. To read from stdin pass '-' as the file name.
+
+     Exactly one of these must be specified:
+
+       --remove-findings
+          If specified, all sensitive data will be removed, instead of
+          replaced.
+
+       --replace-with-info-type
+          If specified, all sensitive data will be replaced with its infoType.
+          For example, 'email:guest@example.com' would become
+          'email:[EMAIL_ADDRESS]'.
+
+       --replacement-text=REPLACEMENT_TEXT
+          Text to replace each sensitive data finding with.
+
+OPTIONAL FLAGS
+     --min-likelihood=MIN_LIKELIHOOD; default="possible"
+        Only return findings equal to or above this threshold. MIN_LIKELIHOOD
+        must be one of: likely, possible, unlikely, very-likely, very-unlikely.
+
+     --output-file=OUTPUT_FILE
+        Path to the file to write redacted contents to.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the dlp/v2 API. The full documentation for this API can
+    be found at: https://cloud.google.com/dlp/docs/
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

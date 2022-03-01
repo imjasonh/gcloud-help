@@ -1,0 +1,122 @@
+NAME
+    gcloud alpha compute service-attachments update - update a Google Compute
+        Engine service attachment
+
+SYNOPSIS
+    gcloud alpha compute service-attachments update NAME
+        [--connection-preference=CONNECTION_PREFERENCE]
+        [--consumer-accept-list=[PROJECT=LIMIT,...]]
+        [--consumer-reject-list=[REJECT_LIST,...]] [--description=DESCRIPTION]
+        [--[no-]enable-proxy-protocol]
+        [--nat-subnets=NAT_SUBNETS,[NAT_SUBNETS,...]]
+        [--nat-subnets-region=NAT_SUBNETS_REGION] [--region=REGION]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) gcloud alpha compute service-attachments update is used to update
+    service attachments. A service producer creates service attachments to make
+    a service available to consumers. Service consumers use Private Service
+    Connect endpoints to privately forward traffic to the service attachment.
+
+EXAMPLES
+    To update the connection policy of a service attachment to be
+    ACCEPT_MANUAL, run:
+
+        $ gcloud alpha compute service-attachments update \
+            SERVICE_ATTACHMENT_NAME --region=us-central1 \
+            --connection-preference=ACCEPT_MANUAL
+
+    To update all supported fields of a service attachment, run:
+
+        $ gcloud alpha compute service-attachments update \
+            SERVICE_ATTACHMENT_NAME --region=us-central1 \
+            --connection-preference=ACCEPT_AUTOMATIC \
+            --nat-subnets=MY_SUBNET1,MY_SUBNET2 --enable-proxy-protocol \
+            --consumer-reject-list=PROJECT_ID1,PROJECT_ID2 \
+            --consumer-accept-list=PROJECT_ID3=10,PROJECT_ID4=20
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the service attachment to update.
+
+FLAGS
+     --connection-preference=CONNECTION_PREFERENCE
+        This defines the service attachment's connection preference.
+        CONNECTION_PREFERENCE must be one of:
+
+         ACCEPT_AUTOMATIC
+            Always accept connection requests from consumers automatically.
+         ACCEPT_MANUAL
+            Only accept connection requests from consumers with the approval of
+            the service provider.
+
+     --consumer-accept-list=[PROJECT=LIMIT,...]
+        Adds consumer project(s) with connection limit(s) to the accept list of
+        the service attachment.
+
+        For example, --consumer-accept-list myProjectId1=20 accepts a consumer
+        project myProjectId1 with connection limit 20.
+
+        ◆ PROJECT_ID_OR_NUM - Consumer project id or number.
+        ◆ CONNECTION_LIMIT - The max number of allowed connections.
+
+     --consumer-reject-list=[REJECT_LIST,...]
+        Specifies a comma separated list of projects that are not allowed to
+        connect to this service attachment. The project can be specified using
+        its id or number.
+
+     --description=DESCRIPTION
+        An optional, textual description for the service attachment.
+
+     --[no-]enable-proxy-protocol
+        If True, then enable the proxy protocol which is for supplying client
+        TCP/IP address data in TCP connections that traverse proxies on their
+        way to destination servers. Use --enable-proxy-protocol to enable and
+        --no-enable-proxy-protocol to disable.
+
+     --nat-subnets=NAT_SUBNETS,[NAT_SUBNETS,...]
+        The subnetworks provided by service producer to use for NAT
+
+     --nat-subnets-region=NAT_SUBNETS_REGION
+        Region of the subnetworks to operate on. If not specified, it will be
+        set to the region of the service attachment. Overrides the default
+        compute/region property value for this command invocation.
+
+     --region=REGION
+        Region of the service attachment to update. If not specified, you might
+        be prompted to select a region (interactive mode only).
+
+        To avoid prompting when this flag is omitted, you can set the
+        compute/region property:
+
+            $ gcloud config set compute/region REGION
+
+        A list of regions can be fetched by running:
+
+            $ gcloud compute regions list
+
+        To unset the property, run:
+
+            $ gcloud config unset compute/region
+
+        Alternatively, the region can be stored in the environment variable
+        CLOUDSDK_COMPUTE_REGION.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud compute service-attachments update
+
+        $ gcloud beta compute service-attachments update
+

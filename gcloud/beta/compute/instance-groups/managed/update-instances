@@ -1,0 +1,143 @@
+NAME
+    gcloud beta compute instance-groups managed update-instances - immediately
+        update selected instances in a Compute Engine managed instance group
+
+SYNOPSIS
+    gcloud beta compute instance-groups managed update-instances NAME
+        (--all-instances | --instances=INSTANCE,[INSTANCE,...])
+        [--minimal-action=MINIMAL_ACTION; default="none"]
+        [--most-disruptive-allowed-action=MOST_DISRUPTIVE_ALLOWED_ACTION;
+          default="replace"] [--region=REGION | --zone=ZONE]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) When using a managed instance group, it's possible that your
+    intended specification for a VM is different from the current state of that
+    VM. For example, this can happen due to changes to the group's target
+    instance template. This command enables you to initiate the update process
+    on the given set of instances instantly, thus when your Managed Instance
+    Group is stable you can be sure that all the changes were applied.
+
+    gcloud beta compute instance-groups managed update-instances allows you to
+    specify the least and the most disruptive actions that can be performed
+    while updating the instances. This way you can reduce the risk of rolling
+    out too many changes at once. Possible actions are: none, refresh, restart
+    and replace. The level of disruption to the instance is ordered as: none <
+    refresh < restart < replace.
+
+    The command returns the operation status per instance, which might be FAIL,
+    SUCCESS, or MEMBER_NOT_FOUND. MEMBER_NOT_FOUND is returned only for
+    regional groups when the gcloud command-line tool wasn't able to resolve
+    the zone from the instance name.
+
+EXAMPLES
+    To update instances instance-1, instance-2 in my-group, with
+    minimal-action=none and most-disruptive-allowed-action=restart, run:
+
+        $ gcloud beta compute instance-groups managed update-instances \
+              my-group --instances=instance-1,instance2 \
+              --minimal-action=none
+              --most-disruptive-allowed-action=restart
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the managed instance group to operate on.
+
+REQUIRED FLAGS
+     Exactly one of these must be specified:
+
+       --all-instances
+          Update all instances in the group.
+
+       --instances=INSTANCE,[INSTANCE,...]
+          Names of instances to update.
+
+OPTIONAL FLAGS
+     --minimal-action=MINIMAL_ACTION; default="none"
+        Use this flag to minimize disruption as much as possible or to apply a
+        more disruptive action than is strictly necessary. The MIG performs at
+        least this action on each instance while updating. If the update
+        requires a more disruptive action than the one specified here, then the
+        more disruptive action is performed. If you omit this flag, the update
+        uses the minimal-action value from the MIG's update policy, unless it
+        is not set in which case the default is replace.
+
+        MINIMAL_ACTION must be one of:
+
+         none
+            No action
+         refresh
+            Apply the new configuration without stopping instances, if
+            possible. For example, use refresh to apply changes that only
+            affect metadata or additional disks.
+         restart
+            Apply the new configuration without replacing instances, if
+            possible. For example, stopping instances and starting them again
+            is sufficient to apply changes to machine type.
+         replace
+            Replace old instances according to the --replacement-method flag.
+
+     --most-disruptive-allowed-action=MOST_DISRUPTIVE_ALLOWED_ACTION; default="replace"
+        Use this flag to prevent an update if it requires more disruption than
+        you can afford. At most, the MIG performs the specified action on each
+        instance while updating. If the update requires a more disruptive
+        action than the one specified here, then the update fails and no
+        changes are made. If you omit this flag, the update uses the
+        most-disruptive-allowed-action value from the MIG's update policy,
+        unless it is not set in which case the default is replace.
+
+        MOST_DISRUPTIVE_ALLOWED_ACTION must be one of:
+
+         none
+            No action
+         refresh
+            Apply the new configuration without stopping instances, if
+            possible. For example, use refresh to apply changes that only
+            affect metadata or additional disks.
+         restart
+            Apply the new configuration without replacing instances, if
+            possible. For example, stopping instances and starting them again
+            is sufficient to apply changes to machine type.
+         replace
+            Replace old instances according to the --replacement-method flag.
+
+     At most one of these can be specified:
+
+       --region=REGION
+          Region of the managed instance group to operate on. If not specified,
+          you might be prompted to select a region (interactive mode only).
+
+          A list of regions can be fetched by running:
+
+              $ gcloud compute regions list
+
+          Overrides the default compute/region property value for this command
+          invocation.
+
+       --zone=ZONE
+          Zone of the managed instance group to operate on. If not specified,
+          you might be prompted to select a zone (interactive mode only).
+
+          A list of zones can be fetched by running:
+
+              $ gcloud compute zones list
+
+          Overrides the default compute/zone property value for this command
+          invocation.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud compute instance-groups managed update-instances
+
+        $ gcloud alpha compute instance-groups managed update-instances
+

@@ -1,0 +1,104 @@
+NAME
+    gcloud alpha ml-engine explain - run AI Platform explanation
+
+SYNOPSIS
+    gcloud alpha ml-engine explain --model=MODEL
+        (--json-instances=JSON_INSTANCES | --json-request=JSON_REQUEST
+          | --text-instances=TEXT_INSTANCES) [--region=REGION]
+        [--version=VERSION] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) gcloud alpha ml-engine explain sends an explain request to AI
+    Platform for the given instances. This command will read up to 100
+    instances, though the service itself will accept instances up to the
+    payload limit size (currently, 1.5MB).
+
+EXAMPLES
+    To get explanations for an AI Platform version model with the version
+    'version' and with the name 'model-name', run:
+
+        $ gcloud alpha ml-engine explain explain --model=model-name \
+            --version=version           --json-instances=instances.json
+
+REQUIRED FLAGS
+     --model=MODEL
+        Name of the model.
+
+     Exactly one of these must be specified:
+
+       --json-instances=JSON_INSTANCES
+          Path to a local file from which instances are read. Instances are in
+          JSON format; newline delimited.
+
+          An example of the JSON instances file:
+
+              {"images": [0.0, ..., 0.1], "key": 3}
+              {"images": [0.0, ..., 0.1], "key": 2}
+              ...
+
+          This flag accepts "-" for stdin.
+
+       --json-request=JSON_REQUEST
+          Path to a local file containing the body of JSON request.
+
+          An example of a JSON request:
+
+              {
+                "instances": [
+                  {"x": [1, 2], "y": [3, 4]},
+                  {"x": [-1, -2], "y": [-3, -4]}
+                ]
+              }
+
+          This flag accepts "-" for stdin.
+
+       --text-instances=TEXT_INSTANCES
+          Path to a local file from which instances are read. Instances are in
+          UTF-8 encoded text format; newline delimited.
+
+          An example of the text instances file:
+
+              107,4.9,2.5,4.5,1.7
+              100,5.7,2.8,4.1,1.3
+              ...
+
+          This flag accepts "-" for stdin.
+
+OPTIONAL FLAGS
+     --region=REGION
+        Google Cloud region of the regional endpoint to use for this command.
+        For the global endpoint, the region needs to be specified as global.
+
+        Learn more about regional endpoints and see a list of available
+        regions:
+        https://cloud.google.com/ai-platform/prediction/docs/regional-endpoints
+
+        REGION must be one of: global, asia-east1, asia-northeast1,
+        asia-southeast1, australia-southeast1, europe-west1, europe-west2,
+        europe-west3, europe-west4, northamerica-northeast1, us-central1,
+        us-east1, us-east4, us-west1.
+
+     --version=VERSION
+        Model version to be used.
+
+        If unspecified, the default version of the model will be used. To list
+        model versions run
+
+            $ gcloud alpha ml-engine versions list
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. This variant is also available:
+
+        $ gcloud beta ml-engine explain
+

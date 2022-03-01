@@ -1,0 +1,59 @@
+NAME
+    gcloud sql export sql - exports data from a Cloud SQL instance to a SQL
+        file
+
+SYNOPSIS
+    gcloud sql export sql INSTANCE URI [--async]
+        [--database=DATABASE,[DATABASE,...], -d DATABASE,[DATABASE,...]]
+        [--offload] [--table=TABLE,[TABLE,...], -t TABLE,[TABLE,...]]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Exports data from a Cloud SQL instance to a Google Cloud Storage bucket as
+    a SQL dump file.
+
+POSITIONAL ARGUMENTS
+     INSTANCE
+        Cloud SQL instance ID.
+
+     URI
+        The path to the file in Google Cloud Storage where the export will be
+        stored. The URI is in the form gs://bucketName/fileName. If the file
+        already exists, the operation fails. If the filename ends with .gz, the
+        contents are compressed.
+
+FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --database=DATABASE,[DATABASE,...], -d DATABASE,[DATABASE,...]
+        Database(s) from which the export is made. Information on requirements
+        can be found here:
+        https://cloud.google.com/sql/docs/mysql/admin-api/v1beta4/instances/export#exportContext.databases
+
+     --offload
+        Offload an export to a temporary instance. Doing so reduces strain on
+        source instances and allows other operations to be performed while the
+        export is in progress.
+
+     --table=TABLE,[TABLE,...], -t TABLE,[TABLE,...]
+        Tables to export from the specified database. If you specify tables,
+        specify one and only one database. For PostgreSQL instances, only one
+        table can be exported at a time.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha sql export sql
+
+        $ gcloud beta sql export sql
+

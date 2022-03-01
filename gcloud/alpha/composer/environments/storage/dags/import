@@ -1,0 +1,157 @@
+NAME
+    gcloud alpha composer environments storage dags import - import DAGs from
+        local storage or Cloud Storage into an environment
+
+SYNOPSIS
+    gcloud alpha composer environments storage dags import --source=SOURCE
+        (--environment=ENVIRONMENT : --location=LOCATION)
+        [--destination=DESTINATION] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) If the SOURCE is a directory, it and its contents are imported
+    recursively. Colliding files in the environment's Cloud Storage bucket will
+    be overwritten. If a file exists in the bucket but is not present in the
+    SOURCE, it is not removed.
+
+EXAMPLES
+    Suppose the '/foo' directory in the local filesystem has the following
+    structure:
+
+        foo
+        |
+        +-- subdir1
+        |   |
+        |   +-- file1.txt
+        |   +-- file2.txt
+        |
+        +-- subdir2
+        |   |
+        |   +-- file3.txt
+        |   +-- file4.txt
+
+    And the environment myenv's Cloud Storage bucket has the following
+    structure:
+
+        gs://the-bucket
+        |
+        +-- dags
+        |   |
+        |   +-- foo
+        |   |   |
+        |   |   +-- subdir1
+        |   |   |   |
+        |   |   |   +-- bar.txt
+
+    The following command:
+
+        gcloud alpha composer environments storage dags import myenv --source=/foo
+
+    would result in the following structure in myenv's Cloud Storage bucket:
+
+        gs://the-bucket
+        |
+        +-- dags
+        |   |
+        |   +-- foo
+        |   |   |
+        |   |   +-- subdir1
+        |   |   |   |
+        |   |   |   +-- bar.txt
+        |   |   |   +-- file1.txt
+        |   |   |   +-- file2.txt
+        |   |   |
+        |   |   +-- subdir2
+        |   |   |   |
+        |   |   |   +-- file3.txt
+        |   |   |   +-- file4.txt
+
+    If instead we had run
+
+        gcloud alpha composer environments storage dags import myenv --source=/foo --destination=bar
+
+    the resulting bucket structure would be the following:
+
+        gs://the-bucket
+        |
+        +-- dags
+        |   |
+        |   +-- foo
+        |   |   |
+        |   |   +-- subdir1
+        |   |   |   |
+        |   |   |   +-- bar.txt
+        |   |
+        |   +-- bar
+        |   |   |
+        |   |   +-- foo
+        |   |   |   |
+        |   |   |   +-- subdir1
+        |   |   |   |   |
+        |   |   |   |   +-- file1.txt
+        |   |   |   |   +-- file2.txt
+        |   |   |   |
+        |   |   |   +-- subdir2
+        |   |   |   |   |
+        |   |   |   |   +-- file3.txt
+        |   |   |   |   +-- file4.txt
+
+REQUIRED FLAGS
+     --source=SOURCE
+        Path to a local directory/file or Cloud Storage bucket/object to be
+        imported into the dags/ subdirectory in the environment's Cloud Storage
+        bucket. Cloud Storage paths must begin with 'gs://'.
+
+     Environment resource - The environment into whose Cloud Storage bucket to
+     import DAGs. The arguments in this group can be used to specify the
+     attributes of this resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways. To set the project
+     attribute:
+      ◆ provide the argument --environment on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       --environment=ENVIRONMENT
+          ID of the environment or fully qualified identifier for the
+          environment. To set the environment attribute:
+          ▸ provide the argument --environment on the command line.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --location=LOCATION
+          Compute Engine region in which to create the environment. To set the
+          location attribute:
+          ▸ provide the argument --environment on the command line with a
+            fully specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property composer/location.
+
+OPTIONAL FLAGS
+     --destination=DESTINATION
+        An optional subdirectory under the dags/ directory in the environment's
+        Cloud Storage bucket into which to import files. May contain forward
+        slashes to delimit multiple levels of subdirectory nesting, but should
+        not contain leading or trailing slashes. If the DESTINATION does not
+        exist, it will be created.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud composer environments storage dags import
+
+        $ gcloud beta composer environments storage dags import
+

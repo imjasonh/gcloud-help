@@ -1,0 +1,157 @@
+NAME
+    gcloud alpha scc assets list - list Cloud Security Command Center assets
+
+SYNOPSIS
+    gcloud alpha scc assets list [PARENT] [--compare-duration=COMPARE_DURATION]
+        [--field-mask=FIELD_MASK] [--order-by=ORDER_BY]
+        [--page-token=PAGE_TOKEN] [--read-time=READ_TIME] [--filter=EXPRESSION]
+        [--limit=LIMIT] [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) List Cloud Security Command Center assets.
+
+EXAMPLES
+    List all assets under organization (123456)
+
+        $ gcloud alpha scc assets list 123456
+
+    List all assets under project (example-project)
+
+        $ gcloud alpha scc assets list projects/example-project
+
+    List all assets under folder (456)
+
+        $ gcloud alpha scc assets list folders/456
+
+    List all assets under organization (123456) that were present as of
+    2019-01-01T01:00:00 GMT time.
+
+        $ gcloud alpha scc assets list 123456 \
+            --read-time="2019-01-01T01:00:00Z"
+
+    Only list category and resource_name for all assets under organization
+    (123456):
+
+        $ gcloud alpha scc assets list 123456 \
+            --field-mask="category,resource_name"
+
+    List all compute instances under organization (123456):
+
+        $ gcloud alpha scc assets list 123456 \
+            --filter="security_center_properties.resource_type=\"google.comp\
+        ute.Instance\""
+
+    List all firewall rules that have open HTTP Ports:
+
+        $ gcloud alpha scc assets list 123456 \
+            --filter="security_center_properties.resource_type = \
+        \"google.compute.Firewall\" AND resource_properties.name \
+            =\"default-allow-http\""
+
+    List all assets that belong to either projects: 5678 OR 78910 (project's
+    numeric identifier).
+
+        $ gcloud alpha scc assets list 123456 \
+            --filter="security_center_properties.resource_parent = \
+        \"//cloudresourcemanager.googleapis.com/projects/5678\" OR \
+            security_center_properties.resource_parent = "\78910\""
+
+    List all projects that are owned by a user:someone@domain.com. Notice the
+    usage of : which enforces partial matching.
+
+        $ gcloud alpha scc assets list 123456 \
+            --filter="security_center_properties.resource_type = \
+        \"google.cloud.resourcemanager.Project\" AND \
+            security_center_properties.resource_owners : \
+            \"user:someone@domain.com\""
+
+    List assets and add a state_change property that indicates if the asset was
+    added, removed, or remained present during the past 24 hours period:
+
+        $ gcloud alpha scc assets list 123456 --compare-duration=86400s
+
+POSITIONAL ARGUMENTS
+     Parent resource - The parent to be used for the SCC (Security Command
+     Center) command. This represents a Cloud resource.
+
+       [PARENT]
+          ID of the parent or fully qualified identifier for the parent. To set
+          the organization attribute:
+          ▸ provide the argument parent on the command line;
+          ▸ Set the parent property in configuration using gcloud config set
+            scc/parent if it is not specified in command line..
+
+FLAGS
+     --compare-duration=COMPARE_DURATION
+        ListAssetResult's "state" attribute is updated to indicate whether the
+        asset was added, removed, or remained present during the
+        compare_duration period of time that precedes the read_time. Example
+        duration: "100000s"
+
+     --field-mask=FIELD_MASK
+        Field mask to specify the Asset fields to be listed in the response. An
+        empty field mask will list all fields. Example field mask:
+        "asset.security_center_properties.resource_type,asset.security_center_properties.resource_parent"
+
+     --order-by=ORDER_BY
+        Expression that defines what fields and order to use for sorting.
+        Example order by: "resource_properties.sort_prop ASC"
+
+     --page-token=PAGE_TOKEN
+        The value returned by the last 'ListAssetsResponse'; indicates that
+        this is a continuation of a prior 'ListAssets' call, and that the
+        system should return the next page of data.
+
+     --read-time=READ_TIME
+        Time used as a reference point when filtering assets. Default: NOW
+        Example read time: "2019-02-28T07:00:06.861Z"
+
+LIST COMMAND FLAGS
+     --filter=EXPRESSION
+        Apply a Boolean filter EXPRESSION to each resource item to be listed.
+        If the expression evaluates True, then that item is listed. For more
+        details and examples of filter expressions, run $ gcloud topic filters.
+        This flag interacts with other flags that are applied in this order:
+        --flatten, --sort-by, --filter, --limit.
+
+     --limit=LIMIT
+        Maximum number of resources to list. The default is unlimited. This
+        flag interacts with other flags that are applied in this order:
+        --flatten, --sort-by, --filter, --limit.
+
+     --page-size=PAGE_SIZE
+        Some services group resource list output into pages. This flag
+        specifies the maximum number of resources per page. The default is
+        determined by the service if it supports paging, otherwise it is
+        unlimited (no paging). Paging may be applied before or after --filter
+        and --limit depending on the service.
+
+     --sort-by=[FIELD,...]
+        Comma-separated list of resource field key names to sort by. The
+        default order is ascending. Prefix a field with ``~'' for descending
+        order on that field. This flag interacts with other flags that are
+        applied in this order: --flatten, --sort-by, --filter, --limit.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the securitycenter/v1 API. The full documentation for
+    this API can be found at: https://cloud.google.com/security-command-center
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud scc assets list
+
+        $ gcloud beta scc assets list
+

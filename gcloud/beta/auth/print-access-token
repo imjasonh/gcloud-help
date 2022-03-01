@@ -1,0 +1,52 @@
+NAME
+    gcloud beta auth print-access-token - print an access token for the
+        specified account
+
+SYNOPSIS
+    gcloud beta auth print-access-token [ACCOUNT] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Print an access token for the specified account. See RFC6749
+    (https://tools.ietf.org/html/rfc6749) for more information about access
+    tokens.
+
+    Note that token itself may not be enough to access some services. If you
+    use the token with curl or similar tools, you may see permission errors
+    similar to "API has not been used in project 32555940559 before or it is
+    disabled.". If it happens, you may need to provide a quota project in the
+    "X-Goog-User-Project" header. For example,
+
+        $ curl -H "X-Goog-User-Project: your-project" \
+            -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+            foo.googleapis.com
+
+    The identity that granted the token must have the serviceusage.services.use
+    permission on the provided project. See
+    https://cloud.google.com/apis/docs/system-parameters for more information.
+
+EXAMPLES
+    To print access tokens:
+
+        $ gcloud beta auth print-access-token
+
+POSITIONAL ARGUMENTS
+     [ACCOUNT]
+        Account to get the access token for. If not specified, the current
+        active account will be used.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud auth print-access-token
+
+        $ gcloud alpha auth print-access-token
+

@@ -1,0 +1,137 @@
+NAME
+    gcloud artifacts repositories create - create an Artifact Registry
+        repository
+
+SYNOPSIS
+    gcloud artifacts repositories create (REPOSITORY : --location=LOCATION)
+        --repository-format=REPOSITORY_FORMAT [--allow-snapshot-overwrites]
+        [--async] [--description=DESCRIPTION] [--kms-key=KMS_KEY]
+        [--labels=[KEY=VALUE,...]]
+        [--version-policy=VERSION_POLICY; default="NONE"]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Create a new Artifact Registry repository.
+
+    This command can fail for the following reasons:
+      ▪ A repository with the same name already exists.
+      ▪ The active account does not have permission to create repositories.
+      ▪ A valid repository format was not provided.
+
+EXAMPLES
+    To create a repository with the name my-repo under the current project,
+    run:
+
+        $ gcloud artifacts repositories create my-repo
+
+    To create repository my-repo with a KMS key
+    projects/my-project/locations/us/keyRings/my-kr/cryptoKeys/my-key, run:
+
+        $ gcloud artifacts repositories create my-repo \
+            --kms-key=projects/my-project/locations/us/keyRings/my-kr/\
+        cryptoKeys/my-key
+
+POSITIONAL ARGUMENTS
+     Repository resource - The Artifact Registry repository to create. The
+     arguments in this group can be used to specify the attributes of this
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways. To set the project attribute:
+      ◆ provide the argument repository on the command line with a fully
+        specified name;
+      ◆ set the property core/project;
+      ◆ provide the argument --project on the command line.
+
+     This must be specified.
+
+       REPOSITORY
+          ID of the repository or fully qualified identifier for the
+          repository. To set the repository attribute:
+          ▸ provide the argument repository on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --location=LOCATION
+          Location of the repository. Overrides the default artifacts/location
+          property value for this command invocation. To configure the default
+          location, use the command: gcloud config set artifacts/location.
+
+          To set the location attribute:
+          ▸ provide the argument repository on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property artifacts/location.
+
+REQUIRED FLAGS
+     --repository-format=REPOSITORY_FORMAT
+        Format of the repository. REPOSITORY_FORMAT must be one of:
+
+         apt
+            APT package format.
+         docker
+            Docker image format.
+         googet
+            GooGet package format.
+         maven
+            Maven package format.
+         npm
+            NPM package format.
+         python
+            Python package format.
+         yum
+            YUM package format.
+
+OPTIONAL FLAGS
+     --allow-snapshot-overwrites
+        (Maven only) Allow repository users to publish a snapshot that
+        overwrites the same snapshot version in the repository.
+
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --description=DESCRIPTION
+        Description for the repository.
+
+     --kms-key=KMS_KEY
+        Name of the encryption key that's used for encrypting the contents of
+        the repository.
+
+     --labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     --version-policy=VERSION_POLICY; default="NONE"
+        (Maven only) The package versions that the repository will store.
+        VERSION_POLICY must be one of:
+
+         none
+            (Maven only) The repository doesn't validate the version type.
+         release
+            (Maven only) The repository accepts release versions only.
+         snapshot
+            (Maven only) The repository accepts snapshot versions only.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the artifactregistry/v1beta2 API. The full documentation
+    for this API can be found at: https://cloud.google.com/artifacts/docs/
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha artifacts repositories create
+
+        $ gcloud beta artifacts repositories create
+

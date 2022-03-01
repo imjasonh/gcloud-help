@@ -1,0 +1,88 @@
+NAME
+    gcloud beta runtime-config configs variables set - create or update
+        variable resources
+
+SYNOPSIS
+    gcloud beta runtime-config configs variables set NAME [VALUE]
+        --config-name=CONFIG_NAME [--is-text]
+        [--fail-if-absent | --fail-if-present] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) This command creates or updates a variable resource, setting its
+    value to the specified string or file contents.
+
+EXAMPLES
+    To create or update a variable named "my-var", run:
+
+        $ gcloud beta runtime-config configs variables set \
+            --config-name=my-config my-var "my value"
+
+    To create or update a variable with a hierarchical name, such as
+    "results/task1", run:
+
+        $ gcloud beta runtime-config configs variables set \
+            --config-name=my-config results/task1 "my value"
+
+    To create a variable, but fail if it already exists, run:
+
+        $ gcloud beta runtime-config configs variables set \
+            --config-name=my-config my-var "my-value" --fail-if-present
+
+    To update a variable, but fail if it does not exist, run:
+
+        $ gcloud beta runtime-config configs variables set \
+            --config-name=my-config my-var "my-value" --fail-if-absent
+
+    It is possible to provide --is-text flag if the value contains only text
+    (UTF-8 encoded). This affects how the variable is transmitted on the wire
+    and requires less quota on the backend.
+
+        $ gcloud beta runtime-config configs variables set \
+            --config-name=my-config --is-text my-var "my value"
+
+    If the variable's value parameter is not specified, the value will be read
+    from standard input. This allows setting variables to large values or
+    values that contain non-printable characters. The variable value will be
+    automatically base64-encoded. For example, to set a variable's value to the
+    contents of a file, run:
+
+        $ cat my-file | gcloud beta runtime-config configs variables set \
+            --config-name my-config my-var
+
+POSITIONAL ARGUMENTS
+     NAME
+        The variable name.
+
+     [VALUE]
+        The variable value. If absent, the value will be read from stdin. The
+        value is automatically base64-encoded, unless --is-text flag is set.
+
+REQUIRED FLAGS
+     --config-name=CONFIG_NAME
+        The name of the configuration resource to use.
+
+OPTIONAL FLAGS
+     --is-text
+        If True, send and store the value as text. Can be used if the value
+        contains only text (UTF-8 encoded). This affects how the variable is
+        transmitted on the wire and requires less quota on the backend.
+
+     At most one of these can be specified:
+
+       --fail-if-absent
+          Fail if a variable with the specified name does not exist.
+
+       --fail-if-present
+          Fail if a variable with the specified name already exists.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice.
+

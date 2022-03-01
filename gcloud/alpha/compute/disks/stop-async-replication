@@ -1,0 +1,108 @@
+NAME
+    gcloud alpha compute disks stop-async-replication - stop async replication
+        on a Compute Engine persistent disk
+
+SYNOPSIS
+    gcloud alpha compute disks stop-async-replication DISK_NAME
+        [--secondary-disk=SECONDARY_DISK] [--region=REGION | --zone=ZONE]
+        [--secondary-disk-region=SECONDARY_DISK_REGION
+          | --secondary-disk-zone=SECONDARY_DISK_ZONE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) gcloud alpha compute disks stop-async-replication stops async
+    replication on a Compute Engine persistent disk. This command can be
+    invoked either on the primary or on the secondary disk. If stop replication
+    is invoked on the primary disk, --secondary-disk and one of
+    --secondary-disk-zone or secondary-disk-region must be provided.
+
+EXAMPLES
+    When stopping async replication, be sure to include the --zone or --region
+    option. To stop replication between primary disk 'my-disk-1' in zone
+    us-east1-a and secondary disk 'my-disk-2' in us-west1-a:
+
+        $ gcloud alpha compute disks stop-async-replication my-disk-1 \
+            --zone=us-east1-a --secondary-disk=my-disk-2 \
+            --secondary-disk-zone=us-west1-a
+
+    Alternatively, you can stop replication from the secondary disk:
+
+        $ gcloud alpha compute disks stop-async-replication my-disk-2 \
+            --zone=us-west1-a
+
+POSITIONAL ARGUMENTS
+     DISK_NAME
+        Name of the disk to stop async replication.
+
+FLAGS
+     --secondary-disk=SECONDARY_DISK
+        Secondary disk to stop asynchronous replication to. Supplied if and
+        only if the target disk is a primary disk in an asynchronously
+        replicated pair.
+
+     At most one of these can be specified:
+
+       --region=REGION
+          Region of the disk to stop async replication. If not specified, you
+          might be prompted to select a region (interactive mode only).
+
+          To avoid prompting when this flag is omitted, you can set the
+          compute/region property:
+
+              $ gcloud config set compute/region REGION
+
+          A list of regions can be fetched by running:
+
+              $ gcloud compute regions list
+
+          To unset the property, run:
+
+              $ gcloud config unset compute/region
+
+          Alternatively, the region can be stored in the environment variable
+          CLOUDSDK_COMPUTE_REGION.
+
+       --zone=ZONE
+          Zone of the disk to stop async replication. If not specified and the
+          compute/zone property isn't set, you might be prompted to select a
+          zone (interactive mode only).
+
+          To avoid prompting when this flag is omitted, you can set the
+          compute/zone property:
+
+              $ gcloud config set compute/zone ZONE
+
+          A list of zones can be fetched by running:
+
+              $ gcloud compute zones list
+
+          To unset the property, run:
+
+              $ gcloud config unset compute/zone
+
+          Alternatively, the zone can be stored in the environment variable
+          CLOUDSDK_COMPUTE_ZONE.
+
+     At most one of these can be specified:
+
+       --secondary-disk-region=SECONDARY_DISK_REGION
+          Region of the async secondary disk. Overrides the default
+          compute/region property value for this command invocation.
+
+       --secondary-disk-zone=SECONDARY_DISK_ZONE
+          Zone of the async secondary disk. Overrides the default compute/zone
+          property value for this command invocation.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

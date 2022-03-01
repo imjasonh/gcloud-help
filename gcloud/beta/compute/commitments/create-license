@@ -1,0 +1,78 @@
+NAME
+    gcloud beta compute commitments create-license - create Compute Engine
+        license-based commitments
+
+SYNOPSIS
+    gcloud beta compute commitments create-license COMMITMENT --amount=AMOUNT
+        --license=LICENSE --plan=PLAN [--cores-per-license=CORES_PER_LICENSE]
+        [--region=REGION] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Create Compute Engine license-based commitments.
+
+EXAMPLES
+    To create a commitment called commitment-1 in the us-central1 region with
+    36-month plan, sles-sap-12 license, 1-2 cores, run:
+
+        $ gcloud beta compute commitments create-license commitment-1 \
+            --plan=36-month \
+            --license=https://www.googleapis.com/compute/v1/projects/\
+        suse-sap-cloud/global/licenses/sles-sap-12 --region=us-central1 \
+            --amount=1 --cores-per-license=1-2
+
+POSITIONAL ARGUMENTS
+     COMMITMENT
+        Name of the commitment to create.
+
+REQUIRED FLAGS
+     --amount=AMOUNT
+        Number of licenses purchased.
+
+     --license=LICENSE
+        Applicable license URI. For example:
+        https://www.googleapis.com/compute/v1/projects/suse-sap-cloud/global/licenses/sles-sap-12
+
+     --plan=PLAN
+        Duration of the commitment. PLAN must be one of: 12-month, 36-month.
+
+OPTIONAL FLAGS
+     --cores-per-license=CORES_PER_LICENSE
+        Core range of the instance. Must be one of: 1-2, 3-4, 5+. Required for
+        SAP licenses.
+
+     --region=REGION
+        Region of the commitment to create. If not specified, you might be
+        prompted to select a region (interactive mode only).
+
+        To avoid prompting when this flag is omitted, you can set the
+        compute/region property:
+
+            $ gcloud config set compute/region REGION
+
+        A list of regions can be fetched by running:
+
+            $ gcloud compute regions list
+
+        To unset the property, run:
+
+            $ gcloud config unset compute/region
+
+        Alternatively, the region can be stored in the environment variable
+        CLOUDSDK_COMPUTE_REGION.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud compute commitments create-license
+
+        $ gcloud alpha compute commitments create-license
+

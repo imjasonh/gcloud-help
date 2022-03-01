@@ -1,0 +1,121 @@
+NAME
+    gcloud beta monitoring dashboards update - update a Cloud Monitoring
+        dashboard
+
+SYNOPSIS
+    gcloud beta monitoring dashboards update DASHBOARD
+        (--config=CONFIG | --config-from-file=CONFIG_FROM_FILE)
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Update a Monitoring dashboard. The updated dashboard can be
+    specified as a JSON/YAML value passed in as a string through the --config
+    flag or as a file through the --config-from-file flag.
+
+    Note: Etags are used to prevent concurrent updates to the same dashboard.
+    The latest etag can be found in a describe or list response.
+
+    For information about the format of a dashboard:
+    https://cloud.google.com/monitoring/api/ref_v3/rest/v1/projects.dashboards
+
+EXAMPLES
+    To update a dashboard with a YAML config, run:
+
+        $ gcloud beta monitoring dashboards update MY-DASHBOARD --config='''
+          displayName: New Dashboard with New Display Name
+          etag: 40d1040034db4e5a9dee931ec1b12c0d
+          gridLayout:
+            widgets:
+            - text:
+                content: Hello World
+          '''
+
+    To update a dashboard with a JSON config, run:
+
+        $ gcloud beta monitoring dashboards update MY-DASHBOARD --config='''
+          {
+            "displayName": "New Dashboard with New Display Name",
+            "etag": "40d1040034db4e5a9dee931ec1b12c0d",
+            "gridLayout": {
+              "widgets": [
+                {
+                  "text": {
+                    "content": "Hello World",
+                  }
+                }
+              ]
+            },
+          }
+          '''
+
+    To update a dashboard within a specific project, run:
+
+        $ gcloud beta monitoring dashboards update MY-DASHBOARD \
+            --project=MY-PROJECT --config='''
+          displayName: New Dashboard with New Display Name
+          etag: 40d1040034db4e5a9dee931ec1b12c0d
+          gridLayout:
+            widgets:
+            - text:
+                content: Hello World
+          '''
+
+    To update a dashboard with a file, run:
+
+        $ gcloud beta monitoring dashboards update MY-DASHBOARD \
+            --config-from-file=MY-FILE
+
+    Sample contents of MY-FILE:
+
+        displayName: New Dashboard with new Display Name
+        etag: 40d1040034db4e5a9dee931ec1b12c0d
+        gridLayout:
+          widgets:
+          - text:
+              content: Hello World
+
+POSITIONAL ARGUMENTS
+     Dashboard resource - The dashboard to update. This represents a Cloud
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways. To set the project attribute:
+      ◆ provide the argument dashboard on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       DASHBOARD
+          ID of the dashboard or fully qualified identifier for the dashboard.
+          To set the dashboard attribute:
+          ▸ provide the argument dashboard on the command line.
+
+REQUIRED FLAGS
+     Exactly one of these must be specified:
+
+       --config=CONFIG
+          Dashboard configuration, in either JSON or YAML format, as a string.
+
+       --config-from-file=CONFIG_FROM_FILE
+          Path to a JSON or YAML file containing the dashboard configuration.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the monitoring/v1 API. The full documentation for this
+    API can be found at: https://cloud.google.com/monitoring/api/
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud monitoring dashboards update
+
+        $ gcloud alpha monitoring dashboards update
+

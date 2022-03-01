@@ -1,0 +1,72 @@
+NAME
+    gcloud dns record-sets import - import record-sets into your managed-zone
+
+SYNOPSIS
+    gcloud dns record-sets import RECORDS_FILE --zone=ZONE, -z ZONE
+        [--delete-all-existing] [--replace-origin-ns] [--zone-file-format]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    This command imports record-sets contained within the specified record-sets
+    file into your managed-zone. Note that NS records for the origin of the
+    zone and the SOA NS field are not imported since name-servers are managed
+    by Cloud DNS. By default, record-sets cannot be imported if there are any
+    conflicts. A conflict exists if an existing record-set has the same name
+    and type as a record-set that is being imported. In contrast, if the
+    --delete-all-existing flag is used, the imported record-sets will replace
+    all the records-sets currently in the managed-zone.
+
+EXAMPLES
+    To import record-sets from a yaml record-sets file, run:
+
+        $ gcloud dns record-sets import YAML_RECORDS_FILE --zone=MANAGED_ZONE
+
+    To import record-sets from a zone file, run:
+
+        $ gcloud dns record-sets import ZONE_FILE --zone-file-format \
+            --zone=MANAGED_ZONE
+
+    To replace all the record-sets in your zone with records from a yaml file,
+    run:
+
+        $ gcloud dns record-sets import YAML_RECORDS_FILE \
+            --delete-all-existing --zone=MANAGED_ZONE
+
+POSITIONAL ARGUMENTS
+     RECORDS_FILE
+        File from which record-sets should be imported. For examples of
+        YAML-formatted and BIND zone-formatted records files, refer to
+        https://cloud.google.com/dns/records#importing_and_exporting_record_sets
+
+REQUIRED FLAGS
+     --zone=ZONE, -z ZONE
+        Name of the managed zone whose record sets you want to manage.
+
+OPTIONAL FLAGS
+     --delete-all-existing
+        Indicates that all existing record-sets should be deleted before
+        importing the record-sets in the records-file.
+
+     --replace-origin-ns
+        Indicates that NS records for the origin of a zone should be imported
+        if defined
+
+     --zone-file-format
+        Indicates that the input records-file is in BIND zone format. If
+        omitted, indicates that the records-file is in YAML format.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha dns record-sets import
+
+        $ gcloud beta dns record-sets import
+

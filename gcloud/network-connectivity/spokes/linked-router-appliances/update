@@ -1,0 +1,120 @@
+NAME
+    gcloud network-connectivity spokes linked-router-appliances update - update
+        a Router appliance spoke
+
+SYNOPSIS
+    gcloud network-connectivity spokes linked-router-appliances update
+        (SPOKE : --region=REGION) [--async] [--description=DESCRIPTION]
+        [--router-appliance=ROUTER_APPLIANCE] [--update-labels=[KEY=VALUE,...]]
+        [--clear-labels | --remove-labels=[KEY,...]] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Update the details of a Router appliance spoke.
+
+EXAMPLES
+    To update the description of a Router appliance spoke named my-spoke, run:
+
+        $ gcloud network-connectivity spokes linked-router-appliances \
+            update my-spoke --region=us-central1 \
+            --description="new spoke description"
+
+    To replace the router appliance instances linked to a spoke with two new
+    instances, run:
+
+        $ gcloud network-connectivity spokes linked-router-appliances \
+            update my-spoke --region=us-central1 \
+            --router-appliance=instance=https://www.googleapis.com/compute/\
+        v1/projects/my-project/zones/us-central1-a/instances/vm1,\
+        ip=10.10.0.1 \
+            --router-appliance=instance=https://www.googleapis.com/compute/\
+        v1/projects/my-project/zones/us-central1-a/instances/vm2,\
+        ip=10.10.0.2
+
+POSITIONAL ARGUMENTS
+     Spoke resource - Name of the spoke to be updated. The arguments in this
+     group can be used to specify the attributes of this resource. (NOTE) Some
+     attributes are not given arguments in this group but can be set in other
+     ways. To set the project attribute:
+      ◆ provide the argument spoke on the command line with a fully specified
+        name;
+      ◆ set the property core/project;
+      ◆ provide the argument --project on the command line.
+
+     This must be specified.
+
+       SPOKE
+          ID of the spoke or fully qualified identifier for the spoke. To set
+          the spoke attribute:
+          ▸ provide the argument spoke on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --region=REGION
+          The location Id.
+
+          To set the region attribute:
+          ▸ provide the argument spoke on the command line with a fully
+            specified name;
+          ▸ provide the argument --region on the command line.
+
+FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --description=DESCRIPTION
+        New description of the spoke.
+
+     --router-appliance=ROUTER_APPLIANCE
+        Router appliance instance(s) with which to replace the set of instances
+        already linked to this spoke. Pass this flag multiple times to replace
+        with multiple instances. For example, use
+        --router-appliance=instance=new_ins_uri,ip=10.10.0.1 for a single
+        router appliance instance, or
+        --router-appliance=instance=new_ins_uri_1,ip=10.10.0.1
+        --router-appliance=instance=new_ins_uri_2,ip=10.10.0.2 ... for multiple
+        instances.
+
+     --update-labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to update. If a label exists, its value
+        is modified. Otherwise, a new label is created.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     At most one of these can be specified:
+
+       --clear-labels
+          Remove all labels. If --update-labels is also specified then
+          --clear-labels is applied first.
+
+          For example, to remove all labels:
+
+              $ gcloud network-connectivity spokes linked-router-appliances \
+                update --clear-labels
+
+          To remove all existing labels and create two new labels, foo and baz:
+
+              $ gcloud network-connectivity spokes linked-router-appliances \
+                update --clear-labels --update-labels foo=bar,baz=qux
+
+       --remove-labels=[KEY,...]
+          List of label keys to remove. If a label does not exist it is
+          silently ignored. If --update-labels is also specified then
+          --update-labels is applied first.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the networkconnectivity/v1 API. The full documentation
+    for this API can be found at:
+    https://cloud.google.com/network-connectivity/docs/reference/networkconnectivity/rest

@@ -1,0 +1,151 @@
+NAME
+    gcloud alpha code dev - run a Cloud Run service in a local development
+        environment
+
+SYNOPSIS
+    gcloud alpha code dev [SERVICE_CONFIG] [--[no-]allow-secret-manager]
+        [--cloudsql-instances=[CLOUDSQL_INSTANCE,...]] [--cpu=CPU]
+        [--image=IMAGE] [--local-port=LOCAL_PORT] [--memory=MEMORY]
+        [--minikube-vm-driver=MINIKUBE_VM_DRIVER; default="docker"]
+        [--namespace=NAMESPACE] [--secrets=[KEY=VALUE,...]]
+        [--service-name=SERVICE_NAME] [--source=SOURCE] [--no-stop-cluster]
+        [--application-default-credential | --service-account=SERVICE_ACCOUNT]
+        [--builder=BUILDER | --dockerfile=DOCKERFILE; default="Dockerfile"]
+        [--env-vars=[KEY=VALUE,...] | --env-vars-file=FILE_PATH]
+        [--kube-context=KUBE_CONTEXT | --minikube-profile=MINIKUBE_PROFILE]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Run a Cloud Run service in a local development environment.
+
+    This command takes Cloud Run source, builds it, and runs it on the local
+    machine. This command also watches the relevant source files and updates
+    the container when they change.
+
+EXAMPLES
+    If building images using a Dockerfile:
+
+        $ gcloud alpha code dev --dockerfile=<path_to_dockerfile>
+
+    If the Dockerfile is named Dockerfile and is located in the current
+    directory, the --dockerfile flag may be omitted:
+
+        $ gcloud alpha code dev
+
+    To access Google Cloud Platform services with the current user's
+    credentials, login to obtain the application default credentials and invoke
+    this command with the --application-default-credential flag.
+
+        $ gcloud auth application-default login
+        $ gcloud alpha code dev --dockerfile=<path_to_dockerfile>          \
+               --application-default-credential
+
+POSITIONAL ARGUMENTS
+     [SERVICE_CONFIG]
+        service.yaml filename override. Defaults to the first file matching
+        *service.dev.yaml then *service.yaml, if any exist. This path is
+        relative to the --source dir. An App Engine config path (typically
+        app.yaml) may also be provided here, and we will build with a Cloud
+        Native Computing Foundation Buildpack builder selected from
+        gcr.io/gae-runtimes/buildpacks, according to the App Engine runtime
+        specified in app.yaml.
+
+FLAGS
+     --[no-]allow-secret-manager
+        Suppress warnings if secrets need to be pulled from secret manager. Use
+        --allow-secret-manager to enable and --no-allow-secret-manager to
+        disable.
+
+     --cloudsql-instances=[CLOUDSQL_INSTANCE,...]
+        Cloud SQL instance connection strings. Must be in the form
+        <project>:<region>:<instance>.
+
+     --cpu=CPU
+        Container CPU limit. Limit is expressed as a number of CPUs. Fractional
+        CPU limits are allowed (e.g. 1.5).
+
+     --image=IMAGE
+        Name for the built image.
+
+     --local-port=LOCAL_PORT
+        Local port to which the service connection is forwarded. If this flag
+        is not set, then a random port is chosen.
+
+     --memory=MEMORY
+        Container memory limit. Limit is expressed either as an integer
+        representing the number of bytes or an integer followed by a unit
+        suffix. Valid unit suffixes are "B", "KB", "MB", "GB", "TB", "KiB",
+        "MiB", "GiB", "TiB", or "PiB".
+
+     --minikube-vm-driver=MINIKUBE_VM_DRIVER; default="docker"
+        If running on minikube, use this vm driver.
+
+     --namespace=NAMESPACE
+        Kubernetes namespace for development kubernetes objects.
+
+     --secrets=[KEY=VALUE,...]
+        List of key-value pairs to set as secrets.
+
+     --service-name=SERVICE_NAME
+        Name of the service.
+
+     --source=SOURCE
+        The directory containing the source to build. If not specified, the
+        current directory is used.
+
+     --stop-cluster
+        If running on minikube, stop the minkube profile at the end of the
+        session. Enabled by default, use --no-stop-cluster to disable.
+
+     At most one of these can be specified:
+
+       --application-default-credential
+          When connecting to Google Cloud Platform services, use the
+          application default credential.
+
+       --service-account=SERVICE_ACCOUNT
+          When connecting to Google Cloud Platform services, use a service
+          account key.
+
+     At most one of these can be specified:
+
+       --builder=BUILDER
+          Build with a given Cloud Native Computing Foundation Buildpack
+          builder.
+
+       --dockerfile=DOCKERFILE; default="Dockerfile"
+          Dockerfile for the service image.
+
+     At most one of these can be specified:
+
+       --env-vars=[KEY=VALUE,...]
+          List of key-value pairs to set as environment variables.
+
+       --env-vars-file=FILE_PATH
+          Path to a local YAML file with definitions for all environment
+          variables.
+
+     At most one of these can be specified:
+
+       --kube-context=KUBE_CONTEXT
+          Kubernetes context.
+
+       --minikube-profile=MINIKUBE_PROFILE
+          Minikube profile.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. This variant is also available:
+
+        $ gcloud beta code dev
+

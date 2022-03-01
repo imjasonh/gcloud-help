@@ -1,0 +1,130 @@
+NAME
+    gcloud alpha compute forwarding-rules update - update a Compute Engine
+        forwarding rule
+
+SYNOPSIS
+    gcloud alpha compute forwarding-rules update NAME [--allow-global-access]
+        [--network-tier=NETWORK_TIER]
+        [--source-ip-ranges=SOURCE_IP_RANGE,[...]]
+        [--update-labels=[KEY=VALUE,...]]
+        [--clear-labels | --remove-labels=[KEY,...]]
+        [--global | --region=REGION] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) gcloud alpha compute forwarding-rules update updates labels, global
+    access and network tier for a Compute Engine forwarding rule.
+
+EXAMPLES
+    To update the forwarding rule to allow global access, run:
+
+        $ gcloud alpha compute forwarding-rules update example-fr \
+            --allow-global-access --region=us-central1
+
+    To add/update labels k0 and k1 and remove labels with key k3 , run:
+
+        $ gcloud alpha compute forwarding-rules update example-fr \
+            --region=us-central1             \
+            --update-labels=k0=value1,k1=value2 --remove-labels=k3
+
+    Labels can be used to identify the forwarding rule and to filter them as in
+
+        $ gcloud alpha compute forwarding-rules list \
+            --filter='labels.k1:value2'
+
+    To list existing labels, run:
+
+        $ gcloud alpha compute forwarding-rules describe example-fr \
+            --format="default(labels)"
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the forwarding rule to operate on.
+
+FLAGS
+     --allow-global-access
+        If True, then clients from all regions can access this internal
+        forwarding rule. This can only be specified for forwarding rules with
+        the LOAD_BALANCING_SCHEME set to INTERNAL and the target must be either
+        a backend service or a target instance.
+
+     --network-tier=NETWORK_TIER
+        Update the network tier of a forwarding rule. It does not allow to
+        change from PREMIUM to STANDARD and visa versa.
+
+     --source-ip-ranges=SOURCE_IP_RANGE,[...]
+        List of comma-separated IP addresses or IP ranges. If not empty, this
+        Forwarding Rule will only forward the traffic when the source IP
+        address falls into one of the IP ranges set here.
+
+     --update-labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to update. If a label exists, its value
+        is modified. Otherwise, a new label is created.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     At most one of these can be specified:
+
+       --clear-labels
+          Remove all labels. If --update-labels is also specified then
+          --clear-labels is applied first.
+
+          For example, to remove all labels:
+
+              $ gcloud alpha compute forwarding-rules update --clear-labels
+
+          To remove all existing labels and create two new labels, foo and baz:
+
+              $ gcloud alpha compute forwarding-rules update --clear-labels \
+                --update-labels foo=bar,baz=qux
+
+       --remove-labels=[KEY,...]
+          List of label keys to remove. If a label does not exist it is
+          silently ignored. If --update-labels is also specified then
+          --update-labels is applied first.
+
+     At most one of these can be specified:
+
+       --global
+          If set, the forwarding rule is global.
+
+       --region=REGION
+          Region of the forwarding rule to operate on. If not specified, you
+          might be prompted to select a region (interactive mode only).
+
+          To avoid prompting when this flag is omitted, you can set the
+          compute/region property:
+
+              $ gcloud config set compute/region REGION
+
+          A list of regions can be fetched by running:
+
+              $ gcloud compute regions list
+
+          To unset the property, run:
+
+              $ gcloud config unset compute/region
+
+          Alternatively, the region can be stored in the environment variable
+          CLOUDSDK_COMPUTE_REGION.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud compute forwarding-rules update
+
+        $ gcloud beta compute forwarding-rules update
+

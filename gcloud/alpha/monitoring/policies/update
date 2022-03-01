@@ -1,0 +1,176 @@
+NAME
+    gcloud alpha monitoring policies update - updates an alerting policy
+
+SYNOPSIS
+    gcloud alpha monitoring policies update ALERT_POLICY
+        [--fields=[field,...] | --combiner=COMBINER --display-name=DISPLAY_NAME
+          --[no-]enabled
+          --add-notification-channels=[NOTIFICATION-CHANNELS,...]
+          | --clear-notification-channels
+          | --remove-notification-channels=[NOTIFICATION-CHANNELS,...]
+          | --set-notification-channels=[NOTIFICATION-CHANNELS,...]
+          --documentation-format=DOCUMENTATION_FORMAT
+          --documentation=DOCUMENTATION
+          | --documentation-from-file=DOCUMENTATION_FROM_FILE
+          --update-user-labels=[KEY=VALUE,...] --clear-user-labels
+          | --remove-user-labels=[KEY,...]]
+        [--policy=POLICY | --policy-from-file=POLICY_FROM_FILE]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Updates an alerting policy.
+
+    If --policy or --policy-from-file are specified:
+
+      ▪ If --fields is specified, the only the specified fields will be
+        updated.
+      ▪ Else, the policy will be replaced with the provided policy. The
+        policy can be modified further using the flags from the Policy Settings
+        group below.
+
+    Otherwise, the policy will be updated with the values specified in the
+    flags from the Policy Settings group.
+
+    For information about the JSON/YAML format of an alerting policy:
+    https://cloud.google.com/monitoring/api/ref_v3/rest/v3/projects.alertPolicies
+
+POSITIONAL ARGUMENTS
+     Alert Policy resource - Name of the Alert Policy to be updated. This
+     represents a Cloud resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways. To set the project
+     attribute:
+      ◆ provide the argument alert_policy on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       ALERT_POLICY
+          ID of the Alert Policy or fully qualified identifier for the Alert
+          Policy. To set the policy attribute:
+          ▸ provide the argument alert_policy on the command line.
+
+FLAGS
+     At most one of these can be specified:
+
+       --fields=[field,...]
+          The list of fields to update. Must specify --policy or
+          --policy-from-file if using this flag. field must be one of:
+          disabled, notificationChannels.
+
+       Policy Settings. If any of these are specified, they will overwrite
+       fields in the --policy or --policy-from-file flags if specified.
+
+         --combiner=COMBINER
+            The combiner for the Alert Policy. COMBINER must be one of:
+
+             AND
+                An incident is created only if all conditions are met
+                simultaneously. This combiner is satisfied if all conditions
+                are met, even if they are met on completely different
+                resources.
+             AND_WITH_MATCHING_RESOURCE
+                Combine conditions using logical AND operator, but unlike the
+                regular AND option, an incident is created only if all
+                conditions are met simultaneously on at least one resource.
+             COMBINE_UNSPECIFIED
+                An unspecified combiner
+             OR
+                An incident is created if any of the listed conditions is met.
+
+         --display-name=DISPLAY_NAME
+            The display name for the Alert Policy.
+
+         --[no-]enabled
+            If the policy is enabled. Use --enabled to enable and --no-enabled
+            to disable.
+
+         These flags modify the member Notification Channels of this Alert
+         Policy.
+
+         At most one of these can be specified:
+
+           --add-notification-channels=[NOTIFICATION-CHANNELS,...]
+              Append the given values to the current Notification Channels.
+
+           --clear-notification-channels
+              Empty the current Notification Channels.
+
+           --remove-notification-channels=[NOTIFICATION-CHANNELS,...]
+              Remove the given values from the current Notification Channels.
+
+           --set-notification-channels=[NOTIFICATION-CHANNELS,...]
+              Completely replace the current Notification Channels with the
+              given values.
+
+         Documentation
+
+           --documentation-format=DOCUMENTATION_FORMAT
+              The MIME type that should be used with --documentation or
+              --documentation-from-file. Currently, only "text/markdown" is
+              supported.
+
+           At most one of these can be specified:
+
+             --documentation=DOCUMENTATION
+                The documentation to be included with the policy.
+
+             --documentation-from-file=DOCUMENTATION_FROM_FILE
+                The path to a file containing the documentation to be included
+                with the policy.
+
+         User Labels
+
+           --update-user-labels=[KEY=VALUE,...]
+              List of label KEY=VALUE pairs to update. If a label exists, its
+              value is modified. Otherwise, a new label is created.
+
+              Keys must start with a lowercase character and contain only
+              hyphens (-), underscores (_), lowercase characters, and numbers.
+              Values must contain only hyphens (-), underscores (_), lowercase
+              characters, and numbers.
+
+           At most one of these can be specified:
+
+             --clear-user-labels
+                Remove all labels. If --update-user-labels is also specified
+                then --clear-user-labels is applied first.
+
+                For example, to remove all labels:
+
+                    $ gcloud alpha monitoring policies update --clear-user-labels
+
+                To remove all existing labels and create two new labels, foo
+                and baz:
+
+                    $ gcloud alpha monitoring policies update --clear-user-labels \
+                      --update-user-labels foo=bar,baz=qux
+
+             --remove-user-labels=[KEY,...]
+                List of label keys to remove. If a label does not exist it is
+                silently ignored. If --update-user-labels is also specified
+                then --update-user-labels is applied first.
+
+     At most one of these can be specified:
+
+       --policy=POLICY
+          The policy as a string. In either JSON or YAML format.
+
+       --policy-from-file=POLICY_FROM_FILE
+          The path to a JSON or YAML file containing the policy.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

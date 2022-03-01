@@ -1,0 +1,134 @@
+NAME
+    gcloud beta container binauthz - manage attestations for Binary
+        Authorization on Google Cloud Platform
+
+SYNOPSIS
+    gcloud beta container binauthz GROUP | COMMAND [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Binary Authorization is a feature which allows binaries to run on
+    Google Cloud Platform only if they are appropriately attested. Binary
+    Authorization is configured by creating a policy.
+
+EXAMPLES
+    This example assumes that you have created a keypair using gpg, usually by
+    running gpg --gen-key ..., with Name-Email set to
+    attesting_user@example.com for your attestor.
+
+    First, some convenience variables for brevity:
+
+        ATTESTING_USER="attesting_user@example.com"
+        DIGEST="000000000000000000000000000000000000000000000000000000000000abcd"
+        ARTIFACT_URL="gcr.io/example-project/example-image@sha256:${DIGEST}"
+        ATTESTOR_NAME="projects/example-project/attestors/canary"
+
+    Export your key's fingerprint (note this may differ based on version and
+    implementations of gpg):
+
+        gpg \
+            --with-colons \
+            --with-fingerprint \
+            --force-v4-certs \
+            --list-keys \
+            "${ATTESTING_USER}" | grep fpr | cut --delimiter=':' --fields 10
+
+    This should produce a 40 character, hexidecimal encoded string. See
+    https://tools.ietf.org/html/rfc4880#section-12.2 for more information on
+    key fingerprints.
+
+    Create your attestation payload:
+
+        gcloud beta container binauthz create-signature-payload \
+            --artifact-url="${ARTIFACT_URL}" \
+          > example_payload.txt
+
+    Create a signature from your attestation payload:
+
+        gpg \
+          --local-user "${ATTESTING_USER}" \
+          --armor \
+          --clearsign \
+          --output example_signature.pgp \
+          example_payload.txt
+
+    Upload the attestation:
+
+        gcloud beta container binauthz attestations create \
+          --public-key-id=${KEY_FINGERPRINT} \
+          --signature-file=example_signature.pgp \
+          --artifact-url="${ARTIFACT_URL}" \
+          --attestor=${ATTESTOR_NAME}
+
+    List the attestation by artifact URL. --format can be passed to output the
+    attestations as json or another supported format:
+
+        gcloud beta container binauthz attestations list \
+          --artifact-url="${ARTIFACT_URL}" \
+          --format=yaml
+
+          ---
+          - |
+            -----BEGIN PGP PUBLIC KEY BLOCK-----
+            Version: GnuPG v1
+            ... SNIP ...
+            -----END PGP PUBLIC KEY BLOCK-----
+          - |
+            -----BEGIN PGP SIGNED MESSAGE-----
+            Hash: SHA1
+            ... SNIP ...
+            -----BEGIN PGP SIGNATURE-----
+            Version: GnuPG v1
+            ... SNIP ...
+            -----END PGP SIGNATURE-----
+
+    List all artifact URLs on the project for which Container Analysis
+    Occurrences exist. This list includes the list of all URLs with BinAuthz
+    attestations:
+
+        gcloud beta container binauthz attestations list
+
+          ---
+          https://gcr.io/example-project/example-image@sha256:000000000000000000000000000000000000000000000000000000000000abcd
+          ...
+
+    Listing also works for kind=ATTESTATION_AUTHORITY attestations, just pass
+    the attestor:
+
+        gcloud beta container binauthz attestations list \
+          --artifact-url="${ARTIFACT_URL}" \
+          --attestor=${ATTESTOR_NAME} \
+          --format=yaml
+
+          ...
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --help.
+
+    Run $ gcloud help for details.
+
+GROUPS
+    GROUP is one of the following:
+
+     attestations
+        (BETA) Create and manage Google Binary Authorization attestations.
+
+     attestors
+        (BETA) Create and manage Google Binary Authorization Attestors.
+
+     policy
+        (BETA) Create and manage Google Binary Authorization policies.
+
+COMMANDS
+    COMMAND is one of the following:
+
+     create-signature-payload
+        (BETA) Create a JSON container image signature object.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud container binauthz
+
+        $ gcloud alpha container binauthz
+

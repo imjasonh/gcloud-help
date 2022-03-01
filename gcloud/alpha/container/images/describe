@@ -1,0 +1,81 @@
+NAME
+    gcloud alpha container images describe - lists container analysis data for
+        a given image
+
+SYNOPSIS
+    gcloud alpha container images describe IMAGE_NAME
+        [--metadata-filter=METADATA_FILTER] [--show-all-metadata]
+        [--show-build-details] [--show-deployment] [--show-image-basis]
+        [--show-package-vulnerability] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Lists container analysis data for a valid image.
+
+EXAMPLES
+    Describe the specified image:
+
+        $ gcloud alpha container images describe \
+            gcr.io/myproject/myimage@digest
+              OR
+        $ gcloud alpha container images describe gcr.io/myproject/myimage:tag
+
+    Find the digest for a tag:
+
+        $ gcloud alpha container images describe \
+            gcr.io/myproject/myimage:tag \
+          --format="value(image_summary.digest)"
+              OR
+        $ gcloud alpha container images describe \
+            gcr.io/myproject/myimage:tag \
+          --format="value(image_summary.fully_qualified_digest)"
+
+    See package vulnerabilities found by the Container Analysis API for the
+    specified image:
+
+        $ gcloud alpha container images describe \
+            gcr.io/myproject/myimage@digest --show-package-vulnerability
+
+POSITIONAL ARGUMENTS
+     IMAGE_NAME
+        The fully qualified name(s) of image(s) to describe. The name(s) should
+        be formatted as *.gcr.io/PROJECT_ID/IMAGE_PATH@sha256:DIGEST or
+        *.gcr.io/PROJECT_ID/IMAGE_PATH:TAG.
+
+FLAGS
+     --metadata-filter=METADATA_FILTER
+        Additional filter to fetch metadata for a given fully qualified image
+        reference.
+
+     --show-all-metadata
+        Include all metadata in the output.
+
+     --show-build-details
+        Include build metadata in the output.
+
+     --show-deployment
+        Include deployment metadata in the output.
+
+     --show-image-basis
+        Include base image metadata in the output.
+
+     --show-package-vulnerability
+        Include vulnerability metadata in the output.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud container images describe
+
+        $ gcloud beta container images describe
+

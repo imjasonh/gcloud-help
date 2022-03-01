@@ -1,0 +1,78 @@
+NAME
+    gcloud alpha dlp images redact - redact potentially sensitive data from
+        image content
+
+SYNOPSIS
+    gcloud alpha dlp images redact IMAGE [--include-quote]
+        [--info-types=[INFOTYPE,...]]
+        [--min-likelihood=MIN_LIKELIHOOD; default="possible"]
+        [--output-file=OUTPUT_FILE] [--redact-all-text]
+        [--redact-color=REDACT_COLOR] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Redact potentially sensitive data from image content.
+
+EXAMPLES
+    To redact phone numbers from an image named my-image.jpg and write the
+    redacted image to my-redacted-image.jpg, run:
+
+        $ gcloud alpha dlp images redact my-image.jpg \
+            --info-types PHONE_NUMBER \
+            --output-file my-redacted-image.jpg
+
+POSITIONAL ARGUMENTS
+     IMAGE
+        Image file to search for sensitive info. The file type must be one of
+        PNG, JPEG, SVG, or BMP.
+
+FLAGS
+     --include-quote
+        If True, a contextual quote from the data that triggered a finding is
+        included in the response. Even if the content is not text, it may be
+        converted to a textual representation in the response. For example,
+        given the input value 'My phone number is (415) 555-0890' and a search
+        for the infoType PHONE_NUMBER, the contextual quote would be '(415)
+        555-0890.'
+
+     --info-types=[INFOTYPE,...]
+        Which infoTypes to scan input for. The values must correspond to
+        infoType values found in documentation. For more information about
+        valid infoTypes, see infoTypes Reference
+        (https://cloud.google.com/dlp/docs/infotypes-reference)
+
+     --min-likelihood=MIN_LIKELIHOOD; default="possible"
+        Only return findings equal to or above this threshold. MIN_LIKELIHOOD
+        must be one of: likely, possible, unlikely, very-likely, very-unlikely.
+
+     --output-file=OUTPUT_FILE
+        Path to the file to write redacted contents to.
+
+     --redact-all-text
+        If specified, all text info in the image will be removed, whether it is
+        detected as sensitive or not.
+
+     --redact-color=REDACT_COLOR
+        The color to use when redacting content from an image. If not
+        specified, the default value is black. Colors should be specified as a
+        string of r,g,b float values in the interval [0,1] representing the
+        amount of red, green, and blue in the color, respectively. For example,
+        black = 0,0,0, red = 1.0,0,0, white = 1.0,1.0,1.0, and so on.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the dlp/v2 API. The full documentation for this API can
+    be found at: https://cloud.google.com/dlp/docs/
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

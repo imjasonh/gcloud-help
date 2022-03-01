@@ -1,0 +1,113 @@
+NAME
+    gcloud dataproc workflow-templates add-job presto - add a Presto job to the
+        workflow template
+
+SYNOPSIS
+    gcloud dataproc workflow-templates add-job presto --step-id=STEP_ID
+        (--execute=QUERY, -e QUERY | --file=FILE, -f FILE)
+        (--workflow-template=WORKFLOW_TEMPLATE : --region=REGION)
+        [--client-tags=[CLIENT_TAG,...]] [--continue-on-failure]
+        [--driver-log-levels=[PACKAGE=LEVEL,...]] [--labels=[KEY=VALUE,...]]
+        [--properties=[PARAM=VALUE,...]]
+        [--query-output-format=QUERY_OUTPUT_FORMAT]
+        [--start-after=STEP_ID,[STEP_ID,...]] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Add a Presto job to the workflow template.
+
+EXAMPLES
+    To add a Presto job that executes query 'QUERY' to a the workflow template
+    'my-workflow-template' in region 'us-central1' with step-id 'my-step-id',
+
+    run:
+
+        $ gcloud dataproc workflow-templates add-job presto \
+            --step-id=my-step_id -e=QUERY \
+            --workflow-template=my-workflow-template --region=us-central1
+
+REQUIRED FLAGS
+     --step-id=STEP_ID
+        The step ID of the job in the workflow template.
+
+     Exactly one of these must be specified:
+
+       --execute=QUERY, -e QUERY
+          A Presto query to execute.
+
+       --file=FILE, -f FILE
+          HCFS URI of file containing the Presto script to execute.
+
+     Template resource - The name of the workflow template to add job to. The
+     arguments in this group can be used to specify the attributes of this
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways. To set the project attribute:
+      ◆ provide the argument --workflow-template on the command line with a
+        fully specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       --workflow-template=WORKFLOW_TEMPLATE
+          ID of the template or fully qualified identifier for the template. To
+          set the template attribute:
+          ▸ provide the argument --workflow-template on the command line.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --region=REGION
+          Dataproc region for the template. Each Dataproc region constitutes an
+          independent resource namespace constrained to deploying instances
+          into Compute Engine zones inside the region. Overrides the default
+          dataproc/region property value for this command invocation. To set
+          the region attribute:
+          ▸ provide the argument --workflow-template on the command line with
+            a fully specified name;
+          ▸ provide the argument --region on the command line;
+          ▸ set the property dataproc/region.
+
+OPTIONAL FLAGS
+     --client-tags=[CLIENT_TAG,...]
+        A list of Presto client tags to attach to this query.
+
+     --continue-on-failure
+        Whether to continue if a query fails.
+
+     --driver-log-levels=[PACKAGE=LEVEL,...]
+        A list of package-to-log4j log level pairs to configure driver logging.
+        For example: root=FATAL,com.example=INFO
+
+     --labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     --properties=[PARAM=VALUE,...]
+        A list of key value pairs to set Presto session properties.
+
+     --query-output-format=QUERY_OUTPUT_FORMAT
+        The query output display format. See the Presto documentation for
+        supported output formats.
+
+     --start-after=STEP_ID,[STEP_ID,...]
+        (Optional) List of step IDs to start this job after.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha dataproc workflow-templates add-job presto
+
+        $ gcloud beta dataproc workflow-templates add-job presto
+

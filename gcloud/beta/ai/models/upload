@@ -1,0 +1,131 @@
+NAME
+    gcloud beta ai models upload - upload a new model
+
+SYNOPSIS
+    gcloud beta ai models upload --container-image-uri=CONTAINER_IMAGE_URI
+        --display-name=DISPLAY_NAME [--artifact-uri=ARTIFACT_URI]
+        [--container-args=[ARG,...]] [--container-command=[COMMAND,...]]
+        [--container-env-vars=[KEY=VALUE,...]]
+        [--container-health-route=CONTAINER_HEALTH_ROUTE]
+        [--container-ports=[PORT,...]]
+        [--container-predict-route=CONTAINER_PREDICT_ROUTE]
+        [--description=DESCRIPTION]
+        [--explanation-metadata-file=EXPLANATION_METADATA_FILE]
+        [--explanation-method=EXPLANATION_METHOD]
+        [--explanation-path-count=EXPLANATION_PATH_COUNT]
+        [--explanation-step-count=EXPLANATION_STEP_COUNT] [--region=REGION]
+        [--smooth-grad-noise-sigma=SMOOTH_GRAD_NOISE_SIGMA]
+        [--smooth-grad-noise-sigma-by-feature=[KEY=VALUE,...]]
+        [--smooth-grad-noisy-sample-count=SMOOTH_GRAD_NOISY_SAMPLE_COUNT]
+        [GCLOUD_WIDE_FLAG ...]
+
+EXAMPLES
+    To upload a model under project example in region us-central1, run:
+
+        $ gcloud beta ai models upload \
+            --container-image-uri="gcr.io/example/my-image"
+        --description=example-model --display-name=my-model
+        --artifact-uri='gs://bucket/path' --project=example --region=us-central1
+
+REQUIRED FLAGS
+     --container-image-uri=CONTAINER_IMAGE_URI
+        URI of the Model serving container file in the Container Registry (e.g.
+        gcr.io/myproject/server:latest).
+
+     --display-name=DISPLAY_NAME
+        Display name of the model.
+
+OPTIONAL FLAGS
+     --artifact-uri=ARTIFACT_URI
+        Path to the directory containing the Model artifact and any of its
+        supporting files.
+
+     --container-args=[ARG,...]
+        Comma-separated arguments passed to the command run by the container
+        image. If not specified and no --command is provided, the container
+        image's default command is used.
+
+     --container-command=[COMMAND,...]
+        Entrypoint for the container image. If not specified, the container
+        image's default entrypoint is run.
+
+     --container-env-vars=[KEY=VALUE,...]
+        List of key-value pairs to set as environment variables.
+
+     --container-health-route=CONTAINER_HEALTH_ROUTE
+        HTTP path to send health checks to inside the container.
+
+     --container-ports=[PORT,...]
+        Container ports to receive requests at. Must be a number between 1 and
+        65535, inclusive.
+
+     --container-predict-route=CONTAINER_PREDICT_ROUTE
+        HTTP path to send prediction requests to inside the container.
+
+     --description=DESCRIPTION
+        Description of the model.
+
+     --explanation-metadata-file=EXPLANATION_METADATA_FILE
+        Path to a local JSON file that contains the metadata describing the
+        Model's input and output for explanation.
+
+     --explanation-method=EXPLANATION_METHOD
+        Method used for explanation. Accepted values are integrated-gradients,
+        xrai and sampled-shapley.
+
+     --explanation-path-count=EXPLANATION_PATH_COUNT
+        Number of feature permutations to consider when approximating the
+        Shapley values for explanation.
+
+     --explanation-step-count=EXPLANATION_STEP_COUNT
+        Number of steps to approximate the path integral for explanation.
+
+     Region resource - Cloud region to upload model. This represents a Cloud
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways. To set the project attribute:
+      ◆ provide the argument --region on the command line with a fully
+        specified name;
+      ◆ set the property ai/region with a fully specified name;
+      ◆ choose one from the prompted list of available regions with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+       --region=REGION
+          ID of the region or fully qualified identifier for the region. To set
+          the region attribute:
+          ▸ provide the argument --region on the command line;
+          ▸ set the property ai/region;
+          ▸ choose one from the prompted list of available regions.
+
+     --smooth-grad-noise-sigma=SMOOTH_GRAD_NOISE_SIGMA
+        Single float value used to add noise to all the features for
+        explanation. Only applicable to explanation method integrated-gradients
+        or xrai.
+
+     --smooth-grad-noise-sigma-by-feature=[KEY=VALUE,...]
+        Noise sigma by features for explanation. Noise sigma represents the
+        standard deviation of the gaussian kernel that will be used to add
+        noise to interpolated inputs prior to computing gradients. Only
+        applicable to explanation method integrated-gradients or xrai.
+
+     --smooth-grad-noisy-sample-count=SMOOTH_GRAD_NOISY_SAMPLE_COUNT
+        Number of gradient samples used for approximation at explanation. Only
+        applicable to explanation method integrated-gradients or xrai.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud ai models upload
+
+        $ gcloud alpha ai models upload
+

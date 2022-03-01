@@ -1,0 +1,133 @@
+NAME
+    gcloud game servers deployments update-rollout - update a Deployment
+        Rollout
+
+SYNOPSIS
+    gcloud game servers deployments update-rollout
+        (DEPLOYMENT : --location=LOCATION) --dry-run
+        [--preview-time=PREVIEW_TIME]
+        [--clear-config-overrides
+          | --config-overrides-file=CONFIG_OVERRIDES_FILE]
+        [--clear-default-config | --default-config=DEFAULT_CONFIG]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Update a Cloud Game Server Deployment Rollout.
+
+EXAMPLES
+    To update a rollout target with new default game server config:
+
+        $ gcloud game servers deployments update-rollout \
+            example-deployment --default-config=version1 --no-dry-run
+
+    To set a rollout target gradually by setting overrides in a YAML file using
+    the --config-overrides-file flag:
+
+        $ gcloud game servers deployments update-rollout \
+            example-deployment \
+            --config-overrides-file=gs-cfg-overrides.yaml --no-dry-run
+
+    Contents of gs-cfg-overrides.yaml:
+
+          - realmsSelector:
+              realms:
+              - projects/test-project-1/locations/us-west1/realms/realm-1
+              - projects/test-project-1/locations/us-west1/realms/realm-2
+            configVersion: version2
+          - realmsSelector:
+              realms:
+              - projects/test-project-1/locations/us-west1/realms/realm-3
+            configVersion: version3
+
+POSITIONAL ARGUMENTS
+     Deployment resource - Cloud Game Server Deployment Resource to update. The
+     arguments in this group can be used to specify the attributes of this
+     resource. The arguments in this group can be used to specify the
+     attributes of this resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways. To set the project
+     attribute:
+      ◆ provide the argument deployment on the command line with a fully
+        specified name;
+      ◆ set the property core/project;
+      ◆ provide the argument --project on the command line.
+
+     This must be specified.
+
+       DEPLOYMENT
+          ID of the deployment or fully qualified identifier for the
+          deployment. To set the deployment attribute:
+          ▸ provide the argument deployment on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --location=LOCATION
+          Google Cloud location. To set the location attribute:
+          ▸ provide the argument deployment on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property game_services/location.
+
+REQUIRED FLAGS
+     --dry-run
+        Validate the rollout changes, but do not execute it.
+
+OPTIONAL FLAGS
+     --preview-time=PREVIEW_TIME
+        This attribute is only relevant for preview (--dry-run). It is used to
+        validate the state for a future time.
+
+     At most one of these can be specified:
+
+       --clear-config-overrides
+          Clear the config overrides.
+
+       --config-overrides-file=CONFIG_OVERRIDES_FILE
+          JSON/YAML file that specifies the Game Server config overrides. This
+          file can be used to gradually rollout a new config version. The
+          following sample file indicates that the version2 config is rolled
+          out to realm-1 and realm-2 while the version3 config is deployed to
+          realm-3. The rest of the realms are deployed with the default config
+          version (if one is specified). Contents of a sample yaml file:
+
+                 - realmsSelector:
+                     realms:
+                     - projects/test-project-1/locations/us-west1/realms/realm-1
+                     - projects/test-project-1/locations/us-west1/realms/realm-2
+                   configVersion: version2
+                 - realmsSelector:
+                     realms:
+                     - projects/test-project-1/locations/us-west1/realms/realm-3
+                   configVersion: version3
+
+     At most one of these can be specified:
+
+       --clear-default-config
+          Clear the default config.
+
+       --default-config=DEFAULT_CONFIG
+          Game Server config to be deployed to all clusters. The value of this
+          field must match an existing game server config that is a
+          sub-resource to the given game server deployment. If not specified,
+          there won't be a default config which means only the clusters
+          specified in the config overrides will have configs applied.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the gameservices/v1 API. The full documentation for this
+    API can be found at: https://cloud.google.com/solutions/gaming/
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha game servers deployments update-rollout
+
+        $ gcloud beta game servers deployments update-rollout
+

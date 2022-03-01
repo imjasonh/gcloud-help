@@ -1,0 +1,101 @@
+NAME
+    gcloud beta debug logpoints create - add debug logpoints to a Cloud
+        Debugger debug target (debuggee)
+
+SYNOPSIS
+    gcloud beta debug logpoints create LOCATION LOG_FORMAT_STRING
+        [--condition=CONDITION] [--log-level=LOG_LEVEL; default="info"]
+        [--target=(ID|DESCRIPTION_REGEXP)] [--wait=WAIT; default=10]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) gcloud beta debug logpoints create is used to add a debug logpoint
+    to a debug target (debuggee). Logpoints add logging to your running service
+    without changing your code or restarting your application. When you create
+    a logpoint, the message you specify will be added to your logs whenever any
+    instance of your service executes the specified line of code.
+
+    The default lifetime of a logpoint is 24 hours from creation, and the
+    output will go to the standard log for the programming language of the
+    target (java.logging for Java, logging for Python, etc.)
+
+EXAMPLES
+    To add a logpoint with no conditions that will print the value of the
+    variable 'name' at line 41 of file main.py of a debug target (debuggee),
+    run:
+
+        $ gcloud beta debug logpoints create main.py:41 \
+            "Variable name={name}" --target=<debuggee_id>
+
+    To add a logpoint that will print the value of the variable 'name' at line
+    41 of file main.py on a debug target (debuggee) that will only trigger if
+    the length of 'name' is greater than 3, run:
+
+        $ gcloud beta debug logpoints create main.py:41 \
+            "Variable name={name}" --target=<debuggee_id> \
+            --condition="len(name) > 3"
+
+    To add a logpoint with a log level of error at line 35 of file main.py on a
+    debug target (debuggee), run:
+
+        $ gcloud beta debug logpoints create main.py:35 "Unexpected path" \
+            --target=<debuggee_id> --log-level=error
+
+POSITIONAL ARGUMENTS
+     LOCATION
+        The logpoint location. Locations are of the form FILE:LINE, where FILE
+        can be simply the file name, or the file name preceded by enough path
+        components to differentiate it from other files with the same name. It
+        is an error to provide a file name that is not unique in the debug
+        target.
+
+     LOG_FORMAT_STRING
+        A format string which will be logged every time the logpoint location
+        is executed. If the string contains curly braces ('{' and '}'), any
+        text within the curly braces will be interpreted as a run-time
+        expression in the debug target's language, which will be evaluated when
+        the logpoint is hit.
+
+        The value of the expression will then replace the {} expression in the
+        resulting log output. For example, if you specify the format string
+        "a={a}, b={b}", and the logpoint is hit when local variable a is 1 and
+        b is 2, the resulting log output would be "a=1, b=2".
+
+FLAGS
+     --condition=CONDITION
+        A condition to restrict when the log output is generated. When the
+        logpoint is hit, the condition will be evaluated, and the log output
+        will be generated only if the condition is true.
+
+     --log-level=LOG_LEVEL; default="info"
+        The logging level to use when producing the log message. LOG_LEVEL must
+        be one of: info, warning, error.
+
+     --target=(ID|DESCRIPTION_REGEXP)
+        The debug target. It may be a target ID or name obtained from 'debug
+        targets list', or it may be a regular expression uniquely specifying a
+        debuggee based on its description or name. For App Engine projects, if
+        not specified, the default target is the most recent deployment of the
+        default module and version.
+
+     --wait=WAIT; default=10
+        The number of seconds to wait to ensure that no error is returned from
+        a debugger agent when creating the logpoint. When a logpoint is
+        created, there will be a delay before the agents see and apply the
+        logpoint. Until at least one agent has attempted to enable the
+        logpoint, it cannot be determined if the logpoint is valid.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud debug logpoints create
+

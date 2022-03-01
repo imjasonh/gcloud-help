@@ -1,0 +1,102 @@
+NAME
+    gcloud beta data-catalog entry-groups remove-iam-policy-binding - remove an
+        IAM policy binding from a Data Catalog entry group
+
+SYNOPSIS
+    gcloud beta data-catalog entry-groups remove-iam-policy-binding
+        (ENTRY_GROUP : --location=LOCATION) --member=PRINCIPAL --role=ROLE
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Remove an IAM policy binding from a Data Catalog entry group.
+
+EXAMPLES
+    To remove an IAM policy binding for the role of 'roles/editor' for the user
+    'test-user@gmail.com' on entry group 'group1' with location 'us-central1',
+    run:
+
+        $ gcloud beta data-catalog entry-groups remove-iam-policy-binding \
+            --location=us-central1 group1 \
+            --member='user:test-user@gmail.com' --role='roles/editor'
+
+    To remove an IAM policy binding for the role of 'roles/editor' from all
+    authenticated users on entry group 'group1' with location 'us-central1',
+    run:
+
+        $ gcloud beta data-catalog entry-groups remove-iam-policy-binding \
+            --location=us-central1 group1 --member='allAuthenticatedUsers' \
+            --role='roles/editor'
+
+    See https://cloud.google.com/iam/docs/managing-policies for details of
+    policy role and member types.
+
+POSITIONAL ARGUMENTS
+     Entry group resource - Entry group from which to remove the IAM policy
+     binding. The arguments in this group can be used to specify the attributes
+     of this resource. (NOTE) Some attributes are not given arguments in this
+     group but can be set in other ways. To set the project attribute:
+      ◆ provide the argument entry_group on the command line with a fully
+        specified name;
+      ◆ set the property core/project;
+      ◆ provide the argument --project on the command line.
+
+     This must be specified.
+
+       ENTRY_GROUP
+          ID of the entry group or fully qualified identifier for the entry
+          group. To set the entry_group attribute:
+          ▸ provide the argument entry_group on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --location=LOCATION
+          Location of the entry group.
+
+          To set the location attribute:
+          ▸ provide the argument entry_group on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line.
+
+REQUIRED FLAGS
+     --member=PRINCIPAL
+        The principal to remove the binding for. Should be of the form
+        user|group|serviceAccount:email or domain:domain.
+
+        Examples: user:test-user@gmail.com, group:admins@example.com,
+        serviceAccount:test123@example.domain.com, or
+        domain:example.domain.com.
+
+        Deleted principals have an additional deleted: prefix and a ?uid=UID
+        suffix, where UID is a unique identifier for the principal. Example:
+        deleted:user:test-user@gmail.com?uid=123456789012345678901.
+
+        Some resources also accept the following special values:
+        ◆ allUsers - Special identifier that represents anyone who is on the
+          internet, with or without a Google account.
+        ◆ allAuthenticatedUsers - Special identifier that represents anyone
+          who is authenticated with a Google account or a service account.
+
+     --role=ROLE
+        The role to remove the principal from.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the datacatalog/v1beta1 API. The full documentation for
+    this API can be found at: https://cloud.google.com/data-catalog/docs/
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud data-catalog entry-groups remove-iam-policy-binding
+
+        $ gcloud alpha data-catalog entry-groups remove-iam-policy-binding
+

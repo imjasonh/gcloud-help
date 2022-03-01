@@ -1,0 +1,114 @@
+NAME
+    gcloud beta container hub memberships unregister - unregister a cluster
+        from Fleet
+
+SYNOPSIS
+    gcloud beta container hub memberships unregister CLUSTER_NAME
+        (--gke-cluster=LOCATION/CLUSTER_NAME | --gke-uri=GKE_URI
+          | [--context=CONTEXT : --kubeconfig=KUBECONFIG])
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) This command unregisters a cluster with the Fleet by:
+
+        1. Deleting the Fleet Membership resource for this cluster (a.k.a
+           `gcloud beta container hub memberships delete`).
+        2. Removing the corresponding in-cluster Kubernetes Resources that make the
+           cluster exclusive to one Fleet (a.k.a `kubectl delete memberships
+           membership`).
+        3. Uninstalling the Connect Agent from this cluster (a.k.a
+           `kubectl delete on the gke-connect namespace`).
+
+    The unregister command makes additional internal checks to ensure that all
+    three steps can be safely done to properly clean-up in-Fleet and in-cluster
+    resources.
+
+    To register a non-GKE cluster use --context flag (with an optional
+    --kubeconfig flag).
+
+    To register a GKE cluster use --gke-cluster or --gke-uri flag (no
+    --kubeconfig flag is required).
+
+    To only delete the Fleet membership resource, consider using the command:
+    gcloud beta container hub memberships delete. This command is intended to
+    delete stale Fleet Membership resources as doing so on a fully registered
+    cluster will skip some of the steps above and orphan in-cluster resources
+    and agent connections to Google.
+
+EXAMPLES
+    Unregister a non-GKE cluster referenced from a specific kubeconfig file:
+
+        $ gcloud beta container hub memberships unregister my-membership \
+          --context=my-cluster-context \
+          --kubeconfig=/home/user/custom_kubeconfig
+
+    Unregister a non-GKE cluster referenced from the default kubeconfig file:
+
+        $ gcloud beta container hub memberships unregister my-membership \
+            --context=my-cluster-context
+
+    Unregister a GKE cluster referenced from a GKE URI:
+
+        $ gcloud beta container hub memberships unregister my-membership \
+          --gke-uri=my-cluster-gke-uri
+
+    Unregister a GKE cluster referenced from a GKE Cluster location and name:
+
+        $ gcloud beta container hub memberships unregister my-membership \
+          --gke-cluster=my-cluster-region-or-zone/my-cluster
+
+POSITIONAL ARGUMENTS
+     CLUSTER_NAME
+        The membership name that corresponds to the cluster being unregistered.
+        To get list of all the memberships on the Fleet, consider using the
+        command: gcloud beta container hub memberships list.
+
+REQUIRED FLAGS
+     Cluster identifier.
+
+     Exactly one of these must be specified:
+
+       --gke-cluster=LOCATION/CLUSTER_NAME
+          The location/name of the GKE cluster. The location can be a zone or a
+          region for e.g us-central1-a/my-cluster.
+
+       --gke-uri=GKE_URI
+          The URI of a GKE cluster that you want to register to Hub; for
+          example,
+          'https://container.googleapis.com/v1/projects/my-project/locations/us-central1-a/clusters/my-cluster'.
+          To obtain the URI, you can run 'gcloud container clusters list
+          --uri'. Note that this should only be provided if the cluster being
+          registered is a GKE cluster. The service will validate the provided
+          URI to confirm that it maps to a valid GKE cluster."
+
+       Non-GKE cluster identifier.
+
+         --context=CONTEXT
+            The cluster context as it appears in the kubeconfig file. You can
+            get this value from the command line by running command: kubectl
+            config current-context.
+
+            This flag must be specified if any of the other arguments in this
+            group are specified.
+
+         --kubeconfig=KUBECONFIG
+            The kubeconfig file containing an entry for the cluster. Defaults
+            to $KUBECONFIG if it is set in the environment, otherwise defaults
+            to $HOME/.kube/config.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud container hub memberships unregister
+
+        $ gcloud alpha container hub memberships unregister
+

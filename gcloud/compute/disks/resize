@@ -1,0 +1,96 @@
+NAME
+    gcloud compute disks resize - resize a disk or disks
+
+SYNOPSIS
+    gcloud compute disks resize DISK_NAME [DISK_NAME ...] --size=SIZE
+        [--region=REGION | --zone=ZONE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    gcloud compute disks resize resizes a Compute Engine disk(s).
+
+    Only increasing disk size is supported. Disks can be resized regardless of
+    whether they are attached.
+
+EXAMPLES
+    To resize a disk called example-disk-1 to new size 6TB, run:
+
+        $ gcloud compute disks resize example-disk-1 --size=6TB
+
+    To resize two disks called example-disk-2 and example-disk-3 to new size
+    6TB, run:
+
+        $ gcloud compute disks resize example-disk-2 example-disk-3 \
+           --size=6TB
+
+    This assumes that original size of each of these disks is 6TB or less.
+
+POSITIONAL ARGUMENTS
+     DISK_NAME [DISK_NAME ...]
+        Names of the disks to operate on.
+
+REQUIRED FLAGS
+     --size=SIZE
+        Indicates the new size of the disks. The value must be a whole number
+        followed by a size unit of GB for gigabyte, or TB for terabyte. If no
+        size unit is specified, GB is assumed. For example, 10GB will produce
+        10 gigabyte disks. Disk size must be a multiple of 1 GB.
+
+OPTIONAL FLAGS
+     At most one of these can be specified:
+
+       --region=REGION
+          Region of the disks to operate on. If not specified, you might be
+          prompted to select a region (interactive mode only).
+
+          To avoid prompting when this flag is omitted, you can set the
+          compute/region property:
+
+              $ gcloud config set compute/region REGION
+
+          A list of regions can be fetched by running:
+
+              $ gcloud compute regions list
+
+          To unset the property, run:
+
+              $ gcloud config unset compute/region
+
+          Alternatively, the region can be stored in the environment variable
+          CLOUDSDK_COMPUTE_REGION.
+
+       --zone=ZONE
+          Zone of the disks to operate on. If not specified and the
+          compute/zone property isn't set, you might be prompted to select a
+          zone (interactive mode only).
+
+          To avoid prompting when this flag is omitted, you can set the
+          compute/zone property:
+
+              $ gcloud config set compute/zone ZONE
+
+          A list of zones can be fetched by running:
+
+              $ gcloud compute zones list
+
+          To unset the property, run:
+
+              $ gcloud config unset compute/zone
+
+          Alternatively, the zone can be stored in the environment variable
+          CLOUDSDK_COMPUTE_ZONE.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha compute disks resize
+
+        $ gcloud beta compute disks resize
+

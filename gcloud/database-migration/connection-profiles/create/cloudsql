@@ -1,0 +1,182 @@
+NAME
+    gcloud database-migration connection-profiles create cloudsql - create a
+        Database Migration Service connection profile for Cloud SQL
+
+SYNOPSIS
+    gcloud database-migration connection-profiles create cloudsql
+        (CONNECTION_PROFILE : --region=REGION)
+        --database-version=DATABASE_VERSION --source-id=SOURCE_ID --tier=TIER
+        [--activation-policy=ACTIVATION_POLICY]
+        [--authorized-networks=NETWORK,[NETWORK,...]]
+        [--auto-storage-increase=AUTO_STORAGE_INCREASE]
+        [--data-disk-size=DATA_DISK_SIZE] [--data-disk-type=DATA_DISK_TYPE]
+        [--database-flags=[KEY=VALUE,...]] [--display-name=DISPLAY_NAME]
+        [--enable-ip-v4=ENABLE_IP_V4] [--labels=[KEY=VALUE,...]]
+        [--private-network=PRIVATE_NETWORK] [--provider=PROVIDER]
+        [--require-ssl=REQUIRE_SSL]
+        [--storage-auto-resize-limit=STORAGE_AUTO_RESIZE_LIMIT]
+        [--user-labels=[KEY=VALUE,...]] [--zone=ZONE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Create a Database Migration Service connection profile for Cloud SQL.
+
+EXAMPLES
+    To create a connection profile for Cloud SQL with database version MySQL
+    5.6:
+
+        $ gcloud database-migration connection-profiles create cloudsql \
+          CONNECTION_PROFILE --region=us-central1 \
+          --display-name=my-profile --database-version=MYSQL_5_6
+
+POSITIONAL ARGUMENTS
+     Connection profile resource - The connection profile to create. The
+     arguments in this group can be used to specify the attributes of this
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways. To set the project attribute:
+      ◆ provide the argument connection_profile on the command line with a
+        fully specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       CONNECTION_PROFILE
+          ID of the connection_profile or fully qualified identifier for the
+          connection_profile. To set the connection_profile attribute:
+          ▸ provide the argument connection_profile on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --region=REGION
+          The Cloud region for the connection_profile. To set the region
+          attribute:
+          ▸ provide the argument connection_profile on the command line with
+            a fully specified name;
+          ▸ provide the argument --region on the command line.
+
+REQUIRED FLAGS
+     --database-version=DATABASE_VERSION
+        Database engine type and version (MYSQL_5_7, MYSQL_5_6, MYSQL_8_0,
+        POSTGRES_9_6, POSTGRES_10, POSTGRES_11, POSTGRES_12, POSTGRES_13).
+        DATABASE_VERSION must be one of: MYSQL_5_7, MYSQL_5_6, MYSQL_8_0,
+        POSTGRES_9_6, POSTGRES_10, POSTGRES_11, POSTGRES_12, POSTGRES_13.
+
+     Connection profile resource - Database Migration Service source connection
+     profile ID. This represents a Cloud resource. (NOTE) Some attributes are
+     not given arguments in this group but can be set in other ways. To set the
+     project attribute:
+      ◆ provide the argument --source-id on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project. To set the region attribute:
+      ◆ provide the argument --source-id on the command line with a fully
+        specified name;
+      ◆ provide the argument --region on the command line.
+
+     This must be specified.
+
+       --source-id=SOURCE_ID
+          ID of the connection_profile or fully qualified identifier for the
+          connection_profile. To set the connection_profile attribute:
+          ▸ provide the argument --source-id on the command line.
+
+     --tier=TIER
+        Tier (or machine type) for this instance, for example: db-n1-standard-1
+        (MySQL instances) of db-custom-1-3840 (PostgreSQL instances). For more
+        information, see Cloud SQL Instance Settings
+        (https://cloud.google.com/sql/docs/mysql/instance-settings).
+
+OPTIONAL FLAGS
+     --activation-policy=ACTIVATION_POLICY
+        Activation policy specifies when the instance is activated; it is
+        applicable only when the instance state is 'RUNNABLE'. Valid values:
+
+        ALWAYS: The instance is on, and remains so even in the absence of
+        connection requests.
+
+        NEVER: The instance is off; it is not activated, even if a connection
+        request arrives.
+
+        ACTIVATION_POLICY must be one of: ALWAYS, NEVER.
+
+     --authorized-networks=NETWORK,[NETWORK,...]
+        List of external networks that are allowed to connect to the instance
+        using the IP. See
+        https://en.wikipedia.org/wiki/CIDR_notation#CIDR_notation, also known
+        as 'slash' notation (e.g.192.168.100.0/24).
+
+     --auto-storage-increase=AUTO_STORAGE_INCREASE
+        If you enable this setting, Cloud SQL checks your available storage
+        every 30 seconds. If the available storage falls below a threshold
+        size, Cloud SQL automatically adds additional storage capacity. If the
+        available storage repeatedly falls below the threshold size, Cloud SQL
+        continues to add storage until it reaches the maximum of 30 TB.
+        Default: ON.
+
+     --data-disk-size=DATA_DISK_SIZE
+        Storage capacity available to the database, in GB. The minimum (and
+        default) size is 10GB.
+
+     --data-disk-type=DATA_DISK_TYPE
+        Type of storage: PD_SSD (default) or PD_HDD. DATA_DISK_TYPE must be one
+        of: PD_SSD, PD_HDD.
+
+     --database-flags=[KEY=VALUE,...]
+        Database flags passed to the Cloud SQL instance at startup. An object
+        containing a list of "key": value pairs. Example: { "name": "wrench",
+        "mass": "1.3kg", "count": "3" }.
+
+     --display-name=DISPLAY_NAME
+        Friendly name for the connection profile.
+
+     --enable-ip-v4=ENABLE_IP_V4
+        Whether the instance should be assigned an IPv4 address or not.
+
+     --labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     --private-network=PRIVATE_NETWORK
+        Resource link for the VPC network from which the Cloud SQL instance is
+        accessible for private IP. For example,
+        /projects/myProject/global/networks/default. This setting can be
+        updated, but it cannot be removed after it is set.
+
+     --provider=PROVIDER
+        Database provider (CLOUDSQL or RDS). PROVIDER must be one of: RDS,
+        CLOUDSQL.
+
+     --require-ssl=REQUIRE_SSL
+        Whether SSL connections over IP should be enforced or not.
+
+     --storage-auto-resize-limit=STORAGE_AUTO_RESIZE_LIMIT
+        Maximum size to which storage capacity can be automatically increased.
+        The default value is 0, which specifies that there is no limit.
+
+     --user-labels=[KEY=VALUE,...]
+        The resource labels for a Cloud SQL instance to use to annotate any
+        related underlying resources such as Compute Engine VMs. An object
+        containing a list of "key": "value" pairs.
+
+     --zone=ZONE
+        Google Cloud Platform zone where your Cloud SQL datdabse instance is
+        located.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This variant is also available:
+
+        $ gcloud alpha database-migration connection-profiles create cloudsql
+

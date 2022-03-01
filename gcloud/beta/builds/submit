@@ -1,0 +1,180 @@
+NAME
+    gcloud beta builds submit - submit a build using Google Cloud Build
+
+SYNOPSIS
+    gcloud beta builds submit [[SOURCE] --no-source] [--async] [--no-cache]
+        [--disk-size=DISK_SIZE] [--gcs-log-dir=GCS_LOG_DIR]
+        [--gcs-source-staging-dir=GCS_SOURCE_STAGING_DIR]
+        [--ignore-file=IGNORE_FILE] [--machine-type=MACHINE_TYPE]
+        [--region=REGION] [--substitutions=[KEY=VALUE,...]] [--suppress-logs]
+        [--timeout=TIMEOUT] [--worker-pool=WORKER_POOL]
+        [--config=CONFIG; default="cloudbuild.yaml"
+          | --pack=[builder=BUILDER],[env=ENV],[image=IMAGE]
+          | --tag=TAG, -t TAG] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Submit a build using Google Cloud Build.
+
+    When the builds/use_kaniko property is True, builds submitted with --tag
+    will use Kaniko (https://github.com/GoogleContainerTools/kaniko) to execute
+    builds. Kaniko executes directives in a Dockerfile, with remote layer
+    caching for faster builds. By default, Kaniko will cache layers for 6
+    hours. To override this, set the builds/kaniko_cache_ttl property.
+
+EXAMPLES
+    To submit a build with source located at storage URL
+    gs://bucket/object.zip:
+
+        $ gcloud beta builds submit  "gs://bucket/object.zip" \
+           --tag=gcr.io/my-project/image
+
+    To submit a build with source located at storage URL gs://bucket/object.zip
+    using config file config.yaml:
+
+        $ gcloud beta builds submit "gs://bucket/object.zip" \
+            --tag=gcr.io/my-project/image --config=config.yaml
+
+    To submit a build with local source source.tgz asynchronously:
+
+        $ gcloud beta builds submit "source.tgz" \
+            --tag=gcr.io/my-project/image --async
+
+POSITIONAL ARGUMENTS
+     At most one of these can be specified:
+
+       [SOURCE]
+          The location of the source to build. The location can be a directory
+          on a local disk or a gzipped archive file (.tar.gz) in Google Cloud
+          Storage. If the source is a local directory, this command skips the
+          files specified in the --ignore-file. If --ignore-file is not
+          specified, use.gcloudignore file. If a .gcloudignore file is absent
+          and a .gitignore file is present in the local source directory,
+          gcloud will use a generated Git-compatible .gcloudignore file that
+          respects your .gitignored files. The global .gitignore is not
+          respected. For more information on .gcloudignore, see gcloud topic
+          gcloudignore.
+
+       --no-source
+          Specify that no source should be uploaded with this build.
+
+FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --no-cache
+        If set, disable layer caching when building with Kaniko.
+
+        This has the same effect as setting the builds/kaniko_cache_ttl
+        property to 0 for this build. This can be useful in cases where
+        Dockerfile builds are non-deterministic and a non-deterministic result
+        should not be cached.
+
+     --disk-size=DISK_SIZE
+        Machine disk size (GB) to run the build.
+
+     --gcs-log-dir=GCS_LOG_DIR
+        A directory in Google Cloud Storage to hold build logs. If this field
+        is not set,
+        gs://[PROJECT_NUMBER].cloudbuild-logs.googleusercontent.com/ will be
+        created and used.
+
+     --gcs-source-staging-dir=GCS_SOURCE_STAGING_DIR
+        A directory in Google Cloud Storage to copy the source used for staging
+        the build. If the specified bucket does not exist, Cloud Build will
+        create one. If you don't set this field,
+        gs://[PROJECT_ID]_cloudbuild/source is used.
+
+     --ignore-file=IGNORE_FILE
+        Override the .gcloudignore file and use the specified file instead.
+
+     --machine-type=MACHINE_TYPE
+        Machine type used to run the build. MACHINE_TYPE must be one of:
+        e2-highcpu-32, e2-highcpu-8, n1-highcpu-32, n1-highcpu-8.
+
+     --region=REGION
+        The region of the Cloud Build Service to use. Must be set to a
+        supported region name (e.g. us-central1). If unset, the global service
+        region is used. This field is restricted.
+
+     --substitutions=[KEY=VALUE,...]
+        Parameters to be substituted in the build specification.
+
+        For example (using some nonsensical substitution keys; all keys must
+        begin with an underscore):
+
+            $ gcloud builds submit . --config config.yaml \
+                --substitutions _FAVORITE_COLOR=blue,_NUM_CANDIES=10
+
+        This will result in a build where every occurrence of
+        ${_FAVORITE_COLOR} in certain fields is replaced by "blue", and
+        similarly for ${_NUM_CANDIES} and "10".
+
+        Only the following built-in variables can be specified with the
+        --substitutions flag: REPO_NAME, BRANCH_NAME, TAG_NAME, REVISION_ID,
+        COMMIT_SHA, SHORT_SHA.
+
+        For more details, see:
+        https://cloud.google.com/cloud-build/docs/api/build-requests#substitutions
+
+     --suppress-logs
+        If set, build logs not streamed to stdout.
+
+     --timeout=TIMEOUT
+        Maximum time a build is run before it is failed as TIMEOUT. It is
+        specified as a duration; for example, "2h15m5s" is two hours, fifteen
+        minutes, and five seconds. If you don't specify a unit, seconds is
+        assumed. For example, "10" is 10 seconds. Overrides the default
+        builds/timeout property value for this command invocation.
+
+     Worker pool only flags.
+
+       --worker-pool=WORKER_POOL
+          Specify a worker pool for the build to run in. Format:
+          projects/{project}/locations/{region}/workerPools/{workerPool}.
+
+     At most one of these can be specified:
+
+       --config=CONFIG; default="cloudbuild.yaml"
+          The YAML or JSON file to use as the build configuration file.
+
+       --pack=[builder=BUILDER],[env=ENV],[image=IMAGE]
+          Uses CNCF buildpack (https://buildpacks.io/) to create image. The
+          "image" key/value must be provided. The image name must be in the
+          gcr.io or pkg.dev namespace. By default gcr.io/buildpacks/builder
+          will be used. To specify your own builder image use the optional
+          "builder" key/value argument. To pass environment variables to the
+          builder use the optional "env" key/value argument where value is a
+          list of key values using escaping
+          (https://cloud.google.com/sdk/gcloud/reference/topic/escaping) if
+          necessary.
+
+       --tag=TAG, -t TAG
+          The tag to use with a "docker build" image creation. Cloud Build will
+          run a remote "docker build -t $TAG .", where $TAG is the tag provided
+          by this flag. The tag must be in the gcr.io or pkg.dev namespace.
+          Specify a tag if you want Cloud Build to build using a Dockerfile
+          instead of a build config file. If you specify a tag in this command,
+          your source must include a Dockerfile. For instructions on building
+          using a Dockerfile see
+          https://cloud.google.com/cloud-build/docs/quickstart-build.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    You can also run a build locally using the separate component: gcloud
+    components install cloud-build-local.
+
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud builds submit
+
+        $ gcloud alpha builds submit
+

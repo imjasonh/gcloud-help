@@ -1,0 +1,100 @@
+NAME
+    gcloud alpha ml translate translate-text - use the Google Cloud Translation
+        API to translate between languages
+
+SYNOPSIS
+    gcloud alpha ml translate translate-text --target-language=TARGET_LANGUAGE
+        (--content=CONTENT | --content-file=CONTENT_FILE)
+        [--glossary-config=GLOSSARY_CONFIG] [--mime-type=MIME_TYPE]
+        [--model=MODEL] [--source-language=SOURCE_LANGUAGE]
+        [--zone=ZONE; default="global"] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Translates input text and returns translated text.
+
+EXAMPLES
+    The following command translates 'What beautiful weather!' into French.
+
+        $ gcloud alpha ml translate translate-text \
+            --content='What beautiful weather!' --zone=us-central1 \
+            --target-language=fr-CA
+
+REQUIRED FLAGS
+     --target-language=TARGET_LANGUAGE
+        The BCP-47 language code to use for translation of the input text.
+
+     Contents group.
+
+     Exactly one of these must be specified:
+
+       --content=CONTENT
+          The content of the input in string format. We recommend that the
+          content be less than 30k codepoints.
+
+       --content-file=CONTENT_FILE
+          Specify a local file path containing the text to be translated.
+
+OPTIONAL FLAGS
+     --glossary-config=GLOSSARY_CONFIG
+        Glossary to be applied. The glossary must be within the same region as
+        the model.
+
+     --mime-type=MIME_TYPE
+        The format of the source text, for example, 'text/html', 'text/plain'.
+        Defaults to 'text/html'.
+
+     --model=MODEL
+        The model type requested for this translation. The format depends on
+        the model type:
+
+            for AutoML Translation models: model-id
+
+            for General (built-in) models: general/nmt or general/base
+
+        Authorization requires one or more of the following Google IAM
+        permissions on the specified resource model:
+
+            cloudtranslate.generalModels.predict
+
+            automl.models.predict
+
+        If missing, the system decides which google base model to use.
+
+        Usage:
+
+        AutoML models: '--model=TRL321456789'
+
+        General models: '--model=general/nmt'
+
+     --source-language=SOURCE_LANGUAGE
+        The BCP-47 language code of the input text if known, for example,
+        'en-US' or 'sr-Latn'. If the source language isn't specified, the API
+        attempts to identify the source language automatically and returns the
+        source language in the response.
+
+     --zone=ZONE; default="global"
+        Location to make calls. Non-global location is required for requests
+        using AutoML models. Currently, only 'us-central1' is supported as a
+        non-global location. Defaults to 'global'.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the translate/v3beta1 API. The full documentation for
+    this API can be found at:
+    https://cloud.google.com/translate/docs/quickstarts
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. This variant is also available:
+
+        $ gcloud beta ml translate translate-text
+

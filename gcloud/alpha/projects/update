@@ -1,0 +1,83 @@
+NAME
+    gcloud alpha projects update - update the name and/or labels of a project
+
+SYNOPSIS
+    gcloud alpha projects update PROJECT_ID_OR_NUMBER
+        (--name=NAME --update-labels=[KEY=VALUE,...] --clear-labels
+          | --remove-labels=[KEY,...]) [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Update the name and/or labels of the given project.
+
+    This command can fail for the following reasons:
+      ▪ There is no project with the given ID.
+      ▪ The active account does not have Owner or Editor permissions for the
+        given project.
+
+EXAMPLES
+    The following command updates a project with the ID example-foo-bar-1 to
+    have the name "Foo Bar & Grill" and removes the label dive:
+
+        $ gcloud alpha projects update example-foo-bar-1 \
+            --name="Foo Bar & Grill" --remove-labels=dive
+
+POSITIONAL ARGUMENTS
+     PROJECT_ID_OR_NUMBER
+        ID or number for the project you want to update.
+
+REQUIRED FLAGS
+     At least one of these must be specified:
+
+       --name=NAME
+          New name for the project.
+
+       Labels Flags
+
+         --update-labels=[KEY=VALUE,...]
+            List of label KEY=VALUE pairs to update. If a label exists, its
+            value is modified. Otherwise, a new label is created.
+
+            Keys must start with a lowercase character and contain only hyphens
+            (-), underscores (_), lowercase characters, and numbers. Values
+            must contain only hyphens (-), underscores (_), lowercase
+            characters, and numbers.
+
+         At most one of these can be specified:
+
+           --clear-labels
+              Remove all labels. If --update-labels is also specified then
+              --clear-labels is applied first.
+
+              For example, to remove all labels:
+
+                  $ gcloud alpha projects update --clear-labels
+
+              To remove all existing labels and create two new labels, foo and
+              baz:
+
+                  $ gcloud alpha projects update --clear-labels \
+                    --update-labels foo=bar,baz=qux
+
+           --remove-labels=[KEY,...]
+              List of label keys to remove. If a label does not exist it is
+              silently ignored. If --update-labels is also specified then
+              --update-labels is applied first.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud projects update
+
+        $ gcloud beta projects update
+

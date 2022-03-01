@@ -1,0 +1,220 @@
+NAME
+    gcloud alpha builds triggers create bitbucketserver - create a build
+        trigger for a Bitbucket Server repository
+
+SYNOPSIS
+    gcloud alpha builds triggers create bitbucketserver
+        (--trigger-config=PATH
+          | [--bitbucket-server-config-resource=BITBUCKET_SERVER_CONFIG_RESOURCE --project-key=PROJECT_KEY --repo-slug=REPO_SLUG (--branch-pattern=REGEX | --tag-pattern=REGEX | [--pull-request-pattern=REGEX : --comment-control=COMMENT_CONTROL; default=CommentControlValueValuesEnum(COMMENTS_ENABLED,
+           1)]) (--build-config=PATH | --inline-config=PATH
+          | --dockerfile=DOCKERFILE --dockerfile-dir=DOCKERFILE_DIR;
+          default="/" --dockerfile-image=DOCKERFILE_IMAGE)
+          : --description=DESCRIPTION --ignored-files=[GLOB,...]
+          --included-files=[GLOB,...] --name=NAME --require-approval
+          --service-account=SERVICE_ACCOUNT --substitutions=[KEY=VALUE,...]])
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Create a build trigger for a Bitbucket Server repository.
+
+EXAMPLES
+    To create a push trigger for all branches:
+
+        $ gcloud alpha builds triggers create bitbucketserver \
+            --name="my-trigger" \
+            --service-account="projects/my-project/serviceAccounts/my-byosa@\
+        my-project.iam.gserviceaccount.com" \
+            --project-key="GoogleCloudPlatform" \
+            --repo-slug="cloud-builders" \
+            --bitbucket-server-config-resource="projects/1234/locations/glob\
+        al/bitbucketServerConfigs/5678" --branch-pattern=".*" \
+            --build-config="cloudbuild.yaml"
+
+    To create a pull request trigger for main:
+
+        $ gcloud alpha builds triggers create bitbucketserver \
+            --name="my-trigger" \
+            --service-account="projects/my-project/serviceAccounts/my-byosa@\
+        my-project.iam.gserviceaccount.com" \
+            --project-key="GoogleCloudPlatform" \
+            --repo-slug="cloud-builders" \
+            --bitbucket-server-config-resource="projects/1234/locations/glob\
+        al/bitbucketServerConfigs/5678" --pull-request-pattern="^main$" \
+            --build-config="cloudbuild.yaml"
+
+REQUIRED FLAGS
+     Exactly one of these must be specified:
+
+       --trigger-config=PATH
+          Path to Build Trigger config file (JSON or YAML format). For more
+          details, see
+          https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.triggers#BuildTrigger
+
+       Flag based trigger configuration
+
+         --bitbucket-server-config-resource=BITBUCKET_SERVER_CONFIG_RESOURCE
+            Bitbucket Server config resource name.
+
+            This flag must be specified if any of the other arguments in this
+            group are specified.
+
+         --project-key=PROJECT_KEY
+            Bitbucket Server project key.
+
+            This flag must be specified if any of the other arguments in this
+            group are specified.
+
+         --repo-slug=REPO_SLUG
+            Bitbucket Server repository slug.
+
+            This flag must be specified if any of the other arguments in this
+            group are specified.
+
+         --description=DESCRIPTION
+            Build trigger description.
+
+         --ignored-files=[GLOB,...]
+            Glob filter. Changes only affecting ignored files won't trigger
+            builds.
+
+         --included-files=[GLOB,...]
+            Glob filter. Changes affecting at least one included file will
+            trigger builds.
+
+         --name=NAME
+            Build trigger name.
+
+         --require-approval
+            Require manual approval for triggered builds.
+
+         --service-account=SERVICE_ACCOUNT
+            The service account used for all user-controlled operations
+            including UpdateBuildTrigger, RunBuildTrigger, CreateBuild, and
+            CancelBuild. If no service account is set, then the standard Cloud
+            Build service account ([PROJECT_NUM]@system.gserviceaccount.com) is
+            used instead. Format:
+            projects/{PROJECT_ID}/serviceAccounts/{ACCOUNT_ID_OR_EMAIL}.
+
+         --substitutions=[KEY=VALUE,...]
+            Parameters to be substituted in the build specification.
+
+            For example (using some nonsensical substitution keys; all keys
+            must begin with an underscore):
+
+                $ gcloud builds triggers create ... --config config.yaml
+                    --substitutions _FAVORITE_COLOR=blue,_NUM_CANDIES=10
+
+            This will result in a build where every occurrence of
+            ${_FAVORITE_COLOR} in certain fields is replaced by "blue", and
+            similarly for ${_NUM_CANDIES} and "10".
+
+            Only the following built-in variables can be specified with the
+            --substitutions flag: REPO_NAME, BRANCH_NAME, TAG_NAME,
+            REVISION_ID, COMMIT_SHA, SHORT_SHA.
+
+            For more details, see:
+            https://cloud.google.com/cloud-build/docs/api/build-requests#substitutions
+
+         Exactly one of these must be specified:
+
+           --branch-pattern=REGEX
+              A regular expression specifying which git branches to match.
+
+              This pattern is used as a regex search for any incoming pushes.
+              For example, --branch-pattern=foo will match "foo", "foobar", and
+              "barfoo". Events on a branch that does not match will be ignored.
+
+              The syntax of the regular expressions accepted is the syntax
+              accepted by RE2 and described at
+              https://github.com/google/re2/wiki/Syntax.
+
+           --tag-pattern=REGEX
+              A regular expression specifying which git tags to match.
+
+              This pattern is used as a regex search for any incoming pushes.
+              For example, --tag-pattern=foo will match "foo", "foobar", and
+              "barfoo". Events on a tag that does not match will be ignored.
+
+              The syntax of the regular expressions accepted is the syntax
+              accepted by RE2 and described at
+              https://github.com/google/re2/wiki/Syntax.
+
+           Pull Request settings
+
+             --pull-request-pattern=REGEX
+                Regular expression specifying which base git branch to match
+                for pull request events.
+
+                This pattern is used as a regex search for the base branch (the
+                branch you are trying to merge into) for pull request updates.
+                For example, --pull-request-pattern=foo will match "foo",
+                "foobar", and "barfoo".
+
+                The syntax of the regular expressions accepted is the syntax
+                accepted by RE2 and described at
+                https://github.com/google/re2/wiki/Syntax.
+
+                This flag must be specified if any of the other arguments in
+                this group are specified.
+
+             --comment-control=COMMENT_CONTROL; default=CommentControlValueValuesEnum(COMMENTS_ENABLED, 1)
+                Require a repository collaborator or owner to comment '/gcbrun'
+                on a pull request before running the build.
+
+         Exactly one of these must be specified:
+
+           Build file configuration flags
+
+             --build-config=PATH
+                Path to a YAML or JSON file containing the build configuration
+                in the repository.
+
+                For more details, see:
+                https://cloud.google.com/cloud-build/docs/build-config
+
+           Build configuration file
+
+             --inline-config=PATH
+                Local path to a YAML or JSON file containing a build
+                configuration.
+
+           Dockerfile build configuration flags
+
+             --dockerfile=DOCKERFILE
+                Path of Dockerfile to use for builds in the repository.
+
+                If specified, a build config will be generated to run docker
+                build using the specified file.
+
+                The filename is relative to the Dockerfile directory.
+
+             --dockerfile-dir=DOCKERFILE_DIR; default="/"
+                Location of the directory containing the Dockerfile in the
+                repository.
+
+                The directory will also be used as the Docker build context.
+
+             --dockerfile-image=DOCKERFILE_IMAGE
+                Docker image name to build.
+
+                If not specified,
+                gcr.io/PROJECT/github.com/REPO_OWNER/REPO_NAME:$COMMIT_SHA will
+                be used.
+
+                Use a build configuration (cloudbuild.yaml) file for building
+                multiple images in a single trigger.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

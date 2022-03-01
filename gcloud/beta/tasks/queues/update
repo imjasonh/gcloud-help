@@ -1,0 +1,163 @@
+NAME
+    gcloud beta tasks queues update - update a Cloud Tasks queue
+
+SYNOPSIS
+    gcloud beta tasks queues update QUEUE [--location=LOCATION]
+        [--type=TYPE; default="push"]
+        [--clear-log-sampling-ratio | --log-sampling-ratio=LOG_SAMPLING_RATIO]
+        [--clear-max-attempts | --max-attempts=MAX_ATTEMPTS]
+        [--clear-max-backoff | --max-backoff=MAX_BACKOFF]
+        [--clear-max-concurrent-dispatches
+          | --max-concurrent-dispatches=MAX_CONCURRENT_DISPATCHES]
+        [--clear-max-dispatches-per-second
+          | --max-dispatches-per-second=MAX_DISPATCHES_PER_SECOND]
+        [--clear-max-doublings | --max-doublings=MAX_DOUBLINGS]
+        [--clear-max-retry-duration | --max-retry-duration=MAX_RETRY_DURATION]
+        [--clear-min-backoff | --min-backoff=MIN_BACKOFF]
+        [--clear-routing-override | --routing-override=KEY:VALUE,[...]]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) The flags available to this command represent the fields of a queue
+    that are mutable.
+
+EXAMPLES
+    To update a Cloud Tasks queue:
+
+        $ gcloud beta tasks queues update my-queue
+          --clear-max-attempts --clear-max-retry-duration
+          --clear-max-doublings --clear-min-backoff
+          --clear-max-backoff
+          --clear-max-dispatches-per-second
+          --clear-max-concurrent-dispatches
+          --clear-routing-override
+
+POSITIONAL ARGUMENTS
+     QUEUE
+        The queue to update.
+
+FLAGS
+     --location=LOCATION
+        The location where we want to manage the queue or task. If not
+        specified, uses the location of the current project's App Engine app if
+        there is an associated app.
+
+     --type=TYPE; default="push"
+        Specifies the type of queue. Only available options are 'push' and
+        'pull'. The default option is 'push'.
+
+     At most one of these can be specified:
+
+       --clear-log-sampling-ratio
+          Clear the field corresponding to --log-sampling-ratio.
+
+       --log-sampling-ratio=LOG_SAMPLING_RATIO
+          Specifies the fraction of operations to write to Cloud Logging. This
+          field may contain any value between 0.0 and 1.0, inclusive. 0.0 is
+          the default and means that no operations are logged.
+
+     At most one of these can be specified:
+
+       --clear-max-attempts
+          Clear the field corresponding to --max-attempts.
+
+       --max-attempts=MAX_ATTEMPTS
+          The maximum number of attempts per task in the queue.
+
+     At most one of these can be specified:
+
+       --clear-max-backoff
+          Clear the field corresponding to --max-backoff.
+
+       --max-backoff=MAX_BACKOFF
+          The maximum amount of time to wait before retrying a task after it
+          fails. Must be a string that ends in 's', such as "5s".
+
+     At most one of these can be specified:
+
+       --clear-max-concurrent-dispatches
+          Clear the field corresponding to --max-concurrent-dispatches.
+
+       --max-concurrent-dispatches=MAX_CONCURRENT_DISPATCHES
+          The maximum number of concurrent tasks that Cloud Tasks allows to be
+          dispatched for this queue. After this threshold has been reached,
+          Cloud Tasks stops dispatching tasks until the number of outstanding
+          requests decreases.
+
+     At most one of these can be specified:
+
+       --clear-max-dispatches-per-second
+          Clear the field corresponding to --max-dispatches-per-second.
+
+       --max-dispatches-per-second=MAX_DISPATCHES_PER_SECOND
+          The maximum rate at which tasks are dispatched from this queue.
+
+     At most one of these can be specified:
+
+       --clear-max-doublings
+          Clear the field corresponding to --max-doublings.
+
+       --max-doublings=MAX_DOUBLINGS
+          The time between retries will double maxDoublings times.
+
+          A tasks retry interval starts at minBackoff, then doubles
+          maxDoublings times, then increases linearly, and finally retries
+          retries at intervals of maxBackoff up to maxAttempts times.
+
+          For example, if minBackoff is 10s, maxBackoff is 300s, and
+          maxDoublings is 3, then the a task will first be retried in 10s. The
+          retry interval will double three times, and then increase linearly by
+          2^3 * 10s. Finally, the task will retry at intervals of maxBackoff
+          until the task has been attempted maxAttempts times. Thus, the
+          requests will retry at 10s, 20s, 40s, 80s, 160s, 240s, 300s, 300s.
+
+     At most one of these can be specified:
+
+       --clear-max-retry-duration
+          Clear the field corresponding to --max-retry-duration.
+
+       --max-retry-duration=MAX_RETRY_DURATION
+          The time limit for retrying a failed task, measured from when the
+          task was first run. Once the --max-retry-duration time has passed and
+          the task has been attempted --max-attempts times, no further attempts
+          will be made and the task will be deleted.
+
+          Must be a string that ends in 's', such as "5s".
+
+     At most one of these can be specified:
+
+       --clear-min-backoff
+          Clear the field corresponding to --min-backoff.
+
+       --min-backoff=MIN_BACKOFF
+          The minimum amount of time to wait before retrying a task after it
+          fails. Must be a string that ends in 's', such as "5s".
+
+     At most one of these can be specified:
+
+       --clear-routing-override
+          Clear the field corresponding to --routing-override.
+
+       --routing-override=KEY:VALUE,[...]
+          If provided, the specified route is used for all tasks in the queue,
+          no matter what is set is at the task-level.
+
+          KEY must be at least one of: [service, version, instance]. Any
+          missing keys will use the default.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud tasks queues update
+
+        $ gcloud alpha tasks queues update
+

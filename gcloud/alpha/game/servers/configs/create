@@ -1,0 +1,134 @@
+NAME
+    gcloud alpha game servers configs create - create a Game Server Config
+
+SYNOPSIS
+    gcloud alpha game servers configs create
+        (CONFIG : --deployment=DEPLOYMENT --location=LOCATION)
+        --fleet-configs-file=FLEET_CONFIGS_FILE [--async]
+        [--description=DESCRIPTION] [--labels=[KEY=VALUE,...]]
+        [--scaling-configs-file=SCALING_CONFIGS_FILE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Create a Cloud Game Server Config for a Game Server Deployment.
+
+EXAMPLES
+    To create Game Server Config 'my-config' in project 'my-project',
+    deployment 'my-deployment', and location in 'global'(configs only support
+    the 'global' location) run:
+
+        $ gcloud alpha game servers configs create my-config \
+            --project=my-project --deployment=my-deployment \
+            --location=global \
+            --deployment=my-deployment --description=description --labels=a=x,b=y \
+            --fleet-configs-file=fleet_configs.json
+
+POSITIONAL ARGUMENTS
+     Game server config resource - Cloud Game Server Config to create. The
+     arguments in this group can be used to specify the attributes of this
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways. To set the project attribute:
+      ◆ provide the argument config on the command line with a fully
+        specified name;
+      ◆ set the property core/project;
+      ◆ provide the argument --project on the command line.
+
+     This must be specified.
+
+       CONFIG
+          ID of the game server config or fully qualified identifier for the
+          game server config. To set the config attribute:
+          ▸ provide the argument config on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --deployment=DEPLOYMENT
+          Cloud Game Servers Deployment. To set the deployment attribute:
+          ▸ provide the argument config on the command line with a fully
+            specified name;
+          ▸ provide the argument --deployment on the command line.
+
+       --location=LOCATION
+          Google Cloud location. To set the location attribute:
+          ▸ provide the argument config on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property game_services/location.
+
+REQUIRED FLAGS
+     --fleet-configs-file=FLEET_CONFIGS_FILE
+        Path to a JSON or YAML file that contains fleet configs. The fleet spec
+        field in configs file follows Agones Fleet custom resource. Please see
+        https://github.com/googleforgames/agones/blob/master/examples/simple-udp/fleet.yaml
+        for example and https://agones.dev/site/docs/reference/fleet/ for Fleet
+        Spec definition.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --description=DESCRIPTION
+        Game server config description.
+
+     --labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     --scaling-configs-file=SCALING_CONFIGS_FILE
+        Path to a JSON or YAML file that contains scaling configs. The fleet
+        autoscaler spec field in configs file follows Agones Fleet Autoscaler
+        custom resource. Please see
+        https://github.com/googleforgames/agones/blob/master/examples/simple-udp/fleetautoscaler.yaml
+        for example and https://agones.dev/site/docs/reference/fleetautoscaler/
+        for Fleet Autoscaler Spec definition. Scaling config file can also
+        specifies schedules. Contents of a sample yaml file:
+
+              - fleetAutoscalerSpec:
+                  policy:
+                    type: Buffer
+                    buffer:
+                      bufferSize: 10
+                      minReplicas: 10
+                      maxReplicas: 20
+                name: scaling-config-2
+                schedules:
+                - startTime: '2020-01-01T01:00:00Z'
+                  endTime: '2020-01-02T01:00:00Z'
+                  cronSpec: '0 9 * * *'
+                  cronJobDuration: 3600s
+              - fleetAutoscalerSpec:
+                  policy:
+                    type: Buffer
+                    buffer:
+                      bufferSize: 2
+                      minReplicas: 2
+                      maxReplicas: 4
+                name: scaling-config-1
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the gameservices/v1alpha API. The full documentation for
+    this API can be found at: https://cloud.google.com/solutions/gaming/
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud game servers configs create
+
+        $ gcloud beta game servers configs create
+

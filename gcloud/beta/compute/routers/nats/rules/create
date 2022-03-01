@@ -1,0 +1,92 @@
+NAME
+    gcloud beta compute routers nats rules create - add a Rule to a Compute
+        Engine NAT
+
+SYNOPSIS
+    gcloud beta compute routers nats rules create RULE_NUMBER --match=MATCH
+        --nat=NAT --router=ROUTER
+        --source-nat-active-ips=IP_ADDRESS,[IP_ADDRESS,...] [--async]
+        [--region=REGION] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) gcloud beta compute routers nats rules create is used to create a
+    Rule on a Compute Engine NAT.
+
+EXAMPLES
+    Create a rule to use the IP Address address-1 to talk to destination IPs in
+    the CIDR Range "203.0.113.0/24".
+
+        $ gcloud beta compute routers nats rules create 1 --nat=my-nat \
+            --router=my-router --region=us-central1
+          --match='inIpRange(destination.ip, "203.0.113.0/24")'
+          --source-nat-active-ips=a1
+
+POSITIONAL ARGUMENTS
+     RULE_NUMBER
+        Number that uniquely identifies the Rule to create
+
+REQUIRED FLAGS
+     --match=MATCH
+        CEL Expression used to identify traffic to which this rule applies.
+        ◆ Supported attributes: destination.ip
+        ◆ Supported operators: ||, ==
+        ◆ Supported methods: inIpRange
+
+        Examples of allowed Match expressions:
+        ◆ 'inIpRange(destination.ip, "203.0.113.0/24")''
+        ◆ 'destination.ip == "203.0.113.7"'
+        ◆ 'destination.ip == "203.0.113.7" || inIpRange(destination.ip,
+          "203.0.113.16/25")'
+
+     --nat=NAT
+        Name of the NAT that contains the Rule
+
+     --router=ROUTER
+        The Router to use for NAT.
+
+     --source-nat-active-ips=IP_ADDRESS,[IP_ADDRESS,...]
+        External IP Addresses to use for connections matching this rule.
+
+        These must be valid reserved external IPs in the same region.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --region=REGION
+        Region of the NAT to create. If not specified, you might be prompted to
+        select a region (interactive mode only).
+
+        To avoid prompting when this flag is omitted, you can set the
+        compute/region property:
+
+            $ gcloud config set compute/region REGION
+
+        A list of regions can be fetched by running:
+
+            $ gcloud compute regions list
+
+        To unset the property, run:
+
+            $ gcloud config unset compute/region
+
+        Alternatively, the region can be stored in the environment variable
+        CLOUDSDK_COMPUTE_REGION.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud compute routers nats rules create
+
+        $ gcloud alpha compute routers nats rules create
+

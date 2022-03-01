@@ -1,0 +1,324 @@
+NAME
+    gcloud compute backend-services add-backend - add a backend to a backend
+        service
+
+SYNOPSIS
+    gcloud compute backend-services add-backend BACKEND_SERVICE_NAME
+        ([--instance-group=INSTANCE_GROUP
+          : --instance-group-region=INSTANCE_GROUP_REGION
+          | --instance-group-zone=INSTANCE_GROUP_ZONE]
+          | [--network-endpoint-group=NETWORK_ENDPOINT_GROUP
+          : --global-network-endpoint-group
+          | --network-endpoint-group-region=NETWORK_ENDPOINT_GROUP_REGION
+          | --network-endpoint-group-zone=NETWORK_ENDPOINT_GROUP_ZONE])
+        [--balancing-mode=BALANCING_MODE] [--capacity-scaler=CAPACITY_SCALER]
+        [--description=DESCRIPTION] [--failover]
+        [--max-utilization=MAX_UTILIZATION] [--global | --region=REGION]
+        [--max-connections=MAX_CONNECTIONS
+          | --max-connections-per-endpoint=MAX_CONNECTIONS_PER_ENDPOINT
+          | --max-connections-per-instance=MAX_CONNECTIONS_PER_INSTANCE
+          | --max-rate=MAX_RATE | --max-rate-per-endpoint=MAX_RATE_PER_ENDPOINT
+          | --max-rate-per-instance=MAX_RATE_PER_INSTANCE]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    gcloud compute backend-services add-backend adds a backend to a Google
+    Cloud load balancer or Traffic Director. Depending on the load balancing
+    scheme of the backend service, backends can be instance groups (managed or
+    unmanaged), zonal network endpoint groups (zonal NEGs), serverless NEGs, or
+    an internet NEG. For more information, see the backend services overview
+    (https://cloud.google.com/load-balancing/docs/backend-service).
+
+    For most load balancers, you can define how Google Cloud measures capacity
+    by selecting a balancing mode. For more information, see traffic
+    distribution
+    (https://cloud.google.com/load-balancing/docs/backend-service#traffic_distribution).
+
+    To modify a backend, use the gcloud compute backend-services update-backend
+    or gcloud compute backend-services edit command.
+
+POSITIONAL ARGUMENTS
+     BACKEND_SERVICE_NAME
+        Name of the backend service to operate on.
+
+REQUIRED FLAGS
+     Exactly one of these must be specified:
+
+       Instance Group
+
+         --instance-group=INSTANCE_GROUP
+            Name of the instance group to add to the backend service. For
+            details on valid instance names, refer to the criteria documented
+            under the field 'name' at:
+            https://cloud.google.com/compute/docs/reference/rest/v1/instances
+
+            This flag must be specified if any of the other arguments in this
+            group are specified.
+
+         At most one of these can be specified:
+
+           --instance-group-region=INSTANCE_GROUP_REGION
+              Region of the instance group to add to the backend service. If
+              not specified, you might be prompted to select a region
+              (interactive mode only).
+
+              To avoid prompting when this flag is omitted, you can set the
+              compute/region property:
+
+                  $ gcloud config set compute/region REGION
+
+              A list of regions can be fetched by running:
+
+                  $ gcloud compute regions list
+
+              To unset the property, run:
+
+                  $ gcloud config unset compute/region
+
+              Alternatively, the region can be stored in the environment
+              variable CLOUDSDK_COMPUTE_REGION.
+
+           --instance-group-zone=INSTANCE_GROUP_ZONE
+              Zone of the instance group to add to the backend service. If not
+              specified and the compute/zone property isn't set, you might be
+              prompted to select a zone (interactive mode only).
+
+              To avoid prompting when this flag is omitted, you can set the
+              compute/zone property:
+
+                  $ gcloud config set compute/zone ZONE
+
+              A list of zones can be fetched by running:
+
+                  $ gcloud compute zones list
+
+              To unset the property, run:
+
+                  $ gcloud config unset compute/zone
+
+              Alternatively, the zone can be stored in the environment variable
+              CLOUDSDK_COMPUTE_ZONE.
+
+       Network Endpoint Group
+
+         --network-endpoint-group=NETWORK_ENDPOINT_GROUP
+            Name of the network endpoint group to add to the backend service.
+
+            This flag must be specified if any of the other arguments in this
+            group are specified.
+
+         At most one of these can be specified:
+
+           --global-network-endpoint-group
+              If set, the network endpoint group is global.
+
+           --network-endpoint-group-region=NETWORK_ENDPOINT_GROUP_REGION
+              Region of the network endpoint group to add to the backend
+              service. If not specified, you might be prompted to select a
+              region (interactive mode only).
+
+              To avoid prompting when this flag is omitted, you can set the
+              compute/region property:
+
+                  $ gcloud config set compute/region REGION
+
+              A list of regions can be fetched by running:
+
+                  $ gcloud compute regions list
+
+              To unset the property, run:
+
+                  $ gcloud config unset compute/region
+
+              Alternatively, the region can be stored in the environment
+              variable CLOUDSDK_COMPUTE_REGION.
+
+           --network-endpoint-group-zone=NETWORK_ENDPOINT_GROUP_ZONE
+              Zone of the network endpoint group to add to the backend service.
+              If not specified and the compute/zone property isn't set, you
+              might be prompted to select a zone (interactive mode only).
+
+              To avoid prompting when this flag is omitted, you can set the
+              compute/zone property:
+
+                  $ gcloud config set compute/zone ZONE
+
+              A list of zones can be fetched by running:
+
+                  $ gcloud compute zones list
+
+              To unset the property, run:
+
+                  $ gcloud config unset compute/zone
+
+              Alternatively, the zone can be stored in the environment variable
+              CLOUDSDK_COMPUTE_ZONE.
+
+OPTIONAL FLAGS
+     --balancing-mode=BALANCING_MODE
+        Defines how to measure whether a backend can handle additional traffic
+        or is fully loaded. For more information, see
+        https://cloud.google.com/load-balancing/docs/backend-service#balancing-mode.
+
+        This cannot be used when the endpoint type of an attached network
+        endpoint group is INTERNET_IP_PORT, INTERNET_FQDN_PORT, or SERVERLESS.
+
+        BALANCING_MODE must be one of:
+
+         CONNECTION
+            Available if the backend service's load balancing scheme is either
+            INTERNAL or EXTERNAL. Available if the backend service's protocol
+            is one of SSL, TCP, or UDP.
+
+            Spreads load based on how many concurrent connections the backend
+            can handle.
+
+            For backend services with --load-balancing-scheme EXTERNAL, you
+            must specify exactly one of these additional parameters:
+            --max-connections, --max-connections-per-instance, or
+            --max-connections-per-endpoint.
+
+            For backend services where --load-balancing-scheme is INTERNAL, you
+            must omit all of these parameters.
+
+         RATE
+            Available if the backend service's load balancing scheme is
+            INTERNAL_MANAGED, INTERNAL_SELF_MANAGED, or EXTERNAL. Available if
+            the backend service's protocol is one of HTTP, HTTPS, or HTTP/2.
+
+            Spreads load based on how many HTTP requests per second (RPS) the
+            backend can handle.
+
+            You must specify exactly one of these additional parameters:
+            --max-rate, --max-rate-per-instance, or --max-rate-per-endpoint.
+
+         UTILIZATION
+            Available if the backend service's load balancing scheme is
+            INTERNAL_MANAGED, INTERNAL_SELF_MANAGED, or EXTERNAL. Available
+            only for managed or unmanaged instance group backends.
+
+            Spreads load based on the backend utilization of instances in a
+            backend instance group.
+
+            The following additional parameters may be specified:
+            --max-utilization, --max-rate, --max-rate-per-instance,
+            --max-connections, --max-connections-per-instance. For valid
+            combinations, see --max-utilization.
+
+     --capacity-scaler=CAPACITY_SCALER
+        Scales down the target capacity (max utilization, max rate, or max
+        connections) without changing the target capacity. For usage guidelines
+        and examples, see Capacity scaler
+        (https://cloud.google.com/load-balancing/docs/backend-service#capacity_scaler).
+
+        This cannot be used when the endpoint type of an attached network
+        endpoint group is INTERNET_IP_PORT, INTERNET_FQDN_PORT, or SERVERLESS.
+
+     --description=DESCRIPTION
+        An optional, textual description for the backend.
+
+     --failover
+        Designates whether this is a failover backend. More than one failover
+        backend can be configured for a given BackendService. Not compatible
+        with the --global flag
+
+     --max-utilization=MAX_UTILIZATION
+        Defines the maximum target for average utilization of the backend
+        instance group. Supported values are 0.0 (0%) through 1.0 (100%). This
+        is an optional parameter for the UTILIZATION balancing mode.
+
+        You can use this parameter with other parameters for defining target
+        capacity. For usage guidelines, see Balancing mode combinations
+        (https://cloud.google.com/load-balancing/docs/backend-service#balancing-mode-combos).
+
+     At most one of these can be specified:
+
+       --global
+          If set, the backend service is global.
+
+       --region=REGION
+          Region of the backend service to operate on. Overrides the default
+          compute/region property value for this command invocation.
+
+     At most one of these can be specified:
+
+       --max-connections=MAX_CONNECTIONS
+          Maximum concurrent connections that the backend can handle. Valid for
+          network endpoint group and instance group backends (except for
+          regional managed instance groups).
+
+          This cannot be used when the endpoint type of an attached network
+          endpoint group is INTERNET_IP_PORT, INTERNET_FQDN_PORT, or
+          SERVERLESS.
+
+       --max-connections-per-endpoint=MAX_CONNECTIONS_PER_ENDPOINT
+          Only valid for network endpoint group backends. Defines a maximum
+          number of connections per endpoint if all endpoints are healthy. When
+          one or more endpoints are unhealthy, an effective maximum average
+          number of connections per healthy endpoint is calculated by
+          multiplying MAX_CONNECTIONS_PER_ENDPOINT by the number of endpoints
+          in the network endpoint group, and then dividing by the number of
+          healthy endpoints.
+
+          This cannot be used when the endpoint type of an attached network
+          endpoint group is INTERNET_IP_PORT, INTERNET_FQDN_PORT, or
+          SERVERLESS.
+
+       --max-connections-per-instance=MAX_CONNECTIONS_PER_INSTANCE
+          Only valid for instance group backends. Defines a maximum number of
+          concurrent connections per instance if all instances in the instance
+          group are healthy. When one or more instances are unhealthy, an
+          effective average maximum number of connections per healthy instance
+          is calculated by multiplying MAX_CONNECTIONS_PER_INSTANCE by the
+          number of instances in the instance group, and then dividing by the
+          number of healthy instances.
+
+       --max-rate=MAX_RATE
+          Maximum number of HTTP requests per second (RPS) that the backend can
+          handle. Valid for network endpoint group and instance group backends
+          (except for regional managed instance groups). Must not be defined if
+          the backend is a managed instance group using load balancing-based
+          autoscaling.
+
+          This cannot be used when the endpoint type of an attached network
+          endpoint group is INTERNET_IP_PORT, INTERNET_FQDN_PORT, or
+          SERVERLESS.
+
+       --max-rate-per-endpoint=MAX_RATE_PER_ENDPOINT
+          Only valid for network endpoint group backends. Defines a maximum
+          number of HTTP requests per second (RPS) per endpoint if all
+          endpoints are healthy. When one or more endpoints are unhealthy, an
+          effective maximum rate per healthy endpoint is calculated by
+          multiplying MAX_RATE_PER_ENDPOINT by the number of endpoints in the
+          network endpoint group, and then dividing by the number of healthy
+          endpoints.
+
+          This cannot be used when the endpoint type of an attached network
+          endpoint group is INTERNET_IP_PORT, INTERNET_FQDN_PORT, or
+          SERVERLESS.
+
+       --max-rate-per-instance=MAX_RATE_PER_INSTANCE
+          Only valid for instance group backends. Defines a maximum number of
+          HTTP requests per second (RPS) per instance if all instances in the
+          instance group are healthy. When one or more instances are unhealthy,
+          an effective maximum RPS per healthy instance is calculated by
+          multiplying MAX_RATE_PER_INSTANCE by the number of instances in the
+          instance group, and then dividing by the number of healthy instances.
+          This parameter is compatible with managed instance group backends
+          that use autoscaling based on load balancing.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha compute backend-services add-backend
+
+        $ gcloud beta compute backend-services add-backend
+

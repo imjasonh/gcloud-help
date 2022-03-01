@@ -1,0 +1,94 @@
+NAME
+    gcloud beta firestore indexes composite create - create a new composite
+        index
+
+SYNOPSIS
+    gcloud beta firestore indexes composite create
+        --collection-group=COLLECTION_GROUP --field-config=FIELD_CONFIG
+        [--async] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Create a new composite index.
+
+EXAMPLES
+    The following command creates a composite index with fields user_id (in
+    descending order) followed by timestamp (in descending order) in the Events
+    collection group.
+
+        $ gcloud beta firestore indexes composite create \
+            --collection-group=Events \
+            --field-config=field-path=user-id,order=descending \
+            --field-config=field-path=timestamp,order=descending
+
+REQUIRED FLAGS
+     Collection group resource - Collection group of the index. This represents
+     a Cloud resource. (NOTE) Some attributes are not given arguments in this
+     group but can be set in other ways. To set the project attribute:
+      ◆ provide the argument --collection-group on the command line with a
+        fully specified name;
+      ◆ set the property core/project;
+      ◆ provide the argument --project on the command line. To set the
+        database attribute:
+      ◆ provide the argument --collection-group on the command line with a
+        fully specified name;
+      ◆ provide the argument [--database] on the command line (currently
+        '(default)' is the only supported value).
+
+     This must be specified.
+
+       --collection-group=COLLECTION_GROUP
+          ID of the collection group or fully qualified identifier for the
+          collection group. To set the collection-group attribute:
+          ▸ provide the argument --collection-group on the command line.
+
+     --field-config=FIELD_CONFIG
+        Configuration for a field.
+
+        This flag must be repeated to provide the ordered list of field
+        configurations comprising the composite index. For example:
+
+            $ gcloud beta firestore indexes composite create \
+                --collection-group=Events \
+                --field-config field-path=tags,array-config=contains \
+                --field-config field-path=user_id,order=descending \
+                --field-config field-path=timestamp,order=descending
+
+        The following keys are allowed:
+
+         field-path
+            Specifies the field path (e.g. 'address.city'). This is required.
+
+         order
+            Specifies the order. Valid options are: 'ascending', 'descending'.
+            Exactly one of order or array-config must be specified.
+
+         array-config
+            Specifies the configuration for an array field. The only valid
+            option is 'contains'. Exactly one of 'order' or 'array-config' must
+            be specified.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the firestore/v1 API. The full documentation for this API
+    can be found at: https://cloud.google.com/firestore
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud firestore indexes composite create
+
+        $ gcloud alpha firestore indexes composite create
+

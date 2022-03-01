@@ -1,0 +1,145 @@
+NAME
+    gcloud alpha compute resource-policies create-snapshot-schedule - create a
+        Compute Engine Snapshot Schedule Resource Policy
+
+SYNOPSIS
+    gcloud alpha compute resource-policies create-snapshot-schedule NAME
+        --max-retention-days=MAX_RETENTION_DAYS
+        (--weekly-schedule-from-file=WEEKLY_CYCLE_FROM_FILE
+          | --start-time=START_TIME (--daily-schedule | --hourly-schedule=HOURS
+          | --weekly-schedule=WEEKLY_CYCLE)) [--description=DESCRIPTION]
+        [--on-source-disk-delete=ON_SOURCE_DISK_DELETE] [--region=REGION]
+        [--guest-flush
+          --snapshot-labels=[KEY=VALUE,...] --storage-location=LOCATION]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) (DEPRECATED) create-snapshot-schedule is deprecated. Use compute
+    resource-policies create snapshot-schedule instead.
+
+    Create a Compute Engine Snapshot Schedule Resource Policy.
+
+EXAMPLES
+    The following command creates a Compute Engine Snapshot Schedule Resource
+    Policy with a daily snapshot and a one day snapshot retention policy.
+
+        $ gcloud alpha compute resource-policies create-snapshot-schedule \
+            my-resource-policy --region=REGION --start-time=04:00Z \
+            --daily-schedule --max-retention-days=1
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the resource policy to operate on.
+
+REQUIRED FLAGS
+     --max-retention-days=MAX_RETENTION_DAYS
+        Maximum number of days snapshot can be retained.
+
+     Cycle Frequency Group.
+
+     Exactly one of these must be specified:
+
+       From file:
+
+         --weekly-schedule-from-file=WEEKLY_CYCLE_FROM_FILE
+            A JSON/YAML file which specifies a weekly schedule. It should be a
+            list of objects with the following fields:
+
+            day: Day of the week with the same choices as --weekly-schedule.
+            startTime: Start time of the snapshot schedule with the same format
+            as --start-time.
+
+       From flags:
+
+         --start-time=START_TIME
+            Start time for the disk snapshot schedule. See $ gcloud topic
+            datetimes for information on time formats.
+
+            This flag must be specified if any of the other arguments in this
+            group are specified.
+
+         Exactly one of these must be specified:
+
+           --daily-schedule
+              Snapshot schedule starts daily at START_TIME.
+
+           --hourly-schedule=HOURS
+              Snapshot schedule occurs every n hours starting at START_TIME.
+
+           --weekly-schedule=WEEKLY_CYCLE
+              Snapshot schedule occurs weekly on WEEKLY_SCHEDULE at START_TIME.
+              WEEKLY_CYCLE must be one of: monday, tuesday, wednesday,
+              thursday, friday, saturday, sunday.
+
+OPTIONAL FLAGS
+     --description=DESCRIPTION
+        An optional, textual description for the backend.
+
+     --on-source-disk-delete=ON_SOURCE_DISK_DELETE
+        Retention behavior of automatic snapshots in the event of source disk
+        deletion. ON_SOURCE_DISK_DELETE must be one of:
+
+         apply-retention-policy
+            Continue to apply the retention window to automatically-created
+            snapshots when the source disk is deleted.
+         keep-auto-snapshots
+            Keep automatically-created snapshots when the source disk is
+            deleted. This is the default behavior.
+
+     --region=REGION
+        Region of the resource policy to operate on. If not specified, you
+        might be prompted to select a region (interactive mode only).
+
+        To avoid prompting when this flag is omitted, you can set the
+        compute/region property:
+
+            $ gcloud config set compute/region REGION
+
+        A list of regions can be fetched by running:
+
+            $ gcloud compute regions list
+
+        To unset the property, run:
+
+            $ gcloud config unset compute/region
+
+        Alternatively, the region can be stored in the environment variable
+        CLOUDSDK_COMPUTE_REGION.
+
+     Snapshot properties
+
+       --guest-flush
+          Create an application consistent snapshot by informing the OS to
+          prepare for the snapshot process.
+
+       --snapshot-labels=[KEY=VALUE,...]
+          List of label KEY=VALUE pairs to add.
+
+          Keys must start with a lowercase character and contain only hyphens
+          (-), underscores (_), lowercase characters, and numbers. Values must
+          contain only hyphens (-), underscores (_), lowercase characters, and
+          numbers.
+
+          These will be added to the disk snapshots on creation.
+
+       --storage-location=LOCATION
+          Google Cloud Storage location, either regional or multi-regional,
+          where snapshot content is to be stored. If absent, a nearby regional
+          or multi-regional location is chosen automatically.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. This variant is also available:
+
+        $ gcloud beta compute resource-policies create-snapshot-schedule
+

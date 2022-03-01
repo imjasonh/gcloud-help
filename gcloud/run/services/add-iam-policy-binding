@@ -1,0 +1,216 @@
+NAME
+    gcloud run services add-iam-policy-binding - add IAM policy binding to a
+        Cloud Run service
+
+SYNOPSIS
+    gcloud run services add-iam-policy-binding SERVICE --member=PRINCIPAL
+        --role=ROLE [--platform=PLATFORM; default="managed"]
+        [--condition=[KEY=VALUE,...]
+          | --condition-from-file=CONDITION_FROM_FILE]
+        [--region=REGION
+          | --cluster=CLUSTER --cluster-location=CLUSTER_LOCATION
+          | --context=CONTEXT --kubeconfig=KUBECONFIG] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Add an IAM policy binding to the IAM policy of a Cloud Run service. One
+    binding consists of a member, a role, and an optional condition.
+
+EXAMPLES
+    To add an IAM policy binding for the role of 'roles/run.invoker' for the
+    user 'test-user@gmail.com' with service 'my-service' and region
+    'us-central1', run:
+
+        $ gcloud run services add-iam-policy-binding my-service \
+            --region='us-central1' --member='user:test-user@gmail.com' \
+            --role='roles/run.invoker'
+
+    To add an IAM policy binding which expires at the end of the year 2019 for
+    the role of 'roles/run.invoker' and the user 'test-user@gmail.com' with
+    service 'my-service' and region 'us-central1', run:
+
+        $ gcloud run services add-iam-policy-binding my-service \
+            --region='us-central1' --member='user:test-user@gmail.com' \
+            --role='roles/run.invoker' \
+            --condition='expression=request.time <
+         timestamp("2020-01-01T00:00:00Z"),title=expires_end_of_2019,descrip\
+        tion=Expires at midnight on 2019-12-31'
+
+    See https://cloud.google.com/iam/docs/managing-policies for details of
+    policy role and member types.
+
+POSITIONAL ARGUMENTS
+     Service resource - The service for which to add IAM policy binding to.
+     This represents a Cloud resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways. To set the project
+     attribute:
+      ◆ provide the argument service on the command line with a fully
+        specified name;
+      ◆ set the property core/project;
+      ◆ provide the argument --project on the command line. To set the region
+        attribute:
+      ◆ provide the argument service on the command line with a fully
+        specified name;
+      ◆ provide the argument --region on the command line;
+      ◆ set the property run/region;
+      ◆ specify from a list of available regions in a prompt.
+
+     This must be specified.
+
+       SERVICE
+          ID of the service or fully qualified identifier for the service. To
+          set the service attribute:
+          ▸ provide the argument service on the command line.
+
+REQUIRED FLAGS
+     --member=PRINCIPAL
+        The principal to add the binding for. Should be of the form
+        user|group|serviceAccount:email or domain:domain.
+
+        Examples: user:test-user@gmail.com, group:admins@example.com,
+        serviceAccount:test123@example.domain.com, or
+        domain:example.domain.com.
+
+        Some resources also accept the following special values:
+        ◆ allUsers - Special identifier that represents anyone who is on the
+          internet, with or without a Google account.
+        ◆ allAuthenticatedUsers - Special identifier that represents anyone
+          who is authenticated with a Google account or a service account.
+
+     --role=ROLE
+        Role name to assign to the principal. The role name is the complete
+        path of a predefined role, such as roles/logging.viewer, or the role ID
+        for a custom role, such as
+        organizations/{ORGANIZATION_ID}/roles/logging.viewer.
+
+OPTIONAL FLAGS
+     --platform=PLATFORM; default="managed"
+        Target platform for running commands. Alternatively, set the property
+        [run/platform]. PLATFORM must be one of:
+
+         managed
+            Fully managed version of Cloud Run. Use with the --region flag or
+            set the [run/region] property to specify a Cloud Run region.
+         gke
+            Cloud Run for Anthos on Google Cloud. Use with the --cluster and
+            --cluster-location flags or set the [run/cluster] and
+            [run/cluster_location] properties to specify a cluster in a given
+            zone.
+         kubernetes
+            Use a Knative-compatible kubernetes cluster. Use with the
+            --kubeconfig and --context flags to specify a kubeconfig file and
+            the context for connecting.
+
+     At most one of these can be specified:
+
+       --condition=[KEY=VALUE,...]
+          A condition to include in the binding. When the condition is
+          explicitly specified as None (--condition=None), a binding without a
+          condition is added. When the condition is specified and is not None,
+          --role cannot be a basic role. Basic roles are roles/editor,
+          roles/owner, and roles/viewer. For more on conditions, refer to the
+          conditions overview guide:
+          https://cloud.google.com/iam/docs/conditions-overview
+
+          When using the --condition flag, include the following key-value
+          pairs:
+
+           expression
+              (Required) Condition expression that evaluates to True or False.
+              This uses a subset of Common Expression Language syntax.
+
+              If the condition expression includes a comma, use a different
+              delimiter to separate the key-value pairs. Specify the delimiter
+              before listing the key-value pairs. For example, to specify a
+              colon (:) as the delimiter, do the following:
+              --condition=^:^title=TITLE:expression=EXPRESSION. For more
+              information, see
+              https://cloud.google.com/sdk/gcloud/reference/topic/escaping.
+
+           title
+              (Required) A short string describing the purpose of the
+              expression.
+
+           description
+              (Optional) Additional description for the expression.
+
+       --condition-from-file=CONDITION_FROM_FILE
+          Path to a local JSON or YAML file that defines the condition. To see
+          available fields, see the help for --condition.
+
+     Arguments to locate resources, depending on the platform used.
+
+     At most one of these can be specified:
+
+       Only applicable if connecting to Cloud Run (fully managed). Specify
+       --platform=managed to use:
+
+         --region=REGION
+            Region in which the resource can be found. Alternatively, set the
+            property [run/region].
+
+       Only applicable if connecting to Cloud Run for Anthos deployed on Google
+       Cloud. Specify --platform=gke to use:
+
+         Cluster resource - Kubernetes Engine cluster to connect to. The
+         arguments in this group can be used to specify the attributes of this
+         resource. (NOTE) Some attributes are not given arguments in this group
+         but can be set in other ways. To set the project attribute:
+          ▫ provide the argument --cluster on the command line with a fully
+            specified name;
+          ▫ set the property run/cluster with a fully specified name;
+          ▫ specify the cluster from a list of available clusters with a
+            fully specified name;
+          ▫ provide the argument --project on the command line;
+          ▫ set the property core/project.
+
+           --cluster=CLUSTER
+              ID of the cluster or fully qualified identifier for the cluster.
+              To set the cluster attribute:
+              ◇ provide the argument --cluster on the command line;
+              ◇ set the property run/cluster;
+              ◇ specify the cluster from a list of available clusters.
+
+           --cluster-location=CLUSTER_LOCATION
+              Zone in which the cluster is located. Alternatively, set the
+              property [run/cluster_location]. To set the location attribute:
+              ◇ provide the argument --cluster on the command line with a
+                fully specified name;
+              ◇ set the property run/cluster with a fully specified name;
+              ◇ specify the cluster from a list of available clusters with a
+                fully specified name;
+              ◇ provide the argument --cluster-location on the command line;
+              ◇ set the property run/cluster_location;
+              ◇ specify the cluster location from a list of available zones.
+
+       Only applicable if connecting to Cloud Run for Anthos deployed on
+       VMware. Specify --platform=kubernetes to use:
+
+         --context=CONTEXT
+            The name of the context in your kubectl config file to use for
+            connecting.
+
+         --kubeconfig=KUBECONFIG
+            The absolute path to your kubectl config file. If not specified,
+            the colon- or semicolon-delimited list of paths specified by
+            $KUBECONFIG will be used. If $KUBECONFIG is unset, this defaults to
+            ~/.kube/config.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the run/v1 API. The full documentation for this API can
+    be found at: https://cloud.google.com/run/
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha run services add-iam-policy-binding
+
+        $ gcloud beta run services add-iam-policy-binding
+

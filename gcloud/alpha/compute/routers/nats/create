@@ -1,0 +1,237 @@
+NAME
+    gcloud alpha compute routers nats create - add a NAT to a Compute Engine
+        router
+
+SYNOPSIS
+    gcloud alpha compute routers nats create NAME --router=ROUTER
+        (--nat-all-subnet-ip-ranges
+          | --nat-custom-subnet-ip-ranges=SUBNETWORK[:RANGE_NAME],[...]
+          | --nat-primary-subnet-ip-ranges) [--async]
+        [--[no-]enable-dynamic-port-allocation]
+        [--enable-endpoint-independent-mapping] [--enable-logging]
+        [--icmp-idle-timeout=ICMP_IDLE_TIMEOUT] [--log-filter=LOG_FILTER]
+        [--max-ports-per-vm=MAX_PORTS_PER_VM]
+        [--min-ports-per-vm=MIN_PORTS_PER_VM] [--region=REGION] [--rules=RULES]
+        [--tcp-established-idle-timeout=TCP_ESTABLISHED_IDLE_TIMEOUT]
+        [--tcp-time-wait-timeout=TCP_TIME_WAIT_TIMEOUT]
+        [--tcp-transitory-idle-timeout=TCP_TRANSITORY_IDLE_TIMEOUT]
+        [--type=TYPE] [--udp-idle-timeout=UDP_IDLE_TIMEOUT]
+        [--auto-allocate-nat-external-ips
+          | --nat-external-ip-pool=IP_ADDRESS,[IP_ADDRESS,...]]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) gcloud alpha compute routers nats create is used to create a NAT on
+    a Compute Engine router.
+
+EXAMPLES
+    Auto-allocate NAT for all IP addresses of all subnets in the region:
+
+        $ gcloud alpha compute routers nats create nat1 --router=my-router
+          --auto-allocate-nat-external-ips --nat-all-subnet-ip-ranges
+
+    Specify IP addresses for NAT: Each IP address is the name of a reserved
+    static IP address resource in the same region.
+
+        $ gcloud alpha compute routers nats create nat1 --router=my-router
+          --nat-external-ip-pool=ip-address1,ip-address2
+
+    Specify subnet ranges for NAT:
+
+    By default, NAT works for all primary and secondary IP ranges for all
+    subnets in the region for the given VPC network. You can restrict which
+    subnet primary and secondary ranges can use NAT.
+
+        $ gcloud alpha compute routers nats create nat1 --router=my-router
+          --auto-allocate-nat-external-ips
+          --nat-custom-subnet-ip-ranges=subnet-1,subnet-3:secondary-range-1
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the NAT to create
+
+REQUIRED FLAGS
+     --router=ROUTER
+        The Router to use for NAT.
+
+     Exactly one of these must be specified:
+
+       --nat-all-subnet-ip-ranges
+          Allow all IP ranges of all subnetworks in the region, including
+          primary and secondary ranges, to use NAT.
+
+       --nat-custom-subnet-ip-ranges=SUBNETWORK[:RANGE_NAME],[...]
+          List of subnetwork primary and secondary IP ranges to be allowed to
+          use NAT. [SUBNETWORK]: including a subnetwork name includes only the
+          primary subnet range of the subnetwork. [SUBNETWORK]:[RANGE_NAME]:
+          specifying a subnetwork and secondary range name includes only that
+          secondary range.It does not include the primary range of the subnet.
+
+       --nat-primary-subnet-ip-ranges
+          Allow only primary IP ranges of all subnetworks in the region to use
+          NAT.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --[no-]enable-dynamic-port-allocation
+        Enable dynamic port allocation.
+
+        If not specified, Dynamic Port Allocation is disabled by default.
+
+        Use --enable-dynamic-port-allocation to enable and
+        --no-enable-dynamic-port-allocation to disable.
+
+     --enable-endpoint-independent-mapping
+        Enable endpoint-independent mapping for the NAT (as defined in RFC
+        5128).
+
+        If not specified, NATs have endpoint-independent mapping disabled by
+        default.
+
+        Use --no-enable-endpoint-independent-mapping to disable
+        endpoint-independent mapping.
+
+     --enable-logging
+        Enable logging for the NAT. Logs will be exported to Stackdriver. NAT
+        logging is disabled by default. To disable logging for the NAT, use $
+        gcloud alpha compute routers nats update MY-NAT \ --no-enable-logging
+        --router ROUTER --region REGION
+
+     --icmp-idle-timeout=ICMP_IDLE_TIMEOUT
+        Timeout for ICMP connections. See
+        https://cloud.google.com/sdk/gcloud/reference/topic/datetimes for
+        information on duration formats.
+
+     --log-filter=LOG_FILTER
+        Filter for logs exported to stackdriver.
+
+        The default is ALL.
+
+        If logging is not enabled, filter settings will be persisted but will
+        have no effect.
+
+        Use --[no-]enable-logging to enable and disable logging.
+
+        LOG_FILTER must be one of:
+
+         ALL
+            Export logs for all connections handled by this NAT.
+         ERRORS_ONLY
+            Export logs for connection failures only.
+         TRANSLATIONS_ONLY
+            Export logs for successful connections only.
+
+     --max-ports-per-vm=MAX_PORTS_PER_VM
+        Maximum ports to be allocated to a VM.
+
+        This field can only be set when Dynamic Port Allocation is enabled and
+        defaults to 65536. It must be set to a power of 2 that is greater than
+        minPortsPerVm and at most 65536.
+
+     --min-ports-per-vm=MIN_PORTS_PER_VM
+        Minimum ports to be allocated to a VM.
+
+        If Dynamic Port Allocation is disabled, this defaults to 64.
+
+        If Dynamic Port Allocation is enabled, this defaults to 32 and must be
+        set to a power of 2 that is at least 32 and lower than maxPortsPerVm.
+
+     --region=REGION
+        Region of the NAT to create. If not specified, you might be prompted to
+        select a region (interactive mode only).
+
+        To avoid prompting when this flag is omitted, you can set the
+        compute/region property:
+
+            $ gcloud config set compute/region REGION
+
+        A list of regions can be fetched by running:
+
+            $ gcloud compute regions list
+
+        To unset the property, run:
+
+            $ gcloud config unset compute/region
+
+        Alternatively, the region can be stored in the environment variable
+        CLOUDSDK_COMPUTE_REGION.
+
+     --rules=RULES
+        Path to YAML file containing NAT Rules applied to the NAT. The YAML
+        file format must follow the REST API schema for NAT Rules. See API
+        Discovery docs
+        (https://www.googleapis.com/discovery/v1/apis/compute/alpha/rest) for
+        reference.
+
+     --tcp-established-idle-timeout=TCP_ESTABLISHED_IDLE_TIMEOUT
+        Timeout for TCP established connections. See
+        https://cloud.google.com/sdk/gcloud/reference/topic/datetimes for
+        information on duration formats.
+
+     --tcp-time-wait-timeout=TCP_TIME_WAIT_TIMEOUT
+        Timeout for TCP connections in the TIME_WAIT state. See
+        https://cloud.google.com/sdk/gcloud/reference/topic/datetimes for
+        information on duration formats.
+
+     --tcp-transitory-idle-timeout=TCP_TRANSITORY_IDLE_TIMEOUT
+        Timeout for TCP transitory connections. See
+        https://cloud.google.com/sdk/gcloud/reference/topic/datetimes for
+        information on duration formats.
+
+     --type=TYPE
+        Type of the NAT Gateway. Defaults to PUBLIC if not specified. TYPE must
+        be one of:
+
+         PRIVATE
+            Used for priate-to-private NAT translations. Allows communication
+            between VPC Networks.
+         PUBLIC
+            Used for private-to-public NAT translations. Allows VMs to
+            communicate with the Internet.
+
+     --udp-idle-timeout=UDP_IDLE_TIMEOUT
+        Timeout for UDP connections. See
+        https://cloud.google.com/sdk/gcloud/reference/topic/datetimes for
+        information on duration formats.
+
+     At most one of these can be specified:
+
+       --auto-allocate-nat-external-ips
+          Automatically allocate external IP addresses for Cloud NAT
+
+       --nat-external-ip-pool=IP_ADDRESS,[IP_ADDRESS,...]
+          External IP Addresses to use for Cloud NAT
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command, when specified without alpha or beta, uses the
+    compute/v1/routers API. The full documentation for this API can be found
+    at: https://cloud.google.com/compute/docs/reference/rest/v1/routers/
+
+    The beta command uses the compute/beta/routers API. The full documentation
+    for this API can be found at:
+    https://cloud.google.com/compute/docs/reference/rest/beta/routers/
+
+    The alpha command uses the compute/alpha/routers API. Full documentation is
+    not available for the alpha API.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud compute routers nats create
+
+        $ gcloud beta compute routers nats create
+

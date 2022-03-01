@@ -1,0 +1,139 @@
+NAME
+    gcloud beta privateca subordinates update - update an existing subordinate
+        certificate authority
+
+SYNOPSIS
+    gcloud beta privateca subordinates update
+        (CERTIFICATE_AUTHORITY : --location=LOCATION)
+        [--issuance-policy=ISSUANCE_POLICY] [--pem-chain=PEM_CHAIN]
+        [--no-publish-ca-cert] [--no-publish-crl]
+        [--update-labels=[KEY=VALUE,...]]
+        [--clear-labels | --remove-labels=[KEY,...]] [GCLOUD_WIDE_FLAG ...]
+
+EXAMPLES
+    To update labels on a subordinate CA:
+
+        $ gcloud beta privateca subordinates update server-tls-1 \
+          --location=us-west1 \
+          --update-labels=foo=bar
+
+    To disable publishing CRLs for a subordinate CA:
+
+        $ gcloud beta privateca subordinates update server-tls-1 \
+          --location=us-west1 \
+          --no-publish-crl
+
+POSITIONAL ARGUMENTS
+     CERTIFICATE AUTHORITY resource - The certificate authority to update. The
+     arguments in this group can be used to specify the attributes of this
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways. To set the project attribute:
+      ◆ provide the argument CERTIFICATE_AUTHORITY on the command line with a
+        fully specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       CERTIFICATE_AUTHORITY
+          ID of the CERTIFICATE_AUTHORITY or fully qualified identifier for the
+          CERTIFICATE_AUTHORITY. To set the certificate_authority attribute:
+          ▸ provide the argument CERTIFICATE_AUTHORITY on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --location=LOCATION
+          The location of the CERTIFICATE_AUTHORITY. To set the location
+          attribute:
+          ▸ provide the argument CERTIFICATE_AUTHORITY on the command line
+            with a fully specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property privateca/location.
+
+FLAGS
+     --issuance-policy=ISSUANCE_POLICY
+        A YAML file describing this Certificate Authority's issuance policy.
+
+     --pem-chain=PEM_CHAIN
+        A file containing a list of PEM-encoded certificates that represent the
+        issuing chain of this CA.
+
+     --publish-ca-cert
+        If this is enabled, the following will happen: 1) The CA certificate
+        will be written to a known location within the CA distribution point.
+        2) The AIA extension in all issued certificates will point to the CA
+        cert URL in that distribution point.
+
+        If this gets disabled, the AIA extension will not be written to any
+        future certificates issued by this CA. However, an existing bucket will
+        not be deleted, and the CA certificate will not be removed from that
+        bucket.
+
+        Note that the same bucket may be used for the CRLs if --publish-crl is
+        set.
+
+        Enabled by default, use --no-publish-ca-cert to disable.
+
+     --publish-crl
+        If this gets enabled, the following will happen: 1) CRLs will be
+        written to a known location within the CA distribution point. 2) The
+        CDP extension in all future issued certificates will point to the CRL
+        URL in that distribution point.
+
+        If this gets disabled, the CDP extension will not be written to any
+        future certificates issued by this CA, and new CRLs will not be
+        published to that bucket (which affects existing certs). However, an
+        existing bucket will not be deleted, and any existing CRLs will not be
+        removed from that bucket.
+
+        Note that the same bucket may be used for the CA cert if
+        --publish-ca-cert is set.
+
+        CRL publication is not supported for CAs in the DevOps tier.
+
+        Enabled by default, use --no-publish-crl to disable.
+
+     --update-labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to update. If a label exists, its value
+        is modified. Otherwise, a new label is created.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     At most one of these can be specified:
+
+       --clear-labels
+          Remove all labels. If --update-labels is also specified then
+          --clear-labels is applied first.
+
+          For example, to remove all labels:
+
+              $ gcloud beta privateca subordinates update --clear-labels
+
+          To remove all existing labels and create two new labels, foo and baz:
+
+              $ gcloud beta privateca subordinates update --clear-labels \
+                --update-labels foo=bar,baz=qux
+
+       --remove-labels=[KEY,...]
+          List of label keys to remove. If a label does not exist it is
+          silently ignored. If --update-labels is also specified then
+          --update-labels is applied first.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud privateca subordinates update
+

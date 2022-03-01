@@ -1,0 +1,80 @@
+NAME
+    gcloud alpha ml language classify-text - classifies input document into
+        categories
+
+SYNOPSIS
+    gcloud alpha ml language classify-text
+        (--content=CONTENT | --content-file=CONTENT_FILE)
+        [--content-type=CONTENT_TYPE; default="plain-text"]
+        [--language=LANGUAGE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Classifies input document into categories. Returns a list of
+    categories representing the document. Only the most relevant categories a
+    document are returned e.g. if /Science and /Science/Astronomy both apply to
+    a document, then only the /Science/Astronomy category is returned, as it is
+    the more specific result.
+
+    Currently only English is supported for this feature.
+
+EXAMPLES
+    To classify text in raw content 'Long Political Text.':
+
+        $ gcloud alpha ml language classify-text \
+            --content='Long Political Text.'
+
+    To classify text in file 'myfile.txt':
+
+        $ gcloud alpha ml language classify-text --content-file='myfile.txt'
+
+    To classify text in a remote file 'gs://bucket_name/mycontent.html' for
+    Japanese language:
+
+        $ gcloud alpha ml language classify-text \
+            --content-file='gs://bucket_name/mycontent.html' \
+            --content-type=HTML  --language=ja-JP
+
+REQUIRED FLAGS
+     Exactly one of these must be specified:
+
+       --content=CONTENT
+          Specify input text on the command line. Useful for experiments, or
+          for extremely short text.
+
+       --content-file=CONTENT_FILE
+          Specify a local file or Google Cloud Storage (format
+          gs://bucket/object) file path containing the text to be analyzed.
+          More useful for longer text or data output from another system.
+
+OPTIONAL FLAGS
+     --content-type=CONTENT_TYPE; default="plain-text"
+        Specify the format of the input text. CONTENT_TYPE must be one of:
+        html, plain-text.
+
+     --language=LANGUAGE
+        Specify the language of the input text. If omitted, the server will
+        attempt to auto-detect. Both ISO (such as en or es) and BCP-47 (such as
+        en-US or ja-JP) language codes are accepted.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the language/v1beta2 API. The full documentation for this
+    API can be found at: https://cloud.google.com/natural-language/
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud ml language classify-text
+
+        $ gcloud beta ml language classify-text
+

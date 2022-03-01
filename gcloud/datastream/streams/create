@@ -1,0 +1,233 @@
+NAME
+    gcloud datastream streams create - create a Datastream stream
+
+SYNOPSIS
+    gcloud datastream streams create (STREAM : --location=LOCATION)
+        --display-name=DISPLAY_NAME
+        (--backfill-none
+          | --backfill-all --mysql-excluded-objects=MYSQL_EXCLUDED_OBJECTS
+          | --oracle-excluded-objects=ORACLE_EXCLUDED_OBJECTS)
+        (--destination=DESTINATION
+          --gcs-destination-config=GCS_DESTINATION_CONFIG)
+        (--source=SOURCE (--mysql-source-config=MYSQL_SOURCE_CONFIG
+          | --oracle-source-config=ORACLE_SOURCE_CONFIG))
+        [--labels=[KEY=VALUE,...]] [--force | --validate-only]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Create a Datastream stream
+
+EXAMPLES
+    To create a stream with an Oracle source and Google Cloud Storage
+    destination:
+
+        $ gcloud datastream streams create STREAM --location=us-central1 \
+          --display-name=my-stream --source=source \
+          --oracle-source-config=source_config.json \
+          --destination=destination \
+          --gcs-destination-config=destination_config.json --backfill-none
+
+    To create a connection profile for Mysql with a backfill all strategy that
+    contains some excluded objects:
+
+        $ gcloud datastream streams create STREAM --location=us-central1 \
+          --display-name=my-stream --source=source \
+          --mysql-source-config=source_config.json \
+          --destination=destination \
+          --gcs-destination-config=destination_config.json \
+          --backfill-all --mysql-excluded-objects=excluded_objects.json
+
+POSITIONAL ARGUMENTS
+     Stream resource - The stream to create. The arguments in this group can be
+     used to specify the attributes of this resource. (NOTE) Some attributes
+     are not given arguments in this group but can be set in other ways. To set
+     the project attribute:
+      ◆ provide the argument stream on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       STREAM
+          ID of the stream or fully qualified identifier for the stream. To set
+          the stream attribute:
+          ▸ provide the argument stream on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --location=LOCATION
+          The Cloud location for the stream. To set the location attribute:
+          ▸ provide the argument stream on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line.
+
+REQUIRED FLAGS
+     --display-name=DISPLAY_NAME
+        Friendly name for the stream.
+
+     Exactly one of these must be specified:
+
+       --backfill-none
+          Do not automatically backfill any objects.
+
+       --backfill-all
+          Automatically backfill objects included in the stream source
+          configuration. Specific objects can be excluded.
+
+       At most one of these can be specified:
+
+         --mysql-excluded-objects=MYSQL_EXCLUDED_OBJECTS
+            MySQL data source objects to avoid backfilling.
+
+         --oracle-excluded-objects=ORACLE_EXCLUDED_OBJECTS
+            Oracle data source objects to avoid backfilling.
+
+     This must be specified.
+
+       Connection profile resource - Resource ID of the destination connection
+       profile. This represents a Cloud resource. (NOTE) Some attributes are
+       not given arguments in this group but can be set in other ways. To set
+       the project attribute:
+        ▸ provide the argument --destination on the command line with a fully
+          specified name;
+        ▸ provide the argument --project on the command line;
+        ▸ set the property core/project. To set the location attribute:
+        ▸ provide the argument --destination on the command line with a fully
+          specified name;
+        ▸ provide the argument --location on the command line.
+
+       This must be specified.
+
+         --destination=DESTINATION
+            ID of the connection_profile or fully qualified identifier for the
+            connection_profile. To set the connection_profile attribute:
+            ▫ provide the argument --destination on the command line.
+
+       --gcs-destination-config=GCS_DESTINATION_CONFIG
+          Path to a YAML (or JSON) file containing the configuration for Google
+          Cloud Storage Destination Config.
+
+          The JSON file is formatted as follows:
+
+               {
+               "path": "some/path",
+               "file_rotation_mb":5,
+               "file_rotation_interval":"15s",
+               "avro_file_format": {}
+               }
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+     This must be specified.
+
+       Connection profile resource - Resource ID of the source connection
+       profile. This represents a Cloud resource. (NOTE) Some attributes are
+       not given arguments in this group but can be set in other ways. To set
+       the project attribute:
+        ▸ provide the argument --source on the command line with a fully
+          specified name;
+        ▸ provide the argument --project on the command line;
+        ▸ set the property core/project. To set the location attribute:
+        ▸ provide the argument --source on the command line with a fully
+          specified name;
+        ▸ provide the argument --location on the command line.
+
+       This must be specified.
+
+         --source=SOURCE
+            ID of the connection_profile or fully qualified identifier for the
+            connection_profile. To set the connection_profile attribute:
+            ▫ provide the argument --source on the command line.
+
+       Exactly one of these must be specified:
+
+         --mysql-source-config=MYSQL_SOURCE_CONFIG
+            Path to a YAML (or JSON) file containing the configuration for
+            Mysql Source Config.
+
+            The JSON file is formatted as follows, with snake_case field
+            naming:
+
+                  {
+                    "include_objects": {},
+                    "exclude_objects":  {
+                      "mysql_databases": [
+                          {
+                            "database":"sample_database",
+                            "mysql_tables": [
+                              {
+                                "table": "sample_table",
+                                "mysql_columns": [
+                                  {
+                                    "column": "sample_column",
+                                  }
+                                 ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                  }
+
+         --oracle-source-config=ORACLE_SOURCE_CONFIG
+            Path to a YAML (or JSON) file containing the configuration for
+            Oracle Source Config.
+
+            The JSON file is formatted as follows, with snake_case field
+            naming:
+
+                  {
+                    "include_objects": {},
+                    "exclude_objects": {
+                      "oracle_schemas": [
+                        {
+                          "schema": "SAMPLE",
+                          "oracle_tables": [
+                            {
+                              "table": "SAMPLE_TABLE",
+                              "oracle_columns": [
+                                {
+                                  "column": "COL",
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+
+OPTIONAL FLAGS
+     --labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     At most one of these can be specified:
+
+       --force
+          Create the stream without validating it.
+
+       --validate-only
+          Only validate the stream, but do not create any resources. The
+          default is false.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This variant is also available:
+
+        $ gcloud beta datastream streams create
+

@@ -1,0 +1,107 @@
+NAME
+    gcloud compute snapshots create - create Compute Engine snapshots
+
+SYNOPSIS
+    gcloud compute snapshots create NAME [--async] [--chain-name=CHAIN_NAME]
+        [--csek-key-file=FILE] [--description=DESCRIPTION] [--guest-flush]
+        [--labels=[KEY=VALUE,...]] [--source-disk=SOURCE_DISK]
+        [--source-disk-key-file=FILE] [--storage-location=LOCATION]
+        [--source-disk-region=SOURCE_DISK_REGION
+          | --source-disk-zone=SOURCE_DISK_ZONE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    gcloud compute snapshots create creates snapshot of persistent disk.
+    Snapshots are useful for backing up persistent disk data and for creating
+    custom images. For more information, see
+    https://cloud.google.com/compute/docs/disks/create-snapshots.
+
+EXAMPLES
+    To create a snapshot 'my-snap' from a disk 'my-disk' in zone 'us-east1-a',
+    run:
+
+        $ gcloud compute snapshots create my-snap --source-disk=my-disk \
+          --source-disk-zone=us-east1-a
+
+POSITIONAL ARGUMENTS
+     NAME
+        The name of the snapshot.
+
+FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --chain-name=CHAIN_NAME
+        Create the new snapshot in the snapshot chain labeled with the
+        specified name. The chain name must be 1-63 characters long and comply
+        with RFC1035. Use this flag only if you are an advanced service owner
+        who needs to create separate snapshot chains, for example, for
+        chargeback tracking. When you describe your snapshot resource, this
+        field is visible only if it has a non-empty value.
+
+     --csek-key-file=FILE
+        Path to a Customer-Supplied Encryption Key (CSEK) key file that maps
+        Compute Engine resources to user managed keys to be used when creating,
+        mounting, or taking snapshots of disks.
+
+        If you pass - as value of the flag, the CSEK is read from stdin. See
+        https://cloud.google.com/compute/docs/disks/customer-supplied-encryption
+        for more details.
+
+     --description=DESCRIPTION
+        Text to describe the new snapshot.
+
+     --guest-flush
+        Create an application-consistent snapshot by informing the OS to
+        prepare for the snapshot process. Currently only supported for creating
+        snapshots of disks attached to Windows instances.
+
+     --labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     --source-disk=SOURCE_DISK
+        Source disk used to create the snapshot. To create a snapshot from a
+        source disk in a different project, specify the full path to the source
+        disk. For example:
+        https://www.googleapis.com/compute/v1/projects/MY-PROJECT/zones/MY-ZONE/disks/MY-DISK
+
+     --source-disk-key-file=FILE
+        Path to the customer-supplied encryption key of the source disk.
+        Required if the source disk is protected by a customer-supplied
+        encryption key.
+
+     --storage-location=LOCATION
+        Google Cloud Storage location, either regional or multi-regional, where
+        snapshot content is to be stored. If absent, a nearby regional or
+        multi-regional location is chosen automatically.
+
+     At most one of these can be specified:
+
+       --source-disk-region=SOURCE_DISK_REGION
+          Region of the source disk to operate on. Overrides the default
+          compute/region property value for this command invocation.
+
+       --source-disk-zone=SOURCE_DISK_ZONE
+          Zone of the source disk to operate on. Overrides the default
+          compute/zone property value for this command invocation.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha compute snapshots create
+
+        $ gcloud beta compute snapshots create
+

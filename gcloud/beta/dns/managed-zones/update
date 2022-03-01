@@ -1,0 +1,172 @@
+NAME
+    gcloud beta dns managed-zones update - update an existing Cloud DNS
+        managed-zone
+
+SYNOPSIS
+    gcloud beta dns managed-zones update ZONE [--async]
+        [--denial-of-existence=DENIAL_OF_EXISTENCE] [--description=DESCRIPTION]
+        [--dnssec-state=DNSSEC_STATE] [--forwarding-targets=[IP_ADDRESSES,...]]
+        [--gkeclusters=[GKECLUSTERS,...]] [--ksk-algorithm=KSK_ALGORITHM]
+        [--ksk-key-length=KSK_KEY_LENGTH] [--location=LOCATION]
+        [--[no-]log-dns-queries] [--managed-reverse-lookup]
+        [--networks=[NETWORK,...]]
+        [--private-forwarding-targets=[IP_ADDRESSES,...]]
+        [--update-labels=[KEY=VALUE,...]] [--zsk-algorithm=ZSK_ALGORITHM]
+        [--zsk-key-length=ZSK_KEY_LENGTH]
+        [--clear-labels | --remove-labels=[KEY,...]]
+        [--target-network=TARGET_NETWORK --target-project=TARGET_PROJECT]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Update an existing Cloud DNS managed-zone.
+
+EXAMPLES
+    To change the description of a managed-zone, run:
+
+        $ gcloud beta dns managed-zones update my-zone \
+            --description="Hello, world!"
+
+    To change the description of a zonal managed-zone in us-east1-a, run:
+
+        $ gcloud beta dns managed-zones update my-zone \
+            --description="Hello, world!" --location=us-east1-a
+
+POSITIONAL ARGUMENTS
+     Zone resource - The name of the managed-zone to be updated. This
+     represents a Cloud resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways. To set the project
+     attribute:
+      ◆ provide the argument zone on the command line with a fully specified
+        name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       ZONE
+          ID of the zone or fully qualified identifier for the zone. To set the
+          zone attribute:
+          ▸ provide the argument zone on the command line.
+
+FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --denial-of-existence=DENIAL_OF_EXISTENCE
+        Requires DNSSEC enabled. DENIAL_OF_EXISTENCE must be one of: nsec,
+        nsec3.
+
+     --description=DESCRIPTION
+        Short description for the managed-zone.
+
+     --dnssec-state=DNSSEC_STATE
+        The DNSSEC state for this managed zone. DNSSEC_STATE must be one of:
+
+         off
+            Disable DNSSEC for the managed zone.
+         on
+            Enable DNSSEC for the managed zone.
+         transfer
+            Enable DNSSEC and allow transferring a signed zone in or out.
+
+     --forwarding-targets=[IP_ADDRESSES,...]
+        List of IPv4 addresses of target name servers that the zone will
+        forward queries to. Ignored for public visibility. Non-RFC1918
+        addresses will forward to the target through the Internet. RFC1918
+        addresses will forward through the VPC.
+
+     --gkeclusters=[GKECLUSTERS,...]
+        List of GKE clusters that the zone should be visible in if the zone
+        visibility is [private].
+
+     --ksk-algorithm=KSK_ALGORITHM
+        String mnemonic specifying the DNSSEC algorithm of the key-signing key.
+        Requires DNSSEC enabled. KSK_ALGORITHM must be one of: ecdsap256sha256,
+        ecdsap384sha384, rsasha1, rsasha256, rsasha512.
+
+     --ksk-key-length=KSK_KEY_LENGTH
+        Length of the key-signing key in bits. Requires DNSSEC enabled.
+
+     --location=LOCATION
+        Specifies the desired service location the request is sent to. Default
+        to Cloud DNS global service.
+
+     --[no-]log-dns-queries
+        Specifies whether to enable query logging. Defaults to False. Use
+        --log-dns-queries to enable and --no-log-dns-queries to disable.
+
+     --managed-reverse-lookup
+        Specifies whether this zone is a managed reverse lookup zone, required
+        for Cloud DNS to correctly resolve Non-RFC1918 PTR records.
+
+     --networks=[NETWORK,...]
+        List of networks that the zone should be visible in if the zone
+        visibility is [private].
+
+     --private-forwarding-targets=[IP_ADDRESSES,...]
+        List of IPv4 addresses of target name servers that the zone will
+        forward queries to. Ignored for public visibility. All addresses
+        specified for this parameter will be reached through the VPC.
+
+     --update-labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to update. If a label exists, its value
+        is modified. Otherwise, a new label is created.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     --zsk-algorithm=ZSK_ALGORITHM
+        String mnemonic specifying the DNSSEC algorithm of the key-signing key.
+        Requires DNSSEC enabled. ZSK_ALGORITHM must be one of: ecdsap256sha256,
+        ecdsap384sha384, rsasha1, rsasha256, rsasha512.
+
+     --zsk-key-length=ZSK_KEY_LENGTH
+        Length of the zone-signing key in bits. Requires DNSSEC enabled.
+
+     At most one of these can be specified:
+
+       --clear-labels
+          Remove all labels. If --update-labels is also specified then
+          --clear-labels is applied first.
+
+          For example, to remove all labels:
+
+              $ gcloud beta dns managed-zones update --clear-labels
+
+          To remove all existing labels and create two new labels, foo and baz:
+
+              $ gcloud beta dns managed-zones update --clear-labels \
+                --update-labels foo=bar,baz=qux
+
+       --remove-labels=[KEY,...]
+          List of label keys to remove. If a label does not exist it is
+          silently ignored. If --update-labels is also specified then
+          --update-labels is applied first.
+
+     --target-network=TARGET_NETWORK
+        Network ID of the Google Compute Engine private network to forward
+        queries to.
+
+     --target-project=TARGET_PROJECT
+        Project ID of the Google Compute Engine private network to forward
+        queries to.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud dns managed-zones update
+
+        $ gcloud alpha dns managed-zones update
+

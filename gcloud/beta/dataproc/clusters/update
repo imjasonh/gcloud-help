@@ -1,0 +1,191 @@
+NAME
+    gcloud beta dataproc clusters update - update labels and/or the number of
+        worker nodes in a cluster
+
+SYNOPSIS
+    gcloud beta dataproc clusters update (CLUSTER : --region=REGION) [--async]
+        [--graceful-decommission-timeout=GRACEFUL_DECOMMISSION_TIMEOUT]
+        [--num-secondary-workers=NUM_SECONDARY_WORKERS]
+        [--num-workers=NUM_WORKERS] [--update-labels=[KEY=VALUE,...]]
+        [--autoscaling-policy=AUTOSCALING_POLICY : --disable-autoscaling]
+        [--clear-labels | --remove-labels=[KEY,...]]
+        [--expiration-time=EXPIRATION_TIME | --max-age=MAX_AGE | --no-max-age]
+        [--max-idle=MAX_IDLE | --no-max-idle] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Update the number of worker nodes and/or the labels in a cluster.
+
+EXAMPLES
+    To resize a cluster, run:
+
+        $ gcloud beta dataproc clusters update my_cluster \
+            --region=us-central1 --num-workers=5
+
+    To change the number preemptible workers in a cluster, run:
+
+        $ gcloud beta dataproc clusters update my_cluster \
+            --region=us-central1 --num-preemptible-workers=5
+
+    To add the label 'customer=acme' to a cluster, run:
+
+        $ gcloud beta dataproc clusters update my_cluster \
+            --region=us-central1 --update-labels=customer=acme
+
+    To update the label 'customer=ackme' to 'customer=acme', run:
+
+        $ gcloud beta dataproc clusters update my_cluster \
+            --region=us-central1 --update-labels=customer=acme
+
+    To remove the label whose key is 'customer', run:
+
+        $ gcloud beta dataproc clusters update my_cluster \
+            --region=us-central1 --remove-labels=customer
+
+POSITIONAL ARGUMENTS
+     Cluster resource - The name of the cluster to update. The arguments in
+     this group can be used to specify the attributes of this resource. (NOTE)
+     Some attributes are not given arguments in this group but can be set in
+     other ways. To set the project attribute:
+      ◆ provide the argument cluster on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       CLUSTER
+          ID of the cluster or fully qualified identifier for the cluster. To
+          set the cluster attribute:
+          ▸ provide the argument cluster on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --region=REGION
+          Dataproc region for the cluster. Each Dataproc region constitutes an
+          independent resource namespace constrained to deploying instances
+          into Compute Engine zones inside the region. Overrides the default
+          dataproc/region property value for this command invocation. To set
+          the region attribute:
+          ▸ provide the argument cluster on the command line with a fully
+            specified name;
+          ▸ provide the argument --region on the command line;
+          ▸ set the property dataproc/region.
+
+FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --graceful-decommission-timeout=GRACEFUL_DECOMMISSION_TIMEOUT
+        The graceful decommission timeout for decommissioning Node Managers in
+        the cluster, used when removing nodes. Graceful decommissioning allows
+        removing nodes from the cluster without interrupting jobs in progress.
+        Timeout specifies how long to wait for jobs in progress to finish
+        before forcefully removing nodes (and potentially interrupting jobs).
+        Timeout defaults to 0 if not set (for forceful decommission), and the
+        maximum allowed timeout is 1 day. See $ gcloud topic datetimes for
+        information on duration formats.
+
+     --num-secondary-workers=NUM_SECONDARY_WORKERS
+        The new number of secondary worker nodes in the cluster.
+
+     --num-workers=NUM_WORKERS
+        The new number of worker nodes in the cluster.
+
+     --update-labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to update. If a label exists, its value
+        is modified. Otherwise, a new label is created.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     At most one of these can be specified:
+
+       Autoscaling policy resource - The autoscaling policy to use. This
+       represents a Cloud resource. (NOTE) Some attributes are not given
+       arguments in this group but can be set in other ways. To set the project
+       attribute:
+        ▸ provide the argument --autoscaling-policy on the command line with
+          a fully specified name;
+        ▸ provide the argument --project on the command line;
+        ▸ set the property core/project. To set the region attribute:
+        ▸ provide the argument --autoscaling-policy on the command line with
+          a fully specified name;
+        ▸ provide the argument --region on the command line;
+        ▸ set the property dataproc/region.
+
+         --autoscaling-policy=AUTOSCALING_POLICY
+            ID of the autoscaling policy or fully qualified identifier for the
+            autoscaling policy. To set the autoscaling_policy attribute:
+            ▫ provide the argument --autoscaling-policy on the command line.
+
+       --disable-autoscaling
+          Disable autoscaling, if it is enabled. This is an alias for passing
+          the empty string to --autoscaling-policy'.
+
+     At most one of these can be specified:
+
+       --clear-labels
+          Remove all labels. If --update-labels is also specified then
+          --clear-labels is applied first.
+
+          For example, to remove all labels:
+
+              $ gcloud beta dataproc clusters update --clear-labels
+
+          To remove all existing labels and create two new labels, foo and baz:
+
+              $ gcloud beta dataproc clusters update --clear-labels \
+                --update-labels foo=bar,baz=qux
+
+       --remove-labels=[KEY,...]
+          List of label keys to remove. If a label does not exist it is
+          silently ignored. If --update-labels is also specified then
+          --update-labels is applied first.
+
+     At most one of these can be specified:
+
+       --expiration-time=EXPIRATION_TIME
+          The time when cluster will be auto-deleted, such as
+          "2017-08-29T18:52:51.142Z". See $ gcloud topic datetimes for
+          information on time formats.
+
+       --max-age=MAX_AGE
+          The lifespan of the cluster before it is auto-deleted, such as "2h"
+          or "1d". See $ gcloud topic datetimes for information on duration
+          formats.
+
+       --no-max-age
+          Cancels the cluster auto-deletion by maximum cluster age (configured
+          by --max-age or --expiration-time flags)
+
+     At most one of these can be specified:
+
+       --max-idle=MAX_IDLE
+          The duration before cluster is auto-deleted after last job finished,
+          such as "2h" or "1d". See $ gcloud topic datetimes for information on
+          duration formats.
+
+       --no-max-idle
+          Cancels the cluster auto-deletion by cluster idle duration
+          (configured by --max-idle flag)
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud dataproc clusters update
+
+        $ gcloud alpha dataproc clusters update
+

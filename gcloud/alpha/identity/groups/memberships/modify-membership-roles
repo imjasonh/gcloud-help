@@ -1,0 +1,69 @@
+NAME
+    gcloud alpha identity groups memberships modify-membership-roles -
+        add/remove/modify membership roles of a membership in a group
+
+SYNOPSIS
+    gcloud alpha identity groups memberships modify-membership-roles
+        --group-email=GROUP_EMAIL --member-email=MEMBER_EMAIL
+        [--update-roles-params=UPDATE_ROLES_PARAMS
+          | --add-roles=ADD_ROLES --remove-roles=[REMOVE_ROLES,...]]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Add/remove/modify membership roles OR update expiry details of
+    membership in a group.
+
+EXAMPLES
+    To add a new membership role to an existing group-member pair.
+
+        $ gcloud alpha identity groups memberships modify-membership-roles \
+            --group-email="eng-discuss@foo.com"  \
+            --member-email="user@foo.com"  \
+            --add-roles=OWNER
+
+REQUIRED FLAGS
+     --group-email=GROUP_EMAIL
+        The email address of the group that member-email belongs to.
+
+     --member-email=MEMBER_EMAIL
+        The email address of the group or user that is being updated
+
+OPTIONAL FLAGS
+     At most one of these can be specified:
+
+       --update-roles-params=UPDATE_ROLES_PARAMS
+          Resource representing the parameters to update membership roles. An
+          example would be --update-roles-params
+          MEMBER=expiry_details.expire_time.
+
+       --add-roles=ADD_ROLES
+          Membership roles to be added. Currently supported MembershipRole:
+          'MEMBER', 'OWNER', 'MANAGER'.
+
+       --remove-roles=[REMOVE_ROLES,...]
+          Membership role names to be removed. Currently supported
+          MembershipRole: 'OWNER', 'MANAGER'. MEMBER-less owner is not
+          supported so removing just MEMBER role won't be possible.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the cloudidentity/v1alpha1 API. The full documentation
+    for this API can be found at: https://cloud.google.com/identity/
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud identity groups memberships modify-membership-roles
+
+        $ gcloud beta identity groups memberships modify-membership-roles
+

@@ -1,0 +1,104 @@
+NAME
+    gcloud alpha compute public-delegated-prefixes delegated-sub-prefixes
+        create - creates a Compute Engine delegated sub prefix
+
+SYNOPSIS
+    gcloud alpha compute public-delegated-prefixes delegated-sub-prefixes
+        create NAME --public-delegated-prefix=PUBLIC_DELEGATED_PREFIX
+        [--create-addresses] [--delegatee-project=DELEGATEE_PROJECT]
+        [--description=DESCRIPTION] [--range=RANGE]
+        [--global-public-delegated-prefix
+          | --public-delegated-prefix-region=PUBLIC_DELEGATED_PREFIX_REGION]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Creates a Compute Engine delegated sub prefix.
+
+EXAMPLES
+    To create a delegated sub prefix for a global public delegated prefix:
+
+        $ gcloud alpha compute public-delegated-prefixes \
+            delegated-sub-prefixes create my-sub-prefix \
+            --range=120.120.10.128/28 --public-delegated-prefix=my-pdp \
+            --global-public-delegated-prefix
+
+    To create a delegated sub prefix for a regional public delegated prefix:
+
+        $ gcloud alpha compute public-delegated-prefixes \
+            delegated-sub-prefixes create my-sub-prefix \
+            --range=120.120.10.128/30 --create-addresses \
+            --public-delegated-prefix=my-pdp \
+            --public-delegated-prefix-region=us-east1
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the delegated sub prefix to create.
+
+REQUIRED FLAGS
+     --public-delegated-prefix=PUBLIC_DELEGATED_PREFIX
+        Name of the public delegated prefix to create the delegate sub prefix
+        for.
+
+OPTIONAL FLAGS
+     --create-addresses
+        Specify if the sub prefix is delegated to create address resources in
+        the delegatee project. Default is false.
+
+     --delegatee-project=DELEGATEE_PROJECT
+        Project to delegate the IPv4 range specified in --range to. If empty,
+        the sub-range is delegated to the same/existing project.
+
+     --description=DESCRIPTION
+        Description of the delegated sub prefix to create.
+
+     --range=RANGE
+        IPv4 range from this public delegated prefix that should be delegated,
+        in CIDR format. If not specified, the entire range ofthe public
+        advertised prefix is delegated.
+
+     At most one of these can be specified:
+
+       --global-public-delegated-prefix
+          If set, the public delegated prefix is global.
+
+       --public-delegated-prefix-region=PUBLIC_DELEGATED_PREFIX_REGION
+          Region of the public delegated prefix to create the delegate sub
+          prefix for. If not specified, you might be prompted to select a
+          region (interactive mode only).
+
+          To avoid prompting when this flag is omitted, you can set the
+          compute/region property:
+
+              $ gcloud config set compute/region REGION
+
+          A list of regions can be fetched by running:
+
+              $ gcloud compute regions list
+
+          To unset the property, run:
+
+              $ gcloud config unset compute/region
+
+          Alternatively, the region can be stored in the environment variable
+          CLOUDSDK_COMPUTE_REGION.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud compute public-delegated-prefixes delegated-sub-prefixes \
+            create
+
+        $ gcloud beta compute public-delegated-prefixes \
+            delegated-sub-prefixes create
+

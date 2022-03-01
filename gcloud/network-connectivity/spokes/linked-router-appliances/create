@@ -1,0 +1,104 @@
+NAME
+    gcloud network-connectivity spokes linked-router-appliances create - create
+        a new Router appliance spoke
+
+SYNOPSIS
+    gcloud network-connectivity spokes linked-router-appliances create
+        (SPOKE : --region=REGION) --hub=HUB --router-appliance=ROUTER_APPLIANCE
+        [--async] [--description=DESCRIPTION] [--labels=[KEY=VALUE,...]]
+        [--site-to-site-data-transfer] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Create a new Router appliance spoke
+    (https://cloud.google.com/network-connectivity/docs/network-connectivity-center/how-to/working-with-hubs-spokes#create-ra-spoke)
+    with the specified properties.
+
+EXAMPLES
+    To create a spoke in region us-central1 that uses data transfer and has two
+    router appliance instances, run:
+
+        $ gcloud network-connectivity spokes linked-router-appliances \
+            create my-spoke \
+            --hub="https://www.googleapis.com/networkconnectivity/v1/project\
+        s/my-project/locations/global/hubs/my-hub" --region=us-central1 \
+            --router-appliance=instance=https://www.googleapis.com/compute/\
+        v1/projects/my-project/zones/us-central1-a/instances/vm1,\
+        ip=10.10.0.1 \
+            --router-appliance=instance=https://www.googleapis.com/compute/\
+        v1/projects/my-project/zones/us-central1-a/instances/vm2,\
+        ip=10.10.0.2 --site-to-site-data-transfer
+
+POSITIONAL ARGUMENTS
+     Spoke resource - Name of the spoke to be created. The arguments in this
+     group can be used to specify the attributes of this resource. (NOTE) Some
+     attributes are not given arguments in this group but can be set in other
+     ways. To set the project attribute:
+      ◆ provide the argument spoke on the command line with a fully specified
+        name;
+      ◆ set the property core/project;
+      ◆ provide the argument --project on the command line.
+
+     This must be specified.
+
+       SPOKE
+          ID of the spoke or fully qualified identifier for the spoke. To set
+          the spoke attribute:
+          ▸ provide the argument spoke on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --region=REGION
+          The location Id.
+
+          To set the region attribute:
+          ▸ provide the argument spoke on the command line with a fully
+            specified name;
+          ▸ provide the argument --region on the command line.
+
+REQUIRED FLAGS
+     --hub=HUB
+        Hub that the spoke will attach to. The hub must already exist.
+
+     --router-appliance=ROUTER_APPLIANCE
+        Router appliance instance(s) to which this spoke links.
+
+        For example, use --router-appliance=instance=ins_uri_1,ip=10.10.0.1 to
+        add a single router appliance instance, or
+        --router-appliance=instance=ins_uri_1,ip=10.10.0.1
+        --router-appliance=instance=ins_uri_2,ip=10.10.0.2 ... to add multiple
+        instances.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --description=DESCRIPTION
+        Description of the spoke to be created.
+
+     --labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     --site-to-site-data-transfer
+        Whether to enable site-to-site data transfer for this spoke. Data
+        transfer is available only in supported locations
+        (https://cloud.google.com/network-connectivity/docs/network-connectivity-center/concepts/locations).
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the networkconnectivity/v1 API. The full documentation
+    for this API can be found at:
+    https://cloud.google.com/network-connectivity/docs/reference/networkconnectivity/rest

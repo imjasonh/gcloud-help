@@ -1,0 +1,111 @@
+NAME
+    gcloud alpha artifacts repositories update - update an Artifact Registry
+        repository
+
+SYNOPSIS
+    gcloud alpha artifacts repositories update
+        (REPOSITORY : --location=LOCATION) [--description=DESCRIPTION]
+        [--update-labels=[KEY=VALUE,...]]
+        [--clear-labels | --remove-labels=[KEY,...]] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Update the description or labels for an Artifact Registry
+    repository.
+
+    This command can fail for the following reasons:
+      ▪ A repository with this name does not exist.
+      ▪ The active account does not have permission to update repositories.
+
+EXAMPLES
+    To update a repository with the name my-repo under the current project,
+    run:
+
+        $ gcloud alpha artifacts repositories update my-repo \
+            --description="New description"
+
+POSITIONAL ARGUMENTS
+     Repository resource - The Artifact Registry repository to update. The
+     arguments in this group can be used to specify the attributes of this
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways. To set the project attribute:
+      ◆ provide the argument repository on the command line with a fully
+        specified name;
+      ◆ set the property core/project;
+      ◆ provide the argument --project on the command line.
+
+     This must be specified.
+
+       REPOSITORY
+          ID of the repository or fully qualified identifier for the
+          repository. To set the repository attribute:
+          ▸ provide the argument repository on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --location=LOCATION
+          Location of the repository. Overrides the default artifacts/location
+          property value for this command invocation. To configure the default
+          location, use the command: gcloud config set artifacts/location.
+
+          To set the location attribute:
+          ▸ provide the argument repository on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property artifacts/location.
+
+FLAGS
+     --description=DESCRIPTION
+        Description for the repository.
+
+     --update-labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to update. If a label exists, its value
+        is modified. Otherwise, a new label is created.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     At most one of these can be specified:
+
+       --clear-labels
+          Remove all labels. If --update-labels is also specified then
+          --clear-labels is applied first.
+
+          For example, to remove all labels:
+
+              $ gcloud alpha artifacts repositories update --clear-labels
+
+          To remove all existing labels and create two new labels, foo and baz:
+
+              $ gcloud alpha artifacts repositories update --clear-labels \
+                --update-labels foo=bar,baz=qux
+
+       --remove-labels=[KEY,...]
+          List of label keys to remove. If a label does not exist it is
+          silently ignored. If --update-labels is also specified then
+          --update-labels is applied first.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the artifactregistry/v1beta1 API. The full documentation
+    for this API can be found at: https://cloud.google.com/artifacts/docs/
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud artifacts repositories update
+
+        $ gcloud beta artifacts repositories update
+

@@ -1,0 +1,69 @@
+NAME
+    gcloud beta compute target-tcp-proxies create - create a target TCP proxy
+
+SYNOPSIS
+    gcloud beta compute target-tcp-proxies create NAME
+        --backend-service=BACKEND_SERVICE [--description=DESCRIPTION]
+        [--[no-]proxy-bind] [--proxy-header=PROXY_HEADER; default="NONE"]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) gcloud beta compute target-tcp-proxies create is used to create
+    target TCP proxies. A target TCP proxy is referenced by one or more
+    forwarding rules which define which packets the proxy is responsible for
+    routing. The target TCP proxy points to a backend service which handle the
+    actual requests.
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the target TCP proxy to create.
+
+REQUIRED FLAGS
+     --backend-service=BACKEND_SERVICE
+        A backend service that will be used for connections to the target TCP
+        proxy.
+
+OPTIONAL FLAGS
+     --description=DESCRIPTION
+        An optional, textual description for the target TCP proxy.
+
+     --[no-]proxy-bind
+        This field only applies when the forwarding rule that references this
+        target proxy has a --load-balancing-scheme set to
+        INTERNAL_SELF_MANAGED.
+
+        When this field is set to true, Envoy proxies set up inbound traffic
+        interception and bind to the IP address and port specified in the
+        forwarding rule. This is generally useful when using Traffic Director
+        to configure Envoy as a gateway or middle proxy (in other words, not a
+        sidecar proxy). The Envoy proxy listens for inbound requests and
+        handles requests when it receives them.
+
+        Use --proxy-bind to enable and --no-proxy-bind to disable.
+
+     --proxy-header=PROXY_HEADER; default="NONE"
+        The type of proxy protocol header to be sent to the backend.
+        PROXY_HEADER must be one of:
+
+         NONE
+            No proxy header is added.
+         PROXY_V1
+            Enables PROXY protocol (version 1) for passing client connection
+            information.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud compute target-tcp-proxies create
+
+        $ gcloud alpha compute target-tcp-proxies create
+

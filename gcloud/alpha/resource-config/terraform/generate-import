@@ -1,0 +1,71 @@
+NAME
+    gcloud alpha resource-config terraform generate-import - generate Terraform
+        import script for exported resources
+
+SYNOPSIS
+    gcloud alpha resource-config terraform generate-import INPUT_PATH
+        [--output-dir=OUTPUT_DIR | --output-module-file=OUTPUT_MODULE_FILE
+          --output-script-file=OUTPUT_SCRIPT_FILE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Generate Terraform import script for exported resources.
+
+EXAMPLES
+    To generate an import script named import.sh and a module file named
+    modules.tf based on exported files in my-dir/, run:
+
+        $ gcloud alpha resource-config terraform generate-import my-dir/ \
+            --output-script-file=import.sh --output-module-file=modules.tf
+
+    To generate an import script with the default
+    terraform_import_YYYYMMDD-HH-MM-SS.cmd and gcloud-export-modules.tf names
+    on Windows, based on exported files in my-dir/, run:
+
+        $ gcloud alpha resource-config terraform generate-import my-dir
+
+POSITIONAL ARGUMENTS
+     INPUT_PATH
+        Path to a Terrafrom formatted (.tf) resource file or directory of files
+        exported via. gcloud alpha resource-config bulk-export or resource
+        surface specific config export command.
+
+OUTPUT DESTINATION FLAGS
+     Specify the destination of the generated script.
+
+     At most one of these can be specified:
+
+       --output-dir=OUTPUT_DIR
+          Specify the output directory only for the generated import script. If
+          specified directory does not exists it will be created. Generated
+          script will have a default name of the form
+          terraform_import_YYYYMMDD-HH-MM-SS.sh|cmd
+
+       Specify the exact filenames for the output import script and module
+       files.
+
+         --output-module-file=OUTPUT_MODULE_FILE
+            Specify the full path path for generated terraform module file. If
+            not set, a default filename of gcloud-export-modules.tf will be
+            generated.
+
+         --output-script-file=OUTPUT_SCRIPT_FILE
+            Specify the full path path for generated import script. If not set,
+            a default filename of the form
+            terraform_import_YYYYMMDD-HH-MM-SS.sh|cmd will be generated.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. This variant is also available:
+
+        $ gcloud beta resource-config terraform generate-import
+

@@ -1,0 +1,94 @@
+NAME
+    gcloud beta auth print-identity-token - print an identity token for the
+        specified account
+
+SYNOPSIS
+    gcloud beta auth print-identity-token [ACCOUNT] [--audiences=AUDIENCES]
+        [--include-email]
+        [--include-license --token-format=TOKEN_FORMAT; default="standard"]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Print an identity token for the specified account.
+
+EXAMPLES
+    To print identity tokens:
+
+        $ gcloud beta auth print-identity-token
+
+    To print identity token for account 'foo@example.com' whose audience is
+    'https://service-hash-uc.a.run.app', run:
+
+        $ gcloud beta auth print-identity-token foo@example.com \
+            --audiences="https://service-hash-uc.a.run.app"
+
+    To print identity token for an impersonated service account
+    'my-account@example.iam.gserviceaccount.com' whose audience is
+    'https://service-hash-uc.a.run.app', run:
+
+        $ gcloud beta auth print-identity-token \
+            --impersonate-service-account="my-account@example.iam.gserviceac\
+        count.com" --audiences="https://service-hash-uc.a.run.app"
+
+    To print identity token of a Compute Engine instance, which includes
+    project and instance details as well as license codes for images associated
+    with the instance, run:
+
+        $ gcloud beta auth print-identity-token --token-format=full \
+            --include-license
+
+    To print identity token for an impersonated service account
+    'my-account@example.iam.gserviceaccount.com', which includes the email
+    address of the service account, run:
+
+        $ gcloud beta auth print-identity-token \
+            --impersonate-service-account="my-account@example.iam.gserviceac\
+        count.com" --include-email
+
+POSITIONAL ARGUMENTS
+     [ACCOUNT]
+        Account to print the identity token for. If not specified, the current
+        active account will be used.
+
+FLAGS
+     --audiences=AUDIENCES
+        Intended recipient of the token. Currently, only one audience can be
+        specified.
+
+     --include-email
+        Specify whether or not service account email is included in the
+        identity token. If specified, the token will contain 'email' and
+        'email_verified' claims. This flag should only be used for impersonate
+        service account.
+
+     Parameters for Google Compute Engine instance identity tokens.
+
+       --include-license
+          Specify whether or not license codes for images associated with this
+          instance are included in the identity token payload. Default is
+          False. This flag does not have effect unless --token-format=full.
+
+       --token-format=TOKEN_FORMAT; default="standard"
+          Specify whether or not the project and instance details are included
+          in the identity token payload. This flag only applies to Google
+          Compute Engine instance identity tokens. See
+          https://cloud.google.com/compute/docs/instances/verifying-instance-identity#token_format
+          for more details on token format. TOKEN_FORMAT must be one of:
+          standard, full.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud auth print-identity-token
+
+        $ gcloud alpha auth print-identity-token
+

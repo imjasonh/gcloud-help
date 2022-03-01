@@ -1,0 +1,98 @@
+NAME
+    gcloud beta datastore export - export Cloud Datastore entities to Google
+        Cloud Storage
+
+SYNOPSIS
+    gcloud beta datastore export OUTPUT_URL_PREFIX [--async]
+        [--kinds=[KIND,...]] [--namespaces=[NAMESPACE,...]]
+        [--operation-labels=[OPERATION_LABEL,...]] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Export a copy of all or a subset of entities from Google Cloud
+    Datastore to another storage system, such as Google Cloud Storage. Recent
+    updates to entities may not be reflected in the export. The export occurs
+    in the background and its progress can be monitored and managed via the
+    operation commands. The output of an export may only be used once the
+    operation has completed. If an export operation is cancelled before
+    completion then it may leave partial data behind in Google Cloud Storage.
+
+EXAMPLES
+    To export all kinds in the exampleNs namespace in the exampleProject
+    project to the exampleBucket, run:
+
+        $ gcloud beta datastore export gs://exampleBucket \
+            --namespaces='exampleNs' --project='exampleProject'
+
+    To export the exampleKind and otherKind kinds in the exampleNs namespace in
+    the exampleProject project to the exampleBucket, run:
+
+        $ gcloud beta datastore export gs://exampleBucket \
+            --kinds='exampleKind','otherKind' --namespaces='exampleNs' \
+            --project='exampleProject'
+
+    To export all namespaces and kinds in the currently set project to the
+    exampleBucket without waiting for the operation to complete, run:
+
+        $ gcloud beta datastore export gs://exampleBucket --async
+
+    To export the exampleKind in all namespaces in the currently set project to
+    the exampleBucket, and output the result in JSON, run:
+
+        $ gcloud beta datastore export gs://exampleBucket \
+            --kinds='exampleKind' --format=json
+
+POSITIONAL ARGUMENTS
+     OUTPUT_URL_PREFIX
+        Location for the export metadata and data files. Must be a valid Google
+        Cloud Storage bucket with an optional path prefix. For example:
+
+            $ gcloud beta datastore export gs://mybucket/my/path
+
+        Will place the export in the mybucket bucket in objects prefixed with
+        my/path.
+
+FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --kinds=[KIND,...]
+        A list specifying what kinds will be included in the operation. When
+        omitted, all Kinds are included. For example, to operate on only the
+        'Customer' and 'Order' Kinds:
+
+            $ gcloud beta datastore export --kinds='Customer','Order'
+
+     --namespaces=[NAMESPACE,...]
+        A list specifying what namespaces will be included in the operation.
+        When omitted, all namespaces are included in the operation, including
+        the default namespace. To specify that only the default namespace
+        should be operated on, use the special symbol '(default)'. For example,
+        to operate on entities from both the 'customers' and default
+        namespaces:
+
+            $ gcloud beta datastore export --namespaces='(default)','customers'
+
+     --operation-labels=[OPERATION_LABEL,...]
+        A string:string map of custom labels to associate with this operation.
+        For example:
+
+            $ gcloud beta datastore export \
+                --operation-labels=comment='customer orders','sales rep'=pending
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud datastore export
+
+        $ gcloud alpha datastore export
+

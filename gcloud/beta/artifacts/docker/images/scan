@@ -1,0 +1,95 @@
+NAME
+    gcloud beta artifacts docker images scan - perform a vulnerability scan on
+        a container image
+
+SYNOPSIS
+    gcloud beta artifacts docker images scan RESOURCE_URI
+        [--additional-package-types=[ADDITIONAL_PACKAGE_TYPES,...]] [--async]
+        [--location=LOCATION; default="us"] [--remote] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) You can scan a container image in a Google Cloud registry (Artifact
+    Registry or Container Registry), or a local container image.
+
+    Reference an image by tag or digest using any of the formats:
+
+        Artifact Registry:
+          LOCATION-docker.pkg.dev/PROJECT-ID/REPOSITORY-ID/IMAGE[:tag]
+          LOCATION-docker.pkg.dev/PROJECT-ID/REPOSITORY-ID/IMAGE@sha256:digest
+
+        Container Registry:
+          [LOCATION.]gcr.io/PROJECT-ID/REPOSITORY-ID/IMAGE[:tag]
+          [LOCATION.]gcr.io/PROJECT-ID/REPOSITORY-ID/IMAGE@sha256:digest
+
+        Local:
+          IMAGE[:tag]
+
+EXAMPLES
+    Start a scan of a container image stored in Artifact Registry:
+
+        $ gcloud beta artifacts docker images scan \
+          us-west1-docker.pkg.dev/my-project/my-repository/\
+        busy-box@sha256:abcxyz --remote
+
+    Start a scan of a container image stored in the Container Registry, and
+    perform the analysis in Europe:
+
+        $ gcloud beta artifacts docker images scan \
+          eu.gcr.io/my-project/my-repository/my-image:latest --remote \
+          --location=europe
+
+    Start a scan of a container image stored locally, and perform the analysis
+    in Asia:
+
+        $ gcloud beta artifacts docker images scan ubuntu:latest \
+          --location=asia
+
+POSITIONAL ARGUMENTS
+     RESOURCE_URI
+        A container image in a Google Cloud registry (Artifact Registry or
+        Container Registry), or a local container image.
+
+FLAGS
+     --additional-package-types=[ADDITIONAL_PACKAGE_TYPES,...]
+        A comma-separated list of package types to scan in addition to OS
+        packages. ADDITIONAL_PACKAGE_TYPES must be one of:
+
+         GO
+            Go standard library and third party packages.
+         MAVEN
+            Maven package.
+
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --location=LOCATION; default="us"
+        The API location in which to perform package analysis. Consider
+        choosing a location closest to where you are located. Proximity to the
+        container image does not affect response time. LOCATION must be one of:
+
+         asia
+            Perform analysis in Asia
+         europe
+            Perform analysis in Europe
+         us
+            Perform analysis in the US
+
+     --remote
+        Whether the container image is located remotely or on your local
+        machine.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud artifacts docker images scan
+

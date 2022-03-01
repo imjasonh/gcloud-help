@@ -1,0 +1,185 @@
+NAME
+    gcloud beta pubsub subscriptions update - updates an existing Cloud Pub/Sub
+        subscription
+
+SYNOPSIS
+    gcloud beta pubsub subscriptions update SUBSCRIPTION
+        [--ack-deadline=ACK_DEADLINE] [--expiration-period=EXPIRATION_PERIOD]
+        [--message-retention-duration=MESSAGE_RETENTION_DURATION]
+        [--push-auth-service-account=SERVICE_ACCOUNT_EMAIL]
+        [--push-auth-token-audience=OPTIONAL_AUDIENCE_OVERRIDE]
+        [--push-endpoint=PUSH_ENDPOINT] [--retain-acked-messages]
+        [--update-labels=[KEY=VALUE,...]]
+        [--clear-dead-letter-policy
+          | --max-delivery-attempts=MAX_DELIVERY_ATTEMPTS
+          [--dead-letter-topic=DEAD_LETTER_TOPIC
+          : --dead-letter-topic-project=DEAD_LETTER_TOPIC_PROJECT]]
+        [--clear-labels | --remove-labels=[KEY,...]]
+        [--clear-retry-policy | --max-retry-delay=MAX_RETRY_DELAY
+          --min-retry-delay=MIN_RETRY_DELAY] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Updates an existing Cloud Pub/Sub subscription.
+
+POSITIONAL ARGUMENTS
+     Subscription resource - Name of the subscription to update. This
+     represents a Cloud resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways. To set the project
+     attribute:
+      ◆ provide the argument subscription on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       SUBSCRIPTION
+          ID of the subscription or fully qualified identifier for the
+          subscription. To set the subscription attribute:
+          ▸ provide the argument subscription on the command line.
+
+FLAGS
+     --ack-deadline=ACK_DEADLINE
+        The number of seconds the system will wait for a subscriber to
+        acknowledge receiving a message before re-attempting delivery.
+
+     --expiration-period=EXPIRATION_PERIOD
+        The subscription will expire if it is inactive for the given period.
+        Valid values are strings of the form INTEGER[UNIT], where UNIT is one
+        of "s", "m", "h", and "d" for seconds, minutes, hours, and days,
+        respectively. If the unit is omitted, seconds is assumed. This flag
+        additionally accepts the special value "never" to indicate that the
+        subscription will never expire.
+
+     --message-retention-duration=MESSAGE_RETENTION_DURATION
+        How long to retain unacknowledged messages in the subscription's
+        backlog, from the moment a message is published. If
+        --retain-acked-messages is true, this also configures the retention of
+        acknowledged messages. Specify "default" to use the default value.
+        Valid values are strings of the form INTEGER[UNIT], where UNIT is one
+        of "s", "m", "h", and "d" for seconds, minutes, hours, and days,
+        respectively. If the unit is omitted, seconds is assumed.
+
+     --push-auth-service-account=SERVICE_ACCOUNT_EMAIL
+        Service account email used as the identity for the generated Open ID
+        Connect token for authenticated push.
+
+     --push-auth-token-audience=OPTIONAL_AUDIENCE_OVERRIDE
+        Audience used in the generated Open ID Connect token for authenticated
+        push. If not specified, it will be set to the push-endpoint.
+
+     --push-endpoint=PUSH_ENDPOINT
+        A URL to use as the endpoint for this subscription. This will also
+        automatically set the subscription type to PUSH.
+
+     --retain-acked-messages
+        Whether or not to retain acknowledged messages. If true, messages are
+        not expunged from the subscription's backlog until they fall out of the
+        --message-retention-duration window. Acknowledged messages are not
+        retained by default.
+
+     --update-labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to update. If a label exists, its value
+        is modified. Otherwise, a new label is created.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     At most one of these can be specified:
+
+       --clear-dead-letter-policy
+          If set, clear the dead letter policy from the subscription.
+
+       Dead Letter Queue Options. The Cloud Pub/Sub service account associated
+       with the enclosing subscription's parent project (i.e.,
+       service-{project_number}@gcp-sa-pubsub.iam.gserviceaccount.com) must
+       have permission to Publish() to this topic and Acknowledge() messages on
+       this subscription.
+
+         --max-delivery-attempts=MAX_DELIVERY_ATTEMPTS
+            Maximum number of delivery attempts for any message. The value must
+            be between 5 and 100. Defaults to 5. --dead-letter-topic must also
+            be specified.
+
+         Dead letter topic resource - Name of the topic to publish dead letter
+         messages to. The arguments in this group can be used to specify the
+         attributes of this resource.
+
+           --dead-letter-topic=DEAD_LETTER_TOPIC
+              ID of the dead-letter-topic or fully qualified identifier for the
+              dead-letter-topic. To set the topic attribute:
+              ◇ provide the argument --dead-letter-topic on the command line.
+
+              This flag must be specified if any of the other arguments in this
+              group are specified.
+
+           --dead-letter-topic-project=DEAD_LETTER_TOPIC_PROJECT
+              Project ID of the Google Cloud project for the dead-letter-topic.
+              To set the project attribute:
+              ◇ provide the argument --dead-letter-topic on the command line
+                with a fully specified name;
+              ◇ provide the argument --dead-letter-topic-project on the
+                command line;
+              ◇ provide the argument --project on the command line;
+              ◇ set the property core/project.
+
+     At most one of these can be specified:
+
+       --clear-labels
+          Remove all labels. If --update-labels is also specified then
+          --clear-labels is applied first.
+
+          For example, to remove all labels:
+
+              $ gcloud beta pubsub subscriptions update --clear-labels
+
+          To remove all existing labels and create two new labels, foo and baz:
+
+              $ gcloud beta pubsub subscriptions update --clear-labels \
+                --update-labels foo=bar,baz=qux
+
+       --remove-labels=[KEY,...]
+          List of label keys to remove. If a label does not exist it is
+          silently ignored. If --update-labels is also specified then
+          --update-labels is applied first.
+
+     At most one of these can be specified:
+
+       --clear-retry-policy
+          If set, clear the retry policy from the subscription.
+
+       Retry Policy Options. Retry policy specifies how Cloud Pub/Sub retries
+       message delivery for this subscription.
+
+         --max-retry-delay=MAX_RETRY_DELAY
+            The maximum delay between consecutive deliveries of a given
+            message. Value should be between 0 and 600 seconds. Defaults to 10
+            seconds. Valid values are strings of the form INTEGER[UNIT], where
+            UNIT is one of "s", "m", "h", and "d" for seconds, minutes, hours,
+            and days, respectively. If the unit is omitted, seconds is assumed.
+
+         --min-retry-delay=MIN_RETRY_DELAY
+            The minimum delay between consecutive deliveries of a given
+            message. Value should be between 0 and 600 seconds. Defaults to 10
+            seconds. Valid values are strings of the form INTEGER[UNIT], where
+            UNIT is one of "s", "m", "h", and "d" for seconds, minutes, hours,
+            and days, respectively. If the unit is omitted, seconds is assumed.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud pubsub subscriptions update
+
+        $ gcloud alpha pubsub subscriptions update
+

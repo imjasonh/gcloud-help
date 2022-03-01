@@ -1,0 +1,137 @@
+NAME
+    gcloud beta compute disks update - update a Compute Engine persistent disk
+
+SYNOPSIS
+    gcloud beta compute disks update DISK_NAME
+        [--update-labels=[KEY=VALUE,...]]
+        [--clear-labels | --remove-labels=[KEY,...]]
+        [--clear-user-licenses | --update-user-licenses=[LICENSE,...]]
+        [--region=REGION | --zone=ZONE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) gcloud beta compute disks update updates a Compute Engine persistent
+    disk.
+
+EXAMPLES
+    To update labels 'k0' and 'k1' and remove label 'k3' of a disk, run:
+
+        $ gcloud beta compute disks update example-disk \
+          --zone=us-central1-a --update-labels=k0=value1,k1=value2 \
+          --remove-labels=k3
+
+        `_k0_` and `_k1_` are added as new labels if not already present.
+
+    Labels can be used to identify the disk. To list disks with the 'k1:value2'
+    label, run:
+
+        $ gcloud beta compute disks list --filter='labels.k1:value2'
+
+    To list only the labels when describing a resource, use --format to filter
+    the result:
+
+        $ gcloud beta compute disks describe example-disk \
+          --format="default(labels)"
+
+POSITIONAL ARGUMENTS
+     DISK_NAME
+        Name of the disk to update.
+
+FLAGS
+     --update-labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to update. If a label exists, its value
+        is modified. Otherwise, a new label is created.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     At most one of these can be specified:
+
+       --clear-labels
+          Remove all labels. If --update-labels is also specified then
+          --clear-labels is applied first.
+
+          For example, to remove all labels:
+
+              $ gcloud beta compute disks update --clear-labels
+
+          To remove all existing labels and create two new labels, foo and baz:
+
+              $ gcloud beta compute disks update --clear-labels \
+                --update-labels foo=bar,baz=qux
+
+       --remove-labels=[KEY,...]
+          List of label keys to remove. If a label does not exist it is
+          silently ignored. If --update-labels is also specified then
+          --update-labels is applied first.
+
+     At most one of these can be specified:
+
+       --clear-user-licenses
+          Remove all existing user licenses on a disk.
+
+       --update-user-licenses=[LICENSE,...]
+          List of user licenses to be updated on a disk. These user licenses
+          will replace all existing user licenses. If this flag is not
+          provided, all existing user licenses will remain unchanged.
+
+     At most one of these can be specified:
+
+       --region=REGION
+          Region of the disk to update. If not specified, you might be prompted
+          to select a region (interactive mode only).
+
+          To avoid prompting when this flag is omitted, you can set the
+          compute/region property:
+
+              $ gcloud config set compute/region REGION
+
+          A list of regions can be fetched by running:
+
+              $ gcloud compute regions list
+
+          To unset the property, run:
+
+              $ gcloud config unset compute/region
+
+          Alternatively, the region can be stored in the environment variable
+          CLOUDSDK_COMPUTE_REGION.
+
+       --zone=ZONE
+          Zone of the disk to update. If not specified and the compute/zone
+          property isn't set, you might be prompted to select a zone
+          (interactive mode only).
+
+          To avoid prompting when this flag is omitted, you can set the
+          compute/zone property:
+
+              $ gcloud config set compute/zone ZONE
+
+          A list of zones can be fetched by running:
+
+              $ gcloud compute zones list
+
+          To unset the property, run:
+
+              $ gcloud config unset compute/zone
+
+          Alternatively, the zone can be stored in the environment variable
+          CLOUDSDK_COMPUTE_ZONE.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud compute disks update
+
+        $ gcloud alpha compute disks update
+

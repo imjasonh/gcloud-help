@@ -1,0 +1,100 @@
+NAME
+    gcloud beta container images list-tags - list tags and digests for the
+        specified image
+
+SYNOPSIS
+    gcloud beta container images list-tags IMAGE_NAME
+        [--occurrence-filter=OCCURRENCE_FILTER;
+          default='kind = "BUILD" OR kind = "IMAGE" OR kind = "DISCOVERY"']
+        [--no-show-occurrences]
+        [--show-occurrences-from=SHOW_OCCURRENCES_FROM; default=10]
+        [--filter=EXPRESSION] [--limit=LIMIT] [--page-size=PAGE_SIZE]
+        [--sort-by=[FIELD,...]; default="~timestamp"] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) The container images list-tags command of gcloud lists metadata
+    about tags and digests for the specified container image. Images must be
+    hosted by the Google Container Registry.
+
+EXAMPLES
+    List the tags in a specified image:
+
+        $ gcloud beta container images list-tags gcr.io/myproject/myimage
+
+    To receive the full, JSON-formatted output (with untruncated digests):
+
+        $ gcloud beta container images list-tags gcr.io/myproject/myimage \
+            --format=json
+
+    To list digests without corresponding tags:
+
+        $ gcloud beta container images list-tags gcr.io/myproject/myimage \
+            --filter="NOT tags:*"
+
+    To list images that have a tag with the value '30e5504145':
+
+        $ gcloud container images list-tags --filter="'tags:30e5504145'"
+
+    The last example encloses the filter expression in single quotes because
+    the value '30e5504145' could be interpreted as a number in scientific
+    notation.
+
+POSITIONAL ARGUMENTS
+     IMAGE_NAME
+        The name of the image to list tags for. The name format should be
+        *.gcr.io/PROJECT_ID/IMAGE_PATH.
+
+FLAGS
+     --occurrence-filter=OCCURRENCE_FILTER; default='kind = "BUILD" OR kind = "IMAGE" OR kind = "DISCOVERY"'
+        A filter for the Occurrences which will be summarized.
+
+     --show-occurrences
+        Whether to show summaries of the various Occurrence types. Enabled by
+        default, use --no-show-occurrences to disable.
+
+     --show-occurrences-from=SHOW_OCCURRENCES_FROM; default=10
+        How many of the most recent images for which to summarize Occurences.
+
+LIST COMMAND FLAGS
+     --filter=EXPRESSION
+        Apply a Boolean filter EXPRESSION to each resource item to be listed.
+        If the expression evaluates True, then that item is listed. For more
+        details and examples of filter expressions, run $ gcloud topic filters.
+        This flag interacts with other flags that are applied in this order:
+        --flatten, --sort-by, --filter, --limit.
+
+     --limit=LIMIT
+        Maximum number of resources to list. The default is unlimited. This
+        flag interacts with other flags that are applied in this order:
+        --flatten, --sort-by, --filter, --limit.
+
+     --page-size=PAGE_SIZE
+        Some services group resource list output into pages. This flag
+        specifies the maximum number of resources per page. The default is
+        determined by the service if it supports paging, otherwise it is
+        unlimited (no paging). Paging may be applied before or after --filter
+        and --limit depending on the service.
+
+     --sort-by=[FIELD,...]; default="~timestamp"
+        Comma-separated list of resource field key names to sort by. The
+        default order is ascending. Prefix a field with ``~'' for descending
+        order on that field. This flag interacts with other flags that are
+        applied in this order: --flatten, --sort-by, --filter, --limit. The
+        default is ~timestamp.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud container images list-tags
+
+        $ gcloud alpha container images list-tags
+

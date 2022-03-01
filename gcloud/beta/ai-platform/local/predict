@@ -1,0 +1,89 @@
+NAME
+    gcloud beta ai-platform local predict - run prediction locally
+
+SYNOPSIS
+    gcloud beta ai-platform local predict --model-dir=MODEL_DIR
+        (--json-instances=JSON_INSTANCES | --json-request=JSON_REQUEST
+          | --text-instances=TEXT_INSTANCES) [--framework=FRAMEWORK]
+        [--signature-name=SIGNATURE_NAME] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) gcloud beta ai-platform local predict performs prediction locally
+    with the given instances. It requires the TensorFlow SDK
+    (https://www.tensorflow.org/install) be installed locally. The output
+    format mirrors gcloud ai-platform predict (online prediction).
+
+    You cannot use this command with custom prediction routines.
+
+REQUIRED FLAGS
+     --model-dir=MODEL_DIR
+        Path to the model.
+
+     Exactly one of these must be specified:
+
+       --json-instances=JSON_INSTANCES
+          Path to a local file from which instances are read. Instances are in
+          JSON format; newline delimited.
+
+          An example of the JSON instances file:
+
+              {"images": [0.0, ..., 0.1], "key": 3}
+              {"images": [0.0, ..., 0.1], "key": 2}
+              ...
+
+          This flag accepts "-" for stdin.
+
+       --json-request=JSON_REQUEST
+          Path to a local file containing the body of JSON request.
+
+          An example of a JSON request:
+
+              {
+                "instances": [
+                  {"x": [1, 2], "y": [3, 4]},
+                  {"x": [-1, -2], "y": [-3, -4]}
+                ]
+              }
+
+          This flag accepts "-" for stdin.
+
+       --text-instances=TEXT_INSTANCES
+          Path to a local file from which instances are read. Instances are in
+          UTF-8 encoded text format; newline delimited.
+
+          An example of the text instances file:
+
+              107,4.9,2.5,4.5,1.7
+              100,5.7,2.8,4.1,1.3
+              ...
+
+          This flag accepts "-" for stdin.
+
+OPTIONAL FLAGS
+     --framework=FRAMEWORK
+        ML framework used to train this version of the model. If not specified,
+        defaults to 'tensorflow'. FRAMEWORK must be one of: scikit-learn,
+        tensorflow, xgboost.
+
+     --signature-name=SIGNATURE_NAME
+        Name of the signature defined in the SavedModel to use for this job.
+        Defaults to DEFAULT_SERVING_SIGNATURE_DEF_KEY in
+        https://www.tensorflow.org/api_docs/python/tf/compat/v1/saved_model/signature_constants,
+        which is "serving_default". Only applies to TensorFlow models.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud ai-platform local predict
+
+        $ gcloud alpha ai-platform local predict
+

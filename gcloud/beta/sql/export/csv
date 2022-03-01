@@ -1,0 +1,90 @@
+NAME
+    gcloud beta sql export csv - exports data from a Cloud SQL instance to a
+        CSV file
+
+SYNOPSIS
+    gcloud beta sql export csv INSTANCE URI --query=QUERY [--async]
+        [--database=DATABASE,[DATABASE,...], -d DATABASE,[DATABASE,...]]
+        [--escape=ESCAPE] [--fields-terminated-by=FIELDS_TERMINATED_BY]
+        [--lines-terminated-by=LINES_TERMINATED_BY] [--offload] [--quote=QUOTE]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Exports data from a Cloud SQL instance to a Google Cloud Storage
+    bucket as a plain text file with one line per row and comma-separated
+    fields.
+
+POSITIONAL ARGUMENTS
+     INSTANCE
+        Cloud SQL instance ID.
+
+     URI
+        The path to the file in Google Cloud Storage where the export will be
+        stored. The URI is in the form gs://bucketName/fileName. If the file
+        already exists, the operation fails. If the filename ends with .gz, the
+        contents are compressed.
+
+REQUIRED FLAGS
+     --query=QUERY
+        A SQL SELECT query (e.g., SELECT * FROM table) that specifies the data
+        to export.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --database=DATABASE,[DATABASE,...], -d DATABASE,[DATABASE,...]
+        Database(s) from which the export is made. Information on requirements
+        can be found here:
+        https://cloud.google.com/sql/docs/mysql/admin-api/v1beta4/instances/export#exportContext.databases
+
+     --escape=ESCAPE
+        Specifies the character that should appear before a data character that
+        needs to be escaped. The value of this argument has to be a character
+        in Hex ASCII Code. For example, "22" represents double quotes. This
+        flag is only available for MySQL and Postgres. If this flag is not
+        provided, double quotes character will be used as the default value.
+
+     --fields-terminated-by=FIELDS_TERMINATED_BY
+        Specifies the character that splits column values. The value of this
+        argument has to be a character in Hex ASCII Code. For example, "2C"
+        represents a comma. This flag is only available for MySQL and Postgres.
+        If this flag is not provided, a comma character will be used as the
+        default value.
+
+     --lines-terminated-by=LINES_TERMINATED_BY
+        Specifies the character that split line records. The value of this
+        argument has to be a character in Hex ASCII Code. For example, "0A"
+        represents a new line. This flag is only available for MySQL. If this
+        flag is not provided, a new line character will be used as the default
+        value.
+
+     --offload
+        Offload an export to a temporary instance. Doing so reduces strain on
+        source instances and allows other operations to be performed while the
+        export is in progress.
+
+     --quote=QUOTE
+        Specifies the character that encloses values from columns that have
+        string data type. The value of this argument has to be a character in
+        Hex ASCII Code. For example, "22" represents double quotes. This flag
+        is only available for MySQL and Postgres. If this flag is not provided,
+        double quotes character will be used as the default value.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud sql export csv
+
+        $ gcloud alpha sql export csv
+

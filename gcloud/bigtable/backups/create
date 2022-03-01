@@ -1,0 +1,101 @@
+NAME
+    gcloud bigtable backups create - creates a backup of a Cloud Bigtable table
+
+SYNOPSIS
+    gcloud bigtable backups create
+        (BACKUP : --cluster=CLUSTER --instance=INSTANCE) --table=TABLE
+        (--expiration-date=EXPIRATION_DATE
+          | --retention-period=RETENTION_PERIOD) [--async]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Creates a backup of a Cloud Bigtable table.
+
+EXAMPLES
+    To create a backup 'BACKUP_NAME' asyncronously from table 'TABLE_NAME'
+    which expires at '2019-03-30T10:49:41Z', run:
+
+        $ gcloud bigtable backups create BACKUP_NAME \
+            --instance=INSTANCE_NAME --cluster=CLUSTER_NAME
+        --table=TABLE_NAME --expiration-date=2019-03-30T10:49:41Z --async
+
+    To create a backup 'BACKUP_NAME' syncronously from table 'TABLE_NAME' which
+    expires in 2 weeks from now, run:
+
+        $ gcloud bigtable backups create BACKUP_NAME \
+            --instance=INSTANCE_NAME --cluster=CLUSTER_NAME
+        --table=TABLE_NAME --retention-period=2w
+
+POSITIONAL ARGUMENTS
+     Backup resource - The Cloud Bigtable backup to create. The arguments in
+     this group can be used to specify the attributes of this resource. (NOTE)
+     Some attributes are not given arguments in this group but can be set in
+     other ways. To set the project attribute:
+      ◆ provide the argument backup on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       BACKUP
+          ID of the backup or fully qualified identifier for the backup. To set
+          the backup attribute:
+          ▸ provide the argument backup on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --cluster=CLUSTER
+          The name of the Cloud Bigtable cluster. To set the cluster attribute:
+          ▸ provide the argument backup on the command line with a fully
+            specified name;
+          ▸ provide the argument --cluster on the command line.
+
+       --instance=INSTANCE
+          The name of the Cloud Bigtable instance. To set the instance
+          attribute:
+          ▸ provide the argument backup on the command line with a fully
+            specified name;
+          ▸ provide the argument --instance on the command line.
+
+REQUIRED FLAGS
+     --table=TABLE
+        ID of the table from which the backup will be created.
+
+     Exactly one of these must be specified:
+
+       --expiration-date=EXPIRATION_DATE
+          Absolute expiration time of the backup, must be at least 6 hours and
+          at most 30 days from the time the request is received. See $ gcloud
+          topic datetimes for information on date/time formats.
+
+       --retention-period=RETENTION_PERIOD
+          Retention period of the backup relative from now, must be at least 6
+          hours and at most 30 days. See $ gcloud topic datetimes for
+          information on duration formats.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the bigtableadmin/v2 API. The full documentation for this
+    API can be found at: https://cloud.google.com/bigtable/
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha bigtable backups create
+
+        $ gcloud beta bigtable backups create
+

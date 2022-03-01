@@ -1,0 +1,61 @@
+NAME
+    gcloud alpha auth revoke - revoke access credentials for an account
+
+SYNOPSIS
+    gcloud alpha auth revoke [ACCOUNTS ...] [--all] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Revokes credentials for the specified user accounts, service
+    accounts or external accounts (workload identity pools).
+
+    When given a user account, this command revokes the user account token on
+    the server. If the revocation is successful, or if the token has already
+    been revoked, this command removes the credential from the local machine.
+
+    When given a service account, this command does not revoke the service
+    account token on the server because service account tokens are not
+    revocable. Instead, it will print a warning and remove the credential from
+    the local machine.
+
+    When given an external account (workload identity pool), whether
+    impersonated or not, the command does not revoke the corresponding token on
+    the server because these tokens are not revocable. The underlying external
+    credentials (OIDC, AWS, etc.) used to generate these access tokens have to
+    be revoked too, but gcloud has no control over that. Instead, it will print
+    a warning and remove the credential from the local machine.
+
+    If no account is specified, this command revokes credentials for the
+    currently active account, effectively logging out of that account. If --all
+    is given, the behaviors described above apply individually to each account
+    in the list.
+
+    You can revoke credentials when you want to prevent gcloud and other Google
+    Cloud CLI tools from using the specified account. You do not need to revoke
+    credentials to switch between accounts.
+
+POSITIONAL ARGUMENTS
+     [ACCOUNTS ...]
+        Accounts whose credentials are to be revoked.
+
+FLAGS
+     --all
+        Revoke credentials for all accounts.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud auth revoke
+
+        $ gcloud beta auth revoke
+

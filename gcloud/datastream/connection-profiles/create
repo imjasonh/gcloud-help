@@ -1,0 +1,254 @@
+NAME
+    gcloud datastream connection-profiles create - create a Datastream
+        connection profile
+
+SYNOPSIS
+    gcloud datastream connection-profiles create
+        (CONNECTION_PROFILE : --location=LOCATION) --display-name=DISPLAY_NAME
+        --type=TYPE
+        ([--bucket=BUCKET : --root-path=ROOT_PATH]
+          | --database-service=DATABASE_SERVICE
+          --oracle-hostname=ORACLE_HOSTNAME --oracle-port=ORACLE_PORT
+          --oracle-username=ORACLE_USERNAME (--oracle-password=ORACLE_PASSWORD
+          | --oracle-prompt-for-password) | [--mysql-hostname=MYSQL_HOSTNAME
+          --mysql-port=MYSQL_PORT
+          --mysql-username=MYSQL_USERNAME (--mysql-password=MYSQL_PASSWORD
+          | --mysql-prompt-for-password) : --ca-certificate=CA_CERTIFICATE
+          --client-certificate=CLIENT_CERTIFICATE --client-key=CLIENT_KEY])
+        [--force] [--labels=[KEY=VALUE,...]]
+        [--private-connection=PRIVATE_CONNECTION : --static-ip-connectivity
+          | [--forward-ssh-hostname=FORWARD_SSH_HOSTNAME
+          --forward-ssh-username=FORWARD_SSH_USERNAME
+          (--forward-ssh-password=FORWARD_SSH_PASSWORD
+          | --forward-ssh-private-key=FORWARD_SSH_PRIVATE_KEY)
+          : --forward-ssh-port=FORWARD_SSH_PORT; default=22]]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Create a Datastream connection profile
+
+EXAMPLES
+    To create a connection profile for Oracle:
+
+        $ gcloud datastream connection-profiles create CONNECTION_PROFILE \
+          --location=us-central1 --type=oracle \
+          --oracle-password=fakepassword --oracle-username=fakeuser \
+          --display-name=my-profile --oracle-hostname=35.188.150.50 \
+          --oracle-port=1521 --database-service=ORCL \
+          --static-ip-connectivity
+
+    To create a connection profile for Mysql:
+
+        $ gcloud datastream connection-profiles create CONNECTION_PROFILE \
+          --location=us-central1 --type=mysql \
+          --mysql-password=fakepassword --mysql-username=fakeuser \
+          --display-name=my-profile --mysql-hostname=35.188.150.50 \
+          --mysql-port=3306 --static-ip-connectivity
+
+    To create a connection profile for Google Cloud Storage:
+
+        $ gcloud datastream connection-profiles create CONNECTION_PROFILE \
+          --location=us-central1 --type=google-cloud-storage \
+          --bucket=fake-bucket --root-path=/root/path \
+          --display-name=my-profile
+
+POSITIONAL ARGUMENTS
+     Connection profile resource - The connection profile to create. The
+     arguments in this group can be used to specify the attributes of this
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways. To set the project attribute:
+      ◆ provide the argument connection_profile on the command line with a
+        fully specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       CONNECTION_PROFILE
+          ID of the connection_profile or fully qualified identifier for the
+          connection_profile. To set the connection_profile attribute:
+          ▸ provide the argument connection_profile on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --location=LOCATION
+          The Cloud location for the connection_profile. To set the location
+          attribute:
+          ▸ provide the argument connection_profile on the command line with
+            a fully specified name;
+          ▸ provide the argument --location on the command line.
+
+REQUIRED FLAGS
+     --display-name=DISPLAY_NAME
+        Friendly name for the connection profile.
+
+     --type=TYPE
+        Type can be MYSQL, ORACLE or GOOGLE-CLOUD-STORAGE
+
+     Exactly one of these must be specified:
+
+       --bucket=BUCKET
+          The full project and resource path for Cloud Storage bucket including
+          the name.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --root-path=ROOT_PATH
+          The root path inside the Cloud Storage bucket.
+
+       --database-service=DATABASE_SERVICE
+          Database service for the Oracle connection.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --oracle-hostname=ORACLE_HOSTNAME
+          IP or hostname of the oracle source database.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --oracle-port=ORACLE_PORT
+          Network port of the oracle source database.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --oracle-username=ORACLE_USERNAME
+          Username Datastream will use to connect to the database.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       Exactly one of these must be specified:
+
+         --oracle-password=ORACLE_PASSWORD
+            Password for the user that Datastream will be using to connect to
+            the database. This field is not returned on request, and the value
+            is encrypted when stored in Datastream.
+
+         --oracle-prompt-for-password
+            Prompt for the password used to connect to the database.
+
+       --mysql-hostname=MYSQL_HOSTNAME
+          IP or hostname of the mysql source database.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --mysql-port=MYSQL_PORT
+          Network port of the mysql source database.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --mysql-username=MYSQL_USERNAME
+          Username Datastream will use to connect to the database.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       Exactly one of these must be specified:
+
+         --mysql-password=MYSQL_PASSWORD
+            Password for the user that Datastream will be using to connect to
+            the database. This field is not returned on request, and the value
+            is encrypted when stored in Datastream.
+
+         --mysql-prompt-for-password
+            Prompt for the password used to connect to the database.
+
+       --ca-certificate=CA_CERTIFICATE
+          x509 PEM-encoded certificate of the CA that signed the source
+          database server's certificate. The replica will use this certificate
+          to verify it's connecting to the right host.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --client-certificate=CLIENT_CERTIFICATE
+          x509 PEM-encoded certificate that will be used by the replica to
+          authenticate against the source database server.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --client-key=CLIENT_KEY
+          Unencrypted PKCS#1 or PKCS#8 PEM-encoded private key associated with
+          the Client Certificate.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+OPTIONAL FLAGS
+     --force
+        Create the connection profile without validating it.
+
+     --labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     At most one of these can be specified:
+
+       Private connection resource - Resource ID of the private connection.
+       This represents a Cloud resource. (NOTE) Some attributes are not given
+       arguments in this group but can be set in other ways. To set the project
+       attribute:
+        ▸ provide the argument --private-connection on the command line with
+          a fully specified name;
+        ▸ provide the argument --project on the command line;
+        ▸ set the property core/project. To set the location attribute:
+        ▸ provide the argument --private-connection on the command line with
+          a fully specified name;
+        ▸ provide the argument --location on the command line.
+
+         --private-connection=PRIVATE_CONNECTION
+            ID of the private_connection or fully qualified identifier for the
+            private_connection. To set the private_connection attribute:
+            ▫ provide the argument --private-connection on the command line.
+
+       --static-ip-connectivity
+          use static ip connectivity
+
+       --forward-ssh-hostname=FORWARD_SSH_HOSTNAME
+          Hostname for the SSH tunnel.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --forward-ssh-username=FORWARD_SSH_USERNAME
+          Username for the SSH tunnel.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --forward-ssh-port=FORWARD_SSH_PORT; default=22
+          Port for the SSH tunnel, default value is 22.
+
+       Exactly one of these must be specified:
+
+         --forward-ssh-password=FORWARD_SSH_PASSWORD
+            SSH password.
+
+         --forward-ssh-private-key=FORWARD_SSH_PRIVATE_KEY
+            SSH private key..
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This variant is also available:
+
+        $ gcloud beta datastream connection-profiles create
+

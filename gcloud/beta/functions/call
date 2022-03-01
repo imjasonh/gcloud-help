@@ -1,0 +1,91 @@
+NAME
+    gcloud beta functions call - triggers execution of a Google Cloud Function
+
+SYNOPSIS
+    gcloud beta functions call (NAME : --region=REGION) [--gen2]
+        [--cloud-event=CLOUD_EVENT | --data=DATA] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Triggers execution of a Google Cloud Function.
+
+EXAMPLES
+    To call a function, giving it 'Hello World!' in the message field of its
+    event argument (depending on your environment you might need to escape
+    characters in --data flag value differently), run:
+
+        $ gcloud beta functions call helloWorld \
+          --data='{"message": "Hello World!"}'
+
+    Note that this method has a limited quota which cannot be increased. It is
+    intended for testing and debugging and should not be used in production.
+
+    Calls to HTTP-triggered functions are sent as HTTP POST requests. To use
+    other HTTP methods, use a dedicated HTTP request tool such as cURL or wget.
+
+POSITIONAL ARGUMENTS
+     Function resource - The Cloud function name to execute. The arguments in
+     this group can be used to specify the attributes of this resource. (NOTE)
+     Some attributes are not given arguments in this group but can be set in
+     other ways. To set the project attribute:
+      ◆ provide the argument NAME on the command line with a fully specified
+        name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       NAME
+          ID of the function or fully qualified identifier for the function. To
+          set the function attribute:
+          ▸ provide the argument NAME on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --region=REGION
+          The Cloud region for the function. Overrides the default
+          functions/region property value for this command invocation. To set
+          the region attribute:
+          ▸ provide the argument NAME on the command line with a fully
+            specified name;
+          ▸ provide the argument --region on the command line;
+          ▸ set the property functions/region.
+
+FLAGS
+     --gen2
+        If enabled, this command will use Cloud Functions (Second generation).
+        If disabled, Cloud Functions (First generation) will be used. If not
+        specified, the value of this flag will be taken from the functions/gen2
+        configuration property.
+
+     At most one of these can be specified:
+
+       --cloud-event=CLOUD_EVENT
+          JSON encoded string with a CloudEvent in structured content mode.
+
+          Mutually exclusive with --data flag.
+
+          Use for Cloud Functions 2nd Gen CloudEvent functions. The CloudEvent
+          object will be sent to your function as a binary content mode message
+          with the top-level 'data' field set as the HTTP body and all other
+          JSON fields sent as HTTP headers.
+
+       --data=DATA
+          JSON string with data that will be passed to the function.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud functions call
+
+        $ gcloud alpha functions call
+

@@ -1,0 +1,88 @@
+NAME
+    gcloud policy-intelligence query-activity - query activities on cloud
+        resource
+
+SYNOPSIS
+    gcloud policy-intelligence query-activity --activity-type=ACTIVITY_TYPE
+        --project=PROJECT [--limit=LIMIT; default=1000]
+        [--page-size=PAGE_SIZE; default=500] [--query-filter=QUERY_FILTER]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Query activities with certain types of specific container resource. For
+    --activity-type, supported values are:
+      ▪ serviceAccountLastAuthentication
+      ▪ serviceAccountKeyLastAuthentication
+
+EXAMPLES
+    To query serviceAccountKeyLastAuthentication activities of a project, run:
+
+        $ gcloud policy-intelligence query-activity \
+            --activity-type=serviceAccountKeyLastAuthentication \
+            --project=project-id
+
+    To query serviceAccountLastAuthentication activities of a project with no
+    limit, run:
+
+        $ gcloud policy-intelligence query-activity \
+            --activity-type=serviceAccountLastAuthentication \
+            --project=project-id --limit=unlimited
+
+    To query serviceAccountLastAuthentication with filtering on certain service
+    account, run:
+
+        $ gcloud policy-intelligence query-activity \
+            --activity-type=serviceAccountLastAuthentication \
+            --project=project-id \
+            --query-filter='activities.full_resource_name="//iam.googleapis.\
+        com/projects/project-id/serviceAccounts/service-account-name@project\
+        -id.iam.gserviceaccount.com"'
+
+    To query serviceAccountLastAuthentication with filtering on multiple
+    service accounts, run:
+
+        $ gcloud policy-intelligence query-activity \
+            --activity-type=serviceAccountLastAuthentication \
+            --project=project-id \
+            --query-filter='activities.full_resource_name="//iam.googleapis.\
+        com/projects/project-id/serviceAccounts/service-account-name-1@proje\
+        ct-id.iam.gserviceaccount.com" OR
+         activities.full_resource_name="//iam.googleapis.com/projects/projec\
+        t-id/serviceAccounts/service-account-name-2@project-id.iam.gservicea\
+        ccount.com" OR
+         activities.full_resource_name="//iam.googleapis.com/projects/projec\
+        t-id/serviceAccounts/service-account-name-3@project-id.iam.gservicea\
+        ccount.com"'
+
+REQUIRED FLAGS
+     --activity-type=ACTIVITY_TYPE
+        Type of the activities. ACTIVITY_TYPE must be one of:
+        serviceAccountLastAuthentication, serviceAccountKeyLastAuthentication.
+
+     --project=PROJECT
+        The project ID or number to query the activities.
+
+OPTIONAL FLAGS
+     --limit=LIMIT; default=1000
+        Max number of query result. Default to be 1000 and max to be unlimited,
+        i.e., --limit=unlimited.
+
+     --page-size=PAGE_SIZE; default=500
+        Max page size for each http response. Default to be 500 and max to be
+        1000.
+
+     --query-filter=QUERY_FILTER
+        Filter on activities, separated by "OR" if multiple filters are
+        specified. At most 10 filter restrictions are supported in the
+        query-filter. e.g.
+        --query-filter='activities.full_resource_name="//iam.googleapis.com/projects/project-id/serviceAccounts/service-account-name-1@project-id.iam.gserviceaccount.com"
+        OR
+        activities.full_resource_name="//iam.googleapis.com/projects/project-id/serviceAccounts/service-account-name-2@project-id.iam.gserviceaccount.com"'
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.

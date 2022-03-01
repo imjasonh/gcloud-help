@@ -1,0 +1,95 @@
+NAME
+    gcloud alpha storage rm - delete objects and buckets
+
+SYNOPSIS
+    gcloud alpha storage rm [URLS ...] [--all-versions, -a]
+        [--continue-on-error] [--if-generation-match=GENERATION]
+        [--if-metageneration-match=METAGENERATION] [--recursive, -R, -r]
+        [--stdin, -I] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Delete objects and buckets.
+
+EXAMPLES
+    The following command deletes a Cloud Storage object named my-object from
+    the bucket my-bucket:
+
+        $ gcloud alpha storage rm gs://my-bucket/my-object
+
+    The following command deletes all objects directly within the directory
+    my-dir but no objects within subdirectories:
+
+        $ gcloud alpha storage rm gs://my-bucket/my-dir/*
+
+    The following command deletes all objects and subdirectories within the
+    directory my-dir:
+
+        $ gcloud alpha storage rm gs://my-bucket/my-dir/**
+
+    Note that for buckets that contain versioned objects
+    (https://cloud.google.com/storage/docs/object-versioning), the above
+    command only affects live versions. Use the --recursive flag instead to
+    delete all versions.
+
+    The following command deletes all versions of all resources in my-bucket
+    and then deletes the bucket.
+
+        $ gcloud alpha storage rm --recursive gs://my-bucket/
+
+    The following command deletes all text files in the top-level of my-bucket,
+    but not text files in subdirectories:
+
+        $ gcloud alpha storage rm -recursive gs://my-bucket/*.txt
+
+    The following command deletes one wildcard expression per line passed in by
+    stdin:
+
+        $ some_program | gcloud alpha storage rm -I
+
+POSITIONAL ARGUMENTS
+     [URLS ...]
+        The URLs of the resources to delete.
+
+FLAGS
+     --all-versions, -a
+        Delete all versions
+        (https://cloud.google.com/storage/docs/object-versioning) of an object.
+
+     --continue-on-error
+        If an error occurs, continue to perform the operation on remaining
+        resources. If any operations are unsuccessful, the command will exit
+        with a non-zero exit status, even if this flag is set. This option is
+        implicitly set when running operations in parallel mode.
+
+     --if-generation-match=GENERATION
+        Execute only if the generation matches the generation of the requested
+        object.
+
+     --if-metageneration-match=METAGENERATION
+        Execute only if the metageneration matches the metageneration of the
+        requested object.
+
+     --recursive, -R, -r
+        Recursively delete the contents of buckets or directories that match
+        the path expression. If the path is set to a bucket, like gs://bucket,
+        the bucket is also deleted. This option implies the --all-versions
+        option. If you want to delete only live object versions, use the ``**''
+        wildcard instead.
+
+     --stdin, -I
+        Read the list of resources to remove from stdin.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

@@ -1,0 +1,87 @@
+NAME
+    gcloud alpha kms encrypt - encrypt a plaintext file using a key
+
+SYNOPSIS
+    gcloud alpha kms encrypt --ciphertext-file=CIPHERTEXT_FILE
+        --plaintext-file=PLAINTEXT_FILE
+        [--additional-authenticated-data-file=ADDITIONAL_AUTHENTICATED_DATA_FILE]
+        [--key=KEY] [--keyring=KEYRING] [--location=LOCATION]
+        [--skip-integrity-verification] [--version=VERSION]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Encrypts the given plaintext file using the given CryptoKey and
+    writes the result to the named ciphertext file. The plaintext file must not
+    be larger than 64KiB.
+
+    If an additional authenticated data file is provided, its contents must
+    also be provided during decryption. The file must not be larger than 64KiB.
+
+    The flag --version indicates the version of the key to use for encryption.
+    By default, the primary version is used.
+
+    If --plaintext-file or --additional-authenticated-data-file is set to '-',
+    that file is read from stdin. Similarly, if --ciphertext-file is set to
+    '-', the ciphertext is written to stdout.
+
+    By default, the command performs integrity verification on data sent to and
+    received from Cloud KMS. Use --skip-integrity-verification to disable
+    integrity verification.
+
+EXAMPLES
+    The following command will read the file 'path/to/plaintext', encrypt it
+    using the CryptoKey frodo with the KeyRing fellowship and Location global,
+    and write the ciphertext to 'path/to/ciphertext'.
+
+        $ gcloud alpha kms encrypt \
+            --key=frodo \
+            --keyring=fellowship \
+            --location=global \
+            --plaintext-file=path/to/input/plaintext \
+            --ciphertext-file=path/to/output/ciphertext
+
+REQUIRED FLAGS
+     --ciphertext-file=CIPHERTEXT_FILE
+        File path of the ciphertext file to output.
+
+     --plaintext-file=PLAINTEXT_FILE
+        File path of the plaintext file to encrypt.
+
+OPTIONAL FLAGS
+     --additional-authenticated-data-file=ADDITIONAL_AUTHENTICATED_DATA_FILE
+        File path to the optional file containing the additional authenticated
+        data.
+
+     --key=KEY
+        The key to use for encryption.
+
+     --keyring=KEYRING
+        Key ring of the key.
+
+     --location=LOCATION
+        Location of the keyring.
+
+     --skip-integrity-verification
+        Skip integrity verification on request and response API fields.
+
+     --version=VERSION
+        Version to use for encryption.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud kms encrypt
+
+        $ gcloud beta kms encrypt
+

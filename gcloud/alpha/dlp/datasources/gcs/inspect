@@ -1,0 +1,136 @@
+NAME
+    gcloud alpha dlp datasources gcs inspect - schedules a job to inspect
+        content in a Google Cloud Storage bucket
+
+SYNOPSIS
+    gcloud alpha dlp datasources gcs inspect PATH [--exclude-info-types]
+        [--file-size-limit=FILE_SIZE_LIMIT; default=1024] [--include-quote]
+        [--info-types=[INFOTYPE,...]] [--job-id=JOB_ID]
+        [--max-findings=MAX_FINDINGS]
+        [--max-findings-per-item=MAX_FINDINGS_PER_ITEM] [--max-time=MAX_TIME]
+        [--min-likelihood=MIN_LIKELIHOOD; default="possible"]
+        [--min-time=MIN_TIME]
+        [--output-table=OUTPUT_TABLE | --output-topics=[OUTPUT_TOPICS,...]]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Schedules a job to inspect content in a Google Cloud Storage bucket
+    for sensitive data.
+
+    See Inspecting Storage and Databases for Sensitive Data
+    (https://cloud.google.com/dlp/docs/inspecting-storage) for more details.
+
+EXAMPLES
+    The following command creates a job my-gcs-job to scan files in the Google
+    Cloud Storage path gs://testproject/dlp/*:
+
+        $ gcloud alpha dlp datasources gcs inspect  \
+            `gs://testproject/dlp/*` --job-id my-gcs-job \
+            --file-size-limit 10000 --min-time '2018-01-01T12:00:00Z' \
+            --max-time '2018-01-31T12:00:00Z' --output-topics my-topic \
+            --max-findings-per-item 3 --max-findings 1000 \
+            --info-types PHONE_NUMBER,EMAIL_ADDRESS \
+            --min-likelihood very-likely --include-quote \
+            --exclude-info-types
+
+POSITIONAL ARGUMENTS
+     PATH
+        Google Cloud Storage URL to scan for files with optional wildcard
+        character (*) -- for example, gs://my-bucket/*.
+
+FLAGS
+     --exclude-info-types
+        Whether or not to exclude type information of the findings. Type
+        information is included by default.
+
+     --file-size-limit=FILE_SIZE_LIMIT; default=1024
+        Integer indicating max number of bytes to scan from a file. If a
+        scanned file's size is bigger than this value, then the rest of the
+        bytes are omitted. The default value is 1024.
+
+     --include-quote
+        If True, a contextual quote from the data that triggered a finding is
+        included in the response. Even if the content is not text, it may be
+        converted to a textual representation in the response. For example,
+        given the input value 'My phone number is (415) 555-0890' and a search
+        for the infoType PHONE_NUMBER, the contextual quote would be '(415)
+        555-0890.'
+
+     --info-types=[INFOTYPE,...]
+        Which infoTypes to scan input for. The values must correspond to
+        infoType values found in documentation. For more information about
+        valid infoTypes, see infoTypes Reference
+        (https://cloud.google.com/dlp/docs/infotypes-reference)
+
+     --job-id=JOB_ID
+        Optional job ID to use for the created job. If not provided, a job ID
+        will automatically be generated. Must be unique within the project. The
+        job ID can contain uppercase and lowercase letters, numbers, and
+        hyphens; that is, it must match the regular expression: [a-zA-Z\\d-]+.
+        The maximum length is 100 characters. Can be empty to allow the system
+        to generate one.
+
+     --max-findings=MAX_FINDINGS
+        Maximum number of findings that will be returned per execution.
+
+        If not specified, no limits are applied.
+
+     --max-findings-per-item=MAX_FINDINGS_PER_ITEM
+        Maximum number of findings that will be returned for each item scanned.
+
+        If not specified, no limits are applied.
+
+     --max-time=MAX_TIME
+        Scan will include items in repository whose age is >= min-time and <=
+        max-time.
+
+        If max-time is omitted then there is no maximum time limit.
+
+        See $ gcloud topic datetimes for information on time formats.
+
+     --min-likelihood=MIN_LIKELIHOOD; default="possible"
+        Only return findings equal to or above this threshold. MIN_LIKELIHOOD
+        must be one of: likely, possible, unlikely, very-likely, very-unlikely.
+
+     --min-time=MIN_TIME
+        Scan will include items in repository whose age is >= min-time and <=
+        max-time.
+
+        If max-time is omitted then there is no maximum time limit.
+
+        See $ gcloud topic datetimes for information on time formats.
+
+     At most one of these can be specified:
+
+       --output-table=OUTPUT_TABLE
+          Publishes results of a Cloud DLP job a BigQuery table. BigQuery
+          tables are uniquely identified by their project_id, dataset_id, and
+          table_id in the format <project_id>.<dataset_id>.<table_id> or
+          <project_id>.<dataset_id>.<table_id>. If no table_id is specified,
+          DLP will create a table for you.
+
+       --output-topics=[OUTPUT_TOPICS,...]
+          Publishes the results of a Cloud DLP job to one or more Cloud Pub/Sub
+          topics.
+
+          Note: The topic must have given publishing access rights to the DLP
+          API service account executing the Cloud DLP job.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the dlp/v2 API. The full documentation for this API can
+    be found at: https://cloud.google.com/dlp/docs/
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

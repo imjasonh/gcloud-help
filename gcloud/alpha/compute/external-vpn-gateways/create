@@ -1,0 +1,81 @@
+NAME
+    gcloud alpha compute external-vpn-gateways create - create a new Compute
+        Engine external VPN gateway
+
+SYNOPSIS
+    gcloud alpha compute external-vpn-gateways create NAME
+        --interfaces=[ID=IP_ADDRESS,...] [--description=DESCRIPTION]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) gcloud alpha compute external-vpn-gateways create creates a new
+    external VPN gateway.
+
+    External VPN gateway is the on-premises VPN gateway or another cloud
+    provider's VPN gateway that connects to your Google Cloud VPN gateway. To
+    create a highly available VPN from Google Cloud to your on-premises side or
+    another Cloud provider's VPN gateway, you must create an external VPN
+    gateway resource in Google Cloud, which provides the information to Google
+    Cloud about your external VPN gateway.
+
+EXAMPLES
+    To create an external VPN gateway, run:
+
+        $ gcloud alpha compute external-vpn-gateways create \
+          my-external-gateway --interfaces=0=8.9.9.9
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the external VPN gateway to create.
+
+REQUIRED FLAGS
+     --interfaces=[ID=IP_ADDRESS,...]
+        Map of interfaces from interface ID to interface IP address for the
+        External VPN Gateway.
+
+        There can be one, two, or four interfaces in the map.
+
+        For example, to create an external VPN gateway with one interface:
+
+            $ gcloud alpha compute external-vpn-gateways create \
+                MY-EXTERNAL-GATEWAY --interfaces 0=8.9.9.9
+
+        To create an external VPN gateway with two interfaces: $ gcloud alpha
+        compute external-vpn-gateways create \ MY-EXTERNAL-GATEWAY --interfaces
+        0=8.9.9.9,1=8.9.9.10
+
+        To create an external VPN gateway with four interfaces: $ gcloud alpha
+        compute external-vpn-gateways create \ MY-EXTERNAL-GATEWAY \
+        --interfaces 0=8.9.9.9,1=8.9.9.10,2=8.9.9.11,3=8.9.9.12
+
+        Note that the redundancy type of the gateway will be automatically
+        inferred based on the number of interfaces provided:
+
+            1 interface: `SINGLE_IP_INTERNALLY_REDUNDANT`
+
+            2 interfaces: `TWO_IPS_REDUNDANCY`
+
+            4 interfaces: `FOUR_IPS_REDUNDANCY`
+
+OPTIONAL FLAGS
+     --description=DESCRIPTION
+        Textual description of the External VPN Gateway.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud compute external-vpn-gateways create
+
+        $ gcloud beta compute external-vpn-gateways create
+

@@ -1,0 +1,228 @@
+NAME
+    gcloud container node-pools update - updates a node pool in a running
+        cluster
+
+SYNOPSIS
+    gcloud container node-pools update NAME
+        (--enable-gvnic | --enable-image-streaming
+          | --node-locations=ZONE,[ZONE,...]
+          | --system-config-from-file=SYSTEM_CONFIG_FROM_FILE
+          | --workload-metadata=WORKLOAD_METADATA | --enable-autoprovisioning
+          --enable-autoscaling --max-nodes=MAX_NODES --min-nodes=MIN_NODES
+          | --enable-autorepair --enable-autoupgrade
+          | --max-surge-upgrade=MAX_SURGE_UPGRADE
+          --max-unavailable-upgrade=MAX_UNAVAILABLE_UPGRADE)
+        [--cluster=CLUSTER] [--region=REGION | --zone=ZONE, -z ZONE]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    gcloud container node-pools update updates a node pool in a Google
+    Kubernetes Engine cluster.
+
+EXAMPLES
+    To turn on node auto repair in "node-pool-1" in the cluster
+    "sample-cluster", run:
+
+        $ gcloud container node-pools update node-pool-1 \
+            --cluster=sample-cluster --enable-autoupgrade
+
+POSITIONAL ARGUMENTS
+     NAME
+        The name of the node pool.
+
+REQUIRED FLAGS
+     Exactly one of these must be specified:
+
+       --enable-gvnic
+          Enable the use of GVNIC for this cluster. Requires re-creation of
+          nodes using either a node-pool upgrade or node-pool creation.
+
+       --enable-image-streaming
+          Specifies whether to enable image streaming on node pool.
+
+       --node-locations=ZONE,[ZONE,...]
+          Set of zones in which the node pool's nodes should be located.
+          Changing the locations for a node pool will result in nodes being
+          either created or removed from the node pool, depending on whether
+          locations are being added or removed.
+
+          Multiple locations can be specified, separated by commas. For
+          example:
+
+              $ gcloud container node-pools update node-pool-1 \
+                  --node-locations=us-central1-a,us-central1-b
+
+       --system-config-from-file=SYSTEM_CONFIG_FROM_FILE
+          Path of the YAML/JSON file that contains the node configuration,
+          including Linux kernel parameters (sysctls) and kubelet configs.
+
+          Examples:
+
+              kubeletConfig:
+                cpuManagerPolicy: static
+              linuxConfig:
+                sysctl:
+                  net.core.somaxconn: '2048'
+                  net.ipv4.tcp_rmem: '4096 87380 6291456'
+
+          List of supported kubelet configs in 'kubeletConfig'.
+
+            KEY                VALUE
+            cpuManagerPolicy   either 'static' or 'none'
+            cpuCFSQuota        true or false (enabled by default)
+            cpuCFSQuotaPeriod  interval (e.g., '100ms')
+
+          List of supported sysctls in 'linuxConfig'.
+
+            KEY                                         VALUE
+            net.core.netdev_max_backlog                 Any positive integer,
+                                                        less than 2147483647
+            net.core.rmem_max                           Any positive integer,
+                                                        less than 2147483647
+            net.core.wmem_default                       Any positive integer,
+                                                        less than 2147483647
+            net.core.wmem_max                           Any positive integer,
+                                                        less than 2147483647
+            net.core.optmem_max                         Any positive integer,
+                                                        less than 2147483647
+            net.core.somaxconn                          Must be [128,
+                                                        2147483647]
+            net.ipv4.tcp_rmem                           Any positive integer
+                                                        tuple
+            net.ipv4.tcp_wmem                           Any positive integer
+                                                        tuple
+            net.ipv4.tcp_tw_reuse                       Must be {0, 1}
+
+          Note, updating the system configuration of an existing node pool
+          requires recreation of the nodes which which might cause a
+          disruption.
+
+       --workload-metadata=WORKLOAD_METADATA
+          Type of metadata server available to pods running in the node pool.
+          WORKLOAD_METADATA must be one of:
+
+           GCE_METADATA
+              Pods running in this node pool have access to the node's
+              underlying Compute Engine Metadata Server.
+           GKE_METADATA
+              Run the Kubernetes Engine Metadata Server on this node. The
+              Kubernetes Engine Metadata Server exposes a metadata API to
+              workloads that is compatible with the V1 Compute Metadata APIs
+              exposed by the Compute Engine and App Engine Metadata Servers.
+              This feature can only be enabled if Workload Identity is enabled
+              at the cluster level.
+
+       Cluster autoscaling
+
+         --enable-autoprovisioning
+            Enables Cluster Autoscaler to treat the node pool as if it was
+            autoprovisioned.
+
+            Cluster Autoscaler will be able to delete the node pool if it's
+            unneeded.
+
+         --enable-autoscaling
+            Enables autoscaling for a node pool.
+
+            Enables autoscaling in the node pool specified by --node-pool or
+            the default node pool if --node-pool is not provided.
+
+         --max-nodes=MAX_NODES
+            Maximum number of nodes per zone in the node pool.
+
+            Maximum number of nodes per zone to which the node pool specified
+            by --node-pool (or default node pool if unspecified) can scale.
+            Ignored unless --enable-autoscaling is also specified.
+
+         --min-nodes=MIN_NODES
+            Minimum number of nodes per zone in the node pool.
+
+            Minimum number of nodes per zone to which the node pool specified
+            by --node-pool (or default node pool if unspecified) can scale.
+            Ignored unless --enable-autoscaling is also specified.
+
+       Node management
+
+         --enable-autorepair
+            Enable node autorepair feature for a node pool.
+
+                $ gcloud container node-pools update node-pool-1 \
+                    --cluster=example-cluster --enable-autorepair
+
+            See
+            https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair
+            for more info.
+
+         --enable-autoupgrade
+            Sets autoupgrade feature for a node pool.
+
+                $ gcloud container node-pools update node-pool-1 \
+                    --cluster=example-cluster --enable-autoupgrade
+
+            See
+            https://cloud.google.com/kubernetes-engine/docs/node-auto-upgrades
+            for more info.
+
+       Upgrade settings
+
+         --max-surge-upgrade=MAX_SURGE_UPGRADE
+            Number of extra (surge) nodes to be created on each upgrade of the
+            node pool.
+
+            Specifies the number of extra (surge) nodes to be created during
+            this node pool's upgrades. For example, running the following
+            command will result in creating an extra node each time the node
+            pool is upgraded:
+
+                $ gcloud container node-pools update node-pool-1 \
+                    --cluster=example-cluster --max-surge-upgrade=1   \
+                    --max-unavailable-upgrade=0
+
+            Must be used in conjunction with '--max-unavailable-upgrade'.
+
+         --max-unavailable-upgrade=MAX_UNAVAILABLE_UPGRADE
+            Number of nodes that can be unavailable at the same time on each
+            upgrade of the node pool.
+
+            Specifies the number of nodes that can be unavailable at the same
+            time during this node pool's upgrades. For example, assume the node
+            pool has 5 nodes, running the following command will result in
+            having 3 nodes being upgraded in parallel (1 + 2), but keeping
+            always at least 3 (5 - 2) available each time the node pool is
+            upgraded:
+
+                $ gcloud container node-pools update node-pool-1 \
+                    --cluster=example-cluster --max-surge-upgrade=1   \
+                    --max-unavailable-upgrade=2
+
+            Must be used in conjunction with '--max-surge-upgrade'.
+
+OPTIONAL FLAGS
+     --cluster=CLUSTER
+        The name of the cluster. Overrides the default container/cluster
+        property value for this command invocation.
+
+     At most one of these can be specified:
+
+       --region=REGION
+          Compute region (e.g. us-central1) for the cluster.
+
+       --zone=ZONE, -z ZONE
+          Compute zone (e.g. us-central1-a) for the cluster. Overrides the
+          default compute/zone property value for this command invocation.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha container node-pools update
+
+        $ gcloud beta container node-pools update
+

@@ -1,0 +1,98 @@
+NAME
+    gcloud beta ai endpoints raw-predict - run Vertex AI online raw prediction
+
+SYNOPSIS
+    gcloud beta ai endpoints raw-predict (ENDPOINT : --region=REGION)
+        --request=REQUEST [--http-headers=[HEADER=VALUE,...]]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) gcloud beta ai endpoints raw-predict sends a raw prediction request
+    to a Vertex AI endpoint. The request can be given on the command line or
+    read from a file or stdin.
+
+EXAMPLES
+    To predict against an endpoint 123 under project example in region
+    us-central1, reading the request from the command line, run:
+
+        $ gcloud beta ai endpoints raw-predict 123 --project=example \
+            --region=us-central1 --request='{
+            "instances": [
+              { "values": [1, 2, 3, 4], "key": 1 },
+              { "values": [5, 6, 7, 8], "key": 2 }
+            ]
+          }'
+
+    If the request body was in the file input.json, run:
+
+        $ gcloud beta ai endpoints raw-predict 123 --project=example \
+            --region=us-central1 --request=@input.json
+
+    To send the image file image.jpeg and set the content type, run:
+
+        $ gcloud beta ai endpoints raw-predict 123 --project=example \
+            --region=us-central1
+        --http-headers=Content-Type=image/jpeg --request=@image.jpeg
+
+POSITIONAL ARGUMENTS
+     Endpoint resource - The endpoint to do online raw prediction. The
+     arguments in this group can be used to specify the attributes of this
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways. To set the project attribute:
+      ◆ provide the argument endpoint on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       ENDPOINT
+          ID of the endpoint or fully qualified identifier for the endpoint. To
+          set the name attribute:
+          ▸ provide the argument endpoint on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --region=REGION
+          Cloud region for the endpoint. To set the region attribute:
+          ▸ provide the argument endpoint on the command line with a fully
+            specified name;
+          ▸ provide the argument --region on the command line;
+          ▸ set the property ai/region;
+          ▸ choose one from the prompted list of available regions.
+
+REQUIRED FLAGS
+     --request=REQUEST
+        The request to send to the endpoint.
+
+        If the request starts with the letter '@', the rest should be a file
+        name to read the request from, or '@-' to read from stdin. If the
+        request body actually starts with '@', it must be placed in a file.
+
+        If required, the Content-Type header should also be set appropriately,
+        particularly for binary data.
+
+OPTIONAL FLAGS
+     --http-headers=[HEADER=VALUE,...]
+        List of header and value pairs to send as part of the request. For
+        example, to set the Content-Type and X-Header:
+
+            --http-headers=Content-Type="application/json",X-Header=Value
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud ai endpoints raw-predict
+
+        $ gcloud alpha ai endpoints raw-predict
+

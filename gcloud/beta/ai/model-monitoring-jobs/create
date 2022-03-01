@@ -1,0 +1,280 @@
+NAME
+    gcloud beta ai model-monitoring-jobs create - create a new Vertex AI model
+        monitoring job
+
+SYNOPSIS
+    gcloud beta ai model-monitoring-jobs create --display-name=DISPLAY_NAME
+        --emails=[EMAILS,...] --endpoint=ENDPOINT
+        --prediction-sampling-rate=PREDICTION_SAMPLING_RATE
+        [--analysis-instance-schema=ANALYSIS_INSTANCE_SCHEMA]
+        [--labels=[KEY=VALUE,...]] [--log-ttl=LOG_TTL]
+        [--monitoring-frequency=MONITORING_FREQUENCY; default=24]
+        [--predict-instance-schema=PREDICT_INSTANCE_SCHEMA] [--region=REGION]
+        [--sample-predict-request=SAMPLE_PREDICT_REQUEST]
+        [--kms-key=KMS_KEY : --kms-keyring=KMS_KEYRING
+          --kms-location=KMS_LOCATION --kms-project=KMS_PROJECT]
+        [--monitoring-config-from-file=MONITORING_CONFIG_FROM_FILE
+          | --feature-attribution-thresholds=[KEY=VALUE,...]
+          --feature-thresholds=[KEY=VALUE,...] --target-field=TARGET_FIELD
+          --training-sampling-rate=TRAINING_SAMPLING_RATE;
+          default=1.0 --bigquery-uri=BIGQUERY_URI | --dataset=DATASET
+          | --data-format=DATA_FORMAT --gcs-uris=[GCS_URIS,...]]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Create a new Vertex AI model monitoring job.
+
+EXAMPLES
+    To create a model deployment monitoring job under project example in region
+    us-central1 for endpoint 123, run:
+
+        $ gcloud beta ai model-monitoring-jobs create --project=example \
+            --region=us-central1 --display-name=my_monitoring_job \
+            --emails=a@gmail.com,b@gmail.com --endpoint=123 \
+            --prediction-sampling-rate=0.2
+
+    To create a model deployment monitoring job with drift detection for all
+    the deployed models under the endpoint 123, run:
+
+        $ gcloud beta ai model-monitoring-jobs create --project=example \
+            --region=us-central1 --display-name=my_monitoring_job \
+            --emails=a@gmail.com,b@gmail.com --endpoint=123 \
+            --prediction-sampling-rate=0.2 \
+            --feature-thresholds=feat1=0.1,feat2=0.2,feat3=0.2,feat4=0.3
+
+    To create a model deployment monitoring job with skew detection for all the
+    deployed models under the endpoint 123, with training dataset from Google
+    Cloud Storage, run:
+
+        $ gcloud beta ai model-monitoring-jobs create --project=example \
+            --region=us-central1 --display-name=my_monitoring_job \
+            --emails=a@gmail.com,b@gmail.com --endpoint=123 \
+            --prediction-sampling-rate=0.2 \
+            --feature-thresholds=feat1=0.1,feat2=0.2,feat3=0.2,feat4=0.3 \
+            --target-field=price --data-format=csv \
+            --gcs-uris=gs://test-bucket/dataset.csv
+
+    To create a model deployment monitoring job with skew detection for all the
+    deployed models under the endpoint 123, with training dataset from Vertex
+    AI dataset 456, run:
+
+        $ gcloud beta ai model-monitoring-jobs create --project=example \
+            --region=us-central1 --display-name=my_monitoring_job \
+            --emails=a@gmail.com,b@gmail.com --endpoint=123 \
+            --prediction-sampling-rate=0.2 \
+            --feature-thresholds=feat1=0.1,feat2=0.2,feat3=0.2,feat4=0.3 \
+            --target-field=price --dataset=456
+
+    To create a model deployment monitoring job with different drift detection
+    or skew detection for different deployed models, run:
+
+        $ gcloud beta ai model-monitoring-jobs create --project=example \
+            --region=us-central1 --display-name=my_monitoring_job \
+            --emails=a@gmail.com,b@gmail.com --endpoint=123 \
+            --prediction-sampling-rate=0.2 \
+            --monitoring-config-from-file=your_objective_config.yaml
+
+    After creating the monitoring job, be sure to send some predict requests.
+    It will be used to generate some metadata for analysis purpose, like
+    predict and analysis instance schema.
+
+REQUIRED FLAGS
+     --display-name=DISPLAY_NAME
+        Display name of the model deployment monitoring job.
+
+     --emails=[EMAILS,...]
+        Comma-separated email address list. e.g.
+        --emails=a@gmail.com,b@gmail.com
+
+     --endpoint=ENDPOINT
+        Id of the endpoint.
+
+     --prediction-sampling-rate=PREDICTION_SAMPLING_RATE
+        Prediction sampling rate.
+
+OPTIONAL FLAGS
+     --analysis-instance-schema=ANALYSIS_INSTANCE_SCHEMA
+        YAML schema file uri(Google Cloud Storage) describing the format of a
+        single instance that you want Tensorflow Data Validation (TFDV) to
+        analyze.
+
+     --labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     --log-ttl=LOG_TTL
+        TTL of BigQuery tables in user projects which stores logs(Day-based
+        unit).
+
+     --monitoring-frequency=MONITORING_FREQUENCY; default=24
+        Monitoring frequency, unit is 1 hour.
+
+     --predict-instance-schema=PREDICT_INSTANCE_SCHEMA
+        YAML schema file uri(Google Cloud Storage) describing the format of a
+        single instance, which are given to format this Endpoint's prediction.
+        If not set, predict schema will be generated from collected predict
+        requests.
+
+     Region resource - Cloud region to create model deployment monitoring job.
+     This represents a Cloud resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways. To set the project
+     attribute:
+      ◆ provide the argument --region on the command line with a fully
+        specified name;
+      ◆ set the property ai/region with a fully specified name;
+      ◆ choose one from the prompted list of available regions with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+       --region=REGION
+          ID of the region or fully qualified identifier for the region. To set
+          the region attribute:
+          ▸ provide the argument --region on the command line;
+          ▸ set the property ai/region;
+          ▸ choose one from the prompted list of available regions.
+
+     --sample-predict-request=SAMPLE_PREDICT_REQUEST
+        Path to a local file containing the body of a JSON object. Same format
+        as [PredictRequest.instances][], this can be set as a replacement of
+        predict-instance-schema. If not set, predict schema will be generated
+        from collected predict requests.
+
+        An example of a JSON request:
+
+            {"x": [1, 2], "y": [3, 4]}
+
+     Key resource - The Cloud KMS (Key Management Service) cryptokey that will
+     be used to protect the model deployment monitoring job. The 'Vertex AI
+     Service Agent' service account must hold permission 'Cloud KMS CryptoKey
+     Encrypter/Decrypter'. The arguments in this group can be used to specify
+     the attributes of this resource.
+
+       --kms-key=KMS_KEY
+          ID of the key or fully qualified identifier for the key. To set the
+          kms-key attribute:
+          ▸ provide the argument --kms-key on the command line.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --kms-keyring=KMS_KEYRING
+          The KMS keyring of the key. To set the kms-keyring attribute:
+          ▸ provide the argument --kms-key on the command line with a fully
+            specified name;
+          ▸ provide the argument --kms-keyring on the command line.
+
+       --kms-location=KMS_LOCATION
+          The Cloud location for the key. To set the kms-location attribute:
+          ▸ provide the argument --kms-key on the command line with a fully
+            specified name;
+          ▸ provide the argument --kms-location on the command line.
+
+       --kms-project=KMS_PROJECT
+          The Cloud project for the key. To set the kms-project attribute:
+          ▸ provide the argument --kms-key on the command line with a fully
+            specified name;
+          ▸ provide the argument --kms-project on the command line;
+          ▸ set the property core/project.
+
+     At most one of these can be specified:
+
+       --monitoring-config-from-file=MONITORING_CONFIG_FROM_FILE
+          Path to the model monitoring objective config file. This file should
+          be a YAML document containing a
+          ModelDeploymentMonitoringJob(https://cloud.google.com/vertex-ai/docs/reference/rest/v1beta1/projects.locations.modelDeploymentMonitoringJobs#ModelDeploymentMonitoringJob),
+          but only the ModelDeploymentMonitoringObjectiveConfig needs to be
+          configured.
+
+          Note: Only one of --monitoring-config-from-file and other objective
+          config set, like --feature-thresholds,
+          --feature-attribution-thresholds needs to be set.
+
+          Example(YAML):
+
+              modelDeploymentMonitoringObjectiveConfigs:
+              - deployedModelId: '5251549009234886656'
+                objectiveConfig:
+                  trainingDataset:
+                    dataFormat: csv
+                    gcsSource:
+                      uris:
+                      - gs://fake-bucket/training_data.csv
+                    targetField: price
+                  trainingPredictionSkewDetectionConfig:
+                    skewThresholds:
+                      feat1:
+                        value: 0.9
+                      feat2:
+                        value: 0.8
+              - deployedModelId: '2945706000021192704'
+                objectiveConfig:
+                  predictionDriftDetectionConfig:
+                    driftThresholds:
+                      feat1:
+                        value: 0.3
+                      feat2:
+                        value: 0.4
+
+       --feature-attribution-thresholds=[KEY=VALUE,...]
+          List of feature-attribution score threshold value pairs(Apply for all
+          the deployed models under the endpoint, if you want to specify
+          different thresholds for different deployed model, please use flag
+          --monitoring-config-from-file or call API directly). If only feature
+          name is set, the default threshold value would be 0.3.
+
+          For example: feature-attribution-thresholds=feat1=0.1,feat2,feat3=0.2
+
+       --feature-thresholds=[KEY=VALUE,...]
+          List of feature-threshold value pairs(Apply for all the deployed
+          models under the endpoint, if you want to specify different
+          thresholds for different deployed model, please use flag
+          --monitoring-config-from-file or call API directly). If only feature
+          name is set, the default threshold value would be 0.3.
+
+          For example: --feature-thresholds=feat1=0.1,feat2,feat3=0.2
+
+       --target-field=TARGET_FIELD
+          Target field name the model is to predict. Must be provided if you'd
+          like to do training-prediction skew detection.
+
+       --training-sampling-rate=TRAINING_SAMPLING_RATE; default=1.0
+          Training Dataset sampling rate.
+
+       At most one of these can be specified:
+
+         --bigquery-uri=BIGQUERY_URI
+            BigQuery table of the unmanaged Dataset used to train this Model.
+            For example: bq://projectId.bqDatasetId.bqTableId.
+
+         --dataset=DATASET
+            Id of Vertex AI Dataset used to train this Model.
+
+         --data-format=DATA_FORMAT
+            Data format of the dataset, must be provided if the input is from
+            Google Cloud Storage. The possible formats are: tf-record, csv
+
+         --gcs-uris=[GCS_URIS,...]
+            Comma-separated Google Cloud Storage uris of the unmanaged Datasets
+            used to train this Model.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud ai model-monitoring-jobs create
+
+        $ gcloud alpha ai model-monitoring-jobs create
+

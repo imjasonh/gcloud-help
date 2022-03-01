@@ -1,0 +1,98 @@
+NAME
+    gcloud beta iot devices configs update - update a specific device
+        configuration
+
+SYNOPSIS
+    gcloud beta iot devices configs update
+        (--config-data=CONFIG_DATA | --config-file=CONFIG_FILE)
+        (--device=DEVICE : --region=REGION --registry=REGISTRY)
+        [--version-to-update=VERSION_TO_UPDATE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) This command updates the current configuration of the device.
+
+    It always creates a new config with a new version number; if
+    --version-to-update is provided, the config at that version is used as a
+    base.
+
+EXAMPLES
+    To update the latest configuration of a device in region 'us-central1',
+    run:
+
+        $ gcloud beta iot devices configs update --region=us-central1 \
+            --registry=my-registry --device=my-device \
+            --config-data="job_timeout:300"
+
+    To update the latest configuration of a device in region 'us-central1' only
+    if the latest configuration version is 11, run:
+
+        $ gcloud beta iot devices configs update --region=us-central1 \
+            --registry=my-registry --device=my-device \
+            --config-file=/path/to/config.base64 --version-to-update=11
+
+REQUIRED FLAGS
+     Exactly one of these must be specified:
+
+       --config-data=CONFIG_DATA
+          The data for this configuration, as a string. For any values that
+          contain special characters (in the context of your shell), use the
+          --config-file flag instead.
+
+       --config-file=CONFIG_FILE
+          Path to a local file containing the data for this configuration.
+
+     Device resource - The device for the configuration to update. The
+     arguments in this group can be used to specify the attributes of this
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways. To set the project attribute:
+      ◆ provide the argument --device on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       --device=DEVICE
+          ID of the device or fully qualified identifier for the device. To set
+          the device attribute:
+          ▸ provide the argument --device on the command line.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --region=REGION
+          The Cloud region for the device. To set the region attribute:
+          ▸ provide the argument --device on the command line with a fully
+            specified name;
+          ▸ provide the argument --region on the command line.
+
+       --registry=REGISTRY
+          The device registry for the device. To set the registry attribute:
+          ▸ provide the argument --device on the command line with a fully
+            specified name;
+          ▸ provide the argument --registry on the command line.
+
+OPTIONAL FLAGS
+     --version-to-update=VERSION_TO_UPDATE
+        The version number to update. If this value is 0 or unspecified, it
+        will not check the version number of the server and will always update
+        the current version; otherwise, this update will fail if the version
+        number provided does not match the latest version on the server. This
+        is used to detect conflicts with simultaneous updates.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud iot devices configs update
+
+        $ gcloud alpha iot devices configs update
+

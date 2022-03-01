@@ -1,0 +1,458 @@
+NAME
+    gcloud composer environments create - create and initialize a Cloud
+        Composer environment
+
+SYNOPSIS
+    gcloud composer environments create (ENVIRONMENT : --location=LOCATION)
+        [--airflow-configs=[KEY=VALUE,...]] [--async]
+        [--cloud-sql-machine-type=CLOUD_SQL_MACHINE_TYPE]
+        [--disk-size=DISK_SIZE] [--env-variables=[NAME=VALUE,...]]
+        [--environment-size=ENVIRONMENT_SIZE] [--labels=[KEY=VALUE,...]]
+        [--machine-type=MACHINE_TYPE] [--node-count=NODE_COUNT]
+        [--oauth-scopes=[SCOPE,...]] [--python-version=PYTHON_VERSION]
+        [--service-account=SERVICE_ACCOUNT] [--tags=[TAG,...]]
+        [--web-server-machine-type=WEB_SERVER_MACHINE_TYPE] [--zone=ZONE]
+        [--airflow-version=AIRFLOW_VERSION | --image-version=IMAGE_VERSION]
+        [--cloud-sql-ipv4-cidr=CLOUD_SQL_IPV4_CIDR
+          --composer-network-ipv4-cidr=COMPOSER_NETWORK_IPV4_CIDR
+          --connection-subnetwork=CONNECTION_SUBNETWORK
+          --enable-private-endpoint --enable-private-environment
+          --master-ipv4-cidr=MASTER_IPV4_CIDR
+          --web-server-ipv4-cidr=WEB_SERVER_IPV4_CIDR]
+        [--cluster-ipv4-cidr=CLUSTER_IPV4_CIDR
+          --cluster-secondary-range-name=CLUSTER_SECONDARY_RANGE_NAME
+          --enable-ip-alias --services-ipv4-cidr=SERVICES_IPV4_CIDR
+          --services-secondary-range-name=SERVICES_SECONDARY_RANGE_NAME]
+        [--kms-key=KMS_KEY : --kms-keyring=KMS_KEYRING
+          --kms-location=KMS_LOCATION --kms-project=KMS_PROJECT]
+        [--maintenance-window-end=MAINTENANCE_WINDOW_END
+          --maintenance-window-recurrence=MAINTENANCE_WINDOW_RECURRENCE
+          --maintenance-window-start=MAINTENANCE_WINDOW_START]
+        [--max-workers=MAX_WORKERS --min-workers=MIN_WORKERS
+          --scheduler-count=SCHEDULER_COUNT --scheduler-cpu=SCHEDULER_CPU
+          --scheduler-memory=SCHEDULER_MEMORY
+          --scheduler-storage=SCHEDULER_STORAGE --web-server-cpu=WEB_SERVER_CPU
+          --web-server-memory=WEB_SERVER_MEMORY
+          --web-server-storage=WEB_SERVER_STORAGE --worker-cpu=WORKER_CPU
+          --worker-memory=WORKER_MEMORY --worker-storage=WORKER_STORAGE]
+        [--network=NETWORK : --subnetwork=SUBNETWORK]
+        [--web-server-allow-all
+          | --web-server-allow-ip=[description=DESCRIPTION],[ip_range=IP_RANGE]
+          | --web-server-deny-all] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    If run asynchronously with --async, exits after printing an operation that
+    can be used to poll the status of the creation operation via:
+
+        gcloud composer operations describe
+
+EXAMPLES
+    To create an environment called env-1 with all the default values, run:
+
+        $ gcloud composer environments create env-1
+
+    To create a new environment named env-1 with the Google Compute Engine
+    machine-type n1-standard-8, and the Google Compute Engine network
+    my-network, run:
+
+        $ gcloud composer environments create env-1 \
+            --machine-type=n1-standard-8 --network=my-network
+
+POSITIONAL ARGUMENTS
+     Environment resource - The environment to create. The arguments in this
+     group can be used to specify the attributes of this resource. (NOTE) Some
+     attributes are not given arguments in this group but can be set in other
+     ways. To set the project attribute:
+      ◆ provide the argument environment on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       ENVIRONMENT
+          ID of the environment or fully qualified identifier for the
+          environment. To set the environment attribute:
+          ▸ provide the argument environment on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --location=LOCATION
+          Compute Engine region in which to create the environment. To set the
+          location attribute:
+          ▸ provide the argument environment on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property composer/location.
+
+FLAGS
+     --airflow-configs=[KEY=VALUE,...]
+        A list of Airflow software configuration override KEY=VALUE pairs to
+        set. For information on how to structure KEYs and VALUEs, run $ gcloud
+        help composer environments update.
+
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --cloud-sql-machine-type=CLOUD_SQL_MACHINE_TYPE
+        Cloud SQL machine type used by the Airflow database.
+
+     --disk-size=DISK_SIZE
+        The disk size for each VM node in the environment. The minimum size is
+        20GB, and the maximum is 64TB. Specified value must be an integer
+        multiple of gigabytes. Cannot be updated after the environment has been
+        created. If units are not provided, defaults to GB.
+
+     --env-variables=[NAME=VALUE,...]
+        A comma-delimited list of environment variable NAME=VALUE pairs to
+        provide to the Airflow scheduler, worker, and webserver processes. NAME
+        may contain upper and lowercase letters, digits, and underscores, but
+        they may not begin with a digit. To include commas as part of a VALUE,
+        see gcloud topics escaping for information about overriding the
+        delimiter.
+
+     --environment-size=ENVIRONMENT_SIZE
+        Size of the environment. Unspecified means that the default option will
+        be chosen. ENVIRONMENT_SIZE must be one of: large, medium, small,
+        unspecified.
+
+     --labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     --machine-type=MACHINE_TYPE
+        The Compute Engine machine type
+        (https://cloud.google.com/compute/docs/machine-types) to use for nodes.
+        For example --machine-type=n1-standard-1.
+
+     --node-count=NODE_COUNT
+        The number of nodes to create to run the environment.
+
+     --oauth-scopes=[SCOPE,...]
+        The set of Google API scopes to be made available on all of the node
+        VMs. Defaults to ['https://www.googleapis.com/auth/cloud-platform'].
+        Cannot be updated.
+
+     --python-version=PYTHON_VERSION
+        The Python version to be used within the created environment. Supplied
+        value should represent the desired major Python version. Cannot be
+        updated. PYTHON_VERSION must be one of:
+
+         2
+            Created environment will use Python 2
+         3
+            Created environment will use Python 3
+
+     --service-account=SERVICE_ACCOUNT
+        The Google Cloud Platform service account to be used by the node VMs.
+        If a service account is not specified, the "default" Compute Engine
+        service account for the project is used. Cannot be updated.
+
+     --tags=[TAG,...]
+        The set of instance tags applied to all node VMs. Tags are used to
+        identify valid sources or targets for network firewalls. Each tag
+        within the list must comply with RFC 1035. Cannot be updated.
+
+     --web-server-machine-type=WEB_SERVER_MACHINE_TYPE
+        machine type used by the Airflow web server. The list of available
+        machine types is available here:
+        https://cloud.google.com/composer/pricing.
+
+     --zone=ZONE
+        The Compute Engine zone in which the environment will be created. For
+        example --zone=us-central1-a.
+
+     At most one of these can be specified:
+
+       --airflow-version=AIRFLOW_VERSION
+          Version of Airflow to run in the environment.
+
+              Must be of the form `X.Y[.Z]`.
+
+              The latest supported Cloud Composer version will be used within
+              the created environment.
+
+       --image-version=IMAGE_VERSION
+          Version of the image to run in the environment.
+
+              The image version encapsulates the versions of both Cloud Composer
+              and Apache Airflow. Must be of the form
+              `composer-A.B.C[-D.E]-airflow-X.Y[.Z]`.
+
+              The Cloud Composer and Airflow versions are semantic versions.
+              `latest` can be provided instead of an explicit Cloud Composer
+              version number indicating that the server will replace `latest`
+              with the current Cloud Composer version. For the Apache Airflow
+              portion, the patch version can be omitted and the current
+              version will be selected. The version numbers that are used will
+              be stored.
+
+     Private Clusters
+
+       --cloud-sql-ipv4-cidr=CLOUD_SQL_IPV4_CIDR
+          IPv4 CIDR range to use for the Cloud SQL network. This should have a
+          size of the netmask not greater than 24.
+
+          Cannot be specified unless '--enable-private-environment' is also
+          specified.
+
+       --composer-network-ipv4-cidr=COMPOSER_NETWORK_IPV4_CIDR
+          IPv4 CIDR range to use for the Composer network. This must have a
+          size of the netmask between 24 and 29.
+
+          Can be specified for Composer 2.X or greater. Cannot be specified
+          unless '--enable-private-environment' is also specified.
+
+       --connection-subnetwork=CONNECTION_SUBNETWORK
+          Subnetwork from which an IP address for internal communications will
+          be reserved. Needs to belong to the Compute network to which the
+          environment is connected. Can be the same subnetwork as the one to
+          which the environment is connected.
+
+          Can be specified for Composer 2.X or greater. Cannot be specified
+          unless '--enable-private-environment' is also specified.
+
+       --enable-private-endpoint
+          Environment cluster is managed using the private IP address of the
+          master API endpoint. Therefore access to the master endpoint must be
+          from internal IP addresses.
+
+          If not specified, the master API endpoint will be accessible by its
+          public IP address.
+
+          Cannot be specified unless '--enable-private-environment' is also
+          specified.
+
+       --enable-private-environment
+          Environment cluster is created with no public IP addresses on the
+          cluster nodes.
+
+          If not specified, cluster nodes will be assigned public IP addresses.
+
+          Cannot be specified unless '--enable-ip-alias' is also specified.
+
+       --master-ipv4-cidr=MASTER_IPV4_CIDR
+          IPv4 CIDR range to use for the cluster master network. This should
+          have a size of the netmask between 23 and 28.
+
+          Cannot be specified unless '--enable-private-environment' is also
+          specified.
+
+       --web-server-ipv4-cidr=WEB_SERVER_IPV4_CIDR
+          IPv4 CIDR range to use for the Airflow web server network. This
+          should have a size of the netmask between 24 and 29.
+
+          Cannot be specified unless '--enable-private-environment' is also
+          specified.
+
+     IP Alias (VPC-native)
+
+       --cluster-ipv4-cidr=CLUSTER_IPV4_CIDR
+          IP address range for the pods in this cluster in CIDR notation (e.g.
+          10.0.0.0/14).
+
+          Cannot be specified unless '--enable-ip-alias' is also specified.
+
+       --cluster-secondary-range-name=CLUSTER_SECONDARY_RANGE_NAME
+          Secondary range to be used as the source for pod IPs. Alias ranges
+          will be allocated from this secondary range. NAME must be the name of
+          an existing secondary range in the cluster subnetwork.
+
+          Cannot be specified unless '--enable-ip-alias' is also specified.
+
+       --enable-ip-alias
+          Enable use of alias IPs
+          (https://cloud.google.com/compute/docs/alias-ip/) for Pod IPs. This
+          will require at least two secondary ranges in the subnetwork, one for
+          the pod IPs and another to reserve space for the services range.
+
+       --services-ipv4-cidr=SERVICES_IPV4_CIDR
+          IP range for the services IPs.
+
+          Can be specified as a netmask size (e.g. '/20') or as in CIDR notion
+          (e.g. '10.100.0.0/20'). If given as a netmask size, the IP range will
+          be chosen automatically from the available space in the network.
+
+          If unspecified, the services CIDR range will be chosen with a default
+          mask size.
+
+          Cannot be specified unless '--enable-ip-alias' is also specified.
+
+       --services-secondary-range-name=SERVICES_SECONDARY_RANGE_NAME
+          Secondary range to be used for services (e.g. ClusterIPs). NAME must
+          be the name of an existing secondary range in the cluster subnetwork.
+
+          Cannot be specified unless '--enable-ip-alias' is also specified.
+
+     Key resource - The Cloud KMS (Key Management Service) cryptokey that will
+     be used to protect the environment. The 'Cloud Composer Service Agent'
+     service account must hold permission 'Cloud KMS CryptoKey
+     Encrypter/Decrypter'. The arguments in this group can be used to specify
+     the attributes of this resource.
+
+       --kms-key=KMS_KEY
+          ID of the key or fully qualified identifier for the key. To set the
+          kms-key attribute:
+          ▸ provide the argument --kms-key on the command line.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --kms-keyring=KMS_KEYRING
+          The KMS keyring of the key. To set the kms-keyring attribute:
+          ▸ provide the argument --kms-key on the command line with a fully
+            specified name;
+          ▸ provide the argument --kms-keyring on the command line.
+
+       --kms-location=KMS_LOCATION
+          The Cloud location for the key. To set the kms-location attribute:
+          ▸ provide the argument --kms-key on the command line with a fully
+            specified name;
+          ▸ provide the argument --kms-location on the command line.
+
+       --kms-project=KMS_PROJECT
+          The Cloud project for the key. To set the kms-project attribute:
+          ▸ provide the argument --kms-key on the command line with a fully
+            specified name;
+          ▸ provide the argument --kms-project on the command line;
+          ▸ set the property core/project.
+
+     Group of arguments for setting the maintenance window value.
+
+       --maintenance-window-end=MAINTENANCE_WINDOW_END
+          End time of the mantenance window in the form of the full date. Only
+          the time of the day is used as a reference for an ending time of the
+          window with a provided recurrence. Specified date must take place
+          after the one specified as a start date, the difference between will
+          be used as a length of a single maintenance window. See $ gcloud
+          topic datetimes for information on time formats.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --maintenance-window-recurrence=MAINTENANCE_WINDOW_RECURRENCE
+          An RFC 5545 RRULE, specifying how the maintenance window will recur.
+          The minimum requirement for the length of the maintenance window is
+          12 hours a week. Only FREQ=DAILY and FREQ=WEEKLY rules are supported.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --maintenance-window-start=MAINTENANCE_WINDOW_START
+          Start time of the mantenance window in the form of the full date.
+          Only the time of the day is used as a reference for a starting time
+          of the window with a provided recurrence. See $ gcloud topic
+          datetimes for information on time formats.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+     Group of arguments for setting workloads configuration in Composer 2.X or
+     greater (--scheduler-count flag is available for Composer 1.X as well).
+
+       --max-workers=MAX_WORKERS
+          Maximum number of workers in the Environment.
+
+       --min-workers=MIN_WORKERS
+          Minimum number of workers in the Environment.
+
+       --scheduler-count=SCHEDULER_COUNT
+          Number of schedulers, supported in the Environments with Airflow
+          2.0.1 and later.
+
+       --scheduler-cpu=SCHEDULER_CPU
+          CPU allocated to Airflow scheduler.
+
+       --scheduler-memory=SCHEDULER_MEMORY
+          Memory allocated to Airflow scheduler, ex. 600MB, 3GB, 2. If units
+          are not provided, defaults to GB.
+
+       --scheduler-storage=SCHEDULER_STORAGE
+          Storage allocated to Airflow scheduler, ex. 600MB, 3GB, 2. If units
+          are not provided, defaults to GB.
+
+       --web-server-cpu=WEB_SERVER_CPU
+          CPU allocated to each Airflow web server
+
+       --web-server-memory=WEB_SERVER_MEMORY
+          Memory allocated to Airflow web server, ex. 600MB, 3GB, 2. If units
+          are not provided, defaults to GB.
+
+       --web-server-storage=WEB_SERVER_STORAGE
+          Storage allocated to Airflow web server, ex. 600MB, 3GB, 2. If units
+          are not provided, defaults to GB.
+
+       --worker-cpu=WORKER_CPU
+          CPU allocated to each Airflow worker
+
+       --worker-memory=WORKER_MEMORY
+          Memory allocated to Airflow worker, ex. 600MB, 3GB, 2. If units are
+          not provided, defaults to GB.
+
+       --worker-storage=WORKER_STORAGE
+          Storage allocated to Airflow worker, ex. 600MB, 3GB, 2. If units are
+          not provided, defaults to GB.
+
+     Virtual Private Cloud networking
+
+       --network=NETWORK
+          The Compute Engine Network to which the environment will be
+          connected. If a 'Custom Subnet Network' is provided, --subnetwork
+          must be specified as well.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --subnetwork=SUBNETWORK
+          The Compute Engine subnetwork
+          (https://cloud.google.com/compute/docs/subnetworks) to which the
+          environment will be connected.
+
+     At most one of these can be specified:
+
+       --web-server-allow-all
+          Allows all IP addresses to access the Airflow web server.
+
+       --web-server-allow-ip=[description=DESCRIPTION],[ip_range=IP_RANGE]
+          Specifies a list of IPv4 or IPv6 ranges that will be allowed to
+          access the Airflow web server. By default, all IPs are allowed to
+          access the web server.
+
+          This is a repeated argument that can be specified multiple times to
+          specify multiple IP ranges. (e.g.
+          --web-server-allow-ip=ip_range=130.211.160.0/28,description="office
+          network"
+          --web-server-allow-ip=ip_range=130.211.114.0/28,description="legacy
+          network")
+
+           ip_range
+              IPv4 or IPv6 range of addresses allowed to access the Airflow web
+              server.
+
+           description
+              An optional description of the IP range.
+
+       --web-server-deny-all
+          Denies all incoming traffic to the Airflow web server.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha composer environments create
+
+        $ gcloud beta composer environments create
+

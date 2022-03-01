@@ -1,0 +1,95 @@
+NAME
+    gcloud alpha compute images update - update a Compute Engine image
+
+SYNOPSIS
+    gcloud alpha compute images update IMAGE_NAME [--architecture=ARCHITECTURE]
+        [--description=DESCRIPTION] [--family=FAMILY]
+        [--update-labels=[KEY=VALUE,...]]
+        [--clear-labels | --remove-labels=[KEY,...]] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) gcloud alpha compute images update updates labels for a Compute
+    Engine image.
+
+EXAMPLES
+    To update labels k0 and k1 and remove labels with key k3, run:
+
+        $ gcloud alpha compute images update example-image \
+            --update-labels=k0=value1,k1=value2 --remove-labels=k3
+
+        k0 and k1 will be added as new labels if not already present.
+
+    Labels can be used to identify the image and to filter them like:
+
+        $ gcloud alpha compute images list --filter='labels.k1:value2'
+
+    To list only the labels when describing a resource, use --format:
+
+        $ gcloud alpha compute images describe example-image \
+            --format="default(labels)"
+
+POSITIONAL ARGUMENTS
+     IMAGE_NAME
+        Name of the disk image to update.
+
+FLAGS
+     --architecture=ARCHITECTURE
+        Image resources can be used to create boot disks compatible with
+        different machine architectures. ARCHITECTURE must be one of: ARM64,
+        X86_64.
+
+     --description=DESCRIPTION
+        An optional text description for the image.
+
+     --family=FAMILY
+        Name of the image family to use. If an image family is specified when
+        you create an instance or disk, the latest non-deprecated image in the
+        family is used.
+
+     --update-labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to update. If a label exists, its value
+        is modified. Otherwise, a new label is created.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     At most one of these can be specified:
+
+       --clear-labels
+          Remove all labels. If --update-labels is also specified then
+          --clear-labels is applied first.
+
+          For example, to remove all labels:
+
+              $ gcloud alpha compute images update --clear-labels
+
+          To remove all existing labels and create two new labels, foo and baz:
+
+              $ gcloud alpha compute images update --clear-labels \
+                --update-labels foo=bar,baz=qux
+
+       --remove-labels=[KEY,...]
+          List of label keys to remove. If a label does not exist it is
+          silently ignored. If --update-labels is also specified then
+          --update-labels is applied first.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud compute images update
+
+        $ gcloud beta compute images update
+

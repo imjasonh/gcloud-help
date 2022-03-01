@@ -1,0 +1,90 @@
+NAME
+    gcloud alpha artifacts apt import - import one or more Debian packages into
+        an artifact repository
+
+SYNOPSIS
+    gcloud alpha artifacts apt import (REPOSITORY : --location=LOCATION)
+        --gcs-source=[GCS_SOURCE,...] [--async] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) gcloud alpha artifacts apt import imports Debian packages from
+    Google Cloud Storage into the specified artifact repository.
+
+EXAMPLES
+    To import the package my-package.deb from Google Cloud Storage into
+    my-repo, run:
+
+        $ gcloud alpha artifacts apt import my-repo --location=us-central1 \
+            --gcs-source=gs://my-bucket/path/to/my-package.deb
+
+    To import the packages my-package.deb and other-package.deb into my-repo,
+    run:
+
+        $ gcloud alpha artifacts apt import my-repo --location=us-central1 \
+            --gcs-source=gs://my-bucket/path/to/my-package.deb,gs://\
+        my-bucket/path/to/other-package.deb
+
+    To import all packages from my-directory into my-repo, run:
+
+        $ gcloud alpha artifacts apt import my-repo --location=us-central1 \
+            --gcs-source=gs://my-bucket/my-directory/*
+
+    To import all packages in all subdirectories from a Google Cloud Storage
+    bucket into my-repo, run:
+
+        $ gcloud alpha artifacts apt import my-repo --location=us-central1 \
+            --gcs-source=gs://my-bucket/**
+
+POSITIONAL ARGUMENTS
+     Repository resource - The Artifact Registry repository. If not specified,
+     the current artifacts/repository is used. The arguments in this group can
+     be used to specify the attributes of this resource. (NOTE) Some attributes
+     are not given arguments in this group but can be set in other ways. To set
+     the project attribute:
+      ◆ provide the argument repository on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       REPOSITORY
+          ID of the repository or fully qualified identifier for the
+          repository. To set the repository attribute:
+          ▸ provide the argument repository on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --location=LOCATION
+          Location of the repository. To set the location attribute:
+          ▸ provide the argument repository on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line.
+
+REQUIRED FLAGS
+     --gcs-source=[GCS_SOURCE,...]
+        The Google Cloud Storage location of a package to import. Wildcards may
+        be added at the end to import multiple packages.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. This variant is also available:
+
+        $ gcloud beta artifacts apt import
+

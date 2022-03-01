@@ -1,0 +1,106 @@
+NAME
+    gcloud beta iot registries update - update a device registry
+
+SYNOPSIS
+    gcloud beta iot registries update (REGISTRY : --region=REGION)
+        [--enable-http-config] [--enable-mqtt-config]
+        [--event-notification-config=[subfolder=SUBFOLDER],[topic=TOPIC]]
+        [--log-level=LOG_LEVEL] [--state-pubsub-topic=STATE_PUBSUB_TOPIC]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Update a device registry.
+
+EXAMPLES
+    The following command updates the device registry 'my-registry' in region
+    'us-central1'. It enables MQTT and HTTP connections and sets
+    'pubsub-topic-name' as the Cloud Pub/Sub topic for state notifications.
+
+        $ gcloud beta iot registries update my-registry \
+            --region=us-central1 --enable-http-config --enable-mqtt-config \
+            --state-pubsub-topic=pubsub-topic-name
+
+POSITIONAL ARGUMENTS
+     Registry resource - The device registry to update. The arguments in this
+     group can be used to specify the attributes of this resource. (NOTE) Some
+     attributes are not given arguments in this group but can be set in other
+     ways. To set the project attribute:
+      ◆ provide the argument registry on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       REGISTRY
+          ID of the registry or fully qualified identifier for the registry. To
+          set the registry attribute:
+          ▸ provide the argument registry on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --region=REGION
+          The Cloud region for the registry. To set the region attribute:
+          ▸ provide the argument registry on the command line with a fully
+            specified name;
+          ▸ provide the argument --region on the command line.
+
+FLAGS
+     --enable-http-config
+        Whether to allow device connections to the HTTP bridge.
+
+     --enable-mqtt-config
+        Whether to allow MQTT connections to this device registry.
+
+     --event-notification-config=[subfolder=SUBFOLDER],[topic=TOPIC]
+        The configuration for notification of telemetry events received from
+        the device. This flag can be specified multiple times to add multiple
+        configs to the device registry. Configs are added to the registry in
+        the order the flags are specified. Only one config with an empty
+        subfolder field is allowed and must be specified last.
+
+         topic
+            A Google Cloud Pub/Sub topic name for event notifications
+
+         subfolder
+            If the subfolder name matches this string exactly, this
+            configuration will be used to publish telemetry events. If empty
+            all strings are matched.
+
+     --log-level=LOG_LEVEL
+        The default logging verbosity for activity from devices in this
+        registry. The verbosity level can be overridden by setting a specific
+        device's log level.
+
+        LOG_LEVEL must be one of:
+
+         debug
+            All events will be logged
+         error
+            Error events will be logged.
+         info
+            Informational events will be logged, such as connections and
+            disconnections. Also includes error events.
+         none
+            Disables logging.
+
+     --state-pubsub-topic=STATE_PUBSUB_TOPIC
+        A Google Cloud Pub/Sub topic name for state notifications.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud iot registries update
+
+        $ gcloud alpha iot registries update
+

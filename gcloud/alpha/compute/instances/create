@@ -1,0 +1,1264 @@
+NAME
+    gcloud alpha compute instances create - create Compute Engine virtual
+        machine instances
+
+SYNOPSIS
+    gcloud alpha compute instances create INSTANCE_NAMES [INSTANCE_NAMES ...]
+        [--accelerator=[count=COUNT],[type=TYPE]] [--async]
+        [--no-boot-disk-auto-delete]
+        [--boot-disk-device-name=BOOT_DISK_DEVICE_NAME]
+        [--boot-disk-provisioned-iops=BOOT_DISK_PROVISIONED_IOPS]
+        [--boot-disk-size=BOOT_DISK_SIZE] [--boot-disk-type=BOOT_DISK_TYPE]
+        [--can-ip-forward] [--confidential-compute]
+        [--create-disk=[PROPERTY=VALUE,...]] [--csek-key-file=FILE]
+        [--deletion-protection] [--description=DESCRIPTION]
+        [--disk=[auto-delete=AUTO-DELETE],[boot=BOOT],
+          [device-name=DEVICE-NAME],[mode=MODE],[name=NAME],[scope=SCOPE]]
+        [--enable-display-device] [--[no-]enable-nested-virtualization]
+        [--[no-]enable-uefi-networking] [--erase-windows-vss-signature]
+        [--host-error-timeout-seconds=HOST_ERROR_TIMEOUT_SECONDS]
+        [--hostname=HOSTNAME]
+        [--instance-termination-action=INSTANCE_TERMINATION_ACTION]
+        [--ipv6-network-tier=IPV6_NETWORK_TIER]
+        [--ipv6-public-ptr-domain=IPV6_PUBLIC_PTR_DOMAIN]
+        [--labels=[KEY=VALUE,...]] [--local-nvdimm=[size=SIZE]]
+        [--local-ssd=[device-name=DEVICE-NAME],
+          [interface=INTERFACE],[size=SIZE]] [--machine-type=MACHINE_TYPE]
+        [--maintenance-freeze-duration=MAINTENANCE_FREEZE_DURATION]
+        [--maintenance-interval=MAINTENANCE_INTERVAL]
+        [--metadata=KEY=VALUE,[KEY=VALUE,...]]
+        [--metadata-from-file=KEY=LOCAL_FILE_PATH,[...]]
+        [--min-cpu-platform=PLATFORM] [--min-node-cpu=MIN_NODE_CPU]
+        [--network=NETWORK]
+        [--network-performance-configs=[PROPERTY=VALUE,...]]
+        [--network-tier=NETWORK_TIER] [--node-project=NODE_PROJECT]
+        [--numa-node-count=NUMA_NODE_COUNT]
+        [--post-key-revocation-action-type=POLICY] [--preemptible]
+        [--private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE]
+        [--private-network-ip=PRIVATE_NETWORK_IP]
+        [--provisioning-model=PROVISIONING_MODEL]
+        [--no-require-csek-key-create]
+        [--resource-manager-tags=[KEY=VALUE,...]]
+        [--resource-policies=[RESOURCE_POLICY,...]] [--no-restart-on-failure]
+        [--secure-tags=SECURE_TAG,[SECURE_TAG,...]]
+        [--shielded-integrity-monitoring] [--shielded-secure-boot]
+        [--shielded-vtpm] [--source-instance-template=SOURCE_INSTANCE_TEMPLATE]
+        [--source-machine-image=SOURCE_MACHINE_IMAGE]
+        [--source-machine-image-csek-key-file=FILE] [--stack-type=STACK_TYPE]
+        [--subnet=SUBNET] [--tags=TAG,[TAG,...]]
+        [--threads-per-core=THREADS_PER_CORE]
+        [--visible-core-count=VISIBLE_CORE_COUNT] [--zone=ZONE]
+        [--address=ADDRESS | --no-address]
+        [--boot-disk-kms-key=BOOT_DISK_KMS_KEY
+          : --boot-disk-kms-keyring=BOOT_DISK_KMS_KEYRING
+          --boot-disk-kms-location=BOOT_DISK_KMS_LOCATION
+          --boot-disk-kms-project=BOOT_DISK_KMS_PROJECT]
+        [--custom-cpu=CUSTOM_CPU --custom-memory=CUSTOM_MEMORY
+          : --custom-extensions --custom-vm-type=CUSTOM_VM_TYPE]
+        [--image-family-scope=IMAGE_FAMILY_SCOPE
+          --image-project=IMAGE_PROJECT --image=IMAGE
+          | --image-family=IMAGE_FAMILY | --source-snapshot=SOURCE_SNAPSHOT]
+        [--maintenance-policy=MAINTENANCE_POLICY
+          | --on-host-maintenance=MAINTENANCE_POLICY]
+        [--network-interface=[PROPERTY=VALUE,...]
+          | --network-interface-from-file=KEY=LOCAL_FILE_PATH
+          | --network-interface-from-json-string=NETWORK_INTERFACE_JSON_STRING]
+        [--node=NODE | --node-affinity-file=NODE_AFFINITY_FILE
+          | --node-group=NODE_GROUP] [--public-dns | --no-public-dns]
+        [--public-ptr | --no-public-ptr]
+        [--public-ptr-domain=PUBLIC_PTR_DOMAIN | --no-public-ptr-domain]
+        [--reservation=RESERVATION
+          --reservation-affinity=RESERVATION_AFFINITY; default="any"]
+        [--scopes=[SCOPE,...] | --no-scopes]
+        [--service-account=SERVICE_ACCOUNT | --no-service-account]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) gcloud alpha compute instances create facilitates the creation of
+    Compute Engine virtual machines.
+
+    When an instance is in RUNNING state and the system begins to boot, the
+    instance creation is considered finished, and the command returns with a
+    list of new virtual machines. Note that you usually cannot log into a new
+    instance until it finishes booting. Check the progress of an instance using
+    gcloud compute instances get-serial-port-output.
+
+    For more examples, refer to the EXAMPLES section below.
+
+EXAMPLES
+    To create an instance with the latest 'Red Hat Enterprise Linux 8' image
+    available, run:
+
+        $ gcloud alpha compute instances create example-instance \
+            --image-family=rhel-8 --image-project=rhel-cloud \
+            --zone=us-central1-a
+
+    To create instances called 'example-instance-1', 'example-instance-2', and
+    'example-instance-3' in the 'us-central1-a' zone, run:
+
+        $ gcloud alpha compute instances create example-instance-1 \
+            example-instance-2 example-instance-3 --zone=us-central1-a
+
+    To create an instance called 'instance-1' from a source snapshot called
+    'instance-snapshot' in zone 'us-central2-a' and attached regional disk
+    'disk-1', run:
+
+        $ gcloud alpha compute instances create instance-1 \
+            --source-snapshot=https://compute.googleapis.com/compute/v1/\
+        projects/myproject/global/snapshots/instance-snapshot \
+            --zone=central2-a --disk=name=disk1,scope=regional
+
+    To create an instance called instance-1 as a Shielded VM instance with
+    Secure Boot, virtual trusted platform module (vTPM) enabled and integrity
+    monitoring, run:
+
+        $ gcloud alpha compute instances create instance-1 \
+            --zone=central2-a --shielded-secure-boot --shielded-vtpm \
+            --shielded-integrity-monitoring
+
+    To create an preemptible instance called 'instance-1', run:
+
+        $ gcloud alpha compute instances create instance-1 \
+            --machine-type=n1-standard-1 --zone=us-central1-b \
+            --preemptible --no-restart-on-failure \
+            --maintenance-policy=terminate
+
+POSITIONAL ARGUMENTS
+     INSTANCE_NAMES [INSTANCE_NAMES ...]
+        Names of the instances to create. For details on valid instance names,
+        refer to the criteria documented under the field 'name' at:
+        https://cloud.google.com/compute/docs/reference/rest/v1/instances
+
+FLAGS
+     --accelerator=[count=COUNT],[type=TYPE]
+        Attaches accelerators (e.g. GPUs) to the instances.
+
+         type
+            The specific type (e.g. nvidia-tesla-k80 for nVidia Tesla K80) of
+            accelerator to attach to the instances. Use 'gcloud compute
+            accelerator-types list' to learn about all available accelerator
+            types.
+
+         count
+            Number of accelerators to attach to each instance. The default
+            value is 1.
+
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --boot-disk-auto-delete
+        Automatically delete boot disks when their instances are deleted.
+        Enabled by default, use --no-boot-disk-auto-delete to disable.
+
+     --boot-disk-device-name=BOOT_DISK_DEVICE_NAME
+        The name the guest operating system will see for the boot disk. This
+        option can only be specified if a new boot disk is being created (as
+        opposed to mounting an existing persistent disk).
+
+     --boot-disk-provisioned-iops=BOOT_DISK_PROVISIONED_IOPS
+        Indicates how many IOPS to provision for the disk. This sets the number
+        of I/O operations per second that the disk can handle. Value must be
+        between 10,000 and 120,000.
+
+     --boot-disk-size=BOOT_DISK_SIZE
+        The size of the boot disk. This option can only be specified if a new
+        boot disk is being created (as opposed to mounting an existing
+        persistent disk). The value must be a whole number followed by a size
+        unit of KB for kilobyte, MB for megabyte, GB for gigabyte, or TB for
+        terabyte. For example, 10GB will produce a 10 gigabyte disk. The
+        minimum size a boot disk can have is 10 GB. Disk size must be a
+        multiple of 1 GB. Limit boot disk size to 2 TB to account for MBR
+        partition table limitations. Default size unit is GB.
+
+     --boot-disk-type=BOOT_DISK_TYPE
+        The type of the boot disk. This option can only be specified if a new
+        boot disk is being created (as opposed to mounting an existing
+        persistent disk). To get a list of available disk types, run $ gcloud
+        compute disk-types list.
+
+     --can-ip-forward
+        If provided, allows the instances to send and receive packets with
+        non-matching destination or source IP addresses.
+
+     --confidential-compute
+        The instance boots with Confidential Computing enabled. Confidential
+        Computing is based on Secure Encrypted Virtualization (SEV), an AMD
+        virtualization feature for running confidential instances.
+
+     --create-disk=[PROPERTY=VALUE,...]
+        Creates and attaches persistent disks to the instances.
+
+         name
+            Specifies the name of the disk. This option cannot be specified if
+            more than one instance is being created.
+
+         description
+            Optional textual description for the disk being created.
+
+         mode
+            Specifies the mode of the disk. Supported options are ro for
+            read-only and rw for read-write. If omitted, rw is used as a
+            default.
+
+         image
+            Specifies the name of the image that the disk will be initialized
+            with. A new disk will be created based on the given image. To view
+            a list of public images and projects, run $ gcloud compute images
+            list. It is best practice to use image when a specific version of
+            an image is needed. If both image and image-family flags are
+            omitted a blank disk will be created.
+
+         image-family
+            The image family for the operating system that the boot disk will
+            be initialized with. Compute Engine offers multiple Linux
+            distributions, some of which are available as both regular and
+            Shielded VM images. When a family is specified instead of an image,
+            the latest non-deprecated image associated with that family is
+            used. It is best practice to use --image-family when the latest
+            version of an image is needed.
+
+         image-project
+            The Google Cloud project against which all image and image family
+            references will be resolved. It is best practice to define
+            image-project. A full list of available image projects can be
+            generated by running gcloud compute images list.
+
+            ▸ If specifying one of our public images, image-project must be
+              provided.
+            ▸ If there are several of the same image-family value in multiple
+              projects, image-project must be specified to clarify the image to
+              be used.
+            ▸ If not specified and either image or image-family is provided,
+              the current default project is used.
+
+         size
+            The size of the disk. The value must be a whole number followed by
+            a size unit of KB for kilobyte, MB for megabyte, GB for gigabyte,
+            or TB for terabyte. For example, 10GB will produce a 10 gigabyte
+            disk. Disk size must be a multiple of 1 GB. If not specified, the
+            default image size will be used for the new disk.
+
+         type
+            The type of the disk. To get a list of available disk types, run $
+            gcloud compute disk-types list. The default disk type is
+            pd-standard.
+
+         device-name
+            An optional name that indicates the disk name the guest operating
+            system will see. If omitted, a device name of the form
+            persistent-disk-N will be used.
+
+         provisioned-iops
+            Indicates how many IOPS to provision for the disk. This sets the
+            number of I/O operations per second that the disk can handle. Value
+            must be between 10,000 and 120,000.
+
+         disk-resource-policy
+            Resource policy to apply to the disk. Specify a full or partial
+            URL. For example:
+            ▸ https://www.googleapis.com/compute/v1/projects/my-project/regions/us-central1/resourcePolicies/my-resource-policy
+            ▸ projects/my-project/regions/us-central1/resourcePolicies/my-resource-policy
+
+            For more information, see the following docs:
+            ▸ https://cloud.google.com/sdk/gcloud/reference/beta/compute/resource-policies/
+            ▸ https://cloud.google.com/compute/docs/disks/scheduled-snapshots
+
+         auto-delete
+            If yes, this persistent disk will be automatically deleted when the
+            instance is deleted. However, if the disk is later detached from
+            the instance, this option won't apply. The default value for this
+            is yes.
+
+         boot
+            If yes, indicates that this is a boot disk. The instance will use
+            the first partition of the disk for its root file system. The
+            default value for this is no.
+
+         kms-key
+            Fully qualified Cloud KMS cryptokey name that will protect the
+            disk.
+
+            This can either be the fully qualified path or the name.
+
+            The fully qualified Cloud KMS cryptokey name format is:
+            projects/<kms-project>/locations/<kms-location>/keyRings/<kms-keyring>/
+            cryptoKeys/<key-name>.
+
+            If the value is not fully qualified then kms-location, kms-keyring,
+            and optionally kms-project are required.
+
+            See
+            https://cloud.google.com/compute/docs/disks/customer-managed-encryption
+            for more details.
+
+         kms-project
+            Project that contains the Cloud KMS cryptokey that will protect the
+            disk.
+
+            If the project is not specified then the project where the disk is
+            being created will be used.
+
+            If this flag is set then key-location, kms-keyring, and kms-key are
+            required.
+
+            See
+            https://cloud.google.com/compute/docs/disks/customer-managed-encryption
+            for more details.
+
+         kms-location
+            Location of the Cloud KMS cryptokey to be used for protecting the
+            disk.
+
+            All Cloud KMS cryptokeys are reside in a 'location'. To get a list
+            of possible locations run 'gcloud kms locations list'. If this flag
+            is set then kms-keyring and kms-key are required. See
+            https://cloud.google.com/compute/docs/disks/customer-managed-encryption
+            for more details.
+
+         kms-keyring
+            The keyring which contains the Cloud KMS cryptokey that will
+            protect the disk.
+
+            If this flag is set then kms-location and kms-key are required.
+
+            See
+            https://cloud.google.com/compute/docs/disks/customer-managed-encryption
+            for more details.
+
+         source-snapshot
+            The source disk snapshot that will be used to create the disk. You
+            can provide this as a full URL to the snapshot or just the snapshot
+            name. For example, the following are valid values:
+
+            ▸ https://compute.googleapis.com/compute/v1/projects/myproject/global/snapshots/snapshot
+            ▸ snapshot
+
+         source-snapshot-csek-required
+            The CSK protected source disk snapshot that will be used to create
+            the disk. This can be provided as a full URL to the snapshot or
+            just the snapshot name. Must be specified with
+            source-snapshot-csek-key-file. The following are valid values:
+
+            ▸ https://www.googleapis.com/compute/v1/projects/myproject/global/snapshots/snapshot
+            ▸ snapshot
+
+         source-snapshot-csek-key-file
+            Path to a Customer-Supplied Encryption Key (CSEK) key file for the
+            source snapshot. Must be specified with
+            source-snapshot-csek-required.
+
+         image-csek-required
+            Specifies the name of the CSK protected image that the disk will be
+            initialized with. A new disk will be created based on the given
+            image. To view a list of public images and projects, run $ gcloud
+            compute images list. It is best practice to use image when a
+            specific version of an image is needed. If both image and
+            image-family flags are omitted a blank disk will be created. Must
+            be specified with image-csek-key-file.
+
+         image-csek-key-file
+            Path to a Customer-Supplied Encryption Key (CSEK) key file for the
+            image. Must be specified with image-csek-required.
+
+         multi-writer
+            If yes, the disk is created in multi-writer mode so that it can be
+            attached with read-write access to two VMs. The default value is
+            no. The multi-writer feature requires specialized filesystems,
+            among other restrictions. For more information, see
+            https://cloud.google.com/compute/docs/disks/sharing-disks-between-vms.
+
+         replica-zones
+            If specified, the created disk is regional. Only one zone can be
+            specified and it has to be different from the zone of the instance,
+            the other replica zone will be inferred from the instance zone. The
+            disk will be replicated to the specified replica zone and the zone
+            of the newly created instance.
+
+         architecture
+            Storage resources can be used to create boot disks compatible with
+            different machine architectures. ARCHITECTURE must be one of:
+            ARM64, X86_64.
+
+     --csek-key-file=FILE
+        Path to a Customer-Supplied Encryption Key (CSEK) key file that maps
+        Compute Engine resources to user managed keys to be used when creating,
+        mounting, or taking snapshots of disks.
+
+        If you pass - as value of the flag, the CSEK is read from stdin. See
+        https://cloud.google.com/compute/docs/disks/customer-supplied-encryption
+        for more details.
+
+     --deletion-protection
+        Enables deletion protection for the instance.
+
+     --description=DESCRIPTION
+        Specifies a textual description of the instances.
+
+     --disk=[auto-delete=AUTO-DELETE],[boot=BOOT],[device-name=DEVICE-NAME],[mode=MODE],[name=NAME],[scope=SCOPE]
+        Attaches persistent disks to the instances. The disks specified must
+        already exist.
+
+         name
+            The disk to attach to the instances. When creating more than one
+            instance and using this property, the only valid mode for attaching
+            the disk is read-only (see mode below).
+
+         mode
+            Specifies the mode of the disk. Supported options are ro for
+            read-only and rw for read-write. If omitted, rw is used as a
+            default. It is an error for mode to be rw when creating more than
+            one instance because read-write disks can only be attached to a
+            single instance.
+
+         boot
+            If yes, indicates that this is a boot disk. The virtual machines
+            will use the first partition of the disk for their root file
+            systems. The default value for this is no.
+
+         device-name
+            An optional name that indicates the disk name the guest operating
+            system will see. If omitted, a device name of the form
+            persistent-disk-N will be used.
+
+         auto-delete
+            If yes, this persistent disk will be automatically deleted when the
+            instance is deleted. However, if the disk is later detached from
+            the instance, this option won't apply. The default value for this
+            is yes.
+
+         scope
+            Can be zonal or regional. If zonal, the disk is interpreted as a
+            zonal disk in the same zone as the instance (default). If regional,
+            the disk is interpreted as a regional disk in the same region as
+            the instance. The default value for this is zonal.
+
+     --enable-display-device
+        Enable a display device on VM instances. Disabled by default.
+
+     --[no-]enable-nested-virtualization
+        If set to true, enables nested virtualization for the instance. Use
+        --enable-nested-virtualization to enable and
+        --no-enable-nested-virtualization to disable.
+
+     --[no-]enable-uefi-networking
+        If set to true, enables UEFI networking for the instance creation. Use
+        --enable-uefi-networking to enable and --no-enable-uefi-networking to
+        disable.
+
+     --erase-windows-vss-signature
+        Specifies whether the disk restored from source snapshots or source
+        machine image should erase Windows specific VSS signature. See
+        https://cloud.google.com/sdk/gcloud/reference/compute/disks/snapshot#--guest-flush
+
+     --host-error-timeout-seconds=HOST_ERROR_TIMEOUT_SECONDS
+        The timeout in seconds for host error detection. The value must be set
+        with 30 second increments, with a range of 90 to 330 seconds. If unset,
+        the default behavior of the host error recovery is used.
+
+     --hostname=HOSTNAME
+        Specify the hostname of the instance to be created. The specified
+        hostname must be RFC1035 compliant. If hostname is not specified, the
+        default hostname is [INSTANCE_NAME].c.[PROJECT_ID].internal when using
+        the global DNS, and [INSTANCE_NAME].[ZONE].c.[PROJECT_ID].internal when
+        using zonal DNS.
+
+     --instance-termination-action=INSTANCE_TERMINATION_ACTION
+        Specifies the termination action that will be taken upon VM preemption.
+        INSTANCE_TERMINATION_ACTION must be one of:
+
+         DELETE
+            Permanently delete the VM.
+         STOP
+            Default. Stop the VM without preserving memory. The VM can be
+            restarted later.
+
+     --ipv6-network-tier=IPV6_NETWORK_TIER
+        Specifies the IPv6 network tier that will be used to configure the
+        instance network interface IPv6 access config. IPV6_NETWORK_TIER must
+        be (currently only one value is supported):
+
+         PREMIUM
+            High quality, Google-grade network tier.
+
+     --ipv6-public-ptr-domain=IPV6_PUBLIC_PTR_DOMAIN
+        Assigns a custom PTR domain for the external IPv6 in the IPv6 access
+        configuration of instance. If its value is not specified, the default
+        PTR record will be used. This option can only be specified for the
+        default network interface, nic0.
+
+     --labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     --local-nvdimm=[size=SIZE]
+        Attaches a local NVDIMM to the instances.
+
+         size
+            Optional. Size of the NVDIMM disk. The value must be a whole number
+            followed by a size unit of KB for kilobyte, MB for megabyte, GB for
+            gigabyte, or TB for terabyte. For example, 3TB will produce a 3
+            terabyte disk. Allowed values are: 3TB and 6TB and the default is 3
+            TB.
+
+     --local-ssd=[device-name=DEVICE-NAME],[interface=INTERFACE],[size=SIZE]
+        Attaches a local SSD to the instances.
+
+        This flag is currently in BETA and might change without notice.
+
+         device-name
+            Optional. A name that indicates the disk name the guest operating
+            system will see. Can only be specified if interface is SCSI. If
+            omitted, a device name of the form local-ssd-N will be used.
+
+         interface
+            Optional. The kind of disk interface exposed to the VM for this
+            SSD. Valid values are SCSI and NVME. SCSI is the default and is
+            supported by more guest operating systems. NVME might provide
+            higher performance.
+
+         size
+            Optional. Size of the SSD disk. The value must be a whole number
+            followed by a size unit of KB for kilobyte, MB for megabyte, GB for
+            gigabyte, or TB for terabyte. For example, 750GB will produce a 750
+            gigabyte disk. The size must be a multiple of 375 GB and the
+            default is 375 GB. For Alpha API only.
+
+     --machine-type=MACHINE_TYPE
+        Specifies the machine type used for the instances. To get a list of
+        available machine types, run 'gcloud compute machine-types list'. If
+        unspecified, the default type is n1-standard-1.
+
+     --maintenance-freeze-duration=MAINTENANCE_FREEZE_DURATION
+        Specifies the amount of hours after instance creation where the
+        instance won't be scheduled for maintenance, e.g. 4h, 2d6h. See $
+        gcloud topic datetimes for information on duration formats.
+
+     --maintenance-interval=MAINTENANCE_INTERVAL
+        Specifies how infrastructure upgrades should be applied to the VM.
+        MAINTENANCE_INTERVAL must be (currently only one value is supported):
+
+         PERIODIC
+            VMs receive infrastructure and hypervisor updates on a periodic
+            basis, minimizing the number of maintenance operations (live
+            migrations or terminations) on an individual VM. Security updates
+            will still be applied as soon as they are available.
+
+     --metadata=KEY=VALUE,[KEY=VALUE,...]
+        Metadata to be made available to the guest operating system running on
+        the instances. Each metadata entry is a key/value pair separated by an
+        equals sign. Each metadata key must be unique and have a max of 128
+        bytes in length. Each value must have a max of 256 KB in length.
+        Multiple arguments can be passed to this flag, e.g., --metadata
+        key-1=value-1,key-2=value-2,key-3=value-3. The combined total size for
+        all metadata entries is 512 KB.
+
+        In images that have Compute Engine tools installed on them, such as the
+        official images (https://cloud.google.com/compute/docs/images), the
+        following metadata keys have special meanings:
+
+         startup-script
+            Specifies a script that will be executed by the instances once they
+            start running. For convenience, --metadata-from-file can be used to
+            pull the value from a file.
+
+         startup-script-url
+            Same as startup-script except that the script contents are pulled
+            from a publicly-accessible location on the web.
+
+        For startup scripts on Windows instances, the following metadata keys
+        have special meanings: windows-startup-script-url,
+        windows-startup-script-cmd, windows-startup-script-bat,
+        windows-startup-script-ps1, sysprep-specialize-script-url,
+        sysprep-specialize-script-cmd, sysprep-specialize-script-bat, and
+        sysprep-specialize-script-ps1. For more information, see Running
+        startup scripts (https://cloud.google.com/compute/docs/startupscript).
+
+     --metadata-from-file=KEY=LOCAL_FILE_PATH,[...]
+        Same as --metadata except that the value for the entry will be read
+        from a local file. This is useful for values that are too large such as
+        startup-script contents.
+
+     --min-cpu-platform=PLATFORM
+        When specified, the VM will be scheduled on host with specified CPU
+        architecture or a newer one. To list available CPU platforms in given
+        zone, run:
+
+            $ gcloud alpha compute zones describe ZONE \
+              --format="value(availableCpuPlatforms)"
+
+        Default setting is "AUTOMATIC".
+
+        CPU platform selection is available only in selected zones.
+
+        You can find more information on-line:
+        https://cloud.google.com/compute/docs/instances/specify-min-cpu-platform
+
+     --min-node-cpu=MIN_NODE_CPU
+        Minimum number of virtual CPUs this instance will consume when running
+        on a sole-tenant node.
+
+     --network=NETWORK
+        Specifies the network that the VM instances are a part of. If --subnet
+        is also specified, subnet must be a subnetwork of the network specified
+        by this --network flag. If neither is specified, the default network is
+        used.
+
+     --network-performance-configs=[PROPERTY=VALUE,...]
+        Configures network performance settings for the instance. If this flag
+        is not specified, the instance will be created with its default network
+        performance configuration.
+
+         total-egress-bandwidth-tier
+            Total egress bandwidth is the available outbound bandwidth from a
+            VM, regardless of whether the traffic is going to internal IP or
+            external IP destinations. The following tier values are allowed:
+            [DEFAULT,TIER_1]
+
+     --network-tier=NETWORK_TIER
+        Specifies the network tier that will be used to configure the instance.
+        NETWORK_TIER must be one of: PREMIUM, STANDARD, FIXED_STANDARD. The
+        default value is PREMIUM.
+
+     --node-project=NODE_PROJECT
+        The name of the project with shared sole tenant node groups to create
+        an instance in.
+
+     --numa-node-count=NUMA_NODE_COUNT
+        The number of virtual NUMA nodes for the instance. Valid values are: 0,
+        1, 2, 4 or 8. Setting NUMA node count to 0 means using the default
+        setting.
+
+     --post-key-revocation-action-type=POLICY
+        Specifies the behavior of the instance when the KMS key of one of its
+        attached disks is revoked. The default is noop. POLICY must be one of:
+
+         noop
+            No operation is performed.
+         shutdown
+            The instance is shut down when the KMS key of one of its attached
+            disks is revoked.
+
+     --preemptible
+        If provided, instances will be preemptible and time-limited. Instances
+        might be preempted to free up resources for standard VM instances, and
+        will only be able to run for a limited amount of time. Preemptible
+        instances can not be restarted and will not migrate.
+
+     --private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE
+        The private IPv6 Google access type for the VM.
+        PRIVATE_IPV6_GOOGLE_ACCESS_TYPE must be one of:
+        enable-bidirectional-access, enable-outbound-vm-access,
+        inherit-subnetwork.
+
+     --private-network-ip=PRIVATE_NETWORK_IP
+        Specifies the RFC1918 IP to assign to the instance. The IP should be in
+        the subnet or legacy network IP range.
+
+     --provisioning-model=PROVISIONING_MODEL
+        Specifies provisioning model, which determines price, obtainability,
+        and runtime for the VM instance. PROVISIONING_MODEL must be one of:
+
+         SPOT
+            Spot VMs are spare capacity; Spot VMs are discounted to have much
+            lower prices than standard VMs but have no guaranteed runtime. Spot
+            VMs are the new version of preemptible VM instances, except Spot
+            VMs do not have a 24-hour maximum runtime.
+         STANDARD
+            Default. Standard provisioning model for VM instances, which has
+            user-controlled runtime but no Spot discounts.
+
+     --require-csek-key-create
+        Refuse to create resources not protected by a user managed key in the
+        key file when --csek-key-file is given. This behavior is enabled by
+        default to prevent incorrect gcloud invocations from accidentally
+        creating resources with no user managed key. Disabling the check allows
+        creation of some resources without a matching Customer-Supplied
+        Encryption Key in the supplied --csek-key-file. See
+        https://cloud.google.com/compute/docs/disks/customer-supplied-encryption
+        for more details. Enabled by default, use --no-require-csek-key-create
+        to disable.
+
+     --resource-manager-tags=[KEY=VALUE,...]
+        Specifies a list of resource manager tags to apply to the instance.
+
+     --resource-policies=[RESOURCE_POLICY,...]
+        A list of resource policy names to be added to the instance. The
+        policies must exist in the same region as the instance.
+
+     --restart-on-failure
+        The instances will be restarted if they are terminated by Compute
+        Engine. This does not affect terminations performed by the user.
+        Enabled by default, use --no-restart-on-failure to disable.
+
+     --secure-tags=SECURE_TAG,[SECURE_TAG,...]
+        Specifies a list of secure tags to apply to the instance. These tags
+        allow network firewall rules and routes to be applied to specified VM
+        instances. See gcloud compute network firewall-policies rules create(1)
+        for more details.
+
+     --shielded-integrity-monitoring
+        Enables monitoring and attestation of the boot integrity of the
+        instance. The attestation is performed against the integrity policy
+        baseline. This baseline is initially derived from the implicitly
+        trusted boot image when the instance is created. This baseline can be
+        updated by using gcloud compute instances update
+        --shielded-learn-integrity-policy. On Shielded VM instances, integrity
+        monitoring is enabled by default. For information about how to modify
+        Shielded VM options, see
+        https://cloud.google.com/compute/docs/instances/modifying-shielded-vm.
+        For information about monitoring integrity on Shielded VM instances,
+        see
+        https://cloud.google.com/compute/docs/instances/integrity-monitoring."
+
+     --shielded-secure-boot
+        The instance boots with secure boot enabled. On Shielded VM instances,
+        Secure Boot is not enabled by default. For information about how to
+        modify Shielded VM options, see
+        https://cloud.google.com/compute/docs/instances/modifying-shielded-vm.
+
+     --shielded-vtpm
+        The instance boots with the TPM (Trusted Platform Module) enabled. A
+        TPM is a hardware module that can be used for different security
+        operations such as remote attestation, encryption, and sealing of keys.
+        On Shielded VM instances, vTPM is enabled by default. For information
+        about how to modify Shielded VM options, see
+        https://cloud.google.com/compute/docs/instances/modifying-shielded-vm.
+
+     --source-instance-template=SOURCE_INSTANCE_TEMPLATE
+        The name of the instance template that the instance will be created
+        from.
+
+        Users can also override machine type and labels. Values of other flags
+        will be ignored and --source-instance-template will be used instead.
+
+     --source-machine-image=SOURCE_MACHINE_IMAGE
+        The name of the machine image that the instance will be created from.
+
+     --source-machine-image-csek-key-file=FILE
+        Path to a Customer-Supplied Encryption Key (CSEK) key file, mapping
+        resources to user managed keys which were used to encrypt the source
+        machine-image. See
+        https://cloud.google.com/compute/docs/disks/customer-supplied-encryption
+        for more details.
+
+     --stack-type=STACK_TYPE
+        Specifies whether IPv6 is enabled on the default network interface. If
+        not specified, IPV4_ONLY will be used. STACK_TYPE must be one of:
+
+         IPV4_IPV6
+            The network interface can have both IPv4 and IPv6 addresses
+         IPV4_ONLY
+            The network interface will be assigned IPv4 addresses
+
+     --subnet=SUBNET
+        Specifies the subnet that the VM instances are a part of. If --network
+        is also specified, subnet must be a subnetwork of the network specified
+        by the --network flag.
+
+     --tags=TAG,[TAG,...]
+        Specifies a list of tags to apply to the instance. These tags allow
+        network firewall rules and routes to be applied to specified VM
+        instances. See gcloud compute firewall-rules create(1) for more
+        details.
+
+        To read more about configuring network tags, read this guide:
+        https://cloud.google.com/vpc/docs/add-remove-network-tags
+
+        To list instances with their respective status and tags, run:
+
+            $ gcloud compute instances list \
+                --format='table(name,status,tags.list())'
+
+        To list instances tagged with a specific tag, tag1, run:
+
+            $ gcloud compute instances list --filter='tags:tag1'
+
+     --threads-per-core=THREADS_PER_CORE
+        The number of visible threads per physical core. To disable
+        simultaneous multithreading (SMT) set this to 1. Valid values are: 1 or
+        2.
+
+        For more information about configuring SMT, see:
+        https://cloud.google.com/compute/docs/instances/configuring-simultaneous-multithreading.
+
+     --visible-core-count=VISIBLE_CORE_COUNT
+        The number of physical cores to expose to the instance's guest
+        operating system. The number of virtual CPUs visible to the instance's
+        guest operating system is this number of cores multiplied by the
+        instance's count of visible threads per physical core.
+
+     --zone=ZONE
+        Zone of the instances to create. If not specified and the compute/zone
+        property isn't set, you might be prompted to select a zone (interactive
+        mode only).
+
+        To avoid prompting when this flag is omitted, you can set the
+        compute/zone property:
+
+            $ gcloud config set compute/zone ZONE
+
+        A list of zones can be fetched by running:
+
+            $ gcloud compute zones list
+
+        To unset the property, run:
+
+            $ gcloud config unset compute/zone
+
+        Alternatively, the zone can be stored in the environment variable
+        CLOUDSDK_COMPUTE_ZONE.
+
+     At most one of these can be specified:
+
+       --address=ADDRESS
+          Assigns the given external address to the instance that is created.
+          The address might be an IP address or the name or URI of an address
+          resource. This option can only be used when creating a single
+          instance.
+
+       --no-address
+          If provided, the instances are not assigned external IP addresses. To
+          pull container images, you must configure private Google access if
+          using Container Registry or configure Cloud NAT for instances to
+          access container images directly. For more information, see:
+          ▸ https://cloud.google.com/vpc/docs/configure-private-google-access
+          ▸ https://cloud.google.com/nat/docs/using-nat
+
+     Key resource - The Cloud KMS (Key Management Service) cryptokey that will
+     be used to protect the disk. The arguments in this group can be used to
+     specify the attributes of this resource.
+
+       --boot-disk-kms-key=BOOT_DISK_KMS_KEY
+          ID of the key or fully qualified identifier for the key. To set the
+          kms-key attribute:
+          ▸ provide the argument --boot-disk-kms-key on the command line.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --boot-disk-kms-keyring=BOOT_DISK_KMS_KEYRING
+          The KMS keyring of the key. To set the kms-keyring attribute:
+          ▸ provide the argument --boot-disk-kms-key on the command line with
+            a fully specified name;
+          ▸ provide the argument --boot-disk-kms-keyring on the command line.
+
+       --boot-disk-kms-location=BOOT_DISK_KMS_LOCATION
+          The Cloud location for the key. To set the kms-location attribute:
+          ▸ provide the argument --boot-disk-kms-key on the command line with
+            a fully specified name;
+          ▸ provide the argument --boot-disk-kms-location on the command
+            line.
+
+       --boot-disk-kms-project=BOOT_DISK_KMS_PROJECT
+          The Cloud project for the key. To set the kms-project attribute:
+          ▸ provide the argument --boot-disk-kms-key on the command line with
+            a fully specified name;
+          ▸ provide the argument --boot-disk-kms-project on the command line;
+          ▸ set the property core/project.
+
+     Custom machine type extensions.
+
+       --custom-cpu=CUSTOM_CPU
+          A whole number value specifying the number of cores that are needed
+          in the custom machine type.
+
+          For some machine types, shared-core values can also be used. For
+          example, for E2 machine types, you can specify micro, small, or
+          medium.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --custom-memory=CUSTOM_MEMORY
+          A whole number value indicating how much memory is desired in the
+          custom machine type. A size unit should be provided (eg. 3072MB or
+          9GB) - if no units are specified, GB is assumed.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --custom-extensions
+          Use the extended custom machine type.
+
+       --custom-vm-type=CUSTOM_VM_TYPE
+          Specifies VM type. n1 - VMs with CPU platforms Skylake and older, n2
+          - VMs with CPU platform Cascade Lake. n2 offers flexible sizing from
+          2 to 80 vCPUs, and 1 to 640GBs of memory. It also features a number
+          of performance enhancements including exposing a more accurate NUMA
+          topology to the guest OS. The default is n1.
+
+     --image-family-scope=IMAGE_FAMILY_SCOPE
+        Sets the scope for the --image-family flag. By default, when specifying
+        an image family in a public image project, the zonal image family scope
+        is used. All other projects default to the global image. Use this flag
+        to override this behavior. IMAGE_FAMILY_SCOPE must be one of: zonal,
+        global.
+
+     --image-project=IMAGE_PROJECT
+        The Google Cloud project against which all image and image family
+        references will be resolved. It is best practice to define
+        image-project. A full list of available projects can be generated by
+        running gcloud projects list.
+        ◆ If specifying one of our public images, image-project must be
+          provided.
+        ◆ If there are several of the same image-family value in multiple
+          projects, image-project must be specified to clarify the image to be
+          used.
+        ◆ If not specified and either image or image-family is provided, the
+          current default project is used.
+
+     At most one of these can be specified:
+
+       --image=IMAGE
+          Specifies the boot image for the instances. For each instance, a new
+          boot disk will be created from the given image. Each boot disk will
+          have the same name as the instance. To view a list of public images
+          and projects, run $ gcloud compute images list. It is best practice
+          to use --image when a specific version of an image is needed.
+
+          When using this option, --boot-disk-device-name and --boot-disk-size
+          can be used to override the boot disk's device name and size,
+          respectively.
+
+       --image-family=IMAGE_FAMILY
+          The image family for the operating system that the boot disk will be
+          initialized with. Compute Engine offers multiple Linux distributions,
+          some of which are available as both regular and Shielded VM images.
+          When a family is specified instead of an image, the latest
+          non-deprecated image associated with that family is used. It is best
+          practice to use --image-family when the latest version of an image is
+          needed.
+
+          By default, debian-10 is assumed for this flag.
+
+       --source-snapshot=SOURCE_SNAPSHOT
+          The name of the source disk snapshot that the instance boot disk will
+          be created from. You can provide this as a full URL to the snapshot
+          or just the snapshot name. For example, the following are valid
+          values:
+
+          ▸ https://compute.googleapis.com/compute/v1/projects/myproject/global/snapshots/snapshot
+          ▸ snapshot
+
+     Maintenance Behavior.
+
+     At most one of these can be specified:
+
+       --maintenance-policy=MAINTENANCE_POLICY
+          (DEPRECATED) Specifies the behavior of the VMs when their host
+          machines undergo maintenance. The default is MIGRATE. For more
+          information, see
+          https://cloud.google.com/compute/docs/instances/setting-instance-scheduling-options.
+
+          The --maintenance-policy flag is now deprecated. Please use
+          --on-host-maintenance instead. MAINTENANCE_POLICY must be one of:
+
+           MIGRATE
+              The instances should be migrated to a new host. This will
+              temporarily impact the performance of instances during a
+              migration event.
+           TERMINATE
+              The instances should be terminated.
+
+       --on-host-maintenance=MAINTENANCE_POLICY
+          Specifies the behavior of the VMs when their host machines undergo
+          maintenance. The default is MIGRATE. For more information, see
+          https://cloud.google.com/compute/docs/instances/setting-instance-scheduling-options.
+          MAINTENANCE_POLICY must be one of:
+
+           MIGRATE
+              The instances should be migrated to a new host. This will
+              temporarily impact the performance of instances during a
+              migration event.
+           TERMINATE
+              The instances should be terminated.
+
+     At most one of these can be specified:
+
+       --network-interface=[PROPERTY=VALUE,...]
+          Adds a network interface to the instance. Mutually exclusive with any
+          of these flags: --address, --network, --network-tier, --subnet,
+          --private-network-ip, --stack-type, --ipv6-network-tier,
+          --ipv6-public-ptr-domain. This flag can be repeated to specify
+          multiple network interfaces.
+
+          The following keys are allowed:
+           address
+              Assigns the given external address to the instance that is
+              created. Specifying an empty string will assign an ephemeral IP.
+              Mutually exclusive with no-address. If neither key is present the
+              instance will get an ephemeral IP.
+
+           network
+              Specifies the network that the interface will be part of. If
+              subnet is also specified it must be subnetwork of this network.
+              If neither is specified, this defaults to the "default" network.
+
+           no-address
+              If specified the interface will have no external IP. Mutually
+              exclusive with address. If neither key is present the instance
+              will get an ephemeral IP.
+
+           network-tier
+              Specifies the network tier of the interface. NETWORK_TIER must be
+              one of: PREMIUM, STANDARD, FIXED_STANDARD. The default value is
+              PREMIUM.
+
+           private-network-ip
+              Assigns the given RFC1918 IP address to the interface.
+
+           subnet
+              Specifies the subnet that the interface will be part of. If
+              network key is also specified this must be a subnetwork of the
+              specified network.
+
+           nic-type
+              Specifies the Network Interface Controller (NIC) type for the
+              interface. NIC_TYPE must be one of: GVNIC, VIRTIO_NET.
+
+           queue-count
+              Specifies the networking queue count for this interface. Both Rx
+              and Tx queues will be set to this number. If it's not specified,
+              a default queue count will be assigned. For Virtio-net, each
+              interface will get min(floor(#vCPU / #vNIC), 32) queues. For
+              gVNIC, each interface will get min(floor(#vCPU / #vNIC / 2), 16)
+              qeueus.
+
+           stack-type
+              Specifies whether IPv6 is enabled on the interface. STACK_TYPE
+              must be one of: IPV4_ONLY, IPV4_IPV6. The default value is
+              IPV4_ONLY.
+
+           ipv6-network-tier
+              Specifies the IPv6 network tier that will be used to configure
+              the instance network interface IPv6 access config.
+              IPV6_NETWORK_TIER must be PREMIUM (currently only one value is
+              supported).
+
+           ipv6-public-ptr-domain
+              Assigns a custom PTR domain for the external IPv6 in the IPv6
+              access configuration of instance. If its value is not specified,
+              the default PTR record will be used. This option can only be
+              specified for the default network interface, nic0.
+
+           aliases
+              Specifies the IP alias ranges to allocate for this interface. If
+              there are multiple IP alias ranges, they are separated by
+              semicolons.
+
+              For example:
+
+                  --aliases="10.128.1.0/24;range1:/32"
+
+                  Each IP alias range consists of a range name and an IP range
+                  separated by a colon, or just the IP range.
+                  The range name is the name of the range within the network
+                  interface's subnet from which to allocate an IP alias range. If
+                  unspecified, it defaults to the primary IP range of the subnet.
+                  The IP range can be a CIDR range (e.g. `192.168.100.0/24`), a single
+                  IP address (e.g. `192.168.100.1`), or a netmask in CIDR format (e.g.
+                  `/24`). If the IP range is specified by CIDR range or single IP
+                  address, it must belong to the CIDR range specified by the range
+                  name on the subnet. If the IP range is specified by netmask, the
+                  IP allocator will pick an available range with the specified netmask
+                  and allocate it to this network interface.
+
+       --network-interface-from-file=KEY=LOCAL_FILE_PATH
+          Same as --network-interface except that the value for the entry will
+          be read from a local file. This is used in case subinterfaces need to
+          be specified. All field names in the json follow lowerCamelCase.
+
+          The following additional key is allowed: subinterfaces Specifies the
+          list of subinterfaces assigned to this network interface of the
+          instance.
+
+              The following keys are allowed:
+              subnetwork: Specifies the subnet that the subinterface will be
+              part of. The subnet should have l2-enable set and VLAN tagged.
+
+              vlan: Specifies the VLAN of the subinterface. Can have a value
+              between 2-4094. This should be the same VLAN as the subnet. VLAN tag
+              within a network interface is unique.
+
+              ipAddress: Optional. Specifies the ip address of the
+              subinterface. If not specified, an ip address will be allocated from
+              subnet ip range.
+
+          An example json looks like: [ {
+          "network":"global/networks/network-example",
+          "subnetwork":"projects/example-project/regions/us-central1/subnetworks/untagged-subnet",
+          "subinterfaces":[ {
+          "subnetwork":"projects/example-project/regions/us-central1/subnetworks/tagged-subnet",
+          "vlan":2, "ipAddress":"111.11.11.1" } ] } ]
+
+       --network-interface-from-json-string=NETWORK_INTERFACE_JSON_STRING
+          Same as --network-interface-from-file except that the value for the
+          entry will be a json string. This can also be used in case
+          subinterfaces need to be specified. All field names in the json
+          follow lowerCamelCase.
+
+     Sole Tenancy.
+
+     At most one of these can be specified:
+
+       --node=NODE
+          The name of the node to schedule this instance on.
+
+       --node-affinity-file=NODE_AFFINITY_FILE
+          The JSON/YAML file containing the configuration of desired nodes onto
+          which this instance could be scheduled. These rules filter the nodes
+          according to their node affinity labels. A node's affinity labels
+          come from the node template of the group the node is in.
+
+          The file should contain a list of a JSON/YAML objects with the
+          following fields:
+
+           key
+              Corresponds to the node affinity label keys of the Node resource.
+           operator
+              Specifies the node selection type. Must be one of: IN: Requires
+              Compute Engine to seek for matched nodes. NOT_IN: Requires
+              Compute Engine to avoid certain nodes.
+           values
+              Optional. A list of values which correspond to the node affinity
+              label values of the Node resource.
+
+       --node-group=NODE_GROUP
+          The name of the node group to schedule this instance on.
+
+     At most one of these can be specified:
+
+       --public-dns
+          Assigns a public DNS name to the instance.
+
+       --no-public-dns
+          If provided, the instance will not be assigned a public DNS name.
+
+     At most one of these can be specified:
+
+       --public-ptr
+          Creates a DNS PTR record for the external IP of the instance.
+
+       --no-public-ptr
+          If provided, no DNS PTR record is created for the external IP of the
+          instance. Mutually exclusive with public-ptr-domain.
+
+     At most one of these can be specified:
+
+       --public-ptr-domain=PUBLIC_PTR_DOMAIN
+          Assigns a custom PTR domain for the external IP of the instance.
+          Mutually exclusive with no-public-ptr.
+
+       --no-public-ptr-domain
+          If both this flag and --public-ptr are specified, creates a DNS PTR
+          record for the external IP of the instance with the PTR domain name
+          being the DNS name of the instance.
+
+     Specifies the reservation for the instance.
+
+       --reservation=RESERVATION
+          The name of the reservation, required when
+          --reservation-affinity=specific.
+
+       --reservation-affinity=RESERVATION_AFFINITY; default="any"
+          The type of reservation for the instance. RESERVATION_AFFINITY must
+          be one of: any, none, specific.
+
+     At most one of these can be specified:
+
+       --scopes=[SCOPE,...]
+          If not provided, the instance will be assigned the default scopes,
+          described below. However, if neither --scopes nor --no-scopes are
+          specified and the project has no default service account, then the
+          instance will be created with no scopes. Note that the level of
+          access that a service account has is determined by a combination of
+          access scopes and IAM roles so you must configure both access scopes
+          and IAM roles for the service account to work properly.
+
+          SCOPE can be either the full URI of the scope or an alias. Default
+          scopes are assigned to all instances. Available aliases are:
+
+            Alias                  URI
+            bigquery               https://www.googleapis.com/auth/bigquery
+            cloud-platform         https://www.googleapis.com/auth/cloud-platform
+            cloud-source-repos     https://www.googleapis.com/auth/source.full_control
+            cloud-source-repos-ro  https://www.googleapis.com/auth/source.read_only
+            compute-ro             https://www.googleapis.com/auth/compute.readonly
+            compute-rw             https://www.googleapis.com/auth/compute
+            datastore              https://www.googleapis.com/auth/datastore
+            default                https://www.googleapis.com/auth/devstorage.read_only
+                                   https://www.googleapis.com/auth/logging.write
+                                   https://www.googleapis.com/auth/monitoring.write
+                                   https://www.googleapis.com/auth/pubsub
+                                   https://www.googleapis.com/auth/service.management.readonly
+                                   https://www.googleapis.com/auth/servicecontrol
+                                   https://www.googleapis.com/auth/trace.append
+            gke-default            https://www.googleapis.com/auth/devstorage.read_only
+                                   https://www.googleapis.com/auth/logging.write
+                                   https://www.googleapis.com/auth/monitoring
+                                   https://www.googleapis.com/auth/service.management.readonly
+                                   https://www.googleapis.com/auth/servicecontrol
+                                   https://www.googleapis.com/auth/trace.append
+            logging-write          https://www.googleapis.com/auth/logging.write
+            monitoring             https://www.googleapis.com/auth/monitoring
+            monitoring-read        https://www.googleapis.com/auth/monitoring.read
+            monitoring-write       https://www.googleapis.com/auth/monitoring.write
+            pubsub                 https://www.googleapis.com/auth/pubsub
+            service-control        https://www.googleapis.com/auth/servicecontrol
+            service-management     https://www.googleapis.com/auth/service.management.readonly
+            sql (deprecated)       https://www.googleapis.com/auth/sqlservice
+            sql-admin              https://www.googleapis.com/auth/sqlservice.admin
+            storage-full           https://www.googleapis.com/auth/devstorage.full_control
+            storage-ro             https://www.googleapis.com/auth/devstorage.read_only
+            storage-rw             https://www.googleapis.com/auth/devstorage.read_write
+            taskqueue              https://www.googleapis.com/auth/taskqueue
+            trace                  https://www.googleapis.com/auth/trace.append
+            userinfo-email         https://www.googleapis.com/auth/userinfo.email
+
+          DEPRECATION WARNING: https://www.googleapis.com/auth/sqlservice
+          account scope and sql alias do not provide SQL instance management
+          capabilities and have been deprecated. Please, use
+          https://www.googleapis.com/auth/sqlservice.admin or sql-admin to
+          manage your Google SQL Service instances.
+
+       --no-scopes
+          Create instance without scopes
+
+     At most one of these can be specified:
+
+       --service-account=SERVICE_ACCOUNT
+          A service account is an identity attached to the instance. Its access
+          tokens can be accessed through the instance metadata server and are
+          used to authenticate applications on the instance. The account can be
+          set using an email address corresponding to the required service
+          account.
+
+          If not provided, the instance will use the project's default service
+          account.
+
+       --no-service-account
+          Create instance without service account
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud compute instances create
+
+        $ gcloud beta compute instances create
+

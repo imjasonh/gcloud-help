@@ -1,0 +1,115 @@
+NAME
+    gcloud beta resource-config bulk-export - export configurations for all
+        assets within the specified project, organization, or folder
+
+SYNOPSIS
+    gcloud beta resource-config bulk-export
+        [--on-error=ON_ERROR; default="ignore"] [--path=PATH; default="-"]
+        [--resource-format=RESOURCE_FORMAT] [--storage-path=STORAGE_PATH]
+        [--folder=FOLDER | --organization=ORGANIZATION | --project=PROJECT]
+        [--resource-types=[RESOURCE_TYPE,...]
+          | --resource-types-file=RESOURCE_TYPE_FILE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Export configurations for all assets within the specified project,
+    organization, or folder.
+
+EXAMPLES
+    To export all resources in a project to a local directory, run:
+
+        $ gcloud beta resource-config bulk-export --path=/path/to/dir/
+
+    To export all resources in a organization to stdout, run:
+
+        $ gcloud beta resource-config bulk-export --organization=12345 \
+            --path=-
+
+    To export all resources in a folder to stdout in Terraform format, run:
+
+        $ gcloud beta resource-config bulk-export --folder=12345 \
+            --resource-format=terraform
+
+    To export all resources in a project to stdout, using a custom Google
+    Storage bucket for interim results, run:
+
+        $ gcloud beta resource-config bulk-export --project=my-project \
+            --storage-path='gs://your-bucket-name/your/prefix/path'
+
+    To export all Storage Bucket and Compute Instances resources in project
+    my-project to stdout, run:
+
+        $ gcloud beta resource-config bulk-export --project=my-project \
+            --resource-types=storage.cnrm.cloud.google.com/StorageBucket,\
+        ComputeInstance
+
+    To export all resource types in file 'types-file.txt' in project my-project
+    to stdout, run:
+
+        $ gcloud beta resource-config bulk-export --project=my-project \
+            --resource-types-file=types-file.txt
+
+FLAGS
+     --on-error=ON_ERROR; default="ignore"
+        Determines behavior when a recoverable error is encountered while
+        exporting a resource. To stop execution when encountering an error,
+        specify "halt". To log errors when encountered and continue the export,
+        specify "continue". To continue when errors are encountered without
+        logging, specify "ignore". ON_ERROR must be one of: continue, halt,
+        ignore.
+
+     --path=PATH; default="-"
+        Path of the directory or file to output configuration(s). To output
+        configurations to stdout, specify "--path=-".
+
+     --resource-format=RESOURCE_FORMAT
+        Format of the configuration to export. Available configuration formats
+        are Kubernetes Resource Model (krm) or Terraform HCL (terraform).
+        Command defaults to "krm". RESOURCE_FORMAT must be one of: krm,
+        terraform.
+
+     --storage-path=STORAGE_PATH
+        Google Cloud Storage path where a Cloud Asset Inventory export will be
+        stored, example: gs://your-bucket-name/your/prefix/path
+
+     At most one of these can be specified:
+
+       --folder=FOLDER
+          Folder ID
+
+       --organization=ORGANIZATION
+          Organization ID
+
+       --project=PROJECT
+          Project ID
+
+     At most one of these can be specified:
+
+       --resource-types=[RESOURCE_TYPE,...]
+          List of Config Connector KRM Kinds to export. For a full list of
+          supported resource types for a given parent scope run:
+
+              $ gcloud beta resource-config list-resource-types \
+                  --[project|organization|folder]=<PARENT>
+
+       --resource-types-file=RESOURCE_TYPE_FILE
+          A comma (',') or newline ('\n') separated file containing the list of
+          Config Connector KRM Kinds to export. For a full list of supported
+          resource types for a given parent scope run:
+
+              $ gcloud beta resource-config list-resource-types \
+                  --[project|organization|folder]=<PARENT>
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud alpha resource-config bulk-export
+

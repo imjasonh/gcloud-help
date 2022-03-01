@@ -1,0 +1,77 @@
+NAME
+    gcloud beta scc assets get-project - get the Project for an asset given its
+        resource name or asset id
+
+SYNOPSIS
+    gcloud beta scc assets get-project [ORGANIZATION]
+        (--asset=ASSET | --resource-name=RESOURCE_NAME) [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Get the Project for an asset given its resource name or asset id.
+
+EXAMPLES
+    Get project id
+    (https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects)
+    given an asset's full resource name
+    (https://cloud.google.com/apis/design/resource_names#full_resource_name)
+    e.g. //storage.googleapis.com/my-bucket under organization 123456:
+
+        $ gcloud beta scc assets get-project 123456 \
+            --resource-name="//storage.googleapis.com/my-bucket"
+
+    Get project id given an asset's Cloud SCC id 5678 under organization
+    123456.
+
+        $ gcloud beta scc assets get-project 123456 --asset=5678
+
+POSITIONAL ARGUMENTS
+     Organization resource - The organization to be used for the SCC (Security
+     Command Center) command. This represents a Cloud resource.
+
+       [ORGANIZATION]
+          ID of the organization or fully qualified identifier for the
+          organization. To set the organization attribute:
+          ▸ provide the argument organization on the command line;
+          ▸ Set the organization property in configuration using gcloud
+            config set scc/organization if it is not specified in command
+            line..
+
+REQUIRED FLAGS
+     Exactly one of these must be specified:
+
+       --asset=ASSET
+          Cloud SCC specific asset. It's derived from the the asset's relative
+          resource name. See:
+          https://cloud.google.com/apis/design/resource_names#relative_resource_name.
+          For Example, for the given asset name:
+          "organizations/123/assets/456", 456 represents asset id.
+
+       --resource-name=RESOURCE_NAME
+          Asset's resource name. Full resource name of the Google Cloud
+          Platform resource this asset represents. This field is immutable
+          after create time. See:
+          https://cloud.google.com/apis/design/resource_names#full_resource_name.
+          For Example:
+          "//cloudresourcemanager.googleapis.com/projects/1234567890123" could
+          be the resource-name for a project.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the securitycenter/v1 API. The full documentation for
+    this API can be found at: https://cloud.google.com/security-command-center
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud scc assets get-project
+
+        $ gcloud alpha scc assets get-project
+

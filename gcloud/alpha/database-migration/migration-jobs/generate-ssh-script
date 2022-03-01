@@ -1,0 +1,106 @@
+NAME
+    gcloud alpha database-migration migration-jobs generate-ssh-script -
+        generate a SSH script for a Database Migration Service migration job
+
+SYNOPSIS
+    gcloud alpha database-migration migration-jobs generate-ssh-script
+        (MIGRATION_JOB : --region=REGION) --vm=VM
+        (--vm-zone=VM_ZONE | [--vm-machine-type=VM_MACHINE_TYPE --vpc=VPC
+          : --vm-zone-create=VM_ZONE_CREATE]) [--vm-port=VM_PORT]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Generate a SSH script for a Database Migration Service migration
+    job.
+
+EXAMPLES
+    To generate a SSH script for a Database Migration Service migration job
+    with vm creation config, run:
+
+        $ gcloud alpha database-migration migration-jobs \
+            generate-ssh-script my-migration-job --vm=sample-vm \
+            --vm-port=1111 --vm-machine-type=n1-standard-1 \
+            --vm-zone-create=us-central1-a --vpc=sample-vpc \
+            --region=us-central1
+
+    To generate a SSH script for a Database Migration Service migration job
+    with vm selection config, run:
+
+        $ gcloud alpha database-migration migration-jobs \
+            generate-ssh-script my-migration-job --vm=sample-vm \
+            --vm-port=1111 --vm-zone=us-central1-a --region=us-central1
+
+POSITIONAL ARGUMENTS
+     Migration job resource - The migration job you want to generate SSH script
+     for. The arguments in this group can be used to specify the attributes of
+     this resource. (NOTE) Some attributes are not given arguments in this
+     group but can be set in other ways. To set the project attribute:
+      ◆ provide the argument migration_job on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       MIGRATION_JOB
+          ID of the migration_job or fully qualified identifier for the
+          migration_job. To set the migration_job attribute:
+          ▸ provide the argument migration_job on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --region=REGION
+          The name of the region. To set the region attribute:
+          ▸ provide the argument migration_job on the command line with a
+            fully specified name;
+          ▸ provide the argument --region on the command line.
+
+REQUIRED FLAGS
+     --vm=VM
+        Bastion VM Instance name to use or to create (if machineType is given).
+
+     Exactly one of these must be specified:
+
+       --vm-zone=VM_ZONE
+          Google Cloud Platform zone the VM is located in.
+
+       --vm-machine-type=VM_MACHINE_TYPE
+          VM instance machine type to create.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --vpc=VPC
+          VPC name the VM needs to be created in.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --vm-zone-create=VM_ZONE_CREATE
+          Google Cloud Platform zone to create the VM in.
+
+OPTIONAL FLAGS
+     --vm-port=VM_PORT
+        Port that will be open on the bastion host.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the datamigration/v1alpha2 API. The full documentation
+    for this API can be found at: https://cloud.google.com/database-migration/
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. This variant is also available:
+
+        $ gcloud database-migration migration-jobs generate-ssh-script
+

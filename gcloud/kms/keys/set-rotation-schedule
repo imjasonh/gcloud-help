@@ -1,0 +1,66 @@
+NAME
+    gcloud kms keys set-rotation-schedule - update the rotation schedule for a
+        key
+
+SYNOPSIS
+    gcloud kms keys set-rotation-schedule KEY [--keyring=KEYRING]
+        [--location=LOCATION] [--next-rotation-time=NEXT_ROTATION_TIME]
+        [--rotation-period=ROTATION_PERIOD] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Updates the rotation schedule for the given key. The schedule automatically
+    creates a new primary version for the key according to the
+    --next-rotation-time and --rotation-period flags.
+
+    The flag --next-rotation-time must be in ISO or RFC3339 format, and
+    --rotation-period must be in the form INTEGER[UNIT], where units can be one
+    of seconds (s), minutes (m), hours (h) or days (d).
+
+    Key rotations performed manually via update-primary-version and the version
+    create do not affect the stored --next-rotation-time.
+
+EXAMPLES
+    The following command sets a 30 day rotation period for the key named frodo
+    within the keyring fellowship and location global starting at the specified
+    time:
+
+        $ gcloud kms keys set-rotation-schedule frodo \
+            --location=global \
+            --keyring=fellowship \
+            --rotation-period=30d \
+            --next-rotation-time=2017-10-12T12:34:56.1234Z
+
+POSITIONAL ARGUMENTS
+     KEY
+        Name of the key to update the schedule of.
+
+FLAGS
+     --keyring=KEYRING
+        Key ring of the key.
+
+     --location=LOCATION
+        Location of the key.
+
+     --next-rotation-time=NEXT_ROTATION_TIME
+        Next automatic rotation time of the key. See $ gcloud topic datetimes
+        for information on time formats.
+
+     --rotation-period=ROTATION_PERIOD
+        Automatic rotation period of the key. See $ gcloud topic datetimes for
+        information on duration formats.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha kms keys set-rotation-schedule
+
+        $ gcloud beta kms keys set-rotation-schedule
+

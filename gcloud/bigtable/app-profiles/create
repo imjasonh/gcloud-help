@@ -1,0 +1,106 @@
+NAME
+    gcloud bigtable app-profiles create - create a new Bigtable app profile
+
+SYNOPSIS
+    gcloud bigtable app-profiles create (APP_PROFILE : --instance=INSTANCE)
+        ([--route-any : --restrict-to=[RESTRICT_TO,...]]
+          | [--route-to=ROUTE_TO : --transactional-writes])
+        [--description=DESCRIPTION] [--force] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Create a new Bigtable app profile.
+
+EXAMPLES
+    To create an app profile with a multi-cluster routing policy, run:
+
+        $ gcloud bigtable app-profiles create my-app-profile-id \
+            --instance=my-instance-id --route-any
+
+    To create an app profile with a single-cluster routing policy which routes
+    all requests to my-cluster-id, run:
+
+        $ gcloud bigtable app-profiles create \
+            my-single-cluster-app-profile --instance=my-instance-id \
+            --route-to=my-cluster-id
+
+    To create an app profile with a friendly description, run:
+
+        $ gcloud bigtable app-profiles create my-app-profile-id \
+            --instance=my-instance-id --route-any \
+            --description="Routes requests for my use case"
+
+POSITIONAL ARGUMENTS
+     App profile resource - The app profile to create. The arguments in this
+     group can be used to specify the attributes of this resource. (NOTE) Some
+     attributes are not given arguments in this group but can be set in other
+     ways. To set the project attribute:
+      ◆ provide the argument app_profile on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       APP_PROFILE
+          ID of the app profile or fully qualified identifier for the app
+          profile. To set the name attribute:
+          ▸ provide the argument app_profile on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --instance=INSTANCE
+          Cloud Bigtable instance for the app profile. To set the instance
+          attribute:
+          ▸ provide the argument app_profile on the command line with a fully
+            specified name;
+          ▸ provide the argument --instance on the command line.
+
+REQUIRED FLAGS
+     Exactly one of these must be specified:
+
+       Multi Cluster Routing Policy
+
+         --route-any
+            Use Multi Cluster Routing policy.
+
+            This flag must be specified if any of the other arguments in this
+            group are specified.
+
+         --restrict-to=[RESTRICT_TO,...]
+            Cluster IDs to route to using the Multi Cluster Routing Policy. If
+            unset, all clusters in the instance are eligible.
+
+       Single Cluster Routing Policy
+
+         --route-to=ROUTE_TO
+            Cluster ID to route to using Single Cluster Routing policy.
+
+            This flag must be specified if any of the other arguments in this
+            group are specified.
+
+         --transactional-writes
+            Allow transactional writes with a Single Cluster Routing policy.
+
+OPTIONAL FLAGS
+     --description=DESCRIPTION
+        Friendly name of the app profile.
+
+     --force
+        Ignore warnings and force create.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha bigtable app-profiles create
+
+        $ gcloud beta bigtable app-profiles create
+

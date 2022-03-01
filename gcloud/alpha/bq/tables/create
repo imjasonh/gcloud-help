@@ -1,0 +1,128 @@
+NAME
+    gcloud alpha bq tables create - create a new BigQuery table
+
+SYNOPSIS
+    gcloud alpha bq tables create (TABLE : --dataset=DATASET)
+        [--description=DESCRIPTION] [--expiration=EXPIRATION] [--overwrite]
+        [--schema=FIELD_NAME=FIELD_TYPE | --schema-file=SCHEMA_FILE
+          | [--view=VIEW : --use-legacy-sql]] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Create a new BigQuery table. Create a table or view with a
+    specified name. A view is a collection of rows selected by a query in a
+    flag, and manipulated as a table. The dataset to contain the table or view
+    must already exist, and must not contain a table or view with the specified
+    name.
+
+EXAMPLES
+    The following command creates a table with ID my-table in my-dataset:
+
+        $ gcloud alpha bq tables create  \
+            /projects/myproject/datasets/my-dataset/tables/my-table \
+            --description 'My New Table'
+
+    The following command creates a view with ID my-view in dataset
+    my-other-dataset:
+
+        $ gcloud alpha bq tables create  my-view --dataset my-other-dataset \
+          --view 'SELECT field1, field3 FROM `my-project.my-other-dataset.my-table`'
+
+POSITIONAL ARGUMENTS
+     Table resource - The BigQuery table you want to create. The arguments in
+     this group can be used to specify the attributes of this resource. (NOTE)
+     Some attributes are not given arguments in this group but can be set in
+     other ways. To set the project attribute:
+      ◆ provide the argument table on the command line with a fully specified
+        name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       TABLE
+          ID of the table or fully qualified identifier for the table. To set
+          the table attribute:
+          ▸ provide the argument table on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --dataset=DATASET
+          The id of the BigQuery dataset. To set the dataset attribute:
+          ▸ provide the argument table on the command line with a fully
+            specified name;
+          ▸ provide the argument --dataset on the command line.
+
+FLAGS
+     --description=DESCRIPTION
+        Description of the table.
+
+     --expiration=EXPIRATION
+        How long after creation should this table or view expire e.g. 1d, 2w
+        etc.
+
+        See $ gcloud topic datetimes for information on duration formats
+
+     --overwrite
+        Overwrite if the resource already exists.
+
+     Specify the table schema.
+
+     At most one of these can be specified:
+
+       --schema=FIELD_NAME=FIELD_TYPE
+          A comma-separated list of entries of the form FIELD_NAME[=FIELD_TYPE]
+          specifying field names and types for the table being created.
+          FIELD_TYPE defaults to string if not present. Possible FIELD_TYPES
+          are string, integer, float, boolean, record, and timestamp.
+
+          For more details on BigQuery schemas see:
+          https://cloud.google.com/bigquery/docs/schemas.
+
+       --schema-file=SCHEMA_FILE
+          The name of a JSON file containing a single object containing an
+          array each element of which is an object with properties name, type,
+          and, optionally a mode (one of: NULLABLE, REQUIRED or REPEATED),
+          specifying a schema for the table being created. If mode is omitted
+          the default is 'NULLABLE'.
+
+          For example: { 'schema': [ { 'name': 'field1', 'type': 'string',
+          'mode': 'REQUIRED' }, { 'name': 'field2', 'type': 'integer', 'mode':
+          'REPEATED' }, [ { 'name': 'fieldN', 'type': TYPE, ['mode': MODE] }
+          ... ] ] }
+
+          For more details on BigQuery schemas see:
+          https://cloud.google.com/bigquery/docs/schemas.
+
+       Create a view instead of regular table.
+
+         --view=VIEW
+            Create a view with this SQL query. (If this flag is not specified,
+            a table is created.)
+
+            This flag must be specified if any of the other arguments in this
+            group are specified.
+
+         --use-legacy-sql
+            If specified, query will use BigQuery's legacy SQL syntax. If not
+            specified, query will use BigQuery's standard SQL dialect by
+            default (https://cloud.google.com/bigquery/sql-reference/).
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the bigquery/v2 API. The full documentation for this API
+    can be found at: https://cloud.google.com/bigquery/
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

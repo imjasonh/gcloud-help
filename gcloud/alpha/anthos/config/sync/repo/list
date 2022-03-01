@@ -1,0 +1,87 @@
+NAME
+    gcloud alpha anthos config sync repo list - list repositories and their
+        status that are synced by Config Sync
+
+SYNOPSIS
+    gcloud alpha anthos config sync repo list [--membership=MEMBERSHIP]
+        [--namespace=NAMESPACE] [--selector=SELECTOR]
+        [--status=STATUS; default="all"] [--targets=TARGETS; default="all"]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) List repositories and their status that are synced by Config Sync.
+
+EXAMPLES
+    To list all repositories synced to the registered clusters or to the Config
+    Controller cluster in the current project:
+
+        $ gcloud alpha anthos config sync repo list list
+
+    To list all repositories synced to the registered clusters to the fleet
+    hosted in the current project:
+
+        $ gcloud alpha anthos config sync repo list list \
+          --targets=fleet-clusters
+
+    To list all repositories synced to the Config Controller cluster in the
+    current project:
+
+        $ gcloud alpha anthos config sync repo list list \
+          --targets=fleet-clusters
+
+    To list repositories in namespace <NAMESPACE> synced to the registered
+    clusters to the current fleet:
+
+        $ gcloud alpha anthos config sync repo list list \
+          --targets=fleet-clusters --namespace=<NAMESPACE>
+
+    To list repositories synced to the registered clusters that are in a
+    "pending" status:
+
+        $ gcloud alpha anthos config sync repo list list \
+          --targets=fleet-clusters --status=pending
+
+FLAGS
+     --membership=MEMBERSHIP
+        The membership name that the listed Config Sync repos are synced to.A
+        membership is for a registered cluster to a fleet. It supportsa single
+        membership or multiple memberships with the format
+        membership1,membership2 or membership.It can only be specified when
+        --targets=fleet-clusters is used.
+
+     --namespace=NAMESPACE
+        The namespace that the listed Config Sync repos are from.It supports a
+        single namespace or multiple namespaces with the format
+        namespace1,namespace2 or namespace.
+
+     --selector=SELECTOR
+        The label selector that the listed Config Sync repos should match. It
+        supports the selector with the format key1=value1,key2=value2
+
+     --status=STATUS; default="all"
+        The status for the Config Sync repos that the list command should
+        include. The supported values are all, synced, pending, error, stalled.
+
+     --targets=TARGETS; default="all"
+        The targets of the clusters. It must be one of the three values: all,
+        fleet-clusters, config-controller.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+PREREQUISITES
+    Please setup Connect Gateway for the registered clusters in order to use
+    this command. The instructions can be found at
+    https://cloud.google.com/anthos/multicluster-management/gateway/setup.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

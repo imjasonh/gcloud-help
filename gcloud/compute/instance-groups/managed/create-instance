@@ -1,0 +1,117 @@
+NAME
+    gcloud compute instance-groups managed create-instance - create a new
+        virtual machine instance in a managed instance group with a defined
+        name and optionally its stateful configuration
+
+SYNOPSIS
+    gcloud compute instance-groups managed create-instance NAME
+        --instance=INSTANCE
+        [--stateful-disk=[auto-delete=AUTO-DELETE],
+          [device-name=DEVICE-NAME],[mode=MODE],[source=SOURCE]]
+        [--stateful-metadata=KEY=VALUE,[KEY=VALUE,...]]
+        [--region=REGION | --zone=ZONE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    gcloud compute instance-groups managed create-instance creates a virtual
+    machine instance with a defined name and optionally its stateful
+    configuration: stateful disk and stateful metadata key-values. Stateful
+    configuration is stored in the corresponding newly created per-instance
+    config. An instance with a per-instance config will preserve its given
+    name, specified disks, and specified metadata key-values during instance
+    recreation, auto-healing, updates, and any other lifecycle transitions of
+    the instance.
+
+EXAMPLES
+    To create an instance instance-1 in my-group (in region europe-west4) with
+    metadata my-key: my-value and a disk disk-1 attached to it as the device
+    device-1, run:
+
+        $ gcloud compute instance-groups managed create-instance \
+              my-group --region=europe-west4 \
+              --instance=instance-1 \
+              --stateful-disk='device-name=foo,source=https://compute.googleapis.com/compute/alpha/projects/my-project/zones/europe-west4/disks/disk-1,mode=rw,auto-delete=on-permanent-instance-deletion' \
+              --stateful-metadata='my-key=my-value'
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the managed instance group to create instance in.
+
+REQUIRED FLAGS
+     --instance=INSTANCE
+        Name of the new instance to create.
+
+OPTIONAL FLAGS
+     --stateful-disk=[auto-delete=AUTO-DELETE],[device-name=DEVICE-NAME],[mode=MODE],[source=SOURCE]
+        Disks considered stateful by the instance group. Managed instance
+        groups preserve and reattach stateful disks on VM autohealing, update,
+        and recreate events.
+
+        You can also attach and preserve disks, not defined in the group's
+        instance template, to a given instance.
+
+        The same disk can be attached to more than one instance but only in
+        read-only mode.
+
+     --stateful-metadata=KEY=VALUE,[KEY=VALUE,...]
+        Additional metadata to be made available to the guest operating system
+        in addition to the metadata defined in the instance template.
+
+        Stateful metadata may be used to define a key/value pair specific for
+        the one given instance to differentiate it from the other instances in
+        the managed instance group.
+
+        Stateful metadata key/value pairs are preserved on instance recreation,
+        autohealing, updates, and any other lifecycle transitions of the
+        instance.
+
+        Stateful metadata have priority over the metadata defined in the
+        instance template. This means that stateful metadata that is defined
+        for a key that already exists in the instance template overrides the
+        instance template value.
+
+        Each metadata entry is a key/value pair separated by an equals sign.
+        Metadata keys must be unique and less than 128 bytes in length.
+        Multiple entries can be passed to this flag, e.g., --stateful-metadata
+        key-1=value-1,key-2=value-2,key-3=value-3.
+
+     At most one of these can be specified:
+
+       --region=REGION
+          Region of the managed instance group to create instance in. If not
+          specified, you might be prompted to select a region (interactive mode
+          only).
+
+          A list of regions can be fetched by running:
+
+              $ gcloud compute regions list
+
+          Overrides the default compute/region property value for this command
+          invocation.
+
+       --zone=ZONE
+          Zone of the managed instance group to create instance in. If not
+          specified, you might be prompted to select a zone (interactive mode
+          only).
+
+          A list of zones can be fetched by running:
+
+              $ gcloud compute zones list
+
+          Overrides the default compute/zone property value for this command
+          invocation.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha compute instance-groups managed create-instance
+
+        $ gcloud beta compute instance-groups managed create-instance
+

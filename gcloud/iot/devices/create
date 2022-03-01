@@ -1,0 +1,183 @@
+NAME
+    gcloud iot devices create - create a new device
+
+SYNOPSIS
+    gcloud iot devices create (DEVICE : --region=REGION --registry=REGISTRY)
+        [--auth-method=AUTH_METHOD] [--blocked] [--device-type=DEVICE_TYPE]
+        [--log-level=LOG_LEVEL] [--metadata=[KEY=VALUE,...]]
+        [--metadata-from-file=[KEY=PATH,...]]
+        [--public-key=[path=PATH,
+          type=TYPE,[expiration-time=EXPIRATION-TIME],...]]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Create a new device.
+
+EXAMPLES
+    To create a new device 'my-device' in device registry 'my-registry' and
+    region 'us-central1', run:
+
+        $ gcloud iot devices create my-device --region=us-central1 \
+            --registry=my-registry
+
+    The following command creates a new non-gateway device 'my-device' in
+    device registry 'my-registry' and region 'us-central1', blocks the device,
+    and sets metadata values.
+
+        $ gcloud iot devices create my-device --region=us-central1 \
+            --registry=my-registry --blocked --device-type=non-gateway \
+            --metadata=key1=value1,key2=value2
+
+POSITIONAL ARGUMENTS
+     Device resource - The device you want to create. The arguments in this
+     group can be used to specify the attributes of this resource. (NOTE) Some
+     attributes are not given arguments in this group but can be set in other
+     ways. To set the project attribute:
+      ◆ provide the argument device on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       DEVICE
+          ID of the device or fully qualified identifier for the device. To set
+          the device attribute:
+          ▸ provide the argument device on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --region=REGION
+          The name of the Cloud IoT region. To set the region attribute:
+          ▸ provide the argument device on the command line with a fully
+            specified name;
+          ▸ provide the argument --region on the command line.
+
+       --registry=REGISTRY
+          The name of the Cloud IoT registry. To set the registry attribute:
+          ▸ provide the argument device on the command line with a fully
+            specified name;
+          ▸ provide the argument --registry on the command line.
+
+FLAGS
+     --auth-method=AUTH_METHOD
+        The authorization/authentication method used by devices in relation to
+        the gateway. This property is set only on gateways. If left
+        unspecified, devices will not be able to access the gateway.
+        AUTH_METHOD must be one of:
+
+         association-and-device-auth-token
+            The device is authenticated through both device credentials and
+            gateway association.
+         association-only
+            The device is authenticated through the gateway association only.
+            Device credentials are ignored if provided.
+         device-auth-token-only
+            The device is authenticated through its own credentials. Gateway
+            association is not checked.
+
+     --blocked
+        If blocked, connections from this device will fail.
+
+        Can be used to temporarily prevent the device from connecting if, for
+        example, the sensor is generating bad data and needs maintenance.
+
+        Connections to device is not blocked by default.
+
+     --device-type=DEVICE_TYPE
+        Whether this device is a gateway. If unspecified, non-gateway is
+        assumed. DEVICE_TYPE must be one of: gateway, non-gateway.
+
+     --log-level=LOG_LEVEL
+        The default logging verbosity for activity from devices in this
+        registry. The verbosity level can be overridden by setting a specific
+        device's log level. LOG_LEVEL must be one of:
+
+         debug
+            All events will be logged.
+         error
+            Error events will be logged.
+         info
+            Informational events will be logged, such as connections and
+            disconnections. Also includes error events.
+         none
+            Disables logging.
+
+     --metadata=[KEY=VALUE,...]
+        The metadata key/value pairs assigned to devices. This metadata is not
+        interpreted or indexed by Cloud IoT Core. It can be used to add
+        contextual information for the device.
+
+        Keys should only contain the following characters [a-zA-Z0-9-_] and be
+        fewer than 128 bytes in length. Values are free-form strings. Each
+        value must be fewer than or equal to 32 KB in size.
+
+        The total size of all keys and values must be less than 256 KB, and the
+        maximum number of key-value pairs is 500.
+
+     --metadata-from-file=[KEY=PATH,...]
+        Same as --metadata, but the metadata values will be read from the file
+        specified by path.
+
+     --public-key=[path=PATH,type=TYPE,[expiration-time=EXPIRATION-TIME],...]
+        Specify a public key.
+
+        Supports four key types:
+
+        ◆ rsa-x509-pem: As RSA_PEM, but wrapped in an X.509v3 certificate
+          (RFC5280 (https://www.ietf.org/rfc/rfc5280.txt)), encoded in base64,
+          and wrapped by -----BEGIN CERTIFICATE----- and -----END
+          CERTIFICATE-----.
+        ◆ rsa-pem: An RSA public key encoded in base64, and wrapped by
+          -----BEGIN PUBLIC KEY----- and -----END PUBLIC KEY-----. This can be
+          used to verify RS256 signatures in JWT tokens (RFC7518
+          (https://www.ietf.org/rfc/rfc7518.txt)).
+        ◆ rs256: Deprecated name for rsa-x509-pem
+        ◆ es256-x509-pem: As ES256_PEM, but wrapped in an X.509v3 certificate
+          (RFC5280 (https://www.ietf.org/rfc/rfc5280.txt)), encoded in base64,
+          and wrapped by -----BEGIN CERTIFICATE----- and -----END
+          CERTIFICATE-----.
+        ◆ es256-pem: Public key for the ECDSA algorithm using P-256 and
+          SHA-256, encoded in base64, and wrapped by -----BEGIN PUBLIC KEY-----
+          and -----END PUBLIC KEY-----. This can be used to verify JWT tokens
+          with the ES256 algorithm (RFC7518
+          (https://www.ietf.org/rfc/rfc7518.txt)). This curve is defined in
+          OpenSSL (https://www.openssl.org/) as the prime256v1 curve.
+        ◆ es256: Deprecated nmame for es256-pem
+
+        The key specification is given via the following sub-arguments:
+
+        ◆ path: Required. The path on disk to the file containing the key.
+        ◆ type: Required. One of [es256, es256-pem, es256-x509-pem, rs256,
+          rsa-pem, rsa-x509-pem]. The type of the key.
+        ◆ expiration-time: Optional. The expiration time for the key. See $
+          gcloud topic datetimes for information on time formats.
+
+        For example:
+
+            --public-key \
+                path=/path/to/id_rsa.pem,type=RSA_PEM,expiration-time=2017-01-01T00:00-05
+
+        This flag may be provide multiple times to provide multiple keys
+        (maximum 3).
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the cloudiot/v1 API. The full documentation for this API
+    can be found at: https://cloud.google.com/iot
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha iot devices create
+
+        $ gcloud beta iot devices create
+

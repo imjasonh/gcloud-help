@@ -1,0 +1,95 @@
+NAME
+    gcloud alpha compute target-http-proxies update - update a target HTTP
+        proxy
+
+SYNOPSIS
+    gcloud alpha compute target-http-proxies update NAME --url-map=URL_MAP
+        [--global | --region=REGION]
+        [--global-url-map | --url-map-region=URL_MAP_REGION]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) gcloud alpha compute target-http-proxies update is used to change
+    the URL map of existing target HTTP proxies. A target HTTP proxy is
+    referenced by one or more forwarding rules which specify the network
+    traffic that the proxy is responsible for routing. The target HTTP proxy
+    points to a URL map that defines the rules for routing the requests. The
+    URL map's job is to map URLs to backend services which handle the actual
+    requests.
+
+EXAMPLES
+    If there is an already-created URL map with the name URL_MAP, update a
+    global target HTTP proxy pointing to this map by running:
+
+        $ gcloud alpha compute target-http-proxies update PROXY_NAME \
+            --url-map=URL_MAP
+
+    Update a regional target HTTP proxy by running:
+
+        $ gcloud alpha compute target-http-proxies update PROXY_NAME \
+            --url-map=URL_MAP --region=REGION_NAME
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the target HTTP proxy to update.
+
+REQUIRED FLAGS
+     --url-map=URL_MAP
+        A reference to a URL map resource. A URL map defines the mapping of
+        URLs to backend services. Before you can refer to a URL map, you must
+        create the URL map. To delete a URL map that a target proxy is
+        referring to, you must first delete the target HTTP proxy.
+
+OPTIONAL FLAGS
+     At most one of these can be specified:
+
+       --global
+          If set, the target HTTP proxy is global.
+
+       --region=REGION
+          Region of the target HTTP proxy to update. If not specified, you
+          might be prompted to select a region (interactive mode only).
+
+          To avoid prompting when this flag is omitted, you can set the
+          compute/region property:
+
+              $ gcloud config set compute/region REGION
+
+          A list of regions can be fetched by running:
+
+              $ gcloud compute regions list
+
+          To unset the property, run:
+
+              $ gcloud config unset compute/region
+
+          Alternatively, the region can be stored in the environment variable
+          CLOUDSDK_COMPUTE_REGION.
+
+     At most one of these can be specified:
+
+       --global-url-map
+          If set, the URL map is global.
+
+       --url-map-region=URL_MAP_REGION
+          Region of the URL map to operate on. Overrides the default
+          compute/region property value for this command invocation.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud compute target-http-proxies update
+
+        $ gcloud beta compute target-http-proxies update
+

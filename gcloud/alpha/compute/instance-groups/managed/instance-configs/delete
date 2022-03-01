@@ -1,0 +1,114 @@
+NAME
+    gcloud alpha compute instance-groups managed instance-configs delete -
+        delete per-instance configs from a managed instance group
+
+SYNOPSIS
+    gcloud alpha compute instance-groups managed instance-configs delete NAME
+        --instances=INSTANCE,[INSTANCE,...]
+        [--instance-update-minimal-action=INSTANCE_UPDATE_MINIMAL_ACTION;
+          default="none"] [--no-update-instance]
+        [--region=REGION | --zone=ZONE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) gcloud alpha compute instance-groups managed instance-configs
+    delete deletes one or more per-instance configs from a Google Compute
+    Engine managed instance group.
+
+    Changes are applied immediately to the corresponding instances, by
+    performing the necessary action (for example, REFRESH), unless overridden
+    by providing the --no-update-instance flag.
+
+EXAMPLES
+    To delete the per-instance config from my-instance, run:
+
+        $ gcloud alpha compute instance-groups managed instance-configs \
+            delete my-group --region=europe-west4 --instances=my-instance
+
+    This removes all metadata and detaches all disks that were defined in the
+    per-instance config (except for disks that are also defined in the instance
+    template, which remain attached).
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the managed instance group to delete.
+
+REQUIRED FLAGS
+     --instances=INSTANCE,[INSTANCE,...]
+        Names of instances to delete instance-configs from.
+
+OPTIONAL FLAGS
+     --instance-update-minimal-action=INSTANCE_UPDATE_MINIMAL_ACTION; default="none"
+        Perform at least this action on the instance while updating, if
+        --update-instance is set to true. INSTANCE_UPDATE_MINIMAL_ACTION must
+        be one of:
+
+         none
+            No action
+         refresh
+            Apply the new configuration without stopping instances, if
+            possible. For example, use refresh to apply changes that only
+            affect metadata or additional disks.
+         restart
+            Apply the new configuration without replacing instances, if
+            possible. For example, stopping instances and starting them again
+            is sufficient to apply changes to machine type.
+         replace
+            Replace old instances according to the --replacement-method flag.
+
+     --update-instance
+        Apply the configuration changes immediately to the instance. If you
+        disable this flag, the managed instance group will apply the
+        configuration update when you next recreate or update the instance.
+
+        Example: say you have an instance with a disk attached to it and you
+        created a stateful configuration for the disk. If you decide to delete
+        the stateful configuration for the disk and you provide this flag, the
+        group immediately refreshes the instance and removes the stateful
+        configuration for the disk. Similarly if you have attached a new disk
+        or changed its definition, with this flag the group immediately
+        refreshes the instance with the new configuration.
+
+        Enabled by default, use --no-update-instance to disable.
+
+     At most one of these can be specified:
+
+       --region=REGION
+          Region of the managed instance group to delete. If not specified, you
+          might be prompted to select a region (interactive mode only).
+
+          A list of regions can be fetched by running:
+
+              $ gcloud compute regions list
+
+          Overrides the default compute/region property value for this command
+          invocation.
+
+       --zone=ZONE
+          Zone of the managed instance group to delete. If not specified, you
+          might be prompted to select a zone (interactive mode only).
+
+          A list of zones can be fetched by running:
+
+              $ gcloud compute zones list
+
+          Overrides the default compute/zone property value for this command
+          invocation.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud compute instance-groups managed instance-configs delete
+
+        $ gcloud beta compute instance-groups managed instance-configs delete
+

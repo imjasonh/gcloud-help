@@ -1,0 +1,95 @@
+NAME
+    gcloud beta iap web set-iam-policy - set the IAM policy for an IAP IAM
+        resource
+
+SYNOPSIS
+    gcloud beta iap web set-iam-policy POLICY_FILE
+        [--resource-type=RESOURCE_TYPE : --service=SERVICE --version=VERSION]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) This command replaces the existing IAM policy for an IAP IAM
+    resource, given a file encoded in JSON or YAML that contains the IAM
+    policy. If the given policy file specifies an "etag" value, then the
+    replacement will succeed only if the policy already in place matches that
+    etag. (An etag obtained via $ gcloud beta iap web get-iam-policy will
+    prevent the replacement if the policy for the resource has been
+    subsequently updated.) A policy file that does not contain an etag value
+    will replace any existing policy for the resource.
+
+EXAMPLES
+    To set the IAM policy for the web accesses to the IAP protected resources
+    within the active project, run:
+
+        $ gcloud beta iap web set-iam-policy POLICY_FILE
+
+    To set the IAM policy for the web accesses to the IAP protected resources
+    within a project, run:
+
+        $ gcloud beta iap web set-iam-policy POLICY_FILE --project=PROJECT_ID
+
+    To set the IAM policy for the web accesses to the IAP protected resources
+    within an App Engine application, run:
+
+        $ gcloud beta iap web set-iam-policy POLICY_FILE \
+            --resource-type=app-engine
+
+    To set the IAM policy for the web accesses to the IAP protected resources
+    within an App Engine service, run:
+
+        $ gcloud beta iap web set-iam-policy POLICY_FILE \
+            --resource-type=app-engine
+            --service=SERVICE_ID
+
+    To set the IAM policy for the web accesses to the IAP protected resources
+    within an App Engine service version, run:
+
+        $ gcloud beta iap web set-iam-policy POLICY_FILE \
+            --resource-type=app-engine
+            --service=SERVICE_ID --version=VERSION
+
+    To set the IAM policy for the web accesses to the IAP protected resources
+    within all backend services, run:
+
+        $ gcloud beta iap web set-iam-policy POLICY_FILE \
+            --resource-type=backend-services
+
+    To set the IAM policy for the web accesses to the IAP protected resources
+    within a backend service, run:
+
+        $ gcloud beta iap web set-iam-policy POLICY_FILE \
+            --resource-type=backend-services
+            --service=SERVICE_ID
+
+POSITIONAL ARGUMENTS
+     POLICY_FILE
+        JSON or YAML file containing the IAM policy.
+
+FLAGS
+     --resource-type=RESOURCE_TYPE
+        Resource type of the IAP resource. RESOURCE_TYPE must be one of:
+        app-engine, backend-services.
+
+     --service=SERVICE
+        Service name.
+
+     --version=VERSION
+        Service version. Should only be specified with
+        --resource-type=app-engine.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud iap web set-iam-policy
+
+        $ gcloud alpha iap web set-iam-policy
+

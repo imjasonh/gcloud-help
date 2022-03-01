@@ -1,0 +1,88 @@
+NAME
+    gcloud beta data-catalog search - search Data Catalog for resources that
+        match a query
+
+SYNOPSIS
+    gcloud beta data-catalog search QUERY
+        (--include-gcp-public-datasets
+          --include-organization-ids=[ORGANIZATION,...]
+          --include-project-ids=[PROJECT,...]
+          --restricted-locations=[LOCATION,...]) [--limit=LIMIT]
+        [--order-by=ORDER_BY] [--page-size=PAGE_SIZE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Search Data Catalog for resources that match a query.
+
+EXAMPLES
+    To search project 'my-project' for Data Catalog resources that match the
+    simple predicate 'foo':
+
+        $ gcloud beta data-catalog search 'foo' \
+            --include-project-ids=my-project
+
+    To search organization '1234' for Data Catalog resources that match
+    entities whose names match the predicate 'foo':
+
+        $ gcloud beta data-catalog search 'name:foo' \
+            --include-organization-ids=1234
+
+POSITIONAL ARGUMENTS
+     QUERY
+        Query string in search query syntax in Data Catalog. For more
+        information, see:
+        https://cloud.google.com/data-catalog/docs/how-to/search-reference
+
+REQUIRED FLAGS
+     Scope. Control the scope of the search.
+
+     At least one of these must be specified:
+
+       --include-gcp-public-datasets
+          If True, include Google Cloud Platform public datasets in the search
+          results.
+
+       --include-organization-ids=[ORGANIZATION,...]
+          List of Cloud Organization IDs to include in the search.
+
+       --include-project-ids=[PROJECT,...]
+          List of Cloud Project IDs to include in the search.
+
+       --restricted-locations=[LOCATION,...]
+          List of locations to search within.
+
+LIST COMMAND FLAGS
+     --limit=LIMIT
+        Maximum number of resources to list. The default is unlimited.
+
+     --order-by=ORDER_BY
+        Specifies the ordering of results. Defaults to 'relevance'.
+
+        Currently supported case-sensitive choices are:
+
+        ◆ relevance
+        ◆ last_access_timestamp [asc|desc]: defaults to descending.
+        ◆ last_modified_timestamp [asc|desc]: defaults to descending.
+
+        To order by last modified timestamp ascending, specify:
+        --order-by="last_modified_timestamp desc".
+
+     --page-size=PAGE_SIZE
+        Some services group resource list output into pages. This flag
+        specifies the maximum number of resources per page.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud data-catalog search
+
+        $ gcloud alpha data-catalog search
+

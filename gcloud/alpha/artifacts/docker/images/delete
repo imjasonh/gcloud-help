@@ -1,0 +1,90 @@
+NAME
+    gcloud alpha artifacts docker images delete - delete an Artifact Registry
+        container image
+
+SYNOPSIS
+    gcloud alpha artifacts docker images delete IMAGE [--async] [--delete-tags]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) A valid container image has the format of
+
+        LOCATION-docker.pkg.dev/PROJECT-ID/REPOSITORY-ID/IMAGE
+
+    A valid container image that can be referenced by tag or digest, has the
+    format of
+
+        LOCATION-docker.pkg.dev/PROJECT-ID/REPOSITORY-ID/IMAGE:tag
+        LOCATION-docker.pkg.dev/PROJECT-ID/REPOSITORY-ID/IMAGE@sha256:digest
+
+    This command can fail for the following reasons:
+      ▪ Trying to delete an image by digest when the image is still tagged.
+        Add --delete-tags to delete the digest and the tags.
+      ▪ Trying to delete an image by tag when the image has other tags. Add
+        --delete-tags to delete all tags.
+      ▪ A valid repository format was not provided.
+      ▪ The specified image does not exist.
+      ▪ The active account does not have permission to delete images.
+
+EXAMPLES
+    To delete image busy-box in us-west1 and all of its digests and tags:
+
+        $ gcloud alpha artifacts docker images delete \
+          us-west1-docker.pkg.dev/my-project/my-repository/busy-box
+
+    To delete image digest abcxyz under image busy-box:
+
+        $ gcloud alpha artifacts docker images delete \
+          us-west1-docker.pkg.dev/my-project/my-repository/\
+        busy-box@sha256:abcxyz
+
+    To delete image digest abcxyz under image busy-box while there're other
+    tags associate with the digest:
+
+        $ gcloud alpha artifacts docker images delete \
+          us-west1-docker.pkg.dev/my-project/my-repository/\
+        busy-box@sha256:abcxyz --delete-tags
+
+    To delete an image digest and its only tag my-tag under image busy-box:
+
+        $ gcloud alpha artifacts docker images delete \
+          us-west1-docker.pkg.dev/my-project/my-repository/busy-box:my-tag
+
+POSITIONAL ARGUMENTS
+     IMAGE
+        A container image.
+
+        A valid container image has the format of
+        LOCATION-docker.pkg.dev/PROJECT-ID/REPOSITORY-ID/IMAGE
+
+        A valid container image that can be referenced by tag or digest, has
+        the format of
+        LOCATION-docker.pkg.dev/PROJECT-ID/REPOSITORY-ID/IMAGE:tag
+        LOCATION-docker.pkg.dev/PROJECT-ID/REPOSITORY-ID/IMAGE@sha256:digest
+
+FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --delete-tags
+        If specified, all tags associated with the image are deleted.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud artifacts docker images delete
+
+        $ gcloud beta artifacts docker images delete
+

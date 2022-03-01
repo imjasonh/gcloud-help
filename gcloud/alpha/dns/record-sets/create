@@ -1,0 +1,109 @@
+NAME
+    gcloud alpha dns record-sets create - creates a record-set in a
+        managed-zone
+
+SYNOPSIS
+    gcloud alpha dns record-sets create DNS_NAME --type=TYPE --zone=ZONE, -z
+        ZONE
+        (--rrdatas=[RRDATA,...] | --routing_policy_data=ROUTING_POLICY_DATA
+          --routing_policy_type=ROUTING_POLICY_TYPE) [--location=LOCATION]
+        [--ttl=TTL] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) This command creates a record-set contained within the specified
+    managed-zone.
+
+EXAMPLES
+    To create a record-set with dnsName foo.bar.com., record type A, rrdata
+    [1.2.3.4, 9.8.7.6] and ttl 60 in my_zone run this:
+
+        $ gcloud alpha dns record-sets create foo.bar.com. \
+            --rrdatas=1.2.3.4,9.8.7.6 --type=A --ttl=60
+        --zone=my_zone
+
+    To create a record-set with dnsName foo.bar.com., record type A, rrdata
+    [1.2.3.4, 9.8.7.6] and ttl 60 in my_zone in us-east1-a run this:
+
+        $ gcloud alpha dns record-sets create us-east1-a.bar.com. \
+            --rrdatas=1.2.3.4,9.8.7.6 --type=A --ttl=60
+        --zone=my_zone --location=us-east1-a
+
+POSITIONAL ARGUMENTS
+     DNS_NAME
+        DNS or domain name of the record-set.
+
+REQUIRED FLAGS
+     --type=TYPE
+        DNS record type of the record-set (e.g. A, AAAA, MX etc.).
+
+     --zone=ZONE, -z ZONE
+        Name of the managed zone whose record sets you want to manage.
+
+     Resource record sets arguments. Can specify either --rrdatas or both
+     --routing-policy-data and --routing-policy-type.
+
+     Exactly one of these must be specified:
+
+       --rrdatas=[RRDATA,...]
+          DNS data (Address/CNAME/MX info, etc.) of the record-set. This is
+          RDATA; the format of this information varies depending on the type
+          and class of the resource record.
+
+       Routing policy arguments. If you specify one of --routing-policy-data or
+       --routing-policy-type, you must specify both.
+
+         --routing_policy_data=ROUTING_POLICY_DATA
+            The routing policy data supports one of two formats below,
+            depending on the choice of routing-policy-type.
+
+            For --routing-policy-type = "WRR" this flag indicates the weighted
+            round robin policy data. The field accepts a semicolon-delimited
+            list of the format "${weight_percent}:${rrdata},${rrdata}". Specify
+            weight as a non-negative number (0 is allowed). Ratio of traffic
+            routed to the target is calculated from the ratio of individual
+            weight over the total across all weights.
+
+            For --routing-policy-type = "GEO" this flag indicates the
+            geo-locations policy data. The field accepts a semicolon-delimited
+            list of the format "${region}:${rrdata},${rrdata}".
+
+            This flag must be specified if any of the other arguments in this
+            group are specified.
+
+         --routing_policy_type=ROUTING_POLICY_TYPE
+            Indicates what type of routing policy is being specified. As of
+            this time, this field can take on either "WRR" for weighted round
+            robin, or "GEO" for geo location. This field cannot be modified -
+            once a policy has chosen a type, the only way to change it is to
+            delete the policy and add a new one with the different type.
+            ROUTING_POLICY_TYPE must be one of: GEO, WRR.
+
+            This flag must be specified if any of the other arguments in this
+            group are specified.
+
+OPTIONAL FLAGS
+     --location=LOCATION
+        Specifies the desired service location the request is sent to. Default
+        to Cloud DNS global service.
+
+     --ttl=TTL
+        TTL (time to live) for the record-set.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud dns record-sets create
+
+        $ gcloud beta dns record-sets create
+

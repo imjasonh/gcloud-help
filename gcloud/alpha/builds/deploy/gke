@@ -1,0 +1,124 @@
+NAME
+    gcloud alpha builds deploy gke - build and deploy to a target Google
+        Kubernetes Engine cluster
+
+SYNOPSIS
+    gcloud alpha builds deploy gke [[SOURCE] --no-source] --cluster=CLUSTER
+        --location=LOCATION [--app-name=APP_NAME] [--app-version=APP_VERSION]
+        [--async] [--config=CONFIG] [--expose=EXPOSE]
+        [--gcs-staging-dir=GCS_STAGING_DIR] [--namespace=NAMESPACE]
+        [--timeout=TIMEOUT] [--image=IMAGE | --tag=TAG] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Build and deploy to a target Google Kubernetes Engine cluster.
+
+POSITIONAL ARGUMENTS
+     At most one of these can be specified:
+
+       [SOURCE]
+          Location of the source and configs to build and deploy. The location
+          can be a directory on a local disk or a gzipped archive file
+          (.tar.gz) in Google Cloud Storage.
+
+       --no-source
+          Specify that no source should be uploaded with this build.
+
+REQUIRED FLAGS
+     --cluster=CLUSTER
+        Name of the target cluster to deploy to.
+
+     --location=LOCATION
+        Region or zone of the target cluster to deploy to.
+
+OPTIONAL FLAGS
+     --app-name=APP_NAME
+        If specified, the following label is added to the Kubernetes manifests:
+        'app.kubernetes.io/name: APP_NAME'. Defaults to the container image
+        name provided by --image or --tag without the tag, e.g. 'my-app' for
+        'gcr.io/my-project/my-app:1.0.0'.
+
+     --app-version=APP_VERSION
+        If specified, the following label is added to the Kubernetes manifests:
+        'app.kubernetes.io/version: APP_VERSION'. Defaults to the container
+        image tag provided by --image or --tag. If no image tag is provided and
+        SOURCE is a valid git repository, defaults to the short revision hash
+        of the HEAD commit.
+
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --config=CONFIG
+        Path to the Kubernetes YAML, or directory containing multiple
+        Kubernetes YAML files, used to deploy the container image. The path is
+        relative to the repository root provided by [SOURCE]. The files must
+        reference the provided container image or tag.
+
+        If this field is not set, a default Deployment config and Horizontal
+        Pod Autoscaler config are used to deploy the image.
+
+     --expose=EXPOSE
+        Port that the deployed application listens on. If set, a Kubernetes
+        Service of type 'LoadBalancer' is created with a single TCP port
+        mapping that exposes this port.
+
+     --gcs-staging-dir=GCS_STAGING_DIR
+        Path to the Google Cloud Storage subdirectory into which to copy the
+        source and configs (suggested base and expanded Kubernetes YAML files)
+        that are used to stage and deploy your app. If the bucket in this path
+        doesn't exist, Cloud Build creates it.
+
+        If this field is not set, the source and configs are written to
+        gs://[PROJECT_ID]_cloudbuild/deploy, where source is written to the
+        'source' sub-directory and configs are written to the 'config'
+        sub-directory.
+
+     --namespace=NAMESPACE
+        Namespace of the target cluster to deploy to. If this field is not set,
+        the 'default' namespace is used.
+
+     --timeout=TIMEOUT
+        Maximum time a build is run before it times out. For example, "2h15m5s"
+        is 2 hours, 15 minutes, and 5 seconds. If you do not specify a unit,
+        seconds is assumed. Overrides the default builds/timeout property value
+        for this command invocation.
+
+        Image to use to build and/or deploy.
+
+        To build an image with a default tag, omit these flags. The resulting
+        tag will be in the format 'gcr.io/[PROJECT_ID]/[IMAGE]/[TAG], where
+        [PROJECT_ID] is your project ID, [IMAGE] is the value provided by
+        `--app-name`, if provided, else it is the name of the provided source
+        directory, and [TAG] is the value provided by `--app-version`, if
+        provided, else it is the commit SHA of your provided source.
+
+    At most one of these can be specified:
+
+         --image=IMAGE
+            Existing container image to deploy. If set, Cloud Build deploys the
+            container image to the target Kubernetes cluster. The image must be
+            in the gcr.io/* or *.gcr.io/* namespaces.
+
+         --tag=TAG
+            Tag to use with a 'docker build' image creation. Cloud Build runs a
+            remote 'docker build -t $TAG .' command, where $TAG is the tag
+            provided by this flag. The tag must be in the gcr.io/* or
+            *.gcr.io/* namespaces. If you specify a tag in this command, your
+            source must include a Dockerfile. For instructions on building
+            using a Dockerfile see
+            https://cloud.google.com/cloud-build/docs/quickstart-docker.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

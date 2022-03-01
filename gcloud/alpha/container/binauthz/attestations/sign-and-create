@@ -1,0 +1,140 @@
+NAME
+    gcloud alpha container binauthz attestations sign-and-create - sign and
+        create a Binary Authorization Attestation using a Cloud KMS key
+
+SYNOPSIS
+    gcloud alpha container binauthz attestations sign-and-create
+        --artifact-url=ARTIFACT_URL
+        (--attestor=ATTESTOR : --attestor-project=ATTESTOR_PROJECT)
+        (--keyversion=KEYVERSION : --keyversion-key=KEYVERSION_KEY
+          --keyversion-keyring=KEYVERSION_KEYRING
+          --keyversion-location=KEYVERSION_LOCATION
+          --keyversion-project=KEYVERSION_PROJECT)
+        [--public-key-id-override=PUBLIC_KEY_ID_OVERRIDE] [--validate]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) This command signs and creates a Binary Authorization attestation
+    for your project. The attestation is created for the specified artifact
+    (e.g. a gcr.io container URL), associate with the specified attestor, and
+    stored under the specified project.
+
+EXAMPLES
+    To sign and create an attestation in the project "my_proj" as the attestor
+    with resource path "projects/foo/attestors/bar" with the key
+    "projects/foo/locations/us-west1/keyRings/aring/cryptoKeys/akey/cryptoKeyVersions/1",
+    run:
+
+        $ gcloud alpha container binauthz attestations sign-and-create \
+            --project=my_proj \
+            --artifact-url='gcr.io/example-project/example-image@sha256:abcd' \
+            --attestor=projects/foo/attestors/bar \
+            --keyversion-project=foo \
+            --keyversion-location=us-west1 \
+            --keyversion-keyring=aring \
+            --keyversion-key=akey \
+            --keyversion=1
+
+REQUIRED FLAGS
+     --artifact-url=ARTIFACT_URL
+        Container URL. May be in the gcr.io/repository/image format, or may
+        optionally contain the http or https scheme
+
+     Attestor resource - The Attestor whose Container Analysis Note will be
+     used to host the created attestation. In order to successfully attach the
+     attestation, the active gcloud account (core/account) must be able to read
+     this attestor and must have the containeranalysis.notes.attachOccurrence
+     permission for the Attestor's underlying Note resource (usually via the
+     containeranalysis.notes.attacher role). The arguments in this group can be
+     used to specify the attributes of this resource.
+
+     This must be specified.
+
+       --attestor=ATTESTOR
+          ID of the attestor or fully qualified identifier for the attestor. To
+          set the name attribute:
+          ▸ provide the argument --attestor on the command line.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --attestor-project=ATTESTOR_PROJECT
+          Project ID of the Google Cloud project for the attestor. To set the
+          project attribute:
+          ▸ provide the argument --attestor on the command line with a fully
+            specified name;
+          ▸ provide the argument --attestor-project on the command line;
+          ▸ provide the argument --project on the command line;
+          ▸ set the property core/project.
+
+     CryptoKeyVersion resource - The Cloud KMS (Key Management Service)
+     CryptoKeyVersion to use to sign the attestation payload. The arguments in
+     this group can be used to specify the attributes of this resource.
+
+     This must be specified.
+
+       --keyversion=KEYVERSION
+          ID of the CryptoKeyVersion or fully qualified identifier for the
+          CryptoKeyVersion. To set the version attribute:
+          ▸ provide the argument --keyversion on the command line.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --keyversion-key=KEYVERSION_KEY
+          The key of the CryptoKeyVersion. To set the key attribute:
+          ▸ provide the argument --keyversion on the command line with a
+            fully specified name;
+          ▸ provide the argument --keyversion-key on the command line.
+
+       --keyversion-keyring=KEYVERSION_KEYRING
+          The keyring of the CryptoKeyVersion. To set the keyring attribute:
+          ▸ provide the argument --keyversion on the command line with a
+            fully specified name;
+          ▸ provide the argument --keyversion-keyring on the command line.
+
+       --keyversion-location=KEYVERSION_LOCATION
+          The location of the CryptoKeyVersion. To set the location attribute:
+          ▸ provide the argument --keyversion on the command line with a
+            fully specified name;
+          ▸ provide the argument --keyversion-location on the command line.
+
+       --keyversion-project=KEYVERSION_PROJECT
+          Project ID of the Google Cloud project for the CryptoKeyVersion. To
+          set the project attribute:
+          ▸ provide the argument --keyversion on the command line with a
+            fully specified name;
+          ▸ provide the argument --keyversion-project on the command line;
+          ▸ provide the argument --project on the command line;
+          ▸ set the property core/project.
+
+OPTIONAL FLAGS
+     --public-key-id-override=PUBLIC_KEY_ID_OVERRIDE
+        If provided, the ID of the public key that will be used to verify the
+        Attestation instead of the default generated one. This ID should match
+        the one found on the Attestor resource(s) which will use this
+        Attestation.
+
+        This parameter is only necessary if the --public-key-id-override flag
+        was provided when this KMS key was added to the Attestor.
+
+     --validate
+        Whether to validate that the Attestation can be verified by the
+        provided Attestor.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. This variant is also available:
+
+        $ gcloud beta container binauthz attestations sign-and-create
+

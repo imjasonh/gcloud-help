@@ -1,0 +1,364 @@
+NAME
+    gcloud container clusters create-auto - create an Autopilot cluster for
+        running containers
+
+SYNOPSIS
+    gcloud container clusters create-auto NAME [--async]
+        [--autoprovisioning-network-tags=TAGS,[TAGS,...]]
+        [--boot-disk-kms-key=BOOT_DISK_KMS_KEY]
+        [--cluster-ipv4-cidr=CLUSTER_IPV4_CIDR]
+        [--cluster-secondary-range-name=NAME]
+        [--cluster-version=CLUSTER_VERSION]
+        [--create-subnetwork=[KEY=VALUE,...]]
+        [--database-encryption-key=DATABASE_ENCRYPTION_KEY] [--network=NETWORK]
+        [--release-channel=CHANNEL] [--security-group=SECURITY_GROUP]
+        [--services-ipv4-cidr=CIDR] [--services-secondary-range-name=NAME]
+        [--subnetwork=SUBNETWORK]
+        [--enable-master-authorized-networks
+          --master-authorized-networks=NETWORK,[NETWORK,...]]
+        [--enable-private-endpoint
+          --enable-private-nodes --master-ipv4-cidr=MASTER_IPV4_CIDR]
+        [--region=REGION | --zone=ZONE, -z ZONE]
+        [--scopes=[SCOPE,...];
+          default="gke-default" --service-account=SERVICE_ACCOUNT]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Create an Autopilot cluster for running containers.
+
+EXAMPLES
+    To create a cluster with the default configuration, run:
+
+        $ gcloud container clusters create-auto sample-cluster
+
+POSITIONAL ARGUMENTS
+     NAME
+        The name of the cluster to create.
+
+        The name may contain only lowercase alphanumerics and '-', must start
+        with a letter and end with an alphanumeric, and must be no longer than
+        40 characters.
+
+FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --autoprovisioning-network-tags=TAGS,[TAGS,...]
+        Applies the given Compute Engine tags (comma separated) on all nodes in
+        the auto-provisioned node pools of the new Standard cluster or the new
+        Autopilot cluster.
+
+        Examples:
+
+            $ gcloud container clusters create-auto example-cluster \
+                --autoprovisioning-network-tags=tag1,tag2
+
+        New nodes in auto-provisioned node pools, including ones created by
+        resize or recreate, will have these tags on the Compute Engine API
+        instance object and can be used in firewall rules. See
+        https://cloud.google.com/sdk/gcloud/reference/compute/firewall-rules/create
+        for examples.
+
+     --boot-disk-kms-key=BOOT_DISK_KMS_KEY
+        The Customer Managed Encryption Key used to encrypt the boot disk
+        attached to each node in the node pool. This should be of the form
+        projects/[KEY_PROJECT_ID]/locations/[LOCATION]/keyRings/[RING_NAME]/cryptoKeys/[KEY_NAME].
+        For more information about protecting resources with Cloud KMS Keys
+        please see:
+        https://cloud.google.com/compute/docs/disks/customer-managed-encryption
+
+     --cluster-ipv4-cidr=CLUSTER_IPV4_CIDR
+        The IP address range for the pods in this cluster in CIDR notation
+        (e.g. 10.0.0.0/14). Prior to Kubernetes version 1.7.0 this must be a
+        subset of 10.0.0.0/8; however, starting with version 1.7.0 can be any
+        RFC 1918 IP range.
+
+        If you omit this option, a range is chosen automatically. The
+        automatically chosen range is randomly selected from 10.0.0.0/8 and
+        will not include IP address ranges allocated to VMs, existing routes,
+        or ranges allocated to other clusters. The automatically chosen range
+        might conflict with reserved IP addresses, dynamic routes, or routes
+        within VPCs that peer with this cluster. You should specify
+        --cluster-ipv4-cidr to prevent conflicts.
+
+     --cluster-secondary-range-name=NAME
+        Set the secondary range to be used as the source for pod IPs. Alias
+        ranges will be allocated from this secondary range. NAME must be the
+        name of an existing secondary range in the cluster subnetwork.
+
+        Must be used in conjunction with '--enable-ip-alias'. Cannot be used
+        with --create-subnetwork.
+
+     --cluster-version=CLUSTER_VERSION
+        The Kubernetes version to use for the master and nodes. Defaults to
+        server-specified.
+
+        The default Kubernetes version is available using the following
+        command.
+
+            $ gcloud container get-server-config
+
+     --create-subnetwork=[KEY=VALUE,...]
+        Create a new subnetwork for the cluster. The name and range of the
+        subnetwork can be customized via optional 'name' and 'range' key-value
+        pairs.
+
+        'name' specifies the name of the subnetwork to be created.
+
+        'range' specifies the IP range for the new subnetwork. This can either
+        be a netmask size (e.g. '/20') or a CIDR range (e.g. '10.0.0.0/20'). If
+        a netmask size is specified, the IP is automatically taken from the
+        free space in the cluster's network.
+
+        Examples:
+
+        Create a new subnetwork with a default name and size.
+
+            $ gcloud container clusters create-auto --create-subnetwork ""
+
+        Create a new subnetwork named "my-subnet" with netmask of size 21.
+
+            $ gcloud container clusters create-auto \
+                --create-subnetwork name=my-subnet,range=/21
+
+        Create a new subnetwork with a default name with the primary range of
+        10.100.0.0/16.
+
+            $ gcloud container clusters create-auto \
+                --create-subnetwork range=10.100.0.0/16
+
+        Create a new subnetwork with the name "my-subnet" with a default range.
+
+            $ gcloud container clusters create-auto \
+                --create-subnetwork name=my-subnet
+
+        Can not be specified unless '--enable-ip-alias' is also specified. Can
+        not be used in conjunction with the '--subnetwork' option.
+
+     --database-encryption-key=DATABASE_ENCRYPTION_KEY
+        Enable Database Encryption.
+
+        Enable database encryption that will be used to encrypt Kubernetes
+        Secrets at the application layer. The key provided should be the
+        resource ID in the format of
+        projects/[KEY_PROJECT_ID]/locations/[LOCATION]/keyRings/[RING_NAME]/cryptoKeys/[KEY_NAME].
+        For more information, see
+        https://cloud.google.com/kubernetes-engine/docs/how-to/encrypting-secrets.
+
+     --network=NETWORK
+        The Compute Engine Network that the cluster will connect to. Google
+        Kubernetes Engine will use this network when creating routes and
+        firewalls for the clusters. Defaults to the 'default' network.
+
+     --release-channel=CHANNEL
+        Release channel a cluster is subscribed to.
+
+        When a cluster is subscribed to a release channel, Google maintains
+        both the master version and the node version. Node auto-upgrade
+        defaults to true and cannot be disabled.
+
+        CHANNEL must be one of:
+
+         None
+            Use 'None' to opt-out of any release channel.
+
+         rapid
+            'rapid' channel is offered on an early access basis for customers
+            who want to test new releases.
+
+            WARNING: Versions available in the 'rapid' channel may be subject
+            to unresolved issues with no known workaround and are not subject
+            to any SLAs.
+
+         regular
+            Clusters subscribed to 'regular' receive versions that are
+            considered GA quality. 'regular' is intended for production users
+            who want to take advantage of new features.
+
+         stable
+            Clusters subscribed to 'stable' receive versions that are known to
+            be stable and reliable in production.
+
+     --security-group=SECURITY_GROUP
+        The name of the RBAC security group for use with Google security groups
+        in Kubernetes RBAC
+        (https://kubernetes.io/docs/reference/access-authn-authz/rbac/).
+
+        To include group membership as part of the claims issued by Google
+        during authentication, a group must be designated as a security group
+        by including it as a direct member of this group.
+
+        If unspecified, no groups will be returned for use with RBAC.
+
+     --services-ipv4-cidr=CIDR
+        Set the IP range for the services IPs.
+
+        Can be specified as a netmask size (e.g. '/20') or as in CIDR notion
+        (e.g. '10.100.0.0/20'). If given as a netmask size, the IP range will
+        be chosen automatically from the available space in the network.
+
+        If unspecified, the services CIDR range will be chosen with a default
+        mask size.
+
+        Can not be specified unless '--enable-ip-alias' is also specified.
+
+     --services-secondary-range-name=NAME
+        Set the secondary range to be used for services (e.g. ClusterIPs). NAME
+        must be the name of an existing secondary range in the cluster
+        subnetwork.
+
+        Must be used in conjunction with '--enable-ip-alias'. Cannot be used
+        with --create-subnetwork.
+
+     --subnetwork=SUBNETWORK
+        The Google Compute Engine subnetwork
+        (https://cloud.google.com/compute/docs/subnetworks) to which the
+        cluster is connected. The subnetwork must belong to the network
+        specified by --network.
+
+        Cannot be used with the "--create-subnetwork" option.
+
+     Master Authorized Networks
+
+       --enable-master-authorized-networks
+          Allow only specified set of CIDR blocks (specified by the
+          --master-authorized-networks flag) to connect to Kubernetes master
+          through HTTPS. Besides these blocks, the following have access as
+          well:
+
+              1) The private network the cluster connects to if
+              `--enable-private-nodes` is specified.
+              2) Google Compute Engine Public IPs if `--enable-private-nodes` is not
+              specified.
+
+          Use --no-enable-master-authorized-networks to disable. When disabled,
+          public internet (0.0.0.0/0) is allowed to connect to Kubernetes
+          master through HTTPS.
+
+       --master-authorized-networks=NETWORK,[NETWORK,...]
+          The list of CIDR blocks (up to 100 for private cluster, 50 for public
+          cluster) that are allowed to connect to Kubernetes master through
+          HTTPS. Specified in CIDR notation (e.g. 1.2.3.4/30). Cannot be
+          specified unless --enable-master-authorized-networks is also
+          specified.
+
+     Private Clusters
+
+       --enable-private-endpoint
+          Cluster is managed using the private IP address of the master API
+          endpoint.
+
+       --enable-private-nodes
+          Cluster is created with no public IP addresses on the cluster nodes.
+
+       --master-ipv4-cidr=MASTER_IPV4_CIDR
+          IPv4 CIDR range to use for the master network. This should have a
+          netmask of size /28 and should be used in conjunction with the
+          --enable-private-nodes flag.
+
+     At most one of these can be specified:
+
+       --region=REGION
+          Compute region (e.g. us-central1) for the cluster.
+
+       --zone=ZONE, -z ZONE
+          Compute zone (e.g. us-central1-a) for the cluster. Overrides the
+          default compute/zone property value for this command invocation.
+
+     Options to specify the node identity.
+
+       Scopes options.
+
+         --scopes=[SCOPE,...]; default="gke-default"
+            Specifies scopes for the node instances.
+
+            Examples:
+
+                $ gcloud container clusters create-auto example-cluster \
+                    --scopes=https://www.googleapis.com/auth/devstorage.read_only
+
+                $ gcloud container clusters create-auto example-cluster \
+                    --scopes=bigquery,storage-rw,compute-ro
+
+            Multiple scopes can be specified, separated by commas. Various
+            scopes are automatically added based on feature usage. Such scopes
+            are not added if an equivalent scope already exists.
+
+            ▫ monitoring-write: always added to ensure metrics can be written
+            ▫ logging-write: added if Cloud Logging is enabled
+              (--enable-cloud-logging/--logging)
+            ▫ monitoring: added if Cloud Monitoring is enabled
+              (--enable-cloud-monitoring/--monitoring)
+            ▫ gke-default: added for Autopilot clusters that use the default
+              service account
+            ▫ cloud-platform: added for Autopilot clusters that use any other
+              service account
+
+            SCOPE can be either the full URI of the scope or an alias. Default
+            scopes are assigned to all instances. Available aliases are:
+
+              Alias                  URI
+              bigquery               https://www.googleapis.com/auth/bigquery
+              cloud-platform         https://www.googleapis.com/auth/cloud-platform
+              cloud-source-repos     https://www.googleapis.com/auth/source.full_control
+              cloud-source-repos-ro  https://www.googleapis.com/auth/source.read_only
+              compute-ro             https://www.googleapis.com/auth/compute.readonly
+              compute-rw             https://www.googleapis.com/auth/compute
+              datastore              https://www.googleapis.com/auth/datastore
+              default                https://www.googleapis.com/auth/devstorage.read_only
+                                     https://www.googleapis.com/auth/logging.write
+                                     https://www.googleapis.com/auth/monitoring.write
+                                     https://www.googleapis.com/auth/pubsub
+                                     https://www.googleapis.com/auth/service.management.readonly
+                                     https://www.googleapis.com/auth/servicecontrol
+                                     https://www.googleapis.com/auth/trace.append
+              gke-default            https://www.googleapis.com/auth/devstorage.read_only
+                                     https://www.googleapis.com/auth/logging.write
+                                     https://www.googleapis.com/auth/monitoring
+                                     https://www.googleapis.com/auth/service.management.readonly
+                                     https://www.googleapis.com/auth/servicecontrol
+                                     https://www.googleapis.com/auth/trace.append
+              logging-write          https://www.googleapis.com/auth/logging.write
+              monitoring             https://www.googleapis.com/auth/monitoring
+              monitoring-read        https://www.googleapis.com/auth/monitoring.read
+              monitoring-write       https://www.googleapis.com/auth/monitoring.write
+              pubsub                 https://www.googleapis.com/auth/pubsub
+              service-control        https://www.googleapis.com/auth/servicecontrol
+              service-management     https://www.googleapis.com/auth/service.management.readonly
+              sql (deprecated)       https://www.googleapis.com/auth/sqlservice
+              sql-admin              https://www.googleapis.com/auth/sqlservice.admin
+              storage-full           https://www.googleapis.com/auth/devstorage.full_control
+              storage-ro             https://www.googleapis.com/auth/devstorage.read_only
+              storage-rw             https://www.googleapis.com/auth/devstorage.read_write
+              taskqueue              https://www.googleapis.com/auth/taskqueue
+              trace                  https://www.googleapis.com/auth/trace.append
+              userinfo-email         https://www.googleapis.com/auth/userinfo.email
+
+            DEPRECATION WARNING: https://www.googleapis.com/auth/sqlservice
+            account scope and sql alias do not provide SQL instance management
+            capabilities and have been deprecated. Please, use
+            https://www.googleapis.com/auth/sqlservice.admin or sql-admin to
+            manage your Google SQL Service instances.
+
+       --service-account=SERVICE_ACCOUNT
+          The Google Cloud Platform Service Account to be used by the node VMs.
+          If a service account is specified, the cloud-platform and
+          userinfo.email scopes are used. If no Service Account is specified,
+          the project default service account is used.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha container clusters create-auto
+
+        $ gcloud beta container clusters create-auto
+

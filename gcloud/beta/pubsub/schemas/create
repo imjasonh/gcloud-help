@@ -1,0 +1,73 @@
+NAME
+    gcloud beta pubsub schemas create - create a Pub/Sub schema
+
+SYNOPSIS
+    gcloud beta pubsub schemas create SCHEMA --type=TYPE
+        (--definition=DEFINITION | --definition-file=DEFINITION_FILE)
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Create a new Pub/Sub schema.
+
+EXAMPLES
+    To create a PROTOCOL_BUFFER schema called "key-schema" that requires
+    exactly one string field named "key", run:        $ gcloud beta pubsub schemas create key-schema \
+            --definition="syntax = 'proto3'; message Message { optional \
+        string key = 1; }" --type=PROTOCOL_BUFFER
+
+    To create an equivalent AVRO schema, run:        $ gcloud beta pubsub schemas create key-schema \
+            --definition='{ "type": "record", "namespace": "my.ns", "name":
+         "KeyMsg", "fields": [ { "name": "key", "type": "string" } ] }' \
+            --type=AVRO
+
+POSITIONAL ARGUMENTS
+     Schema resource - Pub/Sub schema to create. This represents a Cloud
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways. To set the project attribute:
+      ◆ provide the argument schema on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       SCHEMA
+          ID of the schema or fully qualified identifier for the schema. To set
+          the schema attribute:
+          ▸ provide the argument schema on the command line.
+
+REQUIRED FLAGS
+     --type=TYPE
+        Type of the schema. TYPE must be one of: avro, protocol-buffer,
+        type-unspecified.
+
+     Schema definition.
+
+     Exactly one of these must be specified:
+
+       --definition=DEFINITION
+          Inline schema definition.
+
+       --definition-file=DEFINITION_FILE
+          File containing schema definition.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the pubsub/v1 API. The full documentation for this API
+    can be found at: https://cloud.google.com/pubsub/docs
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud pubsub schemas create
+
+        $ gcloud alpha pubsub schemas create
+

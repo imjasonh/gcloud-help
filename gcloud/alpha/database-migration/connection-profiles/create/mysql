@@ -1,0 +1,130 @@
+NAME
+    gcloud alpha database-migration connection-profiles create mysql - create a
+        Database Migration Service connection profile for MySQL
+
+SYNOPSIS
+    gcloud alpha database-migration connection-profiles create mysql
+        (CONNECTION_PROFILE : --region=REGION) --host=HOST --port=PORT
+        --username=USERNAME (--password=PASSWORD | --prompt-for-password)
+        [--display-name=DISPLAY_NAME] [--instance=INSTANCE]
+        [--labels=[KEY=VALUE,...]] [--provider=PROVIDER]
+        [--ca-certificate=CA_CERTIFICATE
+          : --certificate=CERTIFICATE --private-key=PRIVATE_KEY]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Create a Database Migration Service connection profile for MySQL.
+
+EXAMPLES
+    To create a connection profile for MySQL:
+
+        $ gcloud alpha database-migration connection-profiles create mysql \
+          CONNECTION_PROFILE --region=us-central1 --password=123456 \
+          --username=fakeuser --display-name=my-profile --host=1.2.3.4 \
+          --port=1111
+
+    If the source is a Cloud SQL database, run:
+
+        $ gcloud alpha database-migration connection-profiles create mysql \
+          CONNECTION_PROFILE --region=us-central1 --password=123456 \
+          --username=fakeuser --display-name=my-profile --host=1.2.3.4 \
+          --port=1111 --instance=my-instance
+
+POSITIONAL ARGUMENTS
+     Connection profile resource - The connection profile to create. The
+     arguments in this group can be used to specify the attributes of this
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways. To set the project attribute:
+      ◆ provide the argument connection_profile on the command line with a
+        fully specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       CONNECTION_PROFILE
+          ID of the connection_profile or fully qualified identifier for the
+          connection_profile. To set the connection_profile attribute:
+          ▸ provide the argument connection_profile on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --region=REGION
+          The Cloud region for the connection_profile. To set the region
+          attribute:
+          ▸ provide the argument connection_profile on the command line with
+            a fully specified name;
+          ▸ provide the argument --region on the command line.
+
+REQUIRED FLAGS
+     --host=HOST
+        IP or hostname of the source database.
+
+     --port=PORT
+        Network port of the source database.
+
+     --username=USERNAME
+        Username that Database Migration Service will use to connect to the
+        database. The value is encrypted when stored in Database Migration
+        Service.
+
+     Exactly one of these must be specified:
+
+       --password=PASSWORD
+          Password for the user that Database Migration Service will be using
+          to connect to the database. This field is not returned on request,
+          and the value is encrypted when stored in Database Migration Service.
+
+       --prompt-for-password
+          Prompt for the password used to connect to the database.
+
+OPTIONAL FLAGS
+     --display-name=DISPLAY_NAME
+        Friendly name for the connection profile.
+
+     --instance=INSTANCE
+        If the source is a Cloud SQL database, use this field to provide the
+        Cloud SQL instance ID of the source.
+
+     --labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     --provider=PROVIDER
+        Database provider (CLOUDSQL or RDS). PROVIDER must be one of: RDS,
+        CLOUDSQL.
+
+     --ca-certificate=CA_CERTIFICATE
+        x509 PEM-encoded certificate of the CA that signed the source database
+        server's certificate. The replica will use this certificate to verify
+        it's connecting to the right host.
+
+     --certificate=CERTIFICATE
+        x509 PEM-encoded certificate that will be used by the replica to
+        authenticate against the source database server.
+
+     --private-key=PRIVATE_KEY
+        Unencrypted PKCS#1 or PKCS#8 PEM-encoded private key associated with
+        the Client Certificate.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. This variant is also available:
+
+        $ gcloud database-migration connection-profiles create mysql
+

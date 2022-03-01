@@ -1,0 +1,94 @@
+NAME
+    gcloud alpha access-context-manager perimeters dry-run list - list the
+        effective dry-run configuration across all Service Perimeters
+
+SYNOPSIS
+    gcloud alpha access-context-manager perimeters dry-run list
+        [--policy=policy] [--filter=EXPRESSION] [--limit=LIMIT]
+        [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) By default, only the Service Perimeter name, title, type and the
+    dry-run mode configuration (as spec) is displayed.
+
+    Note: For Service Perimeters without an explicit dry-run mode
+    configuration, the enforcement mode configuration is used as the dry-run
+    mode configuration, resulting in no audit logs being generated.
+
+EXAMPLES
+    To list the dry-run mode configuration across all Service Perimeter:
+
+        $ gcloud alpha access-context-manager perimeters dry-run list
+
+    Output:
+
+        name: perimeter_1*
+        spec:
+          resources:
+          - projects/123
+          - projects/456
+          restrictedServices:
+          - storage.googleapis.com
+        title: Perimeter 1
+        ---
+        name: perimeter_2
+        spec:
+          resources:
+          - projects/789
+          restrictedServices:
+          - bigquery.googleapis.com
+          vpcAccessibleServices:
+            allowedServices:
+            - bigquery.googleapis.com
+            enableRestriction: true
+        title: Perimeter 2
+
+FLAGS
+     --policy=policy
+        Policy resource - The access policy you want to list the effective
+        dry-run configuration for. This represents a Cloud resource.
+
+LIST COMMAND FLAGS
+     --filter=EXPRESSION
+        Apply a Boolean filter EXPRESSION to each resource item to be listed.
+        If the expression evaluates True, then that item is listed. For more
+        details and examples of filter expressions, run $ gcloud topic filters.
+        This flag interacts with other flags that are applied in this order:
+        --flatten, --sort-by, --filter, --limit.
+
+     --limit=LIMIT
+        Maximum number of resources to list. The default is unlimited. This
+        flag interacts with other flags that are applied in this order:
+        --flatten, --sort-by, --filter, --limit.
+
+     --page-size=PAGE_SIZE
+        Some services group resource list output into pages. This flag
+        specifies the maximum number of resources per page. The default is
+        determined by the service if it supports paging, otherwise it is
+        unlimited (no paging). Paging may be applied before or after --filter
+        and --limit depending on the service.
+
+     --sort-by=[FIELD,...]
+        Comma-separated list of resource field key names to sort by. The
+        default order is ascending. Prefix a field with ``~'' for descending
+        order on that field. This flag interacts with other flags that are
+        applied in this order: --flatten, --sort-by, --filter, --limit.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud access-context-manager perimeters dry-run list
+
+        $ gcloud beta access-context-manager perimeters dry-run list
+

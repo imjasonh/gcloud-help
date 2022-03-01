@@ -1,0 +1,209 @@
+NAME
+    gcloud compute images import - import an image into Compute Engine
+
+SYNOPSIS
+    gcloud compute images import IMAGE_NAME
+        (--source-file=SOURCE_FILE | --source-image=SOURCE_IMAGE)
+        [--no-address] [--async]
+        [--compute-service-account=COMPUTE_SERVICE_ACCOUNT]
+        [--description=DESCRIPTION] [--family=FAMILY] [--no-guest-environment]
+        [--log-location=LOG_LOCATION] [--network=NETWORK]
+        [--storage-location=STORAGE_LOCATION] [--subnet=SUBNET]
+        [--timeout=TIMEOUT; default="2h"] [--zone=ZONE]
+        [--data-disk | --byol --os=OS] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    gcloud compute images import imports Virtual Disk images, such as VMWare
+    VMDK files and VHD files, into Compute Engine.
+
+    Importing images involves four steps:
+      ▪ Upload the virtual disk file to Cloud Storage.
+      ▪ Import the image to Compute Engine.
+      ▪ Detect the OS and bootloader contained on the disk.
+      ▪ Translate the image to make a bootable image. This command performs
+        all four of these steps as required, depending on the input arguments
+        specified.
+
+    To override the detected OS, specify the --os flag. You can omit the
+    translation step using the --data-disk flag.
+
+    If you exported your disk from Compute Engine then you don't need to
+    re-import it. Instead, use gcloud compute images create to create more
+    images from the disk.
+
+    Files stored on Cloud Storage and images in Compute Engine incur charges.
+    See
+    https://cloud.google.com/compute/docs/images/importing-virtual-disks#resource_cleanup.
+
+EXAMPLES
+    To import a centos-7 VMDK file, run:
+
+        $ gcloud compute images import myimage-name --os=centos-7 \
+            --source-file=mysourcefile
+
+    To import a data disk without operating system, run:
+
+        $ gcloud compute images import myimage-name --data-disk \
+            --source-file=mysourcefile
+
+POSITIONAL ARGUMENTS
+     IMAGE_NAME
+        Name of the disk image to create.
+
+REQUIRED FLAGS
+     Exactly one of these must be specified:
+
+       --source-file=SOURCE_FILE
+          A local file, or the Cloud Storage URI of the virtual disk file to
+          import. For example: gs://my-bucket/my-image.vmdk or
+          ./my-local-image.vmdk. For more information about Cloud Storage URIs,
+          see https://cloud.google.com/storage/docs/request-endpoints#json-api.
+
+       --source-image=SOURCE_IMAGE
+          An existing Compute Engine image from which to import.
+
+OPTIONAL FLAGS
+     --no-address
+        Temporary VMs are created in your project during image import. Set this
+        flag so that these temporary VMs are not assigned external IP
+        addresses.
+
+        Note: The image import process requires package managers to be
+        installed on the operating system for the virtual disk. These package
+        managers might need to make requests to package repositories that are
+        outside Google Cloud. To allow access for these updates, you need to
+        configure Cloud NAT and Private Google Access. For more information,
+        see
+        https://cloud.google.com/compute/docs/import/importing-virtual-disks#no-external-ip.
+
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --compute-service-account=COMPUTE_SERVICE_ACCOUNT
+        A temporary virtual machine instance is created in your project during
+        image import. Image import tooling on this temporary instance must be
+        authenticated.
+
+        A Compute Engine service account is an identity attached to an
+        instance. Its access tokens can be accessed through the instance
+        metadata server and can be used to authenticate image import tooling on
+        the instance.
+
+        To set this option, specify the email address corresponding to the
+        required Compute Engine service account. If not provided, the image
+        import on the temporary instance uses the project's default Compute
+        Engine service account.
+
+        At minimum, the specified Compute Engine service account needs to have
+        the following roles assigned:
+
+        ◆ roles/compute.storageAdmin
+        ◆ roles/storage.objectViewer
+
+     --description=DESCRIPTION
+        Description to set for the imported image.
+
+     --family=FAMILY
+        Family to set for the imported image.
+
+     --guest-environment
+        Installs the guest environment on the image. See
+        https://cloud.google.com/compute/docs/images/guest-environment. Enabled
+        by default, use --no-guest-environment to disable.
+
+     --log-location=LOG_LOCATION
+        Directory in Cloud Storage to hold build logs. If not set,
+        gs://<project num>.cloudbuild-logs.googleusercontent.com/ is created
+        and used.
+
+     --network=NETWORK
+        Name of the network in your project to use for the image import. When
+        you import an image, the import tool creates and uses temporary VMs in
+        your project for the import process. Use this flag to specify the
+        network to use for these temporary VMs.
+
+     --storage-location=STORAGE_LOCATION
+        Specifies a Cloud Storage location, either regional or multi-regional,
+        where image content is to be stored. If not specified, the multi-region
+        location closest to the source is chosen automatically.
+
+     --subnet=SUBNET
+        Name of the subnetwork in your project to use for the image import.
+        When you import an image, the import tool creates and uses temporary
+        VMs in your project for the import process. Use this flag to specify
+        the subnetwork to use for these temporary VMs.
+        ◆ If the network resource is in legacy mode, do not provide this
+          property.
+        ◆ If the network is in auto subnet mode, specifying the subnetwork is
+          optional.
+        ◆ If the network is in custom subnet mode, then this field must be
+          specified.
+
+     --timeout=TIMEOUT; default="2h"
+        Maximum time an import can last before it fails as "TIMEOUT". For
+        example, if you specify 2h, the process fails after 2 hours. See $
+        gcloud topic datetimes for information about duration formats.
+
+        This timeout option has a maximum value of 24 hours.
+
+        If you are importing a large image that takes longer than 24 hours to
+        import, either use the RAW disk format to reduce the time needed for
+        converting the image, or split the data into several smaller images.
+
+     --zone=ZONE
+        Zone to use when importing the image. When you import an image, the
+        import tool creates and uses temporary VMs in your project for the
+        import process. Use this flag to specify the zone to use for these
+        temporary VMs. Overrides the default compute/zone property value for
+        this command invocation.
+
+     At most one of these can be specified:
+
+       --data-disk
+          Specifies that the disk has no bootable OS installed on it. Imports
+          the disk without making it bootable or installing Google tools on it.
+
+       --byol
+          Specifies that you want to import an image with an existing license.
+          Importing an image with an existing license is known as bring your
+          own license (BYOL).
+
+          --byol can be specified in any of the following ways:
+
+              + `--byol --os=rhel-8`: imports a RHEL 8 image with an existing license.
+              + `--os=rhel-8-byol`: imports a RHEL 8 image with an existing license.
+              + `--byol`: detects the OS contained on the disk, and imports
+                 the image with an existing license.
+
+          For more information about BYOL, see:
+          https://cloud.google.com/compute/docs/nodes/bringing-your-own-licenses
+
+       --os=OS
+          Specifies the OS of the disk image being imported. OS must be one of:
+          centos-7, debian-10, debian-11, debian-8, debian-9, opensuse-15,
+          rhel-6, rhel-6-byol, rhel-7, rhel-7-byol, rhel-8, rhel-8-byol,
+          rocky-8, sles-12, sles-12-byol, sles-15, sles-15-byol, sles-sap-12,
+          sles-sap-12-byol, sles-sap-15, sles-sap-15-byol, ubuntu-1404,
+          ubuntu-1604, ubuntu-1804, ubuntu-2004, windows-10-x64-byol,
+          windows-10-x86-byol, windows-2008r2, windows-2008r2-byol,
+          windows-2012, windows-2012-byol, windows-2012r2, windows-2012r2-byol,
+          windows-2016, windows-2016-byol, windows-2019, windows-2019-byol,
+          windows-7-x64-byol, windows-7-x86-byol, windows-8-x64-byol,
+          windows-8-x86-byol.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha compute images import
+
+        $ gcloud beta compute images import
+

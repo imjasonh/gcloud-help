@@ -1,0 +1,154 @@
+NAME
+    gcloud beta compute service-attachments create - create a Google Compute
+        Engine service attachment
+
+SYNOPSIS
+    gcloud beta compute service-attachments create NAME
+        --nat-subnets=NAT_SUBNETS,[NAT_SUBNETS,...]
+        --producer-forwarding-rule=PRODUCER_FORWARDING_RULE
+        [--connection-preference=CONNECTION_PREFERENCE;
+          default="ACCEPT_AUTOMATIC"]
+        [--consumer-accept-list=[PROJECT=LIMIT,...]]
+        [--consumer-reject-list=[REJECT_LIST,...]] [--description=DESCRIPTION]
+        [--domain-names=[DOMAIN_NAMES,...]] [--enable-proxy-protocol]
+        [--nat-subnets-region=NAT_SUBNETS_REGION]
+        [--producer-forwarding-rule-region=PRODUCER_FORWARDING_RULE_REGION]
+        [--region=REGION] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) gcloud beta compute service-attachments create is used to create
+    service attachments. A service producer creates service attachments to make
+    a service available to consumers. Service consumers use Private Service
+    Connect endpoints to privately forward traffic to the service attachment.
+
+EXAMPLES
+    If there is an already-created internal load balancer (ILB) with the name
+    MY_ILB in region us-central1 and there is an already-created Private
+    Service Connect subnets MY_SUBNET1 and MY_SUBNET2, create a service
+    attachment pointing to the ILB by running:
+
+        $ gcloud beta compute service-attachments create \
+            SERVICE_ATTACHMENT_NAME --region=us-central1 \
+            --producer-forwarding-rule=MY_ILB \
+            --connection-preference=ACCEPT_AUTOMATIC \
+            --nat-subnets=MY_SUBNET1,MY_SUBNET2
+
+    To create a service attachment with a textual description, run:
+
+        $ gcloud beta compute service-attachments create \
+            SERVICE_ATTACHMENT_NAME --region=us-central1 \
+            --producer-forwarding-rule=MY_ILB \
+            --connection-preference=ACCEPT_AUTOMATIC \
+            --nat-subnets=MY_SUBNET1,MY_SUBNET2 \
+            --description='default service attachment'
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the service attachment to create.
+
+REQUIRED FLAGS
+     --nat-subnets=NAT_SUBNETS,[NAT_SUBNETS,...]
+        The subnetworks provided by service producer to use for NAT
+
+     --producer-forwarding-rule=PRODUCER_FORWARDING_RULE
+        Target forwarding rule that receives forwarded traffic.
+
+OPTIONAL FLAGS
+     --connection-preference=CONNECTION_PREFERENCE; default="ACCEPT_AUTOMATIC"
+        This defines the service attachment's connection preference.
+        CONNECTION_PREFERENCE must be one of:
+
+         ACCEPT_AUTOMATIC
+            Always accept connection requests from consumers automatically.
+         ACCEPT_MANUAL
+            Only accept connection requests from consumers with the approval of
+            the service provider.
+
+     --consumer-accept-list=[PROJECT=LIMIT,...]
+        Adds consumer project(s) with connection limit(s) to the accept list of
+        the service attachment.
+
+        For example, --consumer-accept-list myProjectId1=20 accepts a consumer
+        project myProjectId1 with connection limit 20.
+
+        ◆ PROJECT_ID_OR_NUM - Consumer project id or number.
+        ◆ CONNECTION_LIMIT - The max number of allowed connections.
+
+     --consumer-reject-list=[REJECT_LIST,...]
+        Specifies a comma separated list of projects that are not allowed to
+        connect to this service attachment. The project can be specified using
+        its id or number.
+
+     --description=DESCRIPTION
+        An optional, textual description for the service attachment.
+
+     --domain-names=[DOMAIN_NAMES,...]
+        Specifies a comma separated list of DNS domain names that are used
+        during DNS integration on PSC connected endpoints.
+
+     --enable-proxy-protocol
+        If True, then enable the proxy protocol which is for supplying client
+        TCP/IP address data in TCP connections that traverse proxies on their
+        way to destination servers.
+
+     --nat-subnets-region=NAT_SUBNETS_REGION
+        Region of the subnetworks to operate on. If not specified, it will be
+        set to the region of the service attachment. Overrides the default
+        compute/region property value for this command invocation.
+
+     --producer-forwarding-rule-region=PRODUCER_FORWARDING_RULE_REGION
+        Region of the forwarding rule to operate on. If not specified, you
+        might be prompted to select a region (interactive mode only).
+
+        To avoid prompting when this flag is omitted, you can set the
+        compute/region property:
+
+            $ gcloud config set compute/region REGION
+
+        A list of regions can be fetched by running:
+
+            $ gcloud compute regions list
+
+        To unset the property, run:
+
+            $ gcloud config unset compute/region
+
+        Alternatively, the region can be stored in the environment variable
+        CLOUDSDK_COMPUTE_REGION.
+
+     --region=REGION
+        Region of the service attachment to create. If not specified, you might
+        be prompted to select a region (interactive mode only).
+
+        To avoid prompting when this flag is omitted, you can set the
+        compute/region property:
+
+            $ gcloud config set compute/region REGION
+
+        A list of regions can be fetched by running:
+
+            $ gcloud compute regions list
+
+        To unset the property, run:
+
+            $ gcloud config unset compute/region
+
+        Alternatively, the region can be stored in the environment variable
+        CLOUDSDK_COMPUTE_REGION.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud compute service-attachments create
+
+        $ gcloud alpha compute service-attachments create
+

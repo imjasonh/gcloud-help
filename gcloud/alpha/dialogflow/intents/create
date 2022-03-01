@@ -1,0 +1,94 @@
+NAME
+    gcloud alpha dialogflow intents create - create a Dialogflow entity type
+        for the agent of the current project
+
+SYNOPSIS
+    gcloud alpha dialogflow intents create --display-name=DISPLAY_NAME
+        [--is-fallback] [--no-ml-enabled]
+        [--other-properties=[OTHER_PROPERTIES,...]] [--priority=PRIORITY]
+        [--responses=[RESPONSES,...]]
+        [--training-phrases=[TRAINING_PHRASES,...]] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Create a Dialogflow intent for the agent of the current project.
+
+EXAMPLES
+    To create an intent with a training phrase and a response:
+
+        $ gcloud alpha dialogflow intents create \
+            --display-name="test-intent" --priority=1 \
+            --training-phrases="example query"
+          --responses="example response"
+
+REQUIRED FLAGS
+     --display-name=DISPLAY_NAME
+        Human-readable name for the intent.
+
+OPTIONAL FLAGS
+     --is-fallback
+        If true, set this intent as a fallback intent.
+
+     --ml-enabled
+        If true, enable machine learning for the intent. Enabled by default,
+        use --no-ml-enabled to disable.
+
+     --other-properties=[OTHER_PROPERTIES,...]
+        Map containing other properties to set on the intent.
+
+        For more information on available properties, see:
+        https://cloud.google.com/dialogflow-enterprise/docs/reference/rest/v2/projects.agent.intents
+
+        To set complex types, specify this flag with --flags-file. For more
+        information, see gcloud topics flags-file.
+
+        Other flags take precedence over properties specified here.
+
+     --priority=PRIORITY
+        Priority of the intent.
+
+        Higher numbers represent higher priorities. Zero or negative numbers
+        mean that the intent is disabled. Default priority is 500000.
+
+     --responses=[RESPONSES,...]
+        Comma separated list of simple text responses to send to the user.
+
+     --training-phrases=[TRAINING_PHRASES,...]
+        List of examples or templates.
+
+        Can be provided as comma separated unannotated examples or as a list
+        training phrase objects. To provide training phrase objects, specify
+        the flag with --flags-file.
+
+        For example, use --flags-file=flags.yaml, where flags.yaml contains:
+
+            --training-phrases:
+              - type: TEMPLATE
+                parts:
+                - text: I love the color
+                - text: red
+                  entityType: <entity_type_id>
+                  alias: color
+
+        For more information on training phrases, see:
+        https://cloud.google.com/dialogflow-enterprise/docs/reference/rest/Shared.Types/Intent#TrainingPhrase
+
+        For more information on --flags-file, see gcloud topics flags-file.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the dialogflow/v2 API. The full documentation for this
+    API can be found at: https://cloud.google.com/dialogflow/
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

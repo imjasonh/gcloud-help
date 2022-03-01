@@ -1,0 +1,92 @@
+NAME
+    gcloud alpha scc settings services modules update - update a module config
+        in Security Command Center(SCC)
+
+SYNOPSIS
+    gcloud alpha scc settings services modules update
+        --enablement-state=ENABLEMENT_STATE --module=MODULE_NAME
+        --service=SERVICE_NAME [--clear-config | --config=CONFIG_VALUE]
+        [--folder=FOLDER_ID | --organization=ORGANIZATION_ID
+          | --project=PROJECT_ID] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Update a module config in Security Command Center(SCC).
+
+EXAMPLES
+    To update the "CONFIGURABLE_BAD_DOMAIN" module in service
+    EVENT_THREAT_DETECTION of organization "12345", run:
+
+        $ gcloud alpha scc settings services modules update \
+            --organization=12345  --service=EVENT_THREAT_DETECTION \
+            --module=CONFIGURABLE_BAD_DOMAIN --enablement-state=ENABLED \
+            --config='{
+            "domains": {
+              "domain1": {
+                "ed11": "ed-1",
+                "ed12": "ed-2"
+              }
+            },
+            "metadata": {
+              "module_name": "etd_bad_domain",
+              "severity": "CRITICAL"
+            }
+          }'
+
+    To clear the config value and disable the module in the
+    "CONFIGURABLE_BAD_DOMAIN" module in service EVENT_THREAT_DETECTION of
+    organization "12345", run:
+
+        $ gcloud alpha scc settings services modules update \
+            --organization=12345  --service=EVENT_THREAT_DETECTION \
+            --module=CONFIGURABLE_BAD_DOMAIN --enablement-state=DISABLED \
+            --clear-config
+
+REQUIRED FLAGS
+     --enablement-state=ENABLEMENT_STATE
+        Module enablement state in Security Command Center. ENABLEMENT_STATE
+        must be one of: enabled, disabled.
+
+     --module=MODULE_NAME
+        Module name in Security Command Center
+
+     --service=SERVICE_NAME
+        Service name in Security Command Center. SERVICE_NAME must be one of:
+        container-threat-detection, event-threat-detection,
+        security-health-analytics, web-security-scanner.
+
+OPTIONAL FLAGS
+     Config value group in Security Command Center.
+
+     At most one of these can be specified:
+
+       --clear-config
+          Clear module config in Security Command Center
+
+       --config=CONFIG_VALUE
+          Module config in Security Command Center
+
+     At most one of these can be specified:
+
+       --folder=FOLDER_ID
+          Folder ID
+
+       --organization=ORGANIZATION_ID
+          Organization ID
+
+       --project=PROJECT_ID
+          Project ID
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

@@ -1,0 +1,78 @@
+NAME
+    gcloud kms asymmetric-sign - sign a user input file using an
+        asymmetric-signing key version
+
+SYNOPSIS
+    gcloud kms asymmetric-sign --input-file=INPUT_FILE
+        --signature-file=SIGNATURE_FILE [--digest-algorithm=DIGEST_ALGORITHM]
+        [--key=KEY] [--keyring=KEYRING] [--location=LOCATION]
+        [--skip-integrity-verification] [--version=VERSION]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Creates a digital signature of the input file using the provided
+    asymmetric-signing key version and saves the base64 encoded signature.
+
+    The required flag signature-file indicates the path to store signature.
+
+    By default, the command performs integrity verification on data sent to and
+    received from Cloud KMS. Use --skip-integrity-verification to disable
+    integrity verification.
+
+EXAMPLES
+    The following command will read the file '/tmp/my/file.to.sign', digest it
+    with the digest algorithm 'sha256' and sign it using the asymmetric
+    CryptoKey dont-panic Version 3, and save the signature in base64 format to
+    '/tmp/my/signature'.
+
+        $ gcloud kms asymmetric-sign \
+        --location=us-central1 \
+        --keyring=hitchhiker \
+        --key=dont-panic \
+        --version=3 \
+        --digest-algorithm=sha256 \
+        --input-file=/tmp/my/file.to.sign \
+        --signature-file=/tmp/my/signature
+
+REQUIRED FLAGS
+     --input-file=INPUT_FILE
+        Path to the input file to sign.
+
+     --signature-file=SIGNATURE_FILE
+        Path to the signature file to output.
+
+OPTIONAL FLAGS
+     --digest-algorithm=DIGEST_ALGORITHM
+        The algorithm to digest the input. DIGEST_ALGORITHM must be one of:
+        sha256, sha384, sha512.
+
+     --key=KEY
+        to use for signing.
+
+     --keyring=KEYRING
+        Key ring of the key.
+
+     --location=LOCATION
+        Location of the keyring.
+
+     --skip-integrity-verification
+        Skip integrity verification on request and response API fields.
+
+     --version=VERSION
+        Version to use for signing.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha kms asymmetric-sign
+
+        $ gcloud beta kms asymmetric-sign
+
