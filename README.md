@@ -1,5 +1,7 @@
 # `gcloud help`
 
+[![crawl](https://github.com/imjasonh/gcloud-help/actions/workflows/crawl.yaml/badge.svg)](https://github.com/imjasonh/gcloud-help/actions/workflows/crawl.yaml)
+
 This repo automatically scrapes the help text for [`gcloud`](https://cloud.google.com/sdk/) and puts it in this Git repo.
 
 Scraping is automated with GitHub Actions.
