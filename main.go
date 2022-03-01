@@ -35,7 +35,8 @@ func main() {
 			incommands = true
 			continue
 		}
-		if strings.Contains(txt, "NOTES") {
+		if strings.Contains(txt, "NOTES") ||
+			strings.Contains(txt, "AVAILABLE") {
 			break
 		}
 		if strings.Contains(txt, " ") {

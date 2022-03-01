@@ -2,7 +2,7 @@
 
 set -euxo pipefail
 
-path=$(pwd)/$(printf "%s/" "$@")
+path=$(pwd)/gcloud/$(printf "%s/" "$@")
 mkdir -p $path
 
 if [[ $# -eq 0 ]] ; then
