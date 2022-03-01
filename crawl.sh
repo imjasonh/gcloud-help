@@ -6,13 +6,12 @@ path=$(pwd)/gcloud/$(printf "%s/" "$@")
 mkdir -p $path
 
 if [[ $# -eq 0 ]] ; then
-    gcloud version > version
+  gcloud version > $(pwd)/gcloud/version
+  gcloud help > $(pwd)/gcloud/help
 fi
 
 groups=$(gcloud help $@ | go run ./ -print=groups)
 commands=$(gcloud help $@ | go run ./ -print=commands)
-
-gcloud help > help
 
 for grp in $groups; do
 	mkdir -p $path/$grp
