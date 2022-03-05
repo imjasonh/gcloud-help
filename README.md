@@ -21,6 +21,29 @@ GitHub also provides an undocumented RSS feed feature, which even lets you filte
 For example, you can subscribe to [changes to the `gcloud builds` surface](https://github.com/imjasonh/gcloud-help/commits/main.atom?path=gcloud/builds) in your RSS reader of choice.
 Party like it's 2009!
 
+Using this information you can count the number of unique CLI surfaces provided by `gcloud`:
+
+```
+$ find gcloud -type f | wc -l
+    9816
+```
+
+Or find the longest CLI surface:
+
+```
+$ find gcloud -type f | awk '{print length, $0}' | sort -rn | head -10 | sed -e "s+/+ +g"
+81 gcloud alpha compute instance-groups managed rolling-action stop-proactive-update
+80 gcloud beta compute instance-groups managed rolling-action stop-proactive-update
+79 gcloud alpha compute resource-policies create vm-maintenance maintenance-window
+78 gcloud alpha compute resource-policies create vm-maintenance concurrency-limit
+76 gcloud alpha compute public-delegated-prefixes delegated-sub-prefixes delete
+76 gcloud alpha compute public-delegated-prefixes delegated-sub-prefixes create
+75 gcloud compute instance-groups managed rolling-action stop-proactive-update
+75 gcloud beta compute public-delegated-prefixes delegated-sub-prefixes delete
+75 gcloud beta compute public-delegated-prefixes delegated-sub-prefixes create
+74 gcloud alpha metastore services databases tables remove-iam-policy-binding
+```
+
 ---
 
 All text content is owned by Google, licensed under the [Creative Commons Attribution 4.0 License](https://creativecommons.org/licenses/by/4.0/).
