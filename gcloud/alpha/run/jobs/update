@@ -15,7 +15,8 @@ SYNOPSIS
           | --remove-cloudsql-instances=[CLOUDSQL-INSTANCES,...]
           | --set-cloudsql-instances=[CLOUDSQL-INSTANCES,...]]
         [--binary-authorization=POLICY | --clear-binary-authorization]
-        [--clear-env-vars | --set-env-vars=[KEY=VALUE,...]
+        [--clear-env-vars | --env-vars-file=FILE_PATH
+          | --set-env-vars=[KEY=VALUE,...]
           | --remove-env-vars=[KEY,...] --update-env-vars=[KEY=VALUE,...]]
         [--clear-labels | --remove-labels=[KEY,...] --labels=[KEY=VALUE,...]
           | --update-labels=[KEY=VALUE,...]]
@@ -29,7 +30,8 @@ DESCRIPTION
 EXAMPLES
     To update the container image of Cloud Run job my-job:
 
-        $ gcloud alpha run jobs update my-job --image=gcr.io/my-project/image
+        $ gcloud alpha run jobs update my-job \
+          --image=us-docker.pkg.dev/project/image
 
 POSITIONAL ARGUMENTS
      Job resource - Job to update. This represents a Cloud resource. (NOTE)
@@ -97,7 +99,7 @@ FLAGS
 
      --parallelism=PARALLELISM
         Number of tasks that may run concurrently. Must be less than or equal
-        to the number of completions.
+        to the number of tasks.
 
      --region=REGION
         Region in which the resource can be found. Alternatively, set the
@@ -176,6 +178,11 @@ FLAGS
 
        --clear-env-vars
           Remove all environment variables.
+
+       --env-vars-file=FILE_PATH
+          Path to a local YAML file with definitions for all environment
+          variables. All existing environment variables will be removed before
+          the new environment variables are added.
 
        --set-env-vars=[KEY=VALUE,...]
           List of key-value pairs to set as environment variables. All existing

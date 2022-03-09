@@ -10,7 +10,8 @@ SYNOPSIS
         [--platform=PLATFORM; default="managed"] [--port=PORT]
         [--service-account=SERVICE_ACCOUNT] [--tag=TAG] [--timeout=TIMEOUT]
         [--no-traffic] [--[no-]use-http2]
-        [--clear-env-vars | --set-env-vars=[KEY=VALUE,...]
+        [--clear-env-vars | --env-vars-file=FILE_PATH
+          | --set-env-vars=[KEY=VALUE,...]
           | --remove-env-vars=[KEY,...] --update-env-vars=[KEY=VALUE,...]]
         [--clear-labels | --remove-labels=[KEY,...] --labels=[KEY=VALUE,...]
           | --update-labels=[KEY=VALUE,...]]
@@ -43,16 +44,17 @@ DESCRIPTION
 EXAMPLES
     To deploy a container to the service my-backend on Cloud Run:
 
-        $ gcloud alpha run deploy my-backend --image=gcr.io/my/image
+        $ gcloud alpha run deploy my-backend \
+          --image=us-docker.pkg.dev/project/image
 
     You may also omit the service name. Then a prompt will be displayed with a
     suggested default value:
 
-        $ gcloud alpha run deploy --image=gcr.io/my/image
+        $ gcloud alpha run deploy --image=us-docker.pkg.dev/project/image
 
     To deploy to Cloud Run on Kubernetes Engine, you need to specify a cluster:
 
-        $ gcloud alpha run deploy --image=gcr.io/my/image \
+        $ gcloud alpha run deploy --image=us-docker.pkg.dev/project/image \
           --cluster=my-cluster
 
 POSITIONAL ARGUMENTS
@@ -205,6 +207,11 @@ FLAGS
 
        --clear-env-vars
           Remove all environment variables.
+
+       --env-vars-file=FILE_PATH
+          Path to a local YAML file with definitions for all environment
+          variables. All existing environment variables will be removed before
+          the new environment variables are added.
 
        --set-env-vars=[KEY=VALUE,...]
           List of key-value pairs to set as environment variables. All existing

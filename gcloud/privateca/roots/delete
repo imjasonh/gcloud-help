@@ -4,12 +4,16 @@ NAME
 SYNOPSIS
     gcloud privateca roots delete
         (CERTIFICATE_AUTHORITY : --location=LOCATION --pool=POOL)
-        [--ignore-active-certificates] [GCLOUD_WIDE_FLAG ...]
+        [--ignore-active-certificates] [--skip-grace-period]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Delete a Root Certificate Authority. Deleted Root Certificate Authorities
     may be recovered with the gcloud privateca roots undelete command within a
     grace period of 30 days.
+
+    Use the --skip-grace-period flag to delete as soon as possible without the
+    30-day grace period to undelete.
 
     Note that any user-managed KMS keys or Google Cloud Storage buckets will
     not be affected by this operation. You will need to delete the user-
@@ -80,6 +84,11 @@ FLAGS
         If this flag is set, the Certificate Authority will be deleted even if
         the Certificate Authority has un-revoked or un-expired certificates
         after the grace period.
+
+     --skip-grace-period
+        If this flag is set, the Certificate Authority will be deleted as soon
+        as possible without a 30-day grace period where undeletion would have
+        been allowed. If you proceed, there will be no way to recover this CA.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
