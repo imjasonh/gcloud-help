@@ -6,9 +6,11 @@ SYNOPSIS
         [--alternative-zone=ALTERNATIVE_ZONE] [--async]
         [--connect-mode=CONNECT_MODE] [--display-name=DISPLAY_NAME]
         [--enable-auth] [--labels=[KEY=VALUE,...]]
-        [--network=NETWORK; default="default"] [--redis-config=KEY=VALUE]
-        [--redis-version=VERSION] [--reserved-ip-range=RESERVED_IP_RANGE]
-        [--size=SIZE; default=1] [--tier=TIER; default="basic"]
+        [--network=NETWORK; default="default"]
+        [--read-replicas-mode=READ_REPLICAS_MODE] [--redis-config=KEY=VALUE]
+        [--redis-version=VERSION] [--replica-count=REPLICA_COUNT]
+        [--reserved-ip-range=RESERVED_IP_RANGE] [--size=SIZE; default=1]
+        [--tier=TIER; default="basic"]
         [--transit-encryption-mode=TRANSIT_ENCRYPTION_MODE] [--zone=ZONE]
         [GCLOUD_WIDE_FLAG ...]
 
@@ -91,6 +93,21 @@ FLAGS
         will be connected. If left unspecified, the default network will be
         used.
 
+     --read-replicas-mode=READ_REPLICAS_MODE
+        Read replicas mode used by the instance. Only works against standard
+        tier instances with 5GB and above provisioned capacity.
+        READ_REPLICAS_MODE must be one of:
+
+         read-replicas-disabled
+            Read replica is disabled for the instance. Read endpoint will not
+            be provided and the instance cannot scale up or down the number of
+            replicas.
+
+         read-replicas-enabled
+            Read replica is enabled for the instance. Read endpoint will be
+            provided and the instance can scale up and down the number of
+            replicas.
+
      --redis-config=KEY=VALUE
         A list of Redis config KEY=VALUE pairs to set on the instance according
         to http://redis.io/topics/config. Currently, the only supported
@@ -116,6 +133,9 @@ FLAGS
             Redis 5.0 compatibility
          redis_6_x
             Redis 6.x compatibility
+
+     --replica-count=REPLICA_COUNT
+        The replica count of the instance.
 
      --reserved-ip-range=RESERVED_IP_RANGE
         The CIDR range of internal addresses that are reserved for this

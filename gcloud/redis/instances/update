@@ -4,7 +4,9 @@ NAME
 SYNOPSIS
     gcloud redis instances update (INSTANCE : --region=REGION) [--async]
         [--display-name=DISPLAY_NAME] [--enable-auth]
-        [--remove-redis-config=[KEY,...]] [--size=SIZE]
+        [--read-replicas-mode=READ_REPLICAS_MODE]
+        [--remove-redis-config=[KEY,...]] [--replica-count=REPLICA_COUNT]
+        [--secondary-ip-range=SECONDARY_IP_RANGE] [--size=SIZE]
         [--update-labels=[KEY=VALUE,...]] [--update-redis-config=KEY=VALUE]
         [--clear-labels | --remove-labels=[KEY,...]] [GCLOUD_WIDE_FLAG ...]
 
@@ -67,9 +69,37 @@ FLAGS
      --enable-auth
         Enables Redis AUTH for the instance.
 
+     --read-replicas-mode=READ_REPLICAS_MODE
+        Read replicas mode used by the instance. Only works against standard
+        tier instances with 5GB and above provisioned capacity and Redis
+        version 5.0 and above. This is an irreversible update i.e. Read
+        replicas can not be disabled for the instance once it is enabled. Also
+        this update is exclusive and cannot be clubbed with other update
+        operations. READ_REPLICAS_MODE must be one of:
+
+         read-replicas-disabled
+            If read replica is not enabled on the instance, no changes are
+            done. If read replica is enabled for the instance, update operation
+            fails
+
+         read-replicas-enabled
+            Read replica is enabled for the instance if not already enabled.
+            Read endpoint will be provided and the instance can scale up and
+            down the number of replicas.
+
      --remove-redis-config=[KEY,...]
         A list of Redis config parameters to remove. Removing a non-existent
         config parameter is silently ignored.
+
+     --replica-count=REPLICA_COUNT
+        The replica count of the instance. Valid from 0 to 5.
+
+     --secondary-ip-range=SECONDARY_IP_RANGE
+        Required only when read-replicas-mode is enabled on the instance. The
+        CIDR range of internal addresses that are reserved for this instance.
+        For example, 10.0.0.0/28 or 192.168.0.0/28. Range must be unique and
+        non-overlapping with existing ranges in the network. If value 'auto'
+        passed, the service will automatically pick an available range.
 
      --size=SIZE
         The memory size of the instance in GiB.
