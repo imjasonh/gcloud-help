@@ -1,27 +1,26 @@
 NAME
-    gcloud alpha memcache instances reschedule-maintenance - reschedule
-        maintenance window for a Memcache instance
+    gcloud redis instances reschedule-maintenance - reschedule maintenance
+        window for a Redis instance
 
 SYNOPSIS
-    gcloud alpha memcache instances reschedule-maintenance
-        (INSTANCE : --region=REGION) --reschedule-type=RESCHEDULE_TYPE
-        [--async] [--schedule-time=SCHEDULE_TIME] [GCLOUD_WIDE_FLAG ...]
+    gcloud redis instances reschedule-maintenance (INSTANCE : --region=REGION)
+        --reschedule-type=RESCHEDULE_TYPE [--async]
+        [--schedule-time=SCHEDULE_TIME] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) Reschedule maintenance window for a Memcache instance.
+    Reschedule maintenance window for a Redis instance.
 
 EXAMPLES
     To reschedule maintenance window for an instance with the name
-    'my-memcache-instance' in region 'us-central-1' with next available window,
+    'my-redis-instance' in region 'us-central-1' with next available window,
     run:
 
-        $ gcloud alpha memcache instances reschedule-maintenance \
-            my-memcache-instance --region=us-central1 \
-            --reschedule-type=next-available-window
+        $ gcloud redis instances reschedule-maintenance my-redis-instance \
+            --region=us-central1 --reschedule-type=next-available-window
 
 POSITIONAL ARGUMENTS
      Instance resource - Arguments and flags that specify the Cloud Memorystore
-     for Memcache instance you want to reschedule maintenance window. The
+     for Redis instance you want to reschedule maintenance window. The
      arguments in this group can be used to specify the attributes of this
      resource. (NOTE) Some attributes are not given arguments in this group but
      can be set in other ways. To set the project attribute:
@@ -41,26 +40,27 @@ POSITIONAL ARGUMENTS
           this group are specified.
 
        --region=REGION
-          The name of the Memcached region of the instance. Overrides the
-          default memcache/region property value for this command invocation.
+          The name of the Redis region of the instance. Overrides the default
+          redis/region property value for this command invocation.
 
           To set the region attribute:
           ▸ provide the argument instance on the command line with a fully
             specified name;
           ▸ provide the argument --region on the command line;
-          ▸ set the property memcache/region.
+          ▸ set the property redis/region.
 
 REQUIRED FLAGS
      --reschedule-type=RESCHEDULE_TYPE
         Reschedule type to use for the reschedule maintenance window.
-        RESCHEDULE_TYPE must be one of:
+        Reschedule Type must be one of:IMMEDIATE, NEXT-AVAILABLE-WINDOW, or
+        SPECIFIC-TIME. RESCHEDULE_TYPE must be one of:
 
          immediate
-            Reschedule the maintenance to perform now.
+            Reschedule the maintenance window to perform now.
          next-available-window
-            Reschedule the maintenance to the next available window.
+            Reschedule the maintenance window to the next available window.
          specific-time
-            Reschedule the maintenance to a specific time.
+            Reschedule the maintenance window to a specific time.
 
 OPTIONAL FLAGS
      --async
@@ -79,14 +79,13 @@ GCLOUD WIDE FLAGS
     Run $ gcloud help for details.
 
 API REFERENCE
-    This command uses the memcache/v1beta2 API. The full documentation for this
-    API can be found at: https://cloud.google.com/memorystore/
+    This command uses the redis/v1 API. The full documentation for this API can
+    be found at: https://cloud.google.com/memorystore/docs/redis/
 
 NOTES
-    This command is currently in alpha and might change without notice. If this
-    command fails with API permission errors despite specifying the correct
-    project, you might be trying to access an API with an invitation-only early
-    access allowlist. This variant is also available:
+    These variants are also available:
 
-        $ gcloud beta memcache instances reschedule-maintenance
+        $ gcloud alpha redis instances reschedule-maintenance
+
+        $ gcloud beta redis instances reschedule-maintenance
 

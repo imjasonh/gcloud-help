@@ -5,8 +5,13 @@ NAME
 SYNOPSIS
     gcloud alpha container aws node-pools update
         (NODE_POOL : --cluster=CLUSTER --location=LOCATION) [--async]
-        [--node-version=NODE_VERSION]
-        [--security-group-ids=[SECURITY_GROUP_ID,...]] [--validate-only]
+        [--config-encryption-kms-key-arn=CONFIG_ENCRYPTION_KMS_KEY_ARN]
+        [--node-version=NODE_VERSION] [--root-volume-iops=ROOT_VOLUME_IOPS]
+        [--root-volume-kms-key-arn=ROOT_VOLUME_KMS_KEY_ARN]
+        [--root-volume-size=ROOT_VOLUME_SIZE]
+        [--root-volume-type=ROOT_VOLUME_TYPE] [--validate-only]
+        [--clear-security-group-ids
+          | --security-group-ids=[SECURITY_GROUP_ID,...]]
         [--max-nodes=MAX_NODES --min-nodes=MIN_NODES] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -60,14 +65,41 @@ FLAGS
         Return immediately, without waiting for the operation in progress to
         complete.
 
+     --config-encryption-kms-key-arn=CONFIG_ENCRYPTION_KMS_KEY_ARN
+        Amazon Resource Name (ARN) of the AWS KMS key to encrypt the user data.
+
      --node-version=NODE_VERSION
         Kubernetes version to use for the node pool.
 
-     --security-group-ids=[SECURITY_GROUP_ID,...]
-        IDs of additional security groups to add to nodes.
+     --root-volume-iops=ROOT_VOLUME_IOPS
+        Number of I/O operations per second (IOPS) to provision for the root
+        volume.
+
+     --root-volume-kms-key-arn=ROOT_VOLUME_KMS_KEY_ARN
+        Amazon Resource Name (ARN) of the AWS KMS key to encrypt the root
+        volume.
+
+     --root-volume-size=ROOT_VOLUME_SIZE
+        Size of the root volume. The value must be a whole number followed by a
+        size unit of GB for gigabyte, or TB for terabyte. If no size unit is
+        specified, GB is assumed.
+
+     --root-volume-type=ROOT_VOLUME_TYPE
+        Type of the root volume. ROOT_VOLUME_TYPE must be one of: gp2, gp3.
 
      --validate-only
         Validate the node pool to update, but don't actually perform it.
+
+     Security groups
+
+     At most one of these can be specified:
+
+       --clear-security-group-ids
+          Clear any additional security groups associated with the nodes. This
+          does not remove the default security groups.
+
+       --security-group-ids=[SECURITY_GROUP_ID,...]
+          IDs of additional security groups to add to nodes.
 
      Node pool autoscaling
 

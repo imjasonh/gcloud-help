@@ -2,7 +2,8 @@ NAME
     gcloud compute url-maps validate - validate a URL map
 
 SYNOPSIS
-    gcloud compute url-maps validate [--source=SOURCE]
+    gcloud compute url-maps validate
+        [--load-balancing-scheme=LOAD_BALANCING_SCHEME] [--source=SOURCE]
         [--global | --region=REGION] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -16,6 +17,27 @@ EXAMPLES
         $ gcloud compute url-maps validate --source=<path-to-file>
 
 FLAGS
+     --load-balancing-scheme=LOAD_BALANCING_SCHEME
+        Specifies the load balancer type(s) this validation request is for. Use
+        EXTERNAL_MANAGED for HTTP/HTTPS External Global Load Balancer with
+        Advanced Traffic Management. Use EXTERNAL for Classic HTTP/HTTPS
+        External Global Load Balancer.
+
+        Other load balancer types are not supported. For more information,
+        refer to Choosing a load balancer
+        (https://cloud.google.com/load-balancing/docs/choosing-load-balancer/).
+
+        If unspecified, the load balancing scheme will be inferred from the
+        backend service resources this URL map references. If that can not be
+        inferred (for example, this URL map only references backend buckets, or
+        this URL map is for rewrites and redirects only and doesn't reference
+        any backends), EXTERNAL will be used as the default type.
+
+        If specified, the scheme must not conflict with the load balancing
+        scheme of the backend service resources this URL map references.
+
+        LOAD_BALANCING_SCHEME must be one of: EXTERNAL, EXTERNAL_MANAGED.
+
      --source=SOURCE
         Path to a YAML file containing configuration export data. The YAML file
         must not contain any output-only fields. Alternatively, you may omit

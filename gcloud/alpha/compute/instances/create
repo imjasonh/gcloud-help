@@ -21,11 +21,13 @@ SYNOPSIS
         [--instance-termination-action=INSTANCE_TERMINATION_ACTION]
         [--ipv6-network-tier=IPV6_NETWORK_TIER]
         [--ipv6-public-ptr-domain=IPV6_PUBLIC_PTR_DOMAIN]
-        [--labels=[KEY=VALUE,...]] [--local-nvdimm=[size=SIZE]]
+        [--key-revocation-action-type=POLICY] [--labels=[KEY=VALUE,...]]
+        [--local-nvdimm=[size=SIZE]]
         [--local-ssd=[device-name=DEVICE-NAME],
           [interface=INTERFACE],[size=SIZE]] [--machine-type=MACHINE_TYPE]
         [--maintenance-freeze-duration=MAINTENANCE_FREEZE_DURATION]
         [--maintenance-interval=MAINTENANCE_INTERVAL]
+        [--max-run-duration=MAX_RUN_DURATION]
         [--metadata=KEY=VALUE,[KEY=VALUE,...]]
         [--metadata-from-file=KEY=LOCAL_FILE_PATH,[...]]
         [--min-cpu-platform=PLATFORM] [--min-node-cpu=MIN_NODE_CPU]
@@ -46,6 +48,7 @@ SYNOPSIS
         [--source-machine-image=SOURCE_MACHINE_IMAGE]
         [--source-machine-image-csek-key-file=FILE] [--stack-type=STACK_TYPE]
         [--subnet=SUBNET] [--tags=TAG,[TAG,...]]
+        [--termination-time=TERMINATION_TIME]
         [--threads-per-core=THREADS_PER_CORE]
         [--visible-core-count=VISIBLE_CORE_COUNT] [--zone=ZONE]
         [--address=ADDRESS | --no-address]
@@ -491,6 +494,16 @@ FLAGS
         PTR record will be used. This option can only be specified for the
         default network interface, nic0.
 
+     --key-revocation-action-type=POLICY
+        Specifies the behavior of the instance when the KMS key of one of its
+        attached disks is revoked. The default is none. POLICY must be one of:
+
+         none
+            No operation is performed.
+         stop
+            The instance is stopped when the KMS key of one of its attached
+            disks is revoked.
+
      --labels=[KEY=VALUE,...]
         List of label KEY=VALUE pairs to add.
 
@@ -551,6 +564,22 @@ FLAGS
             basis, minimizing the number of maintenance operations (live
             migrations or terminations) on an individual VM. Security updates
             will still be applied as soon as they are available.
+
+     --max-run-duration=MAX_RUN_DURATION
+        Limits how long this VM instance can run, specified as a duration
+        relative to the VM instance's most-recent start time. Format the
+        duration, MAX_RUN_DURATION, similar to "T1h2m3s" where you can specify
+        the number of hours, minutes, and seconds using "h", "m", and "s"
+        respectively. Alternatively, to specify a timestamp, use
+        --termination-time instead.
+
+        If neither --max-run-duration nor --termination-time is specified
+        (default), the VM instance runs until prompted by a user action or
+        system event. If either is specified, the VM instance will be
+        terminated using the action specified by --instance-termination-action.
+        For --max-run-duration, the VM instance is terminated whenever the VM's
+        current runtime reaches MAX_RUN_DURATION; the current runtime is reset
+        to zero any time the VM instance is stopped and started again.
 
      --metadata=KEY=VALUE,[KEY=VALUE,...]
         Metadata to be made available to the guest operating system running on
@@ -781,6 +810,18 @@ FLAGS
         To list instances tagged with a specific tag, tag1, run:
 
             $ gcloud compute instances list --filter='tags:tag1'
+
+     --termination-time=TERMINATION_TIME
+        Limits how long this VM instance can run, specified as a time. Format
+        the time, TERMINATION_TIME, as a RFC 3339 timestamp. Alternatively, to
+        specify a duration, use --max-run-duration instead.
+
+        If neither --termination-time nor --max-run-duration is specified
+        (default) the VM instance runs until prompted by a user action or
+        system event. If either is specified, the VM instance will be
+        terminated using the action specified by --instance-termination-action.
+        For --termination-time, the VM instance is terminated only during the
+        specified time.
 
      --threads-per-core=THREADS_PER_CORE
         The number of visible threads per physical core. To disable

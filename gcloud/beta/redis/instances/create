@@ -6,6 +6,8 @@ SYNOPSIS
         [--alternative-zone=ALTERNATIVE_ZONE] [--async]
         [--connect-mode=CONNECT_MODE] [--display-name=DISPLAY_NAME]
         [--enable-auth] [--labels=[KEY=VALUE,...]]
+        [--maintenance-window-day=MAINTENANCE_WINDOW_DAY]
+        [--maintenance-window-hour=MAINTENANCE_WINDOW_HOUR]
         [--network=NETWORK; default="default"]
         [--persistence-mode=PERSISTENCE_MODE]
         [--rdb-snapshot-period=RDB_SNAPSHOT_PERIOD]
@@ -91,6 +93,16 @@ FLAGS
         contain only hyphens (-), underscores (_), lowercase characters, and
         numbers.
 
+     --maintenance-window-day=MAINTENANCE_WINDOW_DAY
+        Day of week for maintenance window, in UTC time zone.
+        MAINTENANCE_WINDOW_DAY must be one of: SUNDAY, MONDAY, TUESDAY,
+        WEDNESDAY, THURSDAY, FRIDAY, SATURDAY. MAINTENANCE_WINDOW_DAY must be
+        one of: day-of-week-unspecified, friday, monday, saturday, sunday,
+        thursday, tuesday, wednesday.
+
+     --maintenance-window-hour=MAINTENANCE_WINDOW_HOUR
+        Hour of day (0 to 23) for maintenance window, in UTC time zone.
+
      --network=NETWORK; default="default"
         The name of the Google Compute Engine network to which the instance
         will be connected. If left unspecified, the default network will be
@@ -167,10 +179,15 @@ FLAGS
         The replica count of the instance.
 
      --reserved-ip-range=RESERVED_IP_RANGE
-        The CIDR range of internal addresses that are reserved for this
-        instance. For example, 10.0.0.0/29 or 192.168.0.0/29. Range must be
-        unique and non-overlapping with existing ranges in the network. If left
-        unspecified, the service will automatically pick an available range.
+        For DIRECT_PEERING mode, the CIDR range of internal addresses that are
+        reserved for this instance. Range must be unique and non-overlapping
+        with existing subnets in an authorized network. For
+        PRIVATE_SERVICE_ACCESS mode, the name of an IP address range allocated
+        for the private service access connection. If not provided, the service
+        will choose an unused /29 block, for example, 10.0.0.0/29 or
+        192.168.0.0/29. If READ_REPLICAS_ENABLED is used for the
+        --read-replicas-mode flag, then the block size required for this flag
+        is /28.
 
      --size=SIZE; default=1
         The memory size of the instance in GiB. If not provided, size of 1 GiB
