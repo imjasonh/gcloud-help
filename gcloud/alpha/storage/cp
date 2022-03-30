@@ -3,7 +3,7 @@ NAME
 
 SYNOPSIS
     gcloud alpha storage cp SOURCE [SOURCE ...] DESTINATION
-        [--cache-control=CACHE_CONTROL]
+        [--all-versions, -A] [--cache-control=CACHE_CONTROL]
         [--content-disposition=CONTENT_DISPOSITION]
         [--content-encoding=CONTENT_ENCODING]
         [--content-language=CONTENT_LANGUAGE] [--content-md5=MD5_DIGEST]
@@ -11,8 +11,11 @@ SYNOPSIS
         [--custom-metadata=[CUSTOM_METADATA,...]] [--custom-time=CUSTOM_TIME]
         [--do-not-decompress] [--if-generation-match=GENERATION]
         [--if-metageneration-match=METAGENERATION] [--ignore-symlinks]
-        [--recursive, -R, -r] [--storage-class=STORAGE_CLASS, -s STORAGE_CLASS]
-        [GCLOUD_WIDE_FLAG ...]
+        [--recursive, -R, -r] [--skip-unsupported, -U]
+        [--storage-class=STORAGE_CLASS, -s STORAGE_CLASS]
+        [--gzip-in-flight-all, -J
+          | --gzip-in-flight-extensions=[FILE_EXTENSIONS,...],
+          -j [FILE_EXTENSIONS,...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Copy data between your local file system and the cloud, within the
@@ -47,6 +50,15 @@ POSITIONAL ARGUMENTS
         The destination path.
 
 FLAGS
+     --all-versions, -A
+        Copy all source versions from a source bucket or folder. If not set,
+        only the live version of each source object is copied.
+
+        Note: This option is only useful when the destination bucket has Object
+        Versioning enabled. Additionally, the generation numbers of copied
+        versions do not necessarily match the order of the original generation
+        numbers.
+
      --cache-control=CACHE_CONTROL
         How caches should handle requests and responses.
 
@@ -98,10 +110,37 @@ FLAGS
         Recursively copy the contents of any directories that match the source
         path expression.
 
+     --skip-unsupported, -U
+        Skip objects with unsupported object types.Currently, the only
+        unsupported category is Amazon S3 objects with the GLACIER storage
+        class.
+
      --storage-class=STORAGE_CLASS, -s STORAGE_CLASS
         Specifies the storage class of the destination object. If not
         specified, the default storage class of the destination bucket is used.
         This option is not valid for copying to non-cloud destinations.
+
+     At most one of these can be specified:
+
+       --gzip-in-flight-all, -J
+          Applies gzip transport encoding to file uploads. This option works
+          like the --gzip-transfer option described above, but it applies to
+          all uploaded files, regardless of extension.
+
+          CAUTION: If some of the source files don't compress well, such as
+          binary data, using this option may result in longer uploads.
+
+       --gzip-in-flight-extensions=[FILE_EXTENSIONS,...], -j [FILE_EXTENSIONS,...]
+          Applies gzip transport encoding to any file upload whose extension
+          matches the input extension list. This is useful when uploading files
+          with compressible content such as .js, .css, or .html files. This
+          also saves network bandwidth while leaving the data uncompressed in
+          Cloud Storage.
+
+          When you specify the --gzip-in-flight option, files being uploaded
+          are compressed in-memory and on-the-wire only. Both the local files
+          and Cloud Storage objects remain uncompressed. The uploaded objects
+          retain the Content-Type and name of the original files.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

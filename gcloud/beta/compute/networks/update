@@ -2,7 +2,9 @@ NAME
     gcloud beta compute networks update - update a Compute Engine network
 
 SYNOPSIS
-    gcloud beta compute networks update NAME [--async] [--mtu=MTU]
+    gcloud beta compute networks update NAME [--async]
+        [--[no-]enable-ula-internal-ipv6]
+        [--internal-ipv6-range=INTERNAL_IPV6_RANGE] [--mtu=MTU]
         [--bgp-routing-mode=MODE | --switch-to-custom-subnet-mode]
         [GCLOUD_WIDE_FLAG ...]
 
@@ -30,6 +32,21 @@ FLAGS
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
+
+     --[no-]enable-ula-internal-ipv6
+        Enable/disable ULA internal IPv6 on this network. Enabling this feature
+        will assign a /48 from google defined ULA prefix fd20::/20.
+
+        Use --enable-ula-internal-ipv6 to enable and
+        --no-enable-ula-internal-ipv6 to disable.
+
+     --internal-ipv6-range=INTERNAL_IPV6_RANGE
+        When enabling ULA internal IPv6, caller can optionally specify the /48
+        range they want from the google defined ULA prefix fd20::/20.
+        ULA_IPV6_RANGE must be a valid /48 ULA IPv6 address and within the
+        fd20::/20. Operation will fail if the speficied /48 is already in used
+        by another resource. If the field is not speficied, then a /48 range
+        will be randomly allocated from fd20::/20 and returned via this field.
 
      --mtu=MTU
         Maximum transmission unit (MTU) is the size of the largest IP packet

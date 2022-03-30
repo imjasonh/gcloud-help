@@ -13,7 +13,9 @@ SYNOPSIS
         --service-address-cidr-blocks=SERVICE_ADDRESS_CIDR_BLOCKS
         --subnet-ids=[SUBNET_ID,...] --vpc-id=VPC_ID
         [--admin-users=USER,[USER,...]] [--async]
-        [--instance-type=INSTANCE_TYPE] [--main-volume-iops=MAIN_VOLUME_IOPS]
+        [--instance-placement=INSTANCE_PLACEMENT]
+        [--instance-type=INSTANCE_TYPE] [--logging=COMPONENT,[COMPONENT,...]]
+        [--main-volume-iops=MAIN_VOLUME_IOPS]
         [--main-volume-kms-key-arn=MAIN_VOLUME_KMS_KEY_ARN]
         [--main-volume-size=MAIN_VOLUME_SIZE]
         [--main-volume-type=MAIN_VOLUME_TYPE]
@@ -120,8 +122,23 @@ OPTIONAL FLAGS
         Return immediately, without waiting for the operation in progress to
         complete.
 
+     --instance-placement=INSTANCE_PLACEMENT
+        Type of the tenancy. INSTANCE_PLACEMENT must be one of: dedicated,
+        default, host.
+
      --instance-type=INSTANCE_TYPE
         AWS EC2 instance type.
+
+     --logging=COMPONENT,[COMPONENT,...]
+        Set the components that have logging enabled.
+
+        Examples:
+
+            $ gcloud alpha container aws clusters create --logging=SYSTEM
+            $ gcloud alpha container aws clusters create \
+                --logging=SYSTEM,WORKLOAD
+
+        COMPONENT must be one of: SYSTEM, WORKLOAD.
 
      --main-volume-iops=MAIN_VOLUME_IOPS
         Number of I/O operations per second (IOPS) to provision for the main

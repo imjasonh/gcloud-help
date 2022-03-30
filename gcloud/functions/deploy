@@ -15,9 +15,11 @@ SYNOPSIS
           | --remove-build-env-vars=[KEY,...]
           --update-build-env-vars=[KEY=VALUE,...]]
         [--build-worker-pool=BUILD_WORKER_POOL | --clear-build-worker-pool]
+        [--clear-docker-repository | --docker-repository=DOCKER_REPOSITORY]
         [--clear-env-vars | --env-vars-file=FILE_PATH
           | --set-env-vars=[KEY=VALUE,...]
           | --remove-env-vars=[KEY,...] --update-env-vars=[KEY=VALUE,...]]
+        [--clear-kms-key | --kms-key=KMS_KEY]
         [--clear-labels | --remove-labels=[KEY,...]]
         [--clear-max-instances | --max-instances=MAX_INSTANCES]
         [--clear-min-instances | --min-instances=MIN_INSTANCES]
@@ -292,6 +294,22 @@ FLAGS
 
      At most one of these can be specified:
 
+       --clear-docker-repository
+          Clears the Docker repository configuration of the function.
+
+       --docker-repository=DOCKER_REPOSITORY
+          Sets the Docker repository to be used for storing the Cloud
+          Function's Docker images while the function is being deployed.
+          DOCKER_REPOSITORY must be an Artifact Registry Docker repository
+          present in the same project and location as the Cloud Function.
+
+          The repository name should match the pattern
+          projects/${PROJECT}/locations/${LOCATION}/repositories/${REPOSITORY}
+          where ${PROJECT} is the project, ${LOCATION} is the location of the
+          repository and ${REPOSITORY} is a valid repository ID.
+
+     At most one of these can be specified:
+
        --clear-env-vars
           Remove all environment variables.
 
@@ -312,6 +330,25 @@ FLAGS
 
          --update-env-vars=[KEY=VALUE,...]
             List of key-value pairs to set as environment variables.
+
+     At most one of these can be specified:
+
+       --clear-kms-key
+          Clears the KMS crypto key used to encrypt the function.
+
+       --kms-key=KMS_KEY
+          Sets the user managed KMS crypto key used to encrypt the Cloud
+          Function and its resources.
+
+          The KMS crypto key name should match the pattern
+          projects/${PROJECT}/locations/${LOCATION}/keyRings/${KEYRING}/cryptoKeys/${CRYPTOKEY}
+          where ${PROJECT} is the project, ${LOCATION} is the location of the
+          key ring, and ${KEYRING} is the key ring that contains the
+          ${CRYPTOKEY} crypto key.
+
+          If this flag is set, then a Docker repository created in Artifact
+          Registry must be specified using the --docker-repository flag and the
+          repository must be encrypted using the same KMS key.
 
      At most one of these can be specified:
 

@@ -4,7 +4,8 @@ NAME
 SYNOPSIS
     gcloud beta compute networks create NAME
         [--bgp-routing-mode=MODE; default="regional"]
-        [--description=DESCRIPTION] [--mtu=MTU] [--range=RANGE]
+        [--description=DESCRIPTION] [--[no-]enable-ula-internal-ipv6]
+        [--internal-ipv6-range=INTERNAL_IPV6_RANGE] [--mtu=MTU] [--range=RANGE]
         [--subnet-mode=MODE] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -48,6 +49,21 @@ FLAGS
 
      --description=DESCRIPTION
         An optional, textual description for the network.
+
+     --[no-]enable-ula-internal-ipv6
+        Enable/disable ULA internal IPv6 on this network. Enabling this feature
+        will assign a /48 from google defined ULA prefix fd20::/20.
+
+        Use --enable-ula-internal-ipv6 to enable and
+        --no-enable-ula-internal-ipv6 to disable.
+
+     --internal-ipv6-range=INTERNAL_IPV6_RANGE
+        When enabling ULA internal IPv6, caller can optionally specify the /48
+        range they want from the google defined ULA prefix fd20::/20.
+        ULA_IPV6_RANGE must be a valid /48 ULA IPv6 address and within the
+        fd20::/20. Operation will fail if the speficied /48 is already in used
+        by another resource. If the field is not speficied, then a /48 range
+        will be randomly allocated from fd20::/20 and returned via this field.
 
      --mtu=MTU
         Maximum transmission unit (MTU) is the size of the largest IP packet
