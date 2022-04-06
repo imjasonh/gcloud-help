@@ -3,7 +3,7 @@ NAME
 
 SYNOPSIS
     gcloud alpha storage cp SOURCE [SOURCE ...] DESTINATION
-        [--all-versions, -A] [--cache-control=CACHE_CONTROL]
+        [--all-versions, -A] [--cache-control=CACHE_CONTROL] [--no-clobber, -n]
         [--content-disposition=CONTENT_DISPOSITION]
         [--content-encoding=CONTENT_ENCODING]
         [--content-language=CONTENT_LANGUAGE] [--content-md5=MD5_DIGEST]
@@ -11,7 +11,8 @@ SYNOPSIS
         [--custom-metadata=[CUSTOM_METADATA,...]] [--custom-time=CUSTOM_TIME]
         [--do-not-decompress] [--if-generation-match=GENERATION]
         [--if-metageneration-match=METAGENERATION] [--ignore-symlinks]
-        [--recursive, -R, -r] [--skip-unsupported, -U]
+        [--print-created-message, -v] [--recursive, -R, -r]
+        [--skip-unsupported, -U]
         [--storage-class=STORAGE_CLASS, -s STORAGE_CLASS]
         [--gzip-in-flight-all, -J
           | --gzip-in-flight-extensions=[FILE_EXTENSIONS,...],
@@ -62,6 +63,11 @@ FLAGS
      --cache-control=CACHE_CONTROL
         How caches should handle requests and responses.
 
+     --no-clobber, -n
+        Do not overwrite existing files or objects at the destination. Skipped
+        items will be printed. This option performs an additional GET request
+        for cloud objects before attempting an upload.
+
      --content-disposition=CONTENT_DISPOSITION
         How content should be displayed.
 
@@ -106,6 +112,9 @@ FLAGS
         Ignore file symlinks instead of copying what they point to. Symlinks
         pointing to directories will always be ignored.
 
+     --print-created-message, -v
+        Prints the version-specific URL for each copied object.
+
      --recursive, -R, -r
         Recursively copy the contents of any directories that match the source
         path expression.
@@ -116,9 +125,9 @@ FLAGS
         class.
 
      --storage-class=STORAGE_CLASS, -s STORAGE_CLASS
-        Specifies the storage class of the destination object. If not
-        specified, the default storage class of the destination bucket is used.
-        This option is not valid for copying to non-cloud destinations.
+        Specify the storage class of the destination object. If not specified,
+        the default storage class of the destination bucket is used. This
+        option is not valid for copying to non-cloud destinations.
 
      At most one of these can be specified:
 

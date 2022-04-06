@@ -4,7 +4,9 @@ NAME
 SYNOPSIS
     gcloud alpha compute target-ssl-proxies update NAME
         [--backend-service=BACKEND_SERVICE] [--proxy-header=PROXY_HEADER]
-        [--ssl-certificates=SSL_CERTIFICATE,[...]]
+        [--certificate-map=CERTIFICATE_MAP
+          : --ssl-certificates=SSL_CERTIFICATE,[...] | --clear-ssl-certificates
+          | --clear-certificate-map]
         [--clear-ssl-policy | --ssl-policy=SSL_POLICY] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -14,8 +16,8 @@ DESCRIPTION
     more forwarding rules which define which packets the proxy is responsible
     for routing. The target SSL proxy in turn points to a backend service which
     will handle the requests. The target SSL proxy also points to at most 15
-    SSL certificates used for server-side authentication. The target SSL proxy
-    can be associated with at most one SSL policy.
+    SSL certificates used for server-side authentication or one certificate
+    map. The target SSL proxy can be associated with at most one SSL policy.
 
 POSITIONAL ARGUMENTS
      NAME
@@ -36,12 +38,37 @@ FLAGS
             Enables PROXY protocol (version 1) for passing client connection
             information.
 
-     --ssl-certificates=SSL_CERTIFICATE,[...]
-        References to at most 15 SSL certificate resources that are used for
-        server-side authentication. The first SSL certificate in this list is
-        considered the primary SSL certificate associated with the load
-        balancer. The SSL certificates must exist and cannot be deleted while
-        referenced by a target SSL proxy.
+     At most one of these can be specified:
+
+       --ssl-certificates=SSL_CERTIFICATE,[...]
+          References to at most 15 SSL certificate resources that are used for
+          server-side authentication. The first SSL certificate in this list is
+          considered the primary SSL certificate associated with the load
+          balancer. The SSL certificates must exist and cannot be deleted while
+          referenced by a target SSL proxy.
+
+       --clear-ssl-certificates
+          Removes any attached SSL Certificates from the SSL proxy.
+
+       Certificate map resource - The certificate map to attach. This
+       represents a Cloud resource. (NOTE) Some attributes are not given
+       arguments in this group but can be set in other ways. To set the project
+       attribute:
+        ▸ provide the argument --certificate-map on the command line with a
+          fully specified name;
+        ▸ provide the argument --project on the command line;
+        ▸ set the property core/project. To set the location attribute:
+        ▸ provide the argument --certificate-map on the command line with a
+          fully specified name;
+        ▸ default value of location is [global].
+
+         --certificate-map=CERTIFICATE_MAP
+            ID of the certificate map or fully qualified identifier for the
+            certificate map. To set the map attribute:
+            ▫ provide the argument --certificate-map on the command line.
+
+       --clear-certificate-map
+          Removes any attached certificate map from the SSL proxy.
 
      At most one of these can be specified:
 

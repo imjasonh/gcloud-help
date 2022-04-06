@@ -183,11 +183,15 @@ FLAGS
      At most one of these can be specified:
 
        --airflow-version=AIRFLOW_VERSION
-          Version of Airflow to run in the environment.
+          Version of Apache Airflow to run in the environment.
 
-              Must be of the form `X.Y[.Z]`.
+              Must be of the form `X[.Y[.Z]]`, where `[]` denotes optional fragments.
 
               The current Cloud Composer version will be used within the created
+              environment. The Apache Airflow version is a semantic version or an alias
+              in the form of major or major.minor version numbers, resolved to the
+              latest matching Apache Airflow version supported in the current Cloud
+              Composer version. The resolved version is stored in the created
               environment.
 
        --image-version=IMAGE_VERSION
@@ -195,15 +199,16 @@ FLAGS
 
               The image version encapsulates the versions of both Cloud Composer
               and Apache Airflow. Must be of the form
-              `composer-A[.B.C[-D.E]]-airflow-X.Y[.Z]`.
+              `composer-A[.B.C[-D.E]]-airflow-X[.Y[.Z]]`, where `[]` denotes optional
+              fragments.
 
-              The Cloud Composer and Airflow versions are semantic versions.
-              `latest` can be provided instead of an explicit Cloud Composer
-              version number indicating that the server will replace `latest`
-              with the current Cloud Composer version. For the Apache Airflow
-              portion, the patch version can be omitted and the current
-              version will be selected. The version numbers that are used will
-              be stored.
+              The Cloud Composer portion of the image version is a semantic version or
+              an alias in the form of major version number or `latest`, resolved to the
+              current Cloud Composer version. The Apache Airflow portion of the image
+              version is a semantic version or an alias in the form of major or
+              major.minor version numbers, resolved to the latest matching Apache
+              Airflow version supported in the given Cloud Composer version. The
+              resolved versions are stored in the created environment.
 
      Private Clusters
 
