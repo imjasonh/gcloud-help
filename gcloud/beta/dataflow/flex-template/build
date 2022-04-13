@@ -13,6 +13,9 @@ SYNOPSIS
         [--additional-user-labels=[ADDITIONAL_USER_LABELS,...]]
         [--dataflow-kms-key=DATAFLOW_KMS_KEY] [--disable-public-ips]
         [--enable-streaming-engine] [--gcs-log-dir=GCS_LOG_DIR]
+        [--image-repository-cert-path=IMAGE_REPOSITORY_CERT_PATH]
+        [--image-repository-password-secret-id=IMAGE_REPOSITORY_PASSWORD_SECRET_ID]
+        [--image-repository-username-secret-id=IMAGE_REPOSITORY_USERNAME_SECRET_ID]
         [--max-workers=MAX_WORKERS] [--metadata-file=METADATA_FILE]
         [--network=NETWORK] [--num-workers=NUM_WORKERS] [--print-only]
         [--service-account-email=SERVICE_ACCOUNT_EMAIL]
@@ -126,6 +129,30 @@ OPTIONAL FLAGS
      --gcs-log-dir=GCS_LOG_DIR
         Google Cloud Storage directory to save build logs.(Must be a URL
         beginning with 'gs://'.)
+
+     --image-repository-cert-path=IMAGE_REPOSITORY_CERT_PATH
+        The full URL to self-signed certificate of private registry in Cloud
+        Storage. For example, gs://mybucket/mycerts/selfsigned.crt. The
+        certificate provided in Cloud Storage must be DER-encoded and may be
+        supplied in binary or printable (Base64) encoding. If the certificate
+        is provided in Base64 encoding, it must be bounded at the beginning by
+        -----BEGIN CERTIFICATE-----, and must be bounded at the end by -----END
+        CERTIFICATE-----. If this parameter is provided, the docker daemon in
+        the template launcher will be instructed to trust that certificate.
+
+     --image-repository-password-secret-id=IMAGE_REPOSITORY_PASSWORD_SECRET_ID
+        Secret Manager secret id for the password to authenticate to private
+        registry. Should be in the format
+        projects/{project}/secrets/{secret}/versions/{secret_version} or
+        projects/{project}/secrets/{secret}. If the version is not provided
+        latest version will be used.
+
+     --image-repository-username-secret-id=IMAGE_REPOSITORY_USERNAME_SECRET_ID
+        Secret Manager secret id for the username to authenticate to private
+        registry. Should be in the format
+        projects/{project}/secrets/{secret}/versions/{secret_version} or
+        projects/{project}/secrets/{secret}. If the version is not provided
+        latest version will be used.
 
      --max-workers=MAX_WORKERS
         Default maximum number of workers to run.

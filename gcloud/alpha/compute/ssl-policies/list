@@ -3,13 +3,18 @@ NAME
         policies
 
 SYNOPSIS
-    gcloud alpha compute ssl-policies list [--filter=EXPRESSION]
-        [--limit=LIMIT] [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [--uri]
-        [GCLOUD_WIDE_FLAG ...]
+    gcloud alpha compute ssl-policies list [NAME ...]
+        [--regexp=REGEXP, -r REGEXP] [--global | --regions=[REGION,...]]
+        [--filter=EXPRESSION] [--limit=LIMIT] [--page-size=PAGE_SIZE]
+        [--sort-by=[FIELD,...]] [--uri] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) gcloud alpha compute ssl-policies list displays all Google Compute
     Engine SSL policies in a project.
+
+    By default, global SSL policies and SSL policies from all regions are
+    listed. The results can be narrowed down by providing the --global or
+    --regions flag.
 
 EXAMPLES
     To list all SSL policies in a project in table form, run:
@@ -19,6 +24,41 @@ EXAMPLES
     To list the URIs of all SSL policies in a project, run:
 
         $ gcloud alpha compute ssl-policies list --uri
+
+    To list all global SSL policies in a project, run:
+
+        $ gcloud alpha compute ssl-policies list --global
+
+    To list all SSL policies in the us-central1 and europe-west1 regions, given
+    they are regional resources, run:
+
+        $ gcloud alpha compute ssl-policies list \
+            --filter="region:( europe-west1 us-central1 )"
+
+POSITIONAL ARGUMENTS
+     [NAME ...]
+        (DEPRECATED) If provided, show details for the specified names and/or
+        URIs of resources.
+
+        Argument NAME is deprecated. Use --filter="name=( 'NAME' ... )"
+        instead.
+
+FLAGS
+     --regexp=REGEXP, -r REGEXP
+        (DEPRECATED) Regular expression to filter the names of the results on.
+        Any names that do not match the entire regular expression will be
+        filtered out.
+
+        Flag --regexp is deprecated. Use --filter="name~'REGEXP'" instead.
+
+     At most one of these can be specified:
+
+       --global
+          If provided, only global resources are shown.
+
+       --regions=[REGION,...]
+          If provided, only regional resources are shown. If arguments are
+          provided, only resources from the given regions are shown.
 
 LIST COMMAND FLAGS
      --filter=EXPRESSION

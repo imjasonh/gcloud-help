@@ -1,0 +1,108 @@
+NAME
+    gcloud alpha edge-cloud networking routers add-interface - add an interface
+        to a Distributed Cloud Edge Network router
+
+SYNOPSIS
+    gcloud alpha edge-cloud networking routers add-interface
+        (ROUTER : --location=LOCATION --zone=ZONE)
+        --interface-name=INTERFACE_NAME
+        (--subnetwork=SUBNETWORK
+          | --interconnect-attachment=INTERCONNECT_ATTACHMENT
+          --ip-address=IP_ADDRESS --ip-mask-length=IP_MASK_LENGTH) [--async]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Create an interface to a Distributed Cloud Edge Network router.
+
+EXAMPLES
+    To create and add a northbound interface for Distributed Cloud Edge Network
+    router 'my-router' in edge zone 'us-central1-edge-den1' , run:
+
+        $ gcloud alpha edge-cloud networking routers add-interface \
+          my-router --interface-name=my-int-r1 \
+          --interconnect-attachment=my-link-attachment \
+          --ip-address=208.117.254.233 --ip-mask-length=31 \
+          --location=us-central1 --zone=us-central1-edge-den1
+
+    To create and add a southbound interface for Distributed Cloud Edge Network
+    router 'my-router' in edge zone 'us-central1-edge-den1', run:
+
+        $ gcloud alpha edge-cloud networking routers add-interface \
+         my-router --interface-name=my-int-r2 --subnetwork=my-subnet \
+         --location=us-central1 --zone=us-central1-edge-den1
+
+POSITIONAL ARGUMENTS
+     Router resource - The router to which we add an interface. The arguments
+     in this group can be used to specify the attributes of this resource.
+     (NOTE) Some attributes are not given arguments in this group but can be
+     set in other ways. To set the project attribute:
+      ◆ provide the argument router on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       ROUTER
+          ID of the router or fully qualified identifier for the router. To set
+          the router attribute:
+          ▸ provide the argument router on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --location=LOCATION
+          The Cloud location for the router. To set the location attribute:
+          ▸ provide the argument router on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line.
+
+       --zone=ZONE
+          The zone of the router. To set the zone attribute:
+          ▸ provide the argument router on the command line with a fully
+            specified name;
+          ▸ provide the argument --zone on the command line.
+
+REQUIRED FLAGS
+     --interface-name=INTERFACE_NAME
+        The name of the interface being added.
+
+     The argument group for configuring the interface for the router.
+
+     Exactly one of these must be specified:
+
+       --subnetwork=SUBNETWORK
+          The subnetwork of the interface being added.
+
+       The argument group for adding northbound interface to edge router
+
+         --interconnect-attachment=INTERCONNECT_ATTACHMENT
+            The interconnect attachment of the interface being added.
+
+         --ip-address=IP_ADDRESS
+            The link local address of the router for this interface.
+
+         --ip-mask-length=IP_MASK_LENGTH
+            The subnet mask for the link-local IP range of the interface. The
+            interface IP address and BGP peer IP address must be selected from
+            the subnet defined by this link-local range.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

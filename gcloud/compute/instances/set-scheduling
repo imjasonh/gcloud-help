@@ -5,15 +5,16 @@ NAME
 SYNOPSIS
     gcloud compute instances set-scheduling INSTANCE_NAME
         [--clear-min-node-cpu] [--maintenance-policy=MAINTENANCE_POLICY]
-        [--min-node-cpu=MIN_NODE_CPU] [--preemptible]
+        [--min-node-cpu=MIN_NODE_CPU] [--[no-]preemptible]
         [--[no-]restart-on-failure] [--zone=ZONE]
         [--clear-node-affinities | --node=NODE
           | --node-affinity-file=NODE_AFFINITY_FILE | --node-group=NODE_GROUP]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    $gcloud compute instances set-scheduling is used to configure scheduling
-    options for Compute Engine virtual machines.
+    $gcloud compute instances set-scheduling is used to update scheduling
+    options for VM instances. You can only call this method on a VM instance
+    that is stopped (a VM instance in a TERMINATED state).
 
 EXAMPLES
     To set instance to be terminated during maintenance, run:
@@ -50,11 +51,12 @@ FLAGS
         Minimum number of virtual CPUs this instance will consume when running
         on a sole-tenant node.
 
-     --preemptible
+     --[no-]preemptible
         If provided, instances will be preemptible and time-limited. Instances
         might be preempted to free up resources for standard VM instances, and
         will only be able to run for a limited amount of time. Preemptible
-        instances can not be restarted and will not migrate.
+        instances can not be restarted and will not migrate. Use --preemptible
+        to enable and --no-preemptible to disable.
 
      --[no-]restart-on-failure
         The instances will be restarted if they are terminated by Compute

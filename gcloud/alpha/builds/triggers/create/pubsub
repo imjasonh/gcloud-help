@@ -10,8 +10,9 @@ SYNOPSIS
           default="/" --dockerfile-image=DOCKERFILE_IMAGE)
           : --description=DESCRIPTION --filter=FILTER --name=NAME
           --require-approval --service-account=SERVICE_ACCOUNT
-          --substitutions=[KEY=VALUE,...] --repo=REPO (--branch=BRANCH
-          | --tag=TAG)]) [GCLOUD_WIDE_FLAG ...]
+          --substitutions=[KEY=VALUE,...]
+          --repo=REPO --repo-type=REPO_TYPE (--branch=BRANCH | --tag=TAG)])
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Create a build trigger with a Pub/Sub trigger event.
@@ -25,7 +26,8 @@ EXAMPLES
             --service-account="projects/my-project/serviceAccounts/my-byosa@\
         my-project.iam.gserviceaccount.com" \
             --topic=projects/my-project/topics/my-topic \
-            --repo=https://www.github.com/owner/repo --branch=my-branch
+            --repo=https://www.github.com/owner/repo --repo-type=GITHUB \
+            --branch=my-branch
 
 REQUIRED FLAGS
      Exactly one of these must be specified:
@@ -133,6 +135,13 @@ REQUIRED FLAGS
            --repo=REPO
               URI of the repository. Currently only HTTP URIs for GitHub and
               Cloud Source Repositories are supported.
+
+              This flag must be specified if any of the other arguments in this
+              group are specified.
+
+           --repo-type=REPO_TYPE
+              Type of the repository. Currently only GitHub and Cloud Source
+              Repository types are supported.
 
               This flag must be specified if any of the other arguments in this
               group are specified.

@@ -6,16 +6,20 @@ SYNOPSIS
     gcloud alpha compute instances set-scheduling INSTANCE_NAME
         [--clear-min-node-cpu]
         [--host-error-timeout-seconds=HOST_ERROR_TIMEOUT_SECONDS]
-        [--min-node-cpu=MIN_NODE_CPU] [--preemptible]
-        [--[no-]restart-on-failure] [--zone=ZONE]
+        [--min-node-cpu=MIN_NODE_CPU] [--[no-]preemptible]
+        [--provisioning-model=PROVISIONING_MODEL] [--[no-]restart-on-failure]
+        [--zone=ZONE]
+        [--clear-instance-termination-action
+          | --instance-termination-action=INSTANCE_TERMINATION_ACTION]
         [--clear-node-affinities | --node=NODE
           | --node-affinity-file=NODE_AFFINITY_FILE | --node-group=NODE_GROUP]
         [--maintenance-policy=MAINTENANCE_POLICY
           | --on-host-maintenance=MAINTENANCE_POLICY] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) $gcloud alpha compute instances set-scheduling is used to configure
-    scheduling options for Compute Engine virtual machines.
+    (ALPHA) $gcloud alpha compute instances set-scheduling is used to update
+    scheduling options for VM instances. You can only call this method on a VM
+    instance that is stopped (a VM instance in a TERMINATED state).
 
 EXAMPLES
     To set instance to be terminated during maintenance, run:
@@ -44,11 +48,25 @@ FLAGS
         Minimum number of virtual CPUs this instance will consume when running
         on a sole-tenant node.
 
-     --preemptible
+     --[no-]preemptible
         If provided, instances will be preemptible and time-limited. Instances
         might be preempted to free up resources for standard VM instances, and
         will only be able to run for a limited amount of time. Preemptible
-        instances can not be restarted and will not migrate.
+        instances can not be restarted and will not migrate. Use --preemptible
+        to enable and --no-preemptible to disable.
+
+     --provisioning-model=PROVISIONING_MODEL
+        Specifies provisioning model, which determines price, obtainability,
+        and runtime for the VM instance. PROVISIONING_MODEL must be one of:
+
+         SPOT
+            Spot VMs are spare capacity; Spot VMs are discounted to have much
+            lower prices than standard VMs but have no guaranteed runtime. Spot
+            VMs are the new version of preemptible VM instances, except Spot
+            VMs do not have a 24-hour maximum runtime.
+         STANDARD
+            Default. Standard provisioning model for VM instances, which has
+            user-controlled runtime but no Spot discounts.
 
      --[no-]restart-on-failure
         The instances will be restarted if they are terminated by Compute
@@ -79,6 +97,29 @@ FLAGS
 
         Alternatively, the zone can be stored in the environment variable
         CLOUDSDK_COMPUTE_ZONE.
+
+     Instance Termination Action
+
+     At most one of these can be specified:
+
+       --clear-instance-termination-action
+          Disables the termination action for this VM if allowed OR sets
+          termination action to the default value. Depending on a VM's
+          availability settings, a termination action is either required or not
+          allowed. This flag is required when you are updating a VM such that
+          it's previously specified termination action is no longer allowed. If
+          you use this flag when a VM requires a termination action, it's
+          termination action is just set to the default value (stop).
+
+       --instance-termination-action=INSTANCE_TERMINATION_ACTION
+          Specifies the termination action that will be taken upon VM
+          preemption. INSTANCE_TERMINATION_ACTION must be one of:
+
+           DELETE
+              Permanently delete the VM.
+           STOP
+              Default. Stop the VM without preserving memory. The VM can be
+              restarted later.
 
      Sole Tenancy.
 
