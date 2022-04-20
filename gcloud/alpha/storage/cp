@@ -11,6 +11,7 @@ SYNOPSIS
         [--custom-metadata=[CUSTOM_METADATA,...]] [--custom-time=CUSTOM_TIME]
         [--do-not-decompress] [--if-generation-match=GENERATION]
         [--if-metageneration-match=METAGENERATION] [--ignore-symlinks]
+        [--manifest-path=MANIFEST_PATH, -L MANIFEST_PATH]
         [--print-created-message, -v] [--recursive, -R, -r]
         [--skip-unsupported, -U]
         [--storage-class=STORAGE_CLASS, -s STORAGE_CLASS]
@@ -111,6 +112,28 @@ FLAGS
      --ignore-symlinks
         Ignore file symlinks instead of copying what they point to. Symlinks
         pointing to directories will always be ignored.
+
+     --manifest-path=MANIFEST_PATH, -L MANIFEST_PATH
+        Outputs a manifest log file with detailed information about each item
+        that was copied. This manifest contains the following information for
+        each item:
+
+        ◆ Source path.
+        ◆ Destination path.
+        ◆ Source size.
+        ◆ Bytes transferred.
+        ◆ MD5 hash.
+        ◆ Transfer start time and date in UTC and ISO 8601 format.
+        ◆ Transfer completion time and date in UTC and ISO 8601 format.
+        ◆ Final result of the attempted transfer: OK, error, or skipped.
+        ◆ Details, if any.
+
+        If the manifest file already exists, gcloud storage appends log items
+        to the existing file.
+
+        Objects that are marked as "OK" or "skipped" in the existing manifest
+        file are not retried by future commands. Objects marked as "error" are
+        retried.
 
      --print-created-message, -v
         Prints the version-specific URL for each copied object.

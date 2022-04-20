@@ -1,0 +1,160 @@
+NAME
+    gcloud alpha vmware network-peerings create - create a VMware Engine VPC
+        network peering
+
+SYNOPSIS
+    gcloud alpha vmware network-peerings create NETWORK_PEERING
+        --peer-network=PEER_NETWORK --peer-network-type=PEER_NETWORK_TYPE
+        (--vmware-engine-network=VMWARE_ENGINE_NETWORK : --location=LOCATION)
+        [--description=DESCRIPTION] [--no-exchange-subnet-routes]
+        [--no-export-custom-routes] [--no-export-custom-routes-with-public-ip]
+        [--no-import-custom-routes] [--no-import-custom-routes-with-public-ip]
+        [--peer-mtu=PEER_MTU] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Create a VMware Engine VPC network peering. VPC network peering
+    creation is considered finished when the network peering is in ACTIVE
+    state. Check the progress of a VPC network peering using gcloud alpha
+    vmware network-peerings list.
+
+EXAMPLES
+    To create a VPC network peering called new-peering that connects the VMware
+    Engine network
+    projects/my-project/locations/us-west1/vmwareEngineNetworks/my-vmware-engine-network
+    with another VMware Engine network
+    projects/another-project/global/networks/another-vmware-engine-network,
+    run:
+
+        $ gcloud alpha vmware network-peerings create new-peering \
+            --vmware-engine-network=projects/my-project/locations/us-west1/\
+        vmwareEngineNetworks/my-vmware-engine-network \
+            --peer-network=projects/another-project/global/networks/\
+        another-vmware-engine-network \
+            --peer-network-type=VMWARE_ENGINE_NETWORK
+
+    In this example, the project is taken from gcloud properties core/project
+    and location is taken as global.
+
+POSITIONAL ARGUMENTS
+     VMware Engine VPC network peering resource - network_peering. This
+     represents a Cloud resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways. To set the project
+     attribute:
+      ◆ provide the argument network_peering on the command line with a fully
+        specified name;
+      ◆ set the property core/project;
+      ◆ provide the argument --project on the command line.
+
+     This must be specified.
+
+       NETWORK_PEERING
+          ID of the VMware Engine VPC network peering or fully qualified
+          identifier for the VMware Engine VPC network peering. To set the
+          network-peering attribute:
+          ▸ provide the argument network_peering on the command line.
+
+REQUIRED FLAGS
+     --peer-network=PEER_NETWORK
+        Name of the VPC network to peer with the VMware Engine network. The
+        peer network can be a consumer VPC network or another service producer
+        VPC network. For a consumer VPC network, provide the name in the
+        following form: projects/{project}/global/networks/{network_id} If the
+        peer network is of type VMWARE_ENGINE_NETWORK, then the peer network
+        will be a service producer VPC network. For a service producer VPC
+        network, provide the name in the following form:
+        projects/{project}/locations/{location}/vmwareEngineNetworks/{vmware_engine_network_id}
+
+     --peer-network-type=PEER_NETWORK_TYPE
+        Type of the VPC network to peer with the VMware Engine network.
+        PEER_NETWORK_TYPE must be one of the following:
+        ◆ STANDARD: Peering connection used for connecting to another VPC
+          network established by the same user. For example, a peering
+          connection to another VPC network in the same project or to an
+          on-premises network.
+        ◆ VMWARE_ENGINE_NETWORK: Peering connection used for connecting to
+          another VMware Engine network.
+        ◆ PRIVATE_SERVICES_ACCESS: Peering connection used for establishing
+          private services access.
+        ◆ NETAPP_CLOUD_VOLUMES: Peering connection used for connecting to
+          NetApp Cloud Volumes.
+        ◆ THIRD_PARTY_SERVICE: Peering connection used for connecting to
+          third-party services. Most third-party services require manual setup
+          of reverse peering on the VPC network associated with the third-party
+          service. PEER_NETWORK_TYPE must be one of:
+          PEER_NETWORK_TYPE_UNSPECIFIED, STANDARD, VMWARE_ENGINE_NETWORK,
+          PRIVATE_SERVICES_ACCESS, NETAPP_CLOUD_VOLUMES, THIRD_PARTY_SERVICE.
+
+     VMware Engine network resource - vmware_engine_network. The arguments in
+     this group can be used to specify the attributes of this resource. (NOTE)
+     Some attributes are not given arguments in this group but can be set in
+     other ways. To set the project attribute:
+      ◆ provide the argument --vmware-engine-network on the command line with
+        a fully specified name;
+      ◆ set the property core/project;
+      ◆ provide the argument --project on the command line.
+
+     This must be specified.
+
+       --vmware-engine-network=VMWARE_ENGINE_NETWORK
+          ID of the VMware Engine network or fully qualified identifier for the
+          VMware Engine network. To set the vmware-engine-network attribute:
+          ▸ provide the argument --vmware-engine-network on the command line.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --location=LOCATION
+          The resource name of the location. To set the location attribute:
+          ▸ provide the argument --vmware-engine-network on the command line
+            with a fully specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set location as 'global' (default) or a region.
+
+OPTIONAL FLAGS
+     --description=DESCRIPTION
+        User-provided description of the VPC network peering.
+
+     --exchange-subnet-routes
+        True if full-mesh connectivity is created and managed automatically
+        between peered VPC networks; false otherwise. This field is always true
+        because Google Compute Engine automatically creates and manages
+        subnetwork routes between two VPC networks when the peering state is
+        ACTIVE. Enabled by default, use --no-exchange-subnet-routes to disable.
+
+     --export-custom-routes
+        True if custom routes are exported to the peered VPC network; false
+        otherwise. The default value is true. Enabled by default, use
+        --no-export-custom-routes to disable.
+
+     --export-custom-routes-with-public-ip
+        True if all subnet routes with public IP address range are exported;
+        false otherwise. The default value is true. Enabled by default, use
+        --no-export-custom-routes-with-public-ip to disable.
+
+     --import-custom-routes
+        True if custom routes are imported to the peered VPC network; false
+        otherwise. The default value is true. Enabled by default, use
+        --no-import-custom-routes to disable.
+
+     --import-custom-routes-with-public-ip
+        True if all subnet routes with public IP address range are imported;
+        false otherwise. The default value is true. Enabled by default, use
+        --no-import-custom-routes-with-public-ip to disable.
+
+     --peer-mtu=PEER_MTU
+        Maximum transmission unit (MTU) in bytes.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

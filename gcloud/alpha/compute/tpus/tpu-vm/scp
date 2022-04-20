@@ -1,5 +1,6 @@
 NAME
-    gcloud alpha compute tpus tpu-vm scp - SCP into a Cloud TPU VM
+    gcloud alpha compute tpus tpu-vm scp - copy files to and from a Cloud TPU
+        VM via SCP
 
 SYNOPSIS
     gcloud alpha compute tpus tpu-vm scp [[USER@]INSTANCE:]SRC
@@ -13,7 +14,26 @@ SYNOPSIS
           | --ssh-key-expire-after=SSH_KEY_EXPIRE_AFTER] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) SCP into a Cloud TPU VM.
+    (ALPHA) Copy files to and from a Cloud TPU VM via SCP (Alpha).
+
+EXAMPLES
+    To copy a file (for example, a text file in the local home directory) to a
+    Cloud TPU VM, run:
+
+        $ gcloud alpha compute tpus tpu-vm scp ~/my-file my-tpu:
+
+    To copy a file into all workers in a Cloud TPU VM, run:
+
+        $ gcloud alpha compute tpus tpu-vm scp ~/my-file my-tpu: --worker=all
+
+    To copy a file from a Cloud TPU VM to the home directory of the local
+    computer, run:
+
+        $ gcloud alpha compute tpus tpu-vm scp my-tpu:~/my-file ~/
+
+    To copy all files in a folder to a Cloud TPU VM, run:
+
+        $ gcloud alpha compute tpus tpu-vm scp ~/my-folder/ my-tpu: --recurse
 
 POSITIONAL ARGUMENTS
      [[USER@]INSTANCE:]SRC [[[USER@]INSTANCE:]SRC ...]
@@ -144,5 +164,7 @@ NOTES
     This command is currently in alpha and might change without notice. If this
     command fails with API permission errors despite specifying the correct
     project, you might be trying to access an API with an invitation-only early
-    access allowlist.
+    access allowlist. This variant is also available:
+
+        $ gcloud compute tpus tpu-vm scp
 
