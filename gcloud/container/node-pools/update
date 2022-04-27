@@ -6,9 +6,11 @@ SYNOPSIS
     gcloud container node-pools update NAME
         (--enable-gvnic | --enable-image-streaming
           | --network-performance-configs=[PROPERTY=VALUE,...]
-          | --node-locations=ZONE,[ZONE,...]
+          | --node-labels=[NODE_LABEL,...] | --node-locations=ZONE,[ZONE,...]
+          | --node-taints=[NODE_TAINT,...]
           | --system-config-from-file=SYSTEM_CONFIG_FROM_FILE
-          | --workload-metadata=WORKLOAD_METADATA | --enable-autoprovisioning
+          | --tags=[TAG,...] | --workload-metadata=WORKLOAD_METADATA
+          | --enable-autoprovisioning
           --enable-autoscaling --max-nodes=MAX_NODES --min-nodes=MIN_NODES
           | --enable-autorepair --enable-autoupgrade
           | --max-surge-upgrade=MAX_SURGE_UPGRADE
@@ -52,6 +54,26 @@ REQUIRED FLAGS
               external IP destinations. The following tier values are allowed:
               [DEFAULT,TIER_1]
 
+       --node-labels=[NODE_LABEL,...]
+          Replaces all the user specified Kubernetes labels on all nodes in an
+          existing node pool with the given labels.
+
+          Examples:
+
+              $ gcloud container node-pools update node-pool-1 \
+                  --cluster=example-cluster \
+                  --node-labels=label1=value1,label2=value2
+
+          New nodes, including ones created by resize or recreate, will have
+          these labels on the Kubernetes API node object and can be used in
+          nodeSelectors. See
+          http://kubernetes.io/docs/user-guide/node-selection/ for examples.
+
+          Note that Kubernetes labels, intended to associate cluster components
+          and resources with one another and manage resource lifecycles, are
+          different from Google Kubernetes Engine labels that are used for the
+          purpose of tracking billing and usage information.
+
        --node-locations=ZONE,[ZONE,...]
           Set of zones in which the node pool's nodes should be located.
           Changing the locations for a node pool will result in nodes being
@@ -64,6 +86,20 @@ REQUIRED FLAGS
               $ gcloud container node-pools update node-pool-1 \
                   --cluster=sample-cluster \
                   --node-locations=us-central1-a,us-central1-b
+
+       --node-taints=[NODE_TAINT,...]
+          Replaces all the user specified Kubernetes taints on all nodes in an
+          existing node pool, which can be used with tolerations for pod
+          scheduling.
+
+          Examples:
+
+              $ gcloud container node-pools update node-pool-1 \
+                  --cluster=example-cluster \
+                  --node-taints=key1=val1:NoSchedule,key2=val2:PreferNoSchedule
+
+          To read more about node-taints, see
+          https://cloud.google.com/kubernetes-engine/docs/node-taints.
 
        --system-config-from-file=SYSTEM_CONFIG_FROM_FILE
           Path of the YAML/JSON file that contains the node configuration,
@@ -109,6 +145,21 @@ REQUIRED FLAGS
           Note, updating the system configuration of an existing node pool
           requires recreation of the nodes which which might cause a
           disruption.
+
+       --tags=[TAG,...]
+          Replaces all the user specified Compute Engine tags on all nodes in
+          an existing node pool with the given tags (comma separated).
+
+          Examples:
+
+              $ gcloud container node-pools update node-pool-1 \
+                  --cluster=example-cluster --tags=tag1,tag2
+
+          New nodes, including ones created by resize or recreate, will have
+          these tags on the Compute Engine API instance object and these tags
+          can be used in firewall rules. See
+          https://cloud.google.com/sdk/gcloud/reference/compute/firewall-rules/create
+          for examples.
 
        --workload-metadata=WORKLOAD_METADATA
           Type of metadata server available to pods running in the node pool.
