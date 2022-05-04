@@ -3,7 +3,8 @@ NAME
         Engine public advertised prefix
 
 SYNOPSIS
-    gcloud alpha compute public-advertised-prefixes update NAME --status=STATUS
+    gcloud alpha compute public-advertised-prefixes update NAME
+        (--announce-prefix | --status=STATUS | --withdraw-prefix)
         [GCLOUD_WIDE_FLAG ...]
 
 EXAMPLES
@@ -12,14 +13,32 @@ EXAMPLES
         $ gcloud alpha compute public-advertised-prefixes update my-pap \
             --status=ptr-configured
 
+    To announce a public advertised prefix:
+
+        $ gcloud alpha compute public-advertised-prefixes update my-pap \
+            --announce-prefix
+
+    To withdraw a public advertised prefix:
+
+        $ gcloud alpha compute public-advertised-prefixes update my-pap \
+            --withdraw-prefix
+
 POSITIONAL ARGUMENTS
      NAME
         Name of the public advertised prefix to operate on.
 
 REQUIRED FLAGS
-     --status=STATUS
-        The status of public advertised prefix. STATUS must be (currently only
-        one value is supported): ptr-configured.
+     Exactly one of these must be specified:
+
+       --announce-prefix
+          Specify if the prefix will be announced. Default is false.
+
+       --status=STATUS
+          The status of public advertised prefix. STATUS must be (currently
+          only one value is supported): ptr-configured.
+
+       --withdraw-prefix
+          Specify if the prefix will be withdrawn. Default is false.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

@@ -2,9 +2,10 @@ NAME
     gcloud beta emulators datastore start - start a local datastore emulator
 
 SYNOPSIS
-    gcloud beta emulators datastore start
-        [--consistency=CONSISTENCY; default=0.9] [--data-dir=DATA_DIR]
-        [--host-port=HOST_PORT] [--no-store-on-disk] [GCLOUD_WIDE_FLAG ...]
+    gcloud beta emulators datastore start [--data-dir=DATA_DIR]
+        [--host-port=HOST_PORT] [--no-store-on-disk]
+        [--consistency=CONSISTENCY; default=0.9
+          | --use-firestore-in-datastore-mode] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) This command starts a local datastore emulator.
@@ -15,12 +16,6 @@ EXAMPLES
         $ gcloud beta emulators datastore start --data-dir=DATA-DIR
 
 FLAGS
-     --consistency=CONSISTENCY; default=0.9
-        Fraction of eventually consistent operations that should succeed
-        immediately. Setting to 1.0 can be useful for unit tests, but may mask
-        incorrect assumptions about non-ancestor queries which are eventually
-        consistent.
-
      --data-dir=DATA_DIR
         The directory to be used to store/retrieve data/config for an emulator
         run. The default value is <USER_CONFIG_DIR>/emulators/datastore. The
@@ -43,6 +38,19 @@ FLAGS
      --store-on-disk
         Whether data should be persisted to disk. Enabled by default, use
         --no-store-on-disk to disable.
+
+     At most one of these can be specified:
+
+       --consistency=CONSISTENCY; default=0.9
+          Fraction of eventually consistent operations that should succeed
+          immediately. Setting to 1.0 can be useful for unit tests, but may
+          mask incorrect assumptions about non-ancestor queries which are
+          eventually consistent.
+
+       --use-firestore-in-datastore-mode
+          Runs the emulator in Cloud Firestore in Datastore Mode. Reads are
+          always strongly consistent and --consistency flag may not be
+          specified.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

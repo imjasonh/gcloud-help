@@ -4,16 +4,18 @@ NAME
 
 SYNOPSIS
     gcloud alpha container fleet mesh update --control-plane=CONTROL_PLANE
-        [--membership=MEMBERSHIP] [GCLOUD_WIDE_FLAG ...]
+        [--membership=MEMBERSHIP | --memberships=MEMBERSHIPS]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Update the Service Mesh Feature Spec of a Membership.
 
 EXAMPLES
-    To update the control plane management of a Membership named MEMBERSHIP,
-    run:
+    To update the control plane management of comma separated Memberships like
+    membership1,membership2, run:
 
-        $ gcloud alpha container fleet mesh update --membership=MEMBERSHIP \
+        $ gcloud alpha container fleet mesh update \
+            --memberships=membership1,membership2 \
             --control-plane=CONTROL_PLANE
 
 REQUIRED FLAGS
@@ -22,8 +24,17 @@ REQUIRED FLAGS
         of: automatic, manual.
 
 OPTIONAL FLAGS
-     --membership=MEMBERSHIP
-        The Membership name to update.
+     At most one of these can be specified:
+
+       --membership=MEMBERSHIP
+          (DEPRECATED) Membership name to update.
+
+          The --membership flag is now deprecated. Please use --memberships
+          instead.
+
+       --memberships=MEMBERSHIPS
+          Membership names to update, separated by commas if multiple are
+          supplied.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
@@ -37,5 +48,7 @@ NOTES
     This command is currently in alpha and might change without notice. If this
     command fails with API permission errors despite specifying the correct
     project, you might be trying to access an API with an invitation-only early
-    access allowlist.
+    access allowlist. This variant is also available:
+
+        $ gcloud container fleet mesh update
 
