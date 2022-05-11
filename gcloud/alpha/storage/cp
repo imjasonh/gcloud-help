@@ -12,8 +12,8 @@ SYNOPSIS
         [--do-not-decompress] [--if-generation-match=GENERATION]
         [--if-metageneration-match=METAGENERATION] [--ignore-symlinks]
         [--manifest-path=MANIFEST_PATH, -L MANIFEST_PATH]
-        [--print-created-message, -v] [--recursive, -R, -r]
-        [--skip-unsupported, -U]
+        [--preserve-posix, -P] [--print-created-message, -v]
+        [--recursive, -R, -r] [--skip-unsupported, -U]
         [--storage-class=STORAGE_CLASS, -s STORAGE_CLASS]
         [--gzip-in-flight-all, -J
           | --gzip-in-flight-extensions=[FILE_EXTENSIONS,...],
@@ -134,6 +134,20 @@ FLAGS
         Objects that are marked as "OK" or "skipped" in the existing manifest
         file are not retried by future commands. Objects marked as "error" are
         retried.
+
+     --preserve-posix, -P
+        Causes POSIX attributes to be preserved when objects are copied. With
+        this feature enabled, gcloud storage will copy several fields provided
+        by the stat command: access time, modification time, owner UID, owner
+        group GID, and the mode (permissions) of the file.
+
+        For uploads, these attributes are read off of local files and stored in
+        the cloud as custom metadata. For downloads, custom cloud metadata is
+        set as POSIX attributes on files after they are downloaded.
+
+        On Windows, this flag will only set and restore access time and
+        modification time because Windows doesn't have a notion of POSIX UID,
+        GID, and mode.
 
      --print-created-message, -v
         Prints the version-specific URL for each copied object.
