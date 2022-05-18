@@ -1,0 +1,106 @@
+NAME
+    gcloud alpha alloydb clusters update - updates an AlloyDB cluster within a
+        given project and region
+
+SYNOPSIS
+    gcloud alpha alloydb clusters update CLUSTER --region=REGION [--async]
+        [--clear-automated-backup | --disable-automated-backup
+          | [--automated-backup-days-of-week=[DAYS_OF_WEEK,...]
+          --automated-backup-start-times=[START_TIMES,...]
+          : --automated-backup-window=TIMEOUT_PERIOD
+          --automated-backup-retention-count=RETENTION_COUNT
+          | --automated-backup-retention-period=RETENTION_PERIOD]]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Updates an AlloyDB cluster within a given project and region.
+
+EXAMPLES
+    To update a cluster, run:
+
+        $ gcloud alpha alloydb clusters update my-cluster \
+            --region=us-central1 --automated-backup-start-times=12:00 \
+            --automated-backup-days-of-week=MONDAY \
+            --automated-backup-retention-count=10
+
+POSITIONAL ARGUMENTS
+     CLUSTER
+        AlloyDB cluster ID
+
+REQUIRED FLAGS
+     --region=REGION
+        Regional location (e.g. asia-east1, us-east1). See the full list of
+        regions at https://cloud.google.com/sql/docs/instance-locations.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     Automated backup policy.
+
+     At most one of these can be specified:
+
+       --clear-automated-backup
+          Clears the automated backup policy on the cluster. The default
+          automated backup policy will be used.
+
+       --disable-automated-backup
+          Disables automated backups on the cluster.
+
+       Enable automated backup policy.
+
+         --automated-backup-days-of-week=[DAYS_OF_WEEK,...]
+            Comma-separated list of days of the week to perform a backup. At
+            least one day of the week must be provided. (e.g.,
+            --automated-backup-days-of-week=MONDAY,WEDNESDAY,SUNDAY).
+            DAYS_OF_WEEK must be one of: MONDAY, TUESDAY, WEDNESDAY, THURSDAY,
+            FRIDAY, SATURDAY, SUNDAY.
+
+            This flag must be specified if any of the other arguments in this
+            group are specified.
+
+         --automated-backup-start-times=[START_TIMES,...]
+            Comma-separated list of times during the day to start a backup. At
+            least one start time must be provided. The start times are assumed
+            to be in UTC and required to be an exact hour in the format HH:00.
+            (e.g., --automated-backup-start-times=01:00,13:00)
+
+            This flag must be specified if any of the other arguments in this
+            group are specified.
+
+         --automated-backup-window=TIMEOUT_PERIOD
+            The length of the time window beginning at start time during which
+            a backup can be taken. If a backup does not succeed within this
+            time window, it will be canceled and considered failed. The backup
+            window must be at least 5 minutes long. There is no upper bound on
+            the window. If not set, it will default to 1 hour.
+
+         Retention policy. If no retention policy is provided, all automated
+         backups will be retained.
+
+         At most one of these can be specified:
+
+           --automated-backup-retention-count=RETENTION_COUNT
+              Number of most recent successful backups retained.
+
+           --automated-backup-retention-period=RETENTION_PERIOD
+              Retention period of the backup relative to creation time. See $
+              gcloud topic datetimes for information on duration formats.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. This variant is also available:
+
+        $ gcloud beta alloydb clusters update
+

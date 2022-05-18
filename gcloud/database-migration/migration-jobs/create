@@ -7,7 +7,7 @@ SYNOPSIS
         (MIGRATION_JOB : --region=REGION) --destination=DESTINATION
         --source=SOURCE --type=TYPE [--display-name=DISPLAY_NAME]
         [--dump-path=DUMP_PATH] [--labels=[KEY=VALUE,...]]
-        [--peer-vpc=PEER_VPC
+        [--peer-vpc=PEER_VPC | --static-ip
           | [--vm-ip=VM_IP --vm-port=VM_PORT --vpc=VPC : --vm=VM]]
         [GCLOUD_WIDE_FLAG ...]
 
@@ -106,14 +106,19 @@ OPTIONAL FLAGS
         contain only hyphens (-), underscores (_), lowercase characters, and
         numbers.
 
-     The connectivity method used by the migration job. If not specified, uses
-     the default IP allowlist method which will create a public IP when used
-     with a Cloud SQL destination DB.
+     The connectivity method used by the migration job. If a connectivity
+     method isn't specified, then it isn't added to the migration job.
 
      At most one of these can be specified:
 
        --peer-vpc=PEER_VPC
           Name of the VPC network to peer with the Cloud SQL private network.
+
+       --static-ip
+          Use the default IP allowlist method. This method creates a public IP
+          that will be used with the destination Cloud SQL database. The method
+          works by configuring the source database server to accept connections
+          from the outgoing IP of the Cloud SQL instance.
 
        Parameters for the reverse-SSH tunnel connectivity method.
 

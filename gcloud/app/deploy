@@ -5,8 +5,9 @@ NAME
 SYNOPSIS
     gcloud app deploy [DEPLOYABLES ...] [--appyaml=APPYAML] [--bucket=BUCKET]
         [--no-cache] [--ignore-file=IGNORE_FILE] [--image-url=IMAGE_URL]
-        [--no-promote] [--no-stop-previous-version]
-        [--version=VERSION, -v VERSION] [GCLOUD_WIDE_FLAG ...]
+        [--no-promote] [--service-account=SERVICE_ACCOUNT]
+        [--no-stop-previous-version] [--version=VERSION, -v VERSION]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     This command is used to deploy both code and configuration to the App
@@ -66,6 +67,11 @@ EXAMPLES
 
         $ gcloud config set app/promote_by_default false
 
+    To deploy a service that will run as a service account, run:
+
+        $ gcloud app deploy ~/my_app/app.yaml \
+            --service-account=SERVICE_ACCOUNT
+
 POSITIONAL ARGUMENTS
      [DEPLOYABLES ...]
         The yaml files for the services or configurations you want to deploy.
@@ -100,6 +106,11 @@ FLAGS
         Promote the deployed version to receive all traffic. Overrides the
         default app/promote_by_default property value for this command
         invocation. Use --no-promote to disable.
+
+     --service-account=SERVICE_ACCOUNT
+        The service account that this deployed version will run as. If this
+        argument is not specified, the App Engine default service account will
+        be used for your current deployed version.
 
      --stop-previous-version
         Stop the previously running version when deploying a new version that

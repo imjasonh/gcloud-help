@@ -7,7 +7,10 @@ SYNOPSIS
         [--[no-]shielded-integrity-monitoring]
         [--shielded-learn-integrity-policy] [--[no-]shielded-secure-boot]
         [--[no-]shielded-vtpm] [--update-labels=[KEY=VALUE,...]] [--zone=ZONE]
-        [--clear-labels | --remove-labels=[KEY,...]] [GCLOUD_WIDE_FLAG ...]
+        [--clear-labels | --remove-labels=[KEY,...]]
+        [--clear-node-affinities | --node=NODE
+          | --node-affinity-file=NODE_AFFINITY_FILE | --node-group=NODE_GROUP]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     gcloud compute instances update updates labels and requested CPU Platform
@@ -157,6 +160,40 @@ FLAGS
           List of label keys to remove. If a label does not exist it is
           silently ignored. If --update-labels is also specified then
           --update-labels is applied first.
+
+     Sole Tenancy.
+
+     At most one of these can be specified:
+
+       --clear-node-affinities
+          Removes the node affinities field from the instance. If specified,
+          the instance node settings will be cleared. The instance will not be
+          scheduled onto a sole-tenant node.
+
+       --node=NODE
+          The name of the node to schedule this instance on.
+
+       --node-affinity-file=NODE_AFFINITY_FILE
+          The JSON/YAML file containing the configuration of desired nodes onto
+          which this instance could be scheduled. These rules filter the nodes
+          according to their node affinity labels. A node's affinity labels
+          come from the node template of the group the node is in.
+
+          The file should contain a list of a JSON/YAML objects with the
+          following fields:
+
+           key
+              Corresponds to the node affinity label keys of the Node resource.
+           operator
+              Specifies the node selection type. Must be one of: IN: Requires
+              Compute Engine to seek for matched nodes. NOT_IN: Requires
+              Compute Engine to avoid certain nodes.
+           values
+              Optional. A list of values which correspond to the node affinity
+              label values of the Node resource.
+
+       --node-group=NODE_GROUP
+          The name of the node group to schedule this instance on.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

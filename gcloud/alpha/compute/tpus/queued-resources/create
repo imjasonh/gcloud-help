@@ -5,7 +5,7 @@ NAME
 SYNOPSIS
     gcloud alpha compute tpus queued-resources create
         (QUEUED_RESOURCE : --zone=ZONE) --accelerator-type=ACCELERATOR_TYPE
-        --node-id=NODE_ID --runtime-version=RUNTIME_VERSION [--async]
+        --node-id=[NODE_ID,...] --runtime-version=RUNTIME_VERSION [--async]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -18,6 +18,13 @@ EXAMPLES
         $ gcloud alpha compute tpus queued-resources create \
             my-queued-resource --accelerator-type=v2-8 \
             --runtime-version=v2-alpha --node-id=my-node-001 \
+            --zone=us-central1-b --project=my-project
+
+    To create a Queued Resource with multiple nodes, run:
+
+        $ gcloud alpha compute tpus queued-resources create \
+            my-queued-resource --accelerator-type=v2-8 \
+            --runtime-version=v2-alpha --node-id=my-node-001,my-node-002 \
             --zone=us-central1-b --project=my-project
 
 POSITIONAL ARGUMENTS
@@ -55,9 +62,12 @@ REQUIRED FLAGS
      --accelerator-type=ACCELERATOR_TYPE
         Accelerator type for the TPU.
 
-     --node-id=NODE_ID
+     --node-id=[NODE_ID,...]
         The unqualified Node identifier, used to identify the TPU in the Nodes
         collection once provisioned.
+
+        To request a resource with multiple nodes, enter multiple, unique,
+        unqualified Node identifiers as a comma delimited list.
 
      --runtime-version=RUNTIME_VERSION
         Runtime version for the TPU, such as 2.3.
