@@ -12,6 +12,8 @@ SYNOPSIS
         [--push-auth-service-account=SERVICE_ACCOUNT_EMAIL]
         [--push-auth-token-audience=OPTIONAL_AUDIENCE_OVERRIDE]
         [--push-endpoint=PUSH_ENDPOINT] [--retain-acked-messages]
+        [--bigquery-table=BIGQUERY_TABLE
+          : --drop-unknown-fields --use-topic-schema --write-metadata]
         [--max-delivery-attempts=MAX_DELIVERY_ATTEMPTS
           [--dead-letter-topic=DEAD_LETTER_TOPIC
           : --dead-letter-topic-project=DEAD_LETTER_TOPIC_PROJECT]]
@@ -132,6 +134,32 @@ OPTIONAL FLAGS
         not expunged from the subscription's backlog until they fall out of the
         --message-retention-duration window. Acknowledged messages are not
         retained by default.
+
+     BigQuery Config Options. The Cloud Pub/Sub service account associated with
+     the enclosing subscription's parent project (i.e.,
+     service-{project_number}@gcp-sa-pubsub.iam.gserviceaccount.com) must have
+     permission to write to this BigQuery table.
+
+       --bigquery-table=BIGQUERY_TABLE
+          A BigQuery table of the form {project}:{dataset_name}.{table_name} to
+          which to write messages for this subscription.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --drop-unknown-fields
+          When --use-topic-schema is set, whether or not to ignore fields in
+          the topic schema that do not appear in the BigQuery schema. If false,
+          then the BigQuery schema must contain all fields that are also
+          present in the topic schema.
+
+       --use-topic-schema
+          Whether or not to use the schema for the subscription's topic (if it
+          exists) when writing messages to BigQuery.
+
+       --write-metadata
+          Whether or not to write message metadata including message ID,
+          publish timestamp, ordering key, and attributes to BigQuery.
 
      Dead Letter Queue Options. The Cloud Pub/Sub service account associated
      with the enclosing subscription's parent project (i.e.,

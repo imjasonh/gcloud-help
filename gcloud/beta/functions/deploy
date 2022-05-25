@@ -38,10 +38,11 @@ SYNOPSIS
           /secret_path=SECRET_VALUE_REF,
           /mount_path:/secret_file_path=SECRET_VALUE_REF,...]]
         [--clear-vpc-connector | --vpc-connector=VPC_CONNECTOR]
-        [--trigger-bucket=TRIGGER_BUCKET
-          | --trigger-event-filters=[ATTRIBUTE=VALUE,...] | --trigger-http
+        [--trigger-bucket=TRIGGER_BUCKET | --trigger-http
           | --trigger-topic=TRIGGER_TOPIC
-          | --trigger-event=EVENT_TYPE --trigger-resource=RESOURCE]
+          | --trigger-event=EVENT_TYPE --trigger-resource=RESOURCE
+          | --trigger-event-filters=[ATTRIBUTE=VALUE,...]
+          --trigger-event-filters-path-pattern=[ATTRIBUTE=VALUE,...]]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -548,11 +549,6 @@ FLAGS
           Google Cloud Storage bucket name. Every change in files in this
           bucket will trigger function execution.
 
-       --trigger-event-filters=[ATTRIBUTE=VALUE,...]
-          The Eventarc matching criteria for the trigger. The criteria can be
-          specified either as a single comma-separated argument or as multiple
-          arguments. This is only relevant when --gen2 is provided.
-
        --trigger-http
           Function will be assigned an endpoint, which you can view by using
           the describe command. Any HTTP request (of a supported type) to the
@@ -577,6 +573,17 @@ FLAGS
           providers/cloud.storage/eventTypes/object.change, --trigger-resource
           must be a bucket name. For a list of expected resources, call gcloud
           functions event-types list.
+
+       --trigger-event-filters=[ATTRIBUTE=VALUE,...]
+          The Eventarc matching criteria for the trigger. The criteria can be
+          specified either as a single comma-separated argument or as multiple
+          arguments. This is only relevant when --gen2 is provided.
+
+       --trigger-event-filters-path-pattern=[ATTRIBUTE=VALUE,...]
+          The Eventarc matching criteria for the trigger in path pattern
+          format. The criteria can be specified as a single comma-separated
+          argument or as multiple arguments. This is only relevant when --gen2
+          is provided.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

@@ -39,6 +39,7 @@ SYNOPSIS
         [--shielded-integrity-monitoring] [--shielded-secure-boot]
         [--shielded-vtpm] [--source-instance-template=SOURCE_INSTANCE_TEMPLATE]
         [--subnet=SUBNET] [--tags=TAG,[TAG,...]]
+        [--target-distribution-shape=SHAPE]
         [--termination-time=TERMINATION_TIME]
         [--threads-per-core=THREADS_PER_CORE]
         [--visible-core-count=VISIBLE_CORE_COUNT]
@@ -689,6 +690,25 @@ OPTIONAL FLAGS
         To list instances tagged with a specific tag, tag1, run:
 
             $ gcloud compute instances list --filter='tags:tag1'
+
+     --target-distribution-shape=SHAPE
+        Specifies whether and how to distribute VMs across multiple zones in a
+        region or to enforce placement of VMs in a single zone. The default
+        shape is ANY_SINGLE_ZONE. SHAPE must be one of:
+
+         ANY
+            Allows creating VMs in multiple zones if one zone cannot
+            accommodate all the requested VMs. The resulting distribution
+            shapes can vary.
+         ANY_SINGLE_ZONE
+            Enforces VM placement in one allowed zone. Use this to avoid
+            cross-zone network egress or to reduce network latency. This is the
+            default value.
+         BALANCED
+            Allows distribution of VMs in zones where resources are available
+            while distributing VMs as evenly as possible across selected zones
+            to minimize the impact of zonal failures. Recommended for highly
+            available serving or batch workloads.
 
      --termination-time=TERMINATION_TIME
         Limits how long this VM instance can run, specified as a time. Format
