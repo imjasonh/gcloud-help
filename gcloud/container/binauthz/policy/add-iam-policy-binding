@@ -4,10 +4,14 @@ NAME
 
 SYNOPSIS
     gcloud container binauthz policy add-iam-policy-binding --member=PRINCIPAL
-        --role=ROLE [GCLOUD_WIDE_FLAG ...]
+        --role=ROLE
+        [--condition=[KEY=VALUE,...]
+          | --condition-from-file=CONDITION_FROM_FILE] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    Add an IAM policy binding to a Binary Authorization policy.
+    Add an IAM policy binding to the IAM policy of a Binary Authorization
+    policy. One binding consists of a member, a role, and an optional
+    condition.
 
 EXAMPLES
     To add an IAM policy binding for the role of
@@ -18,6 +22,18 @@ EXAMPLES
         $ gcloud container binauthz policy add-iam-policy-binding \
             --member='user:test-user@gmail.com' \
             --role='roles/binaryauthorization.attestationAuthoritiesEditor'
+
+    To add an IAM policy binding which expires at the end of the year 2018 for
+    the role of 'roles/binaryauthorization.attestationAuthoritiesEditor' and
+    the user 'test-user@gmail.com' on the current project's Binary
+    Authorization policy, run:
+
+        $ gcloud container binauthz policy add-iam-policy-binding \
+            --member='user:test-user@gmail.com' \
+            --role='roles/binaryauthorization.attestationAuthoritiesEditor' \
+        --condition='expression=request.time <
+         timestamp("2019-01-01T00:00:00Z"),title=expires_end_of_2018,descrip\
+        tion=Expires at midnight on 2018-12-31'
 
     See https://cloud.google.com/iam/docs/managing-policies for details of
     policy role and member types.
@@ -42,6 +58,44 @@ REQUIRED FLAGS
         path of a predefined role, such as roles/logging.viewer, or the role ID
         for a custom role, such as
         organizations/{ORGANIZATION_ID}/roles/logging.viewer.
+
+OPTIONAL FLAGS
+     At most one of these can be specified:
+
+       --condition=[KEY=VALUE,...]
+          A condition to include in the binding. When the condition is
+          explicitly specified as None (--condition=None), a binding without a
+          condition is added. When the condition is specified and is not None,
+          --role cannot be a basic role. Basic roles are roles/editor,
+          roles/owner, and roles/viewer. For more on conditions, refer to the
+          conditions overview guide:
+          https://cloud.google.com/iam/docs/conditions-overview
+
+          When using the --condition flag, include the following key-value
+          pairs:
+
+           expression
+              (Required) Condition expression that evaluates to True or False.
+              This uses a subset of Common Expression Language syntax.
+
+              If the condition expression includes a comma, use a different
+              delimiter to separate the key-value pairs. Specify the delimiter
+              before listing the key-value pairs. For example, to specify a
+              colon (:) as the delimiter, do the following:
+              --condition=^:^title=TITLE:expression=EXPRESSION. For more
+              information, see
+              https://cloud.google.com/sdk/gcloud/reference/topic/escaping.
+
+           title
+              (Required) A short string describing the purpose of the
+              expression.
+
+           description
+              (Optional) Additional description for the expression.
+
+       --condition-from-file=CONDITION_FROM_FILE
+          Path to a local JSON or YAML file that defines the condition. To see
+          available fields, see the help for --condition.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
