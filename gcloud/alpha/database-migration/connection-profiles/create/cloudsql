@@ -6,27 +6,36 @@ SYNOPSIS
     gcloud alpha database-migration connection-profiles create cloudsql
         (CONNECTION_PROFILE : --region=REGION)
         --database-version=DATABASE_VERSION --source-id=SOURCE_ID --tier=TIER
-        [--activation-policy=ACTIVATION_POLICY]
+        [--activation-policy=ACTIVATION_POLICY] [--no-async]
         [--authorized-networks=NETWORK,[NETWORK,...]]
         [--no-auto-storage-increase] [--data-disk-size=DATA_DISK_SIZE]
-        [--data-disk-type=DATA_DISK_TYPE] [--database-flags=[KEY=VALUE,...]]
+        [--data-disk-type=DATA_DISK_TYPE] [--database-flags=[FLAG=VALUE,...]]
         [--display-name=DISPLAY_NAME] [--no-enable-ip-v4]
         [--labels=[KEY=VALUE,...]] [--private-network=PRIVATE_NETWORK]
-        [--provider=PROVIDER] [--require-ssl]
+        [--provider=PROVIDER] [--require-ssl] [--root-password=ROOT_PASSWORD]
         [--storage-auto-resize-limit=STORAGE_AUTO_RESIZE_LIMIT]
         [--user-labels=[KEY=VALUE,...]] [--zone=ZONE] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) Create a Database Migration Service connection profile for Cloud
-    SQL.
+    (ALPHA) Create a Database Migration Service destination connection profile
+    for Cloud SQL. This will create a Cloud SQL replica.
 
 EXAMPLES
     To create a connection profile for Cloud SQL with database version MySQL
     5.6:
 
         $ gcloud alpha database-migration connection-profiles create \
-          cloudsql CONNECTION_PROFILE --region=us-central1 \
-          --display-name=my-profile --database-version=MYSQL_5_6
+          cloudsql my-profile --region=us-central1 \
+          --database-version=MYSQL_5_6 --source-id=cp1 \
+          --tier=db-n1-standard-1
+
+    To create a connection profile for Cloud SQL and a Cloud SQL replica with
+    database version PostgreSQL 10:
+
+        $ gcloud alpha database-migration connection-profiles create \
+          cloudsql my-profile --region=us-central1 \
+          --database-version=POSTGRES_10 --source-id=cp1 \
+          --tier=db-custom-1-3840 --zone=us-central1-a
 
 POSITIONAL ARGUMENTS
      Connection profile resource - The connection profile to create. The
@@ -57,10 +66,9 @@ POSITIONAL ARGUMENTS
 
 REQUIRED FLAGS
      --database-version=DATABASE_VERSION
-        Database engine type and version (MYSQL_5_7, MYSQL_5_6, MYSQL_8_0,
-        POSTGRES_9_6, POSTGRES_10, POSTGRES_11, POSTGRES_12, POSTGRES_13).
-        DATABASE_VERSION must be one of: MYSQL_5_7, MYSQL_5_6, MYSQL_8_0,
-        POSTGRES_9_6, POSTGRES_10, POSTGRES_11, POSTGRES_12, POSTGRES_13.
+        Database engine type and version. DATABASE_VERSION must be one of:
+        MYSQL_5_7, MYSQL_5_6, MYSQL_8_0, POSTGRES_9_6, POSTGRES_10,
+        POSTGRES_11, POSTGRES_12, POSTGRES_13, POSTGRES_14.
 
      Connection profile resource - Database Migration Service source connection
      profile ID. This represents a Cloud resource. (NOTE) Some attributes are
@@ -83,7 +91,7 @@ REQUIRED FLAGS
 
      --tier=TIER
         Tier (or machine type) for this instance, for example: db-n1-standard-1
-        (MySQL instances) of db-custom-1-3840 (PostgreSQL instances). For more
+        (MySQL instances) or db-custom-1-3840 (PostgreSQL instances). For more
         information, see Cloud SQL Instance Settings
         (https://cloud.google.com/sql/docs/mysql/instance-settings).
 
@@ -100,18 +108,20 @@ OPTIONAL FLAGS
 
         ACTIVATION_POLICY must be one of: ALWAYS, NEVER.
 
+     --no-async
+        Waits for the operation in progress to complete before returning.
+
      --authorized-networks=NETWORK,[NETWORK,...]
-        List of external networks that are allowed to connect to the instance
-        using the IP. See
-        https://en.wikipedia.org/wiki/CIDR_notation#CIDR_notation, also known
-        as 'slash' notation (e.g.192.168.100.0/24).
+        List of external networks that are allowed to connect to the instance.
+        Specify values in CIDR notation, also known as 'slash' notation
+        (e.g.192.168.100.0/24).
 
      --auto-storage-increase
         If you enable this setting, Cloud SQL checks your available storage
         every 30 seconds. If the available storage falls below a threshold
         size, Cloud SQL automatically adds additional storage capacity. If the
         available storage repeatedly falls below the threshold size, Cloud SQL
-        continues to add storage until it reaches the maximum of 30 TB.
+        continues to add storage until it reaches the maximum of 64 TB.
         Default: ON. Enabled by default, use --no-auto-storage-increase to
         disable.
 
@@ -120,16 +130,20 @@ OPTIONAL FLAGS
         default) size is 10GB.
 
      --data-disk-type=DATA_DISK_TYPE
-        Type of storage: PD_SSD (default) or PD_HDD. DATA_DISK_TYPE must be one
-        of: PD_SSD, PD_HDD.
+        Type of storage. DATA_DISK_TYPE must be one of: PD_SSD, PD_HDD.
 
-     --database-flags=[KEY=VALUE,...]
-        Database flags passed to the Cloud SQL instance at startup. An object
-        containing a list of "key": value pairs. Example: { "name": "wrench",
-        "mass": "1.3kg", "count": "3" }.
+     --database-flags=[FLAG=VALUE,...]
+        Comma-separated list of database flags to set on the instance. Use an
+        equals sign to separate the flag name and value. Flags without values,
+        like skip_grant_tables, can be written out without a value, e.g.,
+        skip_grant_tables=. Use on/off values for booleans. View the Instance
+        Resource API for allowed flags. (e.g., --database-flags
+        max_allowed_packet=55555 skip_grant_tables=,log_output=1).
 
      --display-name=DISPLAY_NAME
-        Friendly name for the connection profile.
+        A user-friendly name for the connection profile. The display name can
+        include letters, numbers, spaces, and hyphens, and must start with a
+        letter.
 
      --enable-ip-v4
         Whether the instance should be assigned an IPv4 address or not. Enabled
@@ -150,11 +164,14 @@ OPTIONAL FLAGS
         updated, but it cannot be removed after it is set.
 
      --provider=PROVIDER
-        Database provider (CLOUDSQL or RDS). PROVIDER must be one of: RDS,
+        Database provider, for managed databases. PROVIDER must be one of: RDS,
         CLOUDSQL.
 
      --require-ssl
         Whether SSL connections over IP should be enforced or not.
+
+     --root-password=ROOT_PASSWORD
+        Root Cloud SQL user's password.
 
      --storage-auto-resize-limit=STORAGE_AUTO_RESIZE_LIMIT
         Maximum size to which storage capacity can be automatically increased.

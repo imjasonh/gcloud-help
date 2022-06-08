@@ -2,11 +2,11 @@ NAME
     gcloud compute target-https-proxies create - create a target HTTPS proxy
 
 SYNOPSIS
-    gcloud compute target-https-proxies create NAME
-        --ssl-certificates=SSL_CERTIFICATE,[...] --url-map=URL_MAP
+    gcloud compute target-https-proxies create NAME --url-map=URL_MAP
         [--description=DESCRIPTION]
         [--quic-override=QUIC_OVERRIDE; default="NONE"]
-        [--ssl-policy=SSL_POLICY] [--global | --region=REGION]
+        [--ssl-certificates=SSL_CERTIFICATE,[...]] [--ssl-policy=SSL_POLICY]
+        [--global | --region=REGION]
         [--global-ssl-certificates
           | --ssl-certificates-region=SSL_CERTIFICATES_REGION]
         [--global-url-map | --url-map-region=URL_MAP_REGION]
@@ -28,12 +28,12 @@ EXAMPLES
     pointing to this map by running:
 
         $ gcloud compute target-https-proxies create PROXY_NAME \
-            --url-map=URL_MAP --ssl-certificates=SSL_CERTIFIFCATE
+            --url-map=URL_MAP --ssl-certificates=SSL_CERTIFICATE
 
     Create a regional target HTTPS proxy by running:
 
         $ gcloud compute target-https-proxies create PROXY_NAME \
-            --url-map=URL_MAP --ssl-certificates=SSL_CERTIFIFCATE \
+            --url-map=URL_MAP --ssl-certificates=SSL_CERTIFICATE \
             --region=REGION_NAME
 
 POSITIONAL ARGUMENTS
@@ -41,13 +41,6 @@ POSITIONAL ARGUMENTS
         Name of the target HTTPS proxy to create.
 
 REQUIRED FLAGS
-     --ssl-certificates=SSL_CERTIFICATE,[...]
-        References to at most 15 SSL certificate resources that are used for
-        server-side authentication. The first SSL certificate in this list is
-        considered the primary SSL certificate associated with the load
-        balancer. The SSL certificates must exist and cannot be deleted while
-        referenced by a target HTTPS proxy.
-
      --url-map=URL_MAP
         A reference to a URL map resource. A URL map defines the mapping of
         URLs to backend services. Before you can refer to a URL map, you must
@@ -70,6 +63,13 @@ OPTIONAL FLAGS
             Allows load balancer to negotiate QUIC with clients.
          NONE
             Allows Google to control when QUIC is rolled out.
+
+     --ssl-certificates=SSL_CERTIFICATE,[...]
+        References to at most 15 SSL certificate resources that are used for
+        server-side authentication. The first SSL certificate in this list is
+        considered the primary SSL certificate associated with the load
+        balancer. The SSL certificates must exist and cannot be deleted while
+        referenced by a target HTTPS proxy.
 
      --ssl-policy=SSL_POLICY
         A reference to an SSL policy resource that defines the server-side

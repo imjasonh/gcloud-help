@@ -6,8 +6,7 @@ SYNOPSIS
     gcloud beta composer environments create
         (ENVIRONMENT : --location=LOCATION) [--airflow-configs=[KEY=VALUE,...]]
         [--async] [--cloud-sql-machine-type=CLOUD_SQL_MACHINE_TYPE]
-        [--disk-size=DISK_SIZE] [--enable-ip-masq-agent]
-        [--env-variables=[NAME=VALUE,...]]
+        [--disk-size=DISK_SIZE] [--env-variables=[NAME=VALUE,...]]
         [--environment-size=ENVIRONMENT_SIZE] [--labels=[KEY=VALUE,...]]
         [--machine-type=MACHINE_TYPE] [--node-count=NODE_COUNT]
         [--oauth-scopes=[SCOPE,...]] [--python-version=PYTHON_VERSION]
@@ -23,7 +22,8 @@ SYNOPSIS
           --web-server-ipv4-cidr=WEB_SERVER_IPV4_CIDR]
         [--cluster-ipv4-cidr=CLUSTER_IPV4_CIDR
           --cluster-secondary-range-name=CLUSTER_SECONDARY_RANGE_NAME
-          --enable-ip-alias --max-pods-per-node=MAX_PODS_PER_NODE
+          --enable-ip-alias --enable-ip-masq-agent
+          --max-pods-per-node=MAX_PODS_PER_NODE
           --services-ipv4-cidr=SERVICES_IPV4_CIDR
           --services-secondary-range-name=SERVICES_SECONDARY_RANGE_NAME]
         [--enable-master-authorized-networks
@@ -110,12 +110,6 @@ FLAGS
         20GB, and the maximum is 64TB. Specified value must be an integer
         multiple of gigabytes. Cannot be updated after the environment has been
         created. If units are not provided, defaults to GB.
-
-     --enable-ip-masq-agent
-        When enabled the IP Masq Agent is deployed to the cluster with
-        configuration to masquarade all traffic except between pods.
-
-        Cannot be specified unless --enable-ip-alias is also specified.
 
      --env-variables=[NAME=VALUE,...]
         A comma-delimited list of environment variable NAME=VALUE pairs to
@@ -296,6 +290,16 @@ FLAGS
           (https://cloud.google.com/compute/docs/alias-ip/) for Pod IPs. This
           will require at least two secondary ranges in the subnetwork, one for
           the pod IPs and another to reserve space for the services range.
+
+       --enable-ip-masq-agent
+          When enabled, the IP Masquarade Agent
+          (https://cloud.google.com/composer/docs/enable-ip-masquerade-agent)
+          is deployed to your environment's cluster. It performs many-to-one IP
+          address translations to hide a pod's IP address behind the cluster
+          node's IP address. This is done when sending traffic to destinations
+          outside the cluster's pod CIDR range.
+
+          Cannot be specified unless --enable-ip-alias is also specified.
 
        --max-pods-per-node=MAX_PODS_PER_NODE
           Maximum number of pods that can be assigned to a single node, can be

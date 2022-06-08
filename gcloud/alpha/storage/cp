@@ -2,8 +2,8 @@ NAME
     gcloud alpha storage cp - upload, download, and copy Cloud Storage objects
 
 SYNOPSIS
-    gcloud alpha storage cp SOURCE [SOURCE ...] DESTINATION
-        [--all-versions, -A] [--cache-control=CACHE_CONTROL] [--no-clobber, -n]
+    gcloud alpha storage cp [SOURCE ...] DESTINATION [--all-versions, -A]
+        [--cache-control=CACHE_CONTROL] [--no-clobber, -n]
         [--content-disposition=CONTENT_DISPOSITION]
         [--content-encoding=CONTENT_ENCODING]
         [--content-language=CONTENT_LANGUAGE] [--content-md5=MD5_DIGEST]
@@ -13,7 +13,8 @@ SYNOPSIS
         [--if-metageneration-match=METAGENERATION] [--ignore-symlinks]
         [--manifest-path=MANIFEST_PATH, -L MANIFEST_PATH]
         [--preserve-posix, -P] [--print-created-message, -v]
-        [--recursive, -R, -r] [--skip-unsupported, -U]
+        [--read-paths-from-stdin, -I] [--recursive, -R, -r]
+        [--skip-unsupported, -U]
         [--storage-class=STORAGE_CLASS, -s STORAGE_CLASS]
         [--canned-acl=PREDEFINED_ACL,
           --predefined-acl=PREDEFINED_ACL, -a PREDEFINED_ACL
@@ -49,7 +50,7 @@ EXAMPLES
         $ gcloud alpha storage cp --recursive dir gs://my-bucket
 
 POSITIONAL ARGUMENTS
-     SOURCE [SOURCE ...]
+     [SOURCE ...]
         The source path(s) to copy.
 
      DESTINATION
@@ -155,6 +156,13 @@ FLAGS
 
      --print-created-message, -v
         Prints the version-specific URL for each copied object.
+
+     --read-paths-from-stdin, -I
+        Read the list of resources to copy from stdin. No need to enter a
+        source argument if this flag is present. Example: "storage cp -I
+        gs://bucket/destination" Note: To copy the contents of one file
+        directly from stdin, use "-" as the source argument without the "-I"
+        flag.
 
      --recursive, -R, -r
         Recursively copy the contents of any directories that match the source

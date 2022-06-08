@@ -6,8 +6,9 @@ SYNOPSIS
     gcloud database-migration connection-profiles create mysql
         (CONNECTION_PROFILE : --region=REGION) --host=HOST --port=PORT
         --username=USERNAME (--password=PASSWORD | --prompt-for-password)
-        [--cloudsql-instance=CLOUDSQL_INSTANCE] [--display-name=DISPLAY_NAME]
-        [--labels=[KEY=VALUE,...]] [--provider=PROVIDER]
+        [--no-async] [--cloudsql-instance=CLOUDSQL_INSTANCE]
+        [--display-name=DISPLAY_NAME] [--labels=[KEY=VALUE,...]]
+        [--provider=PROVIDER]
         [--ca-certificate=CA_CERTIFICATE
           : --client-certificate=CLIENT_CERTIFICATE --private-key=PRIVATE_KEY]
         [GCLOUD_WIDE_FLAG ...]
@@ -19,16 +20,15 @@ EXAMPLES
     To create a connection profile for MySQL:
 
         $ gcloud database-migration connection-profiles create mysql \
-          CONNECTION_PROFILE --region=us-central1 --password=123456 \
-          --username=fakeuser --display-name=my-profile --host=1.2.3.4 \
-          --port=1111
+          my-profile --region=us-central1 --password=123456 \
+          --username=my-user --host=1.2.3.4 --port=3306
 
     If the source is a Cloud SQL database, run:
 
         $ gcloud database-migration connection-profiles create mysql \
-          CONNECTION_PROFILE --region=us-central1 --password=123456 \
-          --username=fakeuser --display-name=my-profile --host=1.2.3.4 \
-          --port=1111 --cloudsql-instance=my-instance
+          my-profile --region=us-central1 --password=123456 \
+          --username=my-user --host=1.2.3.4 --port=3306 \
+          --cloudsql-instance=my-instance --provider=CLOUDSQL
 
 POSITIONAL ARGUMENTS
      Connection profile resource - The connection profile to create. The
@@ -65,27 +65,32 @@ REQUIRED FLAGS
         Network port of the source database.
 
      --username=USERNAME
-        Username that Database Migration Service will use to connect to the
-        database. The value is encrypted when stored in Database Migration
-        Service.
+        Username that Database Migration Service uses to connect to the
+        database. Database Migration Service encrypts the value when storing
+        it.
 
      Exactly one of these must be specified:
 
        --password=PASSWORD
-          Password for the user that Database Migration Service will be using
-          to connect to the database. This field is not returned on request,
-          and the value is encrypted when stored in Database Migration Service.
+          Password for the user that Database Migration Service uses to connect
+          to the source database. Database Migration Service encrypts the value
+          when storing it, and the field is not returned on request.
 
        --prompt-for-password
           Prompt for the password used to connect to the database.
 
 OPTIONAL FLAGS
+     --no-async
+        Waits for the operation in progress to complete before returning.
+
      --cloudsql-instance=CLOUDSQL_INSTANCE
         If the source is a Cloud SQL database, use this field to provide the
         Cloud SQL instance ID of the source.
 
      --display-name=DISPLAY_NAME
-        Friendly name for the connection profile.
+        A user-friendly name for the connection profile. The display name can
+        include letters, numbers, spaces, and hyphens, and must start with a
+        letter.
 
      --labels=[KEY=VALUE,...]
         List of label KEY=VALUE pairs to add.
@@ -96,21 +101,24 @@ OPTIONAL FLAGS
         numbers.
 
      --provider=PROVIDER
-        Database provider (CLOUDSQL or RDS). PROVIDER must be one of: RDS,
+        Database provider, for managed databases. PROVIDER must be one of: RDS,
         CLOUDSQL.
 
      --ca-certificate=CA_CERTIFICATE
         x509 PEM-encoded certificate of the CA that signed the source database
         server's certificate. The replica will use this certificate to verify
-        it's connecting to the right host.
+        it's connecting to the correct host. Database Migration Service
+        encrypts the value when storing it.
 
      --client-certificate=CLIENT_CERTIFICATE
         x509 PEM-encoded certificate that will be used by the replica to
-        authenticate against the source database server.
+        authenticate against the source database server. Database Migration
+        Service encrypts the value when storing it.
 
      --private-key=PRIVATE_KEY
         Unencrypted PKCS#1 or PKCS#8 PEM-encoded private key associated with
-        the Client Certificate.
+        the Client Certificate. Database Migration Service encrypts the value
+        when storing it.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

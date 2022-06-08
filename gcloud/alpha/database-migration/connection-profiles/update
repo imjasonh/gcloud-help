@@ -14,12 +14,19 @@ SYNOPSIS
 
 DESCRIPTION
     (ALPHA) Update a Database Migration Service connection profile.
+      ▪ Draft connection profile: the user can update all flags available in
+        connection-profiles create command.
+      ▪ Existing connection profile: the user can update a limited list of
+        flags, see connection-profiles update Synopsis.
+      ▪ If a migration job is using the connection profile, then updates to
+        fields host, port, username, and password will propagate to the
+        destination instance.
 
 EXAMPLES
-    To update the display name of a connection profile:
+    To update the username of a connection profile:
 
         $ gcloud alpha database-migration connection-profiles update \
-          CONNECTION_PROFILE --region=us-central1 --display-name=new-name
+          my-profile --region=us-central1 --username=new-user
 
 POSITIONAL ARGUMENTS
      Connection profile resource - The connection profile to update. The
@@ -52,14 +59,17 @@ FLAGS
      --ca-certificate=CA_CERTIFICATE
         x509 PEM-encoded certificate of the CA that signed the source database
         server's certificate. The replica will use this certificate to verify
-        it's connecting to the right host.
+        it's connecting to the correct host. Database Migration Service
+        encrypts the value when storing it.
 
      --certificate=CERTIFICATE
         x509 PEM-encoded certificate that will be used by the replica to
         authenticate against the source database server.
 
      --display-name=DISPLAY_NAME
-        Friendly name for the connection profile.
+        A user-friendly name for the connection profile. The display name can
+        include letters, numbers, spaces, and hyphens, and must start with a
+        letter.
 
      --host=HOST
         IP or hostname of the source database.
@@ -73,7 +83,8 @@ FLAGS
 
      --private-key=PRIVATE_KEY
         Unencrypted PKCS#1 or PKCS#8 PEM-encoded private key associated with
-        the Client Certificate.
+        the Client Certificate. Database Migration Service encrypts the value
+        when storing it.
 
      --update-labels=[KEY=VALUE,...]
         List of label KEY=VALUE pairs to update. If a label exists, its value
@@ -85,9 +96,9 @@ FLAGS
         numbers.
 
      --username=USERNAME
-        Username that Database Migration Service will use to connect to the
-        database. The value is encrypted when stored in Database Migration
-        Service.
+        Username that Database Migration Service uses to connect to the
+        database. Database Migration Service encrypts the value when storing
+        it.
 
      At most one of these can be specified:
 
@@ -113,9 +124,9 @@ FLAGS
      At most one of these can be specified:
 
        --password=PASSWORD
-          Password for the user that Database Migration Service will be using
-          to connect to the database. This field is not returned on request,
-          and the value is encrypted when stored in Database Migration Service.
+          Password for the user that Database Migration Service uses to connect
+          to the source database. Database Migration Service encrypts the value
+          when storing it, and the field is not returned on request.
 
        --prompt-for-password
           Prompt for the password used to connect to the database.
