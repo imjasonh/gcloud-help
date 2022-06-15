@@ -10,31 +10,43 @@ SYNOPSIS
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) Generate a SSH script for a Database Migration Service migration
-    job.
+    (ALPHA) Generate a script for a Database Migration Service migration job,
+    to configure Reverse SSH tunnel connectivity with a bastion host on a
+    Compute Engine VM instance. You can use an existing VM instance or create a
+    new VM for this purpose.
+
+    Copy the generated script and run it in bash from a machine that has:
+      ▪ The gcloud command-line tool installed.
+      ▪ Access to your source database.
+      ▪ Access to the existing bastion VM, or permissions and access to the
+        Cloud Compute API if creating a new bastion VM. Make sure this machine
+        is available during the entire migration.
+
+    Running the script will set up the SSH tunnel on the VM you selected and
+    will establish connectivity between the source database and the Cloud SQL
+    instance. Find additional information here
+    (https://cloud.google.com/database-migration/docs/mysql/configure-connectivity-reverse-ssh-tunnel).
 
 EXAMPLES
-    To generate a SSH script for a Database Migration Service migration job
-    with vm creation config, run:
+    To generate an SSH script with bastion VM instance creation:
 
         $ gcloud alpha database-migration migration-jobs \
-            generate-ssh-script my-migration-job --vm=sample-vm \
-            --vm-port=1111 --vm-machine-type=n1-standard-1 \
-            --vm-zone-create=us-central1-a --vpc=sample-vpc \
+            generate-ssh-script my-migration-job --vm=vm1 --vm-port=1111 \
+            --vm-machine-type=n1-standard-1 --vm-zone-create=us-central1-a \
+            --vpc=projects/my-project/global/networks/my-network \
             --region=us-central1
 
-    To generate a SSH script for a Database Migration Service migration job
-    with vm selection config, run:
+    To generate an SSH script with an existing bastion VM instance:
 
         $ gcloud alpha database-migration migration-jobs \
-            generate-ssh-script my-migration-job --vm=sample-vm \
-            --vm-port=1111 --vm-zone=us-central1-a --region=us-central1
+            generate-ssh-script my-migration-job --vm=vm1 --vm-port=1111 \
+            --vm-zone=us-central1-a --region=us-central1
 
 POSITIONAL ARGUMENTS
-     Migration job resource - The migration job you want to generate SSH script
-     for. The arguments in this group can be used to specify the attributes of
-     this resource. (NOTE) Some attributes are not given arguments in this
-     group but can be set in other ways. To set the project attribute:
+     Migration job resource - The migration job to generate the SSH script for.
+     The arguments in this group can be used to specify the attributes of this
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways. To set the project attribute:
       ◆ provide the argument migration_job on the command line with a fully
         specified name;
       ◆ provide the argument --project on the command line;
@@ -58,27 +70,28 @@ POSITIONAL ARGUMENTS
 
 REQUIRED FLAGS
      --vm=VM
-        Bastion VM Instance name to use or to create (if machineType is given).
+        Bastion Compute Engine VM instance name to use or to create.
 
      Exactly one of these must be specified:
 
        --vm-zone=VM_ZONE
-          Google Cloud Platform zone the VM is located in.
+          Zone the existing bastion VM instance is located in.
 
        --vm-machine-type=VM_MACHINE_TYPE
-          VM instance machine type to create.
+          Machine type for a new VM instance. To get a list of available
+          machine types, run 'gcloud compute machine-types list'.
 
           This flag must be specified if any of the other arguments in this
           group are specified.
 
        --vpc=VPC
-          VPC name the VM needs to be created in.
+          VPC to create the VM instance in.
 
           This flag must be specified if any of the other arguments in this
           group are specified.
 
        --vm-zone-create=VM_ZONE_CREATE
-          Google Cloud Platform zone to create the VM in.
+          Zone to create the VM instance in.
 
 OPTIONAL FLAGS
      --vm-port=VM_PORT

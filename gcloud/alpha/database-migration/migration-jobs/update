@@ -14,14 +14,22 @@ SYNOPSIS
 
 DESCRIPTION
     (ALPHA) Update a Database Migration Service migration job.
+      ▪ Draft migration job: user can update all available flags.
+      ▪ Any other state can only update flags: --display-name, --dump-path,
+        and connectivity method flags.
 
 EXAMPLES
-    To update a migration job in draft with new display name, source and
-    destination connection profiles:
+    To update the source and destination connection profiles of a draft
+    migration job:
 
         $ gcloud alpha database-migration migration-jobs update \
-          MIGRATION_JOB --region=us-central1 --display-name=new-name \
-          --source=new-src --destination=new-dest
+          my-migration-job --region=us-central1 --source=new-src \
+          --destination=new-dest
+
+    To update the display name of a running migration job:
+
+        $ gcloud alpha database-migration migration-jobs update \
+          my-migration-job --region=us-central1 --display-name=new-name
 
 POSITIONAL ARGUMENTS
      Migration job resource - The migration job to update. The arguments in
@@ -50,10 +58,10 @@ POSITIONAL ARGUMENTS
           ▸ provide the argument --region on the command line.
 
 FLAGS
-     Connection profile resource - Resource ID of the destination connection
-     profile. This represents a Cloud resource. (NOTE) Some attributes are not
-     given arguments in this group but can be set in other ways. To set the
-     project attribute:
+     Connection profile resource - ID of the destination connection profile,
+     representing thedestination database. This represents a Cloud resource.
+     (NOTE) Some attributes are not given arguments in this group but can be
+     set in other ways. To set the project attribute:
       ◆ provide the argument --destination on the command line with a fully
         specified name;
       ◆ provide the argument --project on the command line;
@@ -67,10 +75,10 @@ FLAGS
           connection_profile. To set the connection_profile attribute:
           ▸ provide the argument --destination on the command line.
 
-     Connection profile resource - Resource ID of the source connection
-     profile. This represents a Cloud resource. (NOTE) Some attributes are not
-     given arguments in this group but can be set in other ways. To set the
-     project attribute:
+     Connection profile resource - ID of the source connection profile,
+     representing the source database. This represents a Cloud resource. (NOTE)
+     Some attributes are not given arguments in this group but can be set in
+     other ways. To set the project attribute:
       ◆ provide the argument --source on the command line with a fully
         specified name;
       ◆ provide the argument --project on the command line;
@@ -88,15 +96,16 @@ FLAGS
         Waits for the operation in progress to complete before returning.
 
      --display-name=DISPLAY_NAME
-        Friendly name for the migration job.
+        A user-friendly name for the migration job. The display name can
+        include letters, numbers, spaces, and hyphens, and must start with a
+        letter.
 
      --dump-path=DUMP_PATH
         Path to the dump file in Google Cloud Storage, in the format:
         gs://[BUCKET_NAME]/[OBJECT_NAME].
 
      --type=TYPE
-        Type of the migration job (ONE_TIME or CONTINUOUS). TYPE must be one
-        of: ONE_TIME, CONTINUOUS.
+        Type of the migration job. TYPE must be one of: ONE_TIME, CONTINUOUS.
 
      --update-labels=[KEY=VALUE,...]
         List of label KEY=VALUE pairs to update. If a label exists, its value

@@ -1,0 +1,165 @@
+NAME
+    gcloud beta container backup-restore restore-plans update - update a
+        restore plan
+
+SYNOPSIS
+    gcloud beta container backup-restore restore-plans update
+        (RESTORE_PLAN : --location=LOCATION) [--async]
+        [--description=DESCRIPTION] [--etag=ETAG]
+        [--namespaced-resource-restore-mode=NAMESPACED_RESOURCE_RESTORE_MODE]
+        [--substitution-rules-file=SUBSTITUTION_RULES_FILE]
+        [--update-labels=[KEY=VALUE,...]]
+        [--volume-data-restore-policy=VOLUME_DATA_RESTORE_POLICY]
+        [--all-namespaces | --selected-applications=SELECTED_APPLICATIONS
+          | --selected-namespaces=[SELECTED_NAMESPACES,...]]
+        [--clear-labels | --remove-labels=[KEY,...]]
+        [--cluster-resource-conflict-policy=CLUSTER_RESOURCE_CONFLICT_POLICY
+          --cluster-resource-restore-scope=[CLUSTER_RESOURCE_RESTORE_SCOPE,
+          ...]] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Update a Backup for GKE restore plan.
+
+EXAMPLES
+    To update a restore plan my-restore-plan in project my-project in location
+    us-central1 to add new description, run:
+
+        $ gcloud beta container backup-restore restore-plans update \
+            my-restore-plan --project=my-project --location=us-central1 \
+            --description="New description"
+
+POSITIONAL ARGUMENTS
+     Restore plan resource - Name of the restore plan to update. The name may
+     be provided either as a relative name, e.g.
+     projects/<project>/locations/<location>/restorePlans/<restorePlan> or as a
+     single ID name (with the parent resources provided via options or through
+     properties), e.g. RESTORE_PLAN --project=<project> --location=<location>.
+     The arguments in this group can be used to specify the attributes of this
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways. To set the project attribute:
+      ◆ provide the argument restore_plan on the command line with a fully
+        specified name;
+      ◆ set the property core/project;
+      ◆ provide the argument --project on the command line.
+
+     This must be specified.
+
+       RESTORE_PLAN
+          ID of the restore plan or fully qualified identifier for the restore
+          plan. To set the restore_plan attribute:
+          ▸ provide the argument restore_plan on the command line.
+
+          This positional must be specified if any of the other arguments in
+          this group are specified.
+
+       --location=LOCATION
+          Google Cloud location. To set the location attribute:
+          ▸ provide the argument restore_plan on the command line with a
+            fully specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property gkebackup/location.
+
+FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --description=DESCRIPTION
+        The description of the restore plan.
+
+     --etag=ETAG
+        The etag is used for optimistic concurrency control as a way to help
+        prevent simultaneous updates or deletes of a resource from overwriting
+        each other.
+
+     --namespaced-resource-restore-mode=NAMESPACED_RESOURCE_RESTORE_MODE
+        Define how to handle restore-time conflicts for namespaced resources.
+        NAMESPACED_RESOURCE_RESTORE_MODE must be one of: delete-and-restore,
+        fail-on-conflict, namespaced-resource-restore-mode-unspecified.
+
+     --substitution-rules-file=SUBSTITUTION_RULES_FILE
+        If provided, defines a set of resource transformations that will be
+        applied to resources from the source backup before they are created in
+        the target cluster.
+
+     --update-labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to update. If a label exists, its value
+        is modified. Otherwise, a new label is created.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     --volume-data-restore-policy=VOLUME_DATA_RESTORE_POLICY
+        Define how data is populated for restored volumes.
+        VOLUME_DATA_RESTORE_POLICY must be one of: no-volume-data-restoration,
+        restore-volume-data-from-backup, reuse-volume-handle-from-backup,
+        volume-data-restore-policy-unspecified.
+
+     At most one of these can be specified:
+
+       --all-namespaces
+          If true, restore all namespaced resources in the backup.
+
+       --selected-applications=SELECTED_APPLICATIONS
+          List of selected applications to restore. Only those namespaced
+          resources which belong to one of the selected applications are
+          restored.
+
+       --selected-namespaces=[SELECTED_NAMESPACES,...]
+          List of selected namespaces to restore. Only those namespaced
+          resources belonging to a selected namespace are restored.
+
+     At most one of these can be specified:
+
+       --clear-labels
+          Remove all labels. If --update-labels is also specified then
+          --clear-labels is applied first.
+
+          For example, to remove all labels:
+
+              $ gcloud beta container backup-restore restore-plans update \
+                --clear-labels
+
+          To remove all existing labels and create two new labels, foo and baz:
+
+              $ gcloud beta container backup-restore restore-plans update \
+                --clear-labels --update-labels foo=bar,baz=qux
+
+       --remove-labels=[KEY,...]
+          List of label keys to remove. If a label does not exist it is
+          silently ignored. If --update-labels is also specified then
+          --update-labels is applied first.
+
+     --cluster-resource-conflict-policy=CLUSTER_RESOURCE_CONFLICT_POLICY
+        Define how to handle restore-time conflicts for cluster-scoped
+        resources. CLUSTER_RESOURCE_CONFLICT_POLICY must be one of:
+        cluster-resource-conflict-policy-unspecified, use-backup-version,
+        use-existing-version.
+
+     --cluster-resource-restore-scope=[CLUSTER_RESOURCE_RESTORE_SCOPE,...]
+        List of cluster-scoped resource types to be restored. Not specifying
+        this means NO cluster resource will be restored. The format of a
+        resource is "<group>/<kind>", e.g. storage.k8s.io/StorageClass for
+        StorageClass.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the gkebackup/v1 API. The full documentation for this API
+    can be found at:
+    https://cloud.google.com/kubernetes-engine/docs/add-on/backup-for-gke
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud alpha container backup-restore restore-plans update
+

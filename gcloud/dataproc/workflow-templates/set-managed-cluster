@@ -46,6 +46,9 @@ SYNOPSIS
           --tags=TAG,[TAG,...] --network=NETWORK | --subnet=SUBNET
           --reservation=RESERVATION
           --reservation-affinity=RESERVATION_AFFINITY; default="any"]
+        [[--metric-sources=[METRIC_SOURCES,...]
+          : --metric-overrides=[METRIC_SOURCE:INSTANCE:GROUP:METRIC,...]
+          | --metric-overrides-file=METRIC_OVERRIDES_FILE]]
         [--single-node | --num-secondary-workers=NUM_SECONDARY_WORKERS
           --num-workers=NUM_WORKERS
           --secondary-worker-type=TYPE; default="preemptible"]
@@ -646,6 +649,22 @@ FLAGS
          --reservation-affinity=RESERVATION_AFFINITY; default="any"
             The type of reservation for the instance. RESERVATION_AFFINITY must
             be one of: any, none, specific.
+
+     --metric-sources=[METRIC_SOURCES,...]
+        Specifies a list of Metric Sources to collect custom metrics from the
+        cluster. METRIC_SOURCES must be one of: HDFS, HIVESERVER2,
+        MONITORING_AGENT_DEFAULTS, SPARK, SPARK_HISTORY_SERVER, YARN.
+
+     At most one of these can be specified:
+
+       --metric-overrides=[METRIC_SOURCE:INSTANCE:GROUP:METRIC,...]
+          List of Metrics that override the default metrics enabled for the
+          metric source
+
+       --metric-overrides-file=METRIC_OVERRIDES_FILE
+          Path to a file containing list of Metrics that override the default
+          metrics enabled for the metric source. The path can be a Cloud
+          Storage URL (example: gs://path/to/file) or a local file system path.
 
      At most one of these can be specified:
 
