@@ -6,13 +6,16 @@ SYNOPSIS
     gcloud alpha iam workload-identity-pools create-cred-config AUDIENCE
         --output-file=OUTPUT_FILE
         (--aws | --azure | --credential-source-file=CREDENTIAL_SOURCE_FILE
-          | --credential-source-url=CREDENTIAL_SOURCE_URL)
-        [--app-id-uri=APP_ID_URI]
+          | --credential-source-url=CREDENTIAL_SOURCE_URL
+          | --executable-command=EXECUTABLE_COMMAND) [--app-id-uri=APP_ID_URI]
         [--credential-source-field-name=CREDENTIAL_SOURCE_FIELD_NAME]
         [--credential-source-headers=[key=value,...]]
         [--credential-source-type=CREDENTIAL_SOURCE_TYPE] [--enable-imdsv2]
         [--service-account=SERVICE_ACCOUNT]
-        [--subject-token-type=SUBJECT_TOKEN_TYPE] [GCLOUD_WIDE_FLAG ...]
+        [--subject-token-type=SUBJECT_TOKEN_TYPE]
+        [--executable-output-file=EXECUTABLE_OUTPUT_FILE
+          --executable-timeout-millis=EXECUTABLE_TIMEOUT_MILLIS]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) This command creates a configuration file to allow access to
@@ -36,6 +39,16 @@ EXAMPLES
             --service-account=$EMAIL \
             --credential-source-url=$URL_FOR_OIDC_TOKEN \
             --credential-source-headers=Key=Value \
+            --output-file=credentials.json
+
+    To create an executable-source credential configuration for your project,
+    run the following command:
+
+        $ gcloud alpha iam workload-identity-pools create-cred-config \
+            locations/$REGION/workforcePools/$WORKFORCE_POOL_ID/providers/\
+        $PROVIDER_ID --executable-command=$EXECUTABLE_COMMAND \
+            --executable-timeout-millis=30000 \
+            --executable-output-file=$CACHE_FILE \
             --output-file=credentials.json
 
     To create an AWS-based credential configuration for your project, run:
@@ -83,6 +96,10 @@ REQUIRED FLAGS
        --credential-source-url=CREDENTIAL_SOURCE_URL
           URL to obtain the credential from.
 
+       --executable-command=EXECUTABLE_COMMAND
+          The full command to run to retrieve the credential. Must be an
+          absolute path for the program including arguments.
+
 OPTIONAL FLAGS
      --app-id-uri=APP_ID_URI
         The custom Application ID URI for the Azure access token.
@@ -105,6 +122,15 @@ OPTIONAL FLAGS
 
      --subject-token-type=SUBJECT_TOKEN_TYPE
         The type of token being used for authorization.
+
+     Arguments for an executable type credential source.
+
+       --executable-output-file=EXECUTABLE_OUTPUT_FILE
+          The absolute path to the file storing the executable response.
+
+       --executable-timeout-millis=EXECUTABLE_TIMEOUT_MILLIS
+          The timeout duration in milliseconds for waiting for the executable
+          to finish.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

@@ -6,12 +6,15 @@ SYNOPSIS
         [--activation-policy=ACTIVATION_POLICY]
         [--active-directory-domain=ACTIVE_DIRECTORY_DOMAIN]
         [--allocated-ip-range-name=ALLOCATED_IP_RANGE_NAME] [--[no-]assign-ip]
-        [--async] [--authorized-networks=NETWORK,[NETWORK,...]]
+        [--async] [--audit-bucket-path=AUDIT_BUCKET_PATH]
+        [--audit-retention-interval=AUDIT_RETENTION_INTERVAL]
+        [--audit-upload-interval=AUDIT_UPLOAD_INTERVAL]
+        [--authorized-networks=NETWORK,[NETWORK,...]]
         [--availability-type=AVAILABILITY_TYPE] [--no-backup]
         [--backup-location=BACKUP_LOCATION]
         [--backup-start-time=BACKUP_START_TIME] [--collation=COLLATION]
         [--cpu=CPU] [--database-flags=FLAG=VALUE,[FLAG=VALUE,...]]
-        [--database-version=DATABASE_VERSION]
+        [--database-version=DATABASE_VERSION; default="MYSQL_8_0"]
         [--deny-maintenance-period-end-date=DENY_MAINTENANCE_PERIOD_END_DATE]
         [--deny-maintenance-period-start-date=DENY_MAINTENANCE_PERIOD_START_DATE]
         [--deny-maintenance-period-time=DENY_MAINTENANCE_PERIOD_TIME]
@@ -119,6 +122,19 @@ FLAGS
         Return immediately, without waiting for the operation in progress to
         complete.
 
+     --audit-bucket-path=AUDIT_BUCKET_PATH
+        The location, as a Cloud Storage bucket, to which audit files are
+        uploaded. The URI is in the form gs://bucketName/folderName. Only
+        available for SQL Server instances.
+
+     --audit-retention-interval=AUDIT_RETENTION_INTERVAL
+        The number of days for audit log retention on disk, for example, 3dfor
+        3 days. Only available for SQL Server instances.
+
+     --audit-upload-interval=AUDIT_UPLOAD_INTERVAL
+        How often to upload audit logs (audit files), for example, 30mfor 30
+        minutes. Only available for SQL Server instances.
+
      --authorized-networks=NETWORK,[NETWORK,...]
         The list of external networks that are allowed to connect to the
         instance. Specified in CIDR notation, also known as 'slash' notation
@@ -162,9 +178,9 @@ FLAGS
         API for allowed flags. (e.g., --database-flags
         max_allowed_packet=55555,skip_grant_tables=,log_output=1)
 
-     --database-version=DATABASE_VERSION
-        The database engine type and versions. If left unspecified, the API
-        defaults are used. See the list of database versions at
+     --database-version=DATABASE_VERSION; default="MYSQL_8_0"
+        The database engine type and versions. If left unspecified, MYSQL_8_0
+        is used. See the list of database versions at
         https://cloud.google.com/sql/docs/mysql/admin-api/rest/v1beta4/SqlDatabaseVersion.
 
      --deny-maintenance-period-end-date=DENY_MAINTENANCE_PERIOD_END_DATE
