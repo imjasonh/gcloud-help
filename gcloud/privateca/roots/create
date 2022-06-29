@@ -15,8 +15,8 @@ SYNOPSIS
           --kms-location=KMS_LOCATION --kms-project=KMS_PROJECT]]
         [--use-preset-profile=USE_PRESET_PROFILE
           | --extended-key-usages=[EXTENDED_KEY_USAGES,...]
-          --key-usages=[KEY_USAGES,...] --max-chain-length=MAX_CHAIN_LENGTH]
-        [GCLOUD_WIDE_FLAG ...]
+          --key-usages=[KEY_USAGES,...] --max-chain-length=MAX_CHAIN_LENGTH
+          | --unconstrained-chain-length] [GCLOUD_WIDE_FLAG ...]
 
 EXAMPLES
     To create a root CA that supports one layer of subordinates:
@@ -213,10 +213,17 @@ FLAGS
           data_encipherment, key_agreement, cert_sign, crl_sign, encipher_only,
           decipher_only.
 
-       --max-chain-length=MAX_CHAIN_LENGTH
-          Maximum depth of subordinate CAs allowed under this CA for a CA
-          certificate. This can only be provided if --use-preset-profile is not
-          provided.
+       At most one of these can be specified:
+
+         --max-chain-length=MAX_CHAIN_LENGTH
+            Maximum depth of subordinate CAs allowed under this CA for a CA
+            certificate. This can only be provided if neither
+            --use-preset-profile nor --unconstrained-chain-length are provided.
+
+         --unconstrained-chain-length
+            If set, allows an unbounded number of subordinate CAs under this
+            newly issued CA certificate. This can only be provided if neither
+            --use-preset-profile nor --max-chain-length are provided.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

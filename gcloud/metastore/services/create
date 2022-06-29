@@ -5,9 +5,10 @@ SYNOPSIS
     gcloud metastore services create (SERVICE : --location=LOCATION) [--async]
         [--encryption-kms-key=ENCRYPTION_KMS_KEY]
         [--hive-metastore-version=HIVE_METASTORE_VERSION]
-        [--labels=[KEY=VALUE,...]] [--network=NETWORK; default="default"]
-        [--port=PORT; default=9083]
+        [--labels=[KEY=VALUE,...]] [--port=PORT; default=9083]
         [--release-channel=RELEASE_CHANNEL; default="stable"] [--tier=TIER]
+        [--consumer-subnetworks=[CONSUMER_SUBNETWORKS,...] | --network=NETWORK
+          | --network-config-from-file=NETWORK_CONFIG_FROM_FILE]
         [--hive-metastore-configs=KEY=VALUE
           | --hive-metastore-configs-from-file=HIVE_METASTORE_CONFIGS_FROM_FILE]
         [--kerberos-principal=KERBEROS_PRINCIPAL
@@ -98,14 +99,6 @@ FLAGS
         contain only hyphens (-), underscores (_), lowercase characters, and
         numbers.
 
-     Network configuration for the metastore service.
-
-       --network=NETWORK; default="default"
-          The name of the network on which the service can be accessed. This
-          can be the network's ID, fully-qualified URL, or relative name in the
-          form projects/{project_id}/global/networks/{network}. If unspecified,
-          the "default" network will be used.
-
      --port=PORT; default=9083
         The TCP port on which the Metastore service will listen. If
         unspecified, the default port 9083 will be used.
@@ -134,6 +127,35 @@ FLAGS
             The enterprise tier provides multi-zone high availability, and
             sufficient scalability for enterprise-level Dataproc Metastore
             workloads.
+
+     Network configuration for the metastore service.
+
+     At most one of these can be specified:
+
+       --consumer-subnetworks=[CONSUMER_SUBNETWORKS,...]
+          The list of subnetworks from which the service can be accessed. This
+          can be the subnetwork's ID, fully-qualified URL, or relative name in
+          the form
+          projects/{project_id}/regions/{region_id}/subnetworks/{subnetwork}.
+
+       --network=NETWORK
+          The name of the network on which the service can be accessed. This
+          can be the network's ID, fully-qualified URL, or relative name in the
+          form projects/{project_id}/global/networks/{network}. If "network",
+          "consumer-subnetworks" and "network-config" are unspecified, the
+          "default" network will be used.
+
+       --network-config-from-file=NETWORK_CONFIG_FROM_FILE
+          Path to a YAML file containing the network configuration for Dataproc
+          Metastore instance. The contents of the file should be structured as
+          follows:
+
+          YAML: consumers:
+          ▸ subnetwork:
+            projects/{project_id}/regions/{region_id}/subnetworks/{subnetwork_id}
+          ▸ subnetwork:
+            projects/{project_id}/regions/{region_id}/subnetworks/{subnetwork_id}
+            ...
 
      Configuration properties specific to running Hive metastore software as
      the metastore service.

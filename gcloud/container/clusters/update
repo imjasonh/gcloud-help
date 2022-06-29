@@ -45,8 +45,12 @@ SYNOPSIS
           --autoprovisioning-locations=ZONE,[ZONE,...]
           --autoprovisioning-min-cpu-platform=PLATFORM --max-cpu=MAX_CPU
           --max-memory=MAX_MEMORY --min-cpu=MIN_CPU --min-memory=MIN_MEMORY
-          --autoprovisioning-max-surge-upgrade=AUTOPROVISIONING_MAX_SURGE_UPGRADE --autoprovisioning-max-unavailable-upgrade=AUTOPROVISIONING_MAX_UNAVAILABLE_UPGRADE --autoprovisioning-scopes=[SCOPE,
-          ...]
+          --autoprovisioning-max-surge-upgrade=AUTOPROVISIONING_MAX_SURGE_UPGRADE --autoprovisioning-max-unavailable-upgrade=AUTOPROVISIONING_MAX_UNAVAILABLE_UPGRADE --autoprovisioning-node-pool-soak-duration=AUTOPROVISIONING_NODE_POOL_SOAK_DURATION --autoprovisioning-standard-rollout-policy=[batch-node-count=BATCH_NODE_COUNT,
+          batch-percent=BATCH_NODE_PERCENTAGE,
+          batch-soak-duration=BATCH_SOAK_DURATION,...]
+          --enable-autoprovisioning-blue-green-upgrade
+          | --enable-autoprovisioning-surge-upgrade
+          --autoprovisioning-scopes=[SCOPE,...]
           --autoprovisioning-service-account=AUTOPROVISIONING_SERVICE_ACCOUNT
           --enable-autoprovisioning-autorepair
           --enable-autoprovisioning-autoupgrade
@@ -753,6 +757,37 @@ REQUIRED FLAGS
                --autoprovisioning-max-unavailable-upgrade=AUTOPROVISIONING_MAX_UNAVAILABLE_UPGRADE
                   Number of nodes that can be unavailable at the same time on
                   each upgrade of an autoprovisioned node pool.
+
+               --autoprovisioning-node-pool-soak-duration=AUTOPROVISIONING_NODE_POOL_SOAK_DURATION
+                  Time in seconds to be spent waiting during blue-green upgrade
+                  before deleting the blue pool and completing the update. This
+                  argument should be used in conjunction with
+                  --enable-autoprovisioning-blue-green-upgrade to take effect.
+
+               --autoprovisioning-standard-rollout-policy=[batch-node-count=BATCH_NODE_COUNT,batch-percent=BATCH_NODE_PERCENTAGE,batch-soak-duration=BATCH_SOAK_DURATION,...]
+                  Standard rollout policy options for blue-green upgrade. This
+                  argument should be used in conjunction with
+                  --enable-autoprovisioning-blue-green-upgrade to take effect.
+
+                  Batch sizes are specfied by one of, batch-node-count or
+                  batch-percent. The duration between batches is specified by
+                  batch-soak-duration.
+
+                  Example:
+                  --standard-rollout-policy=batch-node-count=3,batch-soak-duration=60s
+                  --standard-rollout-policy=batch-percent=0.05,batch-soak-duration=180s
+
+               Flag group to choose the top level upgrade option:
+
+               At most one of these can be specified:
+
+                 --enable-autoprovisioning-blue-green-upgrade
+                    Whether to use blue-green upgrade for the autoprovisioned
+                    node pool.
+
+                 --enable-autoprovisioning-surge-upgrade
+                    Whether to use surge upgrade for the autoprovisioned node
+                    pool.
 
              Flags to specify identity for autoprovisioned nodes:
 

@@ -14,17 +14,21 @@ SYNOPSIS
           | --enable-autoprovisioning
           --enable-autoscaling --max-nodes=MAX_NODES --min-nodes=MIN_NODES
           | --enable-autorepair --enable-autoupgrade
-          | --max-surge-upgrade=MAX_SURGE_UPGRADE
-          --max-unavailable-upgrade=MAX_UNAVAILABLE_UPGRADE)
-        [--cluster=CLUSTER] [--region=REGION | --zone=ZONE, -z ZONE]
-        [GCLOUD_WIDE_FLAG ...]
+          | --enable-blue-green-upgrade --enable-surge-upgrade
+          --max-surge-upgrade=MAX_SURGE_UPGRADE
+          --max-unavailable-upgrade=MAX_UNAVAILABLE_UPGRADE
+          --node-pool-soak-duration=NODE_POOL_SOAK_DURATION
+          --standard-rollout-policy=[batch-node-count=BATCH_NODE_COUNT,
+          batch-percent=BATCH_NODE_PERCENTAGE,
+          batch-soak-duration=BATCH_SOAK_DURATION,...]) [--cluster=CLUSTER]
+        [--region=REGION | --zone=ZONE, -z ZONE] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     gcloud container node-pools update updates a node pool in a Google
     Kubernetes Engine cluster.
 
 EXAMPLES
-    To turn on node auto repair in "node-pool-1" in the cluster
+    To turn on node autoupgrade in "node-pool-1" in the cluster
     "sample-cluster", run:
 
         $ gcloud container node-pools update node-pool-1 \
@@ -236,6 +240,12 @@ REQUIRED FLAGS
 
        Upgrade settings
 
+         --enable-blue-green-upgrade
+            Changes node pool upgrade strategy to blue-green upgrade.
+
+         --enable-surge-upgrade
+            Changes node pool upgrade strategy to surge upgrade.
+
          --max-surge-upgrade=MAX_SURGE_UPGRADE
             Number of extra (surge) nodes to be created on each upgrade of the
             node pool.
@@ -267,6 +277,30 @@ REQUIRED FLAGS
                     --max-unavailable-upgrade=2
 
             Must be used in conjunction with '--max-surge-upgrade'.
+
+         --node-pool-soak-duration=NODE_POOL_SOAK_DURATION
+            Time in seconds to be spent waiting during blue-green upgrade
+            before deleting the blue pool and completing the upgrade.
+
+                $ gcloud container node-pools update node-pool-1 \
+                    --cluster=example-cluster  --node-pool-soak-duration=600s
+
+         --standard-rollout-policy=[batch-node-count=BATCH_NODE_COUNT,batch-percent=BATCH_NODE_PERCENTAGE,batch-soak-duration=BATCH_SOAK_DURATION,...]
+            Standard rollout policy options for blue-green upgrade.
+
+            Batch sizes are specfied by one of, batch-node-count or
+            batch-percent. The duration between batches is specified by
+            batch-soak-duration.
+
+                $ gcloud container node-pools update node-pool-1 \
+                    --cluster=example-cluster  \
+                    --standard-rollout-policy=batch-node-count=3,\
+                batch-soak-duration=60s
+
+                $ gcloud container node-pools update node-pool-1 \
+                    --cluster=example-cluster  \
+                    --standard-rollout-policy=batch-percent=0.3,\
+                batch-soak-duration=60s
 
 OPTIONAL FLAGS
      --cluster=CLUSTER

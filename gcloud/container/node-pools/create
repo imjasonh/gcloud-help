@@ -8,9 +8,10 @@ SYNOPSIS
         [--boot-disk-kms-key=BOOT_DISK_KMS_KEY] [--cluster=CLUSTER]
         [--disk-size=DISK_SIZE] [--disk-type=DISK_TYPE]
         [--enable-autoprovisioning] [--enable-autorepair]
-        [--no-enable-autoupgrade] [--enable-confidential-nodes]
-        [--enable-gvnic] [--enable-image-streaming] [--image-type=IMAGE_TYPE]
-        [--local-ssd-count=LOCAL_SSD_COUNT]
+        [--no-enable-autoupgrade] [--enable-blue-green-upgrade]
+        [--enable-confidential-nodes] [--enable-gvnic]
+        [--enable-image-streaming] [--enable-surge-upgrade]
+        [--image-type=IMAGE_TYPE] [--local-ssd-count=LOCAL_SSD_COUNT]
         [--machine-type=MACHINE_TYPE, -m MACHINE_TYPE]
         [--max-pods-per-node=MAX_PODS_PER_NODE]
         [--max-surge-upgrade=MAX_SURGE_UPGRADE; default=1]
@@ -20,10 +21,15 @@ SYNOPSIS
         [--min-cpu-platform=PLATFORM]
         [--network-performance-configs=[PROPERTY=VALUE,...]]
         [--node-group=NODE_GROUP] [--node-labels=[NODE_LABEL,...]]
-        [--node-locations=ZONE,[ZONE,...]] [--node-taints=[NODE_TAINT,...]]
-        [--node-version=NODE_VERSION] [--num-nodes=NUM_NODES; default=3]
-        [--preemptible] [--sandbox=[type=TYPE]]
-        [--shielded-integrity-monitoring] [--shielded-secure-boot] [--spot]
+        [--node-locations=ZONE,[ZONE,...]]
+        [--node-pool-soak-duration=NODE_POOL_SOAK_DURATION]
+        [--node-taints=[NODE_TAINT,...]] [--node-version=NODE_VERSION]
+        [--num-nodes=NUM_NODES; default=3] [--preemptible]
+        [--sandbox=[type=TYPE]] [--shielded-integrity-monitoring]
+        [--shielded-secure-boot] [--spot]
+        [--standard-rollout-policy=[batch-node-count=BATCH_NODE_COUNT,
+          batch-percent=BATCH_NODE_PERCENTAGE,
+          batch-soak-duration=BATCH_SOAK_DURATION,...]]
         [--system-config-from-file=SYSTEM_CONFIG_FROM_FILE]
         [--tags=TAG,[TAG,...]] [--threads-per-core=THREADS_PER_CORE]
         [--workload-metadata=WORKLOAD_METADATA]
@@ -125,6 +131,9 @@ FLAGS
 
         Enabled by default, use --no-enable-autoupgrade to disable.
 
+     --enable-blue-green-upgrade
+        Changes node pool upgrade strategy to blue-green upgrade.
+
      --enable-confidential-nodes
         Enable confidential nodes for the node pool. Enabling Confidential
         Nodes will create nodes using Confidential VM
@@ -136,6 +145,9 @@ FLAGS
 
      --enable-image-streaming
         Specifies whether to enable image streaming on node pool.
+
+     --enable-surge-upgrade
+        Changes node pool upgrade strategy to surge upgrade.
 
      --image-type=IMAGE_TYPE
         The image type to use for the node pool. Defaults to server-specified.
@@ -327,6 +339,13 @@ FLAGS
                 --cluster=sample-cluster \
                 --node-locations=us-central1-a,us-central1-b
 
+     --node-pool-soak-duration=NODE_POOL_SOAK_DURATION
+        Time in seconds to be spent waiting during blue-green upgrade before
+        deleting the blue pool and completing the upgrade.
+
+            $ gcloud container node-pools create example-cluster  \
+                --node-pool-soak-duration=600s
+
      --node-taints=[NODE_TAINT,...]
         Applies the given kubernetes taints on all nodes in the new node pool,
         which can be used with tolerations for pod scheduling.
@@ -389,6 +408,20 @@ FLAGS
 
         New nodes, including ones created by resize or recreate, will use spot
         VM instances.
+
+     --standard-rollout-policy=[batch-node-count=BATCH_NODE_COUNT,batch-percent=BATCH_NODE_PERCENTAGE,batch-soak-duration=BATCH_SOAK_DURATION,...]
+        Standard rollout policy options for blue-green upgrade.
+
+        Batch sizes are specfied by one of, batch-node-count or batch-percent.
+        The duration between batches is specified by batch-soak-duration.
+
+            $ gcloud container node-pools create example-cluster  \
+                --standard-rollout-policy=batch-node-count=3,\
+            batch-soak-duration=60s
+
+            $ gcloud container node-pools create example-cluster  \
+                --standard-rollout-policy=batch-percent=0.3,\
+            batch-soak-duration=60s
 
      --system-config-from-file=SYSTEM_CONFIG_FROM_FILE
         Path of the YAML/JSON file that contains the node configuration,

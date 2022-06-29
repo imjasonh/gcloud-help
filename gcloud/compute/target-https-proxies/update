@@ -3,12 +3,12 @@ NAME
 
 SYNOPSIS
     gcloud compute target-https-proxies update NAME
-        [--quic-override=QUIC_OVERRIDE]
-        [--ssl-certificates=SSL_CERTIFICATE,[...]] [--url-map=URL_MAP]
+        [--quic-override=QUIC_OVERRIDE] [--url-map=URL_MAP]
+        [[--certificate-map=CERTIFICATE_MAP : --clear-certificate-map]
+          | --ssl-certificates=SSL_CERTIFICATE,[...] --global-ssl-certificates
+          | --ssl-certificates-region=SSL_CERTIFICATES_REGION]
         [--clear-ssl-policy | --ssl-policy=SSL_POLICY]
         [--global | --region=REGION]
-        [--global-ssl-certificates
-          | --ssl-certificates-region=SSL_CERTIFICATES_REGION]
         [--global-url-map | --url-map-region=URL_MAP_REGION]
         [GCLOUD_WIDE_FLAG ...]
 
@@ -62,18 +62,67 @@ FLAGS
          NONE
             Allows Google to control when QUIC is rolled out.
 
-     --ssl-certificates=SSL_CERTIFICATE,[...]
-        References to at most 15 SSL certificate resources that are used for
-        server-side authentication. The first SSL certificate in this list is
-        considered the primary SSL certificate associated with the load
-        balancer. The SSL certificates must exist and cannot be deleted while
-        referenced by a target HTTPS proxy.
-
      --url-map=URL_MAP
         A reference to a URL map resource. A URL map defines the mapping of
         URLs to backend services. Before you can refer to a URL map, you must
         create the URL map. To delete a URL map that a target proxy is
         referring to, you must first delete the target HTTPS proxy.
+
+     At most one of these can be specified:
+
+       At most one of these can be specified:
+
+         Certificate map resource - The certificate map to attach. This
+         represents a Cloud resource. (NOTE) Some attributes are not given
+         arguments in this group but can be set in other ways. To set the
+         project attribute:
+          ▫ provide the argument --certificate-map on the command line with a
+            fully specified name;
+          ▫ provide the argument --project on the command line;
+          ▫ set the property core/project. To set the location attribute:
+          ▫ provide the argument --certificate-map on the command line with a
+            fully specified name;
+          ▫ default value of location is [global].
+
+           --certificate-map=CERTIFICATE_MAP
+              ID of the certificate map or fully qualified identifier for the
+              certificate map. To set the map attribute:
+              ◇ provide the argument --certificate-map on the command line.
+
+         --clear-certificate-map
+            Removes any attached certificate map from the HTTPS proxy.
+
+       --ssl-certificates=SSL_CERTIFICATE,[...]
+          References to at most 15 SSL certificate resources that are used for
+          server-side authentication. The first SSL certificate in this list is
+          considered the primary SSL certificate associated with the load
+          balancer. The SSL certificates must exist and cannot be deleted while
+          referenced by a target HTTPS proxy.
+
+       At most one of these can be specified:
+
+         --global-ssl-certificates
+            If set, the ssl certificates are global.
+
+         --ssl-certificates-region=SSL_CERTIFICATES_REGION
+            Region of the ssl certificates to operate on. If not specified, you
+            might be prompted to select a region (interactive mode only).
+
+            To avoid prompting when this flag is omitted, you can set the
+            compute/region property:
+
+                $ gcloud config set compute/region REGION
+
+            A list of regions can be fetched by running:
+
+                $ gcloud compute regions list
+
+            To unset the property, run:
+
+                $ gcloud config unset compute/region
+
+            Alternatively, the region can be stored in the environment variable
+            CLOUDSDK_COMPUTE_REGION.
 
      At most one of these can be specified:
 
@@ -93,31 +142,6 @@ FLAGS
 
        --region=REGION
           Region of the target HTTPS proxy to update. If not specified, you
-          might be prompted to select a region (interactive mode only).
-
-          To avoid prompting when this flag is omitted, you can set the
-          compute/region property:
-
-              $ gcloud config set compute/region REGION
-
-          A list of regions can be fetched by running:
-
-              $ gcloud compute regions list
-
-          To unset the property, run:
-
-              $ gcloud config unset compute/region
-
-          Alternatively, the region can be stored in the environment variable
-          CLOUDSDK_COMPUTE_REGION.
-
-     At most one of these can be specified:
-
-       --global-ssl-certificates
-          If set, the ssl certificates are global.
-
-       --ssl-certificates-region=SSL_CERTIFICATES_REGION
-          Region of the ssl certificates to operate on. If not specified, you
           might be prompted to select a region (interactive mode only).
 
           To avoid prompting when this flag is omitted, you can set the

@@ -15,8 +15,8 @@ SYNOPSIS
           --kms-location=KMS_LOCATION --kms-project=KMS_PROJECT])
           : --use-preset-profile=USE_PRESET_PROFILE
           | --extended-key-usages=[EXTENDED_KEY_USAGES,...] --is-ca-cert
-          --key-usages=[KEY_USAGES,...] --max-chain-length=MAX_CHAIN_LENGTH])
-        [--ca=CA] [--labels=[KEY=VALUE,...]]
+          --key-usages=[KEY_USAGES,...] --max-chain-length=MAX_CHAIN_LENGTH
+          | --unconstrained-chain-length]) [--ca=CA] [--labels=[KEY=VALUE,...]]
         [--validity=VALIDITY; default="P30D"]
         [--template=TEMPLATE : --template-location=TEMPLATE_LOCATION]
         [GCLOUD_WIDE_FLAG ...]
@@ -223,10 +223,19 @@ REQUIRED FLAGS
               key_encipherment, data_encipherment, key_agreement, cert_sign,
               crl_sign, encipher_only, decipher_only.
 
-           --max-chain-length=MAX_CHAIN_LENGTH
-              Maximum depth of subordinate CAs allowed under this CA for a CA
-              certificate. This can only be provided if --use-preset-profile is
-              not provided.
+           At most one of these can be specified:
+
+             --max-chain-length=MAX_CHAIN_LENGTH
+                Maximum depth of subordinate CAs allowed under this CA for a CA
+                certificate. This can only be provided if neither
+                --use-preset-profile nor --unconstrained-chain-length are
+                provided.
+
+             --unconstrained-chain-length
+                If set, allows an unbounded number of subordinate CAs under
+                this newly issued CA certificate. This can only be provided if
+                neither --use-preset-profile nor --max-chain-length are
+                provided.
 
 OPTIONAL FLAGS
      --ca=CA
