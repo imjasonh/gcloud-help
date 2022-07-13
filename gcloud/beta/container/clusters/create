@@ -18,7 +18,7 @@ SYNOPSIS
         [--default-max-pods-per-node=DEFAULT_MAX_PODS_PER_NODE]
         [--disable-default-snat] [--disable-pod-cidr-overprovision]
         [--disk-size=DISK_SIZE] [--disk-type=DISK_TYPE] [--enable-autorepair]
-        [--no-enable-autoupgrade] [--enable-binauthz] [--enable-cloud-logging]
+        [--no-enable-autoupgrade] [--enable-cloud-logging]
         [--enable-cloud-monitoring] [--enable-cloud-run-alpha]
         [--enable-confidential-nodes] [--enable-cost-allocation]
         [--enable-dataplane-v2] [--enable-gke-oidc] [--enable-gvnic]
@@ -57,6 +57,8 @@ SYNOPSIS
         [--tags=TAG,[TAG,...]] [--threads-per-core=THREADS_PER_CORE]
         [--workload-metadata=WORKLOAD_METADATA] [--workload-pool=WORKLOAD_POOL]
         [--additional-zones=ZONE,[ZONE,...] | --node-locations=ZONE,[ZONE,...]]
+        [--binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
+          | --enable-binauthz]
         [--cluster-dns=CLUSTER_DNS --cluster-dns-domain=CLUSTER_DNS_DOMAIN
           --cluster-dns-scope=CLUSTER_DNS_SCOPE]
         [[--enable-autoprovisioning
@@ -77,7 +79,9 @@ SYNOPSIS
           --enable-autoprovisioning-autoupgrade
           [--max-accelerator=[type=TYPE,count=COUNT,...]
           : --min-accelerator=[type=TYPE,count=COUNT,...]]]]]
-        [--enable-autoscaling --max-nodes=MAX_NODES --min-nodes=MIN_NODES]
+        [--enable-autoscaling --location-policy=LOCATION_POLICY
+          --max-nodes=MAX_NODES --min-nodes=MIN_NODES
+          --total-max-nodes=TOTAL_MAX_NODES --total-min-nodes=TOTAL_MIN_NODES]
         [--enable-master-authorized-networks
           --master-authorized-networks=NETWORK,[NETWORK,...]]
         [--enable-network-egress-metering
@@ -342,9 +346,6 @@ FLAGS
         for more info.
 
         Enabled by default, use --no-enable-autoupgrade to disable.
-
-     --enable-binauthz
-        Enable Binary Authorization for this cluster.
 
      --enable-cloud-logging
         (DEPRECATED) Automatically send logs from the cluster to the Google
@@ -699,14 +700,16 @@ FLAGS
 
      --monitoring=[COMPONENT,...]
         Set the components that have monitoring enabled. Valid component values
-        are: SYSTEM, WORKLOAD (Deprecated), NONE
+        are: SYSTEM, WORKLOAD (Deprecated), NONE,API_SERVER,
+        CONTROLLER_MANAGER, SCHEDULER
 
         For more information, look at
         https://cloud.google.com/stackdriver/docs/solutions/gke/installing#available-metrics
 
         Examples:
 
-            $ gcloud beta container clusters create --monitoring=SYSTEM
+            $ gcloud beta container clusters create \
+                --monitoring=SYSTEM,API_SERVER
             $ gcloud beta container clusters create --monitoring=NONE
 
      --network=NETWORK
@@ -1071,6 +1074,21 @@ FLAGS
                   --zone us-central1-a \
                   --node-locations us-central1-a,us-central1-b
 
+     Flags for Binary Authorization:
+
+       At most one of these can be specified:
+
+         --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
+            Enable Binary Authorization for this cluster.
+            BINAUTHZ_EVALUATION_MODE must be one of: DISABLED,
+            PROJECT_SINGLETON_POLICY_ENFORCE.
+
+         --enable-binauthz
+            (DEPRECATED) Enable Binary Authorization for this cluster.
+
+            The --enable-binauthz flag is deprecated. Please use
+            --binauthz-evaluation-mode instead.
+
      ClusterDNS
 
        --cluster-dns=CLUSTER_DNS
@@ -1341,6 +1359,17 @@ FLAGS
           Enables autoscaling in the node pool specified by --node-pool or the
           default node pool if --node-pool is not provided.
 
+       --location-policy=LOCATION_POLICY
+          Location policy specifies the algorithm used when scaling-up the node
+          pool.
+
+          ▸ BALANCED - Is a best effort policy that aims to balance the sizes
+            of available zones.
+          ▸ ANY - Instructs the cluster autoscaler to prioritize utilization
+            of unused reservations, and reduces preemption risk for Spot VMs.
+
+          LOCATION_POLICY must be one of: BALANCED, ANY.
+
        --max-nodes=MAX_NODES
           Maximum number of nodes per zone in the node pool.
 
@@ -1352,6 +1381,20 @@ FLAGS
           Minimum number of nodes per zone in the node pool.
 
           Minimum number of nodes per zone to which the node pool specified by
+          --node-pool (or default node pool if unspecified) can scale. Ignored
+          unless --enable-autoscaling is also specified.
+
+       --total-max-nodes=TOTAL_MAX_NODES
+          Maximum number of all nodes in the node pool.
+
+          Maximum number of all nodes to which the node pool specified by
+          --node-pool (or default node pool if unspecified) can scale. Ignored
+          unless --enable-autoscaling is also specified.
+
+       --total-min-nodes=TOTAL_MIN_NODES
+          Minimum number of all nodes in the node pool.
+
+          Minimum number of all nodes to which the node pool specified by
           --node-pool (or default node pool if unspecified) can scale. Ignored
           unless --enable-autoscaling is also specified.
 

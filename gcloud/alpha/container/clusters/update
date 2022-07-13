@@ -10,7 +10,7 @@ SYNOPSIS
           | --database-encryption-key=DATABASE_ENCRYPTION_KEY
           | --disable-database-encryption | --disable-default-snat
           | --disable-workload-identity | --enable-autoscaling
-          | --enable-binauthz | --enable-cost-allocation | --enable-gke-oidc
+          | --enable-cost-allocation | --enable-gke-oidc
           | --enable-identity-service | --enable-image-streaming
           | --enable-intra-node-visibility | --enable-l4-ilb-subsetting
           | --enable-legacy-authorization
@@ -31,7 +31,9 @@ SYNOPSIS
           | --update-addons=[ADDON=ENABLED|DISABLED,...]
           | --update-labels=[KEY=VALUE,...] | --workload-pool=WORKLOAD_POOL
           | --additional-zones=[ZONE,...] | --node-locations=ZONE,[ZONE,...]
-          | --clear-maintenance-window | --remove-maintenance-exclusion=NAME
+          | --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
+          | --enable-binauthz | --clear-maintenance-window
+          | --remove-maintenance-exclusion=NAME
           | [--add-maintenance-exclusion-end=TIME_STAMP
           : --add-maintenance-exclusion-name=NAME
           --add-maintenance-exclusion-scope=SCOPE
@@ -71,7 +73,10 @@ SYNOPSIS
         [--cloud-run-config=[load-balancer-type=EXTERNAL,...]]
         [--istio-config=[auth=MTLS_PERMISSIVE,...]]
         [--master-authorized-networks=NETWORK,[NETWORK,...]]
-        [--node-pool=NODE_POOL] [--max-nodes=MAX_NODES --min-nodes=MIN_NODES]
+        [--node-pool=NODE_POOL]
+        [--location-policy=LOCATION_POLICY --max-nodes=MAX_NODES
+          --min-nodes=MIN_NODES
+          --total-max-nodes=TOTAL_MAX_NODES --total-min-nodes=TOTAL_MIN_NODES]
         [--region=REGION | --zone=ZONE, -z ZONE] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -181,9 +186,6 @@ REQUIRED FLAGS
 
           Enables autoscaling in the node pool specified by --node-pool or the
           default node pool if --node-pool is not provided.
-
-       --enable-binauthz
-          Enable Binary Authorization for this cluster.
 
        --enable-cost-allocation
           Enable the cost management feature.
@@ -551,6 +553,21 @@ REQUIRED FLAGS
                 $ gcloud alpha container clusters update example-cluster \
                     --zone us-central1-a \
                     --node-locations us-central1-a,us-central1-b
+
+       Flags for Binary Authorization:
+
+         At most one of these can be specified:
+
+           --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
+              Enable Binary Authorization for this cluster.
+              BINAUTHZ_EVALUATION_MODE must be one of: DISABLED,
+              PROJECT_SINGLETON_POLICY_ENFORCE.
+
+           --enable-binauthz
+              (DEPRECATED) Enable Binary Authorization for this cluster.
+
+              The --enable-binauthz flag is deprecated. Please use
+              --binauthz-evaluation-mode instead.
 
        At most one of these can be specified:
 
@@ -999,14 +1016,16 @@ REQUIRED FLAGS
 
        --monitoring=[COMPONENT,...]
           Set the components that have monitoring enabled. Valid component
-          values are: SYSTEM, WORKLOAD (Deprecated), NONE
+          values are: SYSTEM, WORKLOAD (Deprecated), NONE,API_SERVER,
+          CONTROLLER_MANAGER, SCHEDULER
 
           For more information, look at
           https://cloud.google.com/stackdriver/docs/solutions/gke/installing#available-metrics
 
           Examples:
 
-              $ gcloud alpha container clusters update --monitoring=SYSTEM
+              $ gcloud alpha container clusters update \
+                  --monitoring=SYSTEM,API_SERVER
               $ gcloud alpha container clusters update --monitoring=NONE
 
        --logging-service=LOGGING_SERVICE
@@ -1102,6 +1121,17 @@ OPTIONAL FLAGS
 
      Cluster autoscaling
 
+       --location-policy=LOCATION_POLICY
+          Location policy specifies the algorithm used when scaling-up the node
+          pool.
+
+          ▸ BALANCED - Is a best effort policy that aims to balance the sizes
+            of available zones.
+          ▸ ANY - Instructs the cluster autoscaler to prioritize utilization
+            of unused reservations, and reduces preemption risk for Spot VMs.
+
+          LOCATION_POLICY must be one of: BALANCED, ANY.
+
        --max-nodes=MAX_NODES
           Maximum number of nodes per zone in the node pool.
 
@@ -1113,6 +1143,20 @@ OPTIONAL FLAGS
           Minimum number of nodes per zone in the node pool.
 
           Minimum number of nodes per zone to which the node pool specified by
+          --node-pool (or default node pool if unspecified) can scale. Ignored
+          unless --enable-autoscaling is also specified.
+
+       --total-max-nodes=TOTAL_MAX_NODES
+          Maximum number of all nodes in the node pool.
+
+          Maximum number of all nodes to which the node pool specified by
+          --node-pool (or default node pool if unspecified) can scale. Ignored
+          unless --enable-autoscaling is also specified.
+
+       --total-min-nodes=TOTAL_MIN_NODES
+          Minimum number of all nodes in the node pool.
+
+          Minimum number of all nodes to which the node pool specified by
           --node-pool (or default node pool if unspecified) can scale. Ignored
           unless --enable-autoscaling is also specified.
 

@@ -2,7 +2,8 @@ NAME
     gcloud alpha compute tpus tpu-vm ssh - SSH into a Cloud TPU VM
 
 SYNOPSIS
-    gcloud alpha compute tpus tpu-vm ssh [USER@]TPU [--dry-run]
+    gcloud alpha compute tpus tpu-vm ssh [USER@]TPU
+        [--batch-size=BATCH_SIZE; default="all"] [--dry-run]
         [--force-key-file-overwrite] [--plain] [--ssh-flag=SSH_FLAG]
         [--ssh-key-file=SSH_KEY_FILE]
         [--strict-host-key-checking=STRICT_HOST_KEY_CHECKING]
@@ -55,6 +56,18 @@ POSITIONAL ARGUMENTS
             --zone=us-central1-a -- -vvv -L 80:%TPU%:80
 
 FLAGS
+     --batch-size=BATCH_SIZE; default="all"
+        Batch size for simultaneous command execution. When using a
+        comma-separated list (e.g. '1,4,6') or a range (e.g. '1-3') or ``all``
+        keyword in --worker flag, it executes the command concurrently in
+        groups of the batch size. This flag takes a value greater than 0 to
+        specify the batch size to control the concurrent connections that can
+        be established with the TPU workers, or the special keyword ``all`` to
+        allow the concurrent command executions on all the specified workers in
+        --worker flag. Maximum value of this flag should not be more than the
+        number of specified workers, otherwise the value will be treated as
+        ``--batch-size=all``.
+
      --dry-run
         Print the equivalent scp/ssh command that would be run to stdout,
         instead of executing it.

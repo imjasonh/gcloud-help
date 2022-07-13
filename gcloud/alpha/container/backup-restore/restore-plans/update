@@ -9,7 +9,8 @@ SYNOPSIS
         [--namespaced-resource-restore-mode=NAMESPACED_RESOURCE_RESTORE_MODE]
         [--substitution-rules-file=SUBSTITUTION_RULES_FILE]
         [--update-labels=[KEY=VALUE,...]]
-        [--volume-data-restore-policy=VOLUME_DATA_RESTORE_POLICY]
+        [--volume-data-restore-policy=VOLUME_DATA_RESTORE_POLICY;
+          default="no-volume-data-restoration"]
         [--all-namespaces | --selected-applications=SELECTED_APPLICATIONS
           | --selected-namespaces=[SELECTED_NAMESPACES,...]]
         [--clear-labels | --remove-labels=[KEY,...]]
@@ -74,8 +75,25 @@ FLAGS
 
      --namespaced-resource-restore-mode=NAMESPACED_RESOURCE_RESTORE_MODE
         Define how to handle restore-time conflicts for namespaced resources.
-        NAMESPACED_RESOURCE_RESTORE_MODE must be one of: delete-and-restore,
-        fail-on-conflict, namespaced-resource-restore-mode-unspecified.
+        NAMESPACED_RESOURCE_RESTORE_MODE must be one of:
+
+         delete-and-restore
+            When conflicting top-level resources (either Namespaces or
+            ProtectedApplications, depending upon the scope) are encountered,
+            this will first trigger a delete of the conflicting resource AND
+            ALL OF ITS REFERENCED RESOURCES (e.g., all resources in the
+            Namespace or all resources referenced by the ProtectedApplication)
+            before restoring the resources from the Backup. This mode should
+            only be used when you are intending to revert some portion of a
+            cluster to an earlier state.
+
+         fail-on-conflict
+            If conflicting top-level resources (either Namespaces or
+            ProtectedApplications, depending upon the scope) are encountered at
+            the beginning of a restore process, the Restore will fail. If a
+            conflict occurs during the restore process itself (e.g., because an
+            out of band process creates conflicting resources), a conflict will
+            be reported.
 
      --substitution-rules-file=SUBSTITUTION_RULES_FILE
         If provided, defines a set of resource transformations that will be
@@ -91,11 +109,26 @@ FLAGS
         contain only hyphens (-), underscores (_), lowercase characters, and
         numbers.
 
-     --volume-data-restore-policy=VOLUME_DATA_RESTORE_POLICY
-        Define how data is populated for restored volumes.
-        VOLUME_DATA_RESTORE_POLICY must be one of: no-volume-data-restoration,
-        restore-volume-data-from-backup, reuse-volume-handle-from-backup,
-        volume-data-restore-policy-unspecified.
+     --volume-data-restore-policy=VOLUME_DATA_RESTORE_POLICY; default="no-volume-data-restoration"
+        Define how data is populated for restored volumes. If this flag is not
+        specified, 'no-volume-data-restoration' will be used.
+        VOLUME_DATA_RESTORE_POLICY must be one of:
+
+         no-volume-data-restoration
+            Selecting 'no-volume-data-restoration' means PV will not be
+            restored. The restoration will ONLY restore selected PVCs and
+            expects corresponding Kubernetes controllers to either dynamically
+            provision blank PVs or bind them to pre-provisioned PVs created
+            out-of-band.
+
+         restore-volume-data-from-backup
+            Selecting 'restore-volume-data-from-backup' means a new PV will be
+            restored using the corresponding volume backup data in the Backup.
+
+         reuse-volume-handle-from-backup
+            Selecting 'reuse-volume-handle-from-backup' means a PV will be
+            pre-provisioned using the volume handle of the original PV in the
+            Backup.
 
      At most one of these can be specified:
 
@@ -135,8 +168,20 @@ FLAGS
      --cluster-resource-conflict-policy=CLUSTER_RESOURCE_CONFLICT_POLICY
         Define how to handle restore-time conflicts for cluster-scoped
         resources. CLUSTER_RESOURCE_CONFLICT_POLICY must be one of:
-        cluster-resource-conflict-policy-unspecified, use-backup-version,
-        use-existing-version.
+
+         use-backup-version
+            Selecting 'use-existing-version' means deleting the existing
+            version of the conflicting resources before re-creating them from
+            the Backup.
+
+            Note that this is a dangerous option which could cause
+            unintentional data loss if used inappropriately. For example,
+            deleting a CRD will cause Kubernetes to delete all CRs of that
+            type.
+
+         use-existing-version
+            Selecting 'use-existing-version' means no conflicting resources
+            will be restored.
 
      --cluster-resource-restore-scope=[CLUSTER_RESOURCE_RESTORE_SCOPE,...]
         List of cluster-scoped resource types to be restored. Not specifying

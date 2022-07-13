@@ -15,7 +15,8 @@ SYNOPSIS
           [boot=BOOT],[device-name=DEVICE-NAME],[mode=MODE],[name=NAME]]
         [--[no-]enable-nested-virtualization] [--[no-]enable-uefi-networking]
         [--instance-termination-action=INSTANCE_TERMINATION_ACTION]
-        [--ipv6-network-tier=IPV6_NETWORK_TIER] [--labels=[KEY=VALUE,...]]
+        [--ipv6-network-tier=IPV6_NETWORK_TIER]
+        [--key-revocation-action-type=POLICY] [--labels=[KEY=VALUE,...]]
         [--local-ssd=[device-name=DEVICE-NAME],[interface=INTERFACE]]
         [--machine-type=MACHINE_TYPE] [--maintenance-policy=MAINTENANCE_POLICY]
         [--metadata=KEY=VALUE,[KEY=VALUE,...]]
@@ -350,6 +351,16 @@ FLAGS
          PREMIUM
             High quality, Google-grade network tier.
 
+     --key-revocation-action-type=POLICY
+        Specifies the behavior of the instance when the KMS key of one of its
+        attached disks is revoked. The default is none. POLICY must be one of:
+
+         none
+            No operation is performed.
+         stop
+            The instance is stopped when the KMS key of one of its attached
+            disks is revoked.
+
      --labels=[KEY=VALUE,...]
         List of label KEY=VALUE pairs to add.
 
@@ -635,9 +646,6 @@ FLAGS
      --source-instance=SOURCE_INSTANCE
         The name of the source instance that the instance template will be
         created from.
-
-        You can override machine type and labels. Values of other flags will be
-        ignored and values from the source instance will be used instead.
 
      --source-instance-zone=SOURCE_INSTANCE_ZONE
         Zone of the instance to operate on. Overrides the default compute/zone

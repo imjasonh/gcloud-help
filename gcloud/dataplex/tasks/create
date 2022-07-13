@@ -5,6 +5,7 @@ SYNOPSIS
     gcloud dataplex tasks create (TASK : --lake=LAKE --location=LOCATION)
         (--execution-service-account=EXECUTION_SERVICE_ACCOUNT
           : --execution-args=EXECUTION_ARGS
+          --execution-project=EXECUTION_PROJECT --kms-key=KMS_KEY
           --max-job-execution-lifetime=MAX_JOB_EXECUTION_LIFETIME)
         ((--spark-main-class=SPARK_MAIN_CLASS
           | --spark-main-jar-file-uri=SPARK_MAIN_JAR_FILE_URI
@@ -15,6 +16,7 @@ SYNOPSIS
           --spark-file-uris=[SPARK_FILE_URIS,...]
           --batch-executors-count=BATCH_EXECUTORS_COUNT
           --batch-max-executors-count=BATCH_MAX_EXECUTORS_COUNT
+          --container-image=CONTAINER_IMAGE
           --container-image-java-jars=[CONTAINER_IMAGE_JAVA_JARS,...]
           --container-image-properties=CONTAINER_IMAGE_PROPERTIES
           --container-image-python-packages=[CONTAINER_IMAGE_PYTHON_PACKAGES,
@@ -128,6 +130,15 @@ REQUIRED FLAGS
             keys being present in the args, then TASK_ARGS will be passed as
             the last argument.
 
+       --execution-project=EXECUTION_PROJECT
+          The project in which jobs are run. By default, the project containing
+          the Lake is used. If a project is provided, the
+          --execution-service-account must belong to this same project.
+
+       --kms-key=KMS_KEY
+          The Cloud KMS key to use for encryption, of the form:
+          projects/{project_number}/locations/{location_id}/keyRings/{key-ring-name}/cryptoKeys/{key-name}
+
        --max-job-execution-lifetime=MAX_JOB_EXECUTION_LIFETIME
           The maximum duration before the job execution expires.
 
@@ -181,6 +192,9 @@ REQUIRED FLAGS
             executors_count, then auto-scaling is enabled.
 
        Container Image Runtime Configuration.
+
+         --container-image=CONTAINER_IMAGE
+            Optional custom container image for the job.
 
          --container-image-java-jars=[CONTAINER_IMAGE_JAVA_JARS,...]
             A list of Java JARS to add to the classpath. Valid input includes

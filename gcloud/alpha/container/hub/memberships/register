@@ -3,7 +3,8 @@ NAME
         fleet
 
 SYNOPSIS
-    gcloud alpha container hub memberships register MEMBERSHIP_NAME
+    gcloud alpha container hub memberships register
+        [[MEMBERSHIP_NAME] --location=LOCATION]
         (--gke-cluster=LOCATION/CLUSTER_NAME | --gke-uri=GKE_URI
           | [--context=CONTEXT : --kubeconfig=KUBECONFIG])
         (--service-account-key-file=SERVICE_ACCOUNT_KEY_FILE
@@ -37,11 +38,11 @@ DESCRIPTION
     corresponds to a service account that has been granted gkehub.connect
     permissions.
 
-    If the cluster is already registered to another Fleet, the registration is
+    If the cluster is already registered to another fleet, the registration is
     not successful.
 
     Rerunning this command against the same cluster with the same
-    MEMBERSHIP_NAME and target GKEFleet is successful and upgrades the Connect
+    MEMBERSHIP_NAME and target fleet is successful and upgrades the Connect
     Agent if a new agent is available.
 
 EXAMPLES
@@ -117,9 +118,35 @@ EXAMPLES
             --service-account-key-file=/tmp/keyfile.json
 
 POSITIONAL ARGUMENTS
-     MEMBERSHIP_NAME
-        The membership name that you choose to uniquely represents the cluster
-        being registered on the fleet.
+     Membership resource - Membership resource name. The arguments in this
+     group can be used to specify the attributes of this resource. (NOTE) Some
+     attributes are not given arguments in this group but can be set in other
+     ways. To set the project attribute:
+      ◆ provide the argument MEMBERSHIP_NAME on the command line with a fully
+        specified name;
+      ◆ provide the argument --membership on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+       [MEMBERSHIP_NAME]
+          ID of the membership or fully qualified identifier for the
+          membership. To set the membership attribute:
+          ▸ provide the argument MEMBERSHIP_NAME on the command line;
+          ▸ provide the argument --membership on the command line.
+
+       --location=LOCATION
+          The location for the membership resource, e.g. us-central1. If not
+          specified, defaults to global. Not supported for GKE clusters, whose
+          membership location will be the location of the cluster.
+
+          To set the location attribute:
+          ▸ provide the argument MEMBERSHIP_NAME on the command line with a
+            fully specified name;
+          ▸ provide the argument --membership on the command line with a
+            fully specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property gkehub/location.
 
 REQUIRED FLAGS
      Cluster identifier.

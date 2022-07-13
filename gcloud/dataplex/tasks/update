@@ -6,13 +6,15 @@ SYNOPSIS
         [--async] [--description=DESCRIPTION] [--display-name=DISPLAY_NAME]
         [--update-labels=[KEY=VALUE,...]]
         [--clear-labels | --remove-labels=[KEY,...]]
-        [--execution-args=EXECUTION_ARGS
+        [--execution-args=EXECUTION_ARGS --execution-project=EXECUTION_PROJECT
           --execution-service-account=EXECUTION_SERVICE_ACCOUNT
+          --kms-key=KMS_KEY
           --max-job-execution-lifetime=MAX_JOB_EXECUTION_LIFETIME]
         [--spark-archive-uris=[SPARK_ARCHIVE_URIS,...]
           --spark-file-uris=[SPARK_FILE_URIS,...]
           --batch-executors-count=BATCH_EXECUTORS_COUNT
           --batch-max-executors-count=BATCH_MAX_EXECUTORS_COUNT
+          --container-image=CONTAINER_IMAGE
           --container-image-java-jars=[CONTAINER_IMAGE_JAVA_JARS,...]
           --container-image-properties=CONTAINER_IMAGE_PROPERTIES
           --container-image-python-packages=[CONTAINER_IMAGE_PYTHON_PACKAGES,
@@ -132,9 +134,18 @@ FLAGS
             case of other keys being present in the args, then TASK_ARGS will
             be passed as the last argument.
 
+       --execution-project=EXECUTION_PROJECT
+          The project in which jobs are run. By default, the project containing
+          the Lake is used. If a project is provided, the
+          --execution-service-account must belong to this same project.
+
        --execution-service-account=EXECUTION_SERVICE_ACCOUNT
           Service account to use to execute a task. If not provided, the
           default Compute service account for the project is used.
+
+       --kms-key=KMS_KEY
+          The Cloud KMS key to use for encryption, of the form:
+          projects/{project_number}/locations/{location_id}/keyRings/{key-ring-name}/cryptoKeys/{key-name}
 
        --max-job-execution-lifetime=MAX_JOB_EXECUTION_LIFETIME
           The maximum duration before the job execution expires.
@@ -160,6 +171,9 @@ FLAGS
             executors_count, then auto-scaling is enabled.
 
        Container Image Runtime Configuration.
+
+         --container-image=CONTAINER_IMAGE
+            Optional custom container image for the job.
 
          --container-image-java-jars=[CONTAINER_IMAGE_JAVA_JARS,...]
             A list of Java JARS to add to the classpath. Valid input includes

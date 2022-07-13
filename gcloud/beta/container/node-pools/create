@@ -34,7 +34,9 @@ SYNOPSIS
         [--tags=TAG,[TAG,...]] [--threads-per-core=THREADS_PER_CORE]
         [--workload-metadata=WORKLOAD_METADATA]
         [--create-pod-ipv4-range=[KEY=VALUE,...] | --pod-ipv4-range=NAME]
-        [--enable-autoscaling --max-nodes=MAX_NODES --min-nodes=MIN_NODES]
+        [--enable-autoscaling --location-policy=LOCATION_POLICY
+          --max-nodes=MAX_NODES --min-nodes=MIN_NODES
+          --total-max-nodes=TOTAL_MAX_NODES --total-min-nodes=TOTAL_MIN_NODES]
         [--ephemeral-storage=[local-ssd-count=LOCAL-SSD-COUNT]
           | --local-ssd-count=LOCAL_SSD_COUNT]
         [--region=REGION | --zone=ZONE, -z ZONE]
@@ -592,6 +594,17 @@ FLAGS
           Enables autoscaling in the node pool specified by --node-pool or the
           default node pool if --node-pool is not provided.
 
+       --location-policy=LOCATION_POLICY
+          Location policy specifies the algorithm used when scaling-up the node
+          pool.
+
+          ▸ BALANCED - Is a best effort policy that aims to balance the sizes
+            of available zones.
+          ▸ ANY - Instructs the cluster autoscaler to prioritize utilization
+            of unused reservations, and reduces preemption risk for Spot VMs.
+
+          LOCATION_POLICY must be one of: BALANCED, ANY.
+
        --max-nodes=MAX_NODES
           Maximum number of nodes per zone in the node pool.
 
@@ -603,6 +616,20 @@ FLAGS
           Minimum number of nodes per zone in the node pool.
 
           Minimum number of nodes per zone to which the node pool specified by
+          --node-pool (or default node pool if unspecified) can scale. Ignored
+          unless --enable-autoscaling is also specified.
+
+       --total-max-nodes=TOTAL_MAX_NODES
+          Maximum number of all nodes in the node pool.
+
+          Maximum number of all nodes to which the node pool specified by
+          --node-pool (or default node pool if unspecified) can scale. Ignored
+          unless --enable-autoscaling is also specified.
+
+       --total-min-nodes=TOTAL_MIN_NODES
+          Minimum number of all nodes in the node pool.
+
+          Minimum number of all nodes to which the node pool specified by
           --node-pool (or default node pool if unspecified) can scale. Ignored
           unless --enable-autoscaling is also specified.
 

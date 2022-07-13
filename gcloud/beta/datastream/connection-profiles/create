@@ -5,8 +5,8 @@ NAME
 SYNOPSIS
     gcloud beta datastream connection-profiles create
         (CONNECTION_PROFILE : --location=LOCATION) --display-name=DISPLAY_NAME
-        --type=TYPE
-        ([--bucket-name=BUCKET_NAME : --root-path=ROOT_PATH]
+        --type=TYPE [--labels=[KEY=VALUE,...]]
+        [[--bucket-name=BUCKET_NAME : --root-path=ROOT_PATH]
           | --database-service=DATABASE_SERVICE
           --oracle-hostname=ORACLE_HOSTNAME --oracle-port=ORACLE_PORT
           --oracle-username=ORACLE_USERNAME (--oracle-password=ORACLE_PASSWORD
@@ -14,8 +14,7 @@ SYNOPSIS
           --mysql-port=MYSQL_PORT
           --mysql-username=MYSQL_USERNAME (--mysql-password=MYSQL_PASSWORD
           | --mysql-prompt-for-password) : --ca-certificate=CA_CERTIFICATE
-          --client-certificate=CLIENT_CERTIFICATE --client-key=CLIENT_KEY])
-        [--labels=[KEY=VALUE,...]]
+          --client-certificate=CLIENT_CERTIFICATE --client-key=CLIENT_KEY]]
         [--private-connection-name=PRIVATE_CONNECTION_NAME : --no-connectivity
           | --static-ip-connectivity
           | [--forward-ssh-hostname=FORWARD_SSH_HOSTNAME
@@ -89,9 +88,18 @@ REQUIRED FLAGS
         Friendly name for the connection profile.
 
      --type=TYPE
-        Type can be MYSQL, ORACLE or GOOGLE-CLOUD-STORAGE
+        Type can be MYSQL, ORACLE, GOOGLE-CLOUD-STORAGE or BIGQUERY
 
-     Exactly one of these must be specified:
+OPTIONAL FLAGS
+     --labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     At most one of these can be specified:
 
        --bucket-name=BUCKET_NAME
           The full project and resource path for Cloud Storage bucket including
@@ -186,15 +194,6 @@ REQUIRED FLAGS
 
           This flag must be specified if any of the other arguments in this
           group are specified.
-
-OPTIONAL FLAGS
-     --labels=[KEY=VALUE,...]
-        List of label KEY=VALUE pairs to add.
-
-        Keys must start with a lowercase character and contain only hyphens
-        (-), underscores (_), lowercase characters, and numbers. Values must
-        contain only hyphens (-), underscores (_), lowercase characters, and
-        numbers.
 
      At most one of these can be specified:
 
