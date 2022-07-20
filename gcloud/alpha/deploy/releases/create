@@ -11,6 +11,7 @@ SYNOPSIS
         [--skaffold-file=SKAFFOLD_FILE] [--skaffold-version=SKAFFOLD_VERSION]
         [--source=SOURCE; default="."] [--to-target=TO_TARGET]
         [--build-artifacts=BUILD_ARTIFACTS | --images=[NAME=TAG,...]]
+        [--disable-initial-rollout | --enable-initial-rollout]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -101,7 +102,7 @@ FLAGS
         A directory in Google Cloud Storage to copy the source used for staging
         the build. If the specified bucket does not exist, Cloud Deploy will
         create one. If you don't set this field,
-        gs://[PROJECT_ID]_clouddeploy/source is used.
+        gs://[DELIVERY_PIPELINE_ID]_clouddeploy/source is used.
 
      --ignore-file=IGNORE_FILE
         Override the .gcloudignore file and use the specified file instead.
@@ -164,6 +165,16 @@ FLAGS
 
               $ gcloud deploy releases create foo \
                   --images image1=path/to/image1:v1@sha256:45db24
+
+     At most one of these can be specified:
+
+       --disable-initial-rollout
+          Skips creating a rollout in the first target defined in the delivery
+          pipeline.
+
+       --enable-initial-rollout
+          Creates a rollout in the first target defined in the delivery
+          pipeline. This is the default behavior.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
