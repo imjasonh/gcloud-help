@@ -4,12 +4,15 @@ NAME
 SYNOPSIS
     gcloud functions deploy (NAME : --region=REGION) [--allow-unauthenticated]
         [--docker-registry=DOCKER_REGISTRY] [--egress-settings=EGRESS_SETTINGS]
-        [--entry-point=ENTRY_POINT] [--ignore-file=IGNORE_FILE]
+        [--entry-point=ENTRY_POINT] [--gen2] [--ignore-file=IGNORE_FILE]
         [--ingress-settings=INGRESS_SETTINGS] [--memory=MEMORY] [--retry]
-        [--runtime=RUNTIME]
+        [--run-service-account=RUN_SERVICE_ACCOUNT] [--runtime=RUNTIME]
         [--security-level=SECURITY_LEVEL; default="secure-always"]
+        [--serve-all-traffic-latest-revision]
         [--service-account=SERVICE_ACCOUNT] [--source=SOURCE]
         [--stage-bucket=STAGE_BUCKET] [--timeout=TIMEOUT]
+        [--trigger-location=TRIGGER_LOCATION]
+        [--trigger-service-account=TRIGGER_SERVICE_ACCOUNT]
         [--update-labels=[KEY=VALUE,...]]
         [--build-env-vars-file=FILE_PATH | --clear-build-env-vars
           | --set-build-env-vars=[KEY=VALUE,...]
@@ -36,7 +39,9 @@ SYNOPSIS
         [--clear-vpc-connector | --vpc-connector=VPC_CONNECTOR]
         [--trigger-bucket=TRIGGER_BUCKET | --trigger-http
           | --trigger-topic=TRIGGER_TOPIC
-          | --trigger-event=EVENT_TYPE --trigger-resource=RESOURCE]
+          | --trigger-event=EVENT_TYPE --trigger-resource=RESOURCE
+          | --trigger-event-filters=[ATTRIBUTE=VALUE,...]
+          --trigger-event-filters-path-pattern=[ATTRIBUTE=VALUE,...]]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -112,6 +117,12 @@ FLAGS
         this is name of a function exported by the module specified in
         source_location.
 
+     --gen2
+        If enabled, this command will use Cloud Functions (Second generation).
+        If disabled, Cloud Functions (First generation) will be used. If not
+        specified, the value of this flag will be taken from the functions/gen2
+        configuration property.
+
      --ignore-file=IGNORE_FILE
         Override the .gcloudignore file and use the specified file instead.
 
@@ -130,6 +141,17 @@ FLAGS
 
      --retry
         If specified, then the function will be retried in case of a failure.
+
+     --run-service-account=RUN_SERVICE_ACCOUNT
+        The email address of the IAM service account associated with the Cloud
+        Run service for the function. The service account represents the
+        identity of the running function, and determines what permissions the
+        function has.
+
+        If not provided, the function will use the project's default service
+        account for Compute Engine.
+
+        This is only relevant when --gen2 is provided.
 
      --runtime=RUNTIME
         Runtime in which to run the function.
@@ -166,6 +188,10 @@ FLAGS
         both HTTP and HTTPS. By default, secure-always will be used, meaning
         only HTTPS is supported. SECURITY_LEVEL must be one of: secure-always,
         secure-optional.
+
+     --serve-all-traffic-latest-revision
+        If specified, latest function revision will be served all traffic. This
+        is only relevant when --gen2 is provided.
 
      --service-account=SERVICE_ACCOUNT
         The email address of the IAM service account associated with the
@@ -255,6 +281,21 @@ FLAGS
         original value for existing function or 60 seconds for new functions.
         Cannot be more than 540s. See $ gcloud topic datetimes for information
         on duration formats.
+
+     --trigger-location=TRIGGER_LOCATION
+        The location of the trigger, which must be a region or multi-region
+        where the relevant events originate. This is only relevant when --gen2
+        is provided.
+
+     --trigger-service-account=TRIGGER_SERVICE_ACCOUNT
+        The email address of the IAM service account associated with the
+        Eventarc trigger for the function. This is used for authenticated
+        invocation.
+
+        If not provided, the function will use the project's default service
+        account for Compute Engine.
+
+        This is only relevant when --gen2 is provided.
 
      --update-labels=[KEY=VALUE,...]
         List of label KEY=VALUE pairs to update. If a label exists, its value
@@ -498,8 +539,8 @@ FLAGS
 
      If you don't specify a trigger when deploying an update to an existing
      function it will keep its current trigger. You must specify
-     --trigger-topic, --trigger-bucket, --trigger-http or (--trigger-event AND
-     --trigger-resource) when deploying a new function.
+     --trigger-topic, --trigger-bucket, --trigger-http, --trigger-event-filters
+     or (--trigger-event AND --trigger-resource) when deploying a new function.
 
      At most one of these can be specified:
 
@@ -531,6 +572,17 @@ FLAGS
           providers/cloud.storage/eventTypes/object.change, --trigger-resource
           must be a bucket name. For a list of expected resources, call gcloud
           functions event-types list.
+
+       --trigger-event-filters=[ATTRIBUTE=VALUE,...]
+          The Eventarc matching criteria for the trigger. The criteria can be
+          specified either as a single comma-separated argument or as multiple
+          arguments. This is only relevant when --gen2 is provided.
+
+       --trigger-event-filters-path-pattern=[ATTRIBUTE=VALUE,...]
+          The Eventarc matching criteria for the trigger in path pattern
+          format. The criteria can be specified as a single comma-separated
+          argument or as multiple arguments. This is only relevant when --gen2
+          is provided.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

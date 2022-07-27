@@ -2,8 +2,8 @@ NAME
     gcloud functions call - triggers execution of a Google Cloud Function
 
 SYNOPSIS
-    gcloud functions call (NAME : --region=REGION) [--data=DATA]
-        [GCLOUD_WIDE_FLAG ...]
+    gcloud functions call (NAME : --region=REGION) [--gen2]
+        [--cloud-event=CLOUD_EVENT | --data=DATA] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Triggers execution of a Google Cloud Function.
@@ -52,8 +52,26 @@ POSITIONAL ARGUMENTS
           ▸ set the property functions/region.
 
 FLAGS
-     --data=DATA
-        JSON string with data that will be passed to the function.
+     --gen2
+        If enabled, this command will use Cloud Functions (Second generation).
+        If disabled, Cloud Functions (First generation) will be used. If not
+        specified, the value of this flag will be taken from the functions/gen2
+        configuration property.
+
+     At most one of these can be specified:
+
+       --cloud-event=CLOUD_EVENT
+          JSON encoded string with a CloudEvent in structured content mode.
+
+          Mutually exclusive with --data flag.
+
+          Use for Cloud Functions 2nd Gen CloudEvent functions. The CloudEvent
+          object will be sent to your function as a binary content mode message
+          with the top-level 'data' field set as the HTTP body and all other
+          JSON fields sent as HTTP headers.
+
+       --data=DATA
+          JSON string with data that will be passed to the function.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

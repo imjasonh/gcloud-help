@@ -11,6 +11,8 @@ SYNOPSIS
         [--enforce-on-key=ENFORCE_ON_KEY]
         [--enforce-on-key-name=ENFORCE_ON_KEY_NAME]
         [--exceed-action=EXCEED_ACTION]
+        [--exceed-action-rpc-status-code=EXCEED_ACTION_RPC_STATUS_CODE]
+        [--exceed-action-rpc-status-message=EXCEED_ACTION_RPC_STATUS_MESSAGE]
         [--exceed-redirect-target=EXCEED_REDIRECT_TARGET]
         [--exceed-redirect-type=EXCEED_REDIRECT_TYPE] [--preview]
         [--rate-limit-threshold-count=RATE_LIMIT_THRESHOLD_COUNT]
@@ -57,6 +59,10 @@ FLAGS
          deny-502
             Denies the request from HTTP(S) Load Balancing, with an HTTP
             response status code of 503.
+         fairshare
+            When traffic reaches the threshold limit, requests from the clients
+            matching this rule begin to be rate-limited using the Fair Share
+            algorithm.
          rate-based-ban
             Enforces rate-based ban action from HTTP(S) Load Balancing, based
             on rate limit options.
@@ -130,6 +136,12 @@ FLAGS
         --exceed-redirect-type and --exceed-redirect-target below.
         EXCEED_ACTION must be one of: deny-403, deny-404, deny-429, deny-502,
         deny, redirect.
+
+     --exceed-action-rpc-status-code=EXCEED_ACTION_RPC_STATUS_CODE
+        Status code, which should be an enum value of [google.rpc.Code]
+
+     --exceed-action-rpc-status-message=EXCEED_ACTION_RPC_STATUS_MESSAGE
+        Developer-facing error message, should be in English.
 
      --exceed-redirect-target=EXCEED_REDIRECT_TARGET
         URL target for the redirect action that is configured as the exceed

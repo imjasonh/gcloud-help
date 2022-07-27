@@ -8,10 +8,11 @@ SYNOPSIS
         [--annotations=[KEY=VALUE,...]] [--description=DESCRIPTION]
         [--gcs-source-staging-dir=GCS_SOURCE_STAGING_DIR]
         [--ignore-file=IGNORE_FILE] [--labels=[KEY=VALUE,...]]
-        [--skaffold-file=SKAFFOLD_FILE] [--skaffold-version=SKAFFOLD_VERSION]
-        [--source=SOURCE; default="."] [--to-target=TO_TARGET]
+        [--skaffold-version=SKAFFOLD_VERSION] [--to-target=TO_TARGET]
         [--build-artifacts=BUILD_ARTIFACTS | --images=[NAME=TAG,...]]
         [--disable-initial-rollout | --enable-initial-rollout]
+        [--from-k8s-manifest=FROM_K8S_MANIFEST
+          | --skaffold-file=SKAFFOLD_FILE --source=SOURCE; default="."]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -118,33 +119,8 @@ FLAGS
             $ gcloud alpha deploy releases create \
                 --labels="commit=abc123,author=foo"
 
-     --skaffold-file=SKAFFOLD_FILE
-        Path of the skaffold file relative to the source directory.
-
-        Examples:
-
-        Use Skaffold file:
-
-            $ gcloud alpha deploy releases create --source=/home/user/source \
-                --skaffold-file=config/skaffold.yaml
-
-            The skaffold file absolute file path is expected to be:
-            /home/user/source/config/skaffold.yaml
-
      --skaffold-version=SKAFFOLD_VERSION
         Version of the Skaffold binary.
-
-     --source=SOURCE; default="."
-        The location of the source that contains skaffold.yaml. The location
-        can be a directory on a local disk or a gzipped archive file (.tar.gz)
-        in Google Cloud Storage. If the source is a local directory, this
-        command skips the files specified in the --ignore-file. If
-        --ignore-file is not specified, use.gcloudignore file. If a
-        .gcloudignore file is absent and a .gitignore file is present in the
-        local source directory, gcloud will use a generated Git-compatible
-        .gcloudignore file that respects your .gitignored files. The global
-        .gitignore is not respected. For more information on .gcloudignore, see
-        gcloud topic gcloudignore.
 
      --to-target=TO_TARGET
         Specifies a target to deliver into upon release creation
@@ -175,6 +151,40 @@ FLAGS
        --enable-initial-rollout
           Creates a rollout in the first target defined in the delivery
           pipeline. This is the default behavior.
+
+     At most one of these can be specified:
+
+       --from-k8s-manifest=FROM_K8S_MANIFEST
+          The path to a Kubernetes manifest, which Cloud Deploy will use to
+          generate a skaffold.yaml file for you (for example, foo/bar/k8.yaml).
+          The generated Skaffold file will be available in the Google Cloud
+          Storage source staging directory (see --gcs-source-staging-dir flag)
+          after the release is complete.
+
+       --skaffold-file=SKAFFOLD_FILE
+          Path of the skaffold file relative to the source directory.
+
+          Examples:
+
+          Use Skaffold file:
+
+              $ gcloud alpha deploy releases create --source=/home/user/source \
+                  --skaffold-file=config/skaffold.yaml
+
+     The skaffold file absolute file path is expected to be:
+     /home/user/source/config/skaffold.yaml
+
+       --source=SOURCE; default="."
+          The location of the source that contains skaffold.yaml. The location
+          can be a directory on a local disk or a gzipped archive file
+          (.tar.gz) in Google Cloud Storage. If the source is a local
+          directory, this command skips the files specified in the
+          --ignore-file. If --ignore-file is not specified, use.gcloudignore
+          file. If a .gcloudignore file is absent and a .gitignore file is
+          present in the local source directory, gcloud will use a generated
+          Git-compatible .gcloudignore file that respects your .gitignored
+          files. The global .gitignore is not respected. For more information
+          on .gcloudignore, see gcloud topic gcloudignore.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
