@@ -3,7 +3,7 @@ NAME
 
 SYNOPSIS
     gcloud beta logging buckets create BUCKET_ID --location=LOCATION
-        [--description=DESCRIPTION]
+        [--description=DESCRIPTION] [--index=[KEY=VALUE, ...,...]]
         [--restricted-fields=[RESTRICTED_FIELD,...]]
         [--retention-days=RETENTION_DAYS] [GCLOUD_WIDE_FLAG ...]
 
@@ -26,6 +26,11 @@ EXAMPLES
 
         $ gcloud beta logging buckets create my-bucket --location=us-central1
 
+    To create a bucket with custom index of 'jsonPayload.foo', run:
+
+        $ gcloud beta logging buckets create my-bucket \
+            --index=fieldPath=jsonPayload.foo,type=INDEX_TYPE_STRING
+
 POSITIONAL ARGUMENTS
      BUCKET_ID
         ID of the bucket to create.
@@ -38,6 +43,22 @@ REQUIRED FLAGS
 OPTIONAL FLAGS
      --description=DESCRIPTION
         A textual description for the bucket.
+
+     --index=[KEY=VALUE, ...,...]
+        Specify an index to be added to the log bucket. This flag can be
+        repeated. The fieldPath and type attributes are required. For example:
+        --index=fieldPath=jsonPayload.foo,type=INDEX_TYPE_STRING. The following
+        keys are accepted:
+
+         fieldPath
+            The LogEntry field path to index. For example:
+            jsonPayload.request.status. Paths are limited to 800 characters and
+            can include only letters, digits, underscores, hyphens, and
+            periods.
+
+         type
+            The type of data in this index. For example: INDEX_TYPE_STRING
+            Supported types are INDEX_TYPE_STRING and INDEX_TYPE_INTEGER.
 
      --restricted-fields=[RESTRICTED_FIELD,...]
         Comma-separated list of field paths that require permission checks in

@@ -11,10 +11,11 @@ SYNOPSIS
         [--credential-source-field-name=CREDENTIAL_SOURCE_FIELD_NAME]
         [--credential-source-headers=[key=value,...]]
         [--credential-source-type=CREDENTIAL_SOURCE_TYPE] [--enable-imdsv2]
-        [--service-account=SERVICE_ACCOUNT]
         [--subject-token-type=SUBJECT_TOKEN_TYPE]
         [--executable-output-file=EXECUTABLE_OUTPUT_FILE
           --executable-timeout-millis=EXECUTABLE_TIMEOUT_MILLIS]
+        [--service-account=SERVICE_ACCOUNT
+          : --service-account-token-lifetime-seconds=SERVICE_ACCOUNT_TOKEN_LIFETIME_SECONDS]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -117,9 +118,6 @@ OPTIONAL FLAGS
         Adds the AWS IMDSv2 session token Url to the credential source to
         enforce the AWS IMDSv2 flow.
 
-     --service-account=SERVICE_ACCOUNT
-        The email of the service account to impersonate.
-
      --subject-token-type=SUBJECT_TOKEN_TYPE
         The type of token being used for authorization.
 
@@ -131,6 +129,22 @@ OPTIONAL FLAGS
        --executable-timeout-millis=EXECUTABLE_TIMEOUT_MILLIS
           The timeout duration in milliseconds for waiting for the executable
           to finish.
+
+     Service account impersonation options.
+
+       --service-account=SERVICE_ACCOUNT
+          The email of the service account to impersonate.
+
+          This flag must be specified if any of the other arguments in this
+          group are specified.
+
+       --service-account-token-lifetime-seconds=SERVICE_ACCOUNT_TOKEN_LIFETIME_SECONDS
+          The desired lifetime duration of the service account access token in
+          seconds. This defaults to one hour when not provided. If a lifetime
+          greater than one hour is required, the service account must be added
+          as an allowed value in an Organization Policy that enforces the
+          constraints/iam.allowServiceAccountCredentialLifetimeExtension
+          constraint.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

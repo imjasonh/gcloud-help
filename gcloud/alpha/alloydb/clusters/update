@@ -8,8 +8,8 @@ SYNOPSIS
           | [--automated-backup-days-of-week=[DAYS_OF_WEEK,...]
           --automated-backup-start-times=[START_TIMES,...]
           : --automated-backup-window=TIMEOUT_PERIOD
-          --automated-backup-retention-count=RETENTION_COUNT
-          | --automated-backup-retention-period=RETENTION_PERIOD]]
+          [--automated-backup-encryption-key=AUTOMATED_BACKUP_ENCRYPTION_KEY
+          : --automated-backup-encryption-key-keyring=AUTOMATED_BACKUP_ENCRYPTION_KEY_KEYRING --automated-backup-encryption-key-location=AUTOMATED_BACKUP_ENCRYPTION_KEY_LOCATION --automated-backup-encryption-key-project=AUTOMATED_BACKUP_ENCRYPTION_KEY_PROJECT] --automated-backup-retention-count=RETENTION_COUNT | --automated-backup-retention-period=RETENTION_PERIOD]]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -75,6 +75,44 @@ OPTIONAL FLAGS
             time window, it will be canceled and considered failed. The backup
             window must be at least 5 minutes long. There is no upper bound on
             the window. If not set, it will default to 1 hour.
+
+         Key resource - The Cloud KMS (Key Management Service) cryptokey that
+         will be used to protect the automated backups. The 'AlloyDB Service
+         Agent' service account must hold permission 'Cloud KMS CryptoKey
+         Encrypter/Decrypter'. The arguments in this group can be used to
+         specify the attributes of this resource.
+
+           --automated-backup-encryption-key=AUTOMATED_BACKUP_ENCRYPTION_KEY
+              ID of the key or fully qualified identifier for the key. To set
+              the kms-key attribute:
+              ◇ provide the argument --automated-backup-encryption-key on the
+                command line.
+
+              This flag must be specified if any of the other arguments in this
+              group are specified.
+
+           --automated-backup-encryption-key-keyring=AUTOMATED_BACKUP_ENCRYPTION_KEY_KEYRING
+              The KMS keyring of the key. To set the kms-keyring attribute:
+              ◇ provide the argument --automated-backup-encryption-key on the
+                command line with a fully specified name;
+              ◇ provide the argument
+                --automated-backup-encryption-key-keyring on the command line.
+
+           --automated-backup-encryption-key-location=AUTOMATED_BACKUP_ENCRYPTION_KEY_LOCATION
+              The Cloud location for the key. To set the kms-location
+              attribute:
+              ◇ provide the argument --automated-backup-encryption-key on the
+                command line with a fully specified name;
+              ◇ provide the argument
+                --automated-backup-encryption-key-location on the command line.
+
+           --automated-backup-encryption-key-project=AUTOMATED_BACKUP_ENCRYPTION_KEY_PROJECT
+              The Cloud project for the key. To set the kms-project attribute:
+              ◇ provide the argument --automated-backup-encryption-key on the
+                command line with a fully specified name;
+              ◇ provide the argument
+                --automated-backup-encryption-key-project on the command line;
+              ◇ set the property core/project.
 
          Retention policy. If no retention policy is provided, all automated
          backups will be retained.

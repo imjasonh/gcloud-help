@@ -1,0 +1,69 @@
+NAME
+    gcloud alpha storage cat - outputs the contents of one or more URLs to
+        stdout
+
+SYNOPSIS
+    gcloud alpha storage cat URL [URL ...] [--display-url, -d]
+        [--range=RANGE, -r RANGE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) The cat command outputs the contents of one or more URLs to stdout.
+    While the cat command does not compute a checksum, it is otherwise
+    equivalent to doing:
+
+        $ gcloud alpha storage cp url... -
+
+    (The final '-' causes gcloud to stream the output to stdout.)
+
+EXAMPLES
+    The following command writes all text files in a bucket to stdout:
+
+        $ gcloud alpha storage cat gs://bucket/*.txt
+
+    The following command outputs a short header describing file.txt, along
+    with its contents:
+
+        $ gcloud alpha storage cat -d gs://my-bucket/file.txt
+
+    The following command outputs bytes 256-939 of file.txt:
+
+        $ gcloud alpha storage cat -r 256-939 gs://my-bucket/file.txt
+
+    The following command outputs the last 5 bytes of file.txt:
+
+        $ gcloud alpha storage cat -r -5 gs://my-bucket/file.txt
+
+POSITIONAL ARGUMENTS
+     URL [URL ...]
+        The url of objects to list.
+
+FLAGS
+     --display-url, -d
+        Prints the header before each object.
+
+     --range=RANGE, -r RANGE
+        Causes gcloud storage to output just the specified byte range of the
+        object. In a case where "start" = 'x', and "end" = 'y', ranges take the
+        form: x-y (e.g., -r 256-5939), x- (e.g., -r 256-), -y (e.g., -r -5)
+
+        When offsets start at 0, x-y means to return bytes x through y
+        (inclusive), x- means to return bytes x through the end of the object,
+        and -y changes the role of y. If -y is present, then it returns the
+        last y bytes of the object.
+
+        If the bytes are out of range of the object, then nothing is printed
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

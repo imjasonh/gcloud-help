@@ -1,0 +1,96 @@
+NAME
+    gcloud alpha storage objects list - lists Cloud Storage objects
+
+SYNOPSIS
+    gcloud alpha storage objects list URLS [URLS ...]
+        [--decryption-keys=[DECRYPTION_KEY,...]]
+        [--encryption-key=ENCRYPTION_KEY] [--filter=EXPRESSION] [--limit=LIMIT]
+        [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [--uri]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) List Cloud Storage objects.
+
+    Bucket URLs like "gs://bucket" will match all the objects inside a bucket,
+    but "gs://b" will error because it matches a list of buckets.
+
+EXAMPLES
+    List all objects in bucket "my-bucket":
+
+        $ gcloud alpha storage objects list gs://my-bucket
+
+    List all objects in bucket beginning with "o":
+
+        $ gcloud alpha storage objects list gs://my-bucket/o*
+
+    List all objects in bucket with JSON formatting, only returning the value
+    of the "name" metadata field:
+
+        $ gcloud alpha storage objects list gs://my-bucket \
+            --format="json(name)"
+
+POSITIONAL ARGUMENTS
+     URLS [URLS ...]
+        Specifies URL of objects to list.
+
+FLAGS
+     --decryption-keys=[DECRYPTION_KEY,...]
+        A comma separated list of customer-supplied encryption keys (RFC 4648
+        section 4 base64-encoded AES256 strings) that will be used to decrypt
+        Google Cloud Storage objects. Data encrypted with a customer-managed
+        encryption key (CMEK) is decrypted automatically, so CMEKs do not need
+        to be listed here.
+
+     --encryption-key=ENCRYPTION_KEY
+        A customer-supplied encryption key (An RFC 4648 section 4
+        base64-encoded AES256 string), or customer-managed encryption key of
+        the form
+        projects/{project}/locations/{location}/keyRings/{key-ring}/cryptoKeys/{crypto-key}.
+        This key will be used for all data written to Google Cloud Storage.
+
+LIST COMMAND FLAGS
+     --filter=EXPRESSION
+        Apply a Boolean filter EXPRESSION to each resource item to be listed.
+        If the expression evaluates True, then that item is listed. For more
+        details and examples of filter expressions, run $ gcloud topic filters.
+        This flag interacts with other flags that are applied in this order:
+        --flatten, --sort-by, --filter, --limit.
+
+     --limit=LIMIT
+        Maximum number of resources to list. The default is unlimited. This
+        flag interacts with other flags that are applied in this order:
+        --flatten, --sort-by, --filter, --limit.
+
+     --page-size=PAGE_SIZE
+        Some services group resource list output into pages. This flag
+        specifies the maximum number of resources per page. The default is
+        determined by the service if it supports paging, otherwise it is
+        unlimited (no paging). Paging may be applied before or after --filter
+        and --limit depending on the service.
+
+     --sort-by=[FIELD,...]
+        Comma-separated list of resource field key names to sort by. The
+        default order is ascending. Prefix a field with ``~'' for descending
+        order on that field. This flag interacts with other flags that are
+        applied in this order: --flatten, --sort-by, --filter, --limit.
+
+     --uri
+        Print a list of resource URIs instead of the default output, and change
+        the command output to a list of URIs. If this flag is used with
+        --format, the formatting is applied on this URI list. To display URIs
+        alongside other keys instead, use the uri() transform.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

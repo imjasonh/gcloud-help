@@ -4,19 +4,36 @@ NAME
 
 SYNOPSIS
     gcloud beta beyondcorp client-connector services update
-        (CLIENT_CONNECTOR_SERVICE : --location=LOCATION) [--async]
-        [--display-name=DISPLAY_NAME] [GCLOUD_WIDE_FLAG ...]
+        (CLIENT_CONNECTOR_SERVICE : --location=LOCATION)
+        (--config-from-file=CONFIG_FROM_FILE
+          | --display-name=DISPLAY_NAME --ingress-config=INGRESS_CONFIG)
+        [--async] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (BETA) Update a BeyondCorp client connector service.
+    (BETA) Update a BeyondCorp client connector service. Note - Mutable fields
+    include - \ display_name, ingress.config.destination_routes.
 
 EXAMPLES
+    Note - Mutable fields include: display_name,
+    ingress.config.destination_routes.
+
     The following command updates a client connector service with ID
-    my-service-resource in location us-central1:
+    my-service-resource with ingress config:
 
         $ gcloud beta beyondcorp client-connector services update \
             my-service-resource --project=consumer-project-id \
-            --location=us-central1 --display-name="my-new-resource"
+            --location=us-central1 --display-name="my-new-resource" \
+            --ingress-config='{"destinationRoutes":[{"address":"196.0.0.1",
+         "netmask":"255.255.255.0"},{"address":"197.0.0.2","netmask":"255.25\
+        5.255.0"}]}'
+
+    The following command updates a client connector service with ID
+    my-service-resource with configuration from file:
+
+        $ gcloud beta beyondcorp client-connector services update \
+            my-service-resource --project=consumer-project-id \
+            --location=us-central1 \
+            --config-from-file=/path/to/file/config.json
 
 POSITIONAL ARGUMENTS
      Client connector service resource - The BeyondCorp client connector
@@ -49,17 +66,42 @@ POSITIONAL ARGUMENTS
             with a fully specified name;
           ▸ provide the argument --location on the command line.
 
-FLAGS
+REQUIRED FLAGS
+     Updated client connector service configuration.
+
+     Exactly one of these must be specified:
+
+       --config-from-file=CONFIG_FROM_FILE
+          Path to json file containing client connector service configuration.
+          Example - "/file/path/config.json" where config.json contains -              {
+                "ingress":{
+                  "config":{
+                    "transportProtocol":"TCP",
+                    "destinationRoutes":[{
+                      "address":"196.0.0.0",
+                      "netmask":"255.255.255.0"
+                    }]
+                  }
+                },
+                "displayName":"my-service-resource"
+              }
+
+       --display-name=DISPLAY_NAME
+          An arbitrary user-provided name for the client connector service. The
+          display name should follow format -
+          ▸ Must be 6 to 30 characters in length.
+          ▸ Can only contain lowercase letters, numbers and hyphens.
+          ▸ Must start with a letter.
+
+       --ingress-config=INGRESS_CONFIG
+          Ingress config for client gateways. Example -
+          {"destinationRoutes":[{"address":"196.0.0.0",
+          "netmask":"255.255.255.0"},{"address":"197.0.0.0","netmask":"255.255.255.0"}]}.
+
+OPTIONAL FLAGS
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
-
-     --display-name=DISPLAY_NAME
-        An arbitrary user-provided name for the client connector service. The
-        display name should follow format -
-        ◆ Must be 6 to 30 characters in length.
-        ◆ Can only contain lowercase letters, numbers and hyphens.
-        ◆ Must start with a letter.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

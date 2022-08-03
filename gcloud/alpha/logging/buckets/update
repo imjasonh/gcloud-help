@@ -19,6 +19,26 @@ EXAMPLES
         $ gcloud alpha logging buckets update my-bucket --location=global \
            --description=my-new-description
 
+    To update a bucket in your project and remove all indexes, run:
+
+        $ gcloud alpha logging buckets update my-bucket --location=global \
+           --clear-indexes
+
+    To update a bucket in your project and remove an index, run:
+
+        $ gcloud alpha logging buckets update my-bucket --location=global \
+           --remove-indexes=jsonPayload.foo2
+
+    To update a bucket in your project and add an index, run:
+
+        $ gcloud alpha logging buckets update my-bucket --location=global \
+           --add-index=fieldPath=jsonPayload.foo2,type=INDEX_TYPE_STRING
+
+    To update a bucket in your project and update an existing index, run:
+
+        $ gcloud alpha logging buckets update my-bucket --location=global \
+           --update-index=fieldPath=jsonPayload.foo,type=INDEX_TYPE_INTEGER
+
 POSITIONAL ARGUMENTS
      BUCKET_ID
         The id of the bucket to update.
@@ -30,19 +50,19 @@ REQUIRED FLAGS
 OPTIONAL FLAGS
      --add-index=[KEY=VALUE, ...,...]
         Add an index to be added to the log bucket. This flag can be repeated.
-        The fieldPath and type attributes are required. For example
+        The fieldPath and type attributes are required. For example:
         --index=fieldPath=jsonPayload.foo,type=INDEX_TYPE_STRING. The following
         keys are accepted:
 
          fieldPath
-            The LogEntry field path to index.For example:
+            The LogEntry field path to index. For example:
             jsonPayload.request.status. Paths are limited to 800 characters and
             can include only letters, digits, underscores, hyphens, and
             periods.
 
          type
-            The type of data in this index.For example: INDEX_TYPE_STRING
-            Supported types are Strings and Integers.
+            The type of data in this index. For example: INDEX_TYPE_STRING
+            Supported types are strings and integers.
 
      --clear-indexes
         Remove all logging indexes from the bucket.
@@ -65,7 +85,7 @@ OPTIONAL FLAGS
         it is empty).
 
      --remove-indexes=[FIELD PATH,...]
-        Specify the field path of the Logging index(es) to delete.
+        Specify the field path of the logging index(es) to delete.
 
      --restricted-fields=[RESTRICTED_FIELD,...]
         A new set of restricted fields for the bucket.
@@ -75,9 +95,9 @@ OPTIONAL FLAGS
 
      --update-index=[KEY=VALUE, ...,...]
         Update an index to be added to the log bucket. This will update the
-        type of the index, and also update its create time to the new update
-        time.This flag can be repeated. The fieldPath and type attributes are
-        required. For example
+        type of the index, and also update its createTime to the new update
+        time. This flag can be repeated. The fieldPath and type attributes are
+        required. For example:
         --index=fieldPath=jsonPayload.foo,type=INDEX_TYPE_STRING. The following
         keys are accepted:
 
@@ -89,7 +109,7 @@ OPTIONAL FLAGS
 
          type
             The type of data in this index. For example: INDEX_TYPE_STRING
-            Supported types are Strings and Integers.
+            Supported types are strings and integers.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

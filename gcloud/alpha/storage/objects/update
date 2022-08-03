@@ -1,0 +1,196 @@
+NAME
+    gcloud alpha storage objects update - update Cloud Storage objects
+
+SYNOPSIS
+    gcloud alpha storage objects update [URL ...]
+        [--cache-control=CACHE_CONTROL] [--clear-cache-control]
+        [--clear-content-disposition] [--clear-content-encoding]
+        [--clear-content-language] [--clear-content-md5] [--clear-content-type]
+        [--clear-custom-time] [--clear-encryption-key]
+        [--content-disposition=CONTENT_DISPOSITION]
+        [--content-encoding=CONTENT_ENCODING]
+        [--content-language=CONTENT_LANGUAGE] [--content-md5=MD5_DIGEST]
+        [--content-type=CONTENT_TYPE] [--continue-on-error, -c]
+        [--custom-time=CUSTOM_TIME] [--decryption-keys=[DECRYPTION_KEY,...]]
+        [--encryption-key=ENCRYPTION_KEY] [--[no-]event-based-hold]
+        [--if-generation-match=GENERATION]
+        [--if-metageneration-match=METAGENERATION] [--preserve-acl, -p]
+        [--read-paths-from-stdin, -I] [--recursive, -R, -r]
+        [--storage-class=STORAGE_CLASS, -s STORAGE_CLASS]
+        [--[no-]temporary-hold]
+        [--clear-custom-metadata
+          | --custom-metadata=[CUSTOM_METADATA_KEYS_AND_VALUES,...]
+          | --remove-custom-metadata=[METADATA_KEYS,...]
+          --update-custom-metadata=[CUSTOM_METADATA_KEYS_AND_VALUES,...]]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Update Cloud Storage objects.
+
+EXAMPLES
+    Update a Google Cloud Storage object's custom-metadata:
+
+        $ *gcloud alpha storage objects update* gs://bucket/my-object \
+            --custom-metadata=key1=value1,key2=value2
+
+    Set a temporary hold on JPG images:
+
+        $ *gcloud alpha storage objects update* gs://bucket/*.jpg \
+            --temporary-hold
+
+        You can also provide a precondition on an object's metageneration in
+        order to avoid potential race conditions:
+
+        $ *gcloud alpha storage objects update* gs://bucket/*.jpg \
+            --temporary-hold --if-metageneration-match=123456789
+
+POSITIONAL ARGUMENTS
+     [URL ...]
+        Specifies URLs of objects to update.
+
+FLAGS
+     --cache-control=CACHE_CONTROL
+        How caches should handle requests and responses.
+
+     --clear-cache-control
+        Clears object cache control.
+
+     --clear-content-disposition
+        Clears object content disposition.
+
+     --clear-content-encoding
+        Clears content encoding.
+
+     --clear-content-language
+        Clears object content language.
+
+     --clear-content-md5
+        Clears object content MD5.
+
+     --clear-content-type
+        Clears object content type.
+
+     --clear-custom-time
+        Clears object custom time.
+
+     --clear-encryption-key
+        Clears encryption key associated with an object.
+
+     --content-disposition=CONTENT_DISPOSITION
+        How content should be displayed.
+
+     --content-encoding=CONTENT_ENCODING
+        How content is encoded (e.g. gzip).
+
+     --content-language=CONTENT_LANGUAGE
+        Content's language (e.g. en signifies "English").
+
+     --content-md5=MD5_DIGEST
+        Manually specified MD5 hash digest for the contents of an uploaded
+        file. This flag cannot be used when uploading multiple files. The
+        custom digest is used by the cloud provider for validation.
+
+     --content-type=CONTENT_TYPE
+        Type of data contained in the object (e.g. text/html).
+
+     --continue-on-error, -c
+        If any operations are unsuccessful, the command will exit with a
+        non-zero exit status after completing the remaining operations. This
+        flag takes effect only in sequential execution mode (i.e. processor and
+        thread count are set to 1). Parallelism is default.
+
+     --custom-time=CUSTOM_TIME
+        Custom time for Google Cloud Storage objects in RFC 3339 format.
+
+     --decryption-keys=[DECRYPTION_KEY,...]
+        A comma separated list of customer-supplied encryption keys (RFC 4648
+        section 4 base64-encoded AES256 strings) that will be used to decrypt
+        Google Cloud Storage objects. Data encrypted with a customer-managed
+        encryption key (CMEK) is decrypted automatically, so CMEKs do not need
+        to be listed here.
+
+     --encryption-key=ENCRYPTION_KEY
+        A customer-supplied encryption key (An RFC 4648 section 4
+        base64-encoded AES256 string), or customer-managed encryption key of
+        the form
+        projects/{project}/locations/{location}/keyRings/{key-ring}/cryptoKeys/{crypto-key}.
+        This key will be used for all data written to Google Cloud Storage.
+
+     --[no-]event-based-hold
+        Enables or disables an event-based hold on objects. Use
+        --event-based-hold to enable and --no-event-based-hold to disable.
+
+     --if-generation-match=GENERATION
+        Execute only if the generation matches the generation of the requested
+        object.
+
+     --if-metageneration-match=METAGENERATION
+        Execute only if the metageneration matches the metageneration of the
+        requested object.
+
+     --preserve-acl, -p
+        Preserves ACLs when copying in the cloud. This feature is supported for
+        only Google Cloud Storage and requires OWNER access to all copied
+        objects. To use the destination bucket's default policy (necessary for
+        uniform bucket-level access), use --no-preserve-acl. Enabled by
+        default, use -p to disable.
+
+     --read-paths-from-stdin, -I
+        Read the list of objects to update from stdin. No need to enter a
+        source argument if this flag is present. Example: "storage objects
+        update -I --content-type=new-type"
+
+     --recursive, -R, -r
+        Recursively update objects under any buckets or directories that match
+        the URL expression.
+
+     --storage-class=STORAGE_CLASS, -s STORAGE_CLASS
+        Specify the storage class of the object. Triggers a rewrite
+        ofunderlying object data.
+
+     --[no-]temporary-hold
+        Enables or disables a temporary hold on objects. Use --temporary-hold
+        to enable and --no-temporary-hold to disable.
+
+     At most one of these can be specified:
+
+       --clear-custom-metadata
+          Clears all custom metadata on objects. When used with
+          --preserve-posix, POSIX attributes will still be stored in custom
+          metadata.
+
+       --custom-metadata=[CUSTOM_METADATA_KEYS_AND_VALUES,...]
+          Sets custom metadata on objects. When used with --preserve-posix,
+          POSIX attributes are also stored in custom metadata.
+
+       Flags that preserve unspecified existing metadata cannot be used with
+       --custom-metadata or --clear-custom-metadata, but can be specified
+       together:
+
+         --remove-custom-metadata=[METADATA_KEYS,...]
+            Removes individual custom metadata keys from objects. This flag can
+            be used with --update-custom-metadata. When used with
+            --preserve-posix, POSIX attributes specified by this flag are not
+            preserved.
+
+         --update-custom-metadata=[CUSTOM_METADATA_KEYS_AND_VALUES,...]
+            Adds or sets individual custom metadata key value pairs on objects.
+            Existing custom metadata not specified with this flag is not
+            changed. This flag can be used with --remove-custom-metadata. When
+            keys overlap with those provided by --preserve-posix, values
+            specified by this flag are used.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+
