@@ -74,7 +74,10 @@ FLAGS
         Clears object custom time.
 
      --clear-encryption-key
-        Clears encryption key associated with an object.
+        Clears the encryption key associated with an object. Using this flag
+        triggers a rewrite of affected objects, which are then encrypted using
+        the default encryption key set on the bucket, if one exists, or else
+        with a Google-managed encryption key.
 
      --content-disposition=CONTENT_DISPOSITION
         How content should be displayed.
@@ -110,11 +113,15 @@ FLAGS
         to be listed here.
 
      --encryption-key=ENCRYPTION_KEY
-        A customer-supplied encryption key (An RFC 4648 section 4
-        base64-encoded AES256 string), or customer-managed encryption key of
-        the form
-        projects/{project}/locations/{location}/keyRings/{key-ring}/cryptoKeys/{crypto-key}.
-        This key will be used for all data written to Google Cloud Storage.
+        The encryption key to use for encrypting target objects. The specified
+        encryption key can be a customer-supplied encryption key (An RFC 4648
+        section 4 base64-encoded AES256 string), or a customer-managed
+        encryption key of the form
+        projects/{project}/locations/{location}/keyRings/
+        {key-ring}/cryptoKeys/{crypto-key}. The specified key also acts as a
+        decryption key, which is useful when copying or moving encryted data to
+        a new location. Using this flag in an objects update command triggers a
+        rewrite of target objects.
 
      --[no-]event-based-hold
         Enables or disables an event-based hold on objects. Use
@@ -145,8 +152,8 @@ FLAGS
         the URL expression.
 
      --storage-class=STORAGE_CLASS, -s STORAGE_CLASS
-        Specify the storage class of the object. Triggers a rewrite
-        ofunderlying object data.
+        Specify the storage class of the object. Using this flag triggers a
+        rewrite of underlying object data.
 
      --[no-]temporary-hold
         Enables or disables a temporary hold on objects. Use --temporary-hold

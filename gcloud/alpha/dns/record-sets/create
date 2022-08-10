@@ -5,9 +5,14 @@ NAME
 SYNOPSIS
     gcloud alpha dns record-sets create DNS_NAME --type=TYPE --zone=ZONE, -z
         ZONE
-        (--rrdatas=[RRDATA,...] | --routing_policy_data=ROUTING_POLICY_DATA
-          --routing_policy_type=ROUTING_POLICY_TYPE) [--location=LOCATION]
-        [--ttl=TTL] [GCLOUD_WIDE_FLAG ...]
+        (--rrdatas=[RRDATA,...] | [--routing_policy_type=ROUTING_POLICY_TYPE
+          (--routing_policy_data=ROUTING_POLICY_DATA
+          | [--routing-policy-backup-data=ROUTING_POLICY_BACKUP_DATA
+          --routing-policy-backup-data-type=ROUTING_POLICY_BACKUP_DATA_TYPE
+          --routing-policy-primary-data=ROUTING_POLICY_PRIMARY_DATA
+          : --backup-data-trickle-ratio=BACKUP_DATA_TRICKLE_RATIO])
+          : --enable-geo-fencing --enable-health-checking])
+        [--location=LOCATION] [--ttl=TTL] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) This command creates a record-set contained within the specified
@@ -36,6 +41,31 @@ EXAMPLES
             --rrdatas=1.2.3.4,9.8.7.6 --type=A --ttl=60 --zone=my_zone \
             --location=us-east1-a
 
+    To create a failover type health checked routed record-set with dnsName
+    foo.bar.com., record type A, primary routing data "config1", backup routing
+    data "us-centra1=1.2.3.4,2.3.4.5;us-west1=3.4.5.6,9.8.7.6", with a trickle
+    traffic ratio of 10% to the backup data, and ttl 60 in my_zone.
+
+        $ gcloud alpha dns record-sets create foo.bar.com. --type=A \
+            --ttl=60 --zone=routing-policy-test \
+            --routing_policy_type=FAILOVER \
+            --routing-policy-primary-data='config1' \
+            --routing-policy-backup-data-type=GEO \
+            --routing-policy-backup-data='us-centra1=1.2.3.4,2.3.4.5;us-west\
+        1=3.4.5.6,9.8.7.6' --backup-data-trickle-ratio=0.1 \
+            --enable-health-checking --zone=my_zone
+
+    To create a geo fenced health checked routed record-set with dnsName
+    foo.bar.com., record type A, routing-policy-data
+    "us-centra1=config1,config2;us-west1=3.4.5.6,9.8.7.6", and ttl 60 in
+    my_zone.
+
+        $ gcloud alpha dns record-sets create foo.bar.com. --type=A \
+            --ttl=60 --zone=routing-policy-test --routing_policy_type=GEO \
+            --routing_policy_data='us-centra1=config1,config2;us-west1=3.4.5\
+        .6,9.8.7.6' --enable-health-checking --enable-geo-fencing \
+            --zone=my_zone
+
 POSITIONAL ARGUMENTS
      DNS_NAME
         DNS or domain name of the record-set.
@@ -60,34 +90,78 @@ REQUIRED FLAGS
        Routing policy arguments. If you specify one of --routing-policy-data or
        --routing-policy-type, you must specify both.
 
-         --routing_policy_data=ROUTING_POLICY_DATA
-            The routing policy data supports one of two formats below,
-            depending on the choice of routing-policy-type.
-
-            For --routing-policy-type = "WRR" this flag indicates the weighted
-            round robin policy data. The field accepts a semicolon-delimited
-            list of the format "${weight_percent}:${rrdata},${rrdata}". Specify
-            weight as a non-negative number (0 is allowed). Ratio of traffic
-            routed to the target is calculated from the ratio of individual
-            weight over the total across all weights.
-
-            For --routing-policy-type = "GEO" this flag indicates the
-            geo-locations policy data. The field accepts a semicolon-delimited
-            list of the format "${region}:${rrdata},${rrdata}".
-
-            This flag must be specified if any of the other arguments in this
-            group are specified.
-
          --routing_policy_type=ROUTING_POLICY_TYPE
             Indicates what type of routing policy is being specified. As of
             this time, this field can take on either "WRR" for weighted round
-            robin, or "GEO" for geo location. This field cannot be modified -
-            once a policy has chosen a type, the only way to change it is to
-            delete the policy and add a new one with the different type.
-            ROUTING_POLICY_TYPE must be one of: GEO, WRR.
+            robin, "GEO" for geo location, or "FAILOVER" for a primary-backup
+            configuration. This field cannot be modified - once a policy has a
+            chosen type, the only way to change it is to delete the policy and
+            add a new one with the different type. ROUTING_POLICY_TYPE must be
+            one of: GEO, WRR, FAILOVER.
 
-            This flag must be specified if any of the other arguments in this
-            group are specified.
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --enable-geo-fencing
+            Specifies whether to enable fencing for geo queries.
+
+         --enable-health-checking
+            Required if specifying forwarding rule names for rrdata.
+
+         Routing policy data arguments. Combines routing-policy-data,
+         routing-policy-primary-data, routing-policy-backup-data.
+
+         Exactly one of these must be specified:
+
+           --routing_policy_data=ROUTING_POLICY_DATA
+              The routing policy data supports one of two formats below,
+              depending on the choice of routing-policy-type.
+
+              For --routing-policy-type = "WRR" this flag indicates the
+              weighted round robin policy data. The field accepts a
+              semicolon-delimited list of the format
+              "${weight_percent}:${rrdata},${rrdata}". Specify weight as a
+              non-negative number (0 is allowed). Ratio of traffic routed to
+              the target is calculated from the ratio of individual weight over
+              the total across all weights.
+
+              For --routing-policy-type = "GEO" this flag indicates the
+              geo-locations policy data. The field accepts a
+              semicolon-delimited list of the format
+              "${region}:${rrdata},${rrdata}". Each individual rrdata can
+              either be an ip address or a string of the format
+              forwarding_config_name@region.
+
+           Configuration for primary backup routing policy
+
+             --routing-policy-backup-data=ROUTING_POLICY_BACKUP_DATA
+                The backup config for a primary backup routing policy. This is
+                the same format as the routing-policy-data arg as this is just
+                another geo policy.
+
+                This flag argument must be specified if any of the other
+                arguments in this group are specified.
+
+             --routing-policy-backup-data-type=ROUTING_POLICY_BACKUP_DATA_TYPE
+                For FAILOVER routing policies, the type of routing policy the
+                backup data uses. Currently, this must be GEO.
+                ROUTING_POLICY_BACKUP_DATA_TYPE must be (currently only one
+                value is supported): GEO.
+
+                This flag argument must be specified if any of the other
+                arguments in this group are specified.
+
+             --routing-policy-primary-data=ROUTING_POLICY_PRIMARY_DATA
+                The primary config for a primary backup routing policy. This is
+                just a list of forwarding configs of the format "config_name"
+                or "config_name@scope"
+
+                This flag argument must be specified if any of the other
+                arguments in this group are specified.
+
+             --backup-data-trickle-ratio=BACKUP_DATA_TRICKLE_RATIO
+                Specifies the percentage of traffic to send to the backup
+                targets even when the primary targets are healthy.
 
 OPTIONAL FLAGS
      --location=LOCATION

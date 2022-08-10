@@ -7,6 +7,7 @@ SYNOPSIS
         [--plain] [--ssh-flag=SSH_FLAG] [--ssh-key-file=SSH_KEY_FILE]
         [--strict-host-key-checking=STRICT_HOST_KEY_CHECKING] [--troubleshoot]
         [--zone=ZONE] [--internal-ip | --tunnel-through-iap]
+        [--network=NETWORK --region=REGION : --dest-group=DEST_GROUP]
         [--ssh-key-expiration=SSH_KEY_EXPIRATION
           | --ssh-key-expire-after=SSH_KEY_EXPIRE_AFTER] [GCLOUD_WIDE_FLAG ...]
         [-- SSH_ARGS ...]
@@ -30,6 +31,11 @@ DESCRIPTION
     project's metadata. If the user does not have a public SSH key, one is
     generated using ssh-keygen(1) (if the --quiet flag is given, the generated
     key will have an empty passphrase).
+
+    If the --region and --network flags are provided, then --plain and
+    --tunnel-through-iap are implied and an IP address must be supplied instead
+    of an instance name. This is most useful for connecting to on-prem
+    resources.
 
 EXAMPLES
     To SSH into 'example-instance' in zone us-central1-a, run:
@@ -68,6 +74,11 @@ EXAMPLES
 
         $ gcloud compute ssh example-instance --zone=us-central1-a \
             --ssh-key-expire-after=2m
+
+    To use the IP address of your remote VM (eg, for on-prem), you must also
+    specify the --region and --network flags:
+
+        $ gcloud compute ssh 10.1.2.3 --region=us-central1 --network=default
 
 POSITIONAL ARGUMENTS
      [USER@]INSTANCE
@@ -207,6 +218,17 @@ FLAGS
 
           To learn more, see the IAP for TCP forwarding documentation
           (https://cloud.google.com/iap/docs/tcp-forwarding-overview).
+
+     --network=NETWORK
+        Configures the VPC network to use when connecting via IP address or
+        FQDN.
+
+     --region=REGION
+        Configures the region to use when connecting via IP address or FQDN.
+
+     --dest-group=DEST_GROUP
+        Configures the destination group to use when connecting via IP address
+        or FQDN.
 
      At most one of these can be specified:
 

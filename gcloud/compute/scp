@@ -9,6 +9,7 @@ SYNOPSIS
         [--scp-flag=SCP_FLAG] [--ssh-key-file=SSH_KEY_FILE]
         [--strict-host-key-checking=STRICT_HOST_KEY_CHECKING] [--zone=ZONE]
         [--internal-ip | --tunnel-through-iap]
+        [--network=NETWORK --region=REGION : --dest-group=DEST_GROUP]
         [--ssh-key-expiration=SSH_KEY_EXPIRATION
           | --ssh-key-expire-after=SSH_KEY_EXPIRE_AFTER] [GCLOUD_WIDE_FLAG ...]
 
@@ -29,6 +30,11 @@ DESCRIPTION
         must be local.
 
     Under the covers, scp(1) is used to facilitate the transfer.
+
+    If the --region and --network flags are provided, then --plain and
+    --tunnel-through-iap are implied and any remote file names must be prefixed
+    with the remote IP address instead of the instance name. This is most
+    useful for connecting to on-prem resources.
 
 EXAMPLES
     To copy a remote directory, ~/narnia, from example-instance to the
@@ -63,6 +69,12 @@ EXAMPLES
 
         $ gcloud compute scp --recurse example-instance:~/narnia \
             ~/wardrobe --ssh-key-expire-after=2m
+
+    To use the IP address of your remote VM (eg, for on-prem), you must also
+    specify the --region and --network flags:
+
+        $ gcloud compute scp 10.1.2.3:~/narnia ~/wardrobe \
+            --region=us-central1 --network=default
 
 POSITIONAL ARGUMENTS
      [[USER@]INSTANCE:]SRC [[[USER@]INSTANCE:]SRC ...]
@@ -156,6 +168,17 @@ FLAGS
 
           To learn more, see the IAP for TCP forwarding documentation
           (https://cloud.google.com/iap/docs/tcp-forwarding-overview).
+
+     --network=NETWORK
+        Configures the VPC network to use when connecting via IP address or
+        FQDN.
+
+     --region=REGION
+        Configures the region to use when connecting via IP address or FQDN.
+
+     --dest-group=DEST_GROUP
+        Configures the destination group to use when connecting via IP address
+        or FQDN.
 
      At most one of these can be specified:
 

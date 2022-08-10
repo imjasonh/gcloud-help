@@ -4,8 +4,8 @@ NAME
 
 SYNOPSIS
     gcloud beta resource-manager folders list [--folder=FOLDER_ID]
-        [--organization=ORGANIZATION_ID] [--filter=EXPRESSION] [--limit=LIMIT]
-        [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [--uri]
+        [--organization=ORGANIZATION_ID] [--show-deleted] [--filter=EXPRESSION]
+        [--limit=LIMIT] [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [--uri]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -22,12 +22,30 @@ EXAMPLES
 
         $ gcloud beta resource-manager folders list --folder=123456789
 
+    The following command lists all the folders including the delete requested
+    ones under the folder with ID 123456789:
+
+        $ gcloud beta resource-manager folders list --folder=123456789 \
+            --show-deleted
+
+    The following command lists only the deleted folders under folder with ID
+    123456789:
+
+        $ gcloud beta resource-manager folders list --folder=123456789 \
+            --show-deleted \
+
+        --filter='lifecycleState:DELETE_REQUESTED':
+
 FLAGS
      --folder=FOLDER_ID
         ID for the folder to list folders under
 
      --organization=ORGANIZATION_ID
         ID for the organization to list folders under
+
+     --show-deleted
+        Put --show-deleted flag to include folders for which delete is
+        requested.
 
 LIST COMMAND FLAGS
      --filter=EXPRESSION
