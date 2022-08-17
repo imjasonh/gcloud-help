@@ -8,8 +8,9 @@ SYNOPSIS
         [--content-encoding=CONTENT_ENCODING]
         [--content-language=CONTENT_LANGUAGE] [--content-md5=MD5_DIGEST]
         [--content-type=CONTENT_TYPE] [--continue-on-error, -c]
-        [--custom-time=CUSTOM_TIME] [--daisy-chain, -D] [--do-not-decompress]
-        [--if-generation-match=GENERATION]
+        [--custom-time=CUSTOM_TIME] [--daisy-chain, -D]
+        [--decryption-keys=[DECRYPTION_KEY,...]] [--do-not-decompress]
+        [--encryption-key=ENCRYPTION_KEY] [--if-generation-match=GENERATION]
         [--if-metageneration-match=METAGENERATION] [--ignore-symlinks]
         [--manifest-path=MANIFEST_PATH, -L MANIFEST_PATH]
         [--preserve-posix, -P] [--print-created-message, -v]
@@ -114,8 +115,26 @@ FLAGS
         composite object into a non-composite object. Note: Daisy chain mode is
         automatically used when copying between providers.
 
+     --decryption-keys=[DECRYPTION_KEY,...]
+        A comma separated list of customer-supplied encryption keys (RFC 4648
+        section 4 base64-encoded AES256 strings) that will be used to decrypt
+        Google Cloud Storage objects. Data encrypted with a customer-managed
+        encryption key (CMEK) is decrypted automatically, so CMEKs do not need
+        to be listed here.
+
      --do-not-decompress
         Do not automatically decompress downloaded gzip files.
+
+     --encryption-key=ENCRYPTION_KEY
+        The encryption key to use for encrypting target objects. The specified
+        encryption key can be a customer-supplied encryption key (An RFC 4648
+        section 4 base64-encoded AES256 string), or a customer-managed
+        encryption key of the form
+        projects/{project}/locations/{location}/keyRings/
+        {key-ring}/cryptoKeys/{crypto-key}. The specified key also acts as a
+        decryption key, which is useful when copying or moving encryted data to
+        a new location. Using this flag in an objects update command triggers a
+        rewrite of target objects.
 
      --if-generation-match=GENERATION
         Execute only if the generation matches the generation of the requested
