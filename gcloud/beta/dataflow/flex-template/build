@@ -7,8 +7,8 @@ SYNOPSIS
         --sdk-language=SDK_LANGUAGE
         (--image=IMAGE | --env=[ENV,...]
           --flex-template-base-image=FLEX_TEMPLATE_BASE_IMAGE
-          --image-gcr-path=IMAGE_GCR_PATH (--jar=[JAR,...]
-          | --py-path=[PY_PATH,...]))
+          --image-gcr-path=IMAGE_GCR_PATH (--go-binary-path=GO_BINARY_PATH
+          | --jar=[JAR,...] | --py-path=[PY_PATH,...]))
         [--additional-experiments=[ADDITIONAL_EXPERIMENTS,...]]
         [--additional-user-labels=[ADDITIONAL_USER_LABELS,...]]
         [--dataflow-kms-key=DATAFLOW_KMS_KEY] [--disable-public-ips]
@@ -64,7 +64,7 @@ POSITIONAL ARGUMENTS
 REQUIRED FLAGS
      --sdk-language=SDK_LANGUAGE
         SDK language of the flex template job. SDK_LANGUAGE must be one of:
-        JAVA, PYTHON.
+        JAVA, PYTHON, GO.
 
      Exactly one of these must be specified:
 
@@ -104,6 +104,13 @@ REQUIRED FLAGS
           this group are specified.
 
        Exactly one of these must be specified:
+
+         --go-binary-path=GO_BINARY_PATH
+            Local path to your compiled dataflow pipeline Go binary. The binary
+            should be compiled to run on the target worker architecture
+            (usually linux-amd64). See
+            https://beam.apache.org/documentation/sdks/go-cross-compilation/
+            for more information.
 
          --jar=[JAR,...]
             Local path to your dataflow pipeline jar file and all their

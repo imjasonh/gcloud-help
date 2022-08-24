@@ -6,13 +6,12 @@ SYNOPSIS
     gcloud alpha network-connectivity policy-based-routes create
         POLICY_BASED_ROUTE --network=NETWORK --next-hop-ilb-ip=NEXT_HOP_ILB_IP
         [--async] [--description=DESCRIPTION]
-        [--destination-range=DESTINATION_RANGE]
-        [--interconnect-attachment-region=INTERCONNECT_ATTACHMENT_REGION]
-        [--ip-protocol=IP_PROTOCOL] [--labels=[KEY=VALUE,...]]
-        [--priority=PRIORITY]
+        [--destination-range=DESTINATION_RANGE] [--ip-protocol=IP_PROTOCOL]
+        [--labels=[KEY=VALUE,...]] [--priority=PRIORITY]
         [--protocol-version=PROTOCOL_VERSION; default="IPv4"]
-        [--source-range=SOURCE_RANGE] [--tags=[TAGS,...]]
-        [GCLOUD_WIDE_FLAG ...]
+        [--source-range=SOURCE_RANGE]
+        [--interconnect-attachment-region=INTERCONNECT_ATTACHMENT_REGION
+          | --tags=[TAGS,...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Create a new policy based route with the given name.
@@ -64,13 +63,6 @@ OPTIONAL FLAGS
         Destination IP range of outgoing packets that this policy based route
         applies to.
 
-     --interconnect-attachment-region=INTERCONNECT_ATTACHMENT_REGION
-        Cloud region to install this policy based route on interconnect
-        attachment. Use all to install it on all interconnect attachments. Note
-        if both --tags and --interconnect-attachment-region are not set, then
-        the policy based route will be installed in all network endpoints,
-        including VMs, VPNs, and Interconnects, in the network.
-
      --ip-protocol=IP_PROTOCOL
         IP protocol that this policy based route applies to. Valid values are
         TCP, UDP, and ALL. Default is ALL.
@@ -101,11 +93,22 @@ OPTIONAL FLAGS
         Source IP range of outgoing packets that this policy based route
         applies to.
 
-     --tags=[TAGS,...]
-        List of VM instance tags to which this route applies to. Note if both
-        --tags and --interconnect-attachment-region are not set, then the
-        policy based route will be installed in all endpoints, including VMs,
-        VPNs, and Interconnects, in the network.
+     At most one of these can be specified:
+
+       --interconnect-attachment-region=INTERCONNECT_ATTACHMENT_REGION
+          Cloud region to install this policy based route on interconnect
+          attachment. Use all to install it on all interconnect attachments.
+          Note if both --tags and --interconnect-attachment-region are not set,
+          then the policy based route will be installed in all network
+          endpoints, including VMs, VPNs, and Interconnect attachements, in the
+          network.
+
+       --tags=[TAGS,...]
+          List of VM instance tags to which this route applies to. VM instances
+          that have ANY of tags specified here will install this route. Note if
+          both --tags and --interconnect-attachment-region are not set, then
+          the policy based route will be installed in all endpoints, including
+          VMs, VPNs, and Interconnect attachements, in the network.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

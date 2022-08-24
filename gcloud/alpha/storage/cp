@@ -10,8 +10,7 @@ SYNOPSIS
         [--content-type=CONTENT_TYPE] [--continue-on-error, -c]
         [--custom-time=CUSTOM_TIME] [--daisy-chain, -D]
         [--decryption-keys=[DECRYPTION_KEY,...]] [--do-not-decompress]
-        [--encryption-key=ENCRYPTION_KEY] [--if-generation-match=GENERATION]
-        [--if-metageneration-match=METAGENERATION] [--ignore-symlinks]
+        [--encryption-key=ENCRYPTION_KEY] [--ignore-symlinks]
         [--manifest-path=MANIFEST_PATH, -L MANIFEST_PATH]
         [--preserve-posix, -P] [--print-created-message, -v]
         [--read-paths-from-stdin, -I] [--recursive, -R, -r]
@@ -27,7 +26,9 @@ SYNOPSIS
         [--gzip-in-flight=[FILE_EXTENSIONS,...], -j [FILE_EXTENSIONS,...]
           | --gzip-in-flight-all, -J
           | --gzip-local=[FILE_EXTENSIONS,...], -z [FILE_EXTENSIONS,...]
-          | --gzip-local-all, -Z] [GCLOUD_WIDE_FLAG ...]
+          | --gzip-local-all, -Z]
+        [--if-generation-match=GENERATION
+          --if-metageneration-match=METAGENERATION] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Copy data between your local file system and the cloud, within the
@@ -135,14 +136,6 @@ FLAGS
         decryption key, which is useful when copying or moving encryted data to
         a new location. Using this flag in an objects update command triggers a
         rewrite of target objects.
-
-     --if-generation-match=GENERATION
-        Execute only if the generation matches the generation of the requested
-        object.
-
-     --if-metageneration-match=METAGENERATION
-        Execute only if the metageneration matches the metageneration of the
-        requested object.
 
      --ignore-symlinks
         Ignore file symlinks instead of copying what they point to. Symlinks
@@ -299,6 +292,15 @@ FLAGS
           CAUTION: If some of the source files don't compress well, such as
           binary data, using this option may result in files taking up more
           space in the cloud than they would if left uncompressed.
+
+PRECONDITION FLAGS
+     --if-generation-match=GENERATION
+        Execute only if the generation matches the generation of the requested
+        object.
+
+     --if-metageneration-match=METAGENERATION
+        Execute only if the metageneration matches the metageneration of the
+        requested object.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

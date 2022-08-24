@@ -4,8 +4,15 @@ NAME
 
 SYNOPSIS
     gcloud alpha compute future-reservations update FUTURE_RESERVATION
-        [--start-time=START_TIME] [--total-count=TOTAL_COUNT] [--zone=ZONE]
-        [--duration=DURATION | --end-time=END_TIME] [GCLOUD_WIDE_FLAG ...]
+        [--planning-status=PLANNING_STATUS] [--total-count=TOTAL_COUNT]
+        [--zone=ZONE]
+        [--accelerator=[count=COUNT],[type=TYPE]
+          --local-ssd=[interface=INTERFACE],[size=SIZE]
+          --machine-type=MACHINE_TYPE
+          --maintenance-interval=MAINTENANCE_INTERVAL
+          --min-cpu-platform=MIN_CPU_PLATFORM]
+        [--start-time=START_TIME --duration=DURATION | --end-time=END_TIME]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Update Compute Engine future reservations.
@@ -24,12 +31,19 @@ POSITIONAL ARGUMENTS
         Name of the future reservation to update.
 
 FLAGS
-     --start-time=START_TIME
-        Start time of the Future Reservation. The start time must be an RFC3339
-        valid string formatted by date, time, and timezone or
-        "YYYY-MM-DDTHH:MM:SSZ"; where YYYY = year, MM = month, DD = day, HH =
-        hours, MM = minutes, SS = seconds, and Z = timezone (i.e.
-        2021-11-20T07:00:00Z).
+     --planning-status=PLANNING_STATUS
+        The planning status of the future reservation. The default value is
+        DRAFT. While in DRAFT, any changes to the future reservation's
+        properties will be allowed. If set to SUBMITTED, the future reservation
+        will submit and its procurementStatus will change to PENDING_APPROVAL.
+        Once the future reservation is pending approval, changes to the future
+        reservation's properties will not be allowed. PLANNING_STATUS must be
+        one of:
+
+         DRAFT
+            Default planning status value.
+         SUBMITTED
+            Planning status value to immediately submit the future reservation.
 
      --total-count=TOTAL_COUNT
         The total number of instances for which capacity assurance is requested
@@ -56,18 +70,72 @@ FLAGS
         Alternatively, the zone can be stored in the environment variable
         CLOUDSDK_COMPUTE_ZONE.
 
-     At most one of these can be specified:
+     Manage the specific SKU reservation properties.
 
-       --duration=DURATION
-          Alternate way of specifying time in the number of seconds to
-          terminate capacity request relative to the start time of a request.
+       --accelerator=[count=COUNT],[type=TYPE]
+          Manage the configuration of the type and number of accelerator cards
+          attached.
+           count
+              The number of accelerators to attach to each instance in the
+              reservation.
+           type
+              The specific type (e.g. nvidia-tesla-k80 for nVidia Tesla K80) of
+              accelerator to attach to instances in the reservation. Use gcloud
+              compute accelerator-types list to learn about all available
+              accelerator types.
 
-       --end-time=END_TIME
-          End time of the Future Reservation. The end time must be an RFC3339
-          valid string formatted by date, time, and timezone or
+       --local-ssd=[interface=INTERFACE],[size=SIZE]
+          Manage the size and the interface of local SSD to use. See
+          https://cloud.google.com/compute/docs/disks/local-ssd for more
+          information.
+           interface
+              The kind of disk interface exposed to the VM for this SSD. Valid
+              values are scsi and nvme. SCSI is the default and is supported by
+              more guest operating systems. NVME may provide higher
+              performance.
+           size
+              The size of the local SSD in base-2 GB.
+
+       --machine-type=MACHINE_TYPE
+          The type of machine (name only) which has a fixed number of vCPUs and
+          a fixed amount of memory. This also includes specifying custom
+          machine type following custom-number_of_CPUs-amount_of_memory
+          pattern, e.g. custom-32-29440.
+
+       --maintenance-interval=MAINTENANCE_INTERVAL
+          Specifies how infrastructure upgrades should be applied to the VM.
+          MAINTENANCE_INTERVAL must be (currently only one value is supported):
+
+           PERIODIC
+              VMs receive infrastructure and hypervisor updates on a periodic
+              basis, minimizing the number of maintenance operations (live
+              migrations or terminations) on an individual VM. Security updates
+              will still be applied as soon as they are available.
+
+       --min-cpu-platform=MIN_CPU_PLATFORM
+          Optional minimum CPU platform of the reservation to create.
+
+     Manage the time specific properties for requesting future capacity
+
+       --start-time=START_TIME
+          Start time of the Future Reservation. The start time must be an
+          RFC3339 valid string formatted by date, time, and timezone or
           "YYYY-MM-DDTHH:MM:SSZ"; where YYYY = year, MM = month, DD = day, HH =
           hours, MM = minutes, SS = seconds, and Z = timezone (i.e.
           2021-11-20T07:00:00Z).
+
+       At most one of these can be specified:
+
+         --duration=DURATION
+            Alternate way of specifying time in the number of seconds to
+            terminate capacity request relative to the start time of a request.
+
+         --end-time=END_TIME
+            End time of the Future Reservation. The end time must be an RFC3339
+            valid string formatted by date, time, and timezone or
+            "YYYY-MM-DDTHH:MM:SSZ"; where YYYY = year, MM = month, DD = day, HH
+            = hours, MM = minutes, SS = seconds, and Z = timezone (i.e.
+            2021-11-20T07:00:00Z).
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
