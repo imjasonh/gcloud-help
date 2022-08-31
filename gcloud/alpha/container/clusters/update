@@ -20,7 +20,7 @@ SYNOPSIS
           | --enable-service-externalips | --enable-shielded-nodes
           | --enable-stackdriver-kubernetes | --enable-vertical-pod-autoscaling
           | --generate-password | --identity-provider=IDENTITY_PROVIDER
-          | --maintenance-window=START_TIME
+          | --logging-variant=LOGGING_VARIANT | --maintenance-window=START_TIME
           | --notification-config=[pubsub=ENABLED|DISABLED,
           pubsub-topic=TOPIC,...]
           | --private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE
@@ -317,6 +317,19 @@ REQUIRED FLAGS
 
        --identity-provider=IDENTITY_PROVIDER
           Enable 3P identity provider on the cluster.
+
+       --logging-variant=LOGGING_VARIANT
+          Specifies the logging variant that will be deployed on all the nodes
+          in the cluster. Valid logging variants are MAX_THROUGHPUT, DEFAULT.
+          If no value is specified, DEFAULT is used. LOGGING_VARIANT must be
+          one of:
+
+           DEFAULT
+              'DEFAULT' variant requests minimal resources but may not
+              guarantee high throughput.
+           MAX_THROUGHPUT
+              'MAX_THROUGHPUT' variant requests more node resources and is able
+              to achieve logging throughput up to 10MB per sec.
 
        --maintenance-window=START_TIME
           Set a time of day when you prefer maintenance to start on this
@@ -788,11 +801,11 @@ REQUIRED FLAGS
               the same time on each upgrade of an autoprovisioned node pool.
 
               Node Management settings are specified under the field
-              'nodeManagement', which has the following fields:
-              enableAutoUpgrade: A boolean field that indicates if node
-              autoupgrade is enabled for autoprovisioned node pools.
-              enableAutoRepair: A boolean field that indicates if node
-              autorepair is enabled for autoprovisioned node pools.
+              'management', which has the following fields: autoUpgrade: A
+              boolean field that indicates if node autoupgrade is enabled for
+              autoprovisioned node pools. autoRepair: A boolean field that
+              indicates if node autorepair is enabled for autoprovisioned node
+              pools.
 
               minCpuPlatform (deprecated): If specified, new autoprovisioned
               nodes will be scheduled on host with specified CPU architecture

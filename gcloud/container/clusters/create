@@ -31,7 +31,7 @@ SYNOPSIS
         [--enable-stackdriver-kubernetes] [--enable-vertical-pod-autoscaling]
         [--image-type=IMAGE_TYPE] [--issue-client-certificate]
         [--labels=[KEY=VALUE,...]] [--local-ssd-count=LOCAL_SSD_COUNT]
-        [--logging=[COMPONENT,...]]
+        [--logging=[COMPONENT,...]] [--logging-variant=LOGGING_VARIANT]
         [--machine-type=MACHINE_TYPE, -m MACHINE_TYPE]
         [--max-nodes-per-pool=MAX_NODES_PER_POOL]
         [--max-pods-per-node=MAX_PODS_PER_NODE]
@@ -536,6 +536,18 @@ FLAGS
             $ gcloud container clusters create --logging=SYSTEM
             $ gcloud container clusters create --logging=SYSTEM,WORKLOAD
             $ gcloud container clusters create --logging=NONE
+
+     --logging-variant=LOGGING_VARIANT
+        Specifies the logging variant that will be deployed on all the nodes in
+        the cluster. Valid logging variants are MAX_THROUGHPUT, DEFAULT. If no
+        value is specified, DEFAULT is used. LOGGING_VARIANT must be one of:
+
+         DEFAULT
+            'DEFAULT' variant requests minimal resources but may not guarantee
+            high throughput.
+         MAX_THROUGHPUT
+            'MAX_THROUGHPUT' variant requests more node resources and is able
+            to achieve logging throughput up to 10MB per sec.
 
      --machine-type=MACHINE_TYPE, -m MACHINE_TYPE
         The type of machine to use for nodes. Defaults to e2-medium. The list
@@ -1055,11 +1067,11 @@ FLAGS
             autoprovisioned node pool.
 
             Node Management settings are specified under the field
-            'nodeManagement', which has the following fields:
-            enableAutoUpgrade: A boolean field that indicates if node
-            autoupgrade is enabled for autoprovisioned node pools.
-            enableAutoRepair: A boolean field that indicates if node autorepair
-            is enabled for autoprovisioned node pools.
+            'management', which has the following fields: autoUpgrade: A
+            boolean field that indicates if node autoupgrade is enabled for
+            autoprovisioned node pools. autoRepair: A boolean field that
+            indicates if node autorepair is enabled for autoprovisioned node
+            pools.
 
             minCpuPlatform (deprecated): If specified, new autoprovisioned
             nodes will be scheduled on host with specified CPU architecture or

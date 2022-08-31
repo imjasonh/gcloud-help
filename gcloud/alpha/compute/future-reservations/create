@@ -5,11 +5,13 @@ NAME
 SYNOPSIS
     gcloud alpha compute future-reservations create FUTURE_RESERVATION
         --total-count=TOTAL_COUNT
-        (--machine-type=MACHINE_TYPE : --accelerator=[count=COUNT],[type=TYPE]
+        (--source-instance-template=SOURCE_INSTANCE_TEMPLATE
+          | [--machine-type=MACHINE_TYPE
+          : --accelerator=[count=COUNT],[type=TYPE]
           --local-ssd=[interface=INTERFACE],[size=SIZE]
           --maintenance-freeze-duration=MAINTENANCE_FREEZE_DURATION
           --maintenance-interval=MAINTENANCE_INTERVAL
-          --min-cpu-platform=MIN_CPU_PLATFORM)
+          --min-cpu-platform=MIN_CPU_PLATFORM])
         (--start-time=START_TIME (--duration=DURATION | --end-time=END_TIME))
         [--description=DESCRIPTION] [--name-prefix=NAME_PREFIX]
         [--planning-status=PLANNING_STATUS] [--zone=ZONE]
@@ -37,60 +39,71 @@ REQUIRED FLAGS
         The total number of instances for which capacity assurance is requested
         at a future time period.
 
-     Manage the specific SKU reservation properties.
+     Manage the instance properties for the Specific SKU reservation. You must
+     either provide a source instance template or define the instance
+     properties.
 
-     This must be specified.
+     Exactly one of these must be specified:
 
-       --machine-type=MACHINE_TYPE
-          The type of machine (name only) which has a fixed number of vCPUs and
-          a fixed amount of memory. This also includes specifying custom
-          machine type following custom-number_of_CPUs-amount_of_memory
-          pattern, e.g. custom-32-29440.
+       --source-instance-template=SOURCE_INSTANCE_TEMPLATE
+          The url of the instance template that will be used to populate the
+          fields of the reservation. Instance properties can not be defined in
+          addition to source instance template.
 
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
+       Define individual instance properties for the specific SKU reservation.
 
-       --accelerator=[count=COUNT],[type=TYPE]
-          Manage the configuration of the type and number of accelerator cards
-          attached.
-           count
-              The number of accelerators to attach to each instance in the
-              reservation.
-           type
-              The specific type (e.g. nvidia-tesla-k80 for nVidia Tesla K80) of
-              accelerator to attach to instances in the reservation. Use gcloud
-              compute accelerator-types list to learn about all available
-              accelerator types.
+         --machine-type=MACHINE_TYPE
+            The type of machine (name only) that has a fixed number of vCPUs
+            and a fixed amount of memory. You can also specify a custom machine
+            type by using the pattern
+            custom-number_of_CPUs-amount_of_memory-for example,
+            custom-32-29440.
 
-       --local-ssd=[interface=INTERFACE],[size=SIZE]
-          Manage the size and the interface of local SSD to use. See
-          https://cloud.google.com/compute/docs/disks/local-ssd for more
-          information.
-           interface
-              The kind of disk interface exposed to the VM for this SSD. Valid
-              values are scsi and nvme. SCSI is the default and is supported by
-              more guest operating systems. NVME may provide higher
-              performance.
-           size
-              The size of the local SSD in base-2 GB.
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
 
-       --maintenance-freeze-duration=MAINTENANCE_FREEZE_DURATION
-          Specifies the amount of hours after instance creation where the
-          instance won't be scheduled for maintenance, e.g. 4h, 2d6h. See $
-          gcloud topic datetimes for information on duration formats.
+         --accelerator=[count=COUNT],[type=TYPE]
+            Manage the configuration of the type and number of accelerator
+            cards attached.
+             count
+                The number of accelerators to attach to each instance in the
+                reservation.
+             type
+                The specific type (e.g. nvidia-tesla-k80 for nVidia Tesla K80)
+                of accelerator to attach to instances in the reservation. Use
+                gcloud compute accelerator-types list to learn about all
+                available accelerator types.
 
-       --maintenance-interval=MAINTENANCE_INTERVAL
-          Specifies how infrastructure upgrades should be applied to the VM.
-          MAINTENANCE_INTERVAL must be (currently only one value is supported):
+         --local-ssd=[interface=INTERFACE],[size=SIZE]
+            Manage the size and the interface of local SSD to use. See
+            https://cloud.google.com/compute/docs/disks/local-ssd for more
+            information.
+             interface
+                The kind of disk interface exposed to the VM for this SSD.
+                Valid values are scsi and nvme. SCSI is the default and is
+                supported by more guest operating systems. NVME may provide
+                higher performance.
+             size
+                The size of the local SSD in base-2 GB.
 
-           PERIODIC
-              VMs receive infrastructure and hypervisor updates on a periodic
-              basis, minimizing the number of maintenance operations (live
-              migrations or terminations) on an individual VM. Security updates
-              will still be applied as soon as they are available.
+         --maintenance-freeze-duration=MAINTENANCE_FREEZE_DURATION
+            Specifies the amount of hours after instance creation where the
+            instance won't be scheduled for maintenance, e.g. 4h, 2d6h. See $
+            gcloud topic datetimes for information on duration formats.
 
-       --min-cpu-platform=MIN_CPU_PLATFORM
-          Optional minimum CPU platform of the reservation to create.
+         --maintenance-interval=MAINTENANCE_INTERVAL
+            Specifies how infrastructure upgrades should be applied to the VM.
+            MAINTENANCE_INTERVAL must be (currently only one value is
+            supported):
+
+             PERIODIC
+                VMs receive infrastructure and hypervisor updates on a periodic
+                basis, minimizing the number of maintenance operations (live
+                migrations or terminations) on an individual VM. Security
+                updates will still be applied as soon as they are available.
+
+         --min-cpu-platform=MIN_CPU_PLATFORM
+            Optional minimum CPU platform of the reservation to create.
 
      Manage the time specific properties for requesting future capacity
 
