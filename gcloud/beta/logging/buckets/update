@@ -4,8 +4,8 @@ NAME
 SYNOPSIS
     gcloud beta logging buckets update BUCKET_ID --location=LOCATION
         [--add-index=[KEY=VALUE, ...,...]] [--clear-indexes]
-        [--description=DESCRIPTION] [--locked]
-        [--remove-indexes=[FIELD PATH,...]]
+        [--cmek-kms-key-name=CMEK_KMS_KEY_NAME] [--description=DESCRIPTION]
+        [--locked] [--remove-indexes=[FIELD PATH,...]]
         [--restricted-fields=[RESTRICTED_FIELD,...]]
         [--retention-days=RETENTION_DAYS] [--update-index=[KEY=VALUE, ...,...]]
         [GCLOUD_WIDE_FLAG ...]
@@ -39,6 +39,11 @@ EXAMPLES
         $ gcloud beta logging buckets update my-bucket --location=global \
            --update-index=fieldPath=jsonPayload.foo,type=INDEX_TYPE_INTEGER
 
+    To update a bucket in your project and update existing cmek, run:
+
+        $ gcloud beta logging buckets update my-bucket --location=global \
+           --cmek-kms-key-name=CMEK_KEY_NAME
+
 POSITIONAL ARGUMENTS
      BUCKET_ID
         The id of the bucket to update.
@@ -66,6 +71,9 @@ OPTIONAL FLAGS
 
      --clear-indexes
         Remove all logging indexes from the bucket.
+
+     --cmek-kms-key-name=CMEK_KMS_KEY_NAME
+        A valid kms_key_name will enable CMEK for the bucket.
 
      --description=DESCRIPTION
         A new description for the bucket.

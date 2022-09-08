@@ -2,21 +2,21 @@ NAME
     gcloud alpha storage objects update - update Cloud Storage objects
 
 SYNOPSIS
-    gcloud alpha storage objects update [URL ...]
-        [--cache-control=CACHE_CONTROL] [--clear-cache-control]
-        [--clear-content-disposition] [--clear-content-encoding]
-        [--clear-content-language] [--clear-content-md5] [--clear-content-type]
-        [--clear-custom-time] [--clear-encryption-key]
-        [--content-disposition=CONTENT_DISPOSITION]
-        [--content-encoding=CONTENT_ENCODING]
-        [--content-language=CONTENT_LANGUAGE] [--content-md5=MD5_DIGEST]
-        [--content-type=CONTENT_TYPE] [--continue-on-error, -c]
-        [--custom-time=CUSTOM_TIME] [--decryption-keys=[DECRYPTION_KEY,...]]
-        [--encryption-key=ENCRYPTION_KEY] [--[no-]event-based-hold]
-        [--preserve-acl, -p] [--read-paths-from-stdin, -I]
-        [--recursive, -R, -r] [--storage-class=STORAGE_CLASS, -s STORAGE_CLASS]
+    gcloud alpha storage objects update [URL ...] [--continue-on-error, -c]
+        [--[no-]event-based-hold] [--preserve-acl, -p]
+        [--read-paths-from-stdin, -I] [--recursive, -R, -r]
+        [--storage-class=STORAGE_CLASS, -s STORAGE_CLASS]
         [--[no-]temporary-hold]
-        [--clear-custom-metadata
+        [--clear-encryption-key --decryption-keys=[DECRYPTION_KEY,...]
+          --encryption-key=ENCRYPTION_KEY]
+        [--cache-control=CACHE_CONTROL --clear-cache-control
+          --clear-content-disposition --clear-content-encoding
+          --clear-content-language --clear-content-md5 --clear-content-type
+          --clear-custom-time --content-disposition=CONTENT_DISPOSITION
+          --content-encoding=CONTENT_ENCODING
+          --content-language=CONTENT_LANGUAGE --content-md5=MD5_DIGEST
+          --content-type=CONTENT_TYPE
+          --custom-time=CUSTOM_TIME --clear-custom-metadata
           | --custom-metadata=[CUSTOM_METADATA_KEYS_AND_VALUES,...]
           | --remove-custom-metadata=[METADATA_KEYS,...]
           --update-custom-metadata=[CUSTOM_METADATA_KEYS_AND_VALUES,...]]
@@ -48,79 +48,11 @@ POSITIONAL ARGUMENTS
         Specifies URLs of objects to update.
 
 FLAGS
-     --cache-control=CACHE_CONTROL
-        How caches should handle requests and responses.
-
-     --clear-cache-control
-        Clears object cache control.
-
-     --clear-content-disposition
-        Clears object content disposition.
-
-     --clear-content-encoding
-        Clears content encoding.
-
-     --clear-content-language
-        Clears object content language.
-
-     --clear-content-md5
-        Clears object content MD5.
-
-     --clear-content-type
-        Clears object content type.
-
-     --clear-custom-time
-        Clears object custom time.
-
-     --clear-encryption-key
-        Clears the encryption key associated with an object. Using this flag
-        triggers a rewrite of affected objects, which are then encrypted using
-        the default encryption key set on the bucket, if one exists, or else
-        with a Google-managed encryption key.
-
-     --content-disposition=CONTENT_DISPOSITION
-        How content should be displayed.
-
-     --content-encoding=CONTENT_ENCODING
-        How content is encoded (e.g. gzip).
-
-     --content-language=CONTENT_LANGUAGE
-        Content's language (e.g. en signifies "English").
-
-     --content-md5=MD5_DIGEST
-        Manually specified MD5 hash digest for the contents of an uploaded
-        file. This flag cannot be used when uploading multiple files. The
-        custom digest is used by the cloud provider for validation.
-
-     --content-type=CONTENT_TYPE
-        Type of data contained in the object (e.g. text/html).
-
      --continue-on-error, -c
         If any operations are unsuccessful, the command will exit with a
         non-zero exit status after completing the remaining operations. This
         flag takes effect only in sequential execution mode (i.e. processor and
         thread count are set to 1). Parallelism is default.
-
-     --custom-time=CUSTOM_TIME
-        Custom time for Google Cloud Storage objects in RFC 3339 format.
-
-     --decryption-keys=[DECRYPTION_KEY,...]
-        A comma separated list of customer-supplied encryption keys (RFC 4648
-        section 4 base64-encoded AES256 strings) that will be used to decrypt
-        Google Cloud Storage objects. Data encrypted with a customer-managed
-        encryption key (CMEK) is decrypted automatically, so CMEKs do not need
-        to be listed here.
-
-     --encryption-key=ENCRYPTION_KEY
-        The encryption key to use for encrypting target objects. The specified
-        encryption key can be a customer-supplied encryption key (An RFC 4648
-        section 4 base64-encoded AES256 string), or a customer-managed
-        encryption key of the form
-        projects/{project}/locations/{location}/keyRings/
-        {key-ring}/cryptoKeys/{crypto-key}. The specified key also acts as a
-        decryption key, which is useful when copying or moving encryted data to
-        a new location. Using this flag in an objects update command triggers a
-        rewrite of target objects.
 
      --[no-]event-based-hold
         Enables or disables an event-based hold on objects. Use
@@ -149,6 +81,76 @@ FLAGS
      --[no-]temporary-hold
         Enables or disables a temporary hold on objects. Use --temporary-hold
         to enable and --no-temporary-hold to disable.
+
+ENCRYPTION FLAGS
+     --clear-encryption-key
+        Clears the encryption key associated with an object. Using this flag
+        triggers a rewrite of affected objects, which are then encrypted using
+        the default encryption key set on the bucket, if one exists, or else
+        with a Google-managed encryption key.
+
+     --decryption-keys=[DECRYPTION_KEY,...]
+        A comma-separated list of customer-supplied encryption keys (RFC 4648
+        section 4 base64-encoded AES256 strings) that will be used to decrypt
+        Google Cloud Storage objects. Data encrypted with a customer-managed
+        encryption key (CMEK) is decrypted automatically, so CMEKs do not need
+        to be listed here.
+
+     --encryption-key=ENCRYPTION_KEY
+        The encryption key to use for encrypting target objects. The specified
+        encryption key can be a customer-supplied encryption key (An RFC 4648
+        section 4 base64-encoded AES256 string), or a customer-managed
+        encryption key of the form
+        projects/{project}/locations/{location}/keyRings/
+        {key-ring}/cryptoKeys/{crypto-key}. The specified key also acts as a
+        decryption key, which is useful when copying or moving encryted data to
+        a new location. Using this flag in an objects update command triggers a
+        rewrite of target objects.
+
+OBJECT METADATA FLAGS
+     --cache-control=CACHE_CONTROL
+        How caches should handle requests and responses.
+
+     --clear-cache-control
+        Clears object cache control.
+
+     --clear-content-disposition
+        Clears object content disposition.
+
+     --clear-content-encoding
+        Clears content encoding.
+
+     --clear-content-language
+        Clears object content language.
+
+     --clear-content-md5
+        Clears object content MD5.
+
+     --clear-content-type
+        Clears object content type.
+
+     --clear-custom-time
+        Clears object custom time.
+
+     --content-disposition=CONTENT_DISPOSITION
+        How content should be displayed.
+
+     --content-encoding=CONTENT_ENCODING
+        How content is encoded (e.g. gzip).
+
+     --content-language=CONTENT_LANGUAGE
+        Content's language (e.g. en signifies "English").
+
+     --content-md5=MD5_DIGEST
+        Manually specified MD5 hash digest for the contents of an uploaded
+        file. This flag cannot be used when uploading multiple files. The
+        custom digest is used by the cloud provider for validation.
+
+     --content-type=CONTENT_TYPE
+        Type of data contained in the object (e.g. text/html).
+
+     --custom-time=CUSTOM_TIME
+        Custom time for Google Cloud Storage objects in RFC 3339 format.
 
      At most one of these can be specified:
 

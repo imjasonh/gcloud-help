@@ -1,0 +1,57 @@
+NAME
+    gcloud beta compute firewall-rules migrate - create a new Network Firewall
+        Policy and move all customer defined firewall rules there
+
+SYNOPSIS
+    gcloud beta compute firewall-rules migrate --source-network=SOURCE_NETWORK
+        (--export-tag-mapping
+          | --target-firewall-policy=TARGET_FIREWALL_POLICY)
+        [--tag-mapping-file=TAG_MAPPING_FILE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) gcloud beta compute firewall-rules migrate is used to create a new
+    Network Firewall Policy that contain all rules defined in already existing
+    Network Firewall Policy associated with the given VPC Network and all
+    customer defined VPC Firewall Rules attached to that VPC Network.
+
+EXAMPLES
+    To execute the migration for VPC Network 'my-network' which stores the
+    result in 'my-policy' Network Firewall Policy, run:
+
+        $ gcloud beta compute firewall-rules migrate \
+            --source-network=my-network --target-firewall-policy=my-policy
+
+REQUIRED FLAGS
+     --source-network=SOURCE_NETWORK
+        The VPC Network for which the migration should be performed.
+
+     Exactly one of these must be specified:
+
+       --export-tag-mapping
+          If set, migration tool will inspect all VPC Firewalls attached to
+          SOURCE_NETWORK, collect all source and target tags, and store them in
+          TAG_MAPPING_FILE.
+
+       --target-firewall-policy=TARGET_FIREWALL_POLICY
+          Name of the new Network Firewall Policy used to store the migration
+          result.
+
+OPTIONAL FLAGS
+     --tag-mapping-file=TAG_MAPPING_FILE
+        Path to a JSON file with legacy tags and service accounts to secure
+        tags mapping.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud alpha compute firewall-rules migrate
+

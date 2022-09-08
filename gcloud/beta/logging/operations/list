@@ -1,0 +1,121 @@
+NAME
+    gcloud beta logging operations list - list long running operations
+
+SYNOPSIS
+    gcloud beta logging operations list --location=LOCATION
+        --operation-filter=OPERATION_FILTER
+        [--billing-account=BILLING_ACCOUNT_ID | --folder=FOLDER_ID
+          | --organization=ORGANIZATION_ID | --project=PROJECT_ID]
+        [--limit=LIMIT] [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Return a list of long running operation details in given LOCATION.
+    The operations were scheduled by other gcloud commands. For example: a
+    copy_log_entries operation scheduled by command: gcloud alpha logging
+    operations copy BUCKET_ID DESTINATION --location=LOCATION. Note: while
+    listing the operations, the request_type must be specified in filter.
+    Example: --operation-filter=request_type=CopyLogEntries, Supported
+    operation types are: CopyLogEntries, CreateBucket and UpdateBucket. Other
+    supported filter expression are: operation_start_time,
+    operation_finish_time and operation_state.
+
+EXAMPLES
+    To list CopyLogEntries operations, run:
+
+        $ gcloud beta logging operations list --location=LOCATION \
+          --operation-filter=request_type=CopyLogEntries
+
+    To list CopyLogEntries operations that started after a specified time, run:
+
+        $ gcloud beta logging operations list --location=LOCATION \
+          --operation-filter=request_type=CopyLogEntries AND \
+          operation_start_time>TIMESTAMP
+
+    To list CopyLogEntries operations that finished before a specified time,
+    run:
+
+        $ gcloud beta logging operations list --location=LOCATION \
+          --operation-filter=request_type=CopyLogEntries AND \
+          operation_finish_time<TIMESTAMP
+
+    To list CopyLogEntries operations that have a specified state, run:
+
+        $ gcloud beta logging operations list --location=LOCATION \
+          --operation-filter=request_type=CopyLogEntries AND \
+          operation_state=STATE
+
+    To list CopyLogEntries operations that don't have a specified state, run:
+
+        $ gcloud beta logging operations list --location=LOCATION \
+          --operation-filter=request_type=CopyLogEntries AND \
+          operation_state!=STATE
+
+REQUIRED FLAGS
+     --location=LOCATION
+        Location of the operations.
+
+     --operation-filter=OPERATION_FILTER
+        Filter expression that specifies the operations to return.
+
+FLAGS
+     At most one of these can be specified:
+
+       --billing-account=BILLING_ACCOUNT_ID
+          List operations associated with this billing account.
+
+       --folder=FOLDER_ID
+          List operations associated with this folder.
+
+       --organization=ORGANIZATION_ID
+          List operations associated with this organization.
+
+       --project=PROJECT_ID
+          List operations associated with this project.
+
+          The Google Cloud project ID to use for this invocation. If omitted,
+          then the current project is assumed; the current project can be
+          listed using gcloud config list --format='text(core.project)' and can
+          be set using gcloud config set project PROJECTID.
+
+          --project and its fallback core/project property play two roles in
+          the invocation. It specifies the project of the resource to operate
+          on. It also specifies the project for API enablement check, quota,
+          and billing. To specify a different project for quota and billing,
+          use --billing-project or billing/quota_project property.
+
+LIST COMMAND FLAGS
+     --limit=LIMIT
+        Maximum number of resources to list. The default is unlimited. This
+        flag interacts with other flags that are applied in this order:
+        --flatten, --sort-by, --filter, --limit.
+
+     --page-size=PAGE_SIZE
+        Some services group resource list output into pages. This flag
+        specifies the maximum number of resources per page. The default is
+        determined by the service if it supports paging, otherwise it is
+        unlimited (no paging). Paging may be applied before or after --filter
+        and --limit depending on the service.
+
+     --sort-by=[FIELD,...]
+        Comma-separated list of resource field key names to sort by. The
+        default order is ascending. Prefix a field with ``~'' for descending
+        order on that field. This flag interacts with other flags that are
+        applied in this order: --flatten, --sort-by, --filter, --limit.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud logging operations list
+
+        $ gcloud alpha logging operations list
+

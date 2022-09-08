@@ -3,14 +3,8 @@ NAME
 
 SYNOPSIS
     gcloud alpha storage mv [SOURCE ...] DESTINATION [--all-versions, -A]
-        [--cache-control=CACHE_CONTROL] [--no-clobber, -n]
-        [--content-disposition=CONTENT_DISPOSITION]
-        [--content-encoding=CONTENT_ENCODING]
-        [--content-language=CONTENT_LANGUAGE] [--content-md5=MD5_DIGEST]
-        [--content-type=CONTENT_TYPE] [--continue-on-error, -c]
-        [--custom-time=CUSTOM_TIME] [--daisy-chain, -D]
-        [--decryption-keys=[DECRYPTION_KEY,...]] [--do-not-decompress]
-        [--encryption-key=ENCRYPTION_KEY] [--ignore-symlinks]
+        [--no-clobber, -n] [--continue-on-error, -c] [--daisy-chain, -D]
+        [--do-not-decompress] [--ignore-symlinks]
         [--manifest-path=MANIFEST_PATH, -L MANIFEST_PATH]
         [--preserve-posix, -P] [--print-created-message, -v]
         [--read-paths-from-stdin, -I] [--skip-unsupported, -U]
@@ -18,14 +12,21 @@ SYNOPSIS
         [--canned-acl=PREDEFINED_ACL,
           --predefined-acl=PREDEFINED_ACL, -a PREDEFINED_ACL
           | --preserve-acl, -p]
-        [--clear-custom-metadata
-          | --custom-metadata=[CUSTOM_METADATA_KEYS_AND_VALUES,...]
-          | --remove-custom-metadata=[METADATA_KEYS,...]
-          --update-custom-metadata=[CUSTOM_METADATA_KEYS_AND_VALUES,...]]
         [--gzip-in-flight=[FILE_EXTENSIONS,...], -j [FILE_EXTENSIONS,...]
           | --gzip-in-flight-all, -J
           | --gzip-local=[FILE_EXTENSIONS,...], -z [FILE_EXTENSIONS,...]
           | --gzip-local-all, -Z]
+        [--decryption-keys=[DECRYPTION_KEY,...]
+          --encryption-key=ENCRYPTION_KEY]
+        [--cache-control=CACHE_CONTROL
+          --content-disposition=CONTENT_DISPOSITION
+          --content-encoding=CONTENT_ENCODING
+          --content-language=CONTENT_LANGUAGE --content-md5=MD5_DIGEST
+          --content-type=CONTENT_TYPE
+          --custom-time=CUSTOM_TIME --clear-custom-metadata
+          | --custom-metadata=[CUSTOM_METADATA_KEYS_AND_VALUES,...]
+          | --remove-custom-metadata=[METADATA_KEYS,...]
+          --update-custom-metadata=[CUSTOM_METADATA_KEYS_AND_VALUES,...]]
         [--if-generation-match=GENERATION
           --if-metageneration-match=METAGENERATION] [GCLOUD_WIDE_FLAG ...]
 
@@ -95,39 +96,16 @@ FLAGS
         versions do not necessarily match the order of the original generation
         numbers.
 
-     --cache-control=CACHE_CONTROL
-        How caches should handle requests and responses.
-
      --no-clobber, -n
         Do not overwrite existing files or objects at the destination. Skipped
         items will be printed. This option performs an additional GET request
         for cloud objects before attempting an upload.
-
-     --content-disposition=CONTENT_DISPOSITION
-        How content should be displayed.
-
-     --content-encoding=CONTENT_ENCODING
-        How content is encoded (e.g. gzip).
-
-     --content-language=CONTENT_LANGUAGE
-        Content's language (e.g. en signifies "English").
-
-     --content-md5=MD5_DIGEST
-        Manually specified MD5 hash digest for the contents of an uploaded
-        file. This flag cannot be used when uploading multiple files. The
-        custom digest is used by the cloud provider for validation.
-
-     --content-type=CONTENT_TYPE
-        Type of data contained in the object (e.g. text/html).
 
      --continue-on-error, -c
         If any operations are unsuccessful, the command will exit with a
         non-zero exit status after completing the remaining operations. This
         flag takes effect only in sequential execution mode (i.e. processor and
         thread count are set to 1). Parallelism is default.
-
-     --custom-time=CUSTOM_TIME
-        Custom time for Google Cloud Storage objects in RFC 3339 format.
 
      --daisy-chain, -D
         Copy in "daisy chain" mode, which means copying an object by first
@@ -139,26 +117,8 @@ FLAGS
         composite object into a non-composite object. Note: Daisy chain mode is
         automatically used when copying between providers.
 
-     --decryption-keys=[DECRYPTION_KEY,...]
-        A comma separated list of customer-supplied encryption keys (RFC 4648
-        section 4 base64-encoded AES256 strings) that will be used to decrypt
-        Google Cloud Storage objects. Data encrypted with a customer-managed
-        encryption key (CMEK) is decrypted automatically, so CMEKs do not need
-        to be listed here.
-
      --do-not-decompress
         Do not automatically decompress downloaded gzip files.
-
-     --encryption-key=ENCRYPTION_KEY
-        The encryption key to use for encrypting target objects. The specified
-        encryption key can be a customer-supplied encryption key (An RFC 4648
-        section 4 base64-encoded AES256 string), or a customer-managed
-        encryption key of the form
-        projects/{project}/locations/{location}/keyRings/
-        {key-ring}/cryptoKeys/{crypto-key}. The specified key also acts as a
-        decryption key, which is useful when copying or moving encryted data to
-        a new location. Using this flag in an objects update command triggers a
-        rewrite of target objects.
 
      --ignore-symlinks
         Ignore file symlinks instead of copying what they point to. Symlinks
@@ -236,34 +196,6 @@ FLAGS
 
      At most one of these can be specified:
 
-       --clear-custom-metadata
-          Clears all custom metadata on objects. When used with
-          --preserve-posix, POSIX attributes will still be stored in custom
-          metadata.
-
-       --custom-metadata=[CUSTOM_METADATA_KEYS_AND_VALUES,...]
-          Sets custom metadata on objects. When used with --preserve-posix,
-          POSIX attributes are also stored in custom metadata.
-
-       Flags that preserve unspecified existing metadata cannot be used with
-       --custom-metadata or --clear-custom-metadata, but can be specified
-       together:
-
-         --remove-custom-metadata=[METADATA_KEYS,...]
-            Removes individual custom metadata keys from objects. This flag can
-            be used with --update-custom-metadata. When used with
-            --preserve-posix, POSIX attributes specified by this flag are not
-            preserved.
-
-         --update-custom-metadata=[CUSTOM_METADATA_KEYS_AND_VALUES,...]
-            Adds or sets individual custom metadata key value pairs on objects.
-            Existing custom metadata not specified with this flag is not
-            changed. This flag can be used with --remove-custom-metadata. When
-            keys overlap with those provided by --preserve-posix, values
-            specified by this flag are used.
-
-     At most one of these can be specified:
-
        --gzip-in-flight=[FILE_EXTENSIONS,...], -j [FILE_EXTENSIONS,...]
           Applies gzip transport encoding to any file upload whose extension
           matches the input extension list. This is useful when uploading files
@@ -311,6 +243,77 @@ FLAGS
           CAUTION: If some of the source files don't compress well, such as
           binary data, using this option may result in files taking up more
           space in the cloud than they would if left uncompressed.
+
+ENCRYPTION FLAGS
+     --decryption-keys=[DECRYPTION_KEY,...]
+        A comma-separated list of customer-supplied encryption keys (RFC 4648
+        section 4 base64-encoded AES256 strings) that will be used to decrypt
+        Google Cloud Storage objects. Data encrypted with a customer-managed
+        encryption key (CMEK) is decrypted automatically, so CMEKs do not need
+        to be listed here.
+
+     --encryption-key=ENCRYPTION_KEY
+        The encryption key to use for encrypting target objects. The specified
+        encryption key can be a customer-supplied encryption key (An RFC 4648
+        section 4 base64-encoded AES256 string), or a customer-managed
+        encryption key of the form
+        projects/{project}/locations/{location}/keyRings/
+        {key-ring}/cryptoKeys/{crypto-key}. The specified key also acts as a
+        decryption key, which is useful when copying or moving encryted data to
+        a new location. Using this flag in an objects update command triggers a
+        rewrite of target objects.
+
+OBJECT METADATA FLAGS
+     --cache-control=CACHE_CONTROL
+        How caches should handle requests and responses.
+
+     --content-disposition=CONTENT_DISPOSITION
+        How content should be displayed.
+
+     --content-encoding=CONTENT_ENCODING
+        How content is encoded (e.g. gzip).
+
+     --content-language=CONTENT_LANGUAGE
+        Content's language (e.g. en signifies "English").
+
+     --content-md5=MD5_DIGEST
+        Manually specified MD5 hash digest for the contents of an uploaded
+        file. This flag cannot be used when uploading multiple files. The
+        custom digest is used by the cloud provider for validation.
+
+     --content-type=CONTENT_TYPE
+        Type of data contained in the object (e.g. text/html).
+
+     --custom-time=CUSTOM_TIME
+        Custom time for Google Cloud Storage objects in RFC 3339 format.
+
+     At most one of these can be specified:
+
+       --clear-custom-metadata
+          Clears all custom metadata on objects. When used with
+          --preserve-posix, POSIX attributes will still be stored in custom
+          metadata.
+
+       --custom-metadata=[CUSTOM_METADATA_KEYS_AND_VALUES,...]
+          Sets custom metadata on objects. When used with --preserve-posix,
+          POSIX attributes are also stored in custom metadata.
+
+       Flags that preserve unspecified existing metadata cannot be used with
+       --custom-metadata or --clear-custom-metadata, but can be specified
+       together:
+
+         --remove-custom-metadata=[METADATA_KEYS,...]
+            Removes individual custom metadata keys from objects. This flag can
+            be used with --update-custom-metadata. When used with
+            --preserve-posix, POSIX attributes specified by this flag are not
+            preserved.
+
+         --update-custom-metadata=[CUSTOM_METADATA_KEYS_AND_VALUES,...]
+            Adds or sets individual custom metadata key value pairs on objects.
+            Existing custom metadata not specified with this flag is not
+            changed. This flag can be used with --remove-custom-metadata. When
+            keys overlap with those provided by --preserve-posix, values
+            specified by this flag are used.
 
 PRECONDITION FLAGS
      --if-generation-match=GENERATION
