@@ -29,19 +29,19 @@ DESCRIPTION
 EXAMPLES
     Update a Google Cloud Storage object's custom-metadata:
 
-        $ *gcloud alpha storage objects update* gs://bucket/my-object \
+        $ gcloud alpha storage objects update gs://bucket/my-object \
             --custom-metadata=key1=value1,key2=value2
 
-    Set a temporary hold on JPG images:
+    Rewrite all JPEG images to the NEARLINE storage class:
 
-        $ *gcloud alpha storage objects update* gs://bucket/*.jpg \
-            --temporary-hold
+        $ gcloud alpha storage objects update gs://bucket/*.jpg \
+            --storage-class=NEARLINE
 
         You can also provide a precondition on an object's metageneration in
         order to avoid potential race conditions:
 
-        $ *gcloud alpha storage objects update* gs://bucket/*.jpg \
-            --temporary-hold --if-metageneration-match=123456789
+        $ gcloud alpha storage objects update gs://bucket/*.jpg \
+            --storage-class=NEARLINE --if-metageneration-match=123456789
 
 POSITIONAL ARGUMENTS
      [URL ...]
@@ -201,5 +201,7 @@ NOTES
     This command is currently in alpha and might change without notice. If this
     command fails with API permission errors despite specifying the correct
     project, you might be trying to access an API with an invitation-only early
-    access allowlist.
+    access allowlist. This variant is also available:
+
+        $ gcloud storage objects update
 

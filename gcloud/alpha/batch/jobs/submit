@@ -22,6 +22,28 @@ EXAMPLES
         $ gcloud alpha batch jobs submit \
             projects/foo/locations/us-central1/jobs/bar --config=config.json
 
+    To submit the job through stdin with json job config and name
+    projects/foo/locations/us-central1/jobs/bar, run:
+
+        $ gcloud alpha batch jobs submit \
+            projects/foo/locations/us-central1/jobs/bar --config=-
+
+        then input json job config via stdin
+        {
+          json job config
+        }
+
+    To submit the job through HereDoc with json job config and name
+    projects/foo/locations/us-central1/jobs/bar, run:
+
+        $ gcloud alpha batch jobs submit \
+            projects/foo/locations/us-central1/jobs/bar --config=- << EOF
+
+        {
+          json job config
+        }
+        EOF
+
 POSITIONAL ARGUMENTS
      Job resource - The Batch job resource. The arguments in this group can be
      used to specify the attributes of this resource. (NOTE) Some attributes
@@ -52,7 +74,9 @@ REQUIRED FLAGS
      At least one of these must be specified:
 
        --config=CONFIG
-          The JSON file of the job config.
+          The file path of the JSON job config JSON. It also supports direct
+          input from stdin with '-' or HereDoc (in shells with HereDoc support
+          like Bash) with '- <<DELIMITER'.
 
        Either specify the config file for the job or the first runnable in the
        task spec. Specify either a script file or container arguments for the

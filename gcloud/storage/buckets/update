@@ -1,0 +1,197 @@
+NAME
+    gcloud storage buckets update - update bucket settings
+
+SYNOPSIS
+    gcloud storage buckets update URL [URL ...] [--continue-on-error, -c]
+        [--default-storage-class=DEFAULT_STORAGE_CLASS] [--[no-]requester-pays]
+        [--[no-]versioning] [--clear-cors | --cors-file=CORS_FILE]
+        [--clear-default-encryption-key
+          | --default-encryption-key=DEFAULT_ENCRYPTION_KEY]
+        [--clear-labels | --labels-file=LABELS_FILE
+          | --remove-labels=[LABEL_KEYS,...]
+          --update-labels=[LABEL_KEYS_AND_VALUES,...]]
+        [--clear-lifecycle | --lifecycle-file=LIFECYCLE_FILE]
+        [--clear-log-bucket | --log-bucket=LOG_BUCKET]
+        [--clear-log-object-prefix | --log-object-prefix=LOG_OBJECT_PREFIX]
+        [--clear-pap, --clear-public-access-prevention
+          | --[no-]pap, --[no-]public-access-prevention]
+        [--clear-web-error-page | --web-error-page=WEB_ERROR_PAGE]
+        [--clear-web-main-page-suffix
+          | --web-main-page-suffix=WEB_MAIN_PAGE_SUFFIX] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Update a bucket.
+
+EXAMPLES
+    The following command updates the default storage class of a Cloud Storage
+    bucket named "my-bucket" to NEARLINE and sets requester pays to true:
+
+        $ gcloud storage buckets update gs://my-bucket \
+            --default-storage-class=NEARLINE --requester-pays
+
+POSITIONAL ARGUMENTS
+     URL [URL ...]
+        URLs of the buckets to update.
+
+FLAGS
+     --continue-on-error, -c
+        If any operations are unsuccessful, the command will exit with a
+        non-zero exit status after completing the remaining operations. This
+        flag takes effect only in sequential execution mode (i.e. processor and
+        thread count are set to 1). Parallelism is default.
+
+     --default-storage-class=DEFAULT_STORAGE_CLASS
+        Sets the default storage class for the bucket.
+
+     --[no-]requester-pays
+        Allows you to configure a Cloud Storage bucket so that the requester
+        pays all costs related to accessing the bucket and its objects. Use
+        --requester-pays to enable and --no-requester-pays to disable.
+
+     --[no-]versioning
+        Allows you to configure a Cloud Storage bucket to keep old versions of
+        objects. Use --versioning to enable and --no-versioning to disable.
+
+     At most one of these can be specified:
+
+       --clear-cors
+          Clears the bucket's CORS settings.
+
+       --cors-file=CORS_FILE
+          Sets the Cross-Origin Resource Sharing (CORS) configuration on a
+          bucket. An example CORS JSON document looks like the following:
+
+              [
+                {
+                  "origin": ["http://origin1.example.com"],
+                  "responseHeader": ["Content-Type"],
+                  "method": ["GET"],
+                  "maxAgeSeconds": 3600
+                }
+              ]
+
+          For more information about supported endpoints for CORS, see [Cloud
+          Storage CORS support]
+          (https://cloud.google.com/storage/docs/cross-origin#server-side-support).
+
+     At most one of these can be specified:
+
+       --clear-default-encryption-key
+          Clears the bucket's default encryption key.
+
+       --default-encryption-key=DEFAULT_ENCRYPTION_KEY
+          Set the default KMS key for the bucket.
+
+     At most one of these can be specified:
+
+       --clear-labels
+          Clear all labels associated with a bucket.
+
+       --labels-file=LABELS_FILE
+          Sets the label configuration for the bucket. An example label JSON
+          document looks like the following:
+
+              {
+                "your_label_key": "your_label_value",
+                "your_other_label_key": "your_other_label_value"
+              }
+
+       --remove-labels=[LABEL_KEYS,...]
+          Remove labels by their key names.
+
+       --update-labels=[LABEL_KEYS_AND_VALUES,...]
+          Add or update labels. Example:
+          --update-labels=key1=value1,key2=value2
+
+     At most one of these can be specified:
+
+       --clear-lifecycle
+          Removes all lifecycle configuration for the bucket.
+
+       --lifecycle-file=LIFECYCLE_FILE
+          Sets the lifecycle management configuration on a bucket. For example,
+          The following lifecycle management configuration JSON document
+          specifies that all objects in this bucket that are more than 365 days
+          old are deleted automatically:
+
+              {
+                "rule":
+                [
+                  {
+                    "action": {"type": "Delete"},
+                    "condition": {"age": 365}
+                  }
+                ]
+              }
+
+     At most one of these can be specified:
+
+       --clear-log-bucket
+          Clears logging bucket receiving the usage current bucket's data.
+
+       --log-bucket=LOG_BUCKET
+          Enables usage logging of the bucket, outputting log files to the
+          specified logging_bucket in this flag. Cloud Storage doesn't validate
+          the existence of the bucket receiving logs. In addition to enabling
+          logging on your bucket, you will also need to grant
+          cloud-storage-analytics@google.com write access to the log bucket.
+
+     At most one of these can be specified:
+
+       --clear-log-object-prefix
+          Clears prefix used to determine what usage data to send to logging
+          bucket.
+
+       --log-object-prefix=LOG_OBJECT_PREFIX
+          Specifies the object prefix for logging activity to the log bucket.
+          The default prefix is the bucket name. All read and write activity to
+          objects in the bucket will be logged for objects matching the prefix.
+
+     At most one of these can be specified:
+
+       --clear-pap, --clear-public-access-prevention
+          Unsets the public access prevention setting on a bucket.
+
+       --[no-]pap, --[no-]public-access-prevention
+          If True, sets public access prevention to "enforced". If False, sets
+          public access prevention to "inherited". For details on how exactly
+          public access is blocked, see:
+          http://cloud/storage/docs/public-access-prevention. Use
+          --public-access-prevention to enable and
+          --no-public-access-prevention to disable.
+
+     At most one of these can be specified:
+
+       --clear-web-error-page
+          Clear website error page if bucket is hosting website.
+
+       --web-error-page=WEB_ERROR_PAGE
+          Cloud Storage allows you to configure a bucket to behave like a
+          static website. A subsequent GET bucket request through a custom
+          domain for a non-existent object serves the specified error page
+          instead of the standard Cloud Storage error.
+
+     At most one of these can be specified:
+
+       --clear-web-main-page-suffix
+          Clear website main page suffix if bucket is hosting website.
+
+       --web-main-page-suffix=WEB_MAIN_PAGE_SUFFIX
+          Cloud Storage allows you to configure a bucket to behave like a
+          static website. A subsequent GET bucket request through a custom
+          domain serves the specified "main" page instead of performing the
+          usual bucket listing.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This variant is also available:
+
+        $ gcloud alpha storage buckets update
+

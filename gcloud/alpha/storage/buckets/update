@@ -2,26 +2,26 @@ NAME
     gcloud alpha storage buckets update - update bucket settings
 
 SYNOPSIS
-    gcloud alpha storage buckets update URL [URL ...] [--clear-cors]
-        [--clear-default-encryption-key] [--clear-lifecycle]
-        [--clear-log-bucket] [--clear-log-object-prefix]
-        [--clear-pap, --clear-public-access-prevention]
-        [--clear-retention-period] [--clear-web-error-page]
-        [--clear-web-main-page-suffix] [--continue-on-error, -c]
-        [--cors-file=CORS_FILE]
-        [--default-encryption-key=DEFAULT_ENCRYPTION_KEY]
+    gcloud alpha storage buckets update URL [URL ...] [--continue-on-error, -c]
         [--[no-]default-event-based-hold]
         [--default-storage-class=DEFAULT_STORAGE_CLASS]
-        [--lifecycle-file=LIFECYCLE_FILE] [--[no-]lock-retention-period]
-        [--log-bucket=LOG_BUCKET] [--log-object-prefix=LOG_OBJECT_PREFIX]
-        [--[no-]pap, --[no-]public-access-prevention] [--[no-]requester-pays]
-        [--retention-period=RETENTION_PERIOD]
+        [--[no-]lock-retention-period] [--[no-]requester-pays]
         [--[no-]uniform-bucket-level-access] [--[no-]versioning]
-        [--web-error-page=WEB_ERROR_PAGE]
-        [--web-main-page-suffix=WEB_MAIN_PAGE_SUFFIX]
+        [--clear-cors | --cors-file=CORS_FILE]
+        [--clear-default-encryption-key
+          | --default-encryption-key=DEFAULT_ENCRYPTION_KEY]
         [--clear-labels | --labels-file=LABELS_FILE
           | --remove-labels=[LABEL_KEYS,...]
-          --update-labels=[LABEL_KEYS_AND_VALUES,...]] [GCLOUD_WIDE_FLAG ...]
+          --update-labels=[LABEL_KEYS_AND_VALUES,...]]
+        [--clear-lifecycle | --lifecycle-file=LIFECYCLE_FILE]
+        [--clear-log-bucket | --log-bucket=LOG_BUCKET]
+        [--clear-log-object-prefix | --log-object-prefix=LOG_OBJECT_PREFIX]
+        [--clear-pap, --clear-public-access-prevention
+          | --[no-]pap, --[no-]public-access-prevention]
+        [--clear-retention-period | --retention-period=RETENTION_PERIOD]
+        [--clear-web-error-page | --web-error-page=WEB_ERROR_PAGE]
+        [--clear-web-main-page-suffix
+          | --web-main-page-suffix=WEB_MAIN_PAGE_SUFFIX] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Update a bucket.
@@ -40,62 +40,14 @@ EXAMPLES
 
 POSITIONAL ARGUMENTS
      URL [URL ...]
-        The URLs of the buckets to update.
+        URLs of the buckets to update.
 
 FLAGS
-     --clear-cors
-        Clears the bucket's CORS settings.
-
-     --clear-default-encryption-key
-        Clears the bucket's default encryption key.
-
-     --clear-lifecycle
-        Removes all lifecycle configuration for the bucket.
-
-     --clear-log-bucket
-        Clears logging bucket receiving the usage current bucket's data.
-
-     --clear-log-object-prefix
-        Clears prefix used to determine what usage data to send to logging
-        bucket.
-
-     --clear-pap, --clear-public-access-prevention
-        Unsets the public access prevention setting on a bucket.
-
-     --clear-retention-period
-        Clears the object retention period for a bucket.
-
-     --clear-web-error-page
-        Clear website error page if bucket is hosting website.
-
-     --clear-web-main-page-suffix
-        Clear website main page suffix if bucket is hosting website.
-
      --continue-on-error, -c
         If any operations are unsuccessful, the command will exit with a
         non-zero exit status after completing the remaining operations. This
         flag takes effect only in sequential execution mode (i.e. processor and
         thread count are set to 1). Parallelism is default.
-
-     --cors-file=CORS_FILE
-        Sets the Cross-Origin Resource Sharing (CORS) configuration on a
-        bucket. An example CORS JSON document looks like the following:
-
-            [
-              {
-                "origin": ["http://origin1.example.com"],
-                "responseHeader": ["Content-Type"],
-                "method": ["GET"],
-                "maxAgeSeconds": 3600
-              }
-            ]
-
-        For more information about supported endpoints for CORS, see [Cloud
-        Storage CORS support]
-        (https://cloud.google.com/storage/docs/cross-origin#server-side-support).
-
-     --default-encryption-key=DEFAULT_ENCRYPTION_KEY
-        Set the default KMS key for the bucket.
 
      --[no-]default-event-based-hold
         Sets the default value for an event-based hold on the bucket. By
@@ -107,22 +59,6 @@ FLAGS
      --default-storage-class=DEFAULT_STORAGE_CLASS
         Sets the default storage class for the bucket.
 
-     --lifecycle-file=LIFECYCLE_FILE
-        Sets the lifecycle management configuration on a bucket. For example,
-        The following lifecycle management configuration JSON document
-        specifies that all objects in this bucket that are more than 365 days
-        old are deleted automatically:
-
-            {
-              "rule":
-              [
-                {
-                  "action": {"type": "Delete"},
-                  "condition": {"age": 365}
-                }
-              ]
-            }
-
      --[no-]lock-retention-period
         Locks an unlocked retention policy on the buckets. Caution: A locked
         retention policy cannot be removed from a bucket or reduced in
@@ -130,39 +66,10 @@ FLAGS
         a retention policy. Use --lock-retention-period to enable and
         --no-lock-retention-period to disable.
 
-     --log-bucket=LOG_BUCKET
-        Enables usage logging of the bucket, outputting log files to the
-        specified logging_bucket in this flag. Cloud Storage doesn't validate
-        the existence of the bucket receiving logs. In addition to enabling
-        logging on your bucket, you will also need to grant
-        cloud-storage-analytics@google.com write access to the log bucket.
-
-     --log-object-prefix=LOG_OBJECT_PREFIX
-        Specifies the object prefix for logging activity to the log bucket. The
-        default prefix is the bucket name. All read and write activity to
-        objects in the bucket will be logged for objects matching the prefix.
-
-     --[no-]pap, --[no-]public-access-prevention
-        If True, sets public access prevention to "enforced". If False, sets
-        public access prevention to "inherited". For details on how exactly
-        public access is blocked, see:
-        http://cloud/storage/docs/public-access-prevention. Use
-        --public-access-prevention to enable and --no-public-access-prevention
-        to disable.
-
      --[no-]requester-pays
         Allows you to configure a Cloud Storage bucket so that the requester
         pays all costs related to accessing the bucket and its objects. Use
         --requester-pays to enable and --no-requester-pays to disable.
-
-     --retention-period=RETENTION_PERIOD
-        Minimum retention period
-        (https://cloud.google.com/storage/docs/bucket-lock#retention-periods)
-        for objects stored in the bucket, for example
-        --retention-period=1Y1M1D5S. Objects added to the bucket cannot be
-        deleted until they've been stored for the specified length of time.
-        Default is no retention period. Only available for Cloud Storage using
-        the JSON API.
 
      --[no-]uniform-bucket-level-access
         Enables or disables uniform bucket-level access
@@ -174,17 +81,35 @@ FLAGS
         Allows you to configure a Cloud Storage bucket to keep old versions of
         objects. Use --versioning to enable and --no-versioning to disable.
 
-     --web-error-page=WEB_ERROR_PAGE
-        Cloud Storage allows you to configure a bucket to behave like a static
-        website. A subsequent GET bucket request through a custom domain for a
-        non-existent object serves the specified error page instead of the
-        standard Cloud Storage error.
+     At most one of these can be specified:
 
-     --web-main-page-suffix=WEB_MAIN_PAGE_SUFFIX
-        Cloud Storage allows you to configure a bucket to behave like a static
-        website. A subsequent GET bucket request through a custom domain serves
-        the specified "main" page instead of performing the usual bucket
-        listing.
+       --clear-cors
+          Clears the bucket's CORS settings.
+
+       --cors-file=CORS_FILE
+          Sets the Cross-Origin Resource Sharing (CORS) configuration on a
+          bucket. An example CORS JSON document looks like the following:
+
+              [
+                {
+                  "origin": ["http://origin1.example.com"],
+                  "responseHeader": ["Content-Type"],
+                  "method": ["GET"],
+                  "maxAgeSeconds": 3600
+                }
+              ]
+
+          For more information about supported endpoints for CORS, see [Cloud
+          Storage CORS support]
+          (https://cloud.google.com/storage/docs/cross-origin#server-side-support).
+
+     At most one of these can be specified:
+
+       --clear-default-encryption-key
+          Clears the bucket's default encryption key.
+
+       --default-encryption-key=DEFAULT_ENCRYPTION_KEY
+          Set the default KMS key for the bucket.
 
      At most one of these can be specified:
 
@@ -207,6 +132,99 @@ FLAGS
           Add or update labels. Example:
           --update-labels=key1=value1,key2=value2
 
+     At most one of these can be specified:
+
+       --clear-lifecycle
+          Removes all lifecycle configuration for the bucket.
+
+       --lifecycle-file=LIFECYCLE_FILE
+          Sets the lifecycle management configuration on a bucket. For example,
+          The following lifecycle management configuration JSON document
+          specifies that all objects in this bucket that are more than 365 days
+          old are deleted automatically:
+
+              {
+                "rule":
+                [
+                  {
+                    "action": {"type": "Delete"},
+                    "condition": {"age": 365}
+                  }
+                ]
+              }
+
+     At most one of these can be specified:
+
+       --clear-log-bucket
+          Clears logging bucket receiving the usage current bucket's data.
+
+       --log-bucket=LOG_BUCKET
+          Enables usage logging of the bucket, outputting log files to the
+          specified logging_bucket in this flag. Cloud Storage doesn't validate
+          the existence of the bucket receiving logs. In addition to enabling
+          logging on your bucket, you will also need to grant
+          cloud-storage-analytics@google.com write access to the log bucket.
+
+     At most one of these can be specified:
+
+       --clear-log-object-prefix
+          Clears prefix used to determine what usage data to send to logging
+          bucket.
+
+       --log-object-prefix=LOG_OBJECT_PREFIX
+          Specifies the object prefix for logging activity to the log bucket.
+          The default prefix is the bucket name. All read and write activity to
+          objects in the bucket will be logged for objects matching the prefix.
+
+     At most one of these can be specified:
+
+       --clear-pap, --clear-public-access-prevention
+          Unsets the public access prevention setting on a bucket.
+
+       --[no-]pap, --[no-]public-access-prevention
+          If True, sets public access prevention to "enforced". If False, sets
+          public access prevention to "inherited". For details on how exactly
+          public access is blocked, see:
+          http://cloud/storage/docs/public-access-prevention. Use
+          --public-access-prevention to enable and
+          --no-public-access-prevention to disable.
+
+     At most one of these can be specified:
+
+       --clear-retention-period
+          Clears the object retention period for a bucket.
+
+       --retention-period=RETENTION_PERIOD
+          Minimum retention period
+          (https://cloud.google.com/storage/docs/bucket-lock#retention-periods)
+          for objects stored in the bucket, for example
+          --retention-period=1Y1M1D5S. Objects added to the bucket cannot be
+          deleted until they've been stored for the specified length of time.
+          Default is no retention period. Only available for Cloud Storage
+          using the JSON API.
+
+     At most one of these can be specified:
+
+       --clear-web-error-page
+          Clear website error page if bucket is hosting website.
+
+       --web-error-page=WEB_ERROR_PAGE
+          Cloud Storage allows you to configure a bucket to behave like a
+          static website. A subsequent GET bucket request through a custom
+          domain for a non-existent object serves the specified error page
+          instead of the standard Cloud Storage error.
+
+     At most one of these can be specified:
+
+       --clear-web-main-page-suffix
+          Clear website main page suffix if bucket is hosting website.
+
+       --web-main-page-suffix=WEB_MAIN_PAGE_SUFFIX
+          Cloud Storage allows you to configure a bucket to behave like a
+          static website. A subsequent GET bucket request through a custom
+          domain serves the specified "main" page instead of performing the
+          usual bucket listing.
+
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
     --billing-project, --configuration, --flags-file, --flatten, --format,
@@ -219,5 +237,7 @@ NOTES
     This command is currently in alpha and might change without notice. If this
     command fails with API permission errors despite specifying the correct
     project, you might be trying to access an API with an invitation-only early
-    access allowlist.
+    access allowlist. This variant is also available:
+
+        $ gcloud storage buckets update
 

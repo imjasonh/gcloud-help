@@ -1,0 +1,84 @@
+NAME
+    gcloud storage buckets create - create buckets for storing objects
+
+SYNOPSIS
+    gcloud storage buckets create URL
+        [--default-encryption-key=DEFAULT_ENCRYPTION_KEY,
+          -k DEFAULT_ENCRYPTION_KEY]
+        [--default-storage-class=DEFAULT_STORAGE_CLASS,
+          -c DEFAULT_STORAGE_CLASS, -s DEFAULT_STORAGE_CLASS]
+        [--location=LOCATION, -l LOCATION]
+        [--[no-]pap, --[no-]public-access-prevention]
+        [--retention-period=RETENTION_PERIOD]
+        [--[no-]uniform-bucket-level-access, -b] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Create a new bucket.
+
+EXAMPLES
+    The following command creates a Cloud Storage bucket named my-bucket:
+
+        $ gcloud storage buckets create gs://my-bucket
+
+    The following command creates a bucket with the nearline default storage
+    class (https://cloud.google.com/storage/docs/storage-classes) in the asia
+    location (https://cloud.google.com/storage/docs/locations):
+
+        $ gcloud storage buckets create gs://my-bucket \
+            --default-storage-class=nearline --location=asia
+
+POSITIONAL ARGUMENTS
+     URL
+        The URL of the bucket to create.
+
+FLAGS
+     --default-encryption-key=DEFAULT_ENCRYPTION_KEY, -k DEFAULT_ENCRYPTION_KEY
+        Set the default KMS key using the full path to the key, which has the
+        following form:
+        projects/[project-id]/locations/[location]/keyRings/[key-ring]/cryptoKeys/[my-key].
+
+     --default-storage-class=DEFAULT_STORAGE_CLASS, -c DEFAULT_STORAGE_CLASS, -s DEFAULT_STORAGE_CLASS
+        Default storage class
+        (https://cloud.google.com/storage/docs/storage-classes) for the bucket.
+        If not specified, the default storage class used by Cloud Storage is
+        "Standard".
+
+     --location=LOCATION, -l LOCATION
+        Location (https://cloud.google.com/storage/docs/locations) for the
+        bucket. If not specified, the location used by Cloud Storage is us. A
+        bucket's location cannot be changed after creation.
+
+     --[no-]pap, --[no-]public-access-prevention
+        Sets public access prevention to "enforced". For details on how exactly
+        public access is blocked, see:
+        http://cloud/storage/docs/public-access-prevention. Use
+        --public-access-prevention to enable and --no-public-access-prevention
+        to disable.
+
+     --retention-period=RETENTION_PERIOD
+        Minimum retention period
+        (https://cloud.google.com/storage/docs/bucket-lock#retention-periods)
+        for objects stored in the bucket, for example
+        --retention-period=1Y1M1D5S. Objects added to the bucket cannot be
+        deleted until they've been stored for the specified length of time.
+        Default is no retention period. Only available for Cloud Storage using
+        the JSON API.
+
+     --[no-]uniform-bucket-level-access, -b
+        Turns on uniform bucket-level access setting. Default is False. Use
+        --uniform-bucket-level-access to enable and
+        --no-uniform-bucket-level-access to disable.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This variant is also available:
+
+        $ gcloud alpha storage buckets create
+

@@ -1,0 +1,76 @@
+NAME
+    gcloud storage cat - outputs the contents of one or more URLs to stdout
+
+SYNOPSIS
+    gcloud storage cat URL [URL ...] [--display-url, -d]
+        [--range=RANGE, -r RANGE] [--decryption-keys=[DECRYPTION_KEY,...]]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    The cat command outputs the contents of one or more URLs to stdout. While
+    the cat command does not compute a checksum, it is otherwise equivalent to
+    doing:
+
+        $ gcloud storage cp url... -
+
+    (The final '-' causes gcloud to stream the output to stdout.)
+
+EXAMPLES
+    The following command writes all text files in a bucket to stdout:
+
+        $ gcloud storage cat gs://bucket/*.txt
+
+    The following command outputs a short header describing file.txt, along
+    with its contents:
+
+        $ gcloud storage cat -d gs://my-bucket/file.txt
+
+    The following command outputs bytes 256-939 of file.txt:
+
+        $ gcloud storage cat -r 256-939 gs://my-bucket/file.txt
+
+    The following command outputs the last 5 bytes of file.txt:
+
+        $ gcloud storage cat -r -5 gs://my-bucket/file.txt
+
+POSITIONAL ARGUMENTS
+     URL [URL ...]
+        The url of objects to list.
+
+FLAGS
+     --display-url, -d
+        Prints the header before each object.
+
+     --range=RANGE, -r RANGE
+        Causes gcloud storage to output just the specified byte range of the
+        object. In a case where "start" = 'x', and "end" = 'y', ranges take the
+        form: x-y (e.g., -r 256-5939), x- (e.g., -r 256-), -y (e.g., -r -5)
+
+        When offsets start at 0, x-y means to return bytes x through y
+        (inclusive), x- means to return bytes x through the end of the object,
+        and -y changes the role of y. If -y is present, then it returns the
+        last y bytes of the object.
+
+        If the bytes are out of range of the object, then nothing is printed
+
+ENCRYPTION FLAGS
+     --decryption-keys=[DECRYPTION_KEY,...]
+        A comma-separated list of customer-supplied encryption keys (RFC 4648
+        section 4 base64-encoded AES256 strings) that will be used to decrypt
+        Google Cloud Storage objects. Data encrypted with a customer-managed
+        encryption key (CMEK) is decrypted automatically, so CMEKs do not need
+        to be listed here.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This variant is also available:
+
+        $ gcloud alpha storage cat
+
