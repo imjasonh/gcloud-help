@@ -7,7 +7,8 @@ SYNOPSIS
         [--cache-key-include-http-header=[HEADER_FIELD_NAME,...]]
         [--cache-key-include-named-cookie=[NAMED_COOKIE,...]]
         [--cache-key-include-protocol] [--cache-key-include-query-string]
-        [--cache-mode=CACHE_MODE] [--connection-drain-on-failover]
+        [--cache-mode=CACHE_MODE] [--compression-mode=COMPRESSION_MODE]
+        [--connection-drain-on-failover]
         [--connection-draining-timeout=CONNECTION_DRAINING_TIMEOUT]
         [--connection-persistence-on-unhealthy-backends=CONNECTION_PERSISTENCE_ON_UNHEALTHY_BACKENDS]
         [--description=DESCRIPTION] [--drop-traffic-if-unhealthy]
@@ -108,6 +109,16 @@ FLAGS
             Responses without these headers aren't cached at Google's edge, and
             require a full trip to the origin on every request, potentially
             impacting performance and increasing load on the origin server.
+
+     --compression-mode=COMPRESSION_MODE
+        Compress text responses using Brotli or gzip compression, based on the
+        client's Accept-Encoding header. Two modes are supported: AUTOMATIC
+        (recommended) - automatically uses the best compression based on the
+        Accept-Encoding header sent by the client. In most cases, this will
+        result in Brotli compression being favored. DISABLED - disables
+        compression. Existing compressed responses cached by Cloud CDN will not
+        be served to clients. COMPRESSION_MODE must be one of: DISABLED,
+        AUTOMATIC.
 
      --connection-drain-on-failover
         Connection drain is enabled by default and on failover or failback

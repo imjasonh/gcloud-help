@@ -5,8 +5,9 @@ SYNOPSIS
     gcloud dns managed-zones create ZONE_NAME --description=DESCRIPTION
         --dns-name=DNS_NAME [--denial-of-existence=DENIAL_OF_EXISTENCE]
         [--dnssec-state=DNSSEC_STATE] [--forwarding-targets=[IP_ADDRESSES,...]]
-        [--ksk-algorithm=KSK_ALGORITHM] [--ksk-key-length=KSK_KEY_LENGTH]
-        [--labels=[KEY=VALUE,...]] [--[no-]log-dns-queries]
+        [--gkeclusters=[GKECLUSTERS,...]] [--ksk-algorithm=KSK_ALGORITHM]
+        [--ksk-key-length=KSK_KEY_LENGTH] [--labels=[KEY=VALUE,...]]
+        [--location=LOCATION] [--[no-]log-dns-queries]
         [--managed-reverse-lookup] [--networks=[NETWORK,...]]
         [--private-forwarding-targets=[IP_ADDRESSES,...]]
         [--service-directory-namespace=SERVICE_DIRECTORY_NAMESPACE]
@@ -21,8 +22,21 @@ DESCRIPTION
 EXAMPLES
     To create a managed-zone, run:
 
-        $ gcloud dns managed-zones create my-zone --dns-name my.zone.com. \
-            --description "My zone!"
+        $ gcloud dns managed-zones create my-zone --dns-name=my.zone.com. \
+            --description="My zone!"
+
+    To create a managed-zone with DNSSEC, run:
+
+        $ gcloud dns managed-zones create my-zone-2 \
+            --description="Signed Zone" --dns-name=myzone.example \
+            --dnssec-state=on
+
+        To create a zonal managed-zone scoped to a GKE Cluster in us-east1-a, run:
+
+        $ gcloud dns managed-zones create my-zonal-zone \
+            --description="Signed Zone" --dns-name=cluster.local \
+            --visibility=private --gkeclusters=cluster1 \
+            --location=us-east1-a
 
 POSITIONAL ARGUMENTS
      ZONE_NAME
@@ -56,6 +70,10 @@ OPTIONAL FLAGS
         addresses will forward to the target through the Internet. RFC1918
         addresses will forward through the VPC.
 
+     --gkeclusters=[GKECLUSTERS,...]
+        List of GKE clusters that the zone should be visible in if the zone
+        visibility is [private].
+
      --ksk-algorithm=KSK_ALGORITHM
         String mnemonic specifying the DNSSEC algorithm of the key-signing key.
         Requires DNSSEC enabled. KSK_ALGORITHM must be one of: ecdsap256sha256,
@@ -71,6 +89,11 @@ OPTIONAL FLAGS
         (-), underscores (_), lowercase characters, and numbers. Values must
         contain only hyphens (-), underscores (_), lowercase characters, and
         numbers.
+
+     --location=LOCATION
+        Specifies the desired service location the request is sent to. Defaults
+        to Cloud DNS global service. Use --location=global if you want to
+        target the global service.
 
      --[no-]log-dns-queries
         Specifies whether to enable query logging. Defaults to False. Use

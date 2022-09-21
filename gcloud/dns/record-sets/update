@@ -9,8 +9,8 @@ SYNOPSIS
           --routing-policy-backup-data-type=ROUTING_POLICY_BACKUP_DATA_TYPE
           --routing-policy-primary-data=ROUTING_POLICY_PRIMARY_DATA
           : --backup-data-trickle-ratio=BACKUP_DATA_TRICKLE_RATIO])
-          : --enable-geo-fencing --enable-health-checking]) [--ttl=TTL]
-        [GCLOUD_WIDE_FLAG ...]
+          : --enable-geo-fencing --enable-health-checking])
+        [--location=LOCATION] [--ttl=TTL] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     This command updates a record-set contained within the specified
@@ -22,6 +22,14 @@ EXAMPLES
 
         $ gcloud dns record-sets update foo.bar.com. \
             --rrdatas=1.2.3.4,9.8.7.6 --type=A --ttl=60 --zone=my_zone
+
+    To update a record-set with dnsName foo.bar.com., record type A to have
+    rrdata [1.2.3.4, 9.8.7.6] and ttl 60 in my_zone that is located in
+    us-east1-a, run:
+
+        $ gcloud dns record-sets update foo.bar.com. \
+            --rrdatas=1.2.3.4,9.8.7.6 --type=A --ttl=60 --zone=my_zone \
+            --location=us-east1-a
 
 POSITIONAL ARGUMENTS
      DNS_NAME
@@ -121,6 +129,11 @@ REQUIRED FLAGS
                 targets even when the primary targets are healthy.
 
 OPTIONAL FLAGS
+     --location=LOCATION
+        Specifies the desired service location the request is sent to. Defaults
+        to Cloud DNS global service. Use --location=global if you want to
+        target the global service.
+
      --ttl=TTL
         TTL (time to live) for the record-set.
 

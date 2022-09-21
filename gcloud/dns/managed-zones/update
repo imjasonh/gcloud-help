@@ -5,7 +5,8 @@ SYNOPSIS
     gcloud dns managed-zones update ZONE [--async]
         [--denial-of-existence=DENIAL_OF_EXISTENCE] [--description=DESCRIPTION]
         [--dnssec-state=DNSSEC_STATE] [--forwarding-targets=[IP_ADDRESSES,...]]
-        [--ksk-algorithm=KSK_ALGORITHM] [--ksk-key-length=KSK_KEY_LENGTH]
+        [--gkeclusters=[GKECLUSTERS,...]] [--ksk-algorithm=KSK_ALGORITHM]
+        [--ksk-key-length=KSK_KEY_LENGTH] [--location=LOCATION]
         [--[no-]log-dns-queries] [--managed-reverse-lookup]
         [--networks=[NETWORK,...]]
         [--private-forwarding-targets=[IP_ADDRESSES,...]]
@@ -23,6 +24,11 @@ EXAMPLES
 
         $ gcloud dns managed-zones update my-zone \
             --description="Hello, world!"
+
+    To change the description of a zonal managed-zone in us-east1-a, run:
+
+        $ gcloud dns managed-zones update my-zone \
+            --description="Hello, world!" --location=us-east1-a
 
 POSITIONAL ARGUMENTS
      Zone resource - The name of the managed-zone to be updated. This
@@ -69,6 +75,10 @@ FLAGS
         addresses will forward to the target through the Internet. RFC1918
         addresses will forward through the VPC.
 
+     --gkeclusters=[GKECLUSTERS,...]
+        List of GKE clusters that the zone should be visible in if the zone
+        visibility is [private].
+
      --ksk-algorithm=KSK_ALGORITHM
         String mnemonic specifying the DNSSEC algorithm of the key-signing key.
         Requires DNSSEC enabled. KSK_ALGORITHM must be one of: ecdsap256sha256,
@@ -76,6 +86,11 @@ FLAGS
 
      --ksk-key-length=KSK_KEY_LENGTH
         Length of the key-signing key in bits. Requires DNSSEC enabled.
+
+     --location=LOCATION
+        Specifies the desired service location the request is sent to. Defaults
+        to Cloud DNS global service. Use --location=global if you want to
+        target the global service.
 
      --[no-]log-dns-queries
         Specifies whether to enable query logging. Defaults to False. Use

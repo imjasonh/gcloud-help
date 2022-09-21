@@ -5,7 +5,8 @@ SYNOPSIS
     gcloud compute backend-buckets update BACKEND_BUCKET_NAME
         [--cache-key-include-http-header=[HEADER_FIELD_NAME,...]]
         [--cache-key-query-string-whitelist=[QUERY_STRING,...]]
-        [--cache-mode=CACHE_MODE] [--description=DESCRIPTION]
+        [--cache-mode=CACHE_MODE] [--compression-mode=COMPRESSION_MODE]
+        [--description=DESCRIPTION]
         [--edge-security-policy=EDGE_SECURITY_POLICY] [--[no-]enable-cdn]
         [--gcs-bucket-name=GCS_BUCKET_NAME] [--[no-]request-coalescing]
         [--signed-url-cache-max-age=SIGNED_URL_CACHE_MAX_AGE]
@@ -59,6 +60,16 @@ FLAGS
             Responses without these headers aren't cached at Google's edge, and
             require a full trip to the origin on every request, potentially
             impacting performance and increasing load on the origin server.
+
+     --compression-mode=COMPRESSION_MODE
+        Compress text responses using Brotli or gzip compression, based on the
+        client's Accept-Encoding header. Two modes are supported: AUTOMATIC
+        (recommended) - automatically uses the best compression based on the
+        Accept-Encoding header sent by the client. In most cases, this will
+        result in Brotli compression being favored. DISABLED - disables
+        compression. Existing compressed responses cached by Cloud CDN will not
+        be served to clients. COMPRESSION_MODE must be one of: DISABLED,
+        AUTOMATIC.
 
      --description=DESCRIPTION
         An optional, textual description for the backend bucket.
