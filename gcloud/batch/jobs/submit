@@ -1,0 +1,156 @@
+NAME
+    gcloud batch jobs submit - submit a Batch job
+
+SYNOPSIS
+    gcloud batch jobs submit (JOB : --location=LOCATION)
+        (--config=CONFIG --container-commands-file=CONTAINER_COMMANDS_FILE
+          --container-entrypoint=CONTAINER_ENTRYPOINT
+          --container-image-uri=CONTAINER_IMAGE_URI
+          | --script-file-path=SCRIPT_FILE_PATH | --script-text=SCRIPT_TEXT)
+        [--machine-type=MACHINE_TYPE] [--priority=PRIORITY]
+        [--provisioning-model=PROVISIONING_MODEL]
+        [--network=NETWORK --subnetwork=SUBNETWORK] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    This command can fail for the following reasons:
+      ▪ The active account does not have permission to create the Batch job.
+
+EXAMPLES
+    To submit the job with config.json sample config file and name
+    projects/foo/locations/us-central1/jobs/bar, run:
+
+        $ gcloud batch jobs submit \
+            projects/foo/locations/us-central1/jobs/bar --config=config.json
+
+    To submit the job through stdin with json job config and name
+    projects/foo/locations/us-central1/jobs/bar, run:
+
+        $ gcloud batch jobs submit \
+            projects/foo/locations/us-central1/jobs/bar --config=-
+
+        then input json job config via stdin
+        {
+          json job config
+        }
+
+    To submit the job through HereDoc with json job config and name
+    projects/foo/locations/us-central1/jobs/bar, run:
+
+        $ gcloud batch jobs submit \
+            projects/foo/locations/us-central1/jobs/bar --config=- << EOF
+
+        {
+          json job config
+        }
+        EOF
+
+POSITIONAL ARGUMENTS
+     Job resource - The Batch job resource. If not specified,the current
+     batch/location is used. The arguments in this group can be used to specify
+     the attributes of this resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways. To set the project
+     attribute:
+      ◆ provide the argument JOB on the command line with a fully specified
+        name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       JOB
+          ID of the job or fully qualified identifier for the job. To set the
+          job attribute:
+          ▸ provide the argument JOB on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          Google Cloud location for the job. To set the location attribute:
+          ▸ provide the argument JOB on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property batch/location.
+
+REQUIRED FLAGS
+     At least one of these must be specified:
+
+       --config=CONFIG
+          The file path of the JSON job config JSON. It also supports direct
+          input from stdin with '-' or HereDoc (in shells with HereDoc support
+          like Bash) with '- <<DELIMITER'.
+
+       Either specify the config file for the job or the first runnable in the
+       task spec. Specify either a script file or container arguments for the
+       first runnable in the task spec.
+
+       At most one of these can be specified:
+
+         Options to specify the container arguments for the first runnable in
+         the task spec.
+
+           --container-commands-file=CONTAINER_COMMANDS_FILE
+              Overrides the CMD specified in the container. If there is an
+              ENTRYPOINT (either in the container image or with the entrypoint
+              field below) then commands are appended as arguments to the
+              ENTRYPOINT.
+
+           --container-entrypoint=CONTAINER_ENTRYPOINT
+              Overrides the ENTRYPOINT specified in the container.
+
+           --container-image-uri=CONTAINER_IMAGE_URI
+              The URI to pull the container image from.
+
+         Either specify a path to a script file to run or provide inline text
+         to execute directly.
+
+         At most one of these can be specified:
+
+           --script-file-path=SCRIPT_FILE_PATH
+              Path to script file to run as first runnable in task spec. File
+              path should be a valid path on the instance volume.
+
+           --script-text=SCRIPT_TEXT
+              Text to run as first runnable in task spec.
+
+OPTIONAL FLAGS
+     --machine-type=MACHINE_TYPE
+        Specify the Compute Engine machine type, for example, e2-standard-4.
+        Currently only one machine type is supported.
+
+     --priority=PRIORITY
+        Job priority [0-99] 0 is the lowest priority.
+
+     --provisioning-model=PROVISIONING_MODEL
+        Specify the allowed provisioning model for the compute instances.
+        PROVISIONING_MODEL must be one of:
+
+         SPOT
+            The SPOT VM provisioning model. Ideal for fault-tolerant workloads
+            that can withstand preemption.
+         STANDARD
+            The STANDARD VM provisioning model
+
+     --network=NETWORK
+        The URL for the network resource. Must specify subnetwork as well if
+        network is specified
+
+     --subnetwork=SUBNETWORK
+        The URL for the subnetwork resource. Must specify network as well if
+        subnetwork is specified
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha batch jobs submit
+
+        $ gcloud beta batch jobs submit
+

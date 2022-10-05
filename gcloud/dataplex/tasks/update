@@ -10,7 +10,16 @@ SYNOPSIS
           --execution-service-account=EXECUTION_SERVICE_ACCOUNT
           --kms-key=KMS_KEY
           --max-job-execution-lifetime=MAX_JOB_EXECUTION_LIFETIME]
-        [--spark-archive-uris=[SPARK_ARCHIVE_URIS,...]
+        [--notebook=NOTEBOOK
+          --notebook-archive-uris=[NOTEBOOK_ARCHIVE_URIS,...]
+          --notebook-file-uris=[NOTEBOOK_FILE_URIS,...]
+          --notebook-batch-executors-count=NOTEBOOK_BATCH_EXECUTORS_COUNT
+          --notebook-batch-max-executors-count=NOTEBOOK_BATCH_MAX_EXECUTORS_COUNT --notebook-container-image=NOTEBOOK_CONTAINER_IMAGE --notebook-container-image-java-jars=[NOTEBOOK_CONTAINER_IMAGE_JAVA_JARS,
+          ...]
+          --notebook-container-image-properties=NOTEBOOK_CONTAINER_IMAGE_PROPERTIES --notebook-vpc-network-tags=[NOTEBOOK_VPC_NETWORK_TAGS,
+          ...] --notebook-vpc-network-name=NOTEBOOK_VPC_NETWORK_NAME
+          | --notebook-vpc-sub-network-name=NOTEBOOK_VPC_SUB_NETWORK_NAME
+          | --spark-archive-uris=[SPARK_ARCHIVE_URIS,...]
           --spark-file-uris=[SPARK_FILE_URIS,...]
           --batch-executors-count=BATCH_EXECUTORS_COUNT
           --batch-max-executors-count=BATCH_MAX_EXECUTORS_COUNT
@@ -20,7 +29,7 @@ SYNOPSIS
           --container-image-python-packages=[CONTAINER_IMAGE_PYTHON_PACKAGES,
           ...] --vpc-network-tags=[VPC_NETWORK_TAGS,...]
           --vpc-network-name=VPC_NETWORK_NAME
-          | --vpc-sub-network-name=VPC_SUB_NETWORK_NAME
+          --vpc-sub-network-name=VPC_SUB_NETWORK_NAME
           --spark-main-class=SPARK_MAIN_CLASS
           | --spark-main-jar-file-uri=SPARK_MAIN_JAR_FILE_URI
           | --spark-python-script-file=SPARK_PYTHON_SCRIPT_FILE
@@ -150,89 +159,154 @@ FLAGS
        --max-job-execution-lifetime=MAX_JOB_EXECUTION_LIFETIME
           The maximum duration before the job execution expires.
 
-     Config related to running custom Spark tasks.
-
-       --spark-archive-uris=[SPARK_ARCHIVE_URIS,...]
-          Google Cloud Storage URIs of archives to be extracted into the
-          working directory of each executor. Supported file types: .jar, .tar,
-          .tar.gz, .tgz, and .zip.
-
-       --spark-file-uris=[SPARK_FILE_URIS,...]
-          Google Cloud Storage URIs of files to be placed in the working
-          directory of each executor.
-
-       Compute resources needed for a Task when using Dataproc Serverless.
-
-         --batch-executors-count=BATCH_EXECUTORS_COUNT
-            Total number of job executors.
-
-         --batch-max-executors-count=BATCH_MAX_EXECUTORS_COUNT
-            Max configurable executors. If max_executors_count >
-            executors_count, then auto-scaling is enabled.
-
-       Container Image Runtime Configuration.
-
-         --container-image=CONTAINER_IMAGE
-            Optional custom container image for the job.
-
-         --container-image-java-jars=[CONTAINER_IMAGE_JAVA_JARS,...]
-            A list of Java JARS to add to the classpath. Valid input includes
-            Cloud Storage URIs to Jar binaries. For example,
-            gs://bucket-name/my/path/to/file.jar
-
-         --container-image-properties=CONTAINER_IMAGE_PROPERTIES
-            Override to common configuration of open source components
-            installed on the Dataproc cluster. The properties to set on daemon
-            config files. Property keys are specified in prefix:property
-            format, for example core:hadoop.tmp.dir. For more information, see
-            Cluster properties
-            (https://cloud.google.com/dataproc/docs/concepts/cluster-properties).
-
-         --container-image-python-packages=[CONTAINER_IMAGE_PYTHON_PACKAGES,...]
-            A list of python packages to be installed. Valid formats include
-            Cloud Storage URI to a PIP installable library. For example,
-            gs://bucket-name/my/path/to/lib.tar.gz
-
-       Cloud VPC Network used to run the infrastructure.
-
-         --vpc-network-tags=[VPC_NETWORK_TAGS,...]
-            List of network tags to apply to the job.
-
-         The Cloud VPC network identifier.
-
-         At most one of these can be specified:
-
-           --vpc-network-name=VPC_NETWORK_NAME
-              The Cloud VPC network in which the job is run. By default, the
-              Cloud VPC network named Default within the project is used.
-
-           --vpc-sub-network-name=VPC_SUB_NETWORK_NAME
-              The Cloud VPC sub-network in which the job is run.
-
-       The specification of the main method to call to drive the job. Specify
-       either the jar file that contains the main class or the main class name.
+     Select which task you want to schedule and provide the required
+     arguments:-
+      ◆ spark tasks
+      ◆ notebook tasks
 
      At most one of these can be specified:
 
-           --spark-main-class=SPARK_MAIN_CLASS
-              The name of the driver's main class. The jar file that contains
-              the class must be in the default CLASSPATH or specified in
+       Config related to running custom Notebook tasks.
 
-           --spark-main-jar-file-uri=SPARK_MAIN_JAR_FILE_URI
-              The Google Cloud Storage URI of the jar file that contains the
-              main class. The execution args are passed in as a sequence of
-              named process arguments (--key=value).
+         --notebook=NOTEBOOK
+            Google Cloud Storage URIs of the notebook file or the path to a
+            Notebook Content. Path to input notebook.
 
-           --spark-python-script-file=SPARK_PYTHON_SCRIPT_FILE
-              The Google Cloud Storage URI of the main Python file to use as
-              the driver. Must be a .py file.
+         --notebook-archive-uris=[NOTEBOOK_ARCHIVE_URIS,...]
+            Google Cloud Storage URIs of archives to be extracted into the
+            working directory of each executor. Supported file types: .jar,
+            .tar, .tar.gz, .tgz, and .zip.
 
-           --spark-sql-script=SPARK_SQL_SCRIPT
-              The SQL query text.
+         --notebook-file-uris=[NOTEBOOK_FILE_URIS,...]
+            Google Cloud Storage URIs of files to be placed in the working
+            directory of each executor.
 
-           --spark-sql-script-file=SPARK_SQL_SCRIPT_FILE
-              A reference to a query file. This can be the Google Cloud Storage
-              URI of the query file or it can the path to a SqlScript Content.
+         Compute resources needed for a Task when using Dataproc Serverless.
+
+           --notebook-batch-executors-count=NOTEBOOK_BATCH_EXECUTORS_COUNT
+              Total number of job executors.
+
+           --notebook-batch-max-executors-count=NOTEBOOK_BATCH_MAX_EXECUTORS_COUNT
+              Max configurable executors. If max_executors_count >
+              executors_count, then auto-scaling is enabled.
+
+         Container Image Runtime Configuration.
+
+           --notebook-container-image=NOTEBOOK_CONTAINER_IMAGE
+              Optional custom container image for the job.
+
+           --notebook-container-image-java-jars=[NOTEBOOK_CONTAINER_IMAGE_JAVA_JARS,...]
+              A list of Java JARS to add to the classpath. Valid input includes
+              Cloud Storage URIs to Jar binaries. For example,
+              gs://bucket-name/my/path/to/file.jar
+
+           --notebook-container-image-properties=NOTEBOOK_CONTAINER_IMAGE_PROPERTIES
+              Override to common configuration of open source components
+              installed on the Dataproc cluster. The properties to set on
+              daemon config files. Property keys are specified in
+              prefix:property format, for example core:hadoop.tmp.dir. For more
+              information, see Cluster properties
+              (https://cloud.google.com/dataproc/docs/concepts/cluster-properties).
+
+         Cloud VPC Network used to run the infrastructure.
+
+           --notebook-vpc-network-tags=[NOTEBOOK_VPC_NETWORK_TAGS,...]
+              List of network tags to apply to the job.
+
+           The Cloud VPC network identifier.
+
+           At most one of these can be specified:
+
+             --notebook-vpc-network-name=NOTEBOOK_VPC_NETWORK_NAME
+                The Cloud VPC network in which the job is run. By default, the
+                Cloud VPC network named Default within the project is used.
+
+             --notebook-vpc-sub-network-name=NOTEBOOK_VPC_SUB_NETWORK_NAME
+                The Cloud VPC sub-network in which the job is run.
+
+       Config related to running custom Spark tasks.
+
+         --spark-archive-uris=[SPARK_ARCHIVE_URIS,...]
+            Google Cloud Storage URIs of archives to be extracted into the
+            working directory of each executor. Supported file types: .jar,
+            .tar, .tar.gz, .tgz, and .zip.
+
+         --spark-file-uris=[SPARK_FILE_URIS,...]
+            Google Cloud Storage URIs of files to be placed in the working
+            directory of each executor.
+
+         Compute resources needed for a Task when using Dataproc Serverless.
+
+           --batch-executors-count=BATCH_EXECUTORS_COUNT
+              Total number of job executors.
+
+           --batch-max-executors-count=BATCH_MAX_EXECUTORS_COUNT
+              Max configurable executors. If max_executors_count >
+              executors_count, then auto-scaling is enabled.
+
+         Container Image Runtime Configuration.
+
+           --container-image=CONTAINER_IMAGE
+              Optional custom container image for the job.
+
+           --container-image-java-jars=[CONTAINER_IMAGE_JAVA_JARS,...]
+              A list of Java JARS to add to the classpath. Valid input includes
+              Cloud Storage URIs to Jar binaries. For example,
+              gs://bucket-name/my/path/to/file.jar
+
+           --container-image-properties=CONTAINER_IMAGE_PROPERTIES
+              Override to common configuration of open source components
+              installed on the Dataproc cluster. The properties to set on
+              daemon config files. Property keys are specified in
+              prefix:property format, for example core:hadoop.tmp.dir. For more
+              information, see Cluster properties
+              (https://cloud.google.com/dataproc/docs/concepts/cluster-properties).
+
+           --container-image-python-packages=[CONTAINER_IMAGE_PYTHON_PACKAGES,...]
+              A list of python packages to be installed. Valid formats include
+              Cloud Storage URI to a PIP installable library. For example,
+              gs://bucket-name/my/path/to/lib.tar.gz
+
+         Cloud VPC Network used to run the infrastructure.
+
+           --vpc-network-tags=[VPC_NETWORK_TAGS,...]
+              List of network tags to apply to the job.
+
+           The Cloud VPC network identifier.
+
+             --vpc-network-name=VPC_NETWORK_NAME
+                The Cloud VPC network in which the job is run. By default, the
+                Cloud VPC network named Default within the project is used.
+
+             --vpc-sub-network-name=VPC_SUB_NETWORK_NAME
+                The Cloud VPC sub-network in which the job is run.
+
+         The specification of the main method to call to drive the job. Specify
+         either the jar file that contains the main class or the main class
+         name.
+
+       At most one of these can be specified:
+
+             --spark-main-class=SPARK_MAIN_CLASS
+                The name of the driver's main class. The jar file that contains
+                the class must be in the default CLASSPATH or specified in
+
+             --spark-main-jar-file-uri=SPARK_MAIN_JAR_FILE_URI
+                The Google Cloud Storage URI of the jar file that contains the
+                main class. The execution args are passed in as a sequence of
+                named process arguments (--key=value).
+
+             --spark-python-script-file=SPARK_PYTHON_SCRIPT_FILE
+                The Google Cloud Storage URI of the main Python file to use as
+                the driver. Must be a .py file.
+
+             --spark-sql-script=SPARK_SQL_SCRIPT
+                The SQL query text.
+
+             --spark-sql-script-file=SPARK_SQL_SCRIPT_FILE
+                A reference to a query file. This can be the Google Cloud
+                Storage URI of the query file or it can the path to a SqlScript
+                Content.
 
      Spec related to how often and when a task should be triggered.
 

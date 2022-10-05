@@ -6,7 +6,7 @@ SYNOPSIS
     gcloud alpha bigtable instances tables create (TABLE : --instance=INSTANCE)
         --column-families=[COLUMN_FAMILIES,...]
         [--change-stream-retention-period=CHANGE_STREAM_RETENTION_PERIOD]
-        [--splits=[SPLITS,...]] [GCLOUD_WIDE_FLAG ...]
+        [--deletion-protection] [--splits=[SPLITS,...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Create a new Cloud Bigtable table.
@@ -44,6 +44,20 @@ EXAMPLES
             --instance=my-instance \
             --column-families="my-family:maxage=10d" \
             --change-stream-retention-period=7d
+
+    To create a deletion-protected table my-table in instance my-instance with
+    a column family my-family, run:
+
+        $ gcloud alpha bigtable instances tables create my-table \
+            --instance=my-instance --column-families="my-family" \
+            --deletion-protection
+
+    To create a table my-table without deletion protection in instance
+    my-instance with a column family my-family, run:
+
+        $ gcloud alpha bigtable instances tables create my-table \
+            --instance=my-instance --column-families="my-family" \
+            --no-deletion-protection
 
 POSITIONAL ARGUMENTS
      Table resource - Cloud Bigtable table to create. The arguments in this
@@ -84,6 +98,9 @@ OPTIONAL FLAGS
         stream enabled; the value indicates how long the replication logs are
         kept and should be in the range of [1 day, 7 days]. For example: 5d or
         48h
+
+     --deletion-protection
+        Once specified, the table is deletion protected.
 
      --splits=[SPLITS,...]
         Row keys where the table should initially be split. For example:
