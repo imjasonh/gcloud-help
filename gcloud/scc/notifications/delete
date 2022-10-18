@@ -4,18 +4,30 @@ NAME
 
 SYNOPSIS
     gcloud scc notifications delete NOTIFICATION_CONFIG_ID
-        [--organization=ORGANIZATION] [GCLOUD_WIDE_FLAG ...]
+        [--folder=FOLDER | --organization=ORGANIZATION | --project=PROJECT]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Delete a Cloud Security Command Center notification config.
 
 EXAMPLES
-    Delete notification config 'my-config' from organization 123456
+    Delete notification config 'my-config' from organization 123
 
-        $ gcloud scc notifications delete my-config --organization=123456
-
+        $ gcloud scc notifications delete my-config --organization=123
         $ gcloud scc notifications delete \
-            organization/123456/notificationConfigs/my-config
+            organizations/123/notificationConfigs/my-config
+
+    Delete notification config 'my-config' from folder 456
+
+        $ gcloud scc notifications delete my-config --folder=456
+        $ gcloud scc notifications delete \
+            folders/456/notificationConfigs/my-config
+
+    Delete notification config 'my-config' from project 789
+
+        $ gcloud scc notifications delete my-config --project=789
+        $ gcloud scc notifications delete \
+            projects/789/notificationConfigs/my-config
 
 POSITIONAL ARGUMENTS
      NOTIFICATION_CONFIG_ID
@@ -23,10 +35,19 @@ POSITIONAL ARGUMENTS
         "organizations/123/notificationConfigs/456" or just "456".
 
 FLAGS
-     --organization=ORGANIZATION
-        The organization where the notification config resides. Formatted as
-        "organizations/123" or just "123". Required if notificationConfigId
-        does not contain organization information.
+     At most one of these can be specified:
+
+       --folder=FOLDER
+          Folder where the notification config resides. Formatted as
+          folders/456 or just 456.
+
+       --organization=ORGANIZATION
+          Organization where the notification config resides. Formatted as
+          organizations/123 or just 123.
+
+       --project=PROJECT
+          Project (ID or number) where the notification config resides.
+          Formatted as projects/789 or just 789.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

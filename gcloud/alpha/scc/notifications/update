@@ -5,51 +5,76 @@ NAME
 SYNOPSIS
     gcloud alpha scc notifications update NOTIFICATION_CONFIG_ID
         [--description=DESCRIPTION] [--filter=FILTER]
-        [--organization=ORGANIZATION] [--pubsub-topic=PUBSUB_TOPIC]
+        [--pubsub-topic=PUBSUB_TOPIC]
+        [--folder=FOLDER | --organization=ORGANIZATION | --project=PROJECT]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Update a Cloud Security Command Center notification config.
 
 EXAMPLES
-    Update all mutable fields in my-config (description + pubsub topic +
-    filter):
+    Update all mutable fields under an organization parent my-config
+    (description + pubsub topic + filter):
 
-        $ gcloud alpha scc notifications update my-config \
-            --organization=123456 --description="New description" \
+        $ gcloud alpha scc notifications update scc notifications update \
+            my-config --organization=123 --description="New description" \
             --pubsub-topic="projects/22222/topics/newtopic"
 
-        $ gcloud alpha scc notifications update \
-            organizations/123456/notificationConfigs/my-config \
+        $ gcloud alpha scc notifications update scc notifications update \
+            organizations/123/notificationConfigs/my-config \
+            --description="New description" \
+            --pubsub-topic="projects/22222/topics/newtopic"
+
+    Update all mutable fields under a folder parent my-config (description +
+    pubsub topic + filter):
+
+        $ gcloud alpha scc notifications update scc notifications update \
+            my-config --folder=456 --description="New description" \
+            --pubsub-topic="projects/22222/topics/newtopic"
+
+        $ gcloud alpha scc notifications update scc notifications update \
+            folders/456/notificationConfigs/my-config \
+            --description="New description" \
+            --pubsub-topic="projects/22222/topics/newtopic"
+
+    Update all mutable fields under a project parent my-config (description +
+    pubsub topic + filter):
+
+        $ gcloud alpha scc notifications update scc notifications update \
+            my-config --project=789 --description="New description" \
+            --pubsub-topic="projects/22222/topics/newtopic"
+
+        $ gcloud alpha scc notifications update scc notifications update \
+            projects/789/notificationConfigs/my-config \
             --description="New description" \
             --pubsub-topic="projects/22222/topics/newtopic"
 
     Update my-config's description
 
         $ gcloud alpha scc notifications update my-config \
-            --organization=123456 --description="New description"
+            --organization=123 --description="New description"
 
         $ gcloud alpha scc notifications update \
-            organizations/123456/notificationConfigs/my-config \
+            organizations/123/notificationConfigs/my-config \
             --description="New description"
 
     Update my-config's pubsub-topic
 
         $ gcloud alpha scc notifications update my-config \
-            --organization=123456 \
+            --organization=123 \
             --pubsub-topic="projects/22222/topics/newtopic"
 
         $ gcloud alpha scc notifications update \
-            organizations/123456/notificationConfigs/my-config \
+            organizations/123/notificationConfigs/my-config \
             --pubsub-topic="projects/22222/topics/newtopic"
 
     Update my-config's filter
 
         $ gcloud alpha scc notifications update my-config \
-            --organization=123456 --filter='state = \"ACTIVE\"'
+            --organization=123 --filter='state = \"ACTIVE\"'
 
         $ gcloud alpha scc notifications update \
-            organizations/123456/notificationConfigs/my-config \
+            organizations/123/notificationConfigs/my-config \
             --filter='state = \"ACTIVE\"'
 
 POSITIONAL ARGUMENTS
@@ -65,14 +90,23 @@ FLAGS
         The filter string which will applied to events of findings of a
         notification configuration.
 
-     --organization=ORGANIZATION
-        The organization where the notification config resides. Formatted as
-        "organizations/123" or just "123". Required if notificationConfigId
-        does not contain organization information.
-
      --pubsub-topic=PUBSUB_TOPIC
         The Pub/Sub topic which will receive notifications. Its format is
         "projects/[project_id]/topics/[topic]".
+
+     At most one of these can be specified:
+
+       --folder=FOLDER
+          Folder where the notification config resides. Formatted as
+          folders/456 or just 456.
+
+       --organization=ORGANIZATION
+          Organization where the notification config resides. Formatted as
+          organizations/123 or just 123.
+
+       --project=PROJECT
+          Project (ID or number) where the notification config resides.
+          Formatted as projects/789 or just 789.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

@@ -1,31 +1,22 @@
 NAME
     gcloud beta alloydb clusters restore - restores an AlloyDB cluster from a
-        given backup or a source cluster at a specific point in time
+        given backup
 
 SYNOPSIS
-    gcloud beta alloydb clusters restore CLUSTER --region=REGION [--async]
-        [--network=NETWORK]
-        [--backup=BACKUP
-          : --point-in-time=POINT_IN_TIME --source-cluster=SOURCE_CLUSTER]
+    gcloud beta alloydb clusters restore CLUSTER --region=REGION
+        --backup=BACKUP [--async] [--network=NETWORK]
         [--kms-key=KMS_KEY : --kms-keyring=KMS_KEYRING
           --kms-location=KMS_LOCATION --kms-project=KMS_PROJECT]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (BETA) Restores an AlloyDB cluster from a given backup or a source cluster
-    at a specific point in time.
+    (BETA) Restores an AlloyDB cluster from a given backup.
 
 EXAMPLES
     To restore a cluster from a backup, run:
 
         $ gcloud beta alloydb clusters restore my-cluster \
           --region=us-central1 --backup=my-backup
-
-    To restore a cluster back to a point in time, run:
-
-        $ gcloud beta alloydb clusters restore my-cluster \
-          --region=us-central1 --source-cluster=my-source-cluster \
-          --point-in-time=2003-09-25T10:49:41.519Z
 
 POSITIONAL ARGUMENTS
      CLUSTER
@@ -37,6 +28,15 @@ REQUIRED FLAGS
         regions at https://cloud.google.com/sql/docs/instance-locations.
 
 OPTIONAL FLAGS
+     RestoreCluster source types.
+
+     At most one of these can be specified:
+
+       Restore a cluster using a specific backup as the source.
+
+         --backup=BACKUP
+            AlloyDB backup ID
+
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
@@ -47,30 +47,6 @@ OPTIONAL FLAGS
         network. For an example host project, 'testproject', and shared
         network, 'testsharednetwork', this would be of the
         form:--network=projects/testproject/global/networks/testsharednetwork
-
-     RestoreCluster source types.
-
-     At most one of these can be specified:
-
-       Restore a cluster using a specific backup as the source.
-
-         --backup=BACKUP
-            AlloyDB backup ID
-
-       Restore a cluster from a source cluster at a given point in time.
-
-         --point-in-time=POINT_IN_TIME
-            Point in time to restore to, in RFC 3339 format. For example,
-            2012-11-15T16:19:00.094Z.
-
-            This flag argument must be specified if any of the other arguments
-            in this group are specified.
-
-         --source-cluster=SOURCE_CLUSTER
-            Source cluster name.
-
-            This flag argument must be specified if any of the other arguments
-            in this group are specified.
 
      Key resource - The Cloud KMS (Key Management Service) cryptokey that will
      be used to protect the cluster. The 'AlloyDB Service Agent' service

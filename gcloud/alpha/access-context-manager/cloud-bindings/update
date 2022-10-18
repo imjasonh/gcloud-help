@@ -1,25 +1,32 @@
 NAME
-    gcloud alpha access-context-manager cloud-bindings update - update an
-        existing cloud access binding
+    gcloud alpha access-context-manager cloud-bindings update - update a
+        existing cloud access binding under an organization
 
 SYNOPSIS
     gcloud alpha access-context-manager cloud-bindings update
-        (--binding=BINDING : --organization=ORGANIZATION)
-        (--level=LEVEL : --policy=POLICY) [GCLOUD_WIDE_FLAG ...]
+        --level=[LEVEL,...] (--binding=BINDING : --organization=ORGANIZATION)
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) Update an existing cloud access binding.
+    (ALPHA) Update a existing cloud access binding. You can only update the
+    level.
 
 EXAMPLES
-    To update an existing cloud access binding, run:
+    To update a existing cloud access binding, run:
 
         $ gcloud alpha access-context-manager cloud-bindings update \
-            --binding=my-binding-id --level=new-access-level
+            --binding=my-binding-id \
+            --level=accessPolicies/123/accessLevels/new-abc
 
 REQUIRED FLAGS
-     Cloud access binding resource - The access binding to update. The
-     arguments in this group can be used to specify the attributes of this
-     resource.
+     --level=[LEVEL,...]
+        The access level that will replace the existing level for the given
+        binding. The input must be the full identifier for the access level,
+        such as accessPolicies/123/accessLevels/new-abc.
+
+     Cloud access binding resource - The cloud access binding you want to
+     update. The arguments in this group can be used to specify the attributes
+     of this resource.
 
      This must be specified.
 
@@ -32,31 +39,13 @@ REQUIRED FLAGS
           this group are specified.
 
        --organization=ORGANIZATION
-          The ID of the organization. To set the organization attribute:
+          The ID of the organization.
+
+          To set the organization attribute:
           ▸ provide the argument --binding on the command line with a fully
             specified name;
           ▸ provide the argument --organization on the command line;
           ▸ set the property access_context_manager/organization.
-
-     Level resource - The access level to update. The arguments in this group
-     can be used to specify the attributes of this resource.
-
-     This must be specified.
-
-       --level=LEVEL
-          ID of the level or fully qualified identifier for the level. To set
-          the level attribute:
-          ▸ provide the argument --level on the command line.
-
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
-
-       --policy=POLICY
-          The ID of the access policy. To set the policy attribute:
-          ▸ provide the argument --level on the command line with a fully
-            specified name;
-          ▸ provide the argument --policy on the command line;
-          ▸ set the property access_context_manager/policy.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
@@ -65,6 +54,11 @@ GCLOUD WIDE FLAGS
     --trace-token, --user-output-enabled, --verbosity.
 
     Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the accesscontextmanager/v1alpha API. The full
+    documentation for this API can be found at:
+    https://cloud.google.com/access-context-manager/docs/reference/rest/
 
 NOTES
     This command is currently in alpha and might change without notice. If this

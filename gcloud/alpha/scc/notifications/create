@@ -5,23 +5,48 @@ NAME
 SYNOPSIS
     gcloud alpha scc notifications create NOTIFICATION_CONFIG_ID
         --pubsub-topic=PUBSUB_TOPIC [--description=DESCRIPTION]
-        [--filter=FILTER] [--organization=ORGANIZATION] [GCLOUD_WIDE_FLAG ...]
+        [--filter=FILTER]
+        [--folder=FOLDER | --organization=ORGANIZATION | --project=PROJECT]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Create a Cloud Security Command Center notification config.
 
 EXAMPLES
-    Create a notification config test-config under organization 123456 for
+    Create a notification config test-config under organization 123 for
     findings for pubsub-topic projects/test-project/topics/notification-test
     with a filter on resource name:
 
         $ gcloud alpha scc notifications create test-config \
-            --organization=123456 \
+            --organization=123 \
+            --pubsub-topic=projects/test-project/topics/notification-test \
+            --filter="resource_name: \"a\""
+        $ gcloud alpha scc notifications create \
+            organizations/123/notificationConfigs/test-config \
             --pubsub-topic=projects/test-project/topics/notification-test \
             --filter="resource_name: \"a\""
 
+    Create a notification config test-config under folder 456 for findings for
+    pubsub-topic projects/test-project/topics/notification-test with a filter
+    on resource name:
+
+        $ gcloud alpha scc notifications create test-config --folder=456 \
+            --pubsub-topic=projects/test-project/topics/notification-test \
+            --filter="resource_name: \"a\""
         $ gcloud alpha scc notifications create \
-            organizations/123456/notificationConfigs/test-config \
+            folders/456/notificationConfigs/test-config \
+            --pubsub-topic=projects/test-project/topics/notification-test \
+            --filter="resource_name: \"a\""
+
+    Create a notification config test-config under project 789 for findings for
+    pubsub-topic projects/test-project/topics/notification-test with a filter
+    on resource name:
+
+        $ gcloud alpha scc notifications create test-config --project=789 \
+            --pubsub-topic=projects/test-project/topics/notification-test \
+            --filter="resource_name: \"a\""
+        $ gcloud alpha scc notifications create \
+            projects/789/notificationConfigs/test-config \
             --pubsub-topic=projects/test-project/topics/notification-test \
             --filter="resource_name: \"a\""
 
@@ -42,10 +67,19 @@ OPTIONAL FLAGS
      --filter=FILTER
         Filter to be used for notification config.
 
-     --organization=ORGANIZATION
-        The organization where the notification config resides. Formatted as
-        "organizations/123" or just "123". Required if notificationConfigId
-        does not contain organization information.
+     At most one of these can be specified:
+
+       --folder=FOLDER
+          Folder where the notification config resides. Formatted as
+          folders/456 or just 456.
+
+       --organization=ORGANIZATION
+          Organization where the notification config resides. Formatted as
+          organizations/123 or just 123.
+
+       --project=PROJECT
+          Project (ID or number) where the notification config resides.
+          Formatted as projects/789 or just 789.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

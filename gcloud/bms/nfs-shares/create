@@ -1,0 +1,120 @@
+NAME
+    gcloud bms nfs-shares create - create a Bare Metal Solution NFS share
+
+SYNOPSIS
+    gcloud bms nfs-shares create (NFS_SHARE : --region=REGION)
+        --allowed-client=[PROPERTY=VALUE,...] --size-gib=SIZE_GIB
+        --storage-type=STORAGE_TYPE [--async] [--labels=[KEY=VALUE,...]]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Create a Bare Metal Solution NFS share.
+
+EXAMPLES
+    To create an NFS share called my-share in region us-central1, with
+    requested size of 256 Gib, SSD storage and 2 allowed clients, run:
+
+        $ gcloud bms nfs-shares create my-share --region=us-central1 \
+            --size-gib=256 --storage-type=SSD \
+            --allowed-client=network=my-network,\
+        network-project-id=some-other-project,cidr=10.130.240.24/29,\
+        mount-permissions=READ_ONLY,allow-dev=yes,allow-suid=no,\
+        enable-root-squash=yes \
+            --allowed-client=network=my-network2,cidr=10.130.240.26/28,\
+        mount-permissions=READ_WRITE,allow-dev=yes,allow-suid=yes,\
+        enable-root-squash=no
+
+POSITIONAL ARGUMENTS
+     Nfs share resource - nfs_share. The arguments in this group can be used to
+     specify the attributes of this resource. (NOTE) Some attributes are not
+     given arguments in this group but can be set in other ways. To set the
+     project attribute:
+      ◆ provide the argument nfs_share on the command line with a fully
+        specified name;
+      ◆ set the property core/project;
+      ◆ provide the argument --project on the command line.
+
+     This must be specified.
+
+       NFS_SHARE
+          ID of the nfs_share or fully qualified identifier for the nfs_share.
+          To set the nfs_share attribute:
+          ▸ provide the argument nfs_share on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --region=REGION
+          Region of the resource. To set the region attribute:
+          ▸ provide the argument nfs_share on the command line with a fully
+            specified name;
+          ▸ provide the argument --region on the command line.
+
+REQUIRED FLAGS
+     --allowed-client=[PROPERTY=VALUE,...]
+        Adds an allowed client to the NFS share. This flag can be repeated to
+        specify multiple allowed clients.
+
+         network
+            The name of the network to allow.
+
+         network-project-id
+            The project ID of the allowed client network. If not present, the
+            project ID of the NFS share will be used.
+
+         cidr
+            The subnet of IP addresses permitted to access the NFS share.
+
+         mount-permissions
+            The mount permissions for the allowed client. MOUNT_PERMISSIONS
+            must be one of: READ_ONLY, READ_WRITE.
+
+         allow-dev
+            If yes, allows creation of devices.
+
+         allow-suid
+            If yes, allows SUID.
+
+         enable-root-squash
+            If yes, enables root squashing which is a special mapping of the
+            remote superuser (root) identity when using identity authentication
+            .
+
+     --size-gib=SIZE_GIB
+        The requested size of the NFS share in GiB
+
+     --storage-type=STORAGE_TYPE
+        Specifies the storage type of the underlying volume which will be
+        created for the NFS share. STORAGE_TYPE must be one of:
+
+         HDD
+            The storage type of the underlying volume will be HDD
+         SSD
+            The storage type of the underlying volume will be SSD
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This variant is also available:
+
+        $ gcloud alpha bms nfs-shares create
+

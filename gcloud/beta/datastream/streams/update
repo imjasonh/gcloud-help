@@ -10,7 +10,8 @@ SYNOPSIS
           | --oracle-excluded-objects=ORACLE_EXCLUDED_OBJECTS]
         [--clear-labels | --remove-labels=[KEY,...]]
         [--destination-name=DESTINATION_NAME
-          : --gcs-destination-config=GCS_DESTINATION_CONFIG]
+          : --bigquery-destination-config=BIGQUERY_DESTINATION_CONFIG
+          | --gcs-destination-config=GCS_DESTINATION_CONFIG]
         [--force | --validate-only]
         [--source-name=SOURCE_NAME : --mysql-source-config=MYSQL_SOURCE_CONFIG
           | --oracle-source-config=ORACLE_SOURCE_CONFIG] [GCLOUD_WIDE_FLAG ...]
@@ -144,18 +145,37 @@ FLAGS
           connection_profile. To set the connection_profile attribute:
           ▸ provide the argument --destination-name on the command line.
 
-     --gcs-destination-config=GCS_DESTINATION_CONFIG
-        Path to a YAML (or JSON) file containing the configuration for Google
-        Cloud Storage Destination Config.
+     At most one of these can be specified:
 
-        The JSON file is formatted as follows:
+       --bigquery-destination-config=BIGQUERY_DESTINATION_CONFIG
+          Path to a YAML (or JSON) file containing the configuration for Google
+          BigQuery Destination Config.
 
-             {
-             "path": "some/path",
-             "file_rotation_mb":5,
-             "file_rotation_interval":"15s",
-             "avro_file_format": {}
-             }
+          The JSON file is formatted as follows:
+
+              {
+                "source_hierarchy_datasets": {
+                  "dataset_template": {
+                    "location": "us-central1",
+                    "dataset_id_prefix": "my_prefix",
+                    "kms_key_name": "projects/{project}/locations/{location}/keyRings/{key_ring}/cryptoKeys/{cryptoKey}"
+                  }
+                },
+                "data_freshness": 3600
+              }
+
+       --gcs-destination-config=GCS_DESTINATION_CONFIG
+          Path to a YAML (or JSON) file containing the configuration for Google
+          Cloud Storage Destination Config.
+
+          The JSON file is formatted as follows:
+
+               {
+               "path": "some/path",
+               "file_rotation_mb":5,
+               "file_rotation_interval":"15s",
+               "avro_file_format": {}
+               }
 
      At most one of these can be specified:
 
