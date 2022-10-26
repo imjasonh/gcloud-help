@@ -14,7 +14,13 @@ SYNOPSIS
           --mysql-port=MYSQL_PORT
           --mysql-username=MYSQL_USERNAME (--mysql-password=MYSQL_PASSWORD
           | --mysql-prompt-for-password) : --ca-certificate=CA_CERTIFICATE
-          --client-certificate=CLIENT_CERTIFICATE --client-key=CLIENT_KEY]]
+          --client-certificate=CLIENT_CERTIFICATE --client-key=CLIENT_KEY]
+          | --postgresql-database=POSTGRESQL_DATABASE
+          --postgresql-hostname=POSTGRESQL_HOSTNAME
+          --postgresql-port=POSTGRESQL_PORT
+          --postgresql-username=POSTGRESQL_USERNAME
+          (--postgresql-password=POSTGRESQL_PASSWORD
+          | --postgresql-prompt-for-password)]
         [--private-connection-name=PRIVATE_CONNECTION_NAME : --no-connectivity
           | --static-ip-connectivity
           | [--forward-ssh-hostname=FORWARD_SSH_HOSTNAME
@@ -40,7 +46,7 @@ EXAMPLES
           --oracle-port=1521 --database-service=ORCL \
           --static-ip-connectivity
 
-    To create a connection profile for Mysql:
+    To create a connection profile for MySQL:
 
         $ gcloud beta datastream connection-profiles create \
           CONNECTION_PROFILE --location=us-central1 --type=mysql \
@@ -88,7 +94,7 @@ REQUIRED FLAGS
         Friendly name for the connection profile.
 
      --type=TYPE
-        Type can be MYSQL, ORACLE, GOOGLE-CLOUD-STORAGE or BIGQUERY
+        Type can be MYSQL, ORACLE, POSTGRESQL, GOOGLE-CLOUD-STORAGE or BIGQUERY
 
 OPTIONAL FLAGS
      --labels=[KEY=VALUE,...]
@@ -146,13 +152,13 @@ OPTIONAL FLAGS
             Prompt for the password used to connect to the database.
 
        --mysql-hostname=MYSQL_HOSTNAME
-          IP or hostname of the mysql source database.
+          IP or hostname of the MySQL source database.
 
           This flag argument must be specified if any of the other arguments in
           this group are specified.
 
        --mysql-port=MYSQL_PORT
-          Network port of the mysql source database.
+          Network port of the MySQL source database.
 
           This flag argument must be specified if any of the other arguments in
           this group are specified.
@@ -194,6 +200,40 @@ OPTIONAL FLAGS
 
           This flag argument must be specified if any of the other arguments in
           this group are specified.
+
+       --postgresql-database=POSTGRESQL_DATABASE
+          Database service for the PostgreSQL connection.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --postgresql-hostname=POSTGRESQL_HOSTNAME
+          IP or hostname of the PostgreSQL source database.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --postgresql-port=POSTGRESQL_PORT
+          Network port of the PostgreSQL source database.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --postgresql-username=POSTGRESQL_USERNAME
+          Username Datastream will use to connect to the database.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       Exactly one of these must be specified:
+
+         --postgresql-password=POSTGRESQL_PASSWORD
+            Password for the user that Datastream will be using to connect to
+            the database. This field is not returned on request, and the value
+            is encrypted when stored in Datastream.
+
+         --postgresql-prompt-for-password
+            Prompt for the password used to connect to the database.
 
      At most one of these can be specified:
 

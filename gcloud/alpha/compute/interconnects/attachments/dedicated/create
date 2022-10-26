@@ -10,8 +10,8 @@ SYNOPSIS
         [--cloud-router-ipv6-interface-id=INTERFACE_ID]
         [--customer-router-ipv6-interface-id=PEER_INTERFACE_ID]
         [--description=DESCRIPTION] [--dry-run] [--enable-admin] [--mtu=MTU]
-        [--region=REGION] [--stack-type=STACK_TYPE] [--vlan=VLAN]
-        [GCLOUD_WIDE_FLAG ...]
+        [--region=REGION] [--stack-type=STACK_TYPE]
+        [--subnet-length=SUBNET_LENGTH] [--vlan=VLAN] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) gcloud alpha compute interconnects attachments dedicated create is
@@ -73,11 +73,12 @@ OPTIONAL FLAGS
         Up to 16 candidate prefixes that can be used to restrict the allocation
         of cloudRouterIpAddress and customerRouterIpAddress for this
         attachment. All prefixes must be within link-local address space.
-        Google will attempt to select an unused /29 from the supplied candidate
-        subnet(s), or all of link-local space if no subnets supplied. Google
-        will not re-use a /29 already in-use by your project, even if it's
-        contained in one of the candidate subnets. The request will fail if all
-        /29s within the candidate subnets are in use at Google's edge.
+        Google will attempt to select an unused subnet of SUBNET_LENGTH from
+        the supplied candidate subnet(s), or all of link-local space if no
+        subnets supplied. Google will not re-use a subnet already in-use by
+        your project, even if it's contained in one of the candidate subnets.
+        The request will fail if all candidate subnets are in use at Google's
+        edge.
 
      --cloud-router-ipv6-interface-id=INTERFACE_ID
         If supplied, the interface id (index within the subnet) to be used for
@@ -136,6 +137,21 @@ OPTIONAL FLAGS
             Both IPv4 and IPv6 protocols are enabled on this attachment.
          IPV4_ONLY
             Only IPv4 protocol is enabled on this attachment.
+
+     --subnet-length=SUBNET_LENGTH
+        The length of the IPv4 subnet mask for this attachment. 29 is the
+        default value, except for attachments on Cross-Cloud Interconnects
+        whose remote location's "constraints.subnetLengthRange" field specifies
+        a minimum subnet length of 30. In that case, the default value is 30.
+        The default value is recommended when there's no requirement on the
+        subnet length. SUBNET_LENGTH must be one of:
+
+            29:
+              subnet length 29.
+            30:
+              subnet length 30.
+
+        SUBNET_LENGTH must be one of: 29, 30.
 
      --vlan=VLAN
         Desired VLAN for this attachment, in the range 2-4094. If not supplied,

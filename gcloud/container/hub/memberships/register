@@ -5,11 +5,11 @@ SYNOPSIS
     gcloud container hub memberships register MEMBERSHIP_NAME
         (--gke-cluster=LOCATION/CLUSTER_NAME | --gke-uri=GKE_URI
           | [--context=CONTEXT : --kubeconfig=KUBECONFIG])
-        (--service-account-key-file=SERVICE_ACCOUNT_KEY_FILE
-          | [--enable-workload-identity : --has-private-issuer
-          | --public-issuer-url=PUBLIC_ISSUER_URL]) [--internal-ip]
+        [--install-connect-agent] [--internal-ip]
         [--manifest-output-file=MANIFEST_OUTPUT_FILE] [--proxy=PROXY]
-        [GCLOUD_WIDE_FLAG ...]
+        [--service-account-key-file=SERVICE_ACCOUNT_KEY_FILE
+          | [--enable-workload-identity : --has-private-issuer
+          | --public-issuer-url=PUBLIC_ISSUER_URL]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     This command registers a cluster with the fleet by:
@@ -17,103 +17,99 @@ DESCRIPTION
         1. Creating a Fleet Membership resource corresponding to the cluster.
         2. Adding in-cluster Kubernetes Resources that make the cluster exclusive
            to one fleet.
-        3. Installing the Connect Agent into this cluster.
+        3. Installing the Connect agent into this cluster (optional for GKE).
 
     A successful registration implies that the cluster is now exclusive to a
-    single fleet.
+    single Fleet. If the cluster is already registered to another Fleet, the
+    registration will not be successful.
 
-    For more information about Connect Agent, go to:
+    To register a GKE cluster, use --gke-cluster or --gke-uri flag (no
+    --kubeconfig flag is required). Connect agent will not be installed by
+    default for GKE clusters. To install it, specify --install-connect-agent.
+
+    To register a non-GKE or GKE On-Prem cluster, use --context flag (with an
+    optional --kubeconfig flag). Connect agent will always be installed for
+    non-GKE clusters.
+
+    If Connect agent is to be installed, its authentication needs to be
+    configured by --enable-workload-identity or --service-account-key-file. For
+    the latter case, the corresponding service account must have been granted
+    gkehub.connect permissions. For more information about Connect agent, go
+    to:
     https://cloud.google.com/anthos/multicluster-management/connect/overview/
 
-    To register a non-GKE or GKE On-Prem cluster use --context flag (with an
-    optional --kubeconfig flag).
-
-    To register a GKE cluster use --gke-cluster or --gke-uri flag (no
-    --kubeconfig flag is required).
-
-    In all cases, the Connect Agent that is installed in the target cluster
-    must authenticate to Google using a --service-account-key-file that
-    corresponds to a service account that has been granted gkehub.connect
-    permissions.
-
-    If the cluster is already registered to another fleet, the registration is
-    not successful.
-
     Rerunning this command against the same cluster with the same
-    MEMBERSHIP_NAME and target fleet is successful and upgrades the Connect
-    Agent if a new agent is available.
+    MEMBERSHIP_NAME and target fleet is successful, and will upgrade the
+    Connect agent if it is supposed to be installed and a newer version is
+    avaible.
 
 EXAMPLES
-    Register a non-GKE or GKE On-Prem cluster referenced from a specific
-    kubeconfig file, and install the Connect Agent:
+    Register a non-GKE or GKE On-Prem cluster referenced from a specific        kubeconfig file, and install the Connect agent:
 
         $ gcloud container hub memberships register my-cluster \
-            --context=my-cluster-context \
-            --kubeconfig=/home/user/custom_kubeconfig \
-            --service-account-key-file=/tmp/keyfile.json
+           --context=my-cluster-context \
+           --kubeconfig=/home/user/custom_kubeconfig \
+           --service-account-key-file=/tmp/keyfile.json
 
-    Register a non-GKE or GKE On-Prem cluster referenced from the default
-    kubeconfig file, and install the Connect Agent:
-
-        $ gcloud container hub memberships register my-cluster \
-            --context=my-cluster-context \
-            --service-account-key-file=/tmp/keyfile.json
-
-    Register a non-GKE or GKE On-Prem cluster, and install a specific version
-    of the Connect Agent:
+        Register a non-GKE or GKE On-Prem cluster referenced from the default
+        kubeconfig file, and install the Connect agent:
 
         $ gcloud container hub memberships register my-cluster \
-            --context=my-cluster-context \
-            --version=gkeconnect_20190802_02_00 \
-            --service-account-key-file=/tmp/keyfile.json
+           --context=my-cluster-context \
+           --service-account-key-file=/tmp/keyfile.json
 
-    Register a non-GKE or GKE On-Prem cluster and output a manifest that can be
-    used to install the Connect Agent:
+        Register a non-GKE or GKE On-Prem cluster, and install a specific version
+        of the Connect agent:
 
         $ gcloud container hub memberships register my-cluster \
-            --context=my-cluster-context \
-            --manifest-output-file=/tmp/manifest.yaml \
-            --service-account-key-file=/tmp/keyfile.json
+           --context=my-cluster-context \
+           --version=gkeconnect_20190802_02_00 \
+           --service-account-key-file=/tmp/keyfile.json
+
+        Register a non-GKE or GKE On-Prem cluster and output a manifest that can be
+        used to install the Connect agent:
+
+        $ gcloud container hub memberships register my-cluster \
+           --context=my-cluster-context \
+           --manifest-output-file=/tmp/manifest.yaml \
+           --service-account-key-file=/tmp/keyfile.json
+
+        Register a GKE cluster referenced from a GKE URI:
+
+        $ gcloud container hub memberships register my-cluster \
+           --gke-uri=my-cluster-gke-uri
 
     Register a GKE cluster referenced from a GKE URI, and install the Connect
-    Agent:
+    agent using service account key file:
 
         $ gcloud container hub memberships register my-cluster \
-            --gke-uri=my-cluster-gke-uri \
-            --service-account-key-file=/tmp/keyfile.json
+           --gke-uri=my-cluster-gke-uri --install-connect-agent \
+           --service-account-key-file=/tmp/keyfile.json
 
-    Register a GKE cluster referenced from a GKE Cluster location and name, and
-    install the Connect Agent:
-
-        $ gcloud container hub memberships register my-cluster \
-            --gke-cluster=my-cluster-region-or-zone/my-cluster \
-            --service-account-key-file=/tmp/keyfile.json
-
-    Register a GKE cluster, and install a specific version of the Connect
-    Agent:
+        Register a GKE cluster first, and install the Connect agent later.
 
         $ gcloud container hub memberships register my-cluster \
-            --gke-uri=my-cluster-gke-uri \
-            --version=gkeconnect_20190802_02_00 \
-            --service-account-key-file=/tmp/keyfile.json
+           --gke-cluster=my-cluster-region-or-zone/my-cluster
 
         $ gcloud container hub memberships register my-cluster \
-            --gke-cluster=my-cluster-region-or-zone/my-cluster \
-            --version=gkeconnect_20190802_02_00 \
-            --service-account-key-file=/tmp/keyfile.json
+           --gke-cluster=my-cluster-region-or-zone/my-cluster \
+           --install-connect-agent --enable-workload-identity
 
-    Register a GKE cluster and output a manifest that can be used to install
-    the Connect Agent:
-
-        $ gcloud container hub memberships register my-cluster \
-            --gke-uri=my-cluster-gke-uri \
-            --manifest-output-file=/tmp/manifest.yaml \
-            --service-account-key-file=/tmp/keyfile.json
+        Register a GKE cluster, and install a specific version of the Connect
+        agent:
 
         $ gcloud container hub memberships register my-cluster \
-            --gke-cluster=my-cluster-region-or-zone/my-cluster \
-            --manifest-output-file=/tmp/manifest.yaml \
-            --service-account-key-file=/tmp/keyfile.json
+           --gke-cluster=my-cluster-region-or-zone/my-cluster \
+           --install-connect-agent --version=gkeconnect_20190802_02_00 \
+           --service-account-key-file=/tmp/keyfile.json
+
+        Register a GKE cluster and output a manifest that can be used to install the
+        Connect agent:
+
+        $ gcloud container hub memberships register my-cluster \
+           --gke-uri=my-cluster-gke-uri --install-connect-agent \
+           --manifest-output-file=/tmp/manifest.yaml \
+           --service-account-key-file=/tmp/keyfile.json
 
 POSITIONAL ARGUMENTS
      MEMBERSHIP_NAME
@@ -153,7 +149,27 @@ REQUIRED FLAGS
             to $KUBECONFIG if it is set in the environment, otherwise defaults
             to $HOME/.kube/config.
 
-     Exactly one of these must be specified:
+OPTIONAL FLAGS
+     --install-connect-agent
+        If set to True for a GKE cluster, Connect agent will be installed in
+        the cluster. No-op for Non-GKE clusters, where Connect agent will
+        always be installed.
+
+     --internal-ip
+        Whether to use the internal IP address of the cluster endpoint.
+
+     --manifest-output-file=MANIFEST_OUTPUT_FILE
+        The full path of the file into which the Connect agent installation
+        manifest should be stored. If this option is provided, then the
+        manifest will be written to this file and will not be deployed into the
+        cluster by gcloud, and it will need to be deployed manually.
+
+     --proxy=PROXY
+        The proxy address in the format of http[s]://{hostname}. The proxy must
+        support the HTTP CONNECT method in order for this connection to
+        succeed.
+
+     At most one of these can be specified:
 
        --service-account-key-file=SERVICE_ACCOUNT_KEY_FILE
           The JSON file of a Google Cloud service account private key. This
@@ -209,21 +225,6 @@ REQUIRED FLAGS
               associated JSON Web Key Set for validating the cluster's service
               account JWTs are served at a public endpoint different from the
               cluster API server. Requires --enable-workload-identity.
-
-OPTIONAL FLAGS
-     --internal-ip
-        Whether to use the internal IP address of the cluster endpoint.
-
-     --manifest-output-file=MANIFEST_OUTPUT_FILE
-        The full path of the file into which the Connect Agent installation
-        manifest should be stored. If this option is provided, then the
-        manifest will be written to this file and will not be deployed into the
-        cluster by gcloud, and it will need to be deployed manually.
-
-     --proxy=PROXY
-        The proxy address in the format of http[s]://{hostname}. The proxy must
-        support the HTTP CONNECT method in order for this connection to
-        succeed.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

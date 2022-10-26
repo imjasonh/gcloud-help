@@ -6,7 +6,7 @@ SYNOPSIS
     gcloud beta container fleet memberships unregister MEMBERSHIP_NAME
         (--gke-cluster=LOCATION/CLUSTER_NAME | --gke-uri=GKE_URI
           | [--context=CONTEXT : --kubeconfig=KUBECONFIG])
-        [GCLOUD_WIDE_FLAG ...]
+        [--uninstall-connect-agent] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) This command unregisters a cluster with the fleet by:
@@ -16,18 +16,18 @@ DESCRIPTION
         2. Removing the corresponding in-cluster Kubernetes Resources that make the
            cluster exclusive to one fleet (a.k.a `kubectl delete memberships
            membership`).
-        3. Uninstalling the Connect Agent from this cluster (a.k.a
-           `kubectl delete on the gke-connect namespace`).
+        3. [Optional for GKE cluster] Uninstalling the Connect agent from this
+           cluster (a.k.a `kubectl delete on the gke-connect namespace`).
 
     The unregister command makes additional internal checks to ensure that all
     three steps can be safely done to properly clean-up in-Fleet and in-cluster
     resources.
 
-    To register a non-GKE cluster use --context flag (with an optional
-    --kubeconfig flag).
-
     To register a GKE cluster use --gke-cluster or --gke-uri flag (no
     --kubeconfig flag is required).
+
+    To register a non-GKE cluster use --context flag (with an optional
+    --kubeconfig`s flag).
 
     To only delete the Fleet Membership resource, consider using the command:
     gcloud beta container fleet memberships delete. This command is intended to
@@ -56,6 +56,12 @@ EXAMPLES
 
         $ gcloud beta container fleet memberships unregister my-membership \
             --gke-cluster=my-cluster-region-or-zone/my-cluster
+
+    Unregister a GKE cluster and uninstall Connect agent:
+
+        $ gcloud beta container fleet memberships unregister my-membership \
+            --gke-cluster=my-cluster-region-or-zone/my-cluster \
+            --uninstall-connect-agent
 
 POSITIONAL ARGUMENTS
      MEMBERSHIP_NAME
@@ -94,6 +100,12 @@ REQUIRED FLAGS
             The kubeconfig file containing an entry for the cluster. Defaults
             to $KUBECONFIG if it is set in the environment, otherwise defaults
             to $HOME/.kube/config.
+
+OPTIONAL FLAGS
+     --uninstall-connect-agent
+        If set to True for a GKE cluster, Connect agent will be uninstalled
+        from the cluster. No-op for Non-GKE clusters, where Connect agent will
+        always be uninstalled.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

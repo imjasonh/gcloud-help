@@ -7,14 +7,17 @@ SYNOPSIS
         [--update-labels=[KEY=VALUE,...]] [--update-mask=UPDATE_MASK]
         [--backfill-none
           | --backfill-all --mysql-excluded-objects=MYSQL_EXCLUDED_OBJECTS
-          | --oracle-excluded-objects=ORACLE_EXCLUDED_OBJECTS]
+          | --oracle-excluded-objects=ORACLE_EXCLUDED_OBJECTS
+          | --postgresql-excluded-objects=POSTGRESQL_EXCLUDED_OBJECTS]
         [--clear-labels | --remove-labels=[KEY,...]]
         [--destination-name=DESTINATION_NAME
           : --bigquery-destination-config=BIGQUERY_DESTINATION_CONFIG
           | --gcs-destination-config=GCS_DESTINATION_CONFIG]
         [--force | --validate-only]
         [--source-name=SOURCE_NAME : --mysql-source-config=MYSQL_SOURCE_CONFIG
-          | --oracle-source-config=ORACLE_SOURCE_CONFIG] [GCLOUD_WIDE_FLAG ...]
+          | --oracle-source-config=ORACLE_SOURCE_CONFIG
+          | --postgresql-source-config=POSTGRESQL_SOURCE_CONFIG]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) (DEPRECATED) Datastream beta version is deprecated. Please
@@ -107,6 +110,9 @@ FLAGS
 
          --oracle-excluded-objects=ORACLE_EXCLUDED_OBJECTS
             Oracle data source objects to avoid backfilling.
+
+         --postgresql-excluded-objects=POSTGRESQL_EXCLUDED_OBJECTS
+            PostgreSQL data source objects to avoid backfilling.
 
      At most one of these can be specified:
 
@@ -206,7 +212,7 @@ FLAGS
      At most one of these can be specified:
 
        --mysql-source-config=MYSQL_SOURCE_CONFIG
-          Path to a YAML (or JSON) file containing the configuration for Mysql
+          Path to a YAML (or JSON) file containing the configuration for MySQL
           Source Config.
 
           The JSON file is formatted as follows, with snake_case field naming:
@@ -257,6 +263,34 @@ FLAGS
                       }
                     ]
                   }
+                }
+
+       --postgresql-source-config=POSTGRESQL_SOURCE_CONFIG
+          Path to a YAML (or JSON) file containing the configuration for
+          PostgreSQL Source Config.
+
+          The JSON file is formatted as follows, with snake_case field naming:
+
+                {
+                  "include_objects": {},
+                  "exclude_objects": {
+                    "postgresql_schemas": [
+                      {
+                        "schema": "SAMPLE",
+                        "postgresql_tables": [
+                          {
+                            "table": "SAMPLE_TABLE",
+                            "postgresql_columns": [
+                              {
+                                "column": "COL",
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "publication": "SAMPLE_PUBLICATION"
                 }
 
 GCLOUD WIDE FLAGS

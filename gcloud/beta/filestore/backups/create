@@ -3,9 +3,10 @@ NAME
 
 SYNOPSIS
     gcloud beta filestore backups create BACKUP --file-share=FILE_SHARE
-        --instance=INSTANCE --instance-zone=INSTANCE_ZONE --region=REGION
-        [--async] [--description=DESCRIPTION] [--labels=KEY=VALUE]
-        [GCLOUD_WIDE_FLAG ...]
+        --instance=INSTANCE --region=REGION
+        (--instance-location=INSTANCE_LOCATION | --instance-zone=INSTANCE_ZONE)
+        [--async] [--description=DESCRIPTION] [--kms-key=KMS_KEY]
+        [--labels=KEY=VALUE] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) Create a Filestore backup of an instance file share.
@@ -37,11 +38,16 @@ REQUIRED FLAGS
      --instance=INSTANCE
         Share name of the Filestore instance you want to backup.
 
-     --instance-zone=INSTANCE_ZONE
-        Zone of the Filestore instance.
-
      --region=REGION
         Region (e.g. us-central1) for the backup.
+
+     Exactly one of these must be specified:
+
+       --instance-location=INSTANCE_LOCATION
+          Region of the Filestore instance.
+
+       --instance-zone=INSTANCE_ZONE
+          Zone of the Filestore instance.
 
 OPTIONAL FLAGS
      --async
@@ -50,6 +56,10 @@ OPTIONAL FLAGS
 
      --description=DESCRIPTION
         Description for the backup. Limit: 2048 characters.
+
+     --kms-key=KMS_KEY
+        CMEK for backup in the form of
+        projects/{}/locations/{}/keyRings/{}/cryptoKeys/{}
 
      --labels=KEY=VALUE
         List of label KEY=VALUE pairs to add.

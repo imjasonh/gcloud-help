@@ -15,7 +15,8 @@ SYNOPSIS
         [--disk=[auto-delete=AUTO-DELETE],[boot=BOOT],
           [device-name=DEVICE-NAME],[mode=MODE],[name=NAME],[scope=SCOPE]]
         [--enable-display-device] [--[no-]enable-nested-virtualization]
-        [--[no-]enable-uefi-networking] [--hostname=HOSTNAME]
+        [--[no-]enable-uefi-networking] [--erase-windows-vss-signature]
+        [--hostname=HOSTNAME]
         [--instance-termination-action=INSTANCE_TERMINATION_ACTION]
         [--ipv6-network-tier=IPV6_NETWORK_TIER]
         [--ipv6-public-ptr-domain=IPV6_PUBLIC_PTR_DOMAIN]
@@ -37,7 +38,9 @@ SYNOPSIS
         [--resource-policies=[RESOURCE_POLICY,...]] [--no-restart-on-failure]
         [--shielded-integrity-monitoring] [--shielded-secure-boot]
         [--shielded-vtpm] [--source-instance-template=SOURCE_INSTANCE_TEMPLATE]
-        [--stack-type=STACK_TYPE] [--subnet=SUBNET] [--tags=TAG,[TAG,...]]
+        [--source-machine-image=SOURCE_MACHINE_IMAGE]
+        [--source-machine-image-csek-key-file=FILE] [--stack-type=STACK_TYPE]
+        [--subnet=SUBNET] [--tags=TAG,[TAG,...]]
         [--threads-per-core=THREADS_PER_CORE]
         [--visible-core-count=VISIBLE_CORE_COUNT] [--zone=ZONE]
         [--address=ADDRESS | --no-address]
@@ -391,6 +394,11 @@ FLAGS
         --enable-uefi-networking to enable and --no-enable-uefi-networking to
         disable.
 
+     --erase-windows-vss-signature
+        Specifies whether the disk restored from source snapshots or source
+        machine image should erase Windows specific VSS signature. See
+        https://cloud.google.com/sdk/gcloud/reference/compute/disks/snapshot#--guest-flush
+
      --hostname=HOSTNAME
         Specify the hostname of the instance to be created. The specified
         hostname must be RFC1035 compliant. If hostname is not specified, the
@@ -716,6 +724,16 @@ FLAGS
 
         Users can also override machine type and labels. Values of other flags
         will be ignored and --source-instance-template will be used instead.
+
+     --source-machine-image=SOURCE_MACHINE_IMAGE
+        The name of the machine image that the instance will be created from.
+
+     --source-machine-image-csek-key-file=FILE
+        Path to a Customer-Supplied Encryption Key (CSEK) key file, mapping
+        resources to user managed keys which were used to encrypt the source
+        machine-image. See
+        https://cloud.google.com/compute/docs/disks/customer-supplied-encryption
+        for more details.
 
      --stack-type=STACK_TYPE
         Specifies whether IPv6 is enabled on the default network interface. If

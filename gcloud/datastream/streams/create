@@ -6,12 +6,14 @@ SYNOPSIS
         --display-name=DISPLAY_NAME
         (--backfill-none
           | --backfill-all --mysql-excluded-objects=MYSQL_EXCLUDED_OBJECTS
-          | --oracle-excluded-objects=ORACLE_EXCLUDED_OBJECTS)
+          | --oracle-excluded-objects=ORACLE_EXCLUDED_OBJECTS
+          | --postgresql-excluded-objects=POSTGRESQL_EXCLUDED_OBJECTS)
         (--destination=DESTINATION
           (--bigquery-destination-config=BIGQUERY_DESTINATION_CONFIG
           | --gcs-destination-config=GCS_DESTINATION_CONFIG))
         (--source=SOURCE (--mysql-source-config=MYSQL_SOURCE_CONFIG
-          | --oracle-source-config=ORACLE_SOURCE_CONFIG))
+          | --oracle-source-config=ORACLE_SOURCE_CONFIG
+          | --postgresql-source-config=POSTGRESQL_SOURCE_CONFIG))
         [--labels=[KEY=VALUE,...]] [--force | --validate-only]
         [GCLOUD_WIDE_FLAG ...]
 
@@ -43,6 +45,15 @@ EXAMPLES
         $ gcloud datastream streams create STREAM --location=us-central1 \
           --display-name=my-stream --source=source \
           --oracle-source-config=source_config.json \
+          --destination=destination \
+          --bigquery-destination-config=destination_config.json \
+          --backfill-none
+
+    To create a stream with a PostgreSQL source and a BigQuery destination:
+
+        $ gcloud datastream streams create STREAM --location=us-central1 \
+          --display-name=my-stream --source=source \
+          --postgresql-source-config=source_config.json \
           --destination=destination \
           --bigquery-destination-config=destination_config.json \
           --backfill-none
@@ -93,6 +104,9 @@ REQUIRED FLAGS
 
          --oracle-excluded-objects=ORACLE_EXCLUDED_OBJECTS
             Oracle data source objects to avoid backfilling.
+
+         --postgresql-excluded-objects=POSTGRESQL_EXCLUDED_OBJECTS
+            PostgreSQL data source objects to avoid backfilling.
 
      This must be specified.
 
@@ -172,7 +186,7 @@ REQUIRED FLAGS
 
          --mysql-source-config=MYSQL_SOURCE_CONFIG
             Path to a YAML (or JSON) file containing the configuration for
-            Mysql Source Config.
+            MySQL Source Config.
 
             The JSON file is formatted as follows, with snake_case field
             naming:
@@ -224,6 +238,36 @@ REQUIRED FLAGS
                         }
                       ]
                     }
+                  }
+
+         --postgresql-source-config=POSTGRESQL_SOURCE_CONFIG
+            Path to a YAML (or JSON) file containing the configuration for
+            PostgreSQL Source Config.
+
+            The JSON file is formatted as follows, with snake_case field
+            naming:
+
+                  {
+                    "include_objects": {},
+                    "exclude_objects": {
+                      "postgresql_schemas": [
+                        {
+                          "schema": "SAMPLE",
+                          "postgresql_tables": [
+                            {
+                              "table": "SAMPLE_TABLE",
+                              "postgresql_columns": [
+                                {
+                                  "column": "COL",
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "replication_slot": "SAMPLE_REPLICATION_SLOT",
+                    "publication": "SAMPLE_PUBLICATION"
                   }
 
 OPTIONAL FLAGS
