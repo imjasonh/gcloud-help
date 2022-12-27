@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+gcloud version
+
 path=$(pwd)/gcloud/$(printf "%s/" "$@")
 mkdir -p $path
 
