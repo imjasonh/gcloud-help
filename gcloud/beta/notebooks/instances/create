@@ -15,6 +15,8 @@ SYNOPSIS
         [--metadata=[KEY=VALUE,...]]
         [--post-startup-script=POST_STARTUP_SCRIPT]
         [--service-account=SERVICE_ACCOUNT]
+        [--no-shielded-integrity-monitoring] [--shielded-secure-boot]
+        [--no-shielded-vtpm]
         [--accelerator-core-count=ACCELERATOR_CORE_COUNT
           --accelerator-type=ACCELERATOR_TYPE]
         [--boot-disk-size=BOOT_DISK_SIZE --boot-disk-type=BOOT_DISK_TYPE]
@@ -23,7 +25,9 @@ SYNOPSIS
           : --kms-keyring=KMS_KEYRING
           --kms-location=KMS_LOCATION --kms-project=KMS_PROJECT]]
         [--network=NETWORK : --no-proxy-access --no-public-ip [--subnet=SUBNET
-          : --subnet-region=SUBNET_REGION]] [GCLOUD_WIDE_FLAG ...]
+          : --subnet-region=SUBNET_REGION]]
+        [--reservation=RESERVATION --reservation-affinity=RESERVATION_AFFINITY;
+          default="TYPE_UNSPECIFIED"] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) Request for creating notebook instances.
@@ -181,6 +185,17 @@ OPTIONAL FLAGS
         the instance. If not specified, the Compute Engine default service
         account is used.
 
+     --shielded-integrity-monitoring
+        Enable monitoring of the boot integrity of the instance. Enabled by
+        default, use --no-shielded-integrity-monitoring to disable.
+
+     --shielded-secure-boot
+        Boot instance with secure boot enabled. Disabled by default.
+
+     --shielded-vtpm
+        Boot instance with TPM (Trusted Platform Module) enabled. Enabled by
+        default, use --no-shielded-vtpm to disable.
+
      The hardware accelerator used on this instance. If you use accelerators,
      make sure that your configuration has enough vCPUs and memory to support
      the `machine_type` you have selected.
@@ -306,6 +321,17 @@ OPTIONAL FLAGS
             ▫ provide the argument --subnet on the command line with a fully
               specified name;
             ▫ provide the argument --subnet-region on the command line.
+
+     Specifies the reservation for the instance.
+
+       --reservation=RESERVATION
+          The name of the reservation, required when
+          --reservation-affinity=SPECIFIC_RESERVATION.
+
+       --reservation-affinity=RESERVATION_AFFINITY; default="TYPE_UNSPECIFIED"
+          The type of reservation for the instance. RESERVATION_AFFINITY must
+          be one of: TYPE_UNSPECIFIED, NO_RESERVATION, ANY_RESERVATION,
+          SPECIFIC_RESERVATION.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

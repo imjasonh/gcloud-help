@@ -5,13 +5,13 @@ NAME
 SYNOPSIS
     gcloud alpha container azure clusters create
         (CLUSTER : --location=LOCATION) --azure-region=AZURE_REGION
-        --client=CLIENT --cluster-version=CLUSTER_VERSION
-        --fleet-project=FLEET_PROJECT
+        --cluster-version=CLUSTER_VERSION --fleet-project=FLEET_PROJECT
         --pod-address-cidr-blocks=POD_ADDRESS_CIDR_BLOCKS
         --resource-group-id=RESOURCE_GROUP_ID
         --service-address-cidr-blocks=SERVICE_ADDRESS_CIDR_BLOCKS
         --ssh-public-key=SSH_PUBLIC_KEY --vnet-id=VNET_ID
-        [--admin-users=USER,[USER,...]]
+        (--client=CLIENT : --azure-application-id=AZURE_APPLICATION_ID
+          --azure-tenant-id=AZURE_TENANT_ID) [--admin-users=USER,[USER,...]]
         [--annotations=ANNOTATION,[ANNOTATION,...]] [--async]
         [--config-encryption-key-id=CONFIG_ENCRYPTION_KEY_ID]
         [--config-encryption-public-key=CONFIG_ENCRYPTION_PUBLIC_KEY]
@@ -74,26 +74,6 @@ REQUIRED FLAGS
         Azure location to deploy the cluster. Refer to your Azure subscription
         for available locations.
 
-     Client resource - Azure client to use for cluster creation. This
-     represents a Cloud resource. (NOTE) Some attributes are not given
-     arguments in this group but can be set in other ways. To set the project
-     attribute:
-      ◆ provide the argument --client on the command line with a fully
-        specified name;
-      ◆ provide the argument --project on the command line;
-      ◆ set the property core/project. To set the location attribute:
-      ◆ provide the argument --client on the command line with a fully
-        specified name;
-      ◆ provide the argument --location on the command line;
-      ◆ set the property container_azure/location.
-
-     This must be specified.
-
-       --client=CLIENT
-          ID of the client or fully qualified identifier for the client. To set
-          the client attribute:
-          ▸ provide the argument --client on the command line.
-
      --cluster-version=CLUSTER_VERSION
         Kubernetes version to use for the cluster.
 
@@ -116,6 +96,42 @@ REQUIRED FLAGS
 
      --vnet-id=VNET_ID
         ID of the Azure Virtual Network to associate with the cluster.
+
+     Authentication configuration
+
+     Exactly one of these must be specified:
+
+       Client resource - Azure client to use for cluster creation. This
+       represents a Cloud resource. (NOTE) Some attributes are not given
+       arguments in this group but can be set in other ways. To set the project
+       attribute:
+        ▸ provide the argument --client on the command line with a fully
+          specified name;
+        ▸ provide the argument --project on the command line;
+        ▸ set the property core/project. To set the location attribute:
+        ▸ provide the argument --client on the command line with a fully
+          specified name;
+        ▸ provide the argument --location on the command line;
+        ▸ set the property container_azure/location.
+
+         --client=CLIENT
+            ID of the client or fully qualified identifier for the client. To
+            set the client attribute:
+            ▫ provide the argument --client on the command line.
+
+       Azure services authentication
+
+         --azure-application-id=AZURE_APPLICATION_ID
+            ID of the Azure Application to manage Azure resources.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --azure-tenant-id=AZURE_TENANT_ID
+            ID of the Azure Tenant to manage Azure resources.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
 
 OPTIONAL FLAGS
      --admin-users=USER,[USER,...]

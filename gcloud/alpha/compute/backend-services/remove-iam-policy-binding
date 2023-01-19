@@ -4,8 +4,8 @@ NAME
 
 SYNOPSIS
     gcloud alpha compute backend-services remove-iam-policy-binding
-        (BACKEND_SERVICE : --region=REGION) --member=PRINCIPAL --role=ROLE
-        [GCLOUD_WIDE_FLAG ...]
+        BACKEND_SERVICE_NAME --member=PRINCIPAL --role=ROLE
+        [--global | --region=REGION] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Remove an IAM policy binding from a Compute Engine backend service.
@@ -16,41 +16,21 @@ EXAMPLES
     with backend service 'my-backend-service' and region 'REGION', run:
 
         $ gcloud alpha compute backend-services remove-iam-policy-binding \
-            my-backend-service --region=REGION \
-            --member='user:test-user@gmail.com' \
-            --role='roles/compute.loadBalancerServiceUser'
+          my-backend-service --region=REGION \
+          --member='user:test-user@gmail.com' \
+          --role='roles/compute.loadBalancerServiceUser'
+
+        $ gcloud alpha compute backend-services remove-iam-policy-binding \
+          my-backend-service --global \
+          --member='user:test-user@gmail.com' \
+          --role='roles/compute.loadBalancerServiceUser'
 
     See https://cloud.google.com/iam/docs/managing-policies for details of
     policy role and member types.
 
 POSITIONAL ARGUMENTS
-     Backend service resource - The backend service for which to remove the IAM
-     policy from. The arguments in this group can be used to specify the
-     attributes of this resource. (NOTE) Some attributes are not given
-     arguments in this group but can be set in other ways. To set the project
-     attribute:
-      ◆ provide the argument backend_service on the command line with a fully
-        specified name;
-      ◆ set the property core/project;
-      ◆ provide the argument --project on the command line.
-
-     This must be specified.
-
-       BACKEND_SERVICE
-          ID of the backend service or fully qualified identifier for the
-          backend service. To set the backend_service attribute:
-          ▸ provide the argument backend_service on the command line.
-
-          This positional argument must be specified if any of the other
-          arguments in this group are specified.
-
-       --region=REGION
-          The name of the Google Compute Engine region. To set the region
-          attribute:
-          ▸ provide the argument backend_service on the command line with a
-            fully specified name;
-          ▸ provide the argument --region on the command line;
-          ▸ set the property compute/region.
+     BACKEND_SERVICE_NAME
+        Name of the backend service to operate on.
 
 REQUIRED FLAGS
      --member=PRINCIPAL
@@ -74,6 +54,16 @@ REQUIRED FLAGS
      --role=ROLE
         The role to remove the principal from.
 
+OPTIONAL FLAGS
+     At most one of these can be specified:
+
+       --global
+          If set, the backend service is global.
+
+       --region=REGION
+          Region of the backend service to operate on. Overrides the default
+          compute/region property value for this command invocation.
+
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
     --billing-project, --configuration, --flags-file, --flatten, --format,
@@ -81,10 +71,6 @@ GCLOUD WIDE FLAGS
     --trace-token, --user-output-enabled, --verbosity.
 
     Run $ gcloud help for details.
-
-API REFERENCE
-    This command uses the compute/alpha API. The full documentation for this
-    API can be found at: https://cloud.google.com/compute/
 
 NOTES
     This command is currently in alpha and might change without notice. If this

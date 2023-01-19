@@ -3,9 +3,9 @@ NAME
         Compute Engine backend service
 
 SYNOPSIS
-    gcloud compute backend-services get-iam-policy
-        (BACKEND_SERVICE : --region=REGION) [--filter=EXPRESSION]
-        [--limit=LIMIT] [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]]
+    gcloud compute backend-services get-iam-policy BACKEND_SERVICE_NAME
+        [--global | --region=REGION] [--filter=EXPRESSION] [--limit=LIMIT]
+        [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [--uri]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -22,33 +22,22 @@ EXAMPLES
         $ gcloud compute backend-services get-iam-policy \
             my-backend-service --region=REGION
 
+        $ gcloud compute backend-services get-iam-policy \
+            my-backend-service --global
+
 POSITIONAL ARGUMENTS
-     Backend service resource - The network to display the IAM policy for. The
-     arguments in this group can be used to specify the attributes of this
-     resource. (NOTE) Some attributes are not given arguments in this group but
-     can be set in other ways. To set the project attribute:
-      ◆ provide the argument backend_service on the command line with a fully
-        specified name;
-      ◆ set the property core/project;
-      ◆ provide the argument --project on the command line.
+     BACKEND_SERVICE_NAME
+        Name of the backend service to operate on.
 
-     This must be specified.
+FLAGS
+     At most one of these can be specified:
 
-       BACKEND_SERVICE
-          ID of the backend service or fully qualified identifier for the
-          backend service. To set the backend_service attribute:
-          ▸ provide the argument backend_service on the command line.
-
-          This positional argument must be specified if any of the other
-          arguments in this group are specified.
+       --global
+          If set, the backend service is global.
 
        --region=REGION
-          The name of the Google Compute Engine region. To set the region
-          attribute:
-          ▸ provide the argument backend_service on the command line with a
-            fully specified name;
-          ▸ provide the argument --region on the command line;
-          ▸ set the property compute/region.
+          Region of the backend service to operate on. Overrides the default
+          compute/region property value for this command invocation.
 
 LIST COMMAND FLAGS
      --filter=EXPRESSION
@@ -76,6 +65,12 @@ LIST COMMAND FLAGS
         order on that field. This flag interacts with other flags that are
         applied in this order: --flatten, --sort-by, --filter, --limit.
 
+     --uri
+        Print a list of resource URIs instead of the default output, and change
+        the command output to a list of URIs. If this flag is used with
+        --format, the formatting is applied on this URI list. To display URIs
+        alongside other keys instead, use the uri() transform.
+
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
     --billing-project, --configuration, --flags-file, --flatten, --format,
@@ -83,10 +78,6 @@ GCLOUD WIDE FLAGS
     --trace-token, --user-output-enabled, --verbosity.
 
     Run $ gcloud help for details.
-
-API REFERENCE
-    This command uses the compute/v1 API. The full documentation for this API
-    can be found at: https://cloud.google.com/compute/
 
 NOTES
     These variants are also available:

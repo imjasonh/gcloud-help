@@ -26,8 +26,12 @@ SYNOPSIS
         [--disk=[auto-delete=AUTO-DELETE],[boot=BOOT],
           [device-name=DEVICE-NAME],[mode=MODE],[name=NAME],[scope=SCOPE]]
         [--[no-]enable-nested-virtualization]
+        [--external-ipv6-address=EXTERNAL_IPV6_ADDRESS]
+        [--external-ipv6-prefix-length=EXTERNAL_IPV6_PREFIX_LENGTH]
         [--host-error-timeout-seconds=HOST_ERROR_TIMEOUT_SECONDS]
         [--instance-termination-action=INSTANCE_TERMINATION_ACTION]
+        [--internal-ipv6-address=INTERNAL_IPV6_ADDRESS]
+        [--internal-ipv6-prefix-length=INTERNAL_IPV6_PREFIX_LENGTH]
         [--ipv6-address=IPV6_ADDRESS] [--ipv6-network-tier=IPV6_NETWORK_TIER]
         [--ipv6-prefix-length=IPV6_PREFIX_LENGTH] [--labels=[KEY=VALUE,...]]
         [--local-nvdimm=[size=SIZE]]
@@ -412,13 +416,25 @@ FLAGS
         --enable-nested-virtualization to enable and
         --no-enable-nested-virtualization to disable.
 
+     --external-ipv6-address=EXTERNAL_IPV6_ADDRESS
+        Assigns the given external IPv6 address to the instance that is
+        created. The address must be the first IP address in the range. This
+        option can be used only when creating a single instance.
+
+     --external-ipv6-prefix-length=EXTERNAL_IPV6_PREFIX_LENGTH
+        The prefix length of the external IPv6 address range. This field should
+        be used together with --external-ipv6-address. Only the /96 IP address
+        range is supported, and the default value is 96.
+
      --host-error-timeout-seconds=HOST_ERROR_TIMEOUT_SECONDS
         The timeout in seconds for host error detection. The value must be set
         with 30 second increments, with a range of 90 to 330 seconds. If unset,
         the default behavior of the host error recovery is used.
 
      --instance-termination-action=INSTANCE_TERMINATION_ACTION
-        Specifies the termination action that will be taken upon VM preemption.
+        Specifies the termination action that will be taken upon VM preemption
+        (--provisioning-model=SPOT or --preemptible) or automatic instance
+        termination (--max-run-duration or --termination-time).
         INSTANCE_TERMINATION_ACTION must be one of:
 
          DELETE
@@ -427,10 +443,23 @@ FLAGS
             Default. Stop the VM without preserving memory. The VM can be
             restarted later.
 
+     --internal-ipv6-address=INTERNAL_IPV6_ADDRESS
+        Assigns the given internal IPv6 address or range to the instance that
+        is created. The address must be the first IP address in the range or a
+        /96 IP address range. This option can be used only when creating a
+        single instance.
+
+     --internal-ipv6-prefix-length=INTERNAL_IPV6_PREFIX_LENGTH
+        Optional field that indicates the prefix length of the internal IPv6
+        address range, should be used together with --internal-ipv6-address.
+        Only /96 is supported and the default value is 96. If not set, the
+        prefix length from --internal-ipv6-address will be used or assigned a
+        default value of 96.
+
      --ipv6-address=IPV6_ADDRESS
         Assigns the given external IPv6 address to the instance that is
-        created. The address must be the first IP in the range. This option can
-        only be used when creating a single instance.
+        created. The address must be the first IP address in the range. This
+        option can be used only when creating a single instance.
 
      --ipv6-network-tier=IPV6_NETWORK_TIER
         Specifies the IPv6 network tier that will be used to configure the
@@ -441,9 +470,9 @@ FLAGS
             High quality, Google-grade network tier.
 
      --ipv6-prefix-length=IPV6_PREFIX_LENGTH
-        Prefix Length of the External IPv6 address range, should be used
-        together with --ipv6-address. Currently only /96 is supported and the
-        default value is 96.
+        The prefix length of the external IPv6 address range. This field should
+        be used together with --ipv6-address. Only the /96 IP address range is
+        supported, and the default value is 96.
 
      --labels=[KEY=VALUE,...]
         List of label KEY=VALUE pairs to add.
@@ -608,6 +637,10 @@ FLAGS
                 name on the subnet. If the IP range is specified by netmask, the
                 IP allocator will pick an available range with the specified netmask
                 and allocate it to this network interface.
+
+         network-attachment
+            Specifies the network attachment that this interface should connect
+            to. Mutually exclusive with --network and --subnet flags.
 
      --network-performance-configs=[PROPERTY=VALUE,...]
         Configures network performance settings for the instance. If this flag

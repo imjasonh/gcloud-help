@@ -3,9 +3,9 @@ NAME
         index
 
 SYNOPSIS
-    gcloud alpha firestore indexes composite create
-        --collection-group=COLLECTION_GROUP --field-config=FIELD_CONFIG
-        [--async] [GCLOUD_WIDE_FLAG ...]
+    gcloud alpha firestore indexes composite create --field-config=FIELD_CONFIG
+        (--collection-group=COLLECTION_GROUP : --database=DATABASE) [--async]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Create a new composite index.
@@ -20,27 +20,12 @@ EXAMPLES
             --field-config=field-path=user-id,order=descending \
             --field-config=field-path=timestamp,order=descending
 
+        $ gcloud alpha firestore indexes composite create \
+            --database=(default) --collection-group=Events \
+            --field-config=field-path=user-id,order=descending \
+            --field-config=field-path=timestamp,order=descending
+
 REQUIRED FLAGS
-     Collection group resource - Collection group of the index. This represents
-     a Cloud resource. (NOTE) Some attributes are not given arguments in this
-     group but can be set in other ways. To set the project attribute:
-      ◆ provide the argument --collection-group on the command line with a
-        fully specified name;
-      ◆ set the property core/project;
-      ◆ provide the argument --project on the command line. To set the
-        database attribute:
-      ◆ provide the argument --collection-group on the command line with a
-        fully specified name;
-      ◆ provide the argument [--database] on the command line (currently
-        '(default)' is the only supported value).
-
-     This must be specified.
-
-       --collection-group=COLLECTION_GROUP
-          ID of the collection group or fully qualified identifier for the
-          collection group. To set the collection-group attribute:
-          ▸ provide the argument --collection-group on the command line.
-
      --field-config=FIELD_CONFIG
         Configuration for a field.
 
@@ -66,6 +51,34 @@ REQUIRED FLAGS
             Specifies the configuration for an array field. The only valid
             option is 'contains'. Exactly one of 'order' or 'array-config' must
             be specified.
+
+     Collection group resource - Collection group of the index. The arguments
+     in this group can be used to specify the attributes of this resource.
+     (NOTE) Some attributes are not given arguments in this group but can be
+     set in other ways. To set the project attribute:
+      ◆ provide the argument --collection-group on the command line with a
+        fully specified name;
+      ◆ set the property core/project;
+      ◆ provide the argument --project on the command line.
+
+     This must be specified.
+
+       --collection-group=COLLECTION_GROUP
+          ID of the collection group or fully qualified identifier for the
+          collection group. To set the collection-group attribute:
+          ▸ provide the argument --collection-group on the command line.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --database=DATABASE
+          Database of the collection group.
+
+          To set the database attribute:
+          ▸ provide the argument --collection-group on the command line with
+            a fully specified name;
+          ▸ provide the argument --database on the command line;
+          ▸ the default value of argument [--database] is (default).
 
 OPTIONAL FLAGS
      --async

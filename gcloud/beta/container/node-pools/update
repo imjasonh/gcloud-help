@@ -5,15 +5,16 @@ NAME
 SYNOPSIS
     gcloud beta container node-pools update NAME
         (--enable-confidential-nodes | --enable-gvnic
-          | --enable-image-streaming | --logging-variant=LOGGING_VARIANT
+          | --enable-image-streaming | --enable-private-nodes
+          | --labels=[KEY=VALUE,...] | --logging-variant=LOGGING_VARIANT
           | --network-performance-configs=[PROPERTY=VALUE,...]
           | --node-labels=[NODE_LABEL,...] | --node-locations=ZONE,[ZONE,...]
           | --node-taints=[NODE_TAINT,...]
           | --system-config-from-file=SYSTEM_CONFIG_FROM_FILE
-          | --tags=[TAG,...] | --workload-metadata=WORKLOAD_METADATA
-          | --enable-autoprovisioning --enable-autoscaling
-          --location-policy=LOCATION_POLICY --max-nodes=MAX_NODES
-          --min-nodes=MIN_NODES
+          | --tags=[TAG,...] | --windows-os-version=WINDOWS_OS_VERSION
+          | --workload-metadata=WORKLOAD_METADATA | --enable-autoprovisioning
+          --enable-autoscaling --location-policy=LOCATION_POLICY
+          --max-nodes=MAX_NODES --min-nodes=MIN_NODES
           --total-max-nodes=TOTAL_MAX_NODES --total-min-nodes=TOTAL_MIN_NODES
           | --enable-autorepair --enable-autoupgrade
           | --enable-blue-green-upgrade --enable-surge-upgrade
@@ -22,8 +23,9 @@ SYNOPSIS
           --node-pool-soak-duration=NODE_POOL_SOAK_DURATION
           --standard-rollout-policy=[batch-node-count=BATCH_NODE_COUNT,
           batch-percent=BATCH_NODE_PERCENTAGE,
-          batch-soak-duration=BATCH_SOAK_DURATION,...]) [--cluster=CLUSTER]
-        [--region=REGION | --zone=ZONE, -z ZONE] [GCLOUD_WIDE_FLAG ...]
+          batch-soak-duration=BATCH_SOAK_DURATION,...]) [--async]
+        [--cluster=CLUSTER] [--region=REGION | --zone=ZONE, -z ZONE]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) gcloud beta container node-pools update updates a node pool in a
@@ -53,6 +55,22 @@ REQUIRED FLAGS
 
        --enable-image-streaming
           Specifies whether to enable image streaming on node pool.
+
+       --enable-private-nodes
+          Enables provisioning nodes with private IP addresses only.
+
+          The control plane still communicates with all nodes through private
+          IP addresses only, regardless of whether private nodes are enabled or
+          disabled.
+
+       --labels=[KEY=VALUE,...]
+          Labels to apply to the Google Cloud resources of node pools in the
+          Kubernetes Engine cluster. These are unrelated to Kubernetes labels.
+
+          Examples:
+
+              $ gcloud beta container node-pools update node-pool-1 \
+                  --cluster=example-cluster --labels=label1=value1,label2=value2
 
        --logging-variant=LOGGING_VARIANT
           Specifies the logging variant that will be deployed on all the nodes
@@ -188,6 +206,14 @@ REQUIRED FLAGS
           https://cloud.google.com/sdk/gcloud/reference/compute/firewall-rules/create
           for examples.
 
+       --windows-os-version=WINDOWS_OS_VERSION
+          Specifies the Windows Server Image to use when creating a Windows
+          node pool. Valid variants can be "ltsc2019", "ltsc2022". It means
+          using LTSC2019 server image or LTSC2022 server image. If the node
+          pool doesn't specify a Windows Server Image Os version, then Ltsc2019
+          will be the default one to use. WINDOWS_OS_VERSION must be one of:
+          ltsc2019, ltsc2022.
+
        --workload-metadata=WORKLOAD_METADATA
           Type of metadata server available to pods running in the node pool.
           WORKLOAD_METADATA must be one of:
@@ -234,7 +260,8 @@ REQUIRED FLAGS
             Enables autoscaling for a node pool.
 
             Enables autoscaling in the node pool specified by --node-pool or
-            the default node pool if --node-pool is not provided.
+            the default node pool if --node-pool is not provided. If not
+            already, --max-nodes or --total-max-nodes must also be set.
 
          --location-policy=LOCATION_POLICY
             Location policy specifies the algorithm used when scaling-up the
@@ -363,6 +390,10 @@ REQUIRED FLAGS
                 batch-soak-duration=60s
 
 OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
      --cluster=CLUSTER
         The name of the cluster. Overrides the default container/cluster
         property value for this command invocation.

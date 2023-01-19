@@ -4,15 +4,16 @@ NAME
 
 SYNOPSIS
     gcloud beta builds triggers create github
-        (--trigger-config=PATH | [--repo-name=REPO_NAME
-          --repo-owner=REPO_OWNER (--branch-pattern=REGEX | --tag-pattern=REGEX
+        (--trigger-config=PATH | [(--branch-pattern=REGEX | --tag-pattern=REGEX
           | [--pull-request-pattern=REGEX : --comment-control=COMMENT_CONTROL;
           default="COMMENTS_ENABLED"]) (--build-config=PATH
-          | --inline-config=PATH | --dockerfile=DOCKERFILE
-          --dockerfile-dir=DOCKERFILE_DIR;
-          default="/" --dockerfile-image=DOCKERFILE_IMAGE)
-          : --description=DESCRIPTION --ignored-files=[GLOB,...]
-          --include-logs-with-status --included-files=[GLOB,...] --name=NAME
+          | --inline-config=PATH | [--dockerfile=DOCKERFILE
+          : --dockerfile-dir=DOCKERFILE_DIR; default="/"
+          --dockerfile-image=DOCKERFILE_IMAGE]) (--repository=REPOSITORY
+          | [--repo-name=REPO_NAME --repo-owner=REPO_OWNER
+          : --enterprise-config=ENTERPRISE_CONFIG]) : --description=DESCRIPTION
+          --ignored-files=[GLOB,...] --include-logs-with-status
+          --included-files=[GLOB,...] --name=NAME --region=REGION
           --require-approval
           --service-account=SERVICE_ACCOUNT --substitutions=[KEY=VALUE,...]])
         [GCLOUD_WIDE_FLAG ...]
@@ -21,7 +22,7 @@ DESCRIPTION
     (BETA) Create a build trigger for a GitHub repository.
 
 EXAMPLES
-    To create a push trigger for all branches:
+    To create a push trigger with a 1st-gen repository for all branches:
 
         $ gcloud beta builds triggers create github --name="my-trigger" \
             --service-account="projects/my-project/serviceAccounts/my-byosa@\
@@ -30,13 +31,21 @@ EXAMPLES
             --repo-name="cloud-builders" --branch-pattern=".*" \
             --build-config="cloudbuild.yaml"
 
-    To create a pull request trigger for master:
+    To create a pull request trigger with a 1st-gen repository for master:
 
         $ gcloud beta builds triggers create github --name="my-trigger" \
             --service-account="projects/my-project/serviceAccounts/my-byosa@\
         my-project.iam.gserviceaccount.com" \
             --repo-owner="GoogleCloudPlatform" \
             --repo-name="cloud-builders" --pull-request-pattern="^master$" \
+            --build-config="cloudbuild.yaml"
+
+    To create a pull request trigger with a 2nd gen repository for master:
+
+        $ gcloud beta builds triggers create github --name="my-trigger" \
+            --repository=projects/my-project/locations/us-central1/\
+        connections/my-conn/repositories/my-repo \
+            --pull-request-pattern="^master$" \
             --build-config="cloudbuild.yaml"
 
 REQUIRED FLAGS
@@ -48,18 +57,6 @@ REQUIRED FLAGS
           https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.triggers#BuildTrigger
 
        Flag based trigger configuration
-
-         --repo-name=REPO_NAME
-            Name of the GitHub Repository.
-
-            This flag argument must be specified if any of the other arguments
-            in this group are specified.
-
-         --repo-owner=REPO_OWNER
-            Owner of the GitHub Repository.
-
-            This flag argument must be specified if any of the other arguments
-            in this group are specified.
 
          --description=DESCRIPTION
             Build trigger description.
@@ -78,6 +75,13 @@ REQUIRED FLAGS
 
          --name=NAME
             Build trigger name.
+
+         --region=REGION
+            The region of the Cloud Build Service to use. Must be set to a
+            supported region name (e.g. us-central1). If unset, builds/region,
+            which is the default region to use when working with Cloud Build
+            resources, is used. If builds/region is unset, region is set to
+            global.
 
          --require-approval
             Require manual approval for triggered builds.
@@ -170,20 +174,16 @@ REQUIRED FLAGS
 
          Exactly one of these must be specified:
 
-           Build file configuration flags
+           --build-config=PATH
+              Path to a YAML or JSON file containing the build configuration in
+              the repository.
 
-             --build-config=PATH
-                Path to a YAML or JSON file containing the build configuration
-                in the repository.
+              For more details, see:
+              https://cloud.google.com/cloud-build/docs/build-config
 
-                For more details, see:
-                https://cloud.google.com/cloud-build/docs/build-config
-
-           Build configuration file
-
-             --inline-config=PATH
-                Local path to a YAML or JSON file containing a build
-                configuration.
+           --inline-config=PATH
+              Local path to a YAML or JSON file containing a build
+              configuration.
 
            Dockerfile build configuration flags
 
@@ -194,6 +194,9 @@ REQUIRED FLAGS
                 build using the specified file.
 
                 The filename is relative to the Dockerfile directory.
+
+                This flag argument must be specified if any of the other
+                arguments in this group are specified.
 
              --dockerfile-dir=DOCKERFILE_DIR; default="/"
                 Location of the directory containing the Dockerfile in the
@@ -211,6 +214,33 @@ REQUIRED FLAGS
                 Use a build configuration (cloudbuild.yaml) file for building
                 multiple images in a single trigger.
 
+         Exactly one of these must be specified:
+
+           --repository=REPOSITORY
+              Repository resource (2nd gen) to use, in the format
+              "projects/*/locations/*/connections/*/repositories/".
+
+           1st-gen repository settings.
+
+             --repo-name=REPO_NAME
+                Name of the GitHub Repository (1st gen).
+
+                This flag argument must be specified if any of the other
+                arguments in this group are specified.
+
+             --repo-owner=REPO_OWNER
+                Owner of the GitHub Repository (1st gen).
+
+                This flag argument must be specified if any of the other
+                arguments in this group are specified.
+
+             --enterprise-config=ENTERPRISE_CONFIG
+                Resource name of the GitHub Enterprise config that should be
+                applied to this installation.
+
+                For example:
+                "projects/{$project_id}/locations/{$location_id}/githubEnterpriseConfigs/{$config_id}
+
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
     --billing-project, --configuration, --flags-file, --flatten, --format,
@@ -220,8 +250,10 @@ GCLOUD WIDE FLAGS
     Run $ gcloud help for details.
 
 NOTES
-    This command is currently in beta and might change without notice. This
-    variant is also available:
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud builds triggers create github
 
         $ gcloud alpha builds triggers create github
 

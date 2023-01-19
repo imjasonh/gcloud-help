@@ -4,10 +4,12 @@ NAME
 
 SYNOPSIS
     gcloud firestore export OUTPUT_URI_PREFIX [--async]
-        [--collection-ids=[COLLECTION_IDS,...]] [GCLOUD_WIDE_FLAG ...]
+        [--collection-ids=[COLLECTION_IDS,...]]
+        [--database=DATABASE; default="(default)"]
+        [--namespace-ids=[NAMESPACE_IDS,...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    export Cloud Firestore documents to Google Cloud Storage
+    export Cloud Firestore documents to Google Cloud Storage.
 
 EXAMPLES
     To export all collection groups to mybucket in objects prefixed with
@@ -20,6 +22,11 @@ EXAMPLES
         $ gcloud firestore export gs://mybucket/my/path \
             --collection-ids='specific collection group1','specific
          collection group2' --async
+
+    To export all collection groups from certain namespace, run:
+
+        $ gcloud firestore export gs://mybucket/my/path \
+            --namespace-ids='specific namespace id'
 
 POSITIONAL ARGUMENTS
      OUTPUT_URI_PREFIX
@@ -46,6 +53,24 @@ FLAGS
         collections:
 
             $ gcloud firestore export --collection-ids='customers','orders'
+
+     --database=DATABASE; default="(default)"
+        The database to operate on. The default value is (default).
+
+        For example, to operate on database foo:
+
+            $ gcloud firestore export --database='foo'
+
+     --namespace-ids=[NAMESPACE_IDS,...]
+        A list specifying which namespaces will be included in the operation.
+        When omitted, all namespaces are included.
+
+        This is only supported for Datastore Mode databases.
+
+        For example, to operate on only the 'customers' and 'orders'
+        namespaces:
+
+            $ gcloud firestore export --namespaces-ids='customers','orders'
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

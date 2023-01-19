@@ -3,50 +3,29 @@ NAME
         for a Compute Engine backend service
 
 SYNOPSIS
-    gcloud compute backend-services set-iam-policy
-        (BACKEND_SERVICE : --region=REGION) POLICY_FILE [GCLOUD_WIDE_FLAG ...]
+    gcloud compute backend-services set-iam-policy BACKEND_SERVICE_NAME
+        POLICY_FILE [--global | --region=REGION] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Sets the IAM policy for the given backend service as defined in a JSON or
     YAML file.
 
 EXAMPLES
-    The following command will read am IAM policy defined in a JSON file
+    The following command will read an IAM policy defined in a JSON file
     'policy.json' and set it for the backend service my-backend-service:
 
         $ gcloud compute backend-services set-iam-policy \
             my-backend-service policy.json --region=REGION
 
+        $ gcloud compute backend-services set-iam-policy \
+            my-backend-service policy.json --global
+
     See https://cloud.google.com/iam/docs/managing-policies for details of the
     policy file format and contents.
 
 POSITIONAL ARGUMENTS
-     Backend service resource - The backend service to set the IAM policy for.
-     The arguments in this group can be used to specify the attributes of this
-     resource. (NOTE) Some attributes are not given arguments in this group but
-     can be set in other ways. To set the project attribute:
-      ◆ provide the argument backend_service on the command line with a fully
-        specified name;
-      ◆ set the property core/project;
-      ◆ provide the argument --project on the command line.
-
-     This must be specified.
-
-       BACKEND_SERVICE
-          ID of the backend service or fully qualified identifier for the
-          backend service. To set the backend_service attribute:
-          ▸ provide the argument backend_service on the command line.
-
-          This positional argument must be specified if any of the other
-          arguments in this group are specified.
-
-       --region=REGION
-          The name of the Google Compute Engine region. To set the region
-          attribute:
-          ▸ provide the argument backend_service on the command line with a
-            fully specified name;
-          ▸ provide the argument --region on the command line;
-          ▸ set the property compute/region.
+     BACKEND_SERVICE_NAME
+        Name of the backend service to operate on.
 
      POLICY_FILE
         Path to a local JSON or YAML formatted file containing a valid policy.
@@ -55,6 +34,16 @@ POSITIONAL ARGUMENTS
         JSON or YAML file conforming to the structure of a Policy
         (https://cloud.google.com/iam/reference/rest/v1/Policy).
 
+FLAGS
+     At most one of these can be specified:
+
+       --global
+          If set, the backend service is global.
+
+       --region=REGION
+          Region of the backend service to operate on. Overrides the default
+          compute/region property value for this command invocation.
+
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
     --billing-project, --configuration, --flags-file, --flatten, --format,
@@ -62,10 +51,6 @@ GCLOUD WIDE FLAGS
     --trace-token, --user-output-enabled, --verbosity.
 
     Run $ gcloud help for details.
-
-API REFERENCE
-    This command uses the compute/v1 API. The full documentation for this API
-    can be found at: https://cloud.google.com/compute/
 
 NOTES
     These variants are also available:

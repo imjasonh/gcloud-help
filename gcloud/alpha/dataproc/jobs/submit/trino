@@ -1,0 +1,137 @@
+NAME
+    gcloud alpha dataproc jobs submit trino - submit a Trino job to a cluster
+
+SYNOPSIS
+    gcloud alpha dataproc jobs submit trino
+        (--cluster=CLUSTER | --cluster-labels=[KEY=VALUE,...])
+        (--execute=QUERY, -e QUERY | --file=FILE, -f FILE) [--async]
+        [--bucket=BUCKET] [--client-tags=[CLIENT_TAG,...]]
+        [--continue-on-failure] [--driver-log-levels=[PACKAGE=LEVEL,...]]
+        [--labels=[KEY=VALUE,...]]
+        [--max-failures-per-hour=MAX_FAILURES_PER_HOUR]
+        [--max-failures-total=MAX_FAILURES_TOTAL]
+        [--properties=[PARAM=VALUE,...]] [--properties-file=PROPERTIES_FILE]
+        [--query-output-format=QUERY_OUTPUT_FORMAT] [--region=REGION]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Submit a Trino job to a cluster
+
+EXAMPLES
+    To submit a Trino job with a local script, run:
+
+        $ gcloud alpha dataproc jobs submit trino --cluster=my-cluster \
+            --file=my_script.R
+
+    To submit a Trino job with inline queries, run:
+
+        $ gcloud alpha dataproc jobs submit trino --cluster=my-cluster \
+            -e="SELECT * FROM foo WHERE bar > 2"
+
+REQUIRED FLAGS
+     Exactly one of these must be specified:
+
+       --cluster=CLUSTER
+          The Dataproc cluster to submit the job to.
+
+       --cluster-labels=[KEY=VALUE,...]
+          List of label KEY=VALUE pairs to add.
+
+          Keys must start with a lowercase character and contain only hyphens
+          (-), underscores (_), lowercase characters, and numbers. Values must
+          contain only hyphens (-), underscores (_), lowercase characters, and
+          numbers.
+
+          Labels of Dataproc cluster on which to place the job.
+
+     Exactly one of these must be specified:
+
+       --execute=QUERY, -e QUERY
+          A Trino query to execute.
+
+       --file=FILE, -f FILE
+          HCFS URI of file containing the Trino script to execute.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --bucket=BUCKET
+        The Cloud Storage bucket to stage files in. Defaults to the cluster's
+        configured bucket.
+
+     --client-tags=[CLIENT_TAG,...]
+        A list of Trino client tags to attach to this query.
+
+     --continue-on-failure
+        Whether to continue if a query fails.
+
+     --driver-log-levels=[PACKAGE=LEVEL,...]
+        A list of package-to-log4j log level pairs to configure driver logging.
+        For example: root=FATAL,com.example=INFO
+
+     --labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     --max-failures-per-hour=MAX_FAILURES_PER_HOUR
+        Specifies the maximum number of times a job can be restarted per hour
+        in event of failure. Default is 0 (no retries after job failure).
+
+     --max-failures-total=MAX_FAILURES_TOTAL
+        Specifies the maximum total number of times a job can be restarted
+        after the job fails. Default is 0 (no retries after job failure).
+
+     --properties=[PARAM=VALUE,...]
+        A list of key value pairs to set Trino session properties.
+
+     --properties-file=PROPERTIES_FILE
+        Path to a local file or a file in a Cloud Storage bucket containing
+        configuration properties for the job. The client machine running this
+        command must have read permission to the file.
+
+        Specify properties in the form of property=value in the text file. For
+        example:
+
+              # Properties to set for the job:
+              key1=value1
+              key2=value2
+              # Comment out properties not used.
+              # key3=value3
+
+        If a property is set in both --properties and --properties-file, the
+        value defined in --properties takes precedence.
+
+     --query-output-format=QUERY_OUTPUT_FORMAT
+        The query output display format. See the Trino documentation for
+        supported output formats.
+
+     --region=REGION
+        Dataproc region to use. Each Dataproc region constitutes an independent
+        resource namespace constrained to deploying instances into Compute
+        Engine zones inside the region. Overrides the default dataproc/region
+        property value for this command invocation.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. These variants are also available:
+
+        $ gcloud dataproc jobs submit trino
+
+        $ gcloud beta dataproc jobs submit trino
+

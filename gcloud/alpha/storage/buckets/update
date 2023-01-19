@@ -3,12 +3,19 @@ NAME
 
 SYNOPSIS
     gcloud alpha storage buckets update URL [URL ...]
-        [--canned-acl=PREDEFINED_ACL,
-          --predefined-acl=PREDEFINED_ACL, -a PREDEFINED_ACL]
-        [--continue-on-error, -c] [--[no-]default-event-based-hold]
-        [--default-storage-class=DEFAULT_STORAGE_CLASS]
-        [--[no-]lock-retention-period] [--[no-]requester-pays]
-        [--[no-]uniform-bucket-level-access] [--[no-]versioning]
+        [--additional-headers=HEADER=VALUE] [--continue-on-error, -c]
+        [--[no-]default-event-based-hold] [--[no-]enable-autoclass]
+        [--lock-retention-period]
+        [--recovery-point-objective=SETTING, --rpo=SETTING]
+        [--[no-]requester-pays] [--[no-]uniform-bucket-level-access]
+        [--[no-]versioning]
+        [--acl-file=ACL_FILE --add-acl-grant=[ACL_GRANT,...]
+          --canned-acl=PREDEFINED_ACL, --predefined-acl=PREDEFINED_ACL,
+          -a PREDEFINED_ACL --remove-acl-grant=REMOVE_ACL_GRANT]
+        [--add-default-object-acl-grant=[DEFAULT_OBJECT_ACL_GRANT,...]
+          --default-object-acl-file=DEFAULT_OBJECT_ACL_FILE
+          --predefined-default-object-acl=PREDEFINED_DEFAULT_OBJECT_ACL
+          --remove-default-object-acl-grant=REMOVE_DEFAULT_OBJECT_ACL_GRANT]
         [--clear-cors | --cors-file=CORS_FILE]
         [--clear-default-encryption-key
           | --default-encryption-key=DEFAULT_ENCRYPTION_KEY]
@@ -45,10 +52,11 @@ POSITIONAL ARGUMENTS
         URLs of the buckets to update.
 
 FLAGS
-     --canned-acl=PREDEFINED_ACL, --predefined-acl=PREDEFINED_ACL, -a PREDEFINED_ACL
-        Applies predefined, or "canned," ACLs to a resource. See docs for a
-        list of predefined ACL constants:
-        https://cloud.google.com/storage/docs/access-control/lists#predefined-acl
+     --additional-headers=HEADER=VALUE
+        Includes arbitrary headers in storage API calls. Accepts a comma
+        separated list of key=value pairs, e.g. header1=value1,header2=value2.
+        Overrides the default storage/additional_headers property value for
+        this command invocation.
 
      --continue-on-error, -c
         If any operations are unsuccessful, the command will exit with a
@@ -63,15 +71,28 @@ FLAGS
         retroactively). Use --default-event-based-hold to enable and
         --no-default-event-based-hold to disable.
 
-     --default-storage-class=DEFAULT_STORAGE_CLASS
-        Sets the default storage class for the bucket.
+     --[no-]enable-autoclass
+        The Autoclass feature automatically selects the best storage class for
+        objects based on access patterns. Use --enable-autoclass to enable and
+        --no-enable-autoclass to disable.
 
-     --[no-]lock-retention-period
+     --lock-retention-period
         Locks an unlocked retention policy on the buckets. Caution: A locked
         retention policy cannot be removed from a bucket or reduced in
         duration. Once locked, deleting the bucket is the only way to "remove"
-        a retention policy. Use --lock-retention-period to enable and
-        --no-lock-retention-period to disable.
+        a retention policy.
+
+     --recovery-point-objective=SETTING, --rpo=SETTING
+        Sets the recovery point objective
+        (https://cloud.google.com/architecture/dr-scenarios-planning-guide#basics_of_dr_planning)
+        of a bucket. This flag can only be used with multi-region and
+        dual-region buckets. DEFAULT option is valid for multi-region and
+        dual-regions buckets. ASYNC_TURBO option is only valid for dual-region
+        buckets. If unspecified when the bucket is created, it defaults to
+        DEFAULT for dual-region and multi-region buckets. For more information,
+        see Turbo Replication
+        (https://cloud.google.com/storage/docs/turbo-replication). SETTING must
+        be one of: ASYNC_TURBO, DEFAULT.
 
      --[no-]requester-pays
         Allows you to configure a Cloud Storage bucket so that the requester
@@ -87,6 +108,42 @@ FLAGS
      --[no-]versioning
         Allows you to configure a Cloud Storage bucket to keep old versions of
         objects. Use --versioning to enable and --no-versioning to disable.
+
+     --acl-file=ACL_FILE
+        Path to a local JSON or YAML formatted file containing a valid policy.
+        The output of gcloud storage [buckets|objects] describe
+        --format="multi(acl:format=json)" is a valid file and can be edited for
+        more fine-grained control.
+
+     --add-acl-grant=[ACL_GRANT,...]
+        Key-value pairs mirroring the JSON accepted by your cloud provider. For
+        example, for Google Cloud
+        Storage,--add-acl-grant=entity=user-tim@gmail.com,role=OWNER
+
+     --canned-acl=PREDEFINED_ACL, --predefined-acl=PREDEFINED_ACL, -a PREDEFINED_ACL
+        Applies predefined, or "canned," ACLs to a resource. See docs for a
+        list of predefined ACL constants:
+        https://cloud.google.com/storage/docs/access-control/lists#predefined-acl
+
+     --remove-acl-grant=REMOVE_ACL_GRANT
+        Key-value pairs mirroring the JSON accepted by your cloud provider. For
+        example, for Google Cloud Storage, --remove-acl-grant=ENTITY, where
+        ENTITY has a valid ACL entity format, such as user-tim@gmail.com,
+        group-admins, allUsers, etc.
+
+     --add-default-object-acl-grant=[DEFAULT_OBJECT_ACL_GRANT,...]
+        Adds default object ACL grant. See --add-acl-grant help text for more
+        details.
+
+     --default-object-acl-file=DEFAULT_OBJECT_ACL_FILE
+        Sets the default object ACL from file for the bucket.
+
+     --predefined-default-object-acl=PREDEFINED_DEFAULT_OBJECT_ACL
+        Apply a predefined set of default object access controls tobuckets
+
+     --remove-default-object-acl-grant=REMOVE_DEFAULT_OBJECT_ACL_GRANT
+        Removes default object ACL grant. See --remove-acl-grant help text for
+        more details.
 
      At most one of these can be specified:
 
@@ -192,7 +249,7 @@ FLAGS
           If True, sets public access prevention to "enforced". If False, sets
           public access prevention to "inherited". For details on how exactly
           public access is blocked, see:
-          http://cloud/storage/docs/public-access-prevention. Use
+          http://cloud.google.com/storage/docs/public-access-prevention. Use
           --public-access-prevention to enable and
           --no-public-access-prevention to disable.
 

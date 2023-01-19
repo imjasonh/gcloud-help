@@ -1,0 +1,116 @@
+NAME
+    gcloud beta services api-keys create - create an API key
+
+SYNOPSIS
+    gcloud beta services api-keys create [--annotations=[KEY=VALUE,...]]
+        [--async] [--display-name=DISPLAY_NAME]
+        [--api-target=service=SERVICE,[...]
+          --allowed-application=[sha1_fingerprint=SHA1_FINGERPRINT,
+          package_name=PACKAGE_NAME,...]
+          | --allowed-bundle-ids=[ALLOWED_BUNDLE_IDS,...]
+          | --allowed-ips=[ALLOWED_IPS,...]
+          | --allowed-referrers=[ALLOWED_REFERRERS,...]] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Create an API key.
+
+EXAMPLES
+    To create a key with display name and allowed ips specified:
+
+        $ gcloud beta services api-keys create --display-name="test name" \
+            --allowed-ips=2620:15c:2c4:203:2776:1f90:6b3b:217,104.133.8.78
+
+    To create a key with annotations:
+
+        $ gcloud beta services api-keys create --annotations=foo=bar,abc=def
+
+    To create a key with allowed referrers restriction:
+
+        $ gcloud beta services api-keys create \
+            --allowed-referrers="https://www.example.com/*,http://sub.exampl\
+        e.com/*"
+
+    To create a key with allowed ios app bundle ids:
+
+        $ gcloud beta services api-keys create --allowed-bundle-ids=my.app
+
+    To create a key with allowed android application:
+
+        $ gcloud beta services api-keys create \
+            --allowed-application=sha1_fingerprint=foo1,\
+        package_name=bar.foo \
+            --allowed-application=sha1_fingerprint=foo2,package_name=foo.bar
+
+    To create a key with allowed api targets (service name only):
+
+        $ gcloud beta services api-keys create \
+            --api-target=service=bar.service.com \
+            --api-target=service=foo.service.com
+
+    To create a keys with allowed api targets (service and methods are
+    specified):
+
+        $ gcloud beta services api-keys create --flags-file=my-flags.yaml
+
+    The content of 'my-flags.yaml' is as following:
+
+        - --api-target:
+            service:
+              - "foo.service.com"
+        - --api-target:
+            service:
+              - "bar.service.com"
+            methods:
+              - "foomethod"
+              - "barmethod"
+
+FLAGS
+     --annotations=[KEY=VALUE,...]
+        Annotations are key resource. Specify annotations as a key-value
+        dictionary for small amounts of arbitrary client data.
+
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --display-name=DISPLAY_NAME
+        Display name of the key to create.
+
+     --api-target=service=SERVICE,[...]
+        Repeatable. Specify service and optionally one or multiple specific
+        methods. Both fields are case insensitive. If you need to specify
+        methods, it should be specified with the --flags-file. See $ gcloud
+        topic flags-file for details. See the examples section for how to use
+        --api-target in --flags-file.
+
+     At most one of these can be specified:
+
+       --allowed-application=[sha1_fingerprint=SHA1_FINGERPRINT,package_name=PACKAGE_NAME,...]
+          Repeatable. Specify multiple allowed applications. The accepted keys
+          are sha1_fingerprint and package_name.
+
+       --allowed-bundle-ids=[ALLOWED_BUNDLE_IDS,...]
+          iOS app's bundle ids that are allowed to use the key.
+
+       --allowed-ips=[ALLOWED_IPS,...]
+          A list of the caller IP addresses that are allowed to make API calls
+          with this key.
+
+       --allowed-referrers=[ALLOWED_REFERRERS,...]
+          A list of regular expressions for the referrer URLs that are allowed
+          to make API calls with this key.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud alpha services api-keys create
+

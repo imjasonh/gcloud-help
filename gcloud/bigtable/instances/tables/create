@@ -1,0 +1,110 @@
+NAME
+    gcloud bigtable instances tables create - create a new Cloud Bigtable table
+
+SYNOPSIS
+    gcloud bigtable instances tables create (TABLE : --instance=INSTANCE)
+        --column-families=[COLUMN_FAMILIES,...] [--deletion-protection]
+        [--splits=[SPLITS,...]] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Create a new Cloud Bigtable table.
+
+EXAMPLES
+    To create a table my-table in instance my-instance with a column family
+    my-family, run:
+
+        $ gcloud bigtable instances tables create my-table \
+            --instance=my-instance --column-families="my-family"
+
+    To create a table that has a column family named my-instance, a garbage
+    collection policy that lets data expire after 864,000 seconds, and initial
+    table splits on row keys car and key, run:
+
+        $ gcloud bigtable instances tables create my-table \
+            --instance=my-instance \
+            --column-families="my-family:maxage=864000s" --splits=car,key
+
+    To create a table my-table in instance my-instance that lets data in column
+    family my-family1 expire after 10 days and keeps a maximum of 5 cells per
+    column in column family my-family-2 if the data is less than 5 days old,
+    run:
+
+        $ gcloud bigtable instances tables create my-table \
+            --instance=my-instance \
+            --column-families="my-family-1:maxage=10d,my-family-2:maxversion\
+        s=5||maxage=5d"
+
+    To create a deletion-protected table my-table in instance my-instance with
+    a column family my-family, run:
+
+        $ gcloud bigtable instances tables create my-table \
+            --instance=my-instance --column-families="my-family" \
+            --deletion-protection
+
+    To create a table my-table without deletion protection in instance
+    my-instance with a column family my-family, run:
+
+        $ gcloud bigtable instances tables create my-table \
+            --instance=my-instance --column-families="my-family" \
+            --no-deletion-protection
+
+POSITIONAL ARGUMENTS
+     Table resource - Cloud Bigtable table to create. The arguments in this
+     group can be used to specify the attributes of this resource. (NOTE) Some
+     attributes are not given arguments in this group but can be set in other
+     ways. To set the project attribute:
+      ◆ provide the argument table on the command line with a fully specified
+        name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       TABLE
+          ID of the table or fully qualified identifier for the table. To set
+          the table attribute:
+          ▸ provide the argument table on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --instance=INSTANCE
+          Name of the Cloud Bigtable instance. To set the instance attribute:
+          ▸ provide the argument table on the command line with a fully
+            specified name;
+          ▸ provide the argument --instance on the command line.
+
+REQUIRED FLAGS
+     --column-families=[COLUMN_FAMILIES,...]
+        A double-quote (") wrapped list of family name and corresponding
+        garbage collection rules concatenated by :, where the rules are
+        optional. For example: \
+        "family_1,family_2:maxage=5d&&maxversions=2,family_3:maxage=10d||maxversions=5"
+
+OPTIONAL FLAGS
+     --deletion-protection
+        Once specified, the table is deletion protected.
+
+     --splits=[SPLITS,...]
+        Row keys where the table should initially be split. For example:
+        car,key
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the bigtableadmin/v2 API. The full documentation for this
+    API can be found at: https://cloud.google.com/bigtable/
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha bigtable instances tables create
+
+        $ gcloud beta bigtable instances tables create
+

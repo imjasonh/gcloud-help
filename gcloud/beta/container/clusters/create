@@ -24,7 +24,8 @@ SYNOPSIS
         [--no-enable-autoupgrade] [--enable-cloud-logging]
         [--enable-cloud-monitoring] [--enable-cloud-run-alpha]
         [--enable-confidential-nodes] [--enable-cost-allocation]
-        [--enable-dataplane-v2] [--enable-gke-oidc] [--enable-gvnic]
+        [--enable-dataplane-v2] [--enable-gke-oidc]
+        [--enable-google-cloud-access] [--enable-gvnic]
         [--enable-identity-service] [--enable-image-streaming]
         [--enable-intra-node-visibility] [--enable-ip-alias]
         [--enable-kubernetes-alpha] [--enable-l4-ilb-subsetting]
@@ -51,6 +52,7 @@ SYNOPSIS
         [--notification-config=[pubsub=ENABLED|DISABLED,
           pubsub-topic=TOPIC,...]] [--num-nodes=NUM_NODES; default=3]
         [--placement-type=PLACEMENT_TYPE] [--preemptible]
+        [--private-endpoint-subnetwork=NAME]
         [--private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE]
         [--release-channel=CHANNEL] [--security-group=SECURITY_GROUP]
         [--services-ipv4-cidr=CIDR] [--services-secondary-range-name=NAME]
@@ -60,7 +62,8 @@ SYNOPSIS
         [--tags=TAG,[TAG,...]] [--threads-per-core=THREADS_PER_CORE]
         [--workload-metadata=WORKLOAD_METADATA] [--workload-pool=WORKLOAD_POOL]
         [--additional-zones=ZONE,[ZONE,...] | --node-locations=ZONE,[ZONE,...]]
-        [--binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
+        [--binauthz-policy=BINAUTHZ_POLICY
+          --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
           | --enable-binauthz]
         [--cluster-dns=CLUSTER_DNS --cluster-dns-domain=CLUSTER_DNS_DOMAIN
           --cluster-dns-scope=CLUSTER_DNS_SCOPE]
@@ -94,6 +97,8 @@ SYNOPSIS
           --master-ipv4-cidr=MASTER_IPV4_CIDR --private-cluster]
         [--enable-tpu --enable-tpu-service-networking | --tpu-ipv4-cidr=CIDR]
         [--ephemeral-storage=[local-ssd-count=LOCAL-SSD-COUNT]
+          | --ephemeral-storage-local-ssd=[count=COUNT]
+          | --local-nvme-ssd-block=[count=COUNT]
           | --local-ssd-count=LOCAL_SSD_COUNT]
         [--maintenance-window=START_TIME | --maintenance-window-end=TIME_STAMP
           --maintenance-window-recurrence=RRULE
@@ -161,7 +166,7 @@ FLAGS
         ADDON must be one of: HttpLoadBalancing, HorizontalPodAutoscaling,
         KubernetesDashboard, NetworkPolicy, NodeLocalDNS, ConfigConnector,
         GcePersistentDiskCsiDriver, GcpFilestoreCsiDriver, BackupRestore,
-        Istio, ApplicationManager, CloudRun.
+        Istio, CloudRun.
 
      --allow-route-overlap
         Allows the provided cluster CIDRs to overlap with existing routes that
@@ -421,6 +426,11 @@ FLAGS
         Thus, flag --enable-gke-oidc is also deprecated. Please use
         --enable-identity-service to enable the Identity Service component
 
+     --enable-google-cloud-access
+        When you enable Google Cloud Access, any public IP addresses owned by
+        Google Cloud can reach the public control plane endpoint of your
+        cluster.
+
      --enable-gvnic
         Enable the use of GVNIC for this cluster. Requires re-creation of nodes
         using either a node-pool upgrade or node-pool creation.
@@ -600,7 +610,7 @@ FLAGS
 
      --logging=[COMPONENT,...]
         Set the components that have logging enabled. Valid component values
-        are: SYSTEM, WORKLOAD, NONE
+        are: SYSTEM, WORKLOAD, API_SERVER, CONTROLLER_MANAGER, SCHEDULER, NONE
 
         For more information, look at
         https://cloud.google.com/stackdriver/docs/solutions/gke/installing#available-logs
@@ -608,7 +618,8 @@ FLAGS
         Examples:
 
             $ gcloud beta container clusters create --logging=SYSTEM
-            $ gcloud beta container clusters create --logging=SYSTEM,WORKLOAD
+            $ gcloud beta container clusters create \
+                --logging=SYSTEM,API_SERVER,WORKLOAD
             $ gcloud beta container clusters create --logging=NONE
 
      --logging-variant=LOGGING_VARIANT
@@ -830,9 +841,9 @@ FLAGS
         UNSPECIFIED - No requirements on the placement of nodes. This is the
         default option.
 
-        COMPACT - Google will attempt to place the nodes in a close proximity
-        to each other. This helps to reduce the communication latency between
-        the nodes, but imposes additional limitations on the node pool size.
+        COMPACT - GKE will attempt to place the nodes in a close proximity to
+        each other. This helps to reduce the communication latency between the
+        nodes, but imposes additional limitations on the node pool size.
 
             $ gcloud beta container clusters create example-cluster \
                 --placement-type=COMPACT
@@ -848,6 +859,10 @@ FLAGS
         preemptible VM instances. See
         https://cloud.google.com/kubernetes-engine/docs/preemptible-vm for more
         information on how to use Preemptible VMs with Kubernetes Engine.
+
+     --private-endpoint-subnetwork=NAME
+        Sets the subnetwork GKE uses to provision the control plane's private
+        endpoint.
 
      --private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE
         Sets the type of private access to Google services over IPv6.
@@ -954,8 +969,8 @@ FLAGS
         VM instances.
 
      --stack-type=STACK_TYPE
-        IP stack type of the node VMs. Defaults to 'ipv4'. STACK_TYPE must be
-        one of: ipv4, ipv4-ipv6.
+        IP stack type of the node VMs. STACK_TYPE must be one of: ipv4,
+        ipv4-ipv6.
 
      --subnetwork=SUBNETWORK
         The Google Compute Engine subnetwork
@@ -1117,11 +1132,17 @@ FLAGS
 
      Flags for Binary Authorization:
 
+       --binauthz-policy=BINAUTHZ_POLICY
+          The relative resource name of the Binary Authorization policy to
+          audit and/or enforce. GKE policies have the following format:
+          projects/{project_number}/platforms/gke/policies/{policy_id}.
+
        At most one of these can be specified:
 
          --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
             Enable Binary Authorization for this cluster.
-            BINAUTHZ_EVALUATION_MODE must be one of: DISABLED,
+            BINAUTHZ_EVALUATION_MODE must be one of: DISABLED, MONITORING,
+            MONITORING_AND_PROJECT_SINGLETON_POLICY_ENFORCE,
             PROJECT_SINGLETON_POLICY_ENFORCE.
 
          --enable-binauthz
@@ -1148,7 +1169,7 @@ FLAGS
 
        --cluster-dns-scope=CLUSTER_DNS_SCOPE
           DNS scope for the Cloud DNS zone created - valid only with
-          --cluster-dns=clouddns
+          --cluster-dns=clouddns. Defaults to cluster.
 
           CLUSTER_DNS_SCOPE must be one of:
 
@@ -1398,7 +1419,8 @@ FLAGS
           Enables autoscaling for a node pool.
 
           Enables autoscaling in the node pool specified by --node-pool or the
-          default node pool if --node-pool is not provided.
+          default node pool if --node-pool is not provided. If not already,
+          --max-nodes or --total-max-nodes must also be set.
 
        --location-policy=LOCATION_POLICY
           Location policy specifies the algorithm used when scaling-up the node
@@ -1563,11 +1585,47 @@ FLAGS
 
           'local-ssd-count' specifies the number of local SSDs to use to back
           ephemeral storage. Local SDDs use NVMe interfaces and each is 375 GB
-          in size. If 'local-ssd-count=0', it means to disable using local SSDs
-          as ephemeral storage.
+          in size. Setting 'local-ssd-count=0' disables using local SSDs as
+          ephemeral storage.
 
           See https://cloud.google.com/compute/docs/disks/local-ssd for more
           information.
+
+       --ephemeral-storage-local-ssd=[count=COUNT]
+          Parameters for the ephemeral storage filesystem. If unspecified,
+          ephemeral storage is backed by the boot disk.
+
+          Examples:
+
+              $ gcloud beta container clusters create example_cluster \
+                  --ephemeral-storage-local-ssd count=2
+
+          'count' specifies the number of local SSDs to use to back ephemeral
+          storage. Local SDDs use NVMe interfaces and each is 375 GB in size.
+          Setting 'count=0' disables using local SSDs as ephemeral storage.
+
+          See https://cloud.google.com/compute/docs/disks/local-ssd for more
+          information.
+
+       --local-nvme-ssd-block=[count=COUNT]
+          Adds the requested local SSDs on all nodes in default node pool(s) in
+          the new cluster.
+
+          Examples:
+
+              $ gcloud beta container clusters create example_cluster \
+                  --local-nvme-ssd-block count=2
+
+          'count' must be between 1-8
+
+     New nodes, including ones created by resize or recreate, will have these
+     local SSDs.
+
+     Local SSDs have a fixed 375 GB capacity per device. The number of disks
+     that can be attached to an instance is limited by the maximum number of
+     disks available on a machine, which differs by compute zone. See
+     https://cloud.google.com/compute/docs/disks/local-ssd for more
+     information.
 
        --local-ssd-count=LOCAL_SSD_COUNT
           The number of local SSD disks to provision on each node, formatted

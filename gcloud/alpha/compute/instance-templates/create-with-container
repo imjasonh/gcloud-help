@@ -25,7 +25,12 @@ SYNOPSIS
         [--create-disk=[PROPERTY=VALUE,...]] [--description=DESCRIPTION]
         [--disk=[auto-delete=AUTO-DELETE],
           [boot=BOOT],[device-name=DEVICE-NAME],[mode=MODE],[name=NAME]]
-        [--ipv6-network-tier=IPV6_NETWORK_TIER] [--labels=[KEY=VALUE,...]]
+        [--external-ipv6-address=EXTERNAL_IPV6_ADDRESS]
+        [--external-ipv6-prefix-length=EXTERNAL_IPV6_PREFIX_LENGTH]
+        [--internal-ipv6-address=INTERNAL_IPV6_ADDRESS]
+        [--internal-ipv6-prefix-length=INTERNAL_IPV6_PREFIX_LENGTH]
+        [--ipv6-address=IPV6_ADDRESS] [--ipv6-network-tier=IPV6_NETWORK_TIER]
+        [--ipv6-prefix-length=IPV6_PREFIX_LENGTH] [--labels=[KEY=VALUE,...]]
         [--local-nvdimm=[size=SIZE]]
         [--local-ssd=[device-name=DEVICE-NAME],
           [interface=INTERFACE],[size=SIZE]] [--machine-type=MACHINE_TYPE]
@@ -391,6 +396,34 @@ FLAGS
             the instance, this option won't apply. The default value for this
             is yes.
 
+     --external-ipv6-address=EXTERNAL_IPV6_ADDRESS
+        Assigns the given external IPv6 address to the instance that is
+        created. The address must be the first IP address in the range. This
+        option can be used only when creating a single instance.
+
+     --external-ipv6-prefix-length=EXTERNAL_IPV6_PREFIX_LENGTH
+        The prefix length of the external IPv6 address range. This field should
+        be used together with --external-ipv6-address. Only the /96 IP address
+        range is supported, and the default value is 96.
+
+     --internal-ipv6-address=INTERNAL_IPV6_ADDRESS
+        Assigns the given internal IPv6 address or range to the instance that
+        is created. The address must be the first IP address in the range or a
+        /96 IP address range. This option can be used only when creating a
+        single instance.
+
+     --internal-ipv6-prefix-length=INTERNAL_IPV6_PREFIX_LENGTH
+        Optional field that indicates the prefix length of the internal IPv6
+        address range, should be used together with --internal-ipv6-address.
+        Only /96 is supported and the default value is 96. If not set, the
+        prefix length from --internal-ipv6-address will be used or assigned a
+        default value of 96.
+
+     --ipv6-address=IPV6_ADDRESS
+        Assigns the given external IPv6 address to the instance that is
+        created. The address must be the first IP address in the range. This
+        option can be used only when creating a single instance.
+
      --ipv6-network-tier=IPV6_NETWORK_TIER
         Specifies the IPv6 network tier that will be used to configure the
         instance network interface IPv6 access config. IPV6_NETWORK_TIER must
@@ -398,6 +431,11 @@ FLAGS
 
          PREMIUM
             High quality, Google-grade network tier.
+
+     --ipv6-prefix-length=IPV6_PREFIX_LENGTH
+        The prefix length of the external IPv6 address range. This field should
+        be used together with --ipv6-address. Only the /96 IP address range is
+        supported, and the default value is 96.
 
      --labels=[KEY=VALUE,...]
         List of label KEY=VALUE pairs to add.
@@ -550,13 +588,17 @@ FLAGS
 
                 --aliases="10.128.1.0/24;range1:/32"
 
-                Each IP alias range consists of a range name and an CIDR netmask
-                (e.g. `/24`) separated by a colon, or just the netmask.
+                Each IP alias range consists of a range name and a CIDR netmask
+                (e.g. `/24`) separated by a colon or just the netmask.
                 The range name is the name of the range within the network
                 interface's subnet from which to allocate an IP alias range. If
                 unspecified, it defaults to the primary IP range of the subnet.
                 The IP allocator will pick an available range with the specified
                 netmask and allocate it to this network interface.
+
+         network-attachment
+            Specifies the network attachment that this interface should connect
+            to. Mutually exclusive with --network and --subnet flags.
 
      --network-tier=NETWORK_TIER
         Specifies the network tier that will be used to configure the instance.

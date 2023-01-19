@@ -13,9 +13,9 @@ SYNOPSIS
         [--other-files=DEVICE_PATH=FILE_PATH,[...]] [--record-video]
         [--results-bucket=RESULTS_BUCKET] [--results-dir=RESULTS_DIR]
         [--results-history-name=RESULTS_HISTORY_NAME]
-        [--scenario-numbers=int,[int,...]] [--test-special-entitlements]
-        [--filter=EXPRESSION] [--limit=LIMIT] [--page-size=PAGE_SIZE]
-        [--sort-by=[FIELD,...]] [GCLOUD_WIDE_FLAG ...]
+        [--robo-script=ROBO_SCRIPT] [--scenario-numbers=int,[int,...]]
+        [--test-special-entitlements] [--filter=EXPRESSION] [--limit=LIMIT]
+        [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) gcloud alpha firebase test ios run invokes and monitors tests in
@@ -138,7 +138,8 @@ COMMONLY USED FLAGS
         ◆ --timeout 100 is 100 seconds
 
      --type=TYPE
-        The type of iOS test to run. TYPE must be one of: xctest, game-loop.
+        The type of iOS test to run. TYPE must be one of: xctest, game-loop,
+        robo.
 
      --xcode-version=XCODE_VERSION
         The version of Xcode that should be used to run an XCTest. Defaults to
@@ -164,8 +165,8 @@ FLAGS
      --app=APP
         The path to the application archive (.ipa file) for game-loop testing.
         The path may be in the local filesystem or in Google Cloud Storage
-        using gs:// notation. This flag is only valid when --type=game-loop is
-        also set.
+        using gs:// notation. This flag is only valid when --type is game-loop
+        or robo.
 
      --async
         Invoke a test asynchronously without waiting for test results.
@@ -239,6 +240,14 @@ FLAGS
         default: the bundle ID for the iOS application). All tests which use
         the same history name will have their results grouped together in the
         Firebase console in a time-ordered test history list.
+
+     --robo-script=ROBO_SCRIPT
+        The path to a Robo Script JSON file. The path may be in the local
+        filesystem or in Google Cloud Storage using gs:// notation. You can
+        guide the Robo test to perform specific actions by specifying a Robo
+        Script with this argument. Learn more at
+        https://firebase.google.com/docs/test-lab/robo-ux-test#scripting. This
+        flag is only valid when --type=robo is also set.
 
      --scenario-numbers=int,[int,...]
         A list of game-loop scenario numbers which will be run as part of the

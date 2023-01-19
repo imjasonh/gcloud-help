@@ -1,0 +1,223 @@
+NAME
+    gcloud alpha container bare-metal clusters update - update an Anthos
+        cluster on bare metal
+
+SYNOPSIS
+    gcloud alpha container bare-metal clusters update
+        (CLUSTER : --location=LOCATION) [--admin-users=ADMIN_USERS]
+        [--allow-missing] [--async] [--description=DESCRIPTION]
+        [--enable-application-logs] [--login-user=LOGIN_USER]
+        [--maintenance-address-cidr-blocks=[MAINTENANCE_ADDRESS_CIDR_BLOCKS,
+          ...]] [--validate-only] [--version=VERSION]
+        [--api-server-args=[KEY=VALUE,...]
+          --control-plane-node-configs-from-file=CONTROL_PLANE_NODE_CONFIGS_FROM_FILE --control-plane-node-labels=[KEY=VALUE,
+          ...] --control-plane-node-taints=[KEY=VALUE:EFFECT,...]]
+        [--metal-lb-address-pools-from-file=METAL_LB_ADDRESS_POOLS_FROM_FILE
+          --metal-lb-load-balancer-node-configs-from-file=METAL_LB_LOAD_BALANCER_NODE_CONFIGS_FROM_FILE --metal-lb-load-balancer-node-labels=[KEY=VALUE,
+          ...] --metal-lb-load-balancer-node-taints=[KEY=VALUE:EFFECT,...]]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Update an Anthos cluster on bare metal.
+
+EXAMPLES
+    To update a cluster named my-cluster managed in location us-west1, run:
+
+        $ gcloud alpha container bare-metal clusters update my-cluster \
+            --location=us-west1
+
+POSITIONAL ARGUMENTS
+     Cluster resource - cluster to update The arguments in this group can be
+     used to specify the attributes of this resource. (NOTE) Some attributes
+     are not given arguments in this group but can be set in other ways. To set
+     the project attribute:
+      ◆ provide the argument cluster on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       CLUSTER
+          ID of the cluster or fully qualified identifier for the cluster. To
+          set the cluster attribute:
+          ▸ provide the argument cluster on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          Google Cloud location for the cluster. To set the location attribute:
+          ▸ provide the argument cluster on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property container_bare_metal/location.
+
+FLAGS
+     Anthos on bare metal cluster security configuration.
+
+       User cluster authorization configurations to bootstrap onto the admin
+       cluster
+
+         --admin-users=ADMIN_USERS
+            Users that will be granted the cluster-admin role on the cluster,
+            providing full access to the cluster.
+
+     --allow-missing
+        If set, and the Anthos cluster on bare metal is not found, the update
+        request will try to create a new cluster with the provided
+        configuration.
+
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --description=DESCRIPTION
+        Description for the resource.
+
+     Anthos on bare metal cluster operations configuration.
+
+       --enable-application-logs
+          Whether collection of application logs/metrics should be enabled (in
+          addition to system logs/metrics).
+
+     Anthos on bare metal node access related settings for the user cluster.
+
+       --login-user=LOGIN_USER
+          User name used to access node machines.
+
+     Anthos on bare metal cluster maintenance configuration.
+
+       --maintenance-address-cidr-blocks=[MAINTENANCE_ADDRESS_CIDR_BLOCKS,...]
+          IPv4 addresses to be placed into maintenance mode.
+
+     --validate-only
+        If set, only validate the request, but do not actually perform the
+        operation.
+
+     --version=VERSION
+        Anthos cluster on bare metal version for the user cluster resource.
+
+     Anthos on bare metal cluster control plane configuration.
+
+       --api-server-args=[KEY=VALUE,...]
+          API Server argument configuration.
+
+       Anthos on bare metal cluster control plane node pool configuration.
+
+         Anthos on bare metal node pool configuration for control plane nodes.
+
+           Anthos on bare metal node configuration for control plane nodes.
+
+             --control-plane-node-configs-from-file=CONTROL_PLANE_NODE_CONFIGS_FROM_FILE
+                Path of the YAML/JSON file that contains the control plane node
+                configs.
+
+                Examples:
+
+                    nodeConfigs:
+                    - nodeIP: 10.200.0.10
+                      labels:
+                        node1: label1
+                        node2: label2
+                    - nodeIP: 10.200.0.11
+                      labels:
+                        node3: label3
+                        node4: label4
+
+                List of supported fields in nodeConfigs
+
+                  KEY             VALUE                        NOTE
+                  nodeIP          string                       required, mutable
+                  labels          one or more key-val pairs    optional, mutable
+
+             --control-plane-node-labels=[KEY=VALUE,...]
+                Labels assigned to nodes of a node pool.
+
+             --control-plane-node-taints=[KEY=VALUE:EFFECT,...]
+                Node taint applied to every Kubernetes node in a node pool.
+
+     Anthos on bare metal cluster load balancer configuration.
+
+       Populate one of the load balancers.
+
+         MetalLB Configuration
+
+           --metal-lb-address-pools-from-file=METAL_LB_ADDRESS_POOLS_FROM_FILE
+              Path of the YAML/JSON file that contains the MetalLB address
+              pools.
+
+              Examples:
+
+                  addressPools:
+                  - pool: pool-1
+                    addresses:
+                    - 10.200.0.14/32
+                    - 10.200.0.15/32
+                    avoidBuggyIPs: True
+                    manualAssign: True
+                  - pool: pool-2
+                    addresses:
+                    - 10.200.0.16/32
+                    avoidBuggyIPs: False
+                    manualAssign: False
+
+              List of supported fields in addressPools
+
+                KEY             VALUE                    NOTE
+                pool            string                   required, mutable
+                addresses       one or more IP ranges    required, mutable
+                avoidBuggyIPs   bool                     optional, mutable,
+                                                         defaults to False
+                manualAssign    bool                     optional, mutable,
+                                                         defaults to False
+
+           Anthos on bare metal node pool configuration for MetalLB load
+           balancer nodes.
+
+             MetalLB Node Pool configuration.
+
+               --metal-lb-load-balancer-node-configs-from-file=METAL_LB_LOAD_BALANCER_NODE_CONFIGS_FROM_FILE
+                  Path of the YAML/JSON file that contains the Metal LB node
+                  configs.
+
+                  Examples:
+
+                      nodeConfigs:
+                      - nodeIP: 10.200.0.10
+                        labels:
+                          node1: label1
+                          node2: label2
+                      - nodeIP: 10.200.0.11
+                        labels:
+                          node3: label3
+                          node4: label4
+
+                  List of supported fields in nodeConfigs
+
+                    KEY             VALUE                        NOTE
+                    nodeIP          string                       required,
+                                                                 mutable
+                    labels          one or more key-val pairs    optional,
+                                                                 mutable
+
+               --metal-lb-load-balancer-node-labels=[KEY=VALUE,...]
+                  Labels assigned to nodes of a MetalLB node pool.
+
+               --metal-lb-load-balancer-node-taints=[KEY=VALUE:EFFECT,...]
+                  Node taint applied to every node in a MetalLB node pool.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

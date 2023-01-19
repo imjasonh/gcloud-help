@@ -6,7 +6,8 @@ SYNOPSIS
         [--order=ORDER; default="desc"]
         [--billing-account=BILLING_ACCOUNT_ID | --folder=FOLDER_ID
           | --organization=ORGANIZATION_ID | --project=PROJECT_ID]
-        [--bucket=BUCKET --location=LOCATION --view=VIEW] [--limit=LIMIT]
+        [--resource-names=[RESOURCE,...]
+          | --bucket=BUCKET --location=LOCATION --view=VIEW] [--limit=LIMIT]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -49,13 +50,13 @@ EXAMPLES
         $ gcloud beta logging read --bucket=<bucket-id> \
             --location=[LOCATION] --limit=1
 
-    To read a log entry from the global Required log bucket using the bucket's
-    Default log view:
+    To read a log entry from the global _Required log bucket using the bucket's
+    _Default log view:
 
         $ gcloud beta logging read "" --bucket=_Required --location=global \
             --view=_Default --limit=1
 
-    To read a log entry from a log bucket using the bucket's AllLogs log view:
+    To read a log entry from a log bucket using the bucket's _AllLogs log view:
 
         $ gcloud beta logging read "" --bucket=[BUCKET_ID] \
             --location=[LOCATION] --view=_AllLogs --limit=1
@@ -65,6 +66,15 @@ EXAMPLES
 
         $ gcloud beta logging read "" --bucket=[BUCKET_ID] \
             --location=[LOCATION] --view=[VIEW_ID] --limit=1
+
+    To read log entries from multiple resources, specify them as a
+    comma-delimeted sequence with --resource-names. Each resource name can be
+    specified either as a top-level resource (e.g., projects/[PROJECT_ID],
+    folders/[FOLDER_ID], etc.) or as a Log View resource (e.g.,
+    projects/[PROJECT_ID]/locations/[LOCATION]/buckets/[BUCKET_NAME]/views/[VIEW_ID]).
+
+        $ gcloud beta logging read "" \
+            --resource-names=[RESOURCE-1],[RESOURCE-2]
 
 POSITIONAL ARGUMENTS
      [LOG_FILTER]
@@ -85,16 +95,16 @@ FLAGS
      At most one of these can be specified:
 
        --billing-account=BILLING_ACCOUNT_ID
-          Read log entries associated with this billing account.
+          Billing account of the log entries to read.
 
        --folder=FOLDER_ID
-          Read log entries associated with this folder.
+          Folder of the log entries to read.
 
        --organization=ORGANIZATION_ID
-          Read log entries associated with this organization.
+          Organization of the log entries to read.
 
        --project=PROJECT_ID
-          Read log entries associated with this project.
+          Project of the log entries to read.
 
           The Google Cloud project ID to use for this invocation. If omitted,
           then the current project is assumed; the current project can be
@@ -107,29 +117,38 @@ FLAGS
           and billing. To specify a different project for quota and billing,
           use --billing-project or billing/quota_project property.
 
-     These arguments are used in conjunction with the parent to construct a
-     view resource.
+     At most one of these can be specified:
 
-       --bucket=BUCKET
-          Id of the log bucket. If this argument is provided then --location
-          and --view must also be specified.
+       --resource-names=[RESOURCE,...]
+          Resource name(s) to read logs from. A resource can either be an
+          top-level resource (e.g., "projects/my-project") or a full log view
+          resource path (e.g.,
+          "projects/my-project/locations/my-location/buckets/my-bucket/views/my-view").
+          Multiple resources can be specified, separated by a comma.
 
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
+       These arguments are used in conjunction with the parent to construct a
+       view resource.
 
-       --location=LOCATION
-          Location of the log bucket. If this argument is provided then
-          --bucket and --view must also be specified.
+         --bucket=BUCKET
+            Id of the log bucket. If this argument is provided then --location
+            and --view must also be specified.
 
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
 
-       --view=VIEW
-          Id of the view. If this argument is provided then --location and
-          --bucket must also be specified.
+         --location=LOCATION
+            Location of the log bucket. If this argument is provided then
+            --bucket and --view must also be specified.
 
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --view=VIEW
+            Id of the view. If this argument is provided then --location and
+            --bucket must also be specified.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
 
 LIST COMMAND FLAGS
      --limit=LIMIT

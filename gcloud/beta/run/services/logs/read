@@ -1,0 +1,158 @@
+NAME
+    gcloud beta run services logs read - read logs for a service
+
+SYNOPSIS
+    gcloud beta run services logs read SERVICE
+        [--freshness=FRESHNESS; default="1d"] [--log-filter=LOG_FILTER]
+        [--order=ORDER; default="desc"]
+        [--platform=PLATFORM; default="managed"]
+        [--region=REGION
+          | --cluster=CLUSTER --cluster-location=CLUSTER_LOCATION
+          | --context=CONTEXT --kubeconfig=KUBECONFIG] [--limit=LIMIT]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) gcloud beta run services logs read reads log entries. Log entries
+    matching --log-filter are returned according to the specified --order. If
+    the log entries come from multiple logs, then entries from different logs
+    might be intermingled in the results.
+
+EXAMPLES
+    To read log entries from for a Cloud Run Service, run:
+
+        $ gcloud beta run services logs read my-service
+
+    To read log entries with severity ERROR or higher, run:
+
+        $ gcloud beta run services logs read my-service \
+            --log-filter="severity>=ERROR"
+
+    To read log entries written in a specific time window, run:
+
+        $ gcloud beta run services logs read my-service \
+            --log-filter='timestamp<="2015-05-31T23:59:59Z" AND
+         timestamp>="2015-05-31T00:00:00Z"'
+
+    To read up to 10 log entries in your service payloads that include the word
+    SearchText and format the output in JSON format, run:
+
+        $ gcloud beta run services logs read my-service \
+            --log-filter="textPayload:SearchText" --limit=10 --format=json
+
+    Detailed information about filters can be found at:
+    https://cloud.google.com/logging/docs/view/advanced_filters
+
+POSITIONAL ARGUMENTS
+     SERVICE
+        Name for a Cloud Run service.
+
+FLAGS
+     --freshness=FRESHNESS; default="1d"
+        Return entries that are not older than this value. Works only with DESC
+        ordering and filters without a timestamp. See $ gcloud topic datetimes
+        for information on duration formats.
+
+     --log-filter=LOG_FILTER
+        Filter expression that specifies the log entries to return. Detailed
+        information about filters can be found at:
+        https://cloud.google.com/logging/docs/view/logging-query-language
+
+     --order=ORDER; default="desc"
+        Ordering of returned log entries based on timestamp field. ORDER must
+        be one of: desc, asc.
+
+     --platform=PLATFORM; default="managed"
+        Target platform for running commands. Alternatively, set the property
+        [run/platform]. PLATFORM must be one of:
+
+         managed
+            Fully managed version of Cloud Run. Use with the --region flag or
+            set the [run/region] property to specify a Cloud Run region.
+         gke
+            Cloud Run for Anthos on Google Cloud. Use with the --cluster and
+            --cluster-location flags or set the [run/cluster] and
+            [run/cluster_location] properties to specify a cluster in a given
+            zone.
+         kubernetes
+            Use a Knative-compatible kubernetes cluster. Use with the
+            --kubeconfig and --context flags to specify a kubeconfig file and
+            the context for connecting.
+
+     Arguments to locate resources, depending on the platform used.
+
+     At most one of these can be specified:
+
+       Only applicable if connecting to Cloud Run (fully managed). Specify
+       --platform=managed to use:
+
+         --region=REGION
+            Region in which the resource can be found. Alternatively, set the
+            property [run/region].
+
+       Only applicable if connecting to Cloud Run for Anthos deployed on Google
+       Cloud. Specify --platform=gke to use:
+
+         Cluster resource - Kubernetes Engine cluster to connect to. The
+         arguments in this group can be used to specify the attributes of this
+         resource. (NOTE) Some attributes are not given arguments in this group
+         but can be set in other ways. To set the project attribute:
+          ▫ provide the argument --cluster on the command line with a fully
+            specified name;
+          ▫ set the property run/cluster with a fully specified name;
+          ▫ specify the cluster from a list of available clusters with a
+            fully specified name;
+          ▫ provide the argument --project on the command line;
+          ▫ set the property core/project.
+
+           --cluster=CLUSTER
+              ID of the cluster or fully qualified identifier for the cluster.
+              To set the cluster attribute:
+              ◇ provide the argument --cluster on the command line;
+              ◇ set the property run/cluster;
+              ◇ specify the cluster from a list of available clusters.
+
+           --cluster-location=CLUSTER_LOCATION
+              Zone in which the cluster is located. Alternatively, set the
+              property [run/cluster_location]. To set the location attribute:
+              ◇ provide the argument --cluster on the command line with a
+                fully specified name;
+              ◇ set the property run/cluster with a fully specified name;
+              ◇ specify the cluster from a list of available clusters with a
+                fully specified name;
+              ◇ provide the argument --cluster-location on the command line;
+              ◇ set the property run/cluster_location;
+              ◇ specify the cluster location from a list of available zones.
+
+       Only applicable if connecting to Cloud Run for Anthos deployed on
+       VMware. Specify --platform=kubernetes to use:
+
+         --context=CONTEXT
+            The name of the context in your kubectl config file to use for
+            connecting.
+
+         --kubeconfig=KUBECONFIG
+            The absolute path to your kubectl config file. If not specified,
+            the colon- or semicolon-delimited list of paths specified by
+            $KUBECONFIG will be used. If $KUBECONFIG is unset, this defaults to
+            ~/.kube/config.
+
+LIST COMMAND FLAGS
+     --limit=LIMIT
+        Maximum number of resources to list. The default is unlimited. This
+        flag interacts with other flags that are applied in this order:
+        --flatten, --sort-by, --filter, --limit.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud alpha run services logs read
+

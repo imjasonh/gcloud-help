@@ -4,7 +4,7 @@ NAME
 
 SYNOPSIS
     gcloud beta compute networks subnets create NAME --network=NETWORK
-        --range=RANGE [--description=DESCRIPTION] [--enable-flow-logs]
+        [--description=DESCRIPTION] [--enable-flow-logs]
         [--enable-private-ip-google-access]
         [--ipv6-access-type=IPV6_ACCESS_TYPE]
         [--logging-aggregation-interval=LOGGING_AGGREGATION_INTERVAL]
@@ -13,9 +13,11 @@ SYNOPSIS
         [--logging-metadata=LOGGING_METADATA]
         [--logging-metadata-fields=[METADATA_FIELD,...]]
         [--private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE]
-        [--purpose=PURPOSE] [--region=REGION] [--role=ROLE]
-        [--secondary-range=PROPERTY=VALUE,[...]] [--stack-type=STACK_TYPE]
-        [GCLOUD_WIDE_FLAG ...]
+        [--purpose=PURPOSE] [--range=RANGE] [--region=REGION]
+        [--reserved-internal-range=RESERVED_INTERNAL_RANGE] [--role=ROLE]
+        [--secondary-range=PROPERTY=VALUE,[...]]
+        [--secondary-range-with-reserved-internal-range=RANGE_NAME=INTERNAL_RANGE_URL,
+          [...]] [--stack-type=STACK_TYPE] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) gcloud beta compute networks subnets create define a subnetwork for
@@ -35,9 +37,6 @@ POSITIONAL ARGUMENTS
 REQUIRED FLAGS
      --network=NETWORK
         The network to which the subnetwork belongs.
-
-     --range=RANGE
-        The IP space allocated to this subnetwork in CIDR format.
 
 OPTIONAL FLAGS
      --description=DESCRIPTION
@@ -111,6 +110,9 @@ OPTIONAL FLAGS
          REGIONAL_MANAGED_PROXY
             Reserved for Regional HTTP(S) Load Balancing.
 
+     --range=RANGE
+        The IP space allocated to this subnetwork in CIDR format.
+
      --region=REGION
         Region of the subnetwork to create. If not specified, you might be
         prompted to select a region (interactive mode only).
@@ -131,6 +133,23 @@ OPTIONAL FLAGS
         Alternatively, the region can be stored in the environment variable
         CLOUDSDK_COMPUTE_REGION.
 
+     --reserved-internal-range=RESERVED_INTERNAL_RANGE
+        If set, the primary IP range of the subnetwork will be associated with
+        the given InternalRange resource.
+
+        If --range is set, the subnetwork will only use the given IP range. It
+        has to be contained by the IP range defined by the InternalRange
+        resource.
+
+        For example, --range=10.0.0.0/24 --reserved-internal-range
+        //networkconnectivity.googleapis.com/projects/PROJECT/locations/global/internalRanges/RANGE
+
+        If --range is not set, the subnetwork will use the entire IP range
+        defined by the InternalRange resource.
+
+        For example, --reserved-internal-range
+        //networkconnectivity.googleapis.com/projects/PROJECT/locations/global/internalRanges/RANGE
+
      --role=ROLE
         The role of subnetwork. This field is required when the purpose is set
         to REGIONAL_MANAGED_PROXY or INTERNAL_HTTPS_LOAD_BALANCER. ROLE must be
@@ -149,6 +168,17 @@ OPTIONAL FLAGS
 
         ◆ RANGE_NAME - Name of the secondary range.
         ◆ RANGE - IP range in CIDR format.
+
+     --secondary-range-with-reserved-internal-range=RANGE_NAME=INTERNAL_RANGE_URL,[...]
+        Adds secondary IP ranges that are associated with InternalRange
+        resources.
+
+        For example, --secondary-range-with-reserved-internal-range
+        range1=//networkconnectivity.googleapis.com/projects/PROJECT/locations/global/internalRanges/RANGE
+        adds a secondary range with the reserved internal range resource.
+
+        ◆ RANGE_NAME - Name of the secondary range.
+        ◆ INTERNAL_RANGE_URL - URL of an InternalRange resource.
 
      --stack-type=STACK_TYPE
         The stack type for this subnet. Determines if IPv6 is enabled on the

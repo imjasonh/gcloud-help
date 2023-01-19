@@ -13,9 +13,10 @@ SYNOPSIS
           | --target-service-attachment=TARGET_SERVICE_ATTACHMENT
           | --target-ssl-proxy=TARGET_SSL_PROXY
           | --target-tcp-proxy=TARGET_TCP_PROXY
-          | --target-vpn-gateway=TARGET_VPN_GATEWAY) [--allow-global-access]
-        [--allow-psc-global-access] [--description=DESCRIPTION]
-        [--disable-automate-dns-zone] [--ip-protocol=IP_PROTOCOL]
+          | --target-vpn-gateway=TARGET_VPN_GATEWAY) [--address=ADDRESS]
+        [--allow-global-access] [--allow-psc-global-access]
+        [--description=DESCRIPTION] [--disable-automate-dns-zone]
+        [--ip-protocol=IP_PROTOCOL] [--ip-version=IP_VERSION]
         [--is-mirroring-collector]
         [--load-balancing-scheme=LOAD_BALANCING_SCHEME] [--network=NETWORK]
         [--network-tier=NETWORK_TIER]
@@ -27,7 +28,6 @@ SYNOPSIS
         [--target-pool-region=TARGET_POOL_REGION]
         [--target-service-attachment-region=TARGET_SERVICE_ATTACHMENT_REGION]
         [--target-vpn-gateway-region=TARGET_VPN_GATEWAY_REGION]
-        [--address=ADDRESS | --ip-version=IP_VERSION]
         [--address-region=ADDRESS_REGION | --global-address]
         [--backend-service-region=BACKEND_SERVICE_REGION
           | --global-backend-service] [--global | --region=REGION]
@@ -168,11 +168,37 @@ REQUIRED FLAGS
           forwarded traffic. Acceptable values for --ports flag are: 500, 4500.
 
 OPTIONAL FLAGS
+     --address=ADDRESS
+        The IP address that the forwarding rule serves. When a client sends
+        traffic to this IP address, the forwarding rule directs the traffic to
+        the target that you specify in the forwarding rule.
+
+        If you don't specify a reserved IP address, an ephemeral IP address is
+        assigned. You can specify the IP address as a literal IP address or as
+        a reference to an existing Address resource. The following examples are
+        all valid:
+        ◆ 100.1.2.3
+        ◆ 2600:1901::/96
+        ◆ https://compute.googleapis.com/compute/v1/projects/project-1/regions/us-central1/addresses/address-1
+        ◆ projects/project-1/regions/us-central1/addresses/address-1
+        ◆ regions/us-central1/addresses/address-1
+        ◆ global/addresses/address-1
+        ◆ address-1
+
+        The load-balancing-scheme (EXTERNAL, EXTERNAL_MANAGED, INTERNAL,
+        INTERNAL_SELF_MANAGED, INTERNAL_MANAGED) and the target of the
+        forwarding rule determine the type of IP address that you can use. The
+        address type must be external for load-balancing-scheme EXTERNAL or
+        EXTERNAL_MANAGED. For other load-balancing-schemes, the address type
+        must be internal. For detailed information, refer to
+        https://cloud.google.com/load-balancing/docs/forwarding-rule-concepts#ip_address_specifications.
+
      --allow-global-access
         If True, then clients from all regions can access this internal
         forwarding rule. This can only be specified for forwarding rules with
-        the LOAD_BALANCING_SCHEME set to INTERNAL and the target must be either
-        a backend service or a target instance.
+        the LOAD_BALANCING_SCHEME set to INTERNAL or INTERNAL_MANAGED. For
+        forwarding rules of type INTERNAL, the target must be either a backend
+        service or a target instance.
 
      --allow-psc-global-access
         If specified, then clients from all regions can access this Private
@@ -201,6 +227,10 @@ OPTIONAL FLAGS
 
         IP_PROTOCOL must be one of: AH, ESP, ICMP, SCTP, TCP, UDP, L3_DEFAULT,
         ALL.
+
+     --ip-version=IP_VERSION
+        Version of the IP address to be allocated or assigned. The default is
+        IPv4. IP_VERSION must be one of: IPV4, IPV6.
 
      --is-mirroring-collector
         If set, this forwarding rule can be used as a collector for packet
@@ -309,36 +339,6 @@ OPTIONAL FLAGS
         Region of the VPN gateway to operate on. If not specified, the region
         is set to the region of the forwarding rule. Overrides the default
         compute/region property value for this command invocation.
-
-     At most one of these can be specified:
-
-       --address=ADDRESS
-          IP address that the forwarding rule serves. When a client sends
-          traffic to this IP address, the forwarding rule directs the traffic
-          to the target that you specify in the forwarding rule.
-
-          If you don't specify a reserved IP address, an ephemeral IP address
-          is assigned. You can specify the IP address as a literal IP address
-          or a reference to an existing Address resource. The following
-          examples are all valid:
-          ▸ 100.1.2.3
-          ▸ https://compute.googleapis.com/compute/v1/projects/project-1/regions/us-central1/addresses/address-1
-          ▸ projects/project-1/regions/us-central1/addresses/address-1
-          ▸ regions/us-central1/addresses/address-1
-          ▸ global/addresses/address-1
-          ▸ address-1
-
-          The load-balancing-scheme (EXTERNAL, EXTERNAL_MANAGED, INTERNAL,
-          INTERNAL_SELF_MANAGED, INTERNAL_MANAGED) and the forwarding rule's
-          target determine the type of IP address that you can use. The address
-          type must be external for load-balancing-scheme EXTERNAL or
-          EXTERNAL_MANAGED, and for the other load-balancing-schemes the
-          address must be internal. For detailed information, refer to
-          https://cloud.google.com/load-balancing/docs/forwarding-rule-concepts#ip_address_specifications.
-
-       --ip-version=IP_VERSION
-          Version of the IP address to be allocated if no --address is given.
-          The default is IPv4. IP_VERSION must be one of: IPV4, IPV6.
 
      At most one of these can be specified:
 

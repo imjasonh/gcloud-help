@@ -5,29 +5,52 @@ NAME
 SYNOPSIS
     gcloud alpha immersive-stream xr instances update
         (INSTANCE : --location=LOCATION)
-        (--update-region=[capacity=CAPACITY],[region=REGION]
+        (--add-region=[capacity=CAPACITY],[region=REGION]
+          | --fallback-url=FALLBACK_URL | --remove-region=REMOVE_REGION
+          | --update-region=[capacity=CAPACITY],[region=REGION]
           | --version=VERSION) [--async] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Update an Immersive Stream for XR service instance. This command
-    can either be used to update the capacity for an existing region of the
-    service instance or to update the content build version served by the
-    instance. If updating the capacity, only one region may be updated for each
-    command execution, and the new capacity may not be 0 or exceed the quota
-    limit.
+    can be used to update one of the following:
+      ▪ the capacity for an existing region of the service instance
+      ▪ the content build version served by the instance
+      ▪ the fallback url to redirect users to when the service instance is
+        unable to provide the streaming experience
+
+    If updating the capacity, only one region may be updated for each command
+    execution, and the new capacity may not be 0 or exceed the quota limit.
 
 EXAMPLES
-    To update the service instance 'my-instance' to have capacity 2 for region
-    us-west1, run:
+    To update the service instance my-instance to have capacity 2 for an
+    existing region us-west1, run:
 
         $ gcloud alpha immersive-stream xr instances update my-instance \
             --update-region=region=us-west1,capacity=2
 
-    To update the service instance 'my-instance' to serve content build version
-    'my-version', run:
+    To update the service instance my-instance to have capacity 1 for a new
+    region us-east4, run:
+
+        $ gcloud alpha immersive-stream xr instances update my-instance \
+            --add-region=region=us-east4,capacity=1
+
+    To update the service instance my-instance to remove the existing region
+    us-east4, run:
+
+        $ gcloud alpha immersive-stream xr instances update my-instance \
+            --remove-region=us-east4
+
+    To update the service instance my-instance to serve content version
+    my-version, run:
 
         $ gcloud alpha immersive-stream xr instances update my-instance \
             --version=my-version
+
+    To update the service instance my-instance to use fallback url
+    https://www.google.com, run:
+
+        $ gcloud alpha immersive-stream xr instances update my-instance \
+            --fallback-url="https://www.google.com"
 
 POSITIONAL ARGUMENTS
      Instance resource - Immersive Stream for XR service instance to update.
@@ -61,6 +84,22 @@ REQUIRED FLAGS
      Update options
 
      Exactly one of these must be specified:
+
+       --add-region=[capacity=CAPACITY],[region=REGION]
+          Flag used to specify region and capacity required for the service
+          instance's availability.
+
+          'region' is the region in which the instance is deployed.
+
+          'capacity' is the maxium number of concurrent streaming sessions that
+          the instance can support in the given region.
+
+       --fallback-url=FALLBACK_URL
+          Fallback url to redirect users to when this service instance is
+          unable to provide the streaming experience
+
+       --remove-region=REMOVE_REGION
+          Region to remove
 
        --update-region=[capacity=CAPACITY],[region=REGION]
           Flag used to specify region and capacity required for the service

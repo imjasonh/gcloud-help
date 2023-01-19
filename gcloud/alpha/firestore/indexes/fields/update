@@ -4,9 +4,8 @@ NAME
 
 SYNOPSIS
     gcloud alpha firestore indexes fields update
-        (FIELD : --collection-group=COLLECTION_GROUP)
-        (--clear-exemption | --disable-indexes
-          | --index=[array-config=ARRAY-CONFIG],[order=ORDER]) [--async]
+        (FIELD : --collection-group=COLLECTION_GROUP --database=DATABASE)
+        (--clear-exemption | --disable-indexes | --index=KEY=VALUE) [--async]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -21,6 +20,9 @@ EXAMPLES
 
         $ gcloud alpha firestore indexes fields update timestamp \
             --collection-group=Events --disable-indexes
+
+        $ gcloud alpha firestore indexes fields update timestamp \
+            --database=(default) --collection-group=Events --disable-indexes
 
     The following command creates an exemption for the timestamp field in the
     Events collection group, in which the list of indexes is explicitly set to
@@ -45,12 +47,7 @@ POSITIONAL ARGUMENTS
       ◆ provide the argument field on the command line with a fully specified
         name;
       ◆ set the property core/project;
-      ◆ provide the argument --project on the command line. To set the
-        database attribute:
-      ◆ provide the argument field on the command line with a fully specified
-        name;
-      ◆ provide the argument [--database] on the command line (currently
-        '(default)' is the only supported value).
+      ◆ provide the argument --project on the command line.
 
      This must be specified.
 
@@ -70,6 +67,15 @@ POSITIONAL ARGUMENTS
             specified name;
           ▸ provide the argument --collection-group on the command line.
 
+       --database=DATABASE
+          Database of the field.
+
+          To set the database attribute:
+          ▸ provide the argument field on the command line with a fully
+            specified name;
+          ▸ provide the argument --database on the command line;
+          ▸ the default value of argument [--database] is (default).
+
 REQUIRED FLAGS
      Exactly one of these must be specified:
 
@@ -80,7 +86,7 @@ REQUIRED FLAGS
        --disable-indexes
           If provided, the field will no longer be indexed at all.
 
-       --index=[array-config=ARRAY-CONFIG],[order=ORDER]
+       --index=KEY=VALUE
           An index for the field.
 
           This flag can be repeated to provide multiple indexes. Any existing

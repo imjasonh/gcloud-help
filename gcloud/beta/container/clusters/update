@@ -11,27 +11,28 @@ SYNOPSIS
           | --disable-database-encryption | --disable-default-snat
           | --disable-workload-identity | --enable-autoscaling
           | --enable-cost-allocation | --enable-gke-oidc
-          | --enable-identity-service | --enable-image-streaming
-          | --enable-intra-node-visibility | --enable-l4-ilb-subsetting
-          | --enable-legacy-authorization
+          | --enable-google-cloud-access | --enable-identity-service
+          | --enable-image-streaming | --enable-intra-node-visibility
+          | --enable-l4-ilb-subsetting | --enable-legacy-authorization
           | --enable-logging-monitoring-system-only
           | --enable-master-authorized-networks | --enable-master-global-access
           | --enable-network-policy | --enable-pod-security-policy
-          | --enable-service-externalips | --enable-shielded-nodes
-          | --enable-stackdriver-kubernetes | --enable-vertical-pod-autoscaling
-          | --gateway-api=GATEWAY_API | --generate-password
-          | --identity-provider=IDENTITY_PROVIDER
+          | --enable-private-endpoint | --enable-service-externalips
+          | --enable-shielded-nodes | --enable-stackdriver-kubernetes
+          | --enable-vertical-pod-autoscaling | --gateway-api=GATEWAY_API
+          | --generate-password | --identity-provider=IDENTITY_PROVIDER
           | --logging-variant=LOGGING_VARIANT | --maintenance-window=START_TIME
           | --notification-config=[pubsub=ENABLED|DISABLED,
           pubsub-topic=TOPIC,...]
           | --private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE
           | --release-channel=CHANNEL | --remove-labels=[KEY,...]
           | --security-group=SECURITY_GROUP | --set-password
-          | --start-credential-rotation | --start-ip-rotation
-          | --update-addons=[ADDON=ENABLED|DISABLED,...]
+          | --stack-type=STACK_TYPE | --start-credential-rotation
+          | --start-ip-rotation | --update-addons=[ADDON=ENABLED|DISABLED,...]
           | --update-labels=[KEY=VALUE,...] | --workload-pool=WORKLOAD_POOL
           | --additional-zones=[ZONE,...] | --node-locations=ZONE,[ZONE,...]
-          | --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
+          | --binauthz-policy=BINAUTHZ_POLICY
+          --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
           | --enable-binauthz | --clear-maintenance-window
           | --remove-maintenance-exclusion=NAME
           | [--add-maintenance-exclusion-end=TIME_STAMP
@@ -185,7 +186,8 @@ REQUIRED FLAGS
           Enables autoscaling for a node pool.
 
           Enables autoscaling in the node pool specified by --node-pool or the
-          default node pool if --node-pool is not provided.
+          default node pool if --node-pool is not provided. If not already,
+          --max-nodes or --total-max-nodes must also be set.
 
        --enable-cost-allocation
           Enable the cost management feature.
@@ -210,6 +212,11 @@ REQUIRED FLAGS
           GKE OIDC is being replaced by Identity Service across Anthos and GKE.
           Thus, flag --enable-gke-oidc is also deprecated. Please use
           --enable-identity-service to enable the Identity Service component
+
+       --enable-google-cloud-access
+          When you enable Google Cloud Access, any public IP addresses owned by
+          Google Cloud can reach the public control plane endpoint of your
+          cluster.
 
        --enable-identity-service
           Enable Identity Service component on the cluster.
@@ -286,6 +293,10 @@ REQUIRED FLAGS
           create and update authorization controls through the
           PodSecurityPolicy API objects. For more information, see
           https://cloud.google.com/kubernetes-engine/docs/how-to/pod-security-policies.
+
+       --enable-private-endpoint
+          Enables cluster's control plane to be accessible using private IP
+          address only.
 
        --enable-service-externalips
           Enables use of services with externalIPs field.
@@ -467,6 +478,10 @@ REQUIRED FLAGS
           Set the basic auth password to the specified value, keeping the
           existing username.
 
+       --stack-type=STACK_TYPE
+          IP stack type of the node VMs. STACK_TYPE must be one of: ipv4,
+          ipv4-ipv6.
+
        --start-credential-rotation
           Start the rotation of IP and credentials for this cluster. For
           example:
@@ -493,9 +508,9 @@ REQUIRED FLAGS
           HorizontalPodAutoscaling=ENABLED|DISABLED
           HttpLoadBalancing=ENABLED|DISABLED
           KubernetesDashboard=ENABLED|DISABLED Istio=ENABLED|DISABLED
-          ApplicationManager=ENABLED|DISABLED BackupRestore=ENABLED|DISABLED
-          NetworkPolicy=ENABLED|DISABLED CloudRun=ENABLED|DISABLED
-          ConfigConnector=ENABLED|DISABLED NodeLocalDNS=ENABLED|DISABLED
+          BackupRestore=ENABLED|DISABLED NetworkPolicy=ENABLED|DISABLED
+          CloudRun=ENABLED|DISABLED ConfigConnector=ENABLED|DISABLED
+          NodeLocalDNS=ENABLED|DISABLED
           GcePersistentDiskCsiDriver=ENABLED|DISABLED
           GcpFilestoreCsiDriver=ENABLED|DISABLED
 
@@ -571,11 +586,17 @@ REQUIRED FLAGS
 
        Flags for Binary Authorization:
 
+         --binauthz-policy=BINAUTHZ_POLICY
+            The relative resource name of the Binary Authorization policy to
+            audit and/or enforce. GKE policies have the following format:
+            projects/{project_number}/platforms/gke/policies/{policy_id}.
+
          At most one of these can be specified:
 
            --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
               Enable Binary Authorization for this cluster.
-              BINAUTHZ_EVALUATION_MODE must be one of: DISABLED,
+              BINAUTHZ_EVALUATION_MODE must be one of: DISABLED, MONITORING,
+              MONITORING_AND_PROJECT_SINGLETON_POLICY_ENFORCE,
               PROJECT_SINGLETON_POLICY_ENFORCE.
 
            --enable-binauthz
@@ -738,7 +759,7 @@ REQUIRED FLAGS
 
          --cluster-dns-scope=CLUSTER_DNS_SCOPE
             DNS scope for the Cloud DNS zone created - valid only with
-            --cluster-dns=clouddns
+            --cluster-dns=clouddns. Defaults to cluster.
 
             CLUSTER_DNS_SCOPE must be one of:
 
@@ -1018,7 +1039,8 @@ REQUIRED FLAGS
 
        --logging=[COMPONENT,...]
           Set the components that have logging enabled. Valid component values
-          are: SYSTEM, WORKLOAD, NONE
+          are: SYSTEM, WORKLOAD, API_SERVER, CONTROLLER_MANAGER, SCHEDULER,
+          NONE
 
           For more information, look at
           https://cloud.google.com/stackdriver/docs/solutions/gke/installing#available-logs
@@ -1026,7 +1048,8 @@ REQUIRED FLAGS
           Examples:
 
               $ gcloud beta container clusters update --logging=SYSTEM
-              $ gcloud beta container clusters update --logging=SYSTEM,WORKLOAD
+              $ gcloud beta container clusters update \
+                  --logging=SYSTEM,API_SERVER,WORKLOAD
               $ gcloud beta container clusters update --logging=NONE
 
        --monitoring=[COMPONENT,...]

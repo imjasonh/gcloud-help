@@ -3,7 +3,8 @@ NAME
 
 SYNOPSIS
     gcloud transfer agents install --pool=POOL [--count=COUNT]
-        [--creds-file=CREDS_FILE] [--enable-multipart] [--id-prefix=ID_PREFIX]
+        [--creds-file=CREDS_FILE] [--[no-]enable-multipart]
+        [--id-prefix=ID_PREFIX]
         [--logs-directory=LOGS_DIRECTORY; default="/tmp"]
         [--memlock-limit=MEMLOCK_LIMIT; default=64000000]
         [--mount-directories=[MOUNT-DIRECTORIES,...]] [--proxy=PROXY]
@@ -15,15 +16,22 @@ DESCRIPTION
     locally on your machine and run inside Docker containers.
 
 EXAMPLES
+    To create an agent pool for your agent, see the gcloud transfer agent-pools
+    create command.
+
     To install an agent that authenticates with your user account credentials
     and has default agent parameters, run:
 
-        $ gcloud transfer agents install
+        $ gcloud transfer agents install --pool=AGENT_POOL
+
+    You will be prompted to run a command to generate a credentials file if one
+    does not already exist.
 
     To install an agent that authenticates with a service account with
     credentials stored at '/example/path.json', run:
 
-        $ gcloud transfer agents install --creds-file=/example/path.json
+        $ gcloud transfer agents install --creds-file=/example/path.json \
+            --pool=AGENT_POOL
 
 REQUIRED FLAGS
      --pool=POOL
@@ -48,11 +56,12 @@ OPTIONAL FLAGS
         Note that the credentials location will be mounted to the agent
         container.
 
-     --enable-multipart
+     --[no-]enable-multipart
         Split up files and transfer the resulting chunks in parallel before
         merging them at the destination. Can be used make transfers of large
         files faster as long as the network and disk speed are not limiting
-        factors.
+        factors. If unset, agent decides when to use the feature. Use
+        --enable-multipart to enable and --no-enable-multipart to disable.
 
      --id-prefix=ID_PREFIX
         An optional prefix to add to the agent ID to help identify the agent.

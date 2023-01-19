@@ -12,11 +12,15 @@ SYNOPSIS
         [--root-volume-size=ROOT_VOLUME_SIZE]
         [--root-volume-type=ROOT_VOLUME_TYPE] [--validate-only]
         [--annotations=ANNOTATION,[ANNOTATION,...] | --clear-annotations]
+        [--clear-autoscaling-metrics
+          | --autoscaling-metrics=[AUTOSCALING_METRIC,...]
+          --autoscaling-metrics-granularity=AUTOSCALING_METRICS_GRANULARITY]
         [--clear-proxy-config | --proxy-secret-arn=PROXY_SECRET_ARN
           --proxy-secret-version-id=PROXY_SECRET_VERSION_ID]
         [--clear-security-group-ids
           | --security-group-ids=[SECURITY_GROUP_ID,...]]
         [--clear-ssh-ec2-key-pair | --ssh-ec2-key-pair=SSH_EC2_KEY_PAIR]
+        [--clear-tags | --tags=TAG,[TAG,...]]
         [--max-nodes=MAX_NODES --min-nodes=MIN_NODES] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -107,6 +111,27 @@ FLAGS
        --clear-annotations
           Clear the annotations for the node pool.
 
+     Node pool autoscaling metrics collection
+
+     At most one of these can be specified:
+
+       --clear-autoscaling-metrics
+          Clear the cloudwatch autoscaling metrics collection associated with
+          the nodepool.
+
+       Update existing cloudwatch autoscaling metrics collection parameters
+
+         --autoscaling-metrics=[AUTOSCALING_METRIC,...]
+            Autoscaling metrics to enable. For a list of valid metrics, refer
+            to
+            https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_EnableMetricsCollection.html.
+            If granularity is specified but not any metrics, all metrics are
+            enabled.
+
+         --autoscaling-metrics-granularity=AUTOSCALING_METRICS_GRANULARITY
+            Frequency at which EC2 Auto Scaling sends aggregated data to AWS
+            CloudWatch. The only valid value is "1Minute".
+
      Proxy config
 
      At most one of these can be specified:
@@ -145,6 +170,19 @@ FLAGS
        --ssh-ec2-key-pair=SSH_EC2_KEY_PAIR
           Name of the EC2 key pair authorized to login to the node pool's
           nodes.
+
+     Tags
+
+     At most one of these can be specified:
+
+       --clear-tags
+          Clear any tags associated with the node pool's nodes.
+
+       --tags=TAG,[TAG,...]
+          Applies the given tags (comma separated) on the node pool. Example:
+
+              $ gcloud alpha container aws node-pools update EXAMPLE_NODE_POOL \
+                  --tags=tag1=one,tag2=two
 
      Node pool autoscaling
 

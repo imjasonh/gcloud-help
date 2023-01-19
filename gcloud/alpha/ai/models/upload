@@ -12,14 +12,20 @@ SYNOPSIS
         [--description=DESCRIPTION]
         [--explanation-metadata-file=EXPLANATION_METADATA_FILE]
         [--explanation-method=EXPLANATION_METHOD]
+        [--explanation-modality=EXPLANATION_MODALITY;
+          default="MODALITY_UNSPECIFIED"]
+        [--explanation-nearest-neighbor-search-config-file=EXPLANATION_NEAREST_NEIGHBOR_SEARCH_CONFIG_FILE]
+        [--explanation-neighbor-count=EXPLANATION_NEIGHBOR_COUNT]
         [--explanation-path-count=EXPLANATION_PATH_COUNT]
+        [--explanation-query=EXPLANATION_QUERY; default="PRECISE"]
         [--explanation-step-count=EXPLANATION_STEP_COUNT]
         [--labels=[KEY=VALUE,...]] [--model-id=MODEL_ID]
         [--parent-model=PARENT_MODEL] [--region=REGION]
         [--smooth-grad-noise-sigma=SMOOTH_GRAD_NOISE_SIGMA]
         [--smooth-grad-noise-sigma-by-feature=[KEY=VALUE,...]]
         [--smooth-grad-noisy-sample-count=SMOOTH_GRAD_NOISY_SAMPLE_COUNT]
-        [--version-aliases=[VERSION_ALIASES,...]] [GCLOUD_WIDE_FLAG ...]
+        [--uris=[URIS,...]] [--version-aliases=[VERSION_ALIASES,...]]
+        [--version-description=VERSION_DESCRIPTION] [GCLOUD_WIDE_FLAG ...]
 
 EXAMPLES
     To upload a model under project example in region us-central1, run:
@@ -76,9 +82,50 @@ OPTIONAL FLAGS
         Method used for explanation. Accepted values are integrated-gradients,
         xrai and sampled-shapley.
 
+     --explanation-modality=EXPLANATION_MODALITY; default="MODALITY_UNSPECIFIED"
+        Preset option specifying the modality of the uploaded model, which
+        automatically configures the distance measurement and feature
+        normalization for the underlying example index and queries. Accepted
+        values are IMAGE, TEXT and TABULAR. Should be used only when the
+        explanation method is examples.
+
+     --explanation-nearest-neighbor-search-config-file=EXPLANATION_NEAREST_NEIGHBOR_SEARCH_CONFIG_FILE
+        Path to a local JSON file that contains the configuration for the
+        generated index, the semantics are the same as metadata and should
+        match NearestNeighborSearchConfig. If you specify this parameter, no
+        need to use explanation-modality and explanation-query for preset.
+        Should be used only when the explanation method is examples.
+
+        An example of a JSON config file:
+
+            {
+            "contentsDeltaUri": "",
+            "config": {
+                "dimensions": 50,
+                "approximateNeighborsCount": 10,
+                "distanceMeasureType": "SQUARED_L2_DISTANCE",
+                "featureNormType": "NONE",
+                "algorithmConfig": {
+                    "treeAhConfig": {
+                        "leafNodeEmbeddingCount": 1000,
+                        "leafNodesToSearchPercent": 100
+                    }
+                }
+              }
+            }
+
+     --explanation-neighbor-count=EXPLANATION_NEIGHBOR_COUNT
+        The number of items to return when querying for examples. Should be
+        used only when the explanation method is examples.
+
      --explanation-path-count=EXPLANATION_PATH_COUNT
         Number of feature permutations to consider when approximating the
         Shapley values for explanation.
+
+     --explanation-query=EXPLANATION_QUERY; default="PRECISE"
+        Preset option controlling parameters for query speed-precision
+        trade-off. Accepted values are PRECISE and FAST. Should be used only
+        when the explanation method is examples.
 
      --explanation-step-count=EXPLANATION_STEP_COUNT
         Number of steps to approximate the path integral for explanation.
@@ -133,10 +180,17 @@ OPTIONAL FLAGS
         Number of gradient samples used for approximation at explanation. Only
         applicable to explanation method integrated-gradients or xrai.
 
+     --uris=[URIS,...]
+        Cloud Storage bucket paths where training data is stored. Should be
+        used only when the explanation method is examples.
+
      --version-aliases=[VERSION_ALIASES,...]
         Aliases used to reference a model version instead of auto-generated
         version ID. The aliases mentioned in the flag will replace the aliases
         set in the model.
+
+     --version-description=VERSION_DESCRIPTION
+        Description of the model version.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

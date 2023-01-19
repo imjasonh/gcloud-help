@@ -5,13 +5,16 @@ NAME
 SYNOPSIS
     gcloud pubsub lite-subscriptions update
         (SUBSCRIPTION : --location=LOCATION)
-        --delivery-requirement=DELIVERY_REQUIREMENT [GCLOUD_WIDE_FLAG ...]
+        (--delivery-requirement=DELIVERY_REQUIREMENT
+          --export-dead-letter-topic=EXPORT_DEAD_LETTER_TOPIC
+          --export-desired-state=EXPORT_DESIRED_STATE
+          --export-pubsub-topic=EXPORT_PUBSUB_TOPIC) [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Update a Pub/Sub Lite subscription.
 
 EXAMPLES
-    To update a Cloud Pub/Sub lite-subscription, run:
+    To update a Pub/Sub Lite subscription, run:
 
         $ gcloud pubsub lite-subscriptions update mysubscription \
           --location=us-central1-a \
@@ -47,12 +50,29 @@ POSITIONAL ARGUMENTS
           ▸ provide the argument --zone on the command line.
 
 REQUIRED FLAGS
-     --delivery-requirement=DELIVERY_REQUIREMENT
-        When this subscription should send messages to subscribers relative to
-        messages persistence in storage. See
-        https://cloud.google.com/pubsub/lite/docs/subscriptions#creating_lite_subscriptions
-        for more info. DELIVERY_REQUIREMENT must be one of:
-        deliver-after-stored, deliver-immediately.
+     At least one of these must be specified:
+
+       --delivery-requirement=DELIVERY_REQUIREMENT
+          When this subscription should send messages to subscribers relative
+          to messages persistence in storage. See
+          https://cloud.google.com/pubsub/lite/docs/subscriptions#creating_lite_subscriptions
+          for more info. DELIVERY_REQUIREMENT must be one of:
+          deliver-after-stored, deliver-immediately.
+
+       --export-dead-letter-topic=EXPORT_DEAD_LETTER_TOPIC
+          The name of the Pub/Sub Lite topic to write messages that cannot be
+          exported. Must be in the same project and location as the
+          subscription to be created. Note that this is a Lite topic.
+
+       --export-desired-state=EXPORT_DESIRED_STATE
+          The desired state of the export. Process messages by setting the
+          value to ACTIVE or pause message processing by setting the value to
+          PAUSED. EXPORT_DESIRED_STATE must be one of: active, paused.
+
+       --export-pubsub-topic=EXPORT_PUBSUB_TOPIC
+          The name of the destination Pub/Sub topic to which messages are
+          exported. Must be the topic's fully specified path if it is not in
+          the same project as the subscription to be created.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

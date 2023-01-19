@@ -1,0 +1,104 @@
+NAME
+    gcloud notebooks instances diagnose - request for diagnose instances
+
+SYNOPSIS
+    gcloud notebooks instances diagnose (INSTANCE : --location=LOCATION)
+        --gcs-bucket=GCS_BUCKET [--async] [--enable-copy-home-files]
+        [--enable-packet-capture] [--enable-repair]
+        [--relative-path=RELATIVE_PATH] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Request for diagnose notebook instances.
+
+EXAMPLES
+    To diagnose an instance, run:
+
+        $ gcloud notebooks instances diagnose example-instance \
+          --location=us-west1-b --gcs-bucket=gs://example-bucket
+
+    To diagnose an instance with a relative path:
+
+        $ gcloud notebooks instances diagnose example-instance \
+          --location=us-west1-b --gcs-bucket=gs://example-bucket \
+          --relative-path=logs
+
+    To diagnose an instance, with packet capture:
+
+        $ gcloud notebooks instances diagnose example-instance \
+          --location=us-west1-b --gcs-bucket=gs://example-bucket \
+          --enable-packet-capture
+
+POSITIONAL ARGUMENTS
+     Instance resource - User-defined unique name of this instance. The
+     instance name must be 1 to 63 characters long and contain only lowercase
+     letters, numeric characters, and dashes. The first character must be a
+     lowercase letter and the last character cannot be a dash. The arguments in
+     this group can be used to specify the attributes of this resource. (NOTE)
+     Some attributes are not given arguments in this group but can be set in
+     other ways. To set the project attribute:
+      ◆ provide the argument instance on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       INSTANCE
+          ID of the instance or fully qualified identifier for the instance. To
+          set the instance attribute:
+          ▸ provide the argument instance on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          Google Cloud location of this environment
+          https://cloud.google.com/compute/docs/regions-zones/#locations. To
+          set the location attribute:
+          ▸ provide the argument instance on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property notebooks/location.
+
+REQUIRED FLAGS
+     --gcs-bucket=GCS_BUCKET
+        The Cloud Storage bucket where the log files generated from the
+        diagnose command will be stored. storage.buckets.writer permissions
+        must be given to project's service account or user credential. Format:
+        gs://{gcs_bucket}
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --enable-copy-home-files
+        Enables flag to copy all /home/jupyter folder contents
+
+     --enable-packet-capture
+        Enables flag to capture packets from the instance for 30 seconds
+
+     --enable-repair
+        Enables flag to repair service for instance
+
+     --relative-path=RELATIVE_PATH
+        Defines the relative storage path in the Cloud Storage bucket where the
+        diagnostic logs will be written. Default path will be the root
+        directory of the Cloud Storage bucketFormat of full path:
+        gs://{gcs_bucket}/{relative_path}/
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha notebooks instances diagnose
+
+        $ gcloud beta notebooks instances diagnose
+

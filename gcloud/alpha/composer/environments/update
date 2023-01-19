@@ -9,9 +9,16 @@ SYNOPSIS
           | --environment-size=ENVIRONMENT_SIZE | --node-count=NODE_COUNT
           | --web-server-machine-type=WEB_SERVER_MACHINE_TYPE
           | --airflow-version=AIRFLOW_VERSION | --image-version=IMAGE_VERSION
+          | --disable-cloud-data-lineage-integration
+          | --enable-cloud-data-lineage-integration
           | --disable-master-authorized-networks
           --enable-master-authorized-networks
           --master-authorized-networks=[NETWORK,...]
+          | --disable-scheduled-snapshot-creation
+          | --enable-scheduled-snapshot-creation
+          --snapshot-creation-schedule=SNAPSHOT_CREATION_SCHEDULE
+          --snapshot-location=SNAPSHOT_LOCATION
+          --snapshot-schedule-timezone=SNAPSHOT_SCHEDULE_TIMEZONE
           | --maintenance-window-end=MAINTENANCE_WINDOW_END
           --maintenance-window-recurrence=MAINTENANCE_WINDOW_RECURRENCE
           --maintenance-window-start=MAINTENANCE_WINDOW_START
@@ -21,7 +28,10 @@ SYNOPSIS
           --scheduler-storage=SCHEDULER_STORAGE --web-server-cpu=WEB_SERVER_CPU
           --web-server-memory=WEB_SERVER_MEMORY
           --web-server-storage=WEB_SERVER_STORAGE --worker-cpu=WORKER_CPU
-          --worker-memory=WORKER_MEMORY --worker-storage=WORKER_STORAGE
+          --worker-memory=WORKER_MEMORY
+          --worker-storage=WORKER_STORAGE --disable-triggerer
+          | --enable-triggerer
+          --triggerer-cpu=TRIGGERER_CPU --triggerer-memory=TRIGGERER_MEMORY
           | --update-airflow-configs=[KEY=VALUE,...] --clear-airflow-configs
           | --remove-airflow-configs=[KEY,...]
           | --update-env-variables=[NAME=VALUE,...] --clear-env-variables
@@ -79,7 +89,9 @@ REQUIRED FLAGS
      Exactly one of these must be specified:
 
        --cloud-sql-machine-type=CLOUD_SQL_MACHINE_TYPE
-          Cloud SQL machine type used by the Airflow database.
+          Cloud SQL machine type used by the Airflow database. The list of
+          available machine types is available here:
+          https://cloud.google.com/composer/pricing#db-machine-types.
 
        --environment-size=ENVIRONMENT_SIZE
           Size of the environment. Unspecified means that the default option
@@ -102,6 +114,7 @@ REQUIRED FLAGS
             Upgrade the environment to a later Apache Airflow version in-place.
 
             Must be of the form X[.Y[.Z]], where [] denotes optional fragments.
+            Examples: 2, 2.3, 2.3.4.
 
             The Apache Airflow version is a semantic version or an alias in the
             form of major or major.minor version numbers, resolved to the
@@ -117,6 +130,9 @@ REQUIRED FLAGS
             composer-A[.B.C[-D.E]]-airflow-X[.Y[.Z]], where [] denotes optional
             fragments.
 
+            Examples: composer-2-airflow-2, composer-2-airflow-2.2,
+            composer-2.1.2-airflow-2.3.4.
+
             The Cloud Composer portion of the image version is a semantic
             version or an alias in the form of major version number or latest,
             resolved to the current Cloud Composer version. The Apache Airflow
@@ -125,6 +141,17 @@ REQUIRED FLAGS
             latest matching Apache Airflow version supported in the given Cloud
             Composer version. The resolved versions are stored in the upgraded
             environment.
+
+       Group of arguments for setting Cloud Data Lineage integration
+       configuration in Composer 2.
+
+         At most one of these can be specified:
+
+           --disable-cloud-data-lineage-integration
+              Disable Cloud Data Lineage integration.
+
+           --enable-cloud-data-lineage-integration
+              Enable Cloud Data Lineage integration.
 
        Group of arguments for setting master authorized networks configuration.
 
@@ -144,6 +171,49 @@ REQUIRED FLAGS
 
             Cannot be specified unless --enable-master-authorized-networks is
             also specified.
+
+       Group of arguments used during update of scheduled snapshots settings in
+       Composer 2.0.32 or greater.
+
+       At most one of these can be specified:
+
+         --disable-scheduled-snapshot-creation
+            Disables automated snapshots creation. Can be specified for
+            Composer 2.0.32 or greater.
+
+         Group of arguments for setting scheduled snapshots settings in
+         Composer 2.0.32 or greater.
+
+           --enable-scheduled-snapshot-creation
+              When specified, snapshots of the environment will be created
+              according to a schedule. Can be specified for Composer 2.0.32 or
+              greater.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --snapshot-creation-schedule=SNAPSHOT_CREATION_SCHEDULE
+              Cron expression specifying when snapshots of the environment
+              should be created. Can be specified for Composer 2.0.32 or
+              greater.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --snapshot-location=SNAPSHOT_LOCATION
+              The Cloud Storage location for storing automatically created
+              snapshots. Can be specified for Composer 2.0.32 or greater.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --snapshot-schedule-timezone=SNAPSHOT_SCHEDULE_TIMEZONE
+              Timezone that sets the context to interpret
+              snapshot_creation_schedule. Can be specified for Composer 2.0.32
+              or greater.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
 
        Group of arguments for setting the maintenance window value.
 
@@ -222,6 +292,33 @@ REQUIRED FLAGS
          --worker-storage=WORKER_STORAGE
             Storage allocated to Airflow worker, ex. 600MB, 3GB, 2. If units
             are not provided, defaults to GB.
+
+         Group of arguments for setting triggerer settings in Composer 2.0.31
+         or greater.
+
+         At most one of these can be specified:
+
+           --disable-triggerer
+              Disable a triggerer, supported in the Environments with Composer
+              2.0.31 and Airflow 2.2.5 and greater.
+
+           Group of arguments for setting triggerer settings during update in
+           Composer 2.0.31 or greater.
+
+             --enable-triggerer
+                Enable use of a triggerer, supported in the Environments with
+                Composer 2.0.31 and Airflow 2.2.5 and greater.
+
+             --triggerer-cpu=TRIGGERER_CPU
+                CPU allocated to Airflow triggerer. Supported in the
+                Environments with Composer 2.0.31 and Airflow 2.2.5 and
+                greater.
+
+             --triggerer-memory=TRIGGERER_MEMORY
+                Memory allocated to Airflow triggerer, ex. 512MB, 3GB, 2. If
+                units are not provided, defaults to GB. Supported in the
+                Environments with Composer 2.0.31 and Airflow 2.2.5 and
+                greater.
 
        Group of arguments for modifying the Airflow configuration.
 

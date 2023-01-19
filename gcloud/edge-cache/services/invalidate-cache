@@ -1,0 +1,104 @@
+NAME
+    gcloud edge-cache services invalidate-cache - invalidate the cache for an
+        EdgeCacheService resource
+
+SYNOPSIS
+    gcloud edge-cache services invalidate-cache (SERVICE : --location=LOCATION)
+        (--host=HOST --path=PATH --tags=[TAGS,...]) [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Invalidate the cache entries associated with an EdgeCacheService resource.
+
+EXAMPLES
+    To invalidate content via a tag, or tags for a given host for an
+    EdgeCacheService named 'my-service':
+
+        $ gcloud edge-cache services invalidate-cache my-service \
+            --tags="status=404" --host="media.example.com"
+
+    To invalidate all content under a specific path, specify an exact path, or
+    a prefix. Prefixes are denoted with a trailing * character.
+
+        $ gcloud edge-cache services invalidate-cache my-service \
+            --path="/static/*"
+
+    You can optionally combine this with a status code. For example, to
+    invalidate all cached HTTP 404s:
+
+        $ gcloud edge-cache services invalidate-cache my-service \
+            --tags="status=404" --path="/static/*"
+
+POSITIONAL ARGUMENTS
+     Service resource - The EdgeCacheService resource you want to invalidate
+     the cache for. The arguments in this group can be used to specify the
+     attributes of this resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways. To set the project
+     attribute:
+      ◆ provide the argument service on the command line with a fully
+        specified name;
+      ◆ set the property core/project;
+      ◆ provide the argument --project on the command line.
+
+     This must be specified.
+
+       SERVICE
+          ID of the service or fully qualified identifier for the service. To
+          set the service attribute:
+          ▸ provide the argument service on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          The location Id.
+
+          To set the location attribute:
+          ▸ provide the argument service on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ use global location.
+
+REQUIRED FLAGS
+     At least one of these must be specified:
+
+       --host=HOST
+          The hostname to invalidate against. You can specify an exact or
+          wildcard host - e.g. "video.example.com" or ".example.com" - based on
+          host component.
+
+       --path=PATH
+          The path to invalidate against. You can specify an exact or wildcard
+          host - e.g. "/videos/hls/139123.mp4" or "/manifests/" - based on path
+          component.
+
+       --tags=[TAGS,...]
+          A list of cache tags used to identify cached objects.
+
+          ▸ Cache tags are specified when the response is first cached, by
+            setting the "Cache-Tag" response header at the origin.
+          ▸ By default, all objects have a cache tag representing the HTTP
+            status code of the response, the MIME content-type, and the origin.
+          ▸ Multiple cache tags in the same revalidation request are treated
+            as boolean OR - e.g. tag1 OR tag2 OR tag3.
+          ▸ If a host and/or path are also specified, these are treated as
+            boolean AND with any tags.
+
+          Up to 10 tags may be specified in a single invalidation request.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the networkservices/v1 API. The full documentation for
+    this API can be found at: https://cloud.google.com/networking
+
+NOTES
+    This variant is also available:
+
+        $ gcloud alpha edge-cache services invalidate-cache
+

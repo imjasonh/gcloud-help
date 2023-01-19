@@ -1,0 +1,96 @@
+NAME
+    gcloud alloydb instances create - creates a new AlloyDB instance within a
+        given cluster
+
+SYNOPSIS
+    gcloud alloydb instances create INSTANCE --cluster=CLUSTER
+        --cpu-count=CPU_COUNT --instance-type=INSTANCE_TYPE --region=REGION
+        [--async] [--availability-type=AVAILABILITY_TYPE]
+        [--database-flags=FLAG=VALUE,[FLAG=VALUE,...]]
+        [--read-pool-node-count=READ_POOL_NODE_COUNT] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Creates a new AlloyDB instance within a given cluster.
+
+EXAMPLES
+    To create a new primary instance, run:
+
+        $ gcloud alloydb instances create my-instance --cluster=my-cluster \
+            --region=us-central1 --instance-type=PRIMARY --cpu-count=4
+
+    To create a new read pool instance, run:
+
+        $ gcloud alloydb instances create my-instance --cluster=my-cluster \
+            --region=us-central1 --instance-type=READ_POOL \
+            --read-pool-node-count=1 --cpu-count=4
+
+POSITIONAL ARGUMENTS
+     INSTANCE
+        AlloyDB instance ID
+
+REQUIRED FLAGS
+     --cluster=CLUSTER
+        AlloyDB cluster ID
+
+     --cpu-count=CPU_COUNT
+        Whole number value indicating how many vCPUs the machine should
+        contain. Each vCPU count corresponds to a N2 high-mem machine:
+        (https://cloud.google.com/compute/docs/general-purpose-machines#n2_machines).
+        CPU_COUNT must be one of: 2, 4, 8, 16, 32, 64.
+
+     --instance-type=INSTANCE_TYPE
+        Specifies instance type. INSTANCE_TYPE must be one of:
+
+         PRIMARY
+            PRIMARY instances support read and write operations.
+         READ_POOL
+            READ_POOL instances support read operations only. Each read pool
+            instance consists of one or more homogeneous nodes. * Read pool of
+            size 1 can only have zonal availability. * Read pools with node
+            count of 2 or more can have regional availability (nodes are
+            present in 2 or more zones in a region).
+
+     --region=REGION
+        Regional location (e.g. asia-east1, us-east1). See the full list of
+        regions at https://cloud.google.com/sql/docs/instance-locations.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --availability-type=AVAILABILITY_TYPE
+        Specifies level of availability. AVAILABILITY_TYPE must be (currently
+        only one value is supported):
+
+         REGIONAL
+            Provides high availability and is recommended for production
+            instances; instance automatically fails over to another zone within
+            your selected region.
+
+     --database-flags=FLAG=VALUE,[FLAG=VALUE,...]
+        Comma-separated list of database flags to set on the instance. Use an
+        equals sign to separate flag name and value. Flags without values, like
+        skip_grant_tables, can be written out without a value after, e.g.,
+        skip_grant_tables=. Use on/off for booleans. View the Instance Resource
+        API for allowed flags. (e.g., --database-flags
+        max_allowed_packet=55555,skip_grant_tables=,log_output=1)
+
+     --read-pool-node-count=READ_POOL_NODE_COUNT
+        Read capacity, i.e. number of nodes in a read pool instance.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha alloydb instances create
+
+        $ gcloud beta alloydb instances create
+

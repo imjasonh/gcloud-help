@@ -1,0 +1,171 @@
+NAME
+    gcloud container attached clusters register - register an Attached cluster
+
+SYNOPSIS
+    gcloud container attached clusters register (CLUSTER : --location=LOCATION)
+        --distribution=DISTRIBUTION --fleet-project=FLEET_PROJECT
+        --platform-version=PLATFORM_VERSION
+        (--context=CONTEXT : --kubeconfig=KUBECONFIG)
+        (--has-private-issuer | --issuer-url=ISSUER_URL)
+        [--admin-users=[USER,...]] [--annotations=ANNOTATION,[ANNOTATION,...]]
+        [--description=DESCRIPTION] [--enable-managed-prometheus]
+        [--logging=COMPONENT,[COMPONENT,...]] [--validate-only]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Register an Attached cluster.
+
+EXAMPLES
+    Register a cluster to a fleet.
+
+    To register a cluster with a private OIDC issuer, run:
+
+        $ gcloud container attached clusters register my-cluster \
+            --location=us-west1 --platform-version=PLATFORM_VERSION \
+            --fleet-project=FLEET_PROJECT_NUM --distribution=DISTRIBUTION \
+            --context=CLUSTER_CONTEXT --has-private-issuer
+
+    To register a cluster with a public OIDC issuer, run:
+
+        $ gcloud container attached clusters register my-cluster \
+            --location=us-west1 --platform-version=PLATFORM_VERSION \
+            --fleet-project=FLEET_PROJECT_NUM --distribution=DISTRIBUTION \
+            --context=CLUSTER_CONTEXT --issuer-url=https://ISSUER_URL
+
+    To specify a kubeconfig file, run:
+
+        $ gcloud container attached clusters register my-cluster \
+            --location=us-west1 --platform-version=PLATFORM_VERSION \
+            --fleet-project=FLEET_PROJECT_NUM --distribution=DISTRIBUTION \
+            --context=CLUSTER_CONTEXT --has-private-issuer \
+            --kubeconfig=KUBECONFIG_PATH
+
+    To register and set cluster admin users, run:
+
+        $ gcloud container attached clusters register my-cluster \
+            --location=us-west1 --platform-version=PLATFORM_VERSION \
+            --fleet-project=FLEET_PROJECT_NUM --distribution=DISTRIBUTION \
+            --context=CLUSTER_CONTEXT --issuer-url=https://ISSUER_URL \
+            --admin-users=USER1,USER2
+
+POSITIONAL ARGUMENTS
+     Cluster resource - cluster to register. The arguments in this group can be
+     used to specify the attributes of this resource. (NOTE) Some attributes
+     are not given arguments in this group but can be set in other ways. To set
+     the project attribute:
+      ◆ provide the argument cluster on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       CLUSTER
+          ID of the cluster or fully qualified identifier for the cluster. To
+          set the cluster attribute:
+          ▸ provide the argument cluster on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          Google Cloud location for the cluster. To set the location attribute:
+          ▸ provide the argument cluster on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property container_attached/location.
+
+REQUIRED FLAGS
+     --distribution=DISTRIBUTION
+        Set the base platform type of the cluster to attach.
+
+        Examples:
+
+            $ gcloud container attached clusters register --distribution=aks
+            $ gcloud container attached clusters register --distribution=eks
+
+     --fleet-project=FLEET_PROJECT
+        ID or number of the Fleet host project where the cluster is registered.
+
+     --platform-version=PLATFORM_VERSION
+        Platform version to use for the cluster.
+
+        To retrieve a list of valid versions, run:
+
+            $ gcloud alpha container attached get-server-config \
+                --location=LOCATION
+
+        Replace LOCATION with the target Google Cloud location for the cluster.
+
+     kubectl config
+
+     This must be specified.
+
+       --context=CONTEXT
+          Context to use in the kubeconfig.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --kubeconfig=KUBECONFIG
+          Path to the kubeconfig file.
+
+          If not provided, the default at ~/.kube/config will be used.
+
+     OIDC config
+
+     Exactly one of these must be specified:
+
+       --has-private-issuer
+          Indicates no publicly routable OIDC discovery endpoint exists for the
+          Kubernetes service account token issuer.
+
+          If this flag is set, gcloud will read the issuer URL and JWKs from
+          the cluster's api server.
+
+       --issuer-url=ISSUER_URL
+          Issuer url of the cluster to attach.
+
+OPTIONAL FLAGS
+     --admin-users=[USER,...]
+        Users that can perform operations as a cluster administrator.
+
+        There is no way to completely remove admin users after setting.
+
+     --annotations=ANNOTATION,[ANNOTATION,...]
+        Annotations for the cluster.
+
+     --description=DESCRIPTION
+        Description for the cluster.
+
+     --enable-managed-prometheus
+        Enable managed collection for Managed Service for Prometheus.
+
+     --logging=COMPONENT,[COMPONENT,...]
+        Set the components that have logging enabled.
+
+        Examples:
+
+            $ gcloud container attached clusters register --logging=SYSTEM
+            $ gcloud container attached clusters register \
+                --logging=SYSTEM,WORKLOAD
+            $ gcloud container attached clusters register --logging=NONE
+
+        COMPONENT must be one of: NONE, SYSTEM, WORKLOAD.
+
+     --validate-only
+        Validate the cluster to create, but don't actually perform it.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This variant is also available:
+
+        $ gcloud alpha container attached clusters register
+

@@ -8,13 +8,14 @@ SYNOPSIS
           gpu-partition-size=GPU_PARTITION_SIZE,
           gpu-sharing-strategy=GPU_SHARING_STRATEGY,
           max-shared-clients-per-gpu=MAX_SHARED_CLIENTS_PER_GPU],...]]
-        [--boot-disk-kms-key=BOOT_DISK_KMS_KEY] [--cluster=CLUSTER]
+        [--async] [--boot-disk-kms-key=BOOT_DISK_KMS_KEY] [--cluster=CLUSTER]
         [--disable-pod-cidr-overprovision] [--disk-size=DISK_SIZE]
         [--disk-type=DISK_TYPE] [--enable-autoprovisioning]
         [--enable-autorepair] [--no-enable-autoupgrade]
         [--enable-blue-green-upgrade] [--enable-confidential-nodes]
-        [--enable-gvnic] [--enable-image-streaming] [--enable-surge-upgrade]
-        [--image-type=IMAGE_TYPE] [--logging-variant=LOGGING_VARIANT]
+        [--enable-gvnic] [--enable-image-streaming] [--enable-private-nodes]
+        [--enable-surge-upgrade] [--image-type=IMAGE_TYPE]
+        [--labels=[KEY=VALUE,...]] [--logging-variant=LOGGING_VARIANT]
         [--machine-type=MACHINE_TYPE, -m MACHINE_TYPE]
         [--max-pods-per-node=MAX_PODS_PER_NODE]
         [--max-surge-upgrade=MAX_SURGE_UPGRADE; default=1]
@@ -35,12 +36,15 @@ SYNOPSIS
           batch-soak-duration=BATCH_SOAK_DURATION,...]]
         [--system-config-from-file=SYSTEM_CONFIG_FROM_FILE]
         [--tags=TAG,[TAG,...]] [--threads-per-core=THREADS_PER_CORE]
+        [--windows-os-version=WINDOWS_OS_VERSION]
         [--workload-metadata=WORKLOAD_METADATA]
         [--create-pod-ipv4-range=[KEY=VALUE,...] | --pod-ipv4-range=NAME]
         [--enable-autoscaling --location-policy=LOCATION_POLICY
           --max-nodes=MAX_NODES --min-nodes=MIN_NODES
           --total-max-nodes=TOTAL_MAX_NODES --total-min-nodes=TOTAL_MIN_NODES]
         [--ephemeral-storage=[local-ssd-count=LOCAL-SSD-COUNT]
+          | --ephemeral-storage-local-ssd=[count=COUNT]
+          | --local-nvme-ssd-block=[count=COUNT]
           | --local-ssd-count=LOCAL_SSD_COUNT]
         [--region=REGION | --zone=ZONE, -z ZONE]
         [--reservation=RESERVATION --reservation-affinity=RESERVATION_AFFINITY]
@@ -99,6 +103,10 @@ FLAGS
          max-shared-clients-per-gpu
             (Optional) The max number of containers allowed to share each GPU
             on the node. This field is used together with gpu-sharing-strategy.
+
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
 
      --boot-disk-kms-key=BOOT_DISK_KMS_KEY
         The Customer Managed Encryption Key used to encrypt the boot disk
@@ -171,6 +179,13 @@ FLAGS
      --enable-image-streaming
         Specifies whether to enable image streaming on node pool.
 
+     --enable-private-nodes
+        Enables provisioning nodes with private IP addresses only.
+
+        The control plane still communicates with all nodes through private IP
+        addresses only, regardless of whether private nodes are enabled or
+        disabled.
+
      --enable-surge-upgrade
         Changes node pool upgrade strategy to surge upgrade.
 
@@ -186,6 +201,15 @@ FLAGS
         using the following command.
 
             $ gcloud container get-server-config
+
+     --labels=[KEY=VALUE,...]
+        Labels to apply to the Google Cloud resources of node pools in the
+        Kubernetes Engine cluster. These are unrelated to Kubernetes labels.
+
+        Examples:
+
+            $ gcloud beta container node-pools create node-pool-1 \
+                --cluster=example-cluster --labels=label1=value1,label2=value2
 
      --logging-variant=LOGGING_VARIANT
         Specifies the logging variant that will be deployed on all the nodes in
@@ -406,9 +430,9 @@ FLAGS
         UNSPECIFIED - No requirements on the placement of nodes. This is the
         default option.
 
-        COMPACT - Google will attempt to place the nodes in a close proximity
-        to each other. This helps to reduce the communication latency between
-        the nodes, but imposes additional limitations on the node pool size.
+        COMPACT - GKE will attempt to place the nodes in a close proximity to
+        each other. This helps to reduce the communication latency between the
+        nodes, but imposes additional limitations on the node pool size.
 
             $ gcloud beta container node-pools create node-pool-1 \
                 --cluster=example-cluster --placement-type=COMPACT
@@ -528,6 +552,14 @@ FLAGS
         The number of visible threads per physical core for each node. To
         disable simultaneous multithreading (SMT) set this to 1.
 
+     --windows-os-version=WINDOWS_OS_VERSION
+        Specifies the Windows Server Image to use when creating a Windows node
+        pool. Valid variants can be "ltsc2019", "ltsc2022". It means using
+        LTSC2019 server image or LTSC2022 server image. If the node pool
+        doesn't specify a Windows Server Image Os version, then Ltsc2019 will
+        be the default one to use. WINDOWS_OS_VERSION must be one of: ltsc2019,
+        ltsc2022.
+
      --workload-metadata=WORKLOAD_METADATA
         Type of metadata server available to pods running in the node pool.
         WORKLOAD_METADATA must be one of:
@@ -623,7 +655,8 @@ FLAGS
           Enables autoscaling for a node pool.
 
           Enables autoscaling in the node pool specified by --node-pool or the
-          default node pool if --node-pool is not provided.
+          default node pool if --node-pool is not provided. If not already,
+          --max-nodes or --total-max-nodes must also be set.
 
        --location-policy=LOCATION_POLICY
           Location policy specifies the algorithm used when scaling-up the node
@@ -677,11 +710,47 @@ FLAGS
 
           'local-ssd-count' specifies the number of local SSDs to use to back
           ephemeral storage. Local SDDs use NVMe interfaces and each is 375 GB
-          in size. If 'local-ssd-count=0', it means to disable using local SSDs
-          as ephemeral storage.
+          in size. Setting 'local-ssd-count=0' disables using local SSDs as
+          ephemeral storage.
 
           See https://cloud.google.com/compute/docs/disks/local-ssd for more
           information.
+
+       --ephemeral-storage-local-ssd=[count=COUNT]
+          Parameters for the ephemeral storage filesystem. If unspecified,
+          ephemeral storage is backed by the boot disk.
+
+          Examples:
+
+              $ gcloud beta container node-pools create node-pool-1 \
+                  --cluster=example cluster --ephemeral-storage-local-ssd count=2
+
+          'count' specifies the number of local SSDs to use to back ephemeral
+          storage. Local SDDs use NVMe interfaces and each is 375 GB in size.
+          Setting 'count=0' disables using local SSDs as ephemeral storage.
+
+          See https://cloud.google.com/compute/docs/disks/local-ssd for more
+          information.
+
+       --local-nvme-ssd-block=[count=COUNT]
+          Adds the requested local SSDs on all nodes in default node pool(s) in
+          the new cluster.
+
+          Examples:
+
+              $ gcloud beta container node-pools create node-pool-1 \
+                  --cluster=example cluster --local-nvme-ssd-block count=2
+
+          'count' must be between 1-8
+
+     New nodes, including ones created by resize or recreate, will have these
+     local SSDs.
+
+     Local SSDs have a fixed 375 GB capacity per device. The number of disks
+     that can be attached to an instance is limited by the maximum number of
+     disks available on a machine, which differs by compute zone. See
+     https://cloud.google.com/compute/docs/disks/local-ssd for more
+     information.
 
        --local-ssd-count=LOCAL_SSD_COUNT
           The number of local SSD disks to provision on each node, formatted

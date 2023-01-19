@@ -22,17 +22,19 @@ SYNOPSIS
         [--disk-type=DISK_TYPE] [--enable-autorepair] [--no-enable-autoupgrade]
         [--enable-cloud-logging] [--enable-cloud-monitoring]
         [--enable-cloud-run-alpha] [--enable-confidential-nodes]
-        [--enable-cost-allocation] [--enable-dataplane-v2] [--enable-gvnic]
+        [--enable-cost-allocation] [--enable-dataplane-v2]
+        [--enable-google-cloud-access] [--enable-gvnic]
         [--enable-identity-service] [--enable-image-streaming]
         [--enable-intra-node-visibility] [--enable-ip-alias]
         [--enable-kubernetes-alpha] [--enable-l4-ilb-subsetting]
-        [--enable-legacy-authorization] [--enable-master-global-access]
-        [--enable-network-policy] [--enable-service-externalips]
-        [--enable-shielded-nodes] [--enable-stackdriver-kubernetes]
-        [--enable-vertical-pod-autoscaling] [--gateway-api=GATEWAY_API]
-        [--image-type=IMAGE_TYPE] [--issue-client-certificate]
-        [--labels=[KEY=VALUE,...]] [--local-ssd-count=LOCAL_SSD_COUNT]
-        [--logging=[COMPONENT,...]] [--logging-variant=LOGGING_VARIANT]
+        [--enable-legacy-authorization] [--enable-managed-prometheus]
+        [--enable-master-global-access] [--enable-network-policy]
+        [--enable-service-externalips] [--enable-shielded-nodes]
+        [--enable-stackdriver-kubernetes] [--enable-vertical-pod-autoscaling]
+        [--gateway-api=GATEWAY_API] [--image-type=IMAGE_TYPE]
+        [--ipv6-access-type=IPV6_ACCESS_TYPE] [--issue-client-certificate]
+        [--labels=[KEY=VALUE,...]] [--logging=[COMPONENT,...]]
+        [--logging-variant=LOGGING_VARIANT]
         [--machine-type=MACHINE_TYPE, -m MACHINE_TYPE]
         [--max-nodes-per-pool=MAX_NODES_PER_POOL]
         [--max-pods-per-node=MAX_PODS_PER_NODE]
@@ -46,12 +48,13 @@ SYNOPSIS
         [--node-version=NODE_VERSION]
         [--notification-config=[pubsub=ENABLED|DISABLED,
           pubsub-topic=TOPIC,...]] [--num-nodes=NUM_NODES; default=3]
-        [--preemptible]
+        [--placement-type=PLACEMENT_TYPE] [--preemptible]
+        [--private-endpoint-subnetwork=NAME]
         [--private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE]
         [--release-channel=CHANNEL] [--security-group=SECURITY_GROUP]
         [--services-ipv4-cidr=CIDR] [--services-secondary-range-name=NAME]
         [--shielded-integrity-monitoring] [--shielded-secure-boot] [--spot]
-        [--subnetwork=SUBNETWORK]
+        [--stack-type=STACK_TYPE] [--subnetwork=SUBNETWORK]
         [--system-config-from-file=SYSTEM_CONFIG_FROM_FILE]
         [--tags=TAG,[TAG,...]] [--threads-per-core=THREADS_PER_CORE]
         [--workload-metadata=WORKLOAD_METADATA] [--workload-pool=WORKLOAD_POOL]
@@ -88,6 +91,9 @@ SYNOPSIS
         [--enable-private-endpoint
           --enable-private-nodes --master-ipv4-cidr=MASTER_IPV4_CIDR]
         [--enable-tpu --tpu-ipv4-cidr=CIDR]
+        [--ephemeral-storage-local-ssd=[count=COUNT]
+          | --local-nvme-ssd-block=[count=COUNT]
+          | --local-ssd-count=LOCAL_SSD_COUNT]
         [--maintenance-window=START_TIME | --maintenance-window-end=TIME_STAMP
           --maintenance-window-recurrence=RRULE
           --maintenance-window-start=TIME_STAMP]
@@ -402,6 +408,11 @@ FLAGS
         Enables the new eBPF dataplane for GKE clusters that is required for
         network security, scalability and visibility features.
 
+     --enable-google-cloud-access
+        When you enable Google Cloud Access, any public IP addresses owned by
+        Google Cloud can reach the public control plane endpoint of your
+        cluster.
+
      --enable-gvnic
         Enable the use of GVNIC for this cluster. Requires re-creation of nodes
         using either a node-pool upgrade or node-pool creation.
@@ -455,6 +466,9 @@ FLAGS
         https://kubernetes.io/docs/admin/authorization/abac/. To use RBAC
         permissions instead, create or update your cluster with the option
         --no-enable-legacy-authorization.
+
+     --enable-managed-prometheus
+        Enable managed collection for Managed Service for Prometheus.
 
      --enable-master-global-access
         Use with private clusters to allow access to the master's private
@@ -518,6 +532,10 @@ FLAGS
 
             $ gcloud container get-server-config
 
+     --ipv6-access-type=IPV6_ACCESS_TYPE
+        IPv6 access type of the subnetwork. Defaults to 'external'.
+        IPV6_ACCESS_TYPE must be one of: external, internal.
+
      --issue-client-certificate
         Issue a TLS client certificate with admin permissions.
 
@@ -535,19 +553,9 @@ FLAGS
             $ gcloud container clusters create example-cluster \
                 --labels=label_a=value1,label_b=,label_c=value3
 
-     --local-ssd-count=LOCAL_SSD_COUNT
-        The number of local SSD disks to provision on each node, formatted and
-        mounted in the filesystem.
-
-        Local SSDs have a fixed 375 GB capacity per device. The number of disks
-        that can be attached to an instance is limited by the maximum number of
-        disks available on a machine, which differs by compute zone. See
-        https://cloud.google.com/compute/docs/disks/local-ssd for more
-        information.
-
      --logging=[COMPONENT,...]
         Set the components that have logging enabled. Valid component values
-        are: SYSTEM, WORKLOAD, NONE
+        are: SYSTEM, WORKLOAD, API_SERVER, CONTROLLER_MANAGER, SCHEDULER, NONE
 
         For more information, look at
         https://cloud.google.com/stackdriver/docs/solutions/gke/installing#available-logs
@@ -555,7 +563,8 @@ FLAGS
         Examples:
 
             $ gcloud container clusters create --logging=SYSTEM
-            $ gcloud container clusters create --logging=SYSTEM,WORKLOAD
+            $ gcloud container clusters create \
+                --logging=SYSTEM,API_SERVER,WORKLOAD
             $ gcloud container clusters create --logging=NONE
 
      --logging-variant=LOGGING_VARIANT
@@ -787,6 +796,22 @@ FLAGS
      --num-nodes=NUM_NODES; default=3
         The number of nodes to be created in each of the cluster's zones.
 
+     --placement-type=PLACEMENT_TYPE
+        Placement type allows to define the type of node placement within the
+        default node pool of this cluster.
+
+        UNSPECIFIED - No requirements on the placement of nodes. This is the
+        default option.
+
+        COMPACT - GKE will attempt to place the nodes in a close proximity to
+        each other. This helps to reduce the communication latency between the
+        nodes, but imposes additional limitations on the node pool size.
+
+            $ gcloud container clusters create example-cluster \
+                --placement-type=COMPACT
+
+        PLACEMENT_TYPE must be one of: UNSPECIFIED, COMPACT.
+
      --preemptible
         Create nodes using preemptible VM instances in the new cluster.
 
@@ -796,6 +821,10 @@ FLAGS
         preemptible VM instances. See
         https://cloud.google.com/kubernetes-engine/docs/preemptible-vm for more
         information on how to use Preemptible VMs with Kubernetes Engine.
+
+     --private-endpoint-subnetwork=NAME
+        Sets the subnetwork GKE uses to provision the control plane's private
+        endpoint.
 
      --private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE
         Sets the type of private access to Google services over IPv6.
@@ -900,6 +929,10 @@ FLAGS
 
         New nodes, including ones created by resize or recreate, will use spot
         VM instances.
+
+     --stack-type=STACK_TYPE
+        IP stack type of the node VMs. STACK_TYPE must be one of: ipv4,
+        ipv4-ipv6.
 
      --subnetwork=SUBNETWORK
         The Google Compute Engine subnetwork
@@ -1031,7 +1064,7 @@ FLAGS
 
        --cluster-dns-scope=CLUSTER_DNS_SCOPE
           DNS scope for the Cloud DNS zone created - valid only with
-          --cluster-dns=clouddns
+          --cluster-dns=clouddns. Defaults to cluster.
 
           CLUSTER_DNS_SCOPE must be one of:
 
@@ -1281,7 +1314,8 @@ FLAGS
           Enables autoscaling for a node pool.
 
           Enables autoscaling in the node pool specified by --node-pool or the
-          default node pool if --node-pool is not provided.
+          default node pool if --node-pool is not provided. If not already,
+          --max-nodes or --total-max-nodes must also be set.
 
        --location-policy=LOCATION_POLICY
           Location policy specifies the algorithm used when scaling-up the node
@@ -1414,6 +1448,54 @@ FLAGS
 
           Can not be specified unless '--enable-tpu' and '--enable-ip-alias'
           are also specified.
+
+     At most one of these can be specified:
+
+       --ephemeral-storage-local-ssd=[count=COUNT]
+          Parameters for the ephemeral storage filesystem. If unspecified,
+          ephemeral storage is backed by the boot disk.
+
+          Examples:
+
+              $ gcloud container clusters create example_cluster \
+                  --ephemeral-storage-local-ssd count=2
+
+          'count' specifies the number of local SSDs to use to back ephemeral
+          storage. Local SDDs use NVMe interfaces and each is 375 GB in size.
+          Setting 'count=0' disables using local SSDs as ephemeral storage.
+
+          See https://cloud.google.com/compute/docs/disks/local-ssd for more
+          information.
+
+       --local-nvme-ssd-block=[count=COUNT]
+          Adds the requested local SSDs on all nodes in default node pool(s) in
+          the new cluster.
+
+          Examples:
+
+              $ gcloud container clusters create example_cluster \
+                  --local-nvme-ssd-block count=2
+
+          'count' must be between 1-8
+
+     New nodes, including ones created by resize or recreate, will have these
+     local SSDs.
+
+     Local SSDs have a fixed 375 GB capacity per device. The number of disks
+     that can be attached to an instance is limited by the maximum number of
+     disks available on a machine, which differs by compute zone. See
+     https://cloud.google.com/compute/docs/disks/local-ssd for more
+     information.
+
+       --local-ssd-count=LOCAL_SSD_COUNT
+          The number of local SSD disks to provision on each node, formatted
+          and mounted in the filesystem.
+
+          Local SSDs have a fixed 375 GB capacity per device. The number of
+          disks that can be attached to an instance is limited by the maximum
+          number of disks available on a machine, which differs by compute
+          zone. See https://cloud.google.com/compute/docs/disks/local-ssd for
+          more information.
 
      One of either maintenance-window or the group of maintenance-window flags
      can be set.

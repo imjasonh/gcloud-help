@@ -10,6 +10,11 @@ SYNOPSIS
           | --disable-master-authorized-networks
           --enable-master-authorized-networks
           --master-authorized-networks=[NETWORK,...]
+          | --disable-scheduled-snapshot-creation
+          | --enable-scheduled-snapshot-creation
+          --snapshot-creation-schedule=SNAPSHOT_CREATION_SCHEDULE
+          --snapshot-location=SNAPSHOT_LOCATION
+          --snapshot-schedule-timezone=SNAPSHOT_SCHEDULE_TIMEZONE
           | --max-workers=MAX_WORKERS --min-workers=MIN_WORKERS
           --scheduler-count=SCHEDULER_COUNT --scheduler-cpu=SCHEDULER_CPU
           --scheduler-memory=SCHEDULER_MEMORY
@@ -74,7 +79,9 @@ REQUIRED FLAGS
      Exactly one of these must be specified:
 
        --cloud-sql-machine-type=CLOUD_SQL_MACHINE_TYPE
-          Cloud SQL machine type used by the Airflow database.
+          Cloud SQL machine type used by the Airflow database. The list of
+          available machine types is available here:
+          https://cloud.google.com/composer/pricing#db-machine-types.
 
        --environment-size=ENVIRONMENT_SIZE
           Size of the environment. Unspecified means that the default option
@@ -107,6 +114,49 @@ REQUIRED FLAGS
 
             Cannot be specified unless --enable-master-authorized-networks is
             also specified.
+
+       Group of arguments used during update of scheduled snapshots settings in
+       Composer 2.0.32 or greater.
+
+       At most one of these can be specified:
+
+         --disable-scheduled-snapshot-creation
+            Disables automated snapshots creation. Can be specified for
+            Composer 2.0.32 or greater.
+
+         Group of arguments for setting scheduled snapshots settings in
+         Composer 2.0.32 or greater.
+
+           --enable-scheduled-snapshot-creation
+              When specified, snapshots of the environment will be created
+              according to a schedule. Can be specified for Composer 2.0.32 or
+              greater.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --snapshot-creation-schedule=SNAPSHOT_CREATION_SCHEDULE
+              Cron expression specifying when snapshots of the environment
+              should be created. Can be specified for Composer 2.0.32 or
+              greater.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --snapshot-location=SNAPSHOT_LOCATION
+              The Cloud Storage location for storing automatically created
+              snapshots. Can be specified for Composer 2.0.32 or greater.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --snapshot-schedule-timezone=SNAPSHOT_SCHEDULE_TIMEZONE
+              Timezone that sets the context to interpret
+              snapshot_creation_schedule. Can be specified for Composer 2.0.32
+              or greater.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
 
        Group of arguments for setting workloads configuration in Composer 2.X
        or greater (--scheduler-count flag is available for Composer 1.X as

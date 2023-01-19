@@ -2,7 +2,8 @@ NAME
     gcloud storage cp - upload, download, and copy Cloud Storage objects
 
 SYNOPSIS
-    gcloud storage cp [SOURCE ...] DESTINATION [--all-versions, -A]
+    gcloud storage cp [SOURCE ...] DESTINATION
+        [--additional-headers=HEADER=VALUE] [--all-versions, -A]
         [--no-clobber, -n] [--continue-on-error, -c] [--daisy-chain, -D]
         [--do-not-decompress] [--ignore-symlinks]
         [--manifest-path=MANIFEST_PATH, -L MANIFEST_PATH]
@@ -10,9 +11,8 @@ SYNOPSIS
         [--read-paths-from-stdin, -I] [--recursive, -R, -r]
         [--skip-unsupported, -U]
         [--storage-class=STORAGE_CLASS, -s STORAGE_CLASS]
-        [--canned-acl=PREDEFINED_ACL,
-          --predefined-acl=PREDEFINED_ACL, -a PREDEFINED_ACL
-          | --[no-]preserve-acl, -p]
+        [--canned-acl=PREDEFINED_ACL, --predefined-acl=PREDEFINED_ACL,
+          -a PREDEFINED_ACL --[no-]preserve-acl, -p]
         [--gzip-in-flight=[FILE_EXTENSIONS,...], -j [FILE_EXTENSIONS,...]
           | --gzip-in-flight-all, -J
           | --gzip-local=[FILE_EXTENSIONS,...], -z [FILE_EXTENSIONS,...]
@@ -76,6 +76,12 @@ POSITIONAL ARGUMENTS
         The destination path.
 
 FLAGS
+     --additional-headers=HEADER=VALUE
+        Includes arbitrary headers in storage API calls. Accepts a comma
+        separated list of key=value pairs, e.g. header1=value1,header2=value2.
+        Overrides the default storage/additional_headers property value for
+        this command invocation.
+
      --all-versions, -A
         Copy all source versions from a source bucket or folder. If not set,
         only the live version of each source object is copied.
@@ -171,21 +177,18 @@ FLAGS
         the default storage class of the destination bucket is used. This
         option is not valid for copying to non-cloud destinations.
 
-     At most one of these can be specified:
+     --canned-acl=PREDEFINED_ACL, --predefined-acl=PREDEFINED_ACL, -a PREDEFINED_ACL
+        Applies predefined, or "canned," ACLs to a resource. See docs for a
+        list of predefined ACL constants:
+        https://cloud.google.com/storage/docs/access-control/lists#predefined-acl
 
-       --canned-acl=PREDEFINED_ACL, --predefined-acl=PREDEFINED_ACL, -a PREDEFINED_ACL
-          Applies predefined, or "canned," ACLs to a resource. See docs for a
-          list of predefined ACL constants:
-          https://cloud.google.com/storage/docs/access-control/lists#predefined-acl
-
-       --[no-]preserve-acl, -p
-          Preserves ACLs when copying in the cloud. This option is Google Cloud
-          Storage-only, and you need OWNER access to all copied objects. If all
-          objects in the destination bucket should have the same ACL, you can
-          also set a default object ACL on that bucket instead of using this
-          flag. Preserving ACLs is the default behavior for updating existing
-          objects. Use --preserve-acl to enable and --no-preserve-acl to
-          disable.
+     --[no-]preserve-acl, -p
+        Preserves ACLs when copying in the cloud. This option is Google Cloud
+        Storage-only, and you need OWNER access to all copied objects. If all
+        objects in the destination bucket should have the same ACL, you can
+        also set a default object ACL on that bucket instead of using this
+        flag. Preserving ACLs is the default behavior for updating existing
+        objects. Use --preserve-acl to enable and --no-preserve-acl to disable.
 
      At most one of these can be specified:
 

@@ -1,0 +1,125 @@
+NAME
+    gcloud vmware private-clouds create - create a VMware Engine private cloud
+
+SYNOPSIS
+    gcloud vmware private-clouds create (PRIVATE_CLOUD : --location=LOCATION)
+        --cluster=CLUSTER --management-range=MANAGEMENT_RANGE
+        --node-type-config=[count=COUNT],
+          [custom-core-count=CUSTOM-CORE-COUNT],[type=TYPE]
+        --vmware-engine-network=VMWARE_ENGINE_NETWORK [--async]
+        [--description=DESCRIPTION] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Create a VMware Engine private cloud. Private cloud creation is considered
+    finished when the private cloud is in READY state. Check the progress of a
+    private cloud using gcloud vmware private-clouds list.
+
+EXAMPLES
+    To create a private cloud in the us-west2-a zone using standard-72 nodes
+    that connects to the my-network VMware Engine network, run:
+
+        $ gcloud vmware private-clouds create my-private-cloud \
+            --location=us-west2-a --project=my-project \
+            --cluster=my-management-cluster \
+            --node-type-config=type=standard-72,count=3 \
+            --management-range=192.168.0.0/24 \
+            --vmware-engine-network=my-network
+
+    Or:
+
+        $ gcloud vmware private-clouds create my-private-cloud \
+            --cluster=my-management-cluster \
+            --node-type-config=type=standard-72,count=3 \
+            --management-range=192.168.0.0/24 \
+            --vmware-engine-network=my-network
+
+    In the second example, the project and location are taken from gcloud
+    properties core/project and compute/zone.
+
+POSITIONAL ARGUMENTS
+     Private cloud resource - private_cloud. The arguments in this group can be
+     used to specify the attributes of this resource. (NOTE) Some attributes
+     are not given arguments in this group but can be set in other ways. To set
+     the project attribute:
+      ◆ provide the argument private_cloud on the command line with a fully
+        specified name;
+      ◆ set the property core/project;
+      ◆ provide the argument --project on the command line.
+
+     This must be specified.
+
+       PRIVATE_CLOUD
+          ID of the private cloud or fully qualified identifier for the private
+          cloud. To set the private-cloud attribute:
+          ▸ provide the argument private_cloud on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          Zone of the private cloud or cluster. To set the location attribute:
+          ▸ provide the argument private_cloud on the command line with a
+            fully specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property compute/zone.
+
+REQUIRED FLAGS
+     Cluster resource - cluster. This represents a Cloud resource. (NOTE) Some
+     attributes are not given arguments in this group but can be set in other
+     ways. To set the project attribute:
+      ◆ provide the argument --cluster on the command line with a fully
+        specified name;
+      ◆ set the property core/project;
+      ◆ provide the argument --project on the command line. To set the
+        location attribute:
+      ◆ provide the argument --cluster on the command line with a fully
+        specified name;
+      ◆ set the property compute/zone. To set the private-cloud attribute:
+      ◆ provide the argument --cluster on the command line with a fully
+        specified name.
+
+     This must be specified.
+
+       --cluster=CLUSTER
+          ID of the cluster or fully qualified identifier for the cluster. To
+          set the cluster attribute:
+          ▸ provide the argument --cluster on the command line.
+
+     --management-range=MANAGEMENT_RANGE
+        IP address range in the private cloud to use for management appliances,
+        in CIDR format. Use an IP address range that meets the VMware Engine
+        networking requirements
+        (https://cloud.google.com/vmware-engine/docs/quickstart-networking-requirements).
+
+     --node-type-config=[count=COUNT],[custom-core-count=CUSTOM-CORE-COUNT],[type=TYPE]
+        Information about the type and number of nodes associated with the
+        cluster.
+
+        type (required): canonical identifier of the node type.
+
+        count (required): number of nodes of this type in the cluster.
+
+        custom-core-count (optional): customized number of cores available to
+        each node of the type. To get a list of valid values for your node
+        type, run the gcloud vmware node-types describe command and reference
+        the availableCustomCoreCounts field in the output.
+
+     --vmware-engine-network=VMWARE_ENGINE_NETWORK
+        Resource ID of the VMware Engine network attached to the private cloud.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete. The default is True. Enabled by default, use --no-async to
+        disable.
+
+     --description=DESCRIPTION
+        Text describing the private cloud.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.

@@ -6,7 +6,8 @@ SYNOPSIS
     gcloud beta composer environments create
         (ENVIRONMENT : --location=LOCATION) [--airflow-configs=[KEY=VALUE,...]]
         [--async] [--cloud-sql-machine-type=CLOUD_SQL_MACHINE_TYPE]
-        [--disk-size=DISK_SIZE] [--env-variables=[NAME=VALUE,...]]
+        [--disk-size=DISK_SIZE] [--enable-cloud-data-lineage-integration]
+        [--env-variables=[NAME=VALUE,...]]
         [--environment-size=ENVIRONMENT_SIZE] [--labels=[KEY=VALUE,...]]
         [--machine-type=MACHINE_TYPE] [--node-count=NODE_COUNT]
         [--oauth-scopes=[SCOPE,...]] [--python-version=PYTHON_VERSION]
@@ -16,8 +17,8 @@ SYNOPSIS
         [--cloud-sql-ipv4-cidr=CLOUD_SQL_IPV4_CIDR
           --composer-network-ipv4-cidr=COMPOSER_NETWORK_IPV4_CIDR
           --connection-subnetwork=CONNECTION_SUBNETWORK
-          --enable-private-endpoint --enable-private-environment
-          --enable-privately-used-public-ips
+          --connection-type=CONNECTION_TYPE --enable-private-endpoint
+          --enable-private-environment --enable-privately-used-public-ips
           --master-ipv4-cidr=MASTER_IPV4_CIDR
           --web-server-ipv4-cidr=WEB_SERVER_IPV4_CIDR]
         [--cluster-ipv4-cidr=CLUSTER_IPV4_CIDR
@@ -28,6 +29,12 @@ SYNOPSIS
           --services-secondary-range-name=SERVICES_SECONDARY_RANGE_NAME]
         [--enable-master-authorized-networks
           --master-authorized-networks=[NETWORK,...]]
+        [--enable-scheduled-snapshot-creation
+          --snapshot-creation-schedule=SNAPSHOT_CREATION_SCHEDULE
+          --snapshot-location=SNAPSHOT_LOCATION
+          --snapshot-schedule-timezone=SNAPSHOT_SCHEDULE_TIMEZONE]
+        [--enable-triggerer
+          --triggerer-cpu=TRIGGERER_CPU --triggerer-memory=TRIGGERER_MEMORY]
         [--kms-key=KMS_KEY : --kms-keyring=KMS_KEYRING
           --kms-location=KMS_LOCATION --kms-project=KMS_PROJECT]
         [--maintenance-window-end=MAINTENANCE_WINDOW_END
@@ -103,13 +110,21 @@ FLAGS
         complete.
 
      --cloud-sql-machine-type=CLOUD_SQL_MACHINE_TYPE
-        Cloud SQL machine type used by the Airflow database.
+        Cloud SQL machine type used by the Airflow database. The list of
+        available machine types is available here:
+        https://cloud.google.com/composer/pricing#db-machine-types.
 
      --disk-size=DISK_SIZE
         The disk size for each VM node in the environment. The minimum size is
         20GB, and the maximum is 64TB. Specified value must be an integer
         multiple of gigabytes. Cannot be updated after the environment has been
         created. If units are not provided, defaults to GB.
+
+     Group of arguments for setting Cloud Data Lineage integration
+     configuration in Composer 2.
+
+       --enable-cloud-data-lineage-integration
+          Enable Cloud Data Lineage integration.
 
      --env-variables=[NAME=VALUE,...]
         A comma-delimited list of environment variable NAME=VALUE pairs to
@@ -180,6 +195,7 @@ FLAGS
           Version of Apache Airflow to run in the environment.
 
               Must be of the form `X[.Y[.Z]]`, where `[]` denotes optional fragments.
+              Examples: `2`, `2.3`, `2.3.4`.
 
               The current Cloud Composer version will be used within the created
               environment. The Apache Airflow version is a semantic version or an alias
@@ -195,6 +211,9 @@ FLAGS
               and Apache Airflow. Must be of the form
               `composer-A[.B.C[-D.E]]-airflow-X[.Y[.Z]]`, where `[]` denotes optional
               fragments.
+
+              Examples: `composer-2-airflow-2`, `composer-2-airflow-2.2`,
+              `composer-2.1.2-airflow-2.3.4`.
 
               The Cloud Composer portion of the image version is a semantic version or
               an alias in the form of major version number or `latest`, resolved to the
@@ -229,6 +248,17 @@ FLAGS
           Can be specified for Composer 2.X or greater. Cannot be specified
           unless --enable-private-environment is also specified.
 
+       --connection-type=CONNECTION_TYPE
+          Mode of internal communication within the Composer environment. Must
+          be one of VPC_PEERING or PRIVATE_SERVICE_CONNECT.
+
+          Can be specified for Composer 2.X or greater. Cannot be specified
+          unless --enable-private-environment is also specified. Cannot be set
+          to VPC_PEERING if --connection-subnetwork is also specified.
+
+          CONNECTION_TYPE must be one of: connection-type-unspecified,
+          private-service-connect, vpc-peering.
+
        --enable-private-endpoint
           Environment cluster is managed using the private IP address of the
           master API endpoint. Therefore access to the master endpoint must be
@@ -246,7 +276,8 @@ FLAGS
 
           If not specified, cluster nodes will be assigned public IP addresses.
 
-          Cannot be specified unless --enable-ip-alias is also specified.
+          When used with Composer 1.x, cannot be specified unless
+          --enable-ip-alias is also specified.
 
        --enable-privately-used-public-ips
           When enabled GKE pods and services may use public(non-RFC1918) IP
@@ -276,14 +307,16 @@ FLAGS
           IP address range for the pods in this cluster in CIDR notation (e.g.
           10.0.0.0/14).
 
-          Cannot be specified unless --enable-ip-alias is also specified.
+          When used with Composer 1.x, cannot be specified unless
+          --enable-ip-alias is also specified.
 
        --cluster-secondary-range-name=CLUSTER_SECONDARY_RANGE_NAME
           Secondary range to be used as the source for pod IPs. Alias ranges
           will be allocated from this secondary range. NAME must be the name of
           an existing secondary range in the cluster subnetwork.
 
-          Cannot be specified unless --enable-ip-alias is also specified.
+          When used with Composer 1.x, cannot be specified unless
+          --enable-ip-alias is also specified.
 
        --enable-ip-alias
           Enable use of alias IPs
@@ -299,7 +332,8 @@ FLAGS
           node's IP address. This is done when sending traffic to destinations
           outside the cluster's pod CIDR range.
 
-          Cannot be specified unless --enable-ip-alias is also specified.
+          When used with Composer 1.x, cannot be specified unless
+          --enable-ip-alias is also specified.
 
        --max-pods-per-node=MAX_PODS_PER_NODE
           Maximum number of pods that can be assigned to a single node, can be
@@ -318,13 +352,15 @@ FLAGS
           If unspecified, the services CIDR range will be chosen with a default
           mask size.
 
-          Cannot be specified unless --enable-ip-alias is also specified.
+          When used with Composer 1.x, cannot be specified unless
+          --enable-ip-alias is also specified.
 
        --services-secondary-range-name=SERVICES_SECONDARY_RANGE_NAME
           Secondary range to be used for services (e.g. ClusterIPs). NAME must
           be the name of an existing secondary range in the cluster subnetwork.
 
-          Cannot be specified unless --enable-ip-alias is also specified.
+          When used with Composer 1.x, cannot be specified unless
+          --enable-ip-alias is also specified.
 
      Master Authorized Networks configuration
 
@@ -339,6 +375,55 @@ FLAGS
 
           Cannot be specified unless --enable-master-authorized-networks is
           also specified.
+
+     Group of arguments for setting scheduled snapshots settings in Composer
+     2.0.32 or greater.
+
+       --enable-scheduled-snapshot-creation
+          When specified, snapshots of the environment will be created
+          according to a schedule. Can be specified for Composer 2.0.32 or
+          greater.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --snapshot-creation-schedule=SNAPSHOT_CREATION_SCHEDULE
+          Cron expression specifying when snapshots of the environment should
+          be created. Can be specified for Composer 2.0.32 or greater.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --snapshot-location=SNAPSHOT_LOCATION
+          The Cloud Storage location for storing automatically created
+          snapshots. Can be specified for Composer 2.0.32 or greater.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --snapshot-schedule-timezone=SNAPSHOT_SCHEDULE_TIMEZONE
+          Timezone that sets the context to interpret
+          snapshot_creation_schedule. Can be specified for Composer 2.0.32 or
+          greater.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+     Group of arguments for setting triggerer settings in Composer 2.0.31 or
+     greater.
+
+       --enable-triggerer
+          Enable use of a triggerer, supported in the Environments with
+          Composer 2.0.31 and Airflow 2.2.5 and greater.
+
+       --triggerer-cpu=TRIGGERER_CPU
+          CPU allocated to Airflow triggerer. Supported in the Environments
+          with Composer 2.0.31 and Airflow 2.2.5 and greater.
+
+       --triggerer-memory=TRIGGERER_MEMORY
+          Memory allocated to Airflow triggerer, ex. 512MB, 3GB, 2. If units
+          are not provided, defaults to GB. Supported in the Environments with
+          Composer 2.0.31 and Airflow 2.2.5 and greater.
 
      Key resource - The Cloud KMS (Key Management Service) cryptokey that will
      be used to protect the environment. The 'Cloud Composer Service Agent'

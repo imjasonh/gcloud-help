@@ -10,7 +10,9 @@ SYNOPSIS
         [--ignore-file=IGNORE_FILE] [--labels=[KEY=VALUE,...]]
         [--skaffold-version=SKAFFOLD_VERSION] [--to-target=TO_TARGET]
         [--build-artifacts=BUILD_ARTIFACTS | --images=[NAME=TAG,...]]
-        [--disable-initial-rollout | --enable-initial-rollout]
+        [--disable-initial-rollout | --enable-initial-rollout
+          --initial-rollout-annotations=[KEY=VALUE,...]
+          --initial-rollout-labels=[KEY=VALUE,...]]
         [--from-k8s-manifest=FROM_K8S_MANIFEST
           | --from-run-manifest=FROM_RUN_MANIFEST
           | --skaffold-file=SKAFFOLD_FILE --source=SOURCE; default="."]
@@ -158,6 +160,28 @@ FLAGS
        --enable-initial-rollout
           Creates a rollout in the first target defined in the delivery
           pipeline. This is the default behavior.
+
+       --initial-rollout-annotations=[KEY=VALUE,...]
+          Annotations to apply to the initial rollout when creating the
+          release. Annotations take the form of key/value string pairs.
+
+          Examples:
+
+          Add annotations:
+
+              $ gcloud deploy releases create \
+                  --initial-rollout-annotations="from_target=test,status=stable"
+
+       --initial-rollout-labels=[KEY=VALUE,...]
+          Labels to apply to the initial rollout when creating the release.
+          Labels take the form of key/value string pairs.
+
+          Examples:
+
+          Add labels:
+
+              $ gcloud deploy releases create \
+                  initial-rollout-labels="commit=abc123,author=foo"
 
      At most one of these can be specified:
 

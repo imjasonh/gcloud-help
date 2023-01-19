@@ -2,9 +2,10 @@ NAME
     gcloud storage ls - list Cloud Storage buckets and objects
 
 SYNOPSIS
-    gcloud storage ls [PATH ...] [--all-versions, -a] [--buckets, -b]
-        [--etag, -e] [--format=FORMAT] [--readable-sizes] [--recursive, -R, -r]
-        [--full, -L | --json, -j | --long, -l]
+    gcloud storage ls [PATH ...] [--additional-headers=HEADER=VALUE]
+        [--all-versions, -a] [--buckets, -b] [--etag, -e]
+        [--fetch-encrypted-object-hashes] [--format=FORMAT] [--readable-sizes]
+        [--recursive, -R, -r] [--full, -L | --json, -j | --long, -l]
         [--decryption-keys=[DECRYPTION_KEY,...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -73,6 +74,12 @@ POSITIONAL ARGUMENTS
         gs:// and is allowed to contain wildcard characters.
 
 FLAGS
+     --additional-headers=HEADER=VALUE
+        Includes arbitrary headers in storage API calls. Accepts a comma
+        separated list of key=value pairs, e.g. header1=value1,header2=value2.
+        Overrides the default storage/additional_headers property value for
+        this command invocation.
+
      --all-versions, -a
         Include non-current object versions in the listing. This flag is
         typically only useful for buckets with object versioning
@@ -88,6 +95,12 @@ FLAGS
 
      --etag, -e
         Include ETag metadata in listings that use the --long flag.
+
+     --fetch-encrypted-object-hashes
+        API requests to the LIST endpoint do not fetch the hashes for encrypted
+        objects by default. If this flag is set, a GET request is sent for each
+        encrypted object in order to fetch hashes. This can significantly
+        increase the cost of the command.
 
      --format=FORMAT
         Use "gsutil" to get the style of the older gsutil CLI. (e.g.

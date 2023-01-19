@@ -2,12 +2,15 @@ NAME
     gcloud storage objects update - update Cloud Storage objects
 
 SYNOPSIS
-    gcloud storage objects update [URL ...] [--continue-on-error, -c]
+    gcloud storage objects update [URL ...] [--additional-headers=HEADER=VALUE]
+        [--all-versions] [--continue-on-error, -c] [--[no-]event-based-hold]
         [--read-paths-from-stdin, -I] [--recursive, -R, -r]
         [--storage-class=STORAGE_CLASS, -s STORAGE_CLASS]
-        [--canned-acl=PREDEFINED_ACL,
-          --predefined-acl=PREDEFINED_ACL, -a PREDEFINED_ACL
-          | --[no-]preserve-acl, -p]
+        [--[no-]temporary-hold]
+        [--acl-file=ACL_FILE --add-acl-grant=[ACL_GRANT,...]
+          --canned-acl=PREDEFINED_ACL, --predefined-acl=PREDEFINED_ACL, -a
+          PREDEFINED_ACL
+          --[no-]preserve-acl, -p --remove-acl-grant=REMOVE_ACL_GRANT]
         [--clear-encryption-key --decryption-keys=[DECRYPTION_KEY,...]
           --encryption-key=ENCRYPTION_KEY]
         [--cache-control=CACHE_CONTROL --clear-cache-control
@@ -49,11 +52,24 @@ POSITIONAL ARGUMENTS
         Specifies URLs of objects to update.
 
 FLAGS
+     --additional-headers=HEADER=VALUE
+        Includes arbitrary headers in storage API calls. Accepts a comma
+        separated list of key=value pairs, e.g. header1=value1,header2=value2.
+        Overrides the default storage/additional_headers property value for
+        this command invocation.
+
+     --all-versions
+        Perform the operation on all object versions.
+
      --continue-on-error, -c
         If any operations are unsuccessful, the command will exit with a
         non-zero exit status after completing the remaining operations. This
         flag takes effect only in sequential execution mode (i.e. processor and
         thread count are set to 1). Parallelism is default.
+
+     --[no-]event-based-hold
+        Enables or disables an event-based hold on objects. Use
+        --event-based-hold to enable and --no-event-based-hold to disable.
 
      --read-paths-from-stdin, -I
         Read the list of objects to update from stdin. No need to enter a
@@ -68,21 +84,39 @@ FLAGS
         Specify the storage class of the object. Using this flag triggers a
         rewrite of underlying object data.
 
-     At most one of these can be specified:
+     --[no-]temporary-hold
+        Enables or disables a temporary hold on objects. Use --temporary-hold
+        to enable and --no-temporary-hold to disable.
 
-       --canned-acl=PREDEFINED_ACL, --predefined-acl=PREDEFINED_ACL, -a PREDEFINED_ACL
-          Applies predefined, or "canned," ACLs to a resource. See docs for a
-          list of predefined ACL constants:
-          https://cloud.google.com/storage/docs/access-control/lists#predefined-acl
+     --acl-file=ACL_FILE
+        Path to a local JSON or YAML formatted file containing a valid policy.
+        The output of gcloud storage [buckets|objects] describe
+        --format="multi(acl:format=json)" is a valid file and can be edited for
+        more fine-grained control.
 
-       --[no-]preserve-acl, -p
-          Preserves ACLs when copying in the cloud. This option is Google Cloud
-          Storage-only, and you need OWNER access to all copied objects. If all
-          objects in the destination bucket should have the same ACL, you can
-          also set a default object ACL on that bucket instead of using this
-          flag. Preserving ACLs is the default behavior for updating existing
-          objects. Use --preserve-acl to enable and --no-preserve-acl to
-          disable.
+     --add-acl-grant=[ACL_GRANT,...]
+        Key-value pairs mirroring the JSON accepted by your cloud provider. For
+        example, for Google Cloud
+        Storage,--add-acl-grant=entity=user-tim@gmail.com,role=OWNER
+
+     --canned-acl=PREDEFINED_ACL, --predefined-acl=PREDEFINED_ACL, -a PREDEFINED_ACL
+        Applies predefined, or "canned," ACLs to a resource. See docs for a
+        list of predefined ACL constants:
+        https://cloud.google.com/storage/docs/access-control/lists#predefined-acl
+
+     --[no-]preserve-acl, -p
+        Preserves ACLs when copying in the cloud. This option is Google Cloud
+        Storage-only, and you need OWNER access to all copied objects. If all
+        objects in the destination bucket should have the same ACL, you can
+        also set a default object ACL on that bucket instead of using this
+        flag. Preserving ACLs is the default behavior for updating existing
+        objects. Use --preserve-acl to enable and --no-preserve-acl to disable.
+
+     --remove-acl-grant=REMOVE_ACL_GRANT
+        Key-value pairs mirroring the JSON accepted by your cloud provider. For
+        example, for Google Cloud Storage, --remove-acl-grant=ENTITY, where
+        ENTITY has a valid ACL entity format, such as user-tim@gmail.com,
+        group-admins, allUsers, etc.
 
 ENCRYPTION FLAGS
      --clear-encryption-key

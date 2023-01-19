@@ -4,10 +4,12 @@ NAME
 
 SYNOPSIS
     gcloud alpha firestore import INPUT_URI_PREFIX [--async]
-        [--collection-ids=[COLLECTION_IDS,...]] [GCLOUD_WIDE_FLAG ...]
+        [--collection-ids=[COLLECTION_IDS,...]]
+        [--database=DATABASE; default="(default)"]
+        [--namespace-ids=[NAMESPACE_IDS,...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) import Cloud Firestore documents from Google Cloud Storage
+    (ALPHA) import Cloud Firestore documents from Google Cloud Storage.
 
 EXAMPLES
     To import all collection groups from mybucket/my/path, run:
@@ -19,6 +21,11 @@ EXAMPLES
         $ gcloud alpha firestore import gs://mybucket/my/path \
             --collection-ids='specific collection group1','specific
          collection group2' --async
+
+    To import all collection groups from certain namespace, run:
+
+        $ gcloud alpha firestore import gs://mybucket/my/path \
+            --namespace-ids='specific namespace id'
 
 POSITIONAL ARGUMENTS
      INPUT_URI_PREFIX
@@ -41,6 +48,24 @@ FLAGS
         collections:
 
             $ gcloud alpha firestore import --collection-ids='customers','orders'
+
+     --database=DATABASE; default="(default)"
+        The database to operate on. The default value is (default).
+
+        For example, to operate on database foo:
+
+            $ gcloud alpha firestore import --database='foo'
+
+     --namespace-ids=[NAMESPACE_IDS,...]
+        A list specifying which namespaces will be included in the operation.
+        When omitted, all namespaces are included.
+
+        This is only supported for Datastore Mode databases.
+
+        For example, to operate on only the 'customers' and 'orders'
+        namespaces:
+
+            $ gcloud alpha firestore import --namespaces-ids='customers','orders'
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

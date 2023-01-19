@@ -10,11 +10,12 @@ SYNOPSIS
           | --database-encryption-key=DATABASE_ENCRYPTION_KEY
           | --disable-database-encryption | --disable-default-snat
           | --disable-workload-identity | --enable-autoscaling
-          | --enable-cost-allocation | --enable-identity-service
-          | --enable-image-streaming | --enable-intra-node-visibility
-          | --enable-l4-ilb-subsetting | --enable-legacy-authorization
-          | --enable-master-authorized-networks | --enable-master-global-access
-          | --enable-network-policy | --enable-service-externalips
+          | --enable-cost-allocation | --enable-google-cloud-access
+          | --enable-identity-service | --enable-image-streaming
+          | --enable-intra-node-visibility | --enable-l4-ilb-subsetting
+          | --enable-legacy-authorization | --enable-master-authorized-networks
+          | --enable-master-global-access | --enable-network-policy
+          | --enable-private-endpoint | --enable-service-externalips
           | --enable-shielded-nodes | --enable-stackdriver-kubernetes
           | --enable-vertical-pod-autoscaling | --gateway-api=GATEWAY_API
           | --generate-password | --logging-variant=LOGGING_VARIANT
@@ -24,8 +25,8 @@ SYNOPSIS
           | --private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE
           | --release-channel=CHANNEL | --remove-labels=[KEY,...]
           | --security-group=SECURITY_GROUP | --set-password
-          | --start-credential-rotation | --start-ip-rotation
-          | --update-addons=[ADDON=ENABLED|DISABLED,...]
+          | --stack-type=STACK_TYPE | --start-credential-rotation
+          | --start-ip-rotation | --update-addons=[ADDON=ENABLED|DISABLED,...]
           | --update-labels=[KEY=VALUE,...] | --workload-pool=WORKLOAD_POOL
           | --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
           | --enable-binauthz | --clear-maintenance-window
@@ -42,7 +43,8 @@ SYNOPSIS
           --enable-resource-consumption-metering
           --resource-usage-bigquery-dataset=RESOURCE_USAGE_BIGQUERY_DATASET
           | --cluster-dns=CLUSTER_DNS --cluster-dns-domain=CLUSTER_DNS_DOMAIN
-          --cluster-dns-scope=CLUSTER_DNS_SCOPE | [--enable-autoprovisioning
+          --cluster-dns-scope=CLUSTER_DNS_SCOPE | --disable-managed-prometheus
+          | --enable-managed-prometheus | [--enable-autoprovisioning
           : --autoprovisioning-config-file=AUTOPROVISIONING_CONFIG_FILE
           | --autoprovisioning-image-type=AUTOPROVISIONING_IMAGE_TYPE
           --autoprovisioning-locations=ZONE,[ZONE,...]
@@ -178,7 +180,8 @@ REQUIRED FLAGS
           Enables autoscaling for a node pool.
 
           Enables autoscaling in the node pool specified by --node-pool or the
-          default node pool if --node-pool is not provided.
+          default node pool if --node-pool is not provided. If not already,
+          --max-nodes or --total-max-nodes must also be set.
 
        --enable-cost-allocation
           Enable the cost management feature.
@@ -189,6 +192,11 @@ REQUIRED FLAGS
           (https://cloud.google.com/billing/docs/how-to/export-data-bigquery).
 
           Use --no-enable-cost-allocation to disable this feature.
+
+       --enable-google-cloud-access
+          When you enable Google Cloud Access, any public IP addresses owned by
+          Google Cloud can reach the public control plane endpoint of your
+          cluster.
 
        --enable-identity-service
           Enable Identity Service component on the cluster.
@@ -249,6 +257,10 @@ REQUIRED FLAGS
           enabling network policy on an existing cluster the network policy
           addon must first be enabled on the master by using
           --update-addons=NetworkPolicy=ENABLED flag.
+
+       --enable-private-endpoint
+          Enables cluster's control plane to be accessible using private IP
+          address only.
 
        --enable-service-externalips
           Enables use of services with externalIPs field.
@@ -444,6 +456,10 @@ REQUIRED FLAGS
        --set-password
           Set the basic auth password to the specified value, keeping the
           existing username.
+
+       --stack-type=STACK_TYPE
+          IP stack type of the node VMs. STACK_TYPE must be one of: ipv4,
+          ipv4-ipv6.
 
        --start-credential-rotation
           Start the rotation of IP and credentials for this cluster. For
@@ -667,7 +683,7 @@ REQUIRED FLAGS
 
          --cluster-dns-scope=CLUSTER_DNS_SCOPE
             DNS scope for the Cloud DNS zone created - valid only with
-            --cluster-dns=clouddns
+            --cluster-dns=clouddns. Defaults to cluster.
 
             CLUSTER_DNS_SCOPE must be one of:
 
@@ -675,6 +691,14 @@ REQUIRED FLAGS
                 Configures the Cloud DNS zone to be private to the cluster.
              vpc
                 Configures the Cloud DNS zone to be private to the VPC Network.
+
+       At most one of these can be specified:
+
+         --disable-managed-prometheus
+            Disable managed collection for Managed Service for Prometheus.
+
+         --enable-managed-prometheus
+            Enable managed collection for Managed Service for Prometheus.
 
        Node autoprovisioning
 
@@ -909,7 +933,8 @@ REQUIRED FLAGS
 
        --logging=[COMPONENT,...]
           Set the components that have logging enabled. Valid component values
-          are: SYSTEM, WORKLOAD, NONE
+          are: SYSTEM, WORKLOAD, API_SERVER, CONTROLLER_MANAGER, SCHEDULER,
+          NONE
 
           For more information, look at
           https://cloud.google.com/stackdriver/docs/solutions/gke/installing#available-logs
@@ -917,7 +942,8 @@ REQUIRED FLAGS
           Examples:
 
               $ gcloud container clusters update --logging=SYSTEM
-              $ gcloud container clusters update --logging=SYSTEM,WORKLOAD
+              $ gcloud container clusters update \
+                  --logging=SYSTEM,API_SERVER,WORKLOAD
               $ gcloud container clusters update --logging=NONE
 
        --monitoring=[COMPONENT,...]

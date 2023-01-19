@@ -16,6 +16,8 @@ SYNOPSIS
           [device-name=DEVICE-NAME],[mode=MODE],[name=NAME],[scope=SCOPE]]
         [--enable-display-device] [--[no-]enable-nested-virtualization]
         [--[no-]enable-uefi-networking] [--erase-windows-vss-signature]
+        [--external-ipv6-address=EXTERNAL_IPV6_ADDRESS]
+        [--external-ipv6-prefix-length=EXTERNAL_IPV6_PREFIX_LENGTH]
         [--hostname=HOSTNAME]
         [--instance-termination-action=INSTANCE_TERMINATION_ACTION]
         [--ipv6-network-tier=IPV6_NETWORK_TIER]
@@ -105,7 +107,7 @@ EXAMPLES
             --shielded-secure-boot --shielded-vtpm \
             --shielded-integrity-monitoring
 
-    To create an preemptible instance called 'instance-1', run:
+    To create a preemptible instance called 'instance-1', run:
 
         $ gcloud compute instances create instance-1 \
             --machine-type=n1-standard-1 --zone=us-central1-b \
@@ -399,6 +401,16 @@ FLAGS
         machine image should erase Windows specific VSS signature. See
         https://cloud.google.com/sdk/gcloud/reference/compute/disks/snapshot#--guest-flush
 
+     --external-ipv6-address=EXTERNAL_IPV6_ADDRESS
+        Assigns the given external IPv6 address to the instance that is
+        created. The address must be the first IP address in the range. This
+        option can be used only when creating a single instance.
+
+     --external-ipv6-prefix-length=EXTERNAL_IPV6_PREFIX_LENGTH
+        The prefix length of the external IPv6 address range. This field should
+        be used together with --external-ipv6-address. Only the /96 IP address
+        range is supported, and the default value is 96.
+
      --hostname=HOSTNAME
         Specify the hostname of the instance to be created. The specified
         hostname must be RFC1035 compliant. If hostname is not specified, the
@@ -407,7 +419,9 @@ FLAGS
         using zonal DNS.
 
      --instance-termination-action=INSTANCE_TERMINATION_ACTION
-        Specifies the termination action that will be taken upon VM preemption.
+        Specifies the termination action that will be taken upon VM preemption
+        (--provisioning-model=SPOT or --preemptible) or automatic instance
+        termination (--max-run-duration or --termination-time).
         INSTANCE_TERMINATION_ACTION must be one of:
 
          DELETE
@@ -544,8 +558,10 @@ FLAGS
         Adds a network interface to the instance. Mutually exclusive with any
         of these flags: --address, --network, --network-tier, --subnet,
         --private-network-ip, --stack-type, --ipv6-network-tier,
-        --ipv6-public-ptr-domain. This flag can be repeated to specify multiple
-        network interfaces.
+        --ipv6-public-ptr-domain, --internal-ipv6-address,
+        --internal-ipv6-prefix-length, --ipv6-address, --ipv6-prefix-length,
+        --external-ipv6-address, --external-ipv6-prefix-length. This flag can
+        be repeated to specify multiple network interfaces.
 
         The following keys are allowed:
          address
@@ -617,6 +633,10 @@ FLAGS
                 name on the subnet. If the IP range is specified by netmask, the
                 IP allocator will pick an available range with the specified netmask
                 and allocate it to this network interface.
+
+         network-attachment
+            Specifies the network attachment that this interface should connect
+            to. Mutually exclusive with --network and --subnet flags.
 
      --network-performance-configs=[PROPERTY=VALUE,...]
         Configures network performance settings for the instance. If this flag
@@ -945,8 +965,10 @@ FLAGS
           according to their node affinity labels. A node's affinity labels
           come from the node template of the group the node is in.
 
-          The file should contain a list of a JSON/YAML objects with the
-          following fields:
+          The file should contain a list of a JSON/YAML objects. For an
+          example, see
+          https://cloud.google.com/compute/docs/nodes/provisioning-sole-tenant-vms#configure_node_affinity_labels.
+          The following list describes the fields:
 
            key
               Corresponds to the node affinity label keys of the Node resource.

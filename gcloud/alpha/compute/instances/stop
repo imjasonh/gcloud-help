@@ -3,19 +3,28 @@ NAME
 
 SYNOPSIS
     gcloud alpha compute instances stop INSTANCE_NAMES [INSTANCE_NAMES ...]
-        [--async] [--discard-local-ssd] [--zone=ZONE] [GCLOUD_WIDE_FLAG ...]
+        [--async] [--discard-local-ssd[=DISCARD_LOCAL_SSD]] [--zone=ZONE]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) gcloud alpha compute instances stop is used to stop a Compute
     Engine virtual machine. Stopping a VM performs a clean shutdown, much like
     invoking the shutdown functionality of a workstation or laptop. Stopping a
-    VM with a local SSD is not supported and will result in an API error.
-    Stopping a VM which is already stopped will return without errors.
+    VM with a local SSD is not supported and will result in an API error unless
+    the --discard-local-ssd flag is passed. Stopping a VM which is already
+    stopped will return without errors.
 
 EXAMPLES
     To stop an instance named test-instance, run:
 
         $ gcloud alpha compute instances stop test-instance
+
+    To stop an instance named test-instance that has a Local SSD, run:
+
+        $ gcloud alpha compute instances stop test-instance \
+            --discard-local-ssd=True
+
+    Using '--discard-local-ssd' without a value defaults to True.
 
 POSITIONAL ARGUMENTS
      INSTANCE_NAMES [INSTANCE_NAMES ...]
@@ -28,8 +37,8 @@ FLAGS
         Return immediately, without waiting for the operation in progress to
         complete.
 
-     --discard-local-ssd
-        If provided, local SSD data is discarded.
+     --discard-local-ssd[=DISCARD_LOCAL_SSD]
+        If set to true, local SSD data is discarded.
 
      --zone=ZONE
         Zone of the instances to operate on. If not specified, you might be

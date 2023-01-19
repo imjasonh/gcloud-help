@@ -9,12 +9,14 @@ SYNOPSIS
         [--memory=MEMORY] [--parallelism=PARALLELISM] [--region=REGION]
         [--service-account=SERVICE_ACCOUNT]
         [--set-cloudsql-instances=[CLOUDSQL-INSTANCES,...]]
-        [--set-env-vars=[KEY=VALUE,...]]
         [--set-secrets=[KEY=SECRET_NAME:SECRET_VERSION,...]]
         [--task-timeout=TASK_TIMEOUT] [--tasks=TASKS; default=1]
         [--vpc-connector=VPC_CONNECTOR] [--vpc-egress=VPC_EGRESS]
-        [--async | --wait] [--image=IMAGE | --source=SOURCE]
-        [GCLOUD_WIDE_FLAG ...]
+        [--async | --wait]
+        [--clear-env-vars | --env-vars-file=FILE_PATH
+          | --set-env-vars=[KEY=VALUE,...]
+          | --remove-env-vars=[KEY,...] --update-env-vars=[KEY=VALUE,...]]
+        [--image=IMAGE | --source=SOURCE] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Creates or updates a Cloud Run job.
@@ -88,7 +90,7 @@ FLAGS
         List of label KEY=VALUE pairs to add.
 
      --max-retries=MAX_RETRIES
-        Number of times an task is allowed to restart in case of failure before
+        Number of times a task is allowed to restart in case of failure before
         being failed permanently. This applies per-task, not per-job. If set to
         0, tasks will only run once and never be retried on failure.
 
@@ -106,20 +108,13 @@ FLAGS
      --service-account=SERVICE_ACCOUNT
         Service account associated with the revision of the service. The
         service account represents the identity of the running revision, and
-        determines what permissions the revision has. For the managed platform,
-        this is the email address of an IAM service account. For the
-        Kubernetes-based platforms (gke, kubernetes), this is the name of a
-        Kubernetes service account in the same namespace as the service. If not
-        provided, the revision will use the default service account of the
-        project, or default Kubernetes namespace service account respectively.
+        determines what permissions the revision has. This is the email address
+        of an IAM service account.
 
      --set-cloudsql-instances=[CLOUDSQL-INSTANCES,...]
         You can specify a name of a Cloud SQL instance if it's in the same
         project and region as your Cloud Run resource; otherwise specify
         <project>:<region>:<instance> for the instance.
-
-     --set-env-vars=[KEY=VALUE,...]
-        List of key-value pairs to set as environment variables.
 
      --set-secrets=[KEY=SECRET_NAME:SECRET_VERSION,...]
         Specify secrets to provide as environment variables. For example:
@@ -168,6 +163,32 @@ FLAGS
           Wait until the execution has completed running before exiting. If not
           set, gcloud exits successfully when the execution has started.
           Implies --execute-now.
+
+     At most one of these can be specified:
+
+       --clear-env-vars
+          Remove all environment variables.
+
+       --env-vars-file=FILE_PATH
+          Path to a local YAML file with definitions for all environment
+          variables. All existing environment variables will be removed before
+          the new environment variables are added. Example YAML content:
+
+              KEY_1: "value1"
+              KEY_2: "value 2"
+
+       --set-env-vars=[KEY=VALUE,...]
+          List of key-value pairs to set as environment variables. All existing
+          environment variables will be removed first.
+
+       Only --update-env-vars and --remove-env-vars can be used together. If
+       both are specified, --remove-env-vars will be applied first.
+
+         --remove-env-vars=[KEY,...]
+            List of environment variables to be removed.
+
+         --update-env-vars=[KEY=VALUE,...]
+            List of key-value pairs to set as environment variables.
 
      At most one of these can be specified:
 

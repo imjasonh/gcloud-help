@@ -2,13 +2,15 @@ NAME
     gcloud alpha storage buckets create - create buckets for storing objects
 
 SYNOPSIS
-    gcloud alpha storage buckets create URL
+    gcloud alpha storage buckets create URL [--additional-headers=HEADER=VALUE]
         [--default-encryption-key=DEFAULT_ENCRYPTION_KEY,
           -k DEFAULT_ENCRYPTION_KEY]
         [--default-storage-class=DEFAULT_STORAGE_CLASS,
           -c DEFAULT_STORAGE_CLASS, -s DEFAULT_STORAGE_CLASS]
-        [--location=LOCATION, -l LOCATION]
+        [--[no-]enable-autoclass] [--location=LOCATION, -l LOCATION]
         [--[no-]pap, --[no-]public-access-prevention]
+        [--placement=REGION,REGION]
+        [--recovery-point-objective=SETTING, --rpo=SETTING]
         [--retention-period=RETENTION_PERIOD]
         [--[no-]uniform-bucket-level-access, -b] [GCLOUD_WIDE_FLAG ...]
 
@@ -32,6 +34,12 @@ POSITIONAL ARGUMENTS
         The URL of the bucket to create.
 
 FLAGS
+     --additional-headers=HEADER=VALUE
+        Includes arbitrary headers in storage API calls. Accepts a comma
+        separated list of key=value pairs, e.g. header1=value1,header2=value2.
+        Overrides the default storage/additional_headers property value for
+        this command invocation.
+
      --default-encryption-key=DEFAULT_ENCRYPTION_KEY, -k DEFAULT_ENCRYPTION_KEY
         Set the default KMS key using the full path to the key, which has the
         following form:
@@ -43,6 +51,11 @@ FLAGS
         If not specified, the default storage class used by Cloud Storage is
         "Standard".
 
+     --[no-]enable-autoclass
+        The Autoclass feature automatically selects the best storage class for
+        objects based on access patterns. Use --enable-autoclass to enable and
+        --no-enable-autoclass to disable.
+
      --location=LOCATION, -l LOCATION
         Location (https://cloud.google.com/storage/docs/locations) for the
         bucket. If not specified, the location used by Cloud Storage is us. A
@@ -51,9 +64,27 @@ FLAGS
      --[no-]pap, --[no-]public-access-prevention
         Sets public access prevention to "enforced". For details on how exactly
         public access is blocked, see:
-        http://cloud/storage/docs/public-access-prevention. Use
+        http://cloud.google.com/storage/docs/public-access-prevention. Use
         --public-access-prevention to enable and --no-public-access-prevention
         to disable.
+
+     --placement=REGION,REGION
+        A comma-separated list of exactly 2 regions that form the custom
+        dual-region. Only regions within the same continent are or will ever be
+        valid. Invalid location pairs (such as mixed-continent, or with
+        unsupported regions) will return an error.
+
+     --recovery-point-objective=SETTING, --rpo=SETTING
+        Sets the recovery point objective
+        (https://cloud.google.com/architecture/dr-scenarios-planning-guide#basics_of_dr_planning)
+        of a bucket. This flag can only be used with multi-region and
+        dual-region buckets. DEFAULT option is valid for multi-region and
+        dual-regions buckets. ASYNC_TURBO option is only valid for dual-region
+        buckets. If unspecified when the bucket is created, it defaults to
+        DEFAULT for dual-region and multi-region buckets. For more information,
+        see Turbo Replication
+        (https://cloud.google.com/storage/docs/turbo-replication). SETTING must
+        be one of: ASYNC_TURBO, DEFAULT.
 
      --retention-period=RETENTION_PERIOD
         Minimum retention period

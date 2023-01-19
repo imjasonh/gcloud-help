@@ -6,15 +6,16 @@ SYNOPSIS
     gcloud alpha builds triggers create gitlab-enterprise
         (--trigger-config=PATH
           | [--gitlab-config-resource=GITLAB_CONFIG_RESOURCE
-          --project-namespace=PROJECT_NAMESPACE
-          --region=REGION (--branch-pattern=REGEX | --tag-pattern=REGEX
-          | [--pull-request-pattern=REGEX : --comment-control=COMMENT_CONTROL;
+          --project-namespace=PROJECT_NAMESPACE (--branch-pattern=REGEX
+          | --tag-pattern=REGEX | [--pull-request-pattern=REGEX
+          : --comment-control=COMMENT_CONTROL;
           default=CommentControlValueValuesEnum(COMMENTS_ENABLED,
           1)]) (--build-config=PATH | --inline-config=PATH
-          | --dockerfile=DOCKERFILE --dockerfile-dir=DOCKERFILE_DIR;
-          default="/" --dockerfile-image=DOCKERFILE_IMAGE)
+          | [--dockerfile=DOCKERFILE : --dockerfile-dir=DOCKERFILE_DIR;
+          default="/" --dockerfile-image=DOCKERFILE_IMAGE])
           : --description=DESCRIPTION --ignored-files=[GLOB,...]
-          --included-files=[GLOB,...] --name=NAME --require-approval
+          --included-files=[GLOB,...] --name=NAME --region=REGION
+          --require-approval
           --service-account=SERVICE_ACCOUNT --substitutions=[KEY=VALUE,...]])
         [GCLOUD_WIDE_FLAG ...]
 
@@ -65,14 +66,6 @@ REQUIRED FLAGS
             This flag argument must be specified if any of the other arguments
             in this group are specified.
 
-         --region=REGION
-            The region of the Cloud Build Service to use. Must be set to a
-            supported region name (e.g. us-central1). If unset, builds/region
-            is used. If builds/region is unset,region is set to "global".
-
-            This flag argument must be specified if any of the other arguments
-            in this group are specified.
-
          --description=DESCRIPTION
             Build trigger description.
 
@@ -86,6 +79,13 @@ REQUIRED FLAGS
 
          --name=NAME
             Build trigger name.
+
+         --region=REGION
+            The region of the Cloud Build Service to use. Must be set to a
+            supported region name (e.g. us-central1). If unset, builds/region,
+            which is the default region to use when working with Cloud Build
+            resources, is used. If builds/region is unset, region is set to
+            global.
 
          --require-approval
             Require manual approval for triggered builds.
@@ -187,6 +187,9 @@ REQUIRED FLAGS
 
                 The filename is relative to the Dockerfile directory.
 
+                This flag argument must be specified if any of the other
+                arguments in this group are specified.
+
              --dockerfile-dir=DOCKERFILE_DIR; default="/"
                 Location of the directory containing the Dockerfile in the
                 repository.
@@ -215,7 +218,9 @@ NOTES
     This command is currently in alpha and might change without notice. If this
     command fails with API permission errors despite specifying the correct
     project, you might be trying to access an API with an invitation-only early
-    access allowlist. This variant is also available:
+    access allowlist. These variants are also available:
+
+        $ gcloud builds triggers create gitlab-enterprise
 
         $ gcloud beta builds triggers create gitlab-enterprise
 

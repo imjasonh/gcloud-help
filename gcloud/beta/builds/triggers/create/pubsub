@@ -5,11 +5,12 @@ NAME
 SYNOPSIS
     gcloud beta builds triggers create pubsub
         (--trigger-config=PATH | [--topic=TOPIC (--build-config=PATH
-          | --inline-config=PATH | --dockerfile=DOCKERFILE
-          --dockerfile-dir=DOCKERFILE_DIR;
-          default="/" --dockerfile-image=DOCKERFILE_IMAGE)
-          : --description=DESCRIPTION --name=NAME --require-approval
-          --service-account=SERVICE_ACCOUNT
+          | --inline-config=PATH | [--dockerfile=DOCKERFILE
+          : --dockerfile-dir=DOCKERFILE_DIR;
+          default="/" --dockerfile-image=DOCKERFILE_IMAGE])
+          : --description=DESCRIPTION
+          --github-enterprise-config=GITHUB_ENTERPRISE_CONFIG --name=NAME
+          --region=REGION --require-approval --service-account=SERVICE_ACCOUNT
           --subscription-filter=SUBSCRIPTION_FILTER
           --substitutions=[KEY=VALUE,...]
           --repo=REPO --repo-type=REPO_TYPE (--branch=BRANCH | --tag=TAG)])
@@ -49,8 +50,21 @@ REQUIRED FLAGS
          --description=DESCRIPTION
             Build trigger description.
 
+         --github-enterprise-config=GITHUB_ENTERPRISE_CONFIG
+            The resource name of the GitHub Enterprise config that should be
+            applied to this source. Format:
+            projects/{project}/locations/{location}/githubEnterpriseConfigs/{id}
+            or projects/{project}/githubEnterpriseConfigs/{id}
+
          --name=NAME
             Build trigger name.
+
+         --region=REGION
+            The region of the Cloud Build Service to use. Must be set to a
+            supported region name (e.g. us-central1). If unset, builds/region,
+            which is the default region to use when working with Cloud Build
+            resources, is used. If builds/region is unset, region is set to
+            global.
 
          --require-approval
             Require manual approval for triggered builds.
@@ -90,20 +104,16 @@ REQUIRED FLAGS
 
          Exactly one of these must be specified:
 
-           Build file configuration flags
+           --build-config=PATH
+              Path to a YAML or JSON file containing the build configuration in
+              the repository.
 
-             --build-config=PATH
-                Path to a YAML or JSON file containing the build configuration
-                in the repository.
+              For more details, see:
+              https://cloud.google.com/cloud-build/docs/build-config
 
-                For more details, see:
-                https://cloud.google.com/cloud-build/docs/build-config
-
-           Build configuration file
-
-             --inline-config=PATH
-                Local path to a YAML or JSON file containing a build
-                configuration.
+           --inline-config=PATH
+              Local path to a YAML or JSON file containing a build
+              configuration.
 
            Dockerfile build configuration flags
 
@@ -114,6 +124,9 @@ REQUIRED FLAGS
                 build using the specified file.
 
                 The filename is relative to the Dockerfile directory.
+
+                This flag argument must be specified if any of the other
+                arguments in this group are specified.
 
              --dockerfile-dir=DOCKERFILE_DIR; default="/"
                 Location of the directory containing the Dockerfile in the
@@ -164,8 +177,10 @@ GCLOUD WIDE FLAGS
     Run $ gcloud help for details.
 
 NOTES
-    This command is currently in beta and might change without notice. This
-    variant is also available:
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud builds triggers create pubsub
 
         $ gcloud alpha builds triggers create pubsub
 

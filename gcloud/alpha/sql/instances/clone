@@ -4,8 +4,10 @@ NAME
 SYNOPSIS
     gcloud alpha sql instances clone SOURCE DESTINATION
         [--allocated-ip-range-name=ALLOCATED_IP_RANGE_NAME] [--async]
-        [--point-in-time=POINT_IN_TIME | --bin-log-file-name=BIN_LOG_FILE_NAME
-          --bin-log-position=BIN_LOG_POSITION] [GCLOUD_WIDE_FLAG ...]
+        [--bin-log-file-name=BIN_LOG_FILE_NAME
+          --bin-log-position=BIN_LOG_POSITION | [--point-in-time=POINT_IN_TIME
+          : --restore-database-name=RESTORE_DATABASE_NAME]]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) gcloud alpha sql instances clone creates a clone of a Cloud SQL
@@ -19,6 +21,10 @@ DESCRIPTION
     not specified, the current state of the instance is cloned.
 
     For PostgreSQL: The point in time, if specified, defines a past state of
+    the instance to clone. If not specified, the current state of the instance
+    is cloned.
+
+    For SQL Server: The point in time, if specified, defines a past state of
     the instance to clone. If not specified, the current state of the instance
     is cloned.
 
@@ -44,6 +50,11 @@ EXAMPLES
         $ gcloud alpha sql instances clone instance-foo instance-bar \
             --point-in-time '2012-11-15T16:19:00.094Z'
 
+    To clone a SQL Server source instance at a specific point in time:
+
+        $ gcloud alpha sql instances clone instance-foo instance-bar \
+            --point-in-time '2012-11-15T16:19:00.094Z'
+
     To specify the allocated IP range for the private IP target Instance
     (reserved for future use):
 
@@ -61,8 +72,8 @@ FLAGS
      --allocated-ip-range-name=ALLOCATED_IP_RANGE_NAME
         The name of the IP range allocated for the destination instance with
         private network connectivity. For example:
-        'google-managed-services-default'. If set, the the destination instance
-        IP is created in the allocated range represented by this name. Reserved
+        'google-managed-services-default'. If set, the destination instance IP
+        is created in the allocated range represented by this name. Reserved
         for future use.
 
      --async
@@ -70,17 +81,6 @@ FLAGS
         complete.
 
      At most one of these can be specified:
-
-       --point-in-time=POINT_IN_TIME
-          Represents the state of an instance at any given point in time inside
-          a transaction log file. For MySQL, the binary log file is used for
-          transaction logs. For PostgreSQL, the write-ahead log file is used
-          for transaction logs. To create a transaction log, enable
-          point-in-time recovery on the source instance. Instance should have
-          transaction logs accumulated upto the point in time they want to
-          restore upto. Uses RFC 3339 format in UTC timezone. If specified,
-          defines a past state of the instance to clone. For example,
-          '2012-11-15T16:19:00.094Z'.
 
        Binary log coordinates for point-in-time recovery.
 
@@ -103,6 +103,26 @@ FLAGS
 
             This flag argument must be specified if any of the other arguments
             in this group are specified.
+
+       --point-in-time=POINT_IN_TIME
+          Represents the state of an instance at any given point in time inside
+          a transaction log file. For MySQL, the binary log file is used for
+          transaction logs. For PostgreSQL, the write-ahead log file is used
+          for transaction logs. For SQL Server, the log backup file is used for
+          such purpose. To create a transaction log, enable point-in-time
+          recovery on the source instance. Instance should have transaction
+          logs accumulated up to the point in time they want to restore up to.
+          Uses RFC 3339 format in UTC timezone. If specified, defines a past
+          state of the instance to clone. For example,
+          '2012-11-15T16:19:00.094Z'.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --restore-database-name=RESTORE_DATABASE_NAME
+          The name of the database to be restored for a point-in-time restore.
+          If set, the destination instance will only restore the specified
+          database.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

@@ -5,8 +5,8 @@ NAME
 SYNOPSIS
     gcloud beta scc findings create
         (FINDING : --organization=ORGANIZATION --source=SOURCE)
-        --category=CATEGORY --resource-name=RESOURCE_NAME
-        [--event-time=EVENT_TIME] [--external-uri=EXTERNAL_URI]
+        --category=CATEGORY --event-time=EVENT_TIME
+        --resource-name=RESOURCE_NAME [--external-uri=EXTERNAL_URI]
         [--source-properties=[SOURCE_PROPERTIES,...]] [--state=STATE]
         [GCLOUD_WIDE_FLAG ...]
 
@@ -19,8 +19,9 @@ EXAMPLES
 
         $ gcloud beta scc findings create my-finding --organization=123456 \
             --source=5678 --state=ACTIVE --category='XSS_SCRIPTING' \
-            --resource-name='//cloudresourcemanager.googleapis.com/v1/projec\
-        ts/example-project'
+            --event-time=2023-01-11T07:00:06.861Z \
+            --resource-name='//cloudresourcemanager.googleapis.com/projects/\
+        example-project'
 
     Create an ACTIVE my-finding attached to example-project under project
     example-project and source 5678:
@@ -28,8 +29,9 @@ EXAMPLES
         $ gcloud beta scc findings create \
             projects/example-project/sources/5678/findings/my-finding \
             --state=ACTIVE --category='XSS_SCRIPTING' \
-            --resource-name='//cloudresourcemanager.googleapis.com/v1/projec\
-        ts/example-project'
+            --event-time=2023-01-11T07:00:06.861Z \
+            --resource-name='//cloudresourcemanager.googleapis.com/projects/\
+        example-project'
 
     Create an ACTIVE my-finding attached to example-project under folder 456
     and source 5678:
@@ -37,8 +39,9 @@ EXAMPLES
         $ gcloud beta scc findings create \
             folders/456/sources/5678/findings/my-finding --state=ACTIVE \
             --category='XSS_SCRIPTING' \
-            --resource-name='//cloudresourcemanager.googleapis.com/v1/projec\
-        ts/example-project'
+            --event-time=2023-01-11T07:00:06.861Z \
+            --resource-name='//cloudresourcemanager.googleapis.com/projects/\
+        example-project'
 
 POSITIONAL ARGUMENTS
      Finding resource - The finding to be used for the SCC (Security Command
@@ -83,19 +86,18 @@ POSITIONAL ARGUMENTS
 REQUIRED FLAGS
      --category=CATEGORY
         Taxonomy group within findings from a given source. Example:
-        XSS_FLASH_INJECTION
+        XSS_SCRIPTING
+
+     --event-time=EVENT_TIME
+        Time at which the issue is detected or the finding is created, in the
+        following format: YYYY-MM-DDThh:mm:ss.ffffffZ. Example:
+        2023-01-11T07:00:06.861Z
 
      --resource-name=RESOURCE_NAME
         Full resource name of the Google Cloud Platform resource this finding
         is for.
 
 OPTIONAL FLAGS
-     --event-time=EVENT_TIME
-        Time at which the event took place. For example, if the finding
-        represents an open firewall it would capture the time the open firewall
-        was detected. If event-time is not provided, it will default to UTC
-        version of NOW. For example 2019-02-28T07:00:00Z
-
      --external-uri=EXTERNAL_URI
         URI that, if available, points to a web page outside of Cloud SCC
         (Security Command Center) where additional information about the

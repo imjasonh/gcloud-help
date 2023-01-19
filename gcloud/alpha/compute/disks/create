@@ -21,11 +21,12 @@ SYNOPSIS
           | --source-snapshot=SOURCE_SNAPSHOT]
         [--kms-key=KMS_KEY : --kms-keyring=KMS_KEYRING
           --kms-location=KMS_LOCATION --kms-project=KMS_PROJECT]
-        [--primary-disk-region=PRIMARY_DISK_REGION
-          | --primary-disk-zone=PRIMARY_DISK_ZONE]
         [--region=REGION | --zone=ZONE]
         [--source-disk-region=SOURCE_DISK_REGION
-          | --source-disk-zone=SOURCE_DISK_ZONE] [GCLOUD_WIDE_FLAG ...]
+          | --source-disk-zone=SOURCE_DISK_ZONE]
+        [--primary-disk-project=PRIMARY_DISK_PROJECT]
+        [--primary-disk-region=PRIMARY_DISK_REGION
+          | --primary-disk-zone=PRIMARY_DISK_ZONE] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) gcloud alpha compute disks create creates one or more Compute
@@ -83,13 +84,12 @@ FLAGS
         https://cloud.google.com/sdk/gcloud/reference/compute/disks/snapshot#--guest-flush
 
      --guest-os-features=[GUEST_OS_FEATURE,...]
-        This parameter enables one or more features for VM instances that use
-        the image for their boot disks. See
-        https://cloud.google.com/compute/docs/images/create-delete-deprecate-private-images#guest-os-features
-        for descriptions of the supported features. GUEST_OS_FEATURE must be
-        one of: BARE_METAL_LINUX_COMPATIBLE, GVNIC, MULTI_IP_SUBNET,
-        SEV_CAPABLE, SEV_LIVE_MIGRATABLE, SEV_SNP_CAPABLE, UEFI_COMPATIBLE,
-        VIRTIO_SCSI_MULTIQUEUE, WINDOWS.
+        Enables one or more features for VM instances that use the image for
+        their boot disks. See the descriptions of supported features at:
+        https://cloud.google.com/compute/docs/images/create-delete-deprecate-private-images#guest-os-features.
+        GUEST_OS_FEATURE must be one of: BARE_METAL_LINUX_COMPATIBLE, GVNIC,
+        MULTI_IP_SUBNET, SEV_CAPABLE, SEV_LIVE_MIGRATABLE, SEV_SNP_CAPABLE,
+        UEFI_COMPATIBLE, VIRTIO_SCSI_MULTIQUEUE, WINDOWS.
 
      --interface=INTERFACE
         Specifies the disk interface to use for attaching this disk. Valid
@@ -275,18 +275,6 @@ FLAGS
 
      At most one of these can be specified:
 
-       --primary-disk-region=PRIMARY_DISK_REGION
-          Region of the primary disk for asynchronous replication. The primary
-          and secondary disks must not be in the same region. Overrides the
-          default compute/region property value for this command invocation.
-
-       --primary-disk-zone=PRIMARY_DISK_ZONE
-          Zone of the primary disk for asynchronous replication. The primary
-          and secondary disks must not be in the same region. Overrides the
-          default compute/zone property value for this command invocation.
-
-     At most one of these can be specified:
-
        --region=REGION
           Region of the disks to create. If not specified, you might be
           prompted to select a region (interactive mode only).
@@ -339,6 +327,22 @@ FLAGS
           Zone of the source disk. This argument is not required if the target
           disk is in the same zone as the source disk. Overrides the default
           compute/zone property value for this command invocation.
+
+ASYNC PD FLAGS
+     --primary-disk-project=PRIMARY_DISK_PROJECT
+        Project of the primary disk for asynchronous replication.
+
+     At most one of these can be specified:
+
+       --primary-disk-region=PRIMARY_DISK_REGION
+          Region of the primary disk for asynchronous replication. The primary
+          and secondary disks must not be in the same region. Overrides the
+          default compute/region property value for this command invocation.
+
+       --primary-disk-zone=PRIMARY_DISK_ZONE
+          Zone of the primary disk for asynchronous replication. The primary
+          and secondary disks must not be in the same region. Overrides the
+          default compute/zone property value for this command invocation.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

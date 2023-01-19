@@ -4,9 +4,10 @@ NAME
 SYNOPSIS
     gcloud alpha functions deploy (NAME : --region=REGION)
         [--allow-unauthenticated] [--buildpack-stack=BUILDPACK_STACK]
-        [--docker-registry=DOCKER_REGISTRY] [--egress-settings=EGRESS_SETTINGS]
-        [--entry-point=ENTRY_POINT] [--gen2] [--ignore-file=IGNORE_FILE]
-        [--ingress-settings=INGRESS_SETTINGS] [--memory=MEMORY] [--retry]
+        [--concurrency=CONCURRENCY] [--docker-registry=DOCKER_REGISTRY]
+        [--egress-settings=EGRESS_SETTINGS] [--entry-point=ENTRY_POINT]
+        [--gen2] [--ignore-file=IGNORE_FILE]
+        [--ingress-settings=INGRESS_SETTINGS] [--retry]
         [--run-service-account=RUN_SERVICE_ACCOUNT] [--runtime=RUNTIME]
         [--security-level=SECURITY_LEVEL; default="secure-always"]
         [--serve-all-traffic-latest-revision]
@@ -38,6 +39,7 @@ SYNOPSIS
           /secret_path=SECRET_VALUE_REF,
           /mount_path:/secret_file_path=SECRET_VALUE_REF,...]]
         [--clear-vpc-connector | --vpc-connector=VPC_CONNECTOR]
+        [--memory=MEMORY : --cpu=CPU]
         [--trigger-bucket=TRIGGER_BUCKET | --trigger-http
           | --trigger-topic=TRIGGER_TOPIC
           | --trigger-event=EVENT_TYPE --trigger-resource=RESOURCE
@@ -98,6 +100,11 @@ FLAGS
      --buildpack-stack=BUILDPACK_STACK
         Specifies one of the Google provided buildpack stacks.
 
+     --concurrency=CONCURRENCY
+        Set the maximum number of concurrent requests allowed per container
+        instance. Leave concurrency unspecified to receive the server default
+        value. Only applicable when the --gen2 flag is provided.
+
      --docker-registry=DOCKER_REGISTRY
         Docker Registry to use for storing the function's Docker images. The
         option container-registry is used by default.
@@ -134,22 +141,6 @@ FLAGS
         Ingress settings controls what traffic can reach the function. By
         default all will be used. INGRESS_SETTINGS must be one of: all,
         internal-only, internal-and-gclb.
-
-     --memory=MEMORY
-        Limit on the amount of memory the function can use.
-
-        Allowed values for v1 are: 128MB, 256MB, 512MB, 1024MB, 2048MB, 4096MB,
-        and 8192MB.
-
-        Allowed values for GCF 2nd gen are in the format: <number><unit> with
-        allowed units of "k", "M", "G", "Ki", "Mi", "Gi". Ending 'b' or 'B' is
-        allowed.
-
-        Examples: 100000k, 128M, 10Mb, 1024Mi, 750K, 4Gi.
-
-        By default, a new function is limited to 256MB of memory. When
-        deploying an update to an existing function, the function keeps its old
-        memory limit unless you specify this flag.
 
      --retry
         If specified, then the function will be retried in case of a failure.
@@ -530,6 +521,38 @@ FLAGS
           projects/${PROJECT}/locations/${LOCATION}/connectors/${CONNECTOR} or
           ${CONNECTOR}, where ${CONNECTOR} is the short name of the VPC Access
           connector.
+
+     --memory=MEMORY
+        Limit on the amount of memory the function can use.
+
+        Allowed values for v1 are: 128MB, 256MB, 512MB, 1024MB, 2048MB, 4096MB,
+        and 8192MB.
+
+        Allowed values for GCF 2nd gen are in the format: <number><unit> with
+        allowed units of "k", "M", "G", "Ki", "Mi", "Gi". Ending 'b' or 'B' is
+        allowed.
+
+        Examples: 100000k, 128M, 10Mb, 1024Mi, 750K, 4Gi.
+
+        By default, a new function is limited to 256MB of memory. When
+        deploying an update to an existing function, the function keeps its old
+        memory limit unless you specify this flag.
+
+     --cpu=CPU
+        The number of available CPUs to set. Only valid when --gen2 and
+        --memory=MEMORY are specified.
+
+        Examples: .5, 2, 2.0, 2000m.
+
+        By default, a new function's available CPUs is determined based on its
+        memory value.
+
+        When deploying an update that includes memory changes to an existing
+        function, the function's available CPUs will be recalculated based on
+        the new memory unless this flag is specified. When deploying an update
+        that does not include memory changes to an existing function, the
+        function's "available CPUs" setting will keep its old value unless you
+        use this flag to change the setting.
 
      If you don't specify a trigger when deploying an update to an existing
      function it will keep its current trigger. You must specify

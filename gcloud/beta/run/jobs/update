@@ -2,10 +2,10 @@ NAME
     gcloud beta run jobs update - update a Cloud Run Job
 
 SYNOPSIS
-    gcloud beta run jobs update [JOB] [--args=[ARG,...]] [--async]
+    gcloud beta run jobs update [JOB] [--args=[ARG,...]]
         [--breakglass=JUSTIFICATION] [--clear-vpc-connector]
-        [--command=[COMMAND,...]] [--cpu=CPU] [--image=IMAGE] [--key=KEY]
-        [--max-retries=MAX_RETRIES] [--memory=MEMORY]
+        [--command=[COMMAND,...]] [--cpu=CPU] [--execute-now] [--image=IMAGE]
+        [--key=KEY] [--max-retries=MAX_RETRIES] [--memory=MEMORY]
         [--parallelism=PARALLELISM] [--region=REGION]
         [--service-account=SERVICE_ACCOUNT] [--task-timeout=TASK_TIMEOUT]
         [--tasks=TASKS; default=1] [--vpc-connector=VPC_CONNECTOR]
@@ -14,6 +14,7 @@ SYNOPSIS
           | --clear-cloudsql-instances
           | --remove-cloudsql-instances=[CLOUDSQL-INSTANCES,...]
           | --set-cloudsql-instances=[CLOUDSQL-INSTANCES,...]]
+        [--async | --wait]
         [--binary-authorization=POLICY | --clear-binary-authorization]
         [--clear-env-vars | --env-vars-file=FILE_PATH
           | --set-env-vars=[KEY=VALUE,...]
@@ -57,10 +58,6 @@ FLAGS
         image's default Cmd is used. Otherwise, if not specified, no arguments
         are passed. To reset this field to its default, pass an empty string.
 
-     --async
-        Return immediately, without waiting for the operation in progress to
-        complete.
-
      --breakglass=JUSTIFICATION
         Justification to bypass Binary Authorization policy constraints and
         allow the operation. See
@@ -83,6 +80,9 @@ FLAGS
         (fully managed), 4 cpus also requires a minimum 2Gi --memory value.
         Examples 2, 2.0, 2000m
 
+     --execute-now
+        Execute the job immediately after creation.
+
      --image=IMAGE
         Name of the container image to deploy (e.g.
         us-docker.pkg.dev/cloudrun/container/job:latest).
@@ -91,7 +91,7 @@ FLAGS
         CMEK key reference to encrypt the container with.
 
      --max-retries=MAX_RETRIES
-        Number of times an task is allowed to restart in case of failure before
+        Number of times a task is allowed to restart in case of failure before
         being failed permanently. This applies per-task, not per-job. If set to
         0, tasks will only run once and never be retried on failure.
 
@@ -109,12 +109,8 @@ FLAGS
      --service-account=SERVICE_ACCOUNT
         Service account associated with the revision of the service. The
         service account represents the identity of the running revision, and
-        determines what permissions the revision has. For the managed platform,
-        this is the email address of an IAM service account. For the
-        Kubernetes-based platforms (gke, kubernetes), this is the name of a
-        Kubernetes service account in the same namespace as the service. If not
-        provided, the revision will use the default service account of the
-        project, or default Kubernetes namespace service account respectively.
+        determines what permissions the revision has. This is the email address
+        of an IAM service account.
 
      --task-timeout=TASK_TIMEOUT
         Set the maximum time (deadline) a job task attempt can run for. In the
@@ -168,6 +164,17 @@ FLAGS
 
      At most one of these can be specified:
 
+       --async
+          Return immediately, without waiting for the operation in progress to
+          complete.
+
+       --wait
+          Wait until the execution has completed running before exiting. If not
+          set, gcloud exits successfully when the execution has started.
+          Implies --execute-now.
+
+     At most one of these can be specified:
+
        --binary-authorization=POLICY
           Binary Authorization policy to check against. This must be set to
           "default".
@@ -183,7 +190,10 @@ FLAGS
        --env-vars-file=FILE_PATH
           Path to a local YAML file with definitions for all environment
           variables. All existing environment variables will be removed before
-          the new environment variables are added.
+          the new environment variables are added. Example YAML content:
+
+              KEY_1: "value1"
+              KEY_2: "value 2"
 
        --set-env-vars=[KEY=VALUE,...]
           List of key-value pairs to set as environment variables. All existing

@@ -9,6 +9,9 @@ SYNOPSIS
           --destination-agent-pool=DESTINATION_AGENT_POOL
           --intermediate-storage-path=INTERMEDIATE_STORAGE_PATH
           --manifest-file=MANIFEST_FILE]
+        [--event-stream-name=EVENT_STREAM_NAME
+          --event-stream-starts=EVENT_STREAM_STARTS
+          --event-stream-expires=EVENT_STREAM_EXPIRES]
         [--do-not-run --schedule-starts=SCHEDULE_STARTS
           --schedule-repeats-every=SCHEDULE_REPEATS_EVERY
           --schedule-repeats-until=SCHEDULE_REPEATS_UNTIL]
@@ -24,7 +27,7 @@ SYNOPSIS
         [--notification-pubsub-topic=NOTIFICATION_PUBSUB_TOPIC
           --notification-event-types=[EVENT_TYPES,...]
           --notification-payload-format=NOTIFICATION_PAYLOAD_FORMAT]
-        [--log-actions=[LOG_ACTIONS,...]
+        [--[no-]enable-posix-transfer-logs --log-actions=[LOG_ACTIONS,...]
           --log-action-states=[LOG_ACTION_STATES,...]]
         [--source-endpoint=SOURCE_ENDPOINT
           --source-signing-region=SOURCE_SIGNING_REGION
@@ -153,6 +156,36 @@ FLAGS
           gs://mybucket/manifest.csv. For manifest file formatting, see
           https://cloud.google.com/storage-transfer/docs/manifest.
 
+     EVENT STREAM
+
+     Configure an event stream to transfer data whenever it is added or changed
+     at your source, enabling you to act on the data in near real time. This
+     event-driven transfer execution mode is available for transfers from
+     Google Cloud Storage and Amazon S3. For formatting information, see
+     https://cloud.google.com/sdk/gcloud/reference/topic/datetimes.
+
+       --event-stream-name=EVENT_STREAM_NAME
+          Specify an event stream that Storage Transfer Service can use to
+          listen for when objects are created or updated. For Google Cloud
+          Storage sources, specify a Cloud Pub/Sub subscription, using format
+          "projects/yourproject/subscriptions/yoursubscription". For Amazon S3
+          sources, specify the Amazon Resource Name (ARN) of an Amazon Simple
+          Queue Service (SQS) queue using format
+          "arn:aws:sqs:region:account_id:queue_name".
+
+       --event-stream-starts=EVENT_STREAM_STARTS
+          Set when to start listening for events UTC using the
+          %Y-%m-%dT%H:%M:%S%z datetime format (e.g.,
+          2020-04-12T06:42:12+04:00). If not set, the job will start running
+          and listening for events upon the successful submission of the create
+          job command.
+
+       --event-stream-expires=EVENT_STREAM_EXPIRES
+          Set when to stop listening for events UTC using the
+          %Y-%m-%dT%H:%M:%S%z datetime format (e.g.,
+          2020-04-12T06:42:12+04:00). If not set, the job will continue running
+          and listening for events indefinitely.
+
      SCHEDULE
 
      A job's schedule determines when and how often the job will run. For
@@ -269,9 +302,20 @@ FLAGS
 
        --custom-storage-class=CUSTOM_STORAGE_CLASS
           Specifies the storage class to set on objects being transferred to
-          Google Cloud Storage buckets. If unspecified, the behavior is to
-          match the destination bucket default. The value "preserve" will use
-          the class from the object's Google Cloud Storage source bucket.
+          Cloud Storage buckets. If unspecified, the objects' storage class is
+          set to the destination bucket default. Valid values are:
+
+          ▸ Any of the values listed in the Cloud Storage documentation:
+            Available storage classes
+            (https://cloud.google.com/storage/docs/storage-classes#classes).
+          ▸ preserve - Preserves each object's original storage class. Only
+            supported for transfers between Cloud Storage buckets.
+
+          Custom storage class settings are ignored if the destination bucket
+          is Autoclass-enabled
+          (https://cloud.google.com/storage/docs/autoclass). Objects
+          transferred into Autoclass-enabled buckets are initially set to the
+          STANDARD storage class.
 
      NOTIFICATION CONFIG
 
@@ -301,6 +345,12 @@ FLAGS
      Configure which transfer actions and action states are reported when logs
      are generated for this job. Logs can be viewed by running the following
      command: gcloud logging read "resource.type=storage_transfer_job"
+
+       --[no-]enable-posix-transfer-logs
+          Sets whether to generate logs for transfers with a POSIX filesystem
+          source. This setting will later be merged with other log
+          configurations. Use --enable-posix-transfer-logs to enable and
+          --no-enable-posix-transfer-logs to disable.
 
        --log-actions=[LOG_ACTIONS,...]
           Define the transfer operation actions to report in logs. Separate

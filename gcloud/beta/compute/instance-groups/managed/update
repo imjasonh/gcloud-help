@@ -4,7 +4,8 @@ NAME
 
 SYNOPSIS
     gcloud beta compute instance-groups managed update NAME
-        [--description=DESCRIPTION] [--instance-redistribution-type=TYPE]
+        [--description=DESCRIPTION] [--[no-]force-update-on-repair]
+        [--instance-redistribution-type=TYPE]
         [--list-managed-instances-results=MODE]
         [--remove-stateful-disks=DEVICE_NAME,[DEVICE_NAME,...]]
         [--remove-stateful-external-ips=INTERFACE_NAME,[...]]
@@ -50,6 +51,16 @@ FLAGS
      --description=DESCRIPTION
         An optional description for this group. To clear the description, set
         the value to an empty string.
+
+     --[no-]force-update-on-repair
+        Specifies whether to apply the group's latest configuration when
+        repairing a VM. If you updated the group's instance template or
+        per-instance configurations after the VM was created, then these
+        changes are applied when VM is repaired. If this flag is disabled with
+        -no-force-update-on-repair, then updates are applied in accordance with
+        the group's update policy type. By default, this flag is disabled. Use
+        --force-update-on-repair to enable and --no-force-update-on-repair to
+        disable.
 
      --instance-redistribution-type=TYPE
         Specifies the type of the instance redistribution policy. An instance
@@ -207,6 +218,13 @@ FLAGS
             requested number of VMs within present resource constraints and to
             maximize utilization of unused zonal reservations. Recommended for
             batch workloads that do not require high availability.
+         any-single-zone
+            The group schedules all instances within a single zone. The zone is
+            chosen based on hardware support, current resources availability,
+            and matching reservations. The group might not be able to create
+            the requested number of VMs in case of zonal resource availability
+            constraints. Recommended for workloads requiring extensive
+            communication between VMs.
          balanced
             The group prioritizes acquisition of resources, scheduling VMs in
             zones where resources are available while distributing VMs as
