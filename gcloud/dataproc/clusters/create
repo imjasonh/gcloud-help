@@ -6,7 +6,15 @@ SYNOPSIS
         --autoscaling-policy=AUTOSCALING_POLICY
         [--action-on-failed-primary-workers=ACTION_ON_FAILED_PRIMARY_WORKERS]
         [--no-address] [--async] [--bucket=BUCKET] [--confidential-compute]
-        [--dataproc-metastore=DATAPROC_METASTORE] [--enable-component-gateway]
+        [--dataproc-metastore=DATAPROC_METASTORE]
+        [--driver-pool-accelerator=[type=TYPE,[count=COUNT],...]]
+        [--driver-pool-boot-disk-size=DRIVER_POOL_BOOT_DISK_SIZE]
+        [--driver-pool-boot-disk-type=DRIVER_POOL_BOOT_DISK_TYPE]
+        [--driver-pool-id=DRIVER_POOL_ID]
+        [--driver-pool-local-ssd-interface=DRIVER_POOL_LOCAL_SSD_INTERFACE]
+        [--driver-pool-machine-type=DRIVER_POOL_MACHINE_TYPE]
+        [--driver-pool-min-cpu-platform=PLATFORM]
+        [--driver-pool-size=DRIVER_POOL_SIZE] [--enable-component-gateway]
         [--initialization-action-timeout=TIMEOUT; default="10m"]
         [--initialization-actions=CLOUD_STORAGE_URI,[...]]
         [--labels=[KEY=VALUE,...]]
@@ -17,6 +25,7 @@ SYNOPSIS
         [--master-machine-type=MASTER_MACHINE_TYPE]
         [--master-min-cpu-platform=PLATFORM] [--max-idle=MAX_IDLE]
         [--node-group=NODE_GROUP]
+        [--num-driver-pool-local-ssds=NUM_DRIVER_POOL_LOCAL_SSDS]
         [--num-master-local-ssds=NUM_MASTER_LOCAL_SSDS]
         [--num-masters=NUM_MASTERS]
         [--num-secondary-worker-local-ssds=NUM_SECONDARY_WORKER_LOCAL_SSDS]
@@ -148,6 +157,55 @@ FLAGS
         external metastore in the format:
         "projects/{project-id}/locations/{region}/services/{service-name}".
 
+     --driver-pool-accelerator=[type=TYPE,[count=COUNT],...]
+        Attaches accelerators, such as GPUs, to the driver-pool instance(s).
+
+         type
+            The specific type of accelerator to attach to the instances, such
+            as nvidia-tesla-k80 for NVIDIA Tesla K80. Use gcloud compute
+            accelerator-types list to display available accelerator types.
+
+         count
+            The number of accelerators to attach to each instance. The default
+            value is 1.
+
+     --driver-pool-boot-disk-size=DRIVER_POOL_BOOT_DISK_SIZE
+        The size of the boot disk. The value must be a whole number followed by
+        a size unit of KB for kilobyte, MB for megabyte, GB for gigabyte, or TB
+        for terabyte. For example, 10GB will produce a 10 gigabyte disk. The
+        minimum size a boot disk can have is 10 GB. Disk size must be a
+        multiple of 1 GB.
+
+     --driver-pool-boot-disk-type=DRIVER_POOL_BOOT_DISK_TYPE
+        The type of the boot disk. The value must be pd-balanced, pd-ssd, or
+        pd-standard.
+
+     --driver-pool-id=DRIVER_POOL_ID
+        Custom identifier for the DRIVER Node Group being created. If not
+        provided, a random string is generated.
+
+     --driver-pool-local-ssd-interface=DRIVER_POOL_LOCAL_SSD_INTERFACE
+        Interface to use to attach local SSDs to cluster driver pool node(s).
+
+     --driver-pool-machine-type=DRIVER_POOL_MACHINE_TYPE
+        The type of machine to use for the cluster driver pool nodes. Defaults
+        to server-specified.
+
+     --driver-pool-min-cpu-platform=PLATFORM
+        When specified, the VM is scheduled on the host with a specified CPU
+        architecture or a more recent CPU platform that's available in that
+        zone. To list available CPU platforms in a zone, run:
+
+            $ gcloud compute zones describe ZONE
+
+        CPU platform selection may not be available in a zone. Zones that
+        support CPU platform selection provide an availableCpuPlatforms field,
+        which contains the list of available CPU platforms in the zone (see
+        Availability of CPU platforms for more information).
+
+     --driver-pool-size=DRIVER_POOL_SIZE
+        The size of the cluster driver pool.
+
      --enable-component-gateway
         Enable access to the web UIs of selected components on the cluster
         through the component gateway.
@@ -169,17 +227,16 @@ FLAGS
         numbers.
 
      --master-accelerator=[type=TYPE,[count=COUNT],...]
-        Attaches accelerators (e.g. GPUs) to the master instance(s).
+        Attaches accelerators, such as GPUs, to the master instance(s).
 
          type
-            The specific type (e.g. nvidia-tesla-k80 for nVidia Tesla K80) of
-            accelerator to attach to the instances. Use 'gcloud compute
-            accelerator-types list' to learn about all available accelerator
-            types.
+            The specific type of accelerator to attach to the instances, such
+            as nvidia-tesla-k80 for NVIDIA Tesla K80. Use gcloud compute
+            accelerator-types list to display available accelerator types.
 
          count
-            The number of pieces of the accelerator to attach to each of the
-            instances. The default value is 1.
+            The number of accelerators to attach to each instance. The default
+            value is 1.
 
      --master-boot-disk-size=MASTER_BOOT_DISK_SIZE
         The size of the boot disk. The value must be a whole number followed by
@@ -200,18 +257,16 @@ FLAGS
         server-specified.
 
      --master-min-cpu-platform=PLATFORM
-        When specified, the VM will be scheduled on host with specified CPU
-        architecture or a newer one. To list available CPU platforms in given
-        zone, run:
+        When specified, the VM is scheduled on the host with a specified CPU
+        architecture or a more recent CPU platform that's available in that
+        zone. To list available CPU platforms in a zone, run:
 
             $ gcloud compute zones describe ZONE
 
-        CPU platform selection is available only in selected zones; zones that
-        allow CPU platform selection will have an availableCpuPlatforms field
-        that contains the list of available CPU platforms for that zone.
-
-        You can find more information online:
-        https://cloud.google.com/compute/docs/instances/specify-min-cpu-platform
+        CPU platform selection may not be available in a zone. Zones that
+        support CPU platform selection provide an availableCpuPlatforms field,
+        which contains the list of available CPU platforms in the zone (see
+        Availability of CPU platforms for more information).
 
      --max-idle=MAX_IDLE
         The duration before cluster is auto-deleted after last job completes,
@@ -222,6 +277,9 @@ FLAGS
         The name of the sole-tenant node group to create the cluster on. Can be
         a short name ("node-group-name") or in the format
         "projects/{project-id}/zones/{zone}/nodeGroups/{node-group-name}".
+
+     --num-driver-pool-local-ssds=NUM_DRIVER_POOL_LOCAL_SSDS
+        The number of local SSDs to attach to each cluster driver pool node.
 
      --num-master-local-ssds=NUM_MASTER_LOCAL_SSDS
         The number of local SSDs to attach to the master in a cluster.
@@ -288,17 +346,17 @@ FLAGS
         for more information.
 
      --secondary-worker-accelerator=[type=TYPE,[count=COUNT],...]
-        Attaches accelerators (e.g. GPUs) to the secondary-worker instance(s).
+        Attaches accelerators, such as GPUs, to the secondary-worker
+        instance(s).
 
          type
-            The specific type (e.g. nvidia-tesla-k80 for nVidia Tesla K80) of
-            accelerator to attach to the instances. Use 'gcloud compute
-            accelerator-types list' to learn about all available accelerator
-            types.
+            The specific type of accelerator to attach to the instances, such
+            as nvidia-tesla-k80 for NVIDIA Tesla K80. Use gcloud compute
+            accelerator-types list to display available accelerator types.
 
          count
-            The number of pieces of the accelerator to attach to each of the
-            instances. The default value is 1.
+            The number of accelerators to attach to each instance. The default
+            value is 1.
 
      --secondary-worker-boot-disk-size=SECONDARY_WORKER_BOOT_DISK_SIZE
         The size of the boot disk. The value must be a whole number followed by
@@ -336,17 +394,16 @@ FLAGS
         cluster and jobs data, such as Spark and MapReduce history files.
 
      --worker-accelerator=[type=TYPE,[count=COUNT],...]
-        Attaches accelerators (e.g. GPUs) to the worker instance(s).
+        Attaches accelerators, such as GPUs, to the worker instance(s).
 
          type
-            The specific type (e.g. nvidia-tesla-k80 for nVidia Tesla K80) of
-            accelerator to attach to the instances. Use 'gcloud compute
-            accelerator-types list' to learn about all available accelerator
-            types.
+            The specific type of accelerator to attach to the instances, such
+            as nvidia-tesla-k80 for NVIDIA Tesla K80. Use gcloud compute
+            accelerator-types list to display available accelerator types.
 
          count
-            The number of pieces of the accelerator to attach to each of the
-            instances. The default value is 1.
+            The number of accelerators to attach to each instance. The default
+            value is 1.
 
      --worker-boot-disk-size=WORKER_BOOT_DISK_SIZE
         The size of the boot disk. The value must be a whole number followed by
@@ -366,18 +423,16 @@ FLAGS
         The type of machine to use for workers. Defaults to server-specified.
 
      --worker-min-cpu-platform=PLATFORM
-        When specified, the VM will be scheduled on host with specified CPU
-        architecture or a newer one. To list available CPU platforms in given
-        zone, run:
+        When specified, the VM is scheduled on the host with a specified CPU
+        architecture or a more recent CPU platform that's available in that
+        zone. To list available CPU platforms in a zone, run:
 
             $ gcloud compute zones describe ZONE
 
-        CPU platform selection is available only in selected zones; zones that
-        allow CPU platform selection will have an availableCpuPlatforms field
-        that contains the list of available CPU platforms for that zone.
-
-        You can find more information online:
-        https://cloud.google.com/compute/docs/instances/specify-min-cpu-platform
+        CPU platform selection may not be available in a zone. Zones that
+        support CPU platform selection provide an availableCpuPlatforms field,
+        which contains the list of available CPU platforms in the zone (see
+        Availability of CPU platforms for more information).
 
      --zone=ZONE, -z ZONE
         The compute zone (e.g. us-central1-a) for the cluster. If empty and

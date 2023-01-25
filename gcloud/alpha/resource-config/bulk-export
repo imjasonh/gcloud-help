@@ -5,9 +5,9 @@ NAME
 SYNOPSIS
     gcloud alpha resource-config bulk-export
         [--on-error=ON_ERROR; default="ignore"] [--path=PATH; default="-"]
-        [--resource-format=RESOURCE_FORMAT] [--storage-path=STORAGE_PATH]
+        [--resource-format=RESOURCE_FORMAT]
         [--folder=FOLDER | --organization=ORGANIZATION | --project=PROJECT]
-        [--resource-types=[RESOURCE_TYPE,...]
+        [--storage-path=STORAGE_PATH | --resource-types=[RESOURCE_TYPE,...]
           | --resource-types-file=RESOURCE_TYPE_FILE] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -67,9 +67,8 @@ FLAGS
         Command defaults to "krm". RESOURCE_FORMAT must be one of: krm,
         terraform.
 
-     --storage-path=STORAGE_PATH
-        Google Cloud Storage path where a Cloud Asset Inventory export will be
-        stored, example: gs://your-bucket-name/your/prefix/path
+     RESOURCE PARENT FLAG - specify one of the following to determine the scope
+     of exported resources.
 
      At most one of these can be specified:
 
@@ -82,22 +81,35 @@ FLAGS
        --project=PROJECT
           Project ID
 
+     Select storage-path if you want to specify the Google Cloud Storage bucket
+     bulk-export should use for Cloud Asset Inventory Export. Alternatively,
+     you can provide a RESOURCE TYPE FILTER to filter resources. Filtering
+     resources does not use Google Cloud Storage to export resources.
+
      At most one of these can be specified:
 
-       --resource-types=[RESOURCE_TYPE,...]
-          List of Config Connector KRM Kinds to export. For a full list of
-          supported resource types for a given parent scope run:
+       --storage-path=STORAGE_PATH
+          Google Cloud Storage path where a Cloud Asset Inventory export will
+          be stored, example: gs://your-bucket-name/your/prefix/path
 
-              $ gcloud alpha resource-config list-resource-types \
-                  --[project|organization|folder]=<PARENT>
+       RESOURCE TYPE FILTERS - specify resource types to export.
 
-       --resource-types-file=RESOURCE_TYPE_FILE
-          A comma (',') or newline ('\n') separated file containing the list of
-          Config Connector KRM Kinds to export. For a full list of supported
-          resource types for a given parent scope run:
+       At most one of these can be specified:
 
-              $ gcloud alpha resource-config list-resource-types \
-                  --[project|organization|folder]=<PARENT>
+         --resource-types=[RESOURCE_TYPE,...]
+            List of Config Connector KRM Kinds to export. For a full list of
+            supported resource types for a given parent scope run:
+
+                $ gcloud alpha resource-config list-resource-types \
+                    --[project|organization|folder]=<PARENT>
+
+         --resource-types-file=RESOURCE_TYPE_FILE
+            A comma (',') or newline ('\n') separated file containing the list
+            of Config Connector KRM Kinds to export. For a full list of
+            supported resource types for a given parent scope run:
+
+                $ gcloud alpha resource-config list-resource-types \
+                    --[project|organization|folder]=<PARENT>
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

@@ -9,6 +9,9 @@ SYNOPSIS
         [--ban-threshold-interval-sec=BAN_THRESHOLD_INTERVAL_SEC]
         [--conform-action=CONFORM_ACTION] [--description=DESCRIPTION]
         [--enforce-on-key=ENFORCE_ON_KEY]
+        [--enforce-on-key-configs=[[all],[ip],[xff-ip],
+          [http-cookie=HTTP_COOKIE],
+          [http-header=HTTP_HEADER],[http-path],[sni],[region-code]],[...]]
         [--enforce-on-key-name=ENFORCE_ON_KEY_NAME]
         [--exceed-action=EXCEED_ACTION]
         [--exceed-action-rpc-status-code=EXCEED_ACTION_RPC_STATUS_CODE]
@@ -124,6 +127,29 @@ FLAGS
 
         ENFORCE_ON_KEY must be one of: ip, all, http-header, xff-ip,
         http-cookie, http-path, sni, region-code.
+
+     --enforce-on-key-configs=[[all],[ip],[xff-ip],[http-cookie=HTTP_COOKIE],[http-header=HTTP_HEADER],[http-path],[sni],[region-code]],[...]
+        Specify up to 3 key type/name pairs to rate limit. Valid key types are:
+
+        ◆ ip: each client IP address has this limit enforced separately
+        ◆ all: a single limit is applied to all requests matching this rule
+        ◆ http-header: key type takes the value of the HTTP header configured
+          in enforce-on-key-name as the key value
+        ◆ xff-ip: takes the original IP address specified in the
+          X-Forwarded-For header as the key
+        ◆ http-cookie: key type takes the value of the HTTP cookie configured
+          in enforce-on-key-name as the key value
+        ◆ http-path: key type takes the value of the URL path in the request
+        ◆ sni: key type takes the value of the server name indication from
+          the TLS session of the HTTPS request
+        ◆ region-code: key type takes the value of the region code from which
+          the request originates
+
+        Key names are only applicable to the following key types:
+        ◆ http-header: The name of the HTTP header whose value is taken as
+          the key value.
+        ◆ http-cookie: The name of the HTTP cookie whose value is taken as
+          the key value.
 
      --enforce-on-key-name=ENFORCE_ON_KEY_NAME
         Determines the key name for the rate limit key. Applicable only for the

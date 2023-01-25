@@ -22,13 +22,26 @@ DESCRIPTION
     (ALPHA) Create a Compute Engine future reservation.
 
 EXAMPLES
-    To create a Compute Engine future reservation, run:
+    To create a Compute Engine future reservation by specifying VM properties
+    using an instance template, run:
 
         $ gcloud alpha compute future-reservations create \
           my-future-reservation --total-count=1000 \
-          --machine-type=n1-standard-1 \
-          --min-cpu-platform="Intel Haswell" --project=project-01 \
+          --start-time=2022-11-10 --end-time=2022-12-10 \
+          --name-prefix=prefix-reservation \
+          --source-instance-template=example-instance-template \
           --zone=fake-zone
+
+    To create a Compute Engine future reservation by directly specifying VM
+    properties, run:
+
+        $ gcloud alpha compute future-reservations create \
+          my-future-reservation --total-count=1000 \
+          --start-time=2022-11-10 --end-time=2022-12-10 \
+          --name-prefix=prefix-reservation --machine-type=custom-8-10240 \
+          --min-cpu-platform="Intel Haswell" \
+          --accelerator=count=2,type=nvidia-tesla-v100 \
+          --local-ssd=size=375,interface=scsi
 
 POSITIONAL ARGUMENTS
      FUTURE_RESERVATION

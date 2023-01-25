@@ -1,0 +1,71 @@
+NAME
+    gcloud beta pubsub schemas commit - commit a Pub/Sub schema revision
+
+SYNOPSIS
+    gcloud beta pubsub schemas commit SCHEMA --type=TYPE
+        (--definition=DEFINITION | --definition-file=DEFINITION_FILE)
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Commit a Pub/Sub schema revision.
+
+EXAMPLES
+    To commit a PROTOCOL_BUFFER schema revision called "key-schema" that
+    requires exactly one-string field named "key", run:
+
+        $ gcloud beta pubsub schemas commit key-schema \
+            --definition="syntax = 'proto3'; message Message { optional \
+        string key = 1; }" --type=protocol-buffer To commit an equivalent \
+            AVRO schema revision, run:
+
+        $ gcloud beta pubsub schemas commit key-schema \
+            --definition="{ 'type': 'record', 'namespace': 'my.ns', 'name': \
+        'KeyMsg', 'fields': [ { 'name': 'key', 'type': 'string' } ] }" \
+            --type=avro
+
+POSITIONAL ARGUMENTS
+     Schema resource - Name of the schema to revise. This represents a Cloud
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways. To set the project attribute:
+      ◆ provide the argument schema on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       SCHEMA
+          ID of the schema or fully qualified identifier for the schema. To set
+          the schema attribute:
+          ▸ provide the argument schema on the command line.
+
+REQUIRED FLAGS
+     --type=TYPE
+        The type of the schema.
+
+     Schema definition
+
+     Exactly one of these must be specified:
+
+       --definition=DEFINITION
+          The new definition of the schema.
+
+       --definition-file=DEFINITION_FILE
+          File containing the new schema definition.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud pubsub schemas commit
+
+        $ gcloud alpha pubsub schemas commit
+

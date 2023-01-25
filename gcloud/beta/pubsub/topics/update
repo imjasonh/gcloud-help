@@ -6,6 +6,11 @@ SYNOPSIS
         [--clear-labels | --remove-labels=[KEY,...]]
         [--clear-message-retention-duration
           | --message-retention-duration=MESSAGE_RETENTION_DURATION]
+        [--clear-schema-settings
+          | [--message-encoding=ENCODING (--schema=SCHEMA
+          : --schema-project=SCHEMA_PROJECT)
+          : --first-revision-id=FIRST_REVISION_ID
+          --last-revision-id=LAST_REVISION_ID]]
         [--message-storage-policy-allowed-regions=[REGION,...]
           | --recompute-message-storage-policy]
         [--topic-encryption-key=TOPIC_ENCRYPTION_KEY
@@ -123,6 +128,50 @@ FLAGS
           INTEGER[UNIT], where UNIT is one of "s", "m", "h", and "d" for
           seconds, minutes, hours, and days, respectively. If the unit is
           omitted, seconds is assumed.
+
+     At most one of these can be specified:
+
+       --clear-schema-settings
+          If set, clear the Schema Settings from the topic.
+
+       Schema settings. The schema that messages published to this topic must
+       conform to and the expected message encoding.
+
+         --message-encoding=ENCODING
+            The encoding of messages validated against the schema. ENCODING
+            must be one of: json, binary.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --first-revision-id=FIRST_REVISION_ID
+            The id of the oldest revision allowed for the specified schema.
+
+         --last-revision-id=LAST_REVISION_ID
+            The id of the most recent revision allowed for the specified schema
+
+         Schema resource - Name of the schema that messages published to this
+         topic must conform to. The arguments in this group can be used to
+         specify the attributes of this resource.
+
+         This must be specified.
+
+           --schema=SCHEMA
+              ID of the schema or fully qualified identifier for the schema. To
+              set the schema attribute:
+              ◇ provide the argument --schema on the command line.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --schema-project=SCHEMA_PROJECT
+              Project ID of the Google Cloud project for the schema. To set the
+              project attribute:
+              ◇ provide the argument --schema on the command line with a
+                fully specified name;
+              ◇ provide the argument --schema-project on the command line;
+              ◇ provide the argument --project on the command line;
+              ◇ set the property core/project.
 
      Message storage policy options.
 

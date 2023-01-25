@@ -1,0 +1,112 @@
+NAME
+    gcloud beta builds connections create github - create a Cloud Build
+        Connection of type GitHub
+
+SYNOPSIS
+    gcloud beta builds connections create github (CONNECTION : --region=REGION)
+        [--async]
+        [--authorizer-token-secret-version=AUTHORIZER_TOKEN_SECRET_VERSION
+          : --app-installation-id=APP_INSTALLATION_ID] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Create a Cloud Build Connection of type GitHub (for github.com).
+
+    Connections for github.com can be created either by following an
+    installation process (that requires manual steps in a web browser) or by
+    providing the properties of an already-installed application (installation
+    ID and a user token) as arguments to this command.
+
+EXAMPLES
+    To create a connection by following the installation process, provide only
+    the connection name:
+
+        $ gcloud beta builds connections create github myconn \
+            --project=myproj --region=us-central1
+
+    The command will print a URL to be opened in a web browser in order to
+    authorize Cloud Build (i.e. Cloud Build gets an OAuth token for the github
+    account that you use). After doing this authorization, you can get the
+    connection's installation state with the describe command:
+
+        $ gcloud alpha builds connections describe myconn
+
+    The output will include a second link to install the Cloud Build GitHub
+    App. After doing this, the connection will be in installation state
+    COMPLETE and repositories can be added to it (see gcloud alpha builds
+    repositories create).
+
+    --
+
+    To create a complete connection (e.g. based on an existing user token and
+    installation), provide both the authorizer secret token and the app
+    installation id:
+
+        $ gcloud beta builds connections create github myconn \
+            --project=myproj --region=us-central1 \
+            --authorizer-token-secret-version=projects/myproj/secrets/\
+        mytoken/versions/1 --app-installation-id=1234
+
+    Above command creates the connection in installation state COMPLETE, ready
+    for adding repositories.
+
+POSITIONAL ARGUMENTS
+     Connection resource - Connection to create. The arguments in this group
+     can be used to specify the attributes of this resource. (NOTE) Some
+     attributes are not given arguments in this group but can be set in other
+     ways. To set the project attribute:
+      ◆ provide the argument connection on the command line with a fully
+        specified name;
+      ◆ set the property core/project;
+      ◆ provide the argument --project on the command line.
+
+     This must be specified.
+
+       CONNECTION
+          ID of the connection or fully qualified identifier for the
+          connection. To set the connection attribute:
+          ▸ provide the argument connection on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --region=REGION
+          The Google Cloud region. To set the region attribute:
+          ▸ provide the argument connection on the command line with a fully
+            specified name;
+          ▸ provide the argument --region on the command line;
+          ▸ set the property builds/region.
+
+FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     Group of arguments for configuring a complete connnection.
+
+       --authorizer-token-secret-version=AUTHORIZER_TOKEN_SECRET_VERSION
+          Secret containing the authorizer user's token.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --app-installation-id=APP_INSTALLATION_ID
+          Installation ID of the Cloud Build GitHub App.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the cloudbuild/v2 API. The full documentation for this
+    API can be found at: https://cloud.google.com/cloud-build/docs/
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud alpha builds connections create github
+
