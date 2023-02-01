@@ -5,6 +5,10 @@ NAME
 SYNOPSIS
     gcloud beta alloydb clusters create CLUSTER --password=PASSWORD
         --region=REGION [--async] [--network=NETWORK]
+        [--continuous-backup-recovery-window-days=RECOVERY_PERIOD
+          --enable-continuous-backup
+          [--continuous-backup-encryption-key=CONTINUOUS_BACKUP_ENCRYPTION_KEY
+          : --continuous-backup-encryption-key-keyring=CONTINUOUS_BACKUP_ENCRYPTION_KEY_KEYRING --continuous-backup-encryption-key-location=CONTINUOUS_BACKUP_ENCRYPTION_KEY_LOCATION --continuous-backup-encryption-key-project=CONTINUOUS_BACKUP_ENCRYPTION_KEY_PROJECT]]
         [--disable-automated-backup
           | [--automated-backup-days-of-week=[DAYS_OF_WEEK,...]
           --automated-backup-start-times=[START_TIMES,...]
@@ -47,6 +51,52 @@ OPTIONAL FLAGS
         network. For an example host project, 'testproject', and shared
         network, 'testsharednetwork', this would be of the
         form:--network=projects/testproject/global/networks/testsharednetwork
+
+     Continuous Backup configuration.
+
+       --continuous-backup-recovery-window-days=RECOVERY_PERIOD
+          Recovery window of the log files and backups saved to support
+          Continuous Backups.
+
+       --enable-continuous-backup
+          Enables Continuous Backups on the cluster.
+
+       Key resource - The Cloud KMS (Key Management Service) cryptokey that
+       will be used to protect the continuous backup. The 'AlloyDB Service
+       Agent's service account must hold permission 'Cloud KMS CryptoKey
+       Encrypter/Decrypter'. The arguments in this group can be used to specify
+       the attributes of this resource.
+
+         --continuous-backup-encryption-key=CONTINUOUS_BACKUP_ENCRYPTION_KEY
+            ID of the key or fully qualified identifier for the key. To set the
+            kms-key attribute:
+            ▫ provide the argument --continuous-backup-encryption-key on the
+              command line.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --continuous-backup-encryption-key-keyring=CONTINUOUS_BACKUP_ENCRYPTION_KEY_KEYRING
+            The KMS keyring of the key. To set the kms-keyring attribute:
+            ▫ provide the argument --continuous-backup-encryption-key on the
+              command line with a fully specified name;
+            ▫ provide the argument --continuous-backup-encryption-key-keyring
+              on the command line.
+
+         --continuous-backup-encryption-key-location=CONTINUOUS_BACKUP_ENCRYPTION_KEY_LOCATION
+            The Cloud location for the key. To set the kms-location attribute:
+            ▫ provide the argument --continuous-backup-encryption-key on the
+              command line with a fully specified name;
+            ▫ provide the argument
+              --continuous-backup-encryption-key-location on the command line.
+
+         --continuous-backup-encryption-key-project=CONTINUOUS_BACKUP_ENCRYPTION_KEY_PROJECT
+            The Cloud project for the key. To set the kms-project attribute:
+            ▫ provide the argument --continuous-backup-encryption-key on the
+              command line with a fully specified name;
+            ▫ provide the argument --continuous-backup-encryption-key-project
+              on the command line;
+            ▫ set the property core/project.
 
      Automated backup policy. If unspecified, automated backups are enabled.
 

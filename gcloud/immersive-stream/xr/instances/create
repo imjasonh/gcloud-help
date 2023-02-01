@@ -1,0 +1,102 @@
+NAME
+    gcloud immersive-stream xr instances create - create an Immersive Stream
+        for XR service instance
+
+SYNOPSIS
+    gcloud immersive-stream xr instances create INSTANCE
+        --add-region=[capacity=CAPACITY],[region=REGION] --version=VERSION
+        (--content=CONTENT : --location=LOCATION) [--async]
+        [--fallback-url=FALLBACK_URL] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Create an Immersive Stream for XR service instance.
+
+EXAMPLES
+    To create a service instance called my-instance serving content my-content
+    with version my-version that has availablilty for 2 concurent sessions in
+    us-west1 region and 3 concurrent sessions in us-east4 region, run:
+
+        $ gcloud immersive-stream xr instances create my-instance \
+            --content=my-content --version=my-version \
+            --add-region=region=us-west1,capacity=2 \
+            --add-region=region=us-east4,capacity=3
+
+    Optionally, a fallback url may be specified. Users will be redirected to
+    this fallback url when the service instance is unable to provide the
+    streaming experience. To create a service instance called my-instance
+    serving content my-content with version my-version that has availablilty
+    for 2 concurent sessions in us-west1 and uses fallback url
+    https://www.google.com run:
+
+        $ gcloud immersive-stream xr instances create my-instance \
+            --content=my-content --version=my-version \
+            --add-region=region=us-west1,capacity=2 \
+            --fallback-url="https://www.google.com"
+
+POSITIONAL ARGUMENTS
+     INSTANCE
+        Name of the instance to be created
+
+REQUIRED FLAGS
+     --add-region=[capacity=CAPACITY],[region=REGION]
+        Flag used to specify region and capacity required for the service
+        instance's availability.
+
+            'region' is the region in which the instance is deployed.
+
+            'capacity' is the maxium number of concurrent streaming sessions that the instance can support in the given region.
+
+        This is a repeatable flag.
+
+     --version=VERSION
+        Build version tag of the content served by this instance
+
+     Content resource - Immersive Stream for XR content resource served by the
+     instance. The arguments in this group can be used to specify the
+     attributes of this resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways. To set the project
+     attribute:
+      ◆ provide the argument --content on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       --content=CONTENT
+          ID of the content or fully qualified identifier for the content. To
+          set the name attribute:
+          ▸ provide the argument --content on the command line.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --location=LOCATION
+          Google Cloud location for the content. To set the location attribute:
+          ▸ provide the argument --content on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ location is always global.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --fallback-url=FALLBACK_URL
+        Fallback url to redirect users to when this service instance is unable
+        to provide the streaming experience
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This variant is also available:
+
+        $ gcloud alpha immersive-stream xr instances create
+

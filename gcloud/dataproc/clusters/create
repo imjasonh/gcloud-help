@@ -60,7 +60,7 @@ SYNOPSIS
           --tags=TAG,[TAG,...] --network=NETWORK | --subnet=SUBNET
           --reservation=RESERVATION
           --reservation-affinity=RESERVATION_AFFINITY; default="any"]
-        [[--metric-sources=[METRIC_SOURCES,...]
+        [[--metric-sources=[METRIC_SOURCE,...]
           : --metric-overrides=[METRIC_SOURCE:INSTANCE:GROUP:METRIC,...]
           | --metric-overrides-file=METRIC_OVERRIDES_FILE]]
         [--single-node | --num-secondary-workers=NUM_SECONDARY_WORKERS
@@ -771,21 +771,42 @@ FLAGS
             The type of reservation for the instance. RESERVATION_AFFINITY must
             be one of: any, none, specific.
 
-     --metric-sources=[METRIC_SOURCES,...]
-        Specifies a list of Metric Sources to collect custom metrics from the
-        cluster. METRIC_SOURCES must be one of: HDFS, HIVEMETASTORE,
-        HIVESERVER2, MONITORING_AGENT_DEFAULTS, SPARK, SPARK_HISTORY_SERVER,
-        YARN.
+     --metric-sources=[METRIC_SOURCE,...]
+        Specifies a list of cluster Metric Sources
+        (https://cloud.google.com/dataproc/docs/guides/monitoring#available_oss_metrics)
+        to collect custom metrics. METRIC_SOURCE must be one of: HDFS,
+        HIVEMETASTORE, HIVESERVER2, MONITORING_AGENT_DEFAULTS, SPARK,
+        SPARK_HISTORY_SERVER, YARN.
 
      At most one of these can be specified:
 
        --metric-overrides=[METRIC_SOURCE:INSTANCE:GROUP:METRIC,...]
-          List of Metrics that override the default metrics enabled for the
-          metric source
+          List of metrics that override the default metrics enabled for the
+          metric sources. Any of the available OSS metrics
+          (https://cloud.google.com/dataproc/docs/guides/monitoring#available_oss_metrics)
+          and all Spark metrics, can be listed for collection as a metric
+          override. Override metric values are case sensitive, and must be
+          provided, if appropriate, in CamelCase format, for example:
+
+          sparkHistoryServer:JVM:Memory:NonHeapMemoryUsage.committed
+          hiveserver2:JVM:Memory:NonHeapMemoryUsage.used
+
+          Only the specified overridden metrics will be collected from a given
+          metric source. For example, if one or more spark:executive metrics
+          are listed as metric overrides, other SPARK metrics will not be
+          collected. The collection of default OSS metrics from other metric
+          sources is unaffected. For example, if both SPARK and YARN metric
+          sources are enabled, and overrides are provided for Spark metrics
+          only, all default YARN metrics will be collected.
+
+          The source of the specified metric override must be enabled. For
+          example, if one or more spark:driver metrics are provided as metric
+          overrides, the spark metric source must be enabled
+          (--metric-sources=spark).
 
        --metric-overrides-file=METRIC_OVERRIDES_FILE
           Path to a file containing list of Metrics that override the default
-          metrics enabled for the metric source. The path can be a Cloud
+          metrics enabled for the metric sources. The path can be a Cloud
           Storage URL (example: gs://path/to/file) or a local file system path.
 
      At most one of these can be specified:

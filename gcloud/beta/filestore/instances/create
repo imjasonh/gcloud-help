@@ -9,8 +9,8 @@ SYNOPSIS
         --network=[connect-mode=CONNECT-MODE],
           [name=NAME],[reserved-ip-range=RESERVED-IP-RANGE] [--async]
         [--description=DESCRIPTION] [--labels=[KEY=VALUE,...]]
-        [--location=LOCATION] [--region=REGION]
-        [--tier=TIER; default="BASIC_HDD"]
+        [--location=LOCATION] [--protocol=PROTOCOL; default="NFS_V3"]
+        [--region=REGION] [--tier=TIER; default="BASIC_HDD"]
         [--kms-key=KMS_KEY : --kms-keyring=KMS_KEYRING
           --kms-location=KMS_LOCATION --kms-project=KMS_PROJECT]
         [GCLOUD_WIDE_FLAG ...]
@@ -23,7 +23,7 @@ EXAMPLES
     volume.
 
         $ gcloud beta filestore instances create NAME \
-          --description=DESCRIPTION --tier=TIER \
+          --description=DESCRIPTION --tier=TIER --protocol=PROTOCOL \
           --file-share=name=VOLUME_NAME,capacity=CAPACITY \
           --network=name=NETWORK_NAME,\
         reserved-ip-range=RESERVED_IP_RANGE,connect-mode=CONNECT_MODE \
@@ -194,6 +194,15 @@ OPTIONAL FLAGS
 
      --location=LOCATION
         Location of the Cloud Filestore instance/operation.
+
+     --protocol=PROTOCOL; default="NFS_V3"
+        The service protocol for the Cloud Filestore instance. PROTOCOL must be
+        one of:
+
+         nfs-v3
+            NFSv3 protocol.
+         nfs-v4-1
+            NFSv4.1 protocol.
 
      --region=REGION
         Region of the Cloud Filestore instance.

@@ -1,32 +1,53 @@
 NAME
-    gcloud alpha compute queued-resources list - list Compute Engine queued
-        resources
+    gcloud alpha compute queued-resources list - list Google Compute Engine
+        queued resources
 
 SYNOPSIS
-    gcloud alpha compute queued-resources list --zones=ZONE,[ZONE,...]
+    gcloud alpha compute queued-resources list [NAME ...]
+        [--regexp=REGEXP, -r REGEXP] [--zones=ZONE,[ZONE,...]]
         [--filter=EXPRESSION] [--limit=LIMIT] [--page-size=PAGE_SIZE]
         [--sort-by=[FIELD,...]] [--uri] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) gcloud alpha compute queued-resources list displays all Compute
-    Engine queued resources in a project in given zones.
+    (ALPHA) gcloud alpha compute queued-resources list displays all Google
+    Compute Engine queued resources in a project.
+
+    By default, queued resources from all zones are listed. The results can be
+    narrowed down using a filter: --filter="zone:( ZONE ... )".
 
 EXAMPLES
-    To list all queued resources in a project in table form in specified zones,
+    To list all queued resources in a project in table form, run:
+
+        $ gcloud alpha compute queued-resources list
+
+    To list the URIs of all queued resources in a project, run:
+
+        $ gcloud alpha compute queued-resources list --uri
+
+    To list all queued resources in the us-central1-b and europe-west1-d zones,
     run:
 
         $ gcloud alpha compute queued-resources list \
-            --zones=us-central1-a,us-central1-b
+            --filter="zone:( us-central1-b europe-west1-d )"
 
-    To list the URIs of all queued resources in a project in specified zones,
-    run:
+POSITIONAL ARGUMENTS
+     [NAME ...]
+        (DEPRECATED) If provided, show details for the specified names and/or
+        URIs of resources.
 
-        $ gcloud alpha compute queued-resources list \
-            --zones=us-central1-a,us-central1-b --uri
+        Argument NAME is deprecated. Use --filter="name=( 'NAME' ... )"
+        instead.
 
-REQUIRED FLAGS
+FLAGS
+     --regexp=REGEXP, -r REGEXP
+        (DEPRECATED) Regular expression to filter the names of the results on.
+        Any names that do not match the entire regular expression will be
+        filtered out.
+
+        Flag --regexp is deprecated. Use --filter="name~'REGEXP'" instead.
+
      --zones=ZONE,[ZONE,...]
-        Only resources from the given zones are queried.
+        If provided, only resources from the given zones are queried.
 
 LIST COMMAND FLAGS
      --filter=EXPRESSION

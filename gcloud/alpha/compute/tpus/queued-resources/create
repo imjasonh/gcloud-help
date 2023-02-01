@@ -5,8 +5,9 @@ NAME
 SYNOPSIS
     gcloud alpha compute tpus queued-resources create
         (QUEUED_RESOURCE : --zone=ZONE) --accelerator-type=ACCELERATOR_TYPE
-        --node-id=[NODE_ID,...] --runtime-version=RUNTIME_VERSION [--async]
-        [--best-effort] [--guaranteed] [--internal-ips] [--reserved]
+        --runtime-version=RUNTIME_VERSION
+        (--node-id=NODE_ID : --node-count=NODE_COUNT --node-prefix=NODE_PREFIX)
+        [--async] [--best-effort] [--guaranteed] [--internal-ips] [--reserved]
         [--valid-after-duration=VALID_AFTER_DURATION]
         [--valid-after-time=VALID_AFTER_TIME]
         [--valid-until-duration=VALID_UNTIL_DURATION]
@@ -17,19 +18,19 @@ DESCRIPTION
 
 EXAMPLES
     To create a Queued Resource with ID my-queued-resource in zone
-    us-central1-b and project my-project, run:
+    us-central2-b and project my-project, run:
 
         $ gcloud alpha compute tpus queued-resources create \
-            my-queued-resource --accelerator-type=v2-8 \
-            --runtime-version=v2-alpha --node-id=my-node-001 \
-            --zone=us-central1-b --project=my-project
+            my-queued-resource --accelerator-type=v4-8 \
+            --runtime-version=v2-alpha-tpuv4 --node-id=my-node-001 \
+            --zone=us-central2-b --project=my-project
 
     To create a Queued Resource with multiple nodes, run:
 
         $ gcloud alpha compute tpus queued-resources create \
-            my-queued-resource --accelerator-type=v2-8 \
-            --runtime-version=v2-alpha --node-id=my-node-001,my-node-002 \
-            --zone=us-central1-b --project=my-project
+            my-queued-resource --accelerator-type=v4-8 \
+            --runtime-version=v2-alpha-tpuv4 --node-prefix=my-node \
+            --node-count=2 --zone=us-central2-b --project=my-project
 
 POSITIONAL ARGUMENTS
      Queued resource resource - The Queued Resource you want to create. The
@@ -66,15 +67,44 @@ REQUIRED FLAGS
      --accelerator-type=ACCELERATOR_TYPE
         Accelerator type for the TPU.
 
-     --node-id=[NODE_ID,...]
-        The unqualified Node identifier, used to identify the TPU in the Nodes
-        collection once provisioned.
-
-        To request a resource with multiple nodes, enter multiple, unique,
-        unqualified Node identifiers as a comma delimited list.
-
      --runtime-version=RUNTIME_VERSION
         Runtime version for the TPU, such as 2.3.
+
+     Specify TPU node(s) with either a single node id, or a node prefix and
+     node count combination
+
+     Exactly one of these must be specified:
+
+       Single node creation
+
+         --node-id=NODE_ID
+            Unqualified node identifier used to identify the node in the
+            project once provisioned.
+
+            To request a resource with multiple nodes, use --node-prefix to
+            specify the prefix for each node and --node-count to specify the
+            number of nodes in place of --node-id.
+
+       Multinode creation
+
+         --node-count=NODE_COUNT
+            The number of nodes in a multislice provision, also used to
+            generate the qualified name for nodes in the provision. Value must
+            be greater than 1.
+
+            Must also specify --node-prefix.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --node-prefix=NODE_PREFIX
+            Node prefix used to generate the qualified name of each node the
+            multislice node provision.
+
+            Must also specify --node-count.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
 
 OPTIONAL FLAGS
      --async
