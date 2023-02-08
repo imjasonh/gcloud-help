@@ -26,6 +26,8 @@ SYNOPSIS
         [--idle-timeout-sec=IDLE_TIMEOUT_SEC]
         [--load-balancing-scheme=LOAD_BALANCING_SCHEME; default="EXTERNAL"]
         [--locality-lb-policy=LOCALITY_LB_POLICY]
+        [--logging-optional=LOGGING_OPTIONAL]
+        [--logging-optional-fields=[LOGGING_OPTIONAL_FIELDS,...]]
         [--logging-sample-rate=LOGGING_SAMPLE_RATE] [--max-ttl=MAX_TTL]
         [--[no-]negative-caching] [--negative-caching-policy=[[CODE=TTL],...]]
         [--network=NETWORK] [--port-name=PORT_NAME] [--protocol=PROTOCOL]
@@ -336,6 +338,23 @@ FLAGS
         LOCALITY_LB_POLICY must be one of: INVALID_LB_POLICY, ROUND_ROBIN,
         LEAST_REQUEST, RING_HASH, RANDOM, ORIGINAL_DESTINATION, MAGLEV,
         WEIGHTED_MAGLEV.
+
+     --logging-optional=LOGGING_OPTIONAL
+        This field can only be specified if logging is enabled for the backend
+        service. Configures whether all, none or a subset of optional fields
+        should be added to the reported logs. One of [INCLUDE_ALL_OPTIONAL,
+        EXCLUDE_ALL_OPTIONAL, CUSTOM]. This can only be specified if the
+        protocol is HTTP, HTTPS, HTTP2, TCP, SSL, UDP, or UNSPECIFIED. Default
+        is EXCLUDE_ALL_OPTIONAL. LOGGING_OPTIONAL must be one of:
+        EXCLUDE_ALL_OPTIONAL, INCLUDE_ALL_OPTIONAL, CUSTOM.
+
+     --logging-optional-fields=[LOGGING_OPTIONAL_FIELDS,...]
+        This field can only be specified if logging is enabled for the backend
+        service and "logConfig.optionalMode" was set to CUSTOM. Contains a
+        comma-separated list of optional fields you want to include in the
+        logs. For example: serverInstance, serverGkeDetails.cluster,
+        serverGkeDetails.pod.podNamespace. This can only be specified if the
+        protocol is HTTP, HTTPS, HTTP2, TCP, SSL, UDP, or UNSPECIFIED.
 
      --logging-sample-rate=LOGGING_SAMPLE_RATE
         This field can only be specified if logging is enabled for the backend

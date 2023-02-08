@@ -1,0 +1,102 @@
+NAME
+    gcloud beta compute network-attachments create - create a Google Compute
+        Engine network attachment
+
+SYNOPSIS
+    gcloud beta compute network-attachments create NAME
+        --subnets=SUBNETS,[SUBNETS,...]
+        [--connection-preference=CONNECTION_PREFERENCE;
+          default="ACCEPT_AUTOMATIC"] [--description=DESCRIPTION]
+        [--producer-accept-list=[ACCEPT_LIST,...]]
+        [--producer-reject-list=[REJECT_LIST,...]] [--region=REGION]
+        [--subnets-region=SUBNETS_REGION] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) gcloud beta compute network-attachments create is used to create
+    network attachments. A service consumer creates network attachments and
+    makes it available to producers. Service producers then use a multi-NIC VM
+    to form a bi-directional, non-NAT'd communication channel.
+
+EXAMPLES
+        $ gcloud beta compute network-attachments create \
+            NETWORK_ATTACHMENT_NAME --region=us-central1 \
+            --subnets=MY_SUBNET --connection-preference=ACCEPT_MANUAL \
+            --producer-accept-list=PROJECT1,PROJECT2 \
+            --producer-reject-list=PROJECT3,PROJECT4
+
+    To create a network attachment with a textual description, run:
+
+        $ gcloud beta compute network-attachments create \
+            NETWORK_ATTACHMENT_NAME --region=us-central1 \
+            --subnets=MY_SUBNET --connection-preference=ACCEPT_MANUAL \
+            --producer-accept-list=PROJECT1,PROJECT2 \
+            --producer-reject-list=PROJECT3,PROJECT4 \
+            --description='default network attachment'
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the network attachment to create.
+
+REQUIRED FLAGS
+     --subnets=SUBNETS,[SUBNETS,...]
+        The subnetworks provided by the consumer for the producers
+
+OPTIONAL FLAGS
+     --connection-preference=CONNECTION_PREFERENCE; default="ACCEPT_AUTOMATIC"
+        The connection preference of network attachment. The value can be set
+        to ACCEPT_AUTOMATIC or ACCEPT_MANUAL. An ACCEPT_AUTOMATIC network
+        attachment is one that always accepts the connection from producer NIC.
+        An ACCEPT_MANUAL network attachment is one that requires an explicit
+        addition of the producer project id or project number to the producer
+        accept list. CONNECTION_PREFERENCE must be one of: ACCEPT_AUTOMATIC,
+        ACCEPT_MANUAL.
+
+     --description=DESCRIPTION
+        An optional, textual description for the network attachment.
+
+     --producer-accept-list=[ACCEPT_LIST,...]
+        Projects that are allowed to connect to this network attachment.
+
+     --producer-reject-list=[REJECT_LIST,...]
+        Projects that are not allowed to connect to this network attachment.
+
+     --region=REGION
+        Region of the network attachment to create. If not specified, you might
+        be prompted to select a region (interactive mode only).
+
+        To avoid prompting when this flag is omitted, you can set the
+        compute/region property:
+
+            $ gcloud config set compute/region REGION
+
+        A list of regions can be fetched by running:
+
+            $ gcloud compute regions list
+
+        To unset the property, run:
+
+            $ gcloud config unset compute/region
+
+        Alternatively, the region can be stored in the environment variable
+        CLOUDSDK_COMPUTE_REGION.
+
+     --subnets-region=SUBNETS_REGION
+        Region of the subnetworks to operate on. Overrides the default
+        compute/region property value for this command invocation.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud compute network-attachments create
+
+        $ gcloud alpha compute network-attachments create
+
