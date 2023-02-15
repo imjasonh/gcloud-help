@@ -4,33 +4,58 @@ NAME
 
 SYNOPSIS
     gcloud alpha container vmware clusters query-version-config
-        (--cluster=CLUSTER
-          : [--admin-cluster-membership=ADMIN_CLUSTER_MEMBERSHIP
-          : --admin-cluster-membership-location=ADMIN_CLUSTER_MEMBERSHIP_LOCATION; default="global" --admin-cluster-membership-project=ADMIN_CLUSTER_MEMBERSHIP_PROJECT])
-        [--location=LOCATION] [GCLOUD_WIDE_FLAG ...]
+        [--location=LOCATION]
+        [--cluster=CLUSTER
+          | [--admin-cluster-membership=ADMIN_CLUSTER_MEMBERSHIP
+          : --admin-cluster-membership-location=ADMIN_CLUSTER_MEMBERSHIP_LOCATION; default="global" --admin-cluster-membership-project=ADMIN_CLUSTER_MEMBERSHIP_PROJECT]]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Query versions for creating or upgrading an Anthos on VMware user
     cluster.
 
 EXAMPLES
-    To query versions for creating a cluster with an admin cluster membership
-    named my-admin-cluster-membership managed in project
-    my-admin-cluster-project run:
+    To query all available versions in location us-west1, run:
 
         $ gcloud alpha container vmware clusters query-version-config \
+            --location=us-west1
+
+    To query versions for creating a cluster with an admin cluster membership
+    named my-admin-cluster-membership managed in project
+    my-admin-cluster-project and location us-west, run:
+
+        $ gcloud alpha container vmware clusters query-version-config \
+            --location=us-west1 \
             --admin-cluster-membership=my-admin-cluster-membership \
             --admin-cluster-membership-project=my-admin-cluster-project
 
-    To query versions for upgrading a user cluster named my-user-cluster, run:
+    To query versions for upgrading a user cluster named my-user-cluster in
+    location us-west1, run:
 
         $ gcloud alpha container vmware clusters query-version-config \
-            --cluster=my-user-cluster
+            --location=us-west1 --cluster=my-user-cluster
 
-REQUIRED FLAGS
+FLAGS
+     Location resource - Google Cloud location to query versions. This
+     represents a Cloud resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways. To set the project
+     attribute:
+      ◆ provide the argument --location on the command line with a fully
+        specified name;
+      ◆ set the property container_vmware/location with a fully specified
+        name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+       --location=LOCATION
+          ID of the location or fully qualified identifier for the location. To
+          set the location attribute:
+          ▸ provide the argument --location on the command line;
+          ▸ set the property container_vmware/location.
+
      Use cases for querying versions.
 
-     Exactly one of these must be specified:
+     At most one of these can be specified:
 
        Upgrade an Anthos on VMware user cluster use case.
 
@@ -86,24 +111,6 @@ REQUIRED FLAGS
                 the command line;
               ◇ provide the argument --project on the command line;
               ◇ set the property core/project.
-
-OPTIONAL FLAGS
-     Location resource - Google Cloud location to query version configuration.
-     This represents a Cloud resource. (NOTE) Some attributes are not given
-     arguments in this group but can be set in other ways. To set the project
-     attribute:
-      ◆ provide the argument --location on the command line with a fully
-        specified name;
-      ◆ set the property container_vmware/location with a fully specified
-        name;
-      ◆ provide the argument --project on the command line;
-      ◆ set the property core/project.
-
-       --location=LOCATION
-          ID of the location or fully qualified identifier for the location. To
-          set the location attribute:
-          ▸ provide the argument --location on the command line;
-          ▸ set the property container_vmware/location.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

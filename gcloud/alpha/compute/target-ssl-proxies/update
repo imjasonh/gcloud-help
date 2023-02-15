@@ -4,11 +4,11 @@ NAME
 SYNOPSIS
     gcloud alpha compute target-ssl-proxies update NAME
         [--backend-service=BACKEND_SERVICE] [--proxy-header=PROXY_HEADER]
-        [--certificate-map=CERTIFICATE_MAP
-          : --ssl-certificates=SSL_CERTIFICATE,[...] | --clear-ssl-certificates
-          | --clear-certificate-map]
         [--clear-ssl-policy | --ssl-policy=SSL_POLICY --global-ssl-policy
-          | --ssl-policy-region=SSL_POLICY_REGION] [GCLOUD_WIDE_FLAG ...]
+          | --ssl-policy-region=SSL_POLICY_REGION]
+        [--ssl-certificates=SSL_CERTIFICATE,[...] | --clear-ssl-certificates
+          | --certificate-map=CERTIFICATE_MAP | --clear-certificate-map]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) gcloud alpha compute target-ssl-proxies update is used to replace
@@ -41,6 +41,26 @@ FLAGS
 
      At most one of these can be specified:
 
+       --clear-ssl-policy
+          Removes any attached SSL policy from the SSL proxy.
+
+       --ssl-policy=SSL_POLICY
+          A reference to an SSL policy resource that defines the server-side
+          support for SSL features and affects the connections between clients
+          and the SSL proxy load balancer. The SSL policy must exist and cannot
+          be deleted while referenced by a target SSL proxy.
+
+       At most one of these can be specified:
+
+         --global-ssl-policy
+            If set, the SSL policy is global.
+
+         --ssl-policy-region=SSL_POLICY_REGION
+            Region of the SSL policy to operate on. Overrides the default
+            compute/region property value for this command invocation.
+
+     At most one of these can be specified:
+
        --ssl-certificates=SSL_CERTIFICATE,[...]
           References to at most 15 SSL certificate resources that are used for
           server-side authentication. The first SSL certificate in this list is
@@ -70,26 +90,6 @@ FLAGS
 
        --clear-certificate-map
           Removes any attached certificate map from the SSL proxy.
-
-     At most one of these can be specified:
-
-       --clear-ssl-policy
-          Removes any attached SSL policy from the SSL proxy.
-
-       --ssl-policy=SSL_POLICY
-          A reference to an SSL policy resource that defines the server-side
-          support for SSL features and affects the connections between clients
-          and the SSL proxy load balancer. The SSL policy must exist and cannot
-          be deleted while referenced by a target SSL proxy.
-
-       At most one of these can be specified:
-
-         --global-ssl-policy
-            If set, the SSL policy is global.
-
-         --ssl-policy-region=SSL_POLICY_REGION
-            Region of the SSL policy to operate on. Overrides the default
-            compute/region property value for this command invocation.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

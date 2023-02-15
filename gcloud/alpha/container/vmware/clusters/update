@@ -6,9 +6,11 @@ SYNOPSIS
     gcloud alpha container vmware clusters update
         (CLUSTER : --location=LOCATION) [--admin-users=ADMIN_USERS] [--async]
         [--description=DESCRIPTION]
-        [--metal-lb-config-from-file=METAL_LB_CONFIG_FROM_FILE]
-        [--static-ip-config-from-file=STATIC_IP_CONFIG_FROM_FILE]
-        [--version=VERSION]
+        [--metal-lb-config-address-pools=[addresses=ADDRESSES],
+          [avoid-buggy-ips=AVOID-BUGGY-IPS],
+          [manual-assign=MANUAL-ASSIGN],[pool=POOL]]
+        [--static-ip-config-ip-blocks=[gateway=GATEWAY],
+          [ips=IPS],[netmask=NETMASK]] [--version=VERSION]
         [--cpus=CPUS --memory=MEMORY --disable-auto-resize
           | --enable-auto-resize] [--disable-aag-config | --enable-aag-config]
         [--disable-auto-repair | --enable-auto-repair]
@@ -71,40 +73,22 @@ FLAGS
 
          MetalLB Configuration
 
-           --metal-lb-config-from-file=METAL_LB_CONFIG_FROM_FILE
-              Path of the YAML/JSON file that contains the MetalLB
-              configurations.
+         At most one of these can be specified:
+
+           --metal-lb-config-address-pools=[addresses=ADDRESSES],[avoid-buggy-ips=AVOID-BUGGY-IPS],[manual-assign=MANUAL-ASSIGN],[pool=POOL]
+              MetalLB load balancer configurations.
 
               Examples:
 
-                  metalLBConfig:
-                    addressPools:
-                    - pool: lb-test-ip
-                      addresses:
-                      - 10.251.133.79/32
-                      - 10.251.133.80/32
-                      avoidBuggyIPs: True
-                      manualAssign: False
-                    - pool: ingress-ip
-                      addresses:
-                      - 10.251.133.70/32
-                      avoidBuggyIPs: False
-                      manualAssign: True
+              To specify MetalLB load balancer configurations for two address
+              pools pool1 and pool2,
 
-              List of supported fields in metalLBConfig
+                  $ gcloud gcloud alpha container vmware clusters update
+                      --metal-lb-config-address-pools 'pool=pool1,avoid-buggy-ips=True,manual-assign=True,addresses=192.168.1.1/32;192.168.1.2-192.168.1.3'
+                      --metal-lb-config-address-pools 'pool=pool2,avoid-buggy-ips=False,manual-assign=False,addresses=192.168.2.1/32;192.168.2.2-192.168.2.3'
 
-                KEY             VALUE                        NOTE
-                addressPools    one or more addressPools     required, mutable
-
-              List of supported fields in addressPools
-
-                KEY             VALUE                    NOTE
-                pool            string                   required, mutable
-                addresses       one or more IP ranges    required, mutable
-                avoidBuggyIPs   bool                     optional, mutable,
-                                                         defaults to False
-                manualAssign    bool                     optional, mutable,
-                                                         defaults to False
+              Use quote around the flag value to escape semicolon in the
+              terminal.
 
      VMware User Cluster network configurations
 
@@ -112,46 +96,21 @@ FLAGS
 
          Static IP configuration group
 
-           --static-ip-config-from-file=STATIC_IP_CONFIG_FROM_FILE
-              Path of the YAML/JSON file that contains the static IP
-              configurations, used by Anthos on VMware user cluster node pools.
+         At most one of these can be specified:
 
-              Examples:
+           --static-ip-config-ip-blocks=[gateway=GATEWAY],[ips=IPS],[netmask=NETMASK]
+              Static IP configurations.
 
-                  staticIPConfig:
-                    ipBlocks:
-                    - gateway: 10.251.31.254
-                      netmask: 255.255.252.0
-                      ips:
-                      - hostname: hostname-1
-                        ip: 1.1.1.1
-                      - hostname: hostname-2
-                        ip: 2.2.2.2
-                      - hostname: hostname-3
-                        ip: 3.3.3.3
-                      - hostname: hostname-4
-                        ip: 4.4.4.4
+              Example:
 
-              List of supported fields in staticIPConfig
+              To specify two Static IP blocks,
 
-                KEY        VALUE                 NOTE
-                ipBlocks   one or more ipBlocks  required, mutable
+                  $ gcloud gcloud alpha container vmware clusters update
+                      --static-ip-config-ip-blocks 'gateway=192.168.0.1,netmask=255.255.255.0,ips=hostname-1:1.1.1.1;hostname-2:2.2.2.2'
+                      --static-ip-config-ip-blocks 'gateway=192.168.1.1,netmask=255.255.0.0,ips=hostname-3:3.3.3.3;hostname-4:4.4.4.4'
 
-              List of supported fields in ipBlocks
-
-                KEY      VALUE            NOTE
-                gateway  IP address       required, immutable
-                netmask  IP address       required, immutable
-                ips      one or more ips  required, mutable
-
-              List of supported fields in ips
-
-                KEY        VALUE        NOTE
-                hostname   string       optional, immutable
-                ip         IP address   required, immutable
-
-              New ips fields can be added, existing ips fields cannot be
-              removed or updated.
+              Use quote around the flag value to escape semicolon in the
+              terminal.
 
      --version=VERSION
         Anthos Cluster on VMware version for the user cluster resource

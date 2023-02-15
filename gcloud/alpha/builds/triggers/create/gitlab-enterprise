@@ -4,18 +4,16 @@ NAME
 
 SYNOPSIS
     gcloud alpha builds triggers create gitlab-enterprise
-        (--trigger-config=PATH
-          | [--gitlab-config-resource=GITLAB_CONFIG_RESOURCE
-          --project-namespace=PROJECT_NAMESPACE (--branch-pattern=REGEX
-          | --tag-pattern=REGEX | [--pull-request-pattern=REGEX
-          : --comment-control=COMMENT_CONTROL;
+        (--trigger-config=PATH | [(--branch-pattern=REGEX | --tag-pattern=REGEX
+          | [--pull-request-pattern=REGEX : --comment-control=COMMENT_CONTROL;
           default=CommentControlValueValuesEnum(COMMENTS_ENABLED,
           1)]) (--build-config=PATH | --inline-config=PATH
           | [--dockerfile=DOCKERFILE : --dockerfile-dir=DOCKERFILE_DIR;
           default="/" --dockerfile-image=DOCKERFILE_IMAGE])
-          : --description=DESCRIPTION --ignored-files=[GLOB,...]
-          --included-files=[GLOB,...] --name=NAME --region=REGION
-          --require-approval
+          (--gitlab-config-resource=GITLAB_CONFIG_RESOURCE
+          --project-namespace=PROJECT_NAMESPACE) : --description=DESCRIPTION
+          --ignored-files=[GLOB,...] --included-files=[GLOB,...] --name=NAME
+          --region=REGION --require-approval
           --service-account=SERVICE_ACCOUNT --substitutions=[KEY=VALUE,...]])
         [GCLOUD_WIDE_FLAG ...]
 
@@ -23,7 +21,7 @@ DESCRIPTION
     (ALPHA) Create a build trigger for a GitLab Enterprise repository.
 
 EXAMPLES
-    To create a push trigger for all branches:
+    To create a push trigger with a 1st-gen repository for all branches:
 
         $ gcloud alpha builds triggers create gitlab-enterprise \
             --name="my-trigger" \
@@ -33,7 +31,7 @@ EXAMPLES
             --gitlab-config-resource="projects/1234/locations/global/gitLabC\
         onfigs/5678" --branch-pattern=".*" --build-config="cloudbuild.yaml"
 
-    To create a pull request trigger for main:
+    To create a pull request trigger with a 1st-gen repository for main:
 
         $ gcloud alpha builds triggers create gitlab-enterprise \
             --name="my-trigger" \
@@ -53,18 +51,6 @@ REQUIRED FLAGS
           https://cloud.google.com/cloud-build/docs/api/reference/rest/v1/projects.triggers#BuildTrigger
 
        Flag based trigger configuration
-
-         --gitlab-config-resource=GITLAB_CONFIG_RESOURCE
-            GitLab config resource name.
-
-            This flag argument must be specified if any of the other arguments
-            in this group are specified.
-
-         --project-namespace=PROJECT_NAMESPACE
-            GitLab project namespace.
-
-            This flag argument must be specified if any of the other arguments
-            in this group are specified.
 
          --description=DESCRIPTION
             Build trigger description.
@@ -205,6 +191,22 @@ REQUIRED FLAGS
 
                 Use a build configuration (cloudbuild.yaml) file for building
                 multiple images in a single trigger.
+
+         Exactly one of these must be specified:
+
+           1st-gen repository settings.
+
+             --gitlab-config-resource=GITLAB_CONFIG_RESOURCE
+                GitLab config resource name.
+
+                This flag argument must be specified if any of the other
+                arguments in this group are specified.
+
+             --project-namespace=PROJECT_NAMESPACE
+                GitLab project namespace.
+
+                This flag argument must be specified if any of the other
+                arguments in this group are specified.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

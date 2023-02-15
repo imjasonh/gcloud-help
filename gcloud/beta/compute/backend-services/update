@@ -21,6 +21,8 @@ SYNOPSIS
           oauth2-client-secret=OAUTH2-CLIENT-SECRET]]
         [--idle-timeout-sec=IDLE_TIMEOUT_SEC]
         [--locality-lb-policy=LOCALITY_LB_POLICY]
+        [--logging-optional=LOGGING_OPTIONAL]
+        [--logging-optional-fields=[LOGGING_OPTIONAL_FIELDS,...]]
         [--logging-sample-rate=LOGGING_SAMPLE_RATE] [--port-name=PORT_NAME]
         [--protocol=PROTOCOL] [--[no-]request-coalescing]
         [--security-policy=SECURITY_POLICY]
@@ -177,9 +179,9 @@ FLAGS
      --[no-]enable-logging
         The logging options for the load balancer traffic served by this
         backend service. If logging is enabled, logs will be exported to Cloud
-        Logging. This can only be specified if the protocol is HTTP, HTTPS,
-        HTTP2, TCP, SSL, UDP, or UNSPECIFIED. Disabled by default. Use
-        --enable-logging to enable and --no-enable-logging to disable.
+        Logging. Disabled by default. This field cannot be specified for SSL
+        Proxy and TCP Proxy Load Balancing. Use --enable-logging to enable and
+        --no-enable-logging to disable.
 
      --[no-]enable-strong-affinity
         Enable or disable strong session affinity. This is only available for
@@ -244,14 +246,29 @@ FLAGS
         LEAST_REQUEST, RING_HASH, RANDOM, ORIGINAL_DESTINATION, MAGLEV,
         WEIGHTED_MAGLEV.
 
+     --logging-optional=LOGGING_OPTIONAL
+        This field can only be specified if logging is enabled for the backend
+        service. Configures whether all, none, or a subset of optional fields
+        should be added to the reported logs. Default is EXCLUDE_ALL_OPTIONAL.
+        This field can only be specified for Internal TCP/UDP Load Balancing
+        and External Network Load Balancing. LOGGING_OPTIONAL must be one of:
+        EXCLUDE_ALL_OPTIONAL, INCLUDE_ALL_OPTIONAL, CUSTOM.
+
+     --logging-optional-fields=[LOGGING_OPTIONAL_FIELDS,...]
+        This field can only be specified if logging is enabled for the backend
+        service and "--logging-optional" was set to CUSTOM. Contains a
+        comma-separated list of optional fields you want to include in the
+        logs. For example: serverInstance, serverGkeDetails.cluster,
+        serverGkeDetails.pod.podNamespace. This can only be specified for
+        Internal TCP/UDP Load Balancing and External Network Load Balancing.
+
      --logging-sample-rate=LOGGING_SAMPLE_RATE
         This field can only be specified if logging is enabled for the backend
         service. The value of the field must be a float in the range [0, 1].
         This configures the sampling rate of requests to the load balancer
         where 1.0 means all logged requests are reported and 0.0 means no
-        logged requests are reported. This can only be specified if the
-        protocol is HTTP, HTTPS, HTTP2, TCP, SSL, UDP, or UNSPECIFIED. The
-        default value is 0.0.
+        logged requests are reported. The default value is 1.0 when logging is
+        enabled and 0.0 otherwise.
 
      --port-name=PORT_NAME
         Backend services for external HTTP(S) load balancing, internal HTTP(S)

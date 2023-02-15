@@ -1,27 +1,27 @@
 NAME
-    gcloud alpha edge-cloud networking routers remove-bgp-peer - remove a list
-        of BGP peers from a Distributed Cloud Edge Network router
+    gcloud alpha edge-cloud networking routers remove-bgp-peer - remove a BGP
+        peer from a Distributed Cloud Edge Network router
 
 SYNOPSIS
     gcloud alpha edge-cloud networking routers remove-bgp-peer
         (ROUTER : --location=LOCATION --zone=ZONE)
-        --peer-names=[BGP_PEER_NAME,...] [--async] [GCLOUD_WIDE_FLAG ...]
+        (--peer-name=PEER_NAME | --peer-names=[PEER_NAME,...]) [--async]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) Delete a list of BGP peers from a Distributed Cloud Edge Network
+    (ALPHA) Delete a list of BGP peer from a Distributed Cloud Edge Network
     router
 
 EXAMPLES
-    To delete a list of BGP peers contains 'peer1' and 'peer2' from the
-    Distributed Cloud Edge Network router 'my-router' in edge zone
-    'us-central1-edge-den1' , run:
+    To delete a BGP peer 'peer1' from the Distributed Cloud Edge Network router
+    'my-router' in edge zone 'us-central1-edge-den1' , run:
 
         $ gcloud alpha edge-cloud networking routers remove-bgp-peer \
-          my-router --peer-names=peer1,peer2 --location=us-central1 \
+          my-router --peer-name=peer1 --location=us-central1 \
           --zone=us-central1-edge-den1
 
 POSITIONAL ARGUMENTS
-     Router resource - The router from which we delete a list of bgp peers. The
+     Router resource - The router from which we delete a BGP peer. The
      arguments in this group can be used to specify the attributes of this
      resource. (NOTE) Some attributes are not given arguments in this group but
      can be set in other ways. To set the project attribute:
@@ -53,9 +53,14 @@ POSITIONAL ARGUMENTS
           ▸ provide the argument --zone on the command line.
 
 REQUIRED FLAGS
-     --peer-names=[BGP_PEER_NAME,...]
-        The list of names for peers being removed. Only single value allowed
-        currently.
+     Exactly one of these must be specified:
+
+       --peer-name=PEER_NAME
+          The name of the BGP peer being removed.
+
+       --peer-names=[PEER_NAME,...]
+          The list of names for peers being removed. Only single value allowed
+          currently.
 
 OPTIONAL FLAGS
      --async
@@ -74,5 +79,7 @@ NOTES
     This command is currently in alpha and might change without notice. If this
     command fails with API permission errors despite specifying the correct
     project, you might be trying to access an API with an invitation-only early
-    access allowlist.
+    access allowlist. This variant is also available:
+
+        $ gcloud edge-cloud networking routers remove-bgp-peer
 

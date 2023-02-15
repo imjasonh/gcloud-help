@@ -11,10 +11,11 @@ SYNOPSIS
           --destination-gke-path=DESTINATION_GKE_PATH]
           | [--destination-run-service=DESTINATION_RUN_SERVICE
           : --destination-run-path=DESTINATION_RUN_PATH
-          --destination-run-region=DESTINATION_RUN_REGION]) --channel=CHANNEL
-        --transport-topic=TRANSPORT_TOPIC [--async]
+          --destination-run-region=DESTINATION_RUN_REGION]) [--async]
+        [--channel=CHANNEL]
         [--event-filters-path-pattern=[ATTRIBUTE=PATH_PATTERN,...]]
-        [--service-account=SERVICE_ACCOUNT] [GCLOUD_WIDE_FLAG ...]
+        [--service-account=SERVICE_ACCOUNT] [--transport-topic=TRANSPORT_TOPIC]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Create an Eventarc trigger.
@@ -120,6 +121,10 @@ REQUIRED FLAGS
             as the trigger.
 
 OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
      Channel resource - The channel to use in the trigger. The channel is
      needed only if trigger is created for a third-party provider. This
      represents a Cloud resource. (NOTE) Some attributes are not given
@@ -139,6 +144,16 @@ OPTIONAL FLAGS
           set the channel attribute:
           ▸ provide the argument --channel on the command line.
 
+     --event-filters-path-pattern=[ATTRIBUTE=PATH_PATTERN,...]
+        The trigger's list of filters in path pattern format that apply to
+        CloudEvent attributes. This flag can be repeated to add more filters to
+        the list. Only events that match all these filters will be sent to the
+        destination. Currently, path pattern format is only available for the
+        resourceName attribute for Cloud Audit Log events.
+
+     --service-account=SERVICE_ACCOUNT
+        The IAM service account email associated with the trigger.
+
      Pub/Sub topic resource - The Cloud Pub/Sub topic to use for the trigger's
      transport intermediary. This feature is currently only available for
      triggers of event type google.cloud.pubsub.topic.v1.messagePublished. The
@@ -155,20 +170,6 @@ OPTIONAL FLAGS
           ID of the Pub/Sub topic or fully qualified identifier for the Pub/Sub
           topic. To set the transport-topic attribute:
           ▸ provide the argument --transport-topic on the command line.
-
-     --async
-        Return immediately, without waiting for the operation in progress to
-        complete.
-
-     --event-filters-path-pattern=[ATTRIBUTE=PATH_PATTERN,...]
-        The trigger's list of filters in path pattern format that apply to
-        CloudEvent attributes. This flag can be repeated to add more filters to
-        the list. Only events that match all these filters will be sent to the
-        destination. Currently, path pattern format is only available for the
-        resourceName attribute for Cloud Audit Log events.
-
-     --service-account=SERVICE_ACCOUNT
-        The IAM service account email associated with the trigger.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

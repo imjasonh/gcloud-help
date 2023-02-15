@@ -6,7 +6,12 @@ SYNOPSIS
     gcloud artifacts repositories create (REPOSITORY : --location=LOCATION)
         --repository-format=REPOSITORY_FORMAT [--allow-snapshot-overwrites]
         [--async] [--description=DESCRIPTION] [--kms-key=KMS_KEY]
-        [--labels=[KEY=VALUE,...]]
+        [--labels=[KEY=VALUE,...]] [--mode=MODE; default="NONE"]
+        [--remote-docker-repo=REMOTE_DOCKER_REPO]
+        [--remote-mvn-repo=REMOTE_MVN_REPO] [--remote-npm-repo=REMOTE_NPM_REPO]
+        [--remote-python-repo=REMOTE_PYTHON_REPO]
+        [--remote-repo-config-desc=REMOTE_REPO_CONFIG_DESC]
+        [--upstream-policy-file=FILE]
         [--version-policy=VERSION_POLICY; default="NONE"]
         [GCLOUD_WIDE_FLAG ...]
 
@@ -104,6 +109,46 @@ OPTIONAL FLAGS
         (-), underscores (_), lowercase characters, and numbers. Values must
         contain only hyphens (-), underscores (_), lowercase characters, and
         numbers.
+
+     --mode=MODE; default="NONE"
+        Mode is the type of the repository - Standard, Virtual or Remote. MODE
+        must be one of:
+
+         none
+            Repository mode not specified.
+         remote-repository
+            Remote repository mode - fetches data from upstream and caches it.
+         standard-repository
+            Standard repository mode - should be possible to write/read data to
+            this repo.
+         virtual-repository
+            Virtual repository mode - aggregates data from several upstreams.
+
+     --remote-docker-repo=REMOTE_DOCKER_REPO
+        (Docker only) Repo upstream for docker remote repository.
+        REMOTE_DOCKER_REPO must be one of: docker-hub, none.
+
+     --remote-mvn-repo=REMOTE_MVN_REPO
+        (Maven only) Repo upstream for maven remote repository. REMOTE_MVN_REPO
+        must be one of: maven-central, none.
+
+     --remote-npm-repo=REMOTE_NPM_REPO
+        (npm only) Repo upstream for npm remote repository. REMOTE_NPM_REPO
+        must be one of: none, npmjs.
+
+     --remote-python-repo=REMOTE_PYTHON_REPO
+        (Python only) Repo upstream for python remote repository.
+        REMOTE_PYTHON_REPO must be one of: none, pypi.
+
+     --remote-repo-config-desc=REMOTE_REPO_CONFIG_DESC
+        The description for the remote repository config.
+
+     --upstream-policy-file=FILE
+        (Virtual Repositories only) is the upstreams for the Virtual
+        Repository. Example of the file contents: [ { "id": "test1",
+        "repository": "projects/p1/locations/us-central1/repository/repo1",
+        "priority": 1 }, { "id": "test2", "repository":
+        "projects/p2/locations/us-west2/repository/repo2", "priority": 2 } ]
 
      --version-policy=VERSION_POLICY; default="NONE"
         (Maven only) The package versions that the repository will store.
