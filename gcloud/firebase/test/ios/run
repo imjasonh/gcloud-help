@@ -6,7 +6,8 @@ SYNOPSIS
     gcloud firebase test ios run [ARGSPEC] [--device=DIMENSION=VALUE,[...]]
         [--test=XCTEST_ZIP] [--timeout=TIMEOUT] [--type=TYPE]
         [--xcode-version=XCODE_VERSION] [--xctestrun-file=XCTESTRUN_FILE]
-        [--app=APP] [--async] [--num-flaky-test-attempts=int] [--record-video]
+        [--app=APP] [--async] [--client-details=[KEY=VALUE,...]]
+        [--num-flaky-test-attempts=int] [--record-video]
         [--results-bucket=RESULTS_BUCKET] [--results-dir=RESULTS_DIR]
         [--results-history-name=RESULTS_HISTORY_NAME]
         [--test-special-entitlements] [--filter=EXPRESSION] [--limit=LIMIT]
@@ -30,6 +31,12 @@ DESCRIPTION
     for more information about argument files.
 
 EXAMPLES
+    To help you identify and locate your test matrix in the Firebase console,
+    run:
+
+        $ gcloud firebase test ios run --test=XCTEST_ZIP \
+            --client-details=matrixLabel="Example matrix label"
+
     To invoke an XCTest lasting up to five minutes against the default device
     environment, run:
 
@@ -135,6 +142,25 @@ FLAGS
 
      --async
         Invoke a test asynchronously without waiting for test results.
+
+     --client-details=[KEY=VALUE,...]
+        Comma-separated, KEY=VALUE map of additional details to attach to the
+        test matrix. Arbitrary KEY=VALUE pairs may be attached to a test matrix
+        to provide additional context about the tests being run. When consuming
+        the test results, such as in Cloud Functions or a CI system, these
+        details can add additional context such as a link to the corresponding
+        pull request.
+
+        Example:
+
+            --client-details=buildNumber=1234,pullRequest=https://example.com/link/to/pull-request
+
+        To help you identify and locate your test matrix in the Firebase
+        console, use the matrixLabel key.
+
+        Example:
+
+            --client-details=matrixLabel="Example matrix label"
 
      --num-flaky-test-attempts=int
         Specifies the number of times a test execution should be reattempted if

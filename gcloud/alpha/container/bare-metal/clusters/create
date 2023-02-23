@@ -10,7 +10,10 @@ SYNOPSIS
         (--control-plane-load-balancer-port=CONTROL_PLANE_LOAD_BALANCER_PORT
           (--control-plane-vip=CONTROL_PLANE_VIP
           --ingress-vip=INGRESS_VIP) (--enable-manual-lb
-          | [--metal-lb-address-pools-from-file=METAL_LB_ADDRESS_POOLS_FROM_FILE : --metal-lb-load-balancer-node-configs=[labels=LABELS],
+          | [--metal-lb-address-pools=[addresses=ADDRESSES],
+          [avoid-buggy-ips=AVOID-BUGGY-IPS],
+          [manual-assign=MANUAL-ASSIGN],[pool=POOL]
+          : --metal-lb-load-balancer-node-configs=[labels=LABELS],
           [node-ip=NODE-IP]
           --metal-lb-load-balancer-node-labels=[KEY=VALUE,...]
           --metal-lb-load-balancer-node-taints=[KEY=VALUE:EFFECT,...]]))
@@ -142,37 +145,12 @@ REQUIRED FLAGS
 
          MetalLB Configuration
 
-           --metal-lb-address-pools-from-file=METAL_LB_ADDRESS_POOLS_FROM_FILE
-              Path of the YAML/JSON file that contains the MetalLB address
-              pools.
+           MetalLB address pools configuration.
 
-              Examples:
+           Exactly one of these must be specified:
 
-                  addressPools:
-                  - pool: pool-1
-                    addresses:
-                    - 10.200.0.14/32
-                    - 10.200.0.15/32
-                    avoidBuggyIPs: True
-                    manualAssign: True
-                  - pool: pool-2
-                    addresses:
-                    - 10.200.0.16/32
-                    avoidBuggyIPs: False
-                    manualAssign: False
-
-              List of supported fields in addressPools
-
-                KEY             VALUE                    NOTE
-                pool            string                   required, mutable
-                addresses       one or more IP ranges    required, mutable
-                avoidBuggyIPs   bool                     optional, mutable,
-                                                         defaults to False
-                manualAssign    bool                     optional, mutable,
-                                                         defaults to False
-
-              This flag argument must be specified if any of the other
-              arguments in this group are specified.
+             --metal-lb-address-pools=[addresses=ADDRESSES],[avoid-buggy-ips=AVOID-BUGGY-IPS],[manual-assign=MANUAL-ASSIGN],[pool=POOL]
+                MetalLB address pools configuration.
 
            Anthos on bare metal node pool configuration for MetalLB load
            balancer nodes.

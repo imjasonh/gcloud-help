@@ -6,6 +6,7 @@ SYNOPSIS
     gcloud datastream connection-profiles discover --location=LOCATION
         (--connection-profile-name=CONNECTION_PROFILE_NAME
           | --connection-profile-object-file=CONNECTION_PROFILE_OBJECT_FILE)
+        [--full-hierarchy | --hierarchy-depth=HIERARCHY_DEPTH]
         [--mysql-rdbms-file=MYSQL_RDBMS_FILE
           | --oracle-rdbms-file=ORACLE_RDBMS_FILE
           | --postgresql-rdbms-file=POSTGRESQL_RDBMS_FILE]
@@ -20,7 +21,7 @@ EXAMPLES
 
         $ gcloud datastream connection-profiles discover \
           CONNECTION_PROFILE --location=us-central1 \
-          --connection-profile-name=some-cp --recursive
+          --connection-profile-name=some-cp --recursive=true
 
     To discover a non-existing connection profile:
 
@@ -73,6 +74,16 @@ REQUIRED FLAGS
 OPTIONAL FLAGS
      At most one of these can be specified:
 
+       --full-hierarchy
+          Whether to retrieve the full hierarchy of data objects (TRUE) or only
+          the current level (FALSE).
+
+       --hierarchy-depth=HIERARCHY_DEPTH
+          The number of hierarchy levels below the current level to be
+          retrieved.
+
+     At most one of these can be specified:
+
        --mysql-rdbms-file=MYSQL_RDBMS_FILE
           Path to a YAML (or JSON) file containing the MySQL RDBMS to enrich
           with child data objects and metadata. If you pass - as the value of
@@ -91,12 +102,17 @@ OPTIONAL FLAGS
      At most one of these can be specified:
 
        --recursive
-          Whether to retrieve the full hierarchy of data objects (TRUE) or only
-          the current level (FALSE).
+          (DEPRECATED) Whether to retrieve the full hierarchy of data objects
+          (TRUE) or only the current level (FALSE).
+
+          The --recursive option is deprecated; use --full-hierarchy instead.
 
        --recursive-depth=RECURSIVE_DEPTH
-          The number of hierarchy levels below the current level to be
-          retrieved.
+          (DEPRECATED) The number of hierarchy levels below the current level
+          to be retrieved.
+
+          The --recursive-depth option is deprecated; use --hierarchy-depth
+          instead.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
