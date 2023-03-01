@@ -1,31 +1,48 @@
 NAME
     gcloud beta firestore databases create - create a Google Cloud Firestore
-        Native database
+        database via Firestore API
 
 SYNOPSIS
-    gcloud beta firestore databases create [--region=REGION]
-        [GCLOUD_WIDE_FLAG ...]
-
-DESCRIPTION
-    (BETA) Create a Google Cloud Firestore Native database.
+    gcloud beta firestore databases create --location=LOCATION
+        [--database=DATABASE; default="(default)"]
+        [--type=TYPE; default="firestore-native"] [GCLOUD_WIDE_FLAG ...]
 
 EXAMPLES
-    To create Google Cloud Firestore Native database
+    To create Firestore Native database in nam5.
 
-        $ gcloud beta firestore databases create
+        $ gcloud beta firestore databases create --location=nam5
 
-    To create an app in the nam5 region (multi-region), run:
+    To create Datastore Mode database in us-east1.
 
-        $ gcloud beta firestore databases create --region=nam5
+        $ gcloud beta firestore databases create --location=us-east1 \
+          --type=datastore-mode
 
-    To create an app in the us-east1 region, run:
+    To create Datastore Mode database in us-east1 with a databaseId foo.
 
-        $ gcloud beta firestore databases create --region=us-east1
+        $ gcloud beta firestore databases create --database=mytest \
+          --location=us-east1 --type=datastore-mode
 
-FLAGS
-     --region=REGION
-        The region to create the Google Cloud Firestore Native database within.
-        Use gcloud app regions list to list available regions.
+REQUIRED FLAGS
+     --location=LOCATION
+        The location to create the Google Cloud Firestore Native database
+        within. Available locations are listed at
+        https://cloud.google.com/firestore/docs/locations.
+
+OPTIONAL FLAGS
+     --database=DATABASE; default="(default)"
+        The ID to use for the database, which will become the final component
+        of the database's resource name. If database ID is not provided,
+        (default) will be used as database ID.
+
+            This value should be 4-63 characters. Valid characters are /[a-z][0-9]-/
+            with first character a letter and the last a letter or a number. Must
+            not be UUID-like /[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/.
+
+            Using "(default)" database ID is also allowed.
+
+     --type=TYPE; default="firestore-native"
+        The type of the database. TYPE must be one of: firestore-native,
+        datastore-mode.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

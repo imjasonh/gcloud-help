@@ -3,9 +3,9 @@ NAME
 
 SYNOPSIS
     gcloud logging buckets update BUCKET_ID --location=LOCATION
-        [--add-index=[KEY=VALUE, ...,...]] [--clear-indexes]
+        [--add-index=[KEY=VALUE, ...,...]] [--async] [--clear-indexes]
         [--cmek-kms-key-name=CMEK_KMS_KEY_NAME] [--description=DESCRIPTION]
-        [--locked] [--remove-indexes=[FIELD PATH,...]]
+        [--enable-analytics] [--locked] [--remove-indexes=[FIELD PATH,...]]
         [--restricted-fields=[RESTRICTED_FIELD,...]]
         [--retention-days=RETENTION_DAYS] [--update-index=[KEY=VALUE, ...,...]]
         [GCLOUD_WIDE_FLAG ...]
@@ -44,6 +44,11 @@ EXAMPLES
         $ gcloud logging buckets update my-bucket --location=global \
            --cmek-kms-key-name=CMEK_KEY_NAME
 
+    To asynchronously enroll a bucket in your project into Log Analytics, run:
+
+        $ gcloud logging buckets update my-bucket --location=global \
+           --async --enable-analytics
+
 POSITIONAL ARGUMENTS
      BUCKET_ID
         The id of the bucket to update.
@@ -69,6 +74,10 @@ OPTIONAL FLAGS
             The type of data in this index. For example: INDEX_TYPE_STRING
             Supported types are strings and integers.
 
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
      --clear-indexes
         Remove all logging indexes from the bucket.
 
@@ -77,6 +86,10 @@ OPTIONAL FLAGS
 
      --description=DESCRIPTION
         A new description for the bucket.
+
+     --enable-analytics
+        Whether to opt the bucket into Log Analytics. Once opted in, the bucket
+        cannot be opted out of Log Analytics.
 
      --locked
         Lock the bucket and prevent it from being modified or deleted (unless

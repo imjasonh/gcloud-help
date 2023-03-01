@@ -16,7 +16,15 @@ SYNOPSIS
         [--use-preset-profile=USE_PRESET_PROFILE
           | --extended-key-usages=[EXTENDED_KEY_USAGES,...]
           --key-usages=[KEY_USAGES,...] --max-chain-length=MAX_CHAIN_LENGTH
-          | --unconstrained-chain-length] [GCLOUD_WIDE_FLAG ...]
+          | --unconstrained-chain-length --no-name-constraints-critical
+          --name-excluded-dns=[NAME_EXCLUDED_DNS,...]
+          --name-excluded-email=[NAME_EXCLUDED_EMAIL,...]
+          --name-excluded-ip=[NAME_EXCLUDED_IP,...]
+          --name-excluded-uri=[NAME_EXCLUDED_URI,...]
+          --name-permitted-dns=[NAME_PERMITTED_DNS,...]
+          --name-permitted-email=[NAME_PERMITTED_EMAIL,...]
+          --name-permitted-ip=[NAME_PERMITTED_IP,...]
+          --name-permitted-uri=[NAME_PERMITTED_URI,...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     TIP: Consider setting a project lien
@@ -229,6 +237,66 @@ FLAGS
             If set, allows an unbounded number of subordinate CAs under this
             newly issued CA certificate. This can only be provided if neither
             --use-preset-profile nor --max-chain-length are provided.
+
+       The x509 name constraints configurations
+
+         --name-constraints-critical
+            Indicates whether or not name constraints are marked as critical.
+            Name constraints are considered critical unless explicitly set to
+            false. Enabled by default, use --no-name-constraints-critical to
+            disable.
+
+         --name-excluded-dns=[NAME_EXCLUDED_DNS,...]
+            One or more comma-separated DNS names which are excluded from being
+            issued certificates. Any DNS name that can be constructed by simply
+            adding zero or more labels to the left-hand side of the name
+            satisfies the name constraint. For example, example.com,
+            www.example.com, www.sub.example.com would satisfy example.com,
+            while example1.com does not.
+
+         --name-excluded-email=[NAME_EXCLUDED_EMAIL,...]
+            One or more comma-separated emails which are excluded from being
+            issued certificates. The value can be a particular email address, a
+            hostname to indicate all email addresses on that host or a domain
+            with a leading period (e.g. .example.com) to indicate all email
+            addresses in that domain.
+
+         --name-excluded-ip=[NAME_EXCLUDED_IP,...]
+            One or more comma-separated IP ranges which are excluded from being
+            issued certificates. For IPv4 addresses, the ranges are expressed
+            using CIDR notation as specified in RFC 4632. For IPv6 addresses,
+            the ranges are expressed in similar encoding as IPv4
+
+         --name-excluded-uri=[NAME_EXCLUDED_URI,...]
+            One or more comma-separated URIs which are excluded from being
+            issued certificates. The value can be a hostname or a domain with a
+            leading period (like .example.com)
+
+         --name-permitted-dns=[NAME_PERMITTED_DNS,...]
+            One or more comma-separated DNS names which are permitted to be
+            issued certificates. Any DNS name that can be constructed by simply
+            adding zero or more labels to the left-hand side of the name
+            satisfies the name constraint. For example, example.com,
+            www.example.com, www.sub.example.com would satisfy example.com,
+            while example1.com does not.
+
+         --name-permitted-email=[NAME_PERMITTED_EMAIL,...]
+            One or more comma-separated email addresses which are permitted to
+            be issued certificates. The value can be a particular email
+            address, a hostname to indicate all email addresses on that host or
+            a domain with a leading period (e.g. .example.com) to indicate all
+            email addresses in that domain.
+
+         --name-permitted-ip=[NAME_PERMITTED_IP,...]
+            One or more comma-separated IP ranges which are permitted to be
+            issued certificates. For IPv4 addresses, the ranges are expressed
+            using CIDR notation as specified in RFC 4632. For IPv6 addresses,
+            the ranges are expressed in similar encoding as IPv4
+
+         --name-permitted-uri=[NAME_PERMITTED_URI,...]
+            One or more comma-separated URIs which are permitted to be issued
+            certificates. The value can be a hostname or a domain with a
+            leading period (like .example.com)
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

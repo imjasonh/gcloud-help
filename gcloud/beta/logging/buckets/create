@@ -2,9 +2,9 @@ NAME
     gcloud beta logging buckets create - create a bucket
 
 SYNOPSIS
-    gcloud beta logging buckets create BUCKET_ID --location=LOCATION
+    gcloud beta logging buckets create BUCKET_ID --location=LOCATION [--async]
         [--cmek-kms-key-name=CMEK_KMS_KEY_NAME] [--description=DESCRIPTION]
-        [--index=[KEY=VALUE, ...,...]]
+        [--enable-analytics] [--index=[KEY=VALUE, ...,...]]
         [--restricted-fields=[RESTRICTED_FIELD,...]]
         [--retention-days=RETENTION_DAYS] [GCLOUD_WIDE_FLAG ...]
 
@@ -37,6 +37,11 @@ EXAMPLES
         $ gcloud beta logging buckets create my-bucket \
             --location=us-central1 --cmek-kms-key-name=CMEK_KMS_KEY_NAME
 
+    To asynchronously create a bucket enrolled into Log Analytics, run:
+
+        $ gcloud beta logging buckets create my-bucket --location=global \
+            --async --enable-analytics
+
 POSITIONAL ARGUMENTS
      BUCKET_ID
         ID of the bucket to create.
@@ -47,11 +52,19 @@ REQUIRED FLAGS
         location cannot be changed.
 
 OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
      --cmek-kms-key-name=CMEK_KMS_KEY_NAME
         A valid kms_key_name will enable CMEK for the bucket.
 
      --description=DESCRIPTION
         A textual description for the bucket.
+
+     --enable-analytics
+        Whether to opt the bucket into Log Analytics. Once opted in, the bucket
+        cannot be opted out of Log Analytics.
 
      --index=[KEY=VALUE, ...,...]
         Specify an index to be added to the log bucket. This flag can be

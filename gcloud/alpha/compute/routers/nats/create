@@ -9,6 +9,7 @@ SYNOPSIS
           | --nat-primary-subnet-ip-ranges) [--async]
         [--[no-]enable-dynamic-port-allocation]
         [--enable-endpoint-independent-mapping] [--enable-logging]
+        [--endpoint-types=[ENDPOINT_TYPE,...]]
         [--icmp-idle-timeout=ICMP_IDLE_TIMEOUT] [--log-filter=LOG_FILTER]
         [--max-ports-per-vm=MAX_PORTS_PER_VM]
         [--min-ports-per-vm=MIN_PORTS_PER_VM] [--region=REGION] [--rules=RULES]
@@ -106,6 +107,12 @@ OPTIONAL FLAGS
         gcloud alpha compute routers nats update MY-NAT \ --no-enable-logging
         --router ROUTER --region REGION
 
+     --endpoint-types=[ENDPOINT_TYPE,...]
+        Endpoint Types supported by the NAT Gateway. Choices are
+        ENDPOINT_TYPE_VM for VM Endpoints and ENDPOINT_TYPE_SWG for Secure Web
+        Gateway Endpoints. Defaults to ENDPOINT_TYPE_VM if not specified.
+        ENDPOINT_TYPE must be one of: ENDPOINT_TYPE_VM, ENDPOINT_TYPE_SWG.
+
      --icmp-idle-timeout=ICMP_IDLE_TIMEOUT
         Timeout for ICMP connections. See
         https://cloud.google.com/sdk/gcloud/reference/topic/datetimes for
@@ -192,7 +199,7 @@ OPTIONAL FLAGS
         be one of:
 
          PRIVATE
-            Used for priate-to-private NAT translations. Allows communication
+            Used for private-to-private NAT translations. Allows communication
             between VPC Networks.
          PUBLIC
             Used for private-to-public NAT translations. Allows VMs to
