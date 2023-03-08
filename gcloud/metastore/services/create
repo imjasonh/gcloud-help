@@ -7,11 +7,15 @@ SYNOPSIS
         [--encryption-kms-key=ENCRYPTION_KMS_KEY]
         [--hive-metastore-version=HIVE_METASTORE_VERSION]
         [--labels=[KEY=VALUE,...]] [--port=PORT; default=9083]
-        [--release-channel=RELEASE_CHANNEL; default="stable"] [--tier=TIER]
+        [--release-channel=RELEASE_CHANNEL; default="stable"]
+        [--auxiliary-versions=[AUXILIARY_VERSIONS,...]
+          | --auxiliary-versions-from-file=AUXILIARY_VERSIONS_FROM_FILE]
         [--consumer-subnetworks=[CONSUMER_SUBNETWORKS,...] | --network=NETWORK
           | --network-config-from-file=NETWORK_CONFIG_FROM_FILE]
         [--hive-metastore-configs=KEY=VALUE
           | --hive-metastore-configs-from-file=HIVE_METASTORE_CONFIGS_FROM_FILE]
+        [--instance-size=INSTANCE_SIZE | --scaling-factor=SCALING_FACTOR
+          | --tier=TIER]
         [--kerberos-principal=KERBEROS_PRINCIPAL
           --keytab=KEYTAB --krb5-config=KRB5_CONFIG]
         [--maintenance-window-day=MAINTENANCE_WINDOW_DAY
@@ -129,17 +133,44 @@ FLAGS
             The STABLE release channel contains features that are considered
             stable and have been validated for production use.
 
-     --tier=TIER
-        The tier of the service. TIER must be one of:
+     Auxiliary versions configuration for the Dataproc Metastore service. When
+     specified, a secondary Hive metastore service is created along with the
+     primary service.
 
-         developer
-            The developer tier provides limited scalability and no fault
-            tolerance. Good for low-cost proof-of-concept.
+    At most one of these can be specified:
 
-         enterprise
-            The enterprise tier provides multi-zone high availability, and
-            sufficient scalability for enterprise-level Dataproc Metastore
-            workloads.
+         --auxiliary-versions=[AUXILIARY_VERSIONS,...]
+            Comma-separated list of auxiliary Hive metastore versions to
+            deploy. Auxiliary Hive metastore versions must be less than the
+            primary Hive metastore service's version.
+
+         --auxiliary-versions-from-file=AUXILIARY_VERSIONS_FROM_FILE
+            Path to a YAML file containing the auxiliary versions configuration
+            for Dataproc Metastore instance. The file should contain a unique
+            auxiliary service name and auxiliary version that is lower than the
+            primary service version. The primary version's Hive metastore
+            configs are applied to the auxiliary version. Additional Hive
+            metastore configs can be specified for the auxiliary version using
+            "config_overrides". If a specified config property has already been
+            overridden in the primary Hive metastore version's configs, the
+            auxiliary version's override takes precedence. The contents of the
+            file should be structured as follows:
+
+            YAML:
+
+                  - name: aux-service1
+                    version: x.y.z
+                    config_overrides:
+                      key1: value1
+                      key2: value2
+                    ...
+                  - name: aux-service2
+                    version: x.y.z
+                    config_overrides:
+                      key1: value1
+                      key2: value2
+                    ...
+                  ...
 
      Network configuration for the metastore service.
 
@@ -193,6 +224,46 @@ FLAGS
                         <description></description>
                       </property>
                     </configuration>
+
+     The instance size of the Dataproc Metastore instance.
+
+     At most one of these can be specified:
+
+       --instance-size=INSTANCE_SIZE
+          The instance size of the service. INSTANCE_SIZE must be one of:
+
+           extra_large
+              Extra large instance size, maps to a scaling factor of 6.0.
+
+           extra_small
+              Extra small instance size, maps to a scaling factor of 0.1.
+
+           large
+              Large instance size, maps to a scaling factor of 3.0.
+
+           medium
+              Medium instance size, maps to a scaling factor of 1.0.
+
+           small
+              Small instance size, maps to a scaling factor of 0.5.
+
+       --scaling-factor=SCALING_FACTOR
+          The scaling factor of the service. This should be a float in the
+          range [0.1,6.0]. If the value is less than 1.0, then it should be a
+          multiple of 0.1. If the value is greater than 1.0, then it should be
+          a whole number. Float values should be formatted as x.y.
+
+       --tier=TIER
+          The tier of the service. TIER must be one of:
+
+           developer
+              The developer tier provides limited scalability and no fault
+              tolerance. Good for low-cost proof-of-concept.
+
+           enterprise
+              The enterprise tier provides multi-zone high availability, and
+              sufficient scalability for enterprise-level Dataproc Metastore
+              workloads.
 
      Information used to configure the Hive metastore service as a service
      principal in a Kerberos realm.

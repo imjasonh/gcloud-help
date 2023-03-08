@@ -9,9 +9,9 @@ SYNOPSIS
         [--candidate-subnets=[SUBNET,...]]
         [--cloud-router-ipv6-interface-id=INTERFACE_ID]
         [--customer-router-ipv6-interface-id=PEER_INTERFACE_ID]
-        [--description=DESCRIPTION] [--enable-admin] [--mtu=MTU]
-        [--region=REGION] [--stack-type=STACK_TYPE] [--vlan=VLAN]
-        [GCLOUD_WIDE_FLAG ...]
+        [--description=DESCRIPTION] [--enable-admin] [--encryption=ENCRYPTION]
+        [--ipsec-internal-addresses=[ADDRESSES]] [--mtu=MTU] [--region=REGION]
+        [--stack-type=STACK_TYPE] [--vlan=VLAN] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) gcloud beta compute interconnects attachments dedicated create is
@@ -99,6 +99,38 @@ OPTIONAL FLAGS
         on creation, defaults to enabled. When this is enabled, the attachment
         is operational and will carry traffic. Use --no-enable-admin to disable
         it.
+
+     --encryption=ENCRYPTION
+        Indicates the user-supplied encryption option for this interconnect
+        attachment (VLAN attachment).
+
+        Possible values are:
+
+        NONE - This is the default value, which means the interconnect
+        attachment carries unencrypted traffic. VMs can send traffic to or
+        receive traffic from such interconnect attachment.
+
+        IPSEC - The interconnect attachment carries only traffic that is
+        encrypted by an IPsec device; for example, an HA VPN gateway or
+        third-party IPsec VPN. VMs cannot directly send traffic to or receive
+        traffic from such an interconnect attachment. To use HA VPN over Cloud
+        Interconnect, the interconnect attachment must be created with this
+        option.
+
+        ENCRYPTION must be one of: IPSEC, NONE.
+
+     --ipsec-internal-addresses=[ADDRESSES]
+        List of IP address range names that have been reserved for the
+        interconnect attachment (VLAN attachment). Use this option only for an
+        interconnect attachment that has its encryption option set as IPSEC.
+        Currently only one internal IP address range can be specified for each
+        attachment. When creating an HA VPN gateway for the interconnect
+        attachment, if the attachment is configured to use a regional internal
+        IP address, then the VPN gateway's IP address is allocated from the IP
+        address range specified here. If this field is not specified when
+        creating the interconnect attachment, then when creating any HA VPN
+        gateways for this interconnect attachment, the HA VPN gateway's IP
+        address is allocated from a regional external IP address pool.
 
      --mtu=MTU
         Maximum transmission unit (MTU) is the size of the largest IP packet

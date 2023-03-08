@@ -5,8 +5,10 @@ NAME
 SYNOPSIS
     gcloud alpha metastore services update (SERVICE : --location=LOCATION)
         [--async] [--data-catalog-sync] [--endpoint-protocol=ENDPOINT_PROTOCOL]
-        [--port=PORT] [--tier=TIER] [--update-labels=[KEY=VALUE,...]]
+        [--port=PORT] [--update-labels=[KEY=VALUE,...]]
         [--clear-labels | --remove-labels=[KEY,...]]
+        [--instance-size=INSTANCE_SIZE | --scaling-factor=SCALING_FACTOR
+          | --tier=TIER]
         [--kerberos-principal=KERBEROS_PRINCIPAL
           --keytab=KEYTAB --krb5-config=KRB5_CONFIG]
         [--maintenance-window-day=MAINTENANCE_WINDOW_DAY
@@ -89,18 +91,6 @@ FLAGS
      --port=PORT
         The TCP port on which the Metastore service will listen.
 
-     --tier=TIER
-        The tier of the service. TIER must be one of:
-
-         developer
-            The developer tier provides limited scalability and no fault
-            tolerance. Good for low-cost proof-of-concept.
-
-         enterprise
-            The enterprise tier provides multi-zone high availability, and
-            sufficient scalability for enterprise-level Dataproc Metastore
-            workloads.
-
      --update-labels=[KEY=VALUE,...]
         List of label KEY=VALUE pairs to update. If a label exists, its value
         is modified. Otherwise, a new label is created.
@@ -129,6 +119,46 @@ FLAGS
           List of label keys to remove. If a label does not exist it is
           silently ignored. If --update-labels is also specified then
           --update-labels is applied first.
+
+     The instance size of the Dataproc Metastore instance.
+
+     At most one of these can be specified:
+
+       --instance-size=INSTANCE_SIZE
+          The instance size of the service. INSTANCE_SIZE must be one of:
+
+           extra_large
+              Extra large instance size, maps to a scaling factor of 6.0.
+
+           extra_small
+              Extra small instance size, maps to a scaling factor of 0.1.
+
+           large
+              Large instance size, maps to a scaling factor of 3.0.
+
+           medium
+              Medium instance size, maps to a scaling factor of 1.0.
+
+           small
+              Small instance size, maps to a scaling factor of 0.5.
+
+       --scaling-factor=SCALING_FACTOR
+          The scaling factor of the service. This should be a float in the
+          range [0.1,6.0]. If the value is less than 1.0, then it should be a
+          multiple of 0.1. If the value is greater than 1.0, then it should be
+          a whole number.
+
+       --tier=TIER
+          The tier of the service. TIER must be one of:
+
+           developer
+              The developer tier provides limited scalability and no fault
+              tolerance. Good for low-cost proof-of-concept.
+
+           enterprise
+              The enterprise tier provides multi-zone high availability, and
+              sufficient scalability for enterprise-level Dataproc Metastore
+              workloads.
 
      Information used to configure the Hive metastore service as a service
      principal in a Kerberos realm.

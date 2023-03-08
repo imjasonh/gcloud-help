@@ -11,8 +11,10 @@ SYNOPSIS
         [--[no-]restart-on-failure] [--zone=ZONE]
         [--clear-instance-termination-action
           | --instance-termination-action=INSTANCE_TERMINATION_ACTION]
+        [--clear-max-run-duration | --max-run-duration=MAX_RUN_DURATION]
         [--clear-node-affinities | --node=NODE
           | --node-affinity-file=NODE_AFFINITY_FILE | --node-group=NODE_GROUP]
+        [--clear-termination-time | --termination-time=TERMINATION_TIME]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -135,6 +137,33 @@ FLAGS
               Default. Stop the VM without preserving memory. The VM can be
               restarted later.
 
+     Max Run Duration
+
+     At most one of these can be specified:
+
+       --clear-max-run-duration
+          Removes the max-run-duration field from the scheduling options.
+
+       --max-run-duration=MAX_RUN_DURATION
+          Limits how long this VM instance can run, specified as a duration
+          relative to the VM instance's most-recent start time. Format the
+          duration, MAX_RUN_DURATION, as the number of days, hours, minutes,
+          and seconds followed by d, h, m, and s respectively. For example,
+          specify 30m for a duration of 30 minutes or specify 1d2h3m4s for a
+          duration of 1 day, 2 hours, 3 minutes, and 4 seconds. Alternatively,
+          to specify a timestamp, use --termination-time instead.
+
+          If neither --max-run-duration nor --termination-time is specified
+          (default), the VM instance runs until prompted by a user action or
+          system event. If either is specified, the VM instance is scheduled to
+          be automatically terminated using the action specified by
+          --instance-termination-action. For --max-run-duration, the VM
+          instance is automatically terminated when the VM's current runtime
+          reaches MAX_RUN_DURATION. Note: Anytime the VM instance is stopped or
+          suspended, --max-run-duration and (unless the VM uses
+          --provisioning-model=SPOT) --instance-termination-action are
+          automatically removed from the VM.
+
      Sole Tenancy.
 
      At most one of these can be specified:
@@ -170,6 +199,29 @@ FLAGS
 
        --node-group=NODE_GROUP
           The name of the node group to schedule this instance on.
+
+     Termination Time
+
+     At most one of these can be specified:
+
+       --clear-termination-time
+          Removes the termination-time field from the scheduling options.
+
+       --termination-time=TERMINATION_TIME
+          Limits how long this VM instance can run, specified as a time. Format
+          the time, TERMINATION_TIME, as a RFC 3339 timestamp. For more
+          information, see https://tools.ietf.org/html/rfc3339. Alternatively,
+          to specify a duration, use --max-run-duration instead.
+
+          If neither --termination-time nor --max-run-duration is specified
+          (default), the VM instance runs until prompted by a user action or
+          system event. If either is specified, the VM instance is scheduled to
+          be automatically terminated using the action specified by
+          --instance-termination-action. For --termination-time, the VM
+          instance is automatically terminated at the specified timestamp.
+          Note: Anytime the VM instance is stopped or suspended,
+          --termination-time and (unless the VM uses --provisioning-model=SPOT)
+          --instance-termination-action are automatically removed from the VM.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

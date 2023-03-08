@@ -5,7 +5,7 @@ NAME
 SYNOPSIS
     gcloud workflows run (WORKFLOW : --location=LOCATION)
         [--call-log-level=CALL_LOG_LEVEL; default="none"] [--data=DATA]
-        [GCLOUD_WIDE_FLAG ...]
+        [--labels=[KEY=VALUE,...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Execute a workflow and wait for the execution to complete.
@@ -14,7 +14,12 @@ EXAMPLES
     To execute a workflow named my-workflow with the data that will be passed
     to the workflow, run:
 
-        $ gcloud workflows run my-workflow --data=my-data
+        $ gcloud workflows run my-workflow `--data=my-data`
+
+    To add two labels {foo: bar, baz: qux} to the execution, run:
+
+        $ gcloud workflows run my-workflow `--data=my-data` \
+            `--labels=foo=bar,baz=qux`
 
 POSITIONAL ARGUMENTS
      Workflow resource - Name of the workflow to execute. The arguments in this
@@ -60,6 +65,14 @@ FLAGS
      --data=DATA
         JSON string with data that will be passed to the workflow as an
         argument.
+
+     --labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
