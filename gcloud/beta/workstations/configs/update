@@ -1,0 +1,212 @@
+NAME
+    gcloud beta workstations configs update - updates a workstation
+        configuration
+
+SYNOPSIS
+    gcloud beta workstations configs update
+        (CONFIG : --cluster=CLUSTER --region=REGION) [--async]
+        [--boot-disk-size=BOOT_DISK_SIZE]
+        [--container-args=[CONTAINER_ARGS,...]]
+        [--container-command=[CONTAINER_COMMAND,...]]
+        [--container-env=[CONTAINER_ENV,...]]
+        [--container-run-as-user=CONTAINER_RUN_AS_USER]
+        [--container-working-dir=CONTAINER_WORKING_DIR]
+        [--disable-public-ip-addresses] [--enable-confidential-compute]
+        [--idle-timeout=IDLE_TIMEOUT] [--machine-type=MACHINE_TYPE]
+        [--network-tags=[NETWORK_TAGS,...]] [--pool-size=POOL_SIZE]
+        [--running-timeout=RUNNING_TIMEOUT] [--service-account=SERVICE_ACCOUNT]
+        [--shielded-integrity-monitoring] [--shielded-secure-boot]
+        [--shielded-vtpm]
+        [--container-custom-image=CONTAINER_CUSTOM_IMAGE
+          | --container-predefined-image=CONTAINER_PREDEFINED_IMAGE]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Updates a workstation configuration.
+
+EXAMPLES
+    To update a configuration with the 'e2-standard-8' machine type and a
+    IntelliJ image, run:
+
+        $ gcloud beta workstations configs update CONFIG \
+            --machine-type=e2-standard-8 \
+            --container-predefined-image=intellij
+
+    To update a configuration to disable Secure Boot, virtual trusted platform
+    module (vTPM) and integrity monitoring, run:
+
+        $ gcloud beta workstations configs update CONFIG \
+            --no-shielded-secure-boot --no-shielded-vtpm \
+            --no-shielded-integrity-monitoring
+
+POSITIONAL ARGUMENTS
+     Config resource - The group of arguments defining a config The arguments
+     in this group can be used to specify the attributes of this resource.
+     (NOTE) Some attributes are not given arguments in this group but can be
+     set in other ways. To set the project attribute:
+      ◆ provide the argument config on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       CONFIG
+          ID of the config or fully qualified identifier for the config. To set
+          the config attribute:
+          ▸ provide the argument config on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --cluster=CLUSTER
+          The cluster for the config. To set the cluster attribute:
+          ▸ provide the argument config on the command line with a fully
+            specified name;
+          ▸ provide the argument --cluster on the command line.
+
+       --region=REGION
+          The location for the config. To set the region attribute:
+          ▸ provide the argument config on the command line with a fully
+            specified name;
+          ▸ provide the argument --region on the command line.
+
+FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --boot-disk-size=BOOT_DISK_SIZE
+        Size of the boot disk in GB.
+
+     --container-args=[CONTAINER_ARGS,...]
+        Arguments passed to the entrypoint.
+
+        Example:
+
+            $ gcloud beta workstations configs update \
+                --container-args=arg_1,arg_2
+
+     --container-command=[CONTAINER_COMMAND,...]
+        If set, overrides the default ENTRYPOINT specified by the image.
+
+        Example:
+
+            $ gcloud beta workstations configs update \
+                --container-command=executable,parameter_1,parameter_2
+
+     --container-env=[CONTAINER_ENV,...]
+        Environment variables passed to the container.
+
+        Example:
+
+            $ gcloud beta workstations configs update \
+                --container-env=key1=value1,key2=value2
+
+     --container-run-as-user=CONTAINER_RUN_AS_USER
+        If set, overrides the USER specified in the image with the given uid.
+
+     --container-working-dir=CONTAINER_WORKING_DIR
+        If set, overrides the default DIR specified by the image.
+
+     --disable-public-ip-addresses
+        Default value is false. If set, instances will have no public IP
+        address.
+
+     --enable-confidential-compute
+        Default value is false. If set, instances will have confidential
+        compute enabled.
+
+     --idle-timeout=IDLE_TIMEOUT
+        How long (in seconds) to wait before automatically stopping an instance
+        that hasn't received any user traffic. A value of 0 indicates that this
+        instance should never time out due to idleness.
+
+     --machine-type=MACHINE_TYPE
+        Machine type determines the specifications of the Compute Engine
+        machines that the workstations created under this configuration will
+        run on. MACHINE_TYPE must be one of: e2-standard-2, e2-standard-4,
+        e2-standard-8, e2-standard-16, e2-standard-32, n2-standard-8,
+        n1-standard-4, t2d-standard-6, n2d-standard-2, n2d-standard-4,
+        n2d-standard-8, n2d-standard-16, n2d-standard-32.
+
+     --network-tags=[NETWORK_TAGS,...]
+        Network tags to add to the Google Compute Engine machines backing the
+        Workstations.
+
+        Example:
+
+            $ gcloud beta workstations configs update --network-tags=tag_1,tag_2
+
+     --pool-size=POOL_SIZE
+        Number of instances to pool for faster Workstation starup.
+
+     --running-timeout=RUNNING_TIMEOUT
+        How long (in seconds) to wait before automatically stopping a
+        workstation after it started. A value of 0 indicates that workstations
+        using this config should never time out.
+
+     --service-account=SERVICE_ACCOUNT
+        Email address of the service account that will be used on VM instances
+        used to support this config. This service account must have permission
+        to pull the specified container image. If not set, VMs will run without
+        a service account, in which case the image must be publicly accessible.
+
+     --shielded-integrity-monitoring
+        Default value is false. If set, instances will have integrity
+        monitoring enabled.
+
+     --shielded-secure-boot
+        Default value is false. If set, instances will have Secure Boot
+        enabled.
+
+     --shielded-vtpm
+        Default value is false. If set, instances will have vTPM enabled.
+
+     At most one of these can be specified:
+
+       --container-custom-image=CONTAINER_CUSTOM_IMAGE
+          A docker image for the workstation. This image must be accessible by
+          the service account configured in this configuration
+          (--service-account). If no service account is defined, this image
+          must be public.
+
+       --container-predefined-image=CONTAINER_PREDEFINED_IMAGE
+          Code editor on base images. CONTAINER_PREDEFINED_IMAGE must be one
+          of:
+
+           base-image
+              Base image - no IDE
+           clion
+              CLion
+           codeoss
+              Code OSS
+           goland
+              GoLand
+           intellij
+              IntelliJ IDEA Ultimate
+           phpstorm
+              PhpStorm
+           pycharm
+              PyCharm Professional
+           rider
+              Rider
+           rubymine
+              RubyMine
+           webstorm
+              WebStorm
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud alpha workstations configs update
+

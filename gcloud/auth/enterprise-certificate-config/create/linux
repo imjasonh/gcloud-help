@@ -1,0 +1,69 @@
+NAME
+    gcloud auth enterprise-certificate-config create linux - create an
+        enterprise-certificate configuration file for Linux
+
+SYNOPSIS
+    gcloud auth enterprise-certificate-config create linux --label=LABEL
+        --module=MODULE --slot=SLOT [--ecp=ECP] [--ecp-client=ECP_CLIENT]
+        [--output-file=OUTPUT_FILE] [--tls-offload=TLS_OFFLOAD]
+        [--user-pin=USER_PIN] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    This command creates a configuration file used by gcloud to use the
+    enterprise-certificate-proxy component for mTLS.
+
+EXAMPLES
+    To create a credential configuration run:
+
+        $ gcloud auth enterprise-certificate-config create linux \
+            --module=$PATH_TO_PKCS11_MODULE --slot=$PKCS11_SLOT_ID \
+            --label=$PKCS11_OBJECT_LABEL --user-pin=$PKCS11_USER_PIN
+
+REQUIRED FLAGS
+     --label=LABEL
+        The PKCS #11 label for the target credentials. The certificate, public
+        key, and private key MUST have the same label.
+        enterprise-certificate-proxy will use all three objects.
+
+     --module=MODULE
+        The full file path to the PKCS #11 module.
+
+     --slot=SLOT
+        The PKCS #11 slot containing the target credentials.
+
+OPTIONAL FLAGS
+     --ecp=ECP
+        Provide a custom path to the enterprise-certificate-proxy binary. This
+        flag must be the full path to the binary.
+
+     --ecp-client=ECP_CLIENT
+        Provide a custom path to the enterprise-certificate-proxy shared client
+        library. This flag must be the full path to the shared library.
+
+     --output-file=OUTPUT_FILE
+        Override the file path that the enterprise-certificate-proxy
+        configuration is written to.
+
+     --tls-offload=TLS_OFFLOAD
+        Provide a custom path to the enterprise-certificate-proxy shared tls
+        offload library. This flag must be the full path to the shared library.
+
+     --user-pin=USER_PIN
+        The user pin used to login to the PKCS #11 module. If there is no user
+        pin leave this field empty.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha auth enterprise-certificate-config create linux
+
+        $ gcloud beta auth enterprise-certificate-config create linux
+
