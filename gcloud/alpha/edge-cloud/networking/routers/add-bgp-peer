@@ -5,8 +5,9 @@ NAME
 SYNOPSIS
     gcloud alpha edge-cloud networking routers add-bgp-peer
         (ROUTER : --location=LOCATION --zone=ZONE) --interface=INTERFACE
-        --peer-asn=PEER_ASN --peer-ipv4-range=PEER_IPV4_RANGE
-        --peer-name=PEER_NAME [--async] [GCLOUD_WIDE_FLAG ...]
+        --peer-asn=PEER_ASN --peer-name=PEER_NAME
+        (--peer-ipv4-range=PEER_IPV4_RANGE | --peer-ipv6-range=PEER_IPV6_RANGE)
+        [--async] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Create a BGP peer to a Distributed Cloud Edge Network router
@@ -18,6 +19,12 @@ EXAMPLES
         $ gcloud alpha edge-cloud networking routers add-bgp-peer \
           my-router --interface=my-int-r1 --peer-asn=33333 \
           --peer-name=peer1 --peer-ipv4-range=208.117.254.232/31 \
+          --location=us-central1 --zone=us-central1-edge-den1
+
+        $ gcloud alpha edge-cloud networking routers add-bgp-peer \
+          my-router --interface=my-int-r1 --peer-asn=33333 \
+          --peer-name=peer1 \
+          --peer-ipv6-range=2001:0db8:85a3:0000:0000:8a2e:0370:7334/126 \
           --location=us-central1 --zone=us-central1-edge-den1
 
 POSITIONAL ARGUMENTS
@@ -61,11 +68,16 @@ REQUIRED FLAGS
         16-bit or 32-bit private ASN as defined in
         https://tools.ietf.org/html/rfc6996, for example --asn=64512.
 
-     --peer-ipv4-range=PEER_IPV4_RANGE
-        The link-local address range of the peer router.
-
      --peer-name=PEER_NAME
         The name of the new BGP peer being added.
+
+     Exactly one of these must be specified:
+
+       --peer-ipv4-range=PEER_IPV4_RANGE
+          The IPv4 link-local address range of the peer router.
+
+       --peer-ipv6-range=PEER_IPV6_RANGE
+          The IPv6 link-local address range of the peer router.
 
 OPTIONAL FLAGS
      --async

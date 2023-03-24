@@ -24,7 +24,7 @@ SYNOPSIS
         [--no-enable-autoupgrade] [--enable-cloud-logging]
         [--enable-cloud-monitoring] [--enable-cloud-run-alpha]
         [--enable-confidential-nodes] [--enable-cost-allocation]
-        [--enable-dataplane-v2] [--enable-gke-oidc]
+        [--enable-dataplane-v2] [--enable-fleet] [--enable-gke-oidc]
         [--enable-google-cloud-access] [--enable-gvnic]
         [--enable-identity-service] [--enable-image-streaming]
         [--enable-intra-node-visibility] [--enable-ip-alias]
@@ -34,7 +34,8 @@ SYNOPSIS
         [--enable-master-global-access] [--enable-network-policy]
         [--enable-pod-security-policy] [--enable-service-externalips]
         [--enable-shielded-nodes] [--enable-stackdriver-kubernetes]
-        [--enable-vertical-pod-autoscaling] [--gateway-api=GATEWAY_API]
+        [--enable-vertical-pod-autoscaling]
+        [--fleet-project=PROJECT_ID_OR_NUMBER] [--gateway-api=GATEWAY_API]
         [--identity-provider=IDENTITY_PROVIDER] [--image-type=IMAGE_TYPE]
         [--ipv6-access-type=IPV6_ACCESS_TYPE] [--issue-client-certificate]
         [--istio-config=[auth=MTLS_PERMISSIVE,...]] [--labels=[KEY=VALUE,...]]
@@ -417,6 +418,12 @@ FLAGS
         Enables the new eBPF dataplane for GKE clusters that is required for
         network security, scalability and visibility features.
 
+     --enable-fleet
+        Set cluster project as the fleet host project. This will register the
+        cluster to the same project. To register the cluster to a fleet in a
+        different project, please use --fleet-project=FLEET_HOST_PROJECT.
+        Example: $ gcloud alpha container clusters create --enable-fleet
+
      --enable-gke-oidc
         (DEPRECATED) Enable GKE OIDC authentication on the cluster.
 
@@ -546,6 +553,14 @@ FLAGS
 
        --enable-vertical-pod-autoscaling
           Enable vertical pod autoscaling for a cluster.
+
+     --fleet-project=PROJECT_ID_OR_NUMBER
+        Sets fleet host project for the cluster. If specified, the current
+        cluster will be registered as a fleet membership under the fleet host
+        project.
+
+        Example: $ gcloud alpha container clusters create
+        --fleet-project=my-project
 
      --gateway-api=GATEWAY_API
         Enables GKE Gateway controller in this cluster. The value of the flag

@@ -6,7 +6,8 @@ SYNOPSIS
         [--endpoint-filter=ENDPOINT_FILTER] [--hostname=HOSTNAME]
         [--server-certificates-files=[SERVER_CERTIFICATES,...]]
         [--service-directory-service=SERVICE_DIRECTORY_SERVICE]
-        [GCLOUD_WIDE_FLAG ...]
+        [--crypto-space-path=CRYPTO_SPACE_PATH
+          --key-management-mode=KEY_MANAGEMENT_MODE] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     gcloud kms ekm-connections update can be used to update the ekmconnection.
@@ -17,7 +18,7 @@ EXAMPLES
     resolver's hostname within location us-east1:
 
         $ gcloud kms ekm-connections update laplace --location=us-east1 \
-            --hostname=newhostname.foo \
+            --hostname=newhostname.foo
 
     The following command updates an ekm-connection named laplace service
     resolver's service_directory_service, endpoint_filter, hostname, and
@@ -27,6 +28,12 @@ EXAMPLES
             --service-directory-service="foo" \
             --endpoint-filter="foo > bar" --hostname="newhostname.foo" \
             --server-certificates-files=foo.pem,bar.pem
+
+    The following command updates an ekm-connection named laplace
+    key_management_mode within location us-east1:
+
+        $ gcloud kms ekm-connections update laplace --location=us-east1 \
+            --key-management-mode=manual
 
 POSITIONAL ARGUMENTS
      Ekmconnection resource - The KMS ekm connection resource. The arguments in
@@ -70,6 +77,22 @@ FLAGS
      --service-directory-service=SERVICE_DIRECTORY_SERVICE
         The resource name of the Service Directory service pointing to an EKM
         replica.
+
+     Specifies the key management mode for the EkmConnection and associated
+     fields.
+
+       --crypto-space-path=CRYPTO_SPACE_PATH
+          Crypto space path for the EkmConnection. Required during
+          EkmConnection creation if --key-management-mode=cloud-kms.
+
+       --key-management-mode=KEY_MANAGEMENT_MODE
+          Key management mode of the ekm connection. An EkmConnection in
+          cloud-kms mode means Cloud KMS will attempt to create and manage the
+          key material that resides on the EKM for crypto keys created with
+          this EkmConnection. An EkmConnection in manual mode means the
+          external key material will not be managed by Cloud KMS. Omitting the
+          flag defaults to manual. KEY_MANAGEMENT_MODE must be one of: manual,
+          cloud-kms.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

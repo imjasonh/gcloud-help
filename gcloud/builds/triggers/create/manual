@@ -7,11 +7,12 @@ SYNOPSIS
         (--trigger-config=PATH | [(--build-config=PATH | --inline-config=PATH
           | [--dockerfile=DOCKERFILE : --dockerfile-dir=DOCKERFILE_DIR;
           default="/" --dockerfile-image=DOCKERFILE_IMAGE])
-          : --description=DESCRIPTION
-          --github-enterprise-config=GITHUB_ENTERPRISE_CONFIG --name=NAME
-          --region=REGION --require-approval --service-account=SERVICE_ACCOUNT
-          --substitutions=[KEY=VALUE,...]
-          --repo=REPO --repo-type=REPO_TYPE (--branch=BRANCH | --tag=TAG)])
+          : --description=DESCRIPTION --name=NAME --region=REGION
+          --require-approval --service-account=SERVICE_ACCOUNT
+          --substitutions=[KEY=VALUE,...] (--branch=BRANCH
+          | --tag=TAG) (--repository=REPOSITORY
+          | [--repo=REPO --repo-type=REPO_TYPE
+          : --github-enterprise-config=GITHUB_ENTERPRISE_CONFIG])])
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -26,6 +27,14 @@ EXAMPLES
             --repo=https://www.github.com/owner/repo --repo-type=GITHUB \
             --branch=my-branch
 
+    To create a manual trigger that builds off branch my-branch in a 2nd-gen
+    GitHub repository resource:
+
+        $ gcloud builds triggers create manual --name=my-manual-trigger \
+            --build-config=cloudbuild.yaml \
+            --repository=projects/my-proj/locations/us-west1/connections/\
+        my-conn/repositories/my-repo --branch=my-branch
+
 REQUIRED FLAGS
      Exactly one of these must be specified:
 
@@ -38,12 +47,6 @@ REQUIRED FLAGS
 
          --description=DESCRIPTION
             Build trigger description.
-
-         --github-enterprise-config=GITHUB_ENTERPRISE_CONFIG
-            The resource name of the GitHub Enterprise config that should be
-            applied to this source. Format:
-            projects/{project}/locations/{location}/githubEnterpriseConfigs/{id}
-            or projects/{project}/githubEnterpriseConfigs/{id}
 
          --name=NAME
             Build trigger name.
@@ -128,21 +131,7 @@ REQUIRED FLAGS
                 Use a build configuration (cloudbuild.yaml) file for building
                 multiple images in a single trigger.
 
-         Flags for repository information
-
-           --repo=REPO
-              URI of the repository. Currently only HTTP URIs for GitHub and
-              Cloud Source Repositories are supported.
-
-              This flag argument must be specified if any of the other
-              arguments in this group are specified.
-
-           --repo-type=REPO_TYPE
-              Type of the repository. Currently only GitHub and Cloud Source
-              Repository types are supported.
-
-              This flag argument must be specified if any of the other
-              arguments in this group are specified.
+         Flags for repository and branch information
 
            Exactly one of these must be specified:
 
@@ -151,6 +140,36 @@ REQUIRED FLAGS
 
              --tag=TAG
                 Tag to build.
+
+           Flags for repository information
+
+           Exactly one of these must be specified:
+
+             --repository=REPOSITORY
+                Repository resource (2nd gen) to use, in the format
+                "projects/*/locations/*/connections/*/repositories/".
+
+             1st-gen repository settings.
+
+               --repo=REPO
+                  URI of the repository (1st gen). Currently only HTTP URIs for
+                  GitHub and Cloud Source Repositories are supported.
+
+                  This flag argument must be specified if any of the other
+                  arguments in this group are specified.
+
+               --repo-type=REPO_TYPE
+                  Type of the repository (1st gen). Currently only GitHub and
+                  Cloud Source Repository types are supported.
+
+                  This flag argument must be specified if any of the other
+                  arguments in this group are specified.
+
+               --github-enterprise-config=GITHUB_ENTERPRISE_CONFIG
+                  The resource name of the GitHub Enterprise config that should
+                  be applied to this source (1st gen). Format:
+                  projects/{project}/locations/{location}/githubEnterpriseConfigs/{id}
+                  or projects/{project}/githubEnterpriseConfigs/{id}
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

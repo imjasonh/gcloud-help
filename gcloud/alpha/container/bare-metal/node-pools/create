@@ -6,7 +6,12 @@ SYNOPSIS
     gcloud alpha container bare-metal node-pools create
         (NODE_POOL : --cluster=CLUSTER --location=LOCATION)
         (--node-configs=[labels=LABELS],[node-ip=NODE-IP]
-          : --node-labels=[KEY=VALUE,...] --node-taints=[KEY=VALUE:EFFECT,...])
+          : --node-labels=[KEY=VALUE,...] --node-taints=[KEY=VALUE:EFFECT,...]
+          --cpu-cfs-quota-period=CPU_CFS_QUOTA_PERIOD
+          --cpu-manager-policy=CPU_MANAGER_POLICY --disable-cpu-cfs-quota
+          --disable-serialize-image-pulls --feature-gates=[FEATURE=BOOL,...]
+          --pod-pids-limit=POD_PIDS_LIMIT --registry-burst=REGISTRY_BURST
+          --registry-pull-qps=REGISTRY_PULL_QPS)
         [--annotations=[KEY=VALUE,...]] [--async] [--display-name=DISPLAY_NAME]
         [--validate-only] [GCLOUD_WIDE_FLAG ...]
 
@@ -71,6 +76,37 @@ REQUIRED FLAGS
 
        --node-taints=[KEY=VALUE:EFFECT,...]
           Node taint applied to every Kubernetes node in a node pool.
+
+       Sets the modifiable kubelet configurations for bare metal machines.
+
+         --cpu-cfs-quota-period=CPU_CFS_QUOTA_PERIOD
+            CPU Completely Fair Scheduler (CFS) quota period value. Specify
+            with seconds as the time unit, such as 0.2s.
+
+         --cpu-manager-policy=CPU_MANAGER_POLICY
+            The kubelet CPU manager policy. CPU_MANAGER_POLICY must be one of:
+            NONE, STATIC.
+
+         --disable-cpu-cfs-quota
+            If set, disable CPU Completely Fair Scheduler (CFS) quota
+            enforcement for containers that specify CPU limits.
+
+         --disable-serialize-image-pulls
+            If set, prevent the Kubelet from pulling multiple images at a time.
+
+         --feature-gates=[FEATURE=BOOL,...]
+            A map of feature names to bools that enable or disable experimental
+            features.
+
+         --pod-pids-limit=POD_PIDS_LIMIT
+            Maximum number of PIDs in any pod.
+
+         --registry-burst=REGISTRY_BURST
+            Maximum size of bursty pulls, temporarily allows pulls to burst to
+            this number, while still not exceeding registry_pull_qps.
+
+         --registry-pull-qps=REGISTRY_PULL_QPS
+            Limit of registry pulls per second.
 
 OPTIONAL FLAGS
      --annotations=[KEY=VALUE,...]

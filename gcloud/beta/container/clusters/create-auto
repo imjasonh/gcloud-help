@@ -10,11 +10,12 @@ SYNOPSIS
         [--cluster-secondary-range-name=NAME]
         [--cluster-version=CLUSTER_VERSION]
         [--create-subnetwork=[KEY=VALUE,...]]
-        [--database-encryption-key=DATABASE_ENCRYPTION_KEY]
-        [--enable-google-cloud-access] [--network=NETWORK]
-        [--private-endpoint-subnetwork=NAME] [--release-channel=CHANNEL]
-        [--security-group=SECURITY_GROUP] [--services-ipv4-cidr=CIDR]
-        [--services-secondary-range-name=NAME] [--subnetwork=SUBNETWORK]
+        [--database-encryption-key=DATABASE_ENCRYPTION_KEY] [--enable-fleet]
+        [--enable-google-cloud-access] [--fleet-project=PROJECT_ID_OR_NUMBER]
+        [--network=NETWORK] [--private-endpoint-subnetwork=NAME]
+        [--release-channel=CHANNEL] [--security-group=SECURITY_GROUP]
+        [--services-ipv4-cidr=CIDR] [--services-secondary-range-name=NAME]
+        [--subnetwork=SUBNETWORK]
         [--binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
           --binauthz-policy=BINAUTHZ_POLICY]
         [--enable-master-authorized-networks
@@ -149,10 +150,24 @@ FLAGS
         For more information, see
         https://cloud.google.com/kubernetes-engine/docs/how-to/encrypting-secrets.
 
+     --enable-fleet
+        Set cluster project as the fleet host project. This will register the
+        cluster to the same project. To register the cluster to a fleet in a
+        different project, please use --fleet-project=FLEET_HOST_PROJECT.
+        Example: $ gcloud beta container clusters create-auto --enable-fleet
+
      --enable-google-cloud-access
         When you enable Google Cloud Access, any public IP addresses owned by
         Google Cloud can reach the public control plane endpoint of your
         cluster.
+
+     --fleet-project=PROJECT_ID_OR_NUMBER
+        Sets fleet host project for the cluster. If specified, the current
+        cluster will be registered as a fleet membership under the fleet host
+        project.
+
+        Example: $ gcloud beta container clusters create-auto \
+        --fleet-project=my-project
 
      --network=NETWORK
         The Compute Engine Network that the cluster will connect to. Google
