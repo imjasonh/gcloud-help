@@ -1,0 +1,88 @@
+NAME
+    gcloud beta compute disks bulk create - create multiple Compute Engine
+        disks
+
+SYNOPSIS
+    gcloud beta compute disks bulk create
+        --source-consistency-group-policy=SOURCE_CONSISTENCY_GROUP_POLICY
+        (--region=REGION | --zone=ZONE) [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) gcloud beta compute disks bulk create facilitates the creation of
+    multiple Compute Engine disks with a single command. This includes cloning
+    a set of Async PD secondary disks with the same consistency group policy.
+
+EXAMPLES
+    To consistently clone secondary disks with the same consistency group
+    policy
+    'projects/example-project/regions/us-central1/resourcePolicies/example-group-policy'
+    to target zone 'us-central1-a', run:
+
+        $ gcloud beta compute disks bulk create \
+            --source-consistency-group-policy=projects/example-project/\
+        regions/us-central1/resourcePolicies/example-group-policy \
+            --zone=us-central1-a
+
+REQUIRED FLAGS
+     --source-consistency-group-policy=SOURCE_CONSISTENCY_GROUP_POLICY
+        URL of the source consistency group resource policy. The resource
+        policy is always the same region as the source disks.
+
+     Exactly one of these must be specified:
+
+       --region=REGION
+          Target region of the created disks, which currently must be the same
+          as the source region. If not specified, you might be prompted to
+          select a region (interactive mode only).
+
+          To avoid prompting when this flag is omitted, you can set the
+          compute/region property:
+
+              $ gcloud config set compute/region REGION
+
+          A list of regions can be fetched by running:
+
+              $ gcloud compute regions list
+
+          To unset the property, run:
+
+              $ gcloud config unset compute/region
+
+          Alternatively, the region can be stored in the environment variable
+          CLOUDSDK_COMPUTE_REGION.
+
+       --zone=ZONE
+          Target zone of the created disks, which currently must be the same as
+          the source zone. If not specified and the compute/zone property isn't
+          set, you might be prompted to select a zone (interactive mode only).
+
+          To avoid prompting when this flag is omitted, you can set the
+          compute/zone property:
+
+              $ gcloud config set compute/zone ZONE
+
+          A list of zones can be fetched by running:
+
+              $ gcloud compute zones list
+
+          To unset the property, run:
+
+              $ gcloud config unset compute/zone
+
+          Alternatively, the zone can be stored in the environment variable
+          CLOUDSDK_COMPUTE_ZONE.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud alpha compute disks bulk create
+

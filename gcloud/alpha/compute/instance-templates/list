@@ -4,16 +4,17 @@ NAME
 
 SYNOPSIS
     gcloud alpha compute instance-templates list [NAME ...]
-        [--regexp=REGEXP, -r REGEXP] [--filter=EXPRESSION] [--limit=LIMIT]
-        [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [--uri]
-        [GCLOUD_WIDE_FLAG ...]
+        [--regexp=REGEXP, -r REGEXP] [--global | --regions=[REGION,...]]
+        [--filter=EXPRESSION] [--limit=LIMIT] [--page-size=PAGE_SIZE]
+        [--sort-by=[FIELD,...]] [--uri] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) gcloud alpha compute instance-templates list displays all Google
     Compute Engine instance templates in a project.
 
-    By default, instance templates from all zones are listed. The results can
-    be narrowed down using a filter: --filter="zone:( ZONE ... )".
+    By default, global instance templates and instance templates from all
+    regions are listed. The results can be narrowed down by providing the
+    --global or --regions flag.
 
 EXAMPLES
     To list all instance templates in a project in table form, run:
@@ -24,11 +25,15 @@ EXAMPLES
 
         $ gcloud alpha compute instance-templates list --uri
 
-    To list all instance templates in the us-central1-b and europe-west1-d
-    zones, run:
+    To list all global instance templates in a project, run:
+
+        $ gcloud alpha compute instance-templates list --global
+
+    To list all instance templates in the us-central1 and europe-west1 regions,
+    given they are regional resources, run:
 
         $ gcloud alpha compute instance-templates list \
-            --filter="zone:( us-central1-b europe-west1-d )"
+            --filter="region:( europe-west1 us-central1 )"
 
 POSITIONAL ARGUMENTS
      [NAME ...]
@@ -45,6 +50,15 @@ FLAGS
         filtered out.
 
         Flag --regexp is deprecated. Use --filter="name~'REGEXP'" instead.
+
+     At most one of these can be specified:
+
+       --global
+          If provided, only global resources are shown.
+
+       --regions=[REGION,...]
+          If provided, only regional resources are shown. If arguments are
+          provided, only resources from the given regions are shown.
 
 LIST COMMAND FLAGS
      --filter=EXPRESSION

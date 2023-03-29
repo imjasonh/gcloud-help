@@ -3,6 +3,7 @@ NAME
 
 SYNOPSIS
     gcloud builds submit [[SOURCE] --no-source] [--async] [--no-cache]
+        [--default-buckets-behavior=DEFAULT_BUCKETS_BEHAVIOR]
         [--disk-size=DISK_SIZE] [--gcs-log-dir=GCS_LOG_DIR]
         [--gcs-source-staging-dir=GCS_SOURCE_STAGING_DIR]
         [--ignore-file=IGNORE_FILE] [--machine-type=MACHINE_TYPE]
@@ -70,6 +71,10 @@ FLAGS
         Dockerfile builds are non-deterministic and a non-deterministic result
         should not be cached.
 
+     --default-buckets-behavior=DEFAULT_BUCKETS_BEHAVIOR
+        How default buckets are setup. DEFAULT_BUCKETS_BEHAVIOR must be one of:
+        default-logs-bucket-behavior-unspecified, regional-user-owned-bucket.
+
      --disk-size=DISK_SIZE
         Machine disk size (GB) to run the build.
 
@@ -77,13 +82,18 @@ FLAGS
         A directory in Google Cloud Storage to hold build logs. If this field
         is not set,
         gs://[PROJECT_NUMBER].cloudbuild-logs.googleusercontent.com/ will be
-        created and used.
+        created and used or
+        gs://[PROJECT_NUMBER]-[builds/region]-cloudbuild-logs is used when you
+        set --default-buckets-behavior to REGIONAL_USER_OWNED_BUCKET.
 
      --gcs-source-staging-dir=GCS_SOURCE_STAGING_DIR
         A directory in Google Cloud Storage to copy the source used for staging
         the build. If the specified bucket does not exist, Cloud Build will
         create one. If you don't set this field,
-        gs://[PROJECT_ID]_cloudbuild/source is used.
+        gs://[PROJECT_ID]_cloudbuild/source is used or
+        gs://[PROJECT_ID]_[builds/region]_cloudbuild/source is used when you
+        set --default-buckets-behavior to REGIONAL_USER_OWNED_BUCKET and
+        builds/region is not global.
 
      --ignore-file=IGNORE_FILE
         Override the .gcloudignore file and use the specified file instead.

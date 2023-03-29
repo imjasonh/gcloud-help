@@ -12,7 +12,8 @@ SYNOPSIS
         [--build-artifacts=BUILD_ARTIFACTS | --images=[NAME=TAG,...]]
         [--disable-initial-rollout | --enable-initial-rollout
           --initial-rollout-annotations=[KEY=VALUE,...]
-          --initial-rollout-labels=[KEY=VALUE,...]]
+          --initial-rollout-labels=[KEY=VALUE,...]
+          --initial-rollout-phase-id=INITIAL_ROLLOUT_PHASE_ID]
         [--from-k8s-manifest=FROM_K8S_MANIFEST
           | --from-run-manifest=FROM_RUN_MANIFEST
           | --skaffold-file=SKAFFOLD_FILE --source=SOURCE; default="."]
@@ -183,6 +184,18 @@ FLAGS
 
               $ gcloud alpha deploy releases create \
                   initial-rollout-labels="commit=abc123,author=foo"
+
+       --initial-rollout-phase-id=INITIAL_ROLLOUT_PHASE_ID
+          The phase to start the initial rollout at when creating the release.
+          The phase ID must be a valid phase on the rollout. If not specified,
+          then the rollout will start at the first phase.
+
+          Examples:
+
+          Start rollout at stable phase:
+
+              $ gcloud alpha deploy releases create \
+                  --initial-rollout-phase-id=stable
 
      At most one of these can be specified:
 

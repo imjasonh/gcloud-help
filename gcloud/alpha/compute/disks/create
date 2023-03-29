@@ -9,6 +9,7 @@ SYNOPSIS
         [--guest-os-features=[GUEST_OS_FEATURE,...]] [--interface=INTERFACE]
         [--labels=[KEY=VALUE,...]] [--licenses=[LICENSE,...]] [--multi-writer]
         [--physical-block-size=PHYSICAL_BLOCK_SIZE; default="4096"]
+        [--primary-disk-project=PRIMARY_DISK_PROJECT]
         [--provisioned-iops=PROVISIONED_IOPS]
         [--provisioned-throughput=PROVISIONED_THROUGHPUT]
         [--replica-zones=ZONE,ZONE] [--no-require-csek-key-create]
@@ -22,12 +23,11 @@ SYNOPSIS
           | --source-snapshot=SOURCE_SNAPSHOT]
         [--kms-key=KMS_KEY : --kms-keyring=KMS_KEYRING
           --kms-location=KMS_LOCATION --kms-project=KMS_PROJECT]
+        [--primary-disk-region=PRIMARY_DISK_REGION
+          | --primary-disk-zone=PRIMARY_DISK_ZONE]
         [--region=REGION | --zone=ZONE]
         [--source-disk-region=SOURCE_DISK_REGION
-          | --source-disk-zone=SOURCE_DISK_ZONE]
-        [--primary-disk-project=PRIMARY_DISK_PROJECT]
-        [--primary-disk-region=PRIMARY_DISK_REGION
-          | --primary-disk-zone=PRIMARY_DISK_ZONE] [GCLOUD_WIDE_FLAG ...]
+          | --source-disk-zone=SOURCE_DISK_ZONE] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) gcloud alpha compute disks create creates one or more Compute
@@ -124,6 +124,9 @@ FLAGS
         Physical block size of the persistent disk in bytes. Valid values are
         4096(default) and 16384. PHYSICAL_BLOCK_SIZE must be one of: 4096,
         16384.
+
+     --primary-disk-project=PRIMARY_DISK_PROJECT
+        Project of the primary disk for asynchronous replication.
 
      --provisioned-iops=PROVISIONED_IOPS
         Provisioned IOPS of disk to create. Only for use with disks of type
@@ -279,6 +282,18 @@ FLAGS
 
      At most one of these can be specified:
 
+       --primary-disk-region=PRIMARY_DISK_REGION
+          Region of the primary disk for asynchronous replication. The primary
+          and secondary disks must not be in the same region. Overrides the
+          default compute/region property value for this command invocation.
+
+       --primary-disk-zone=PRIMARY_DISK_ZONE
+          Zone of the primary disk for asynchronous replication. The primary
+          and secondary disks must not be in the same region. Overrides the
+          default compute/zone property value for this command invocation.
+
+     At most one of these can be specified:
+
        --region=REGION
           Region of the disks to create. If not specified, you might be
           prompted to select a region (interactive mode only).
@@ -331,22 +346,6 @@ FLAGS
           Zone of the source disk. This argument is not required if the target
           disk is in the same zone as the source disk. Overrides the default
           compute/zone property value for this command invocation.
-
-ASYNC PD FLAGS
-     --primary-disk-project=PRIMARY_DISK_PROJECT
-        Project of the primary disk for asynchronous replication.
-
-     At most one of these can be specified:
-
-       --primary-disk-region=PRIMARY_DISK_REGION
-          Region of the primary disk for asynchronous replication. The primary
-          and secondary disks must not be in the same region. Overrides the
-          default compute/region property value for this command invocation.
-
-       --primary-disk-zone=PRIMARY_DISK_ZONE
-          Zone of the primary disk for asynchronous replication. The primary
-          and secondary disks must not be in the same region. Overrides the
-          default compute/zone property value for this command invocation.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

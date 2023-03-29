@@ -6,7 +6,8 @@ SYNOPSIS
         (CERTIFICATE : --location=LOCATION)
         (--certificate-file=CERTIFICATE_FILE
           --private-key-file=PRIVATE_KEY_FILE | [--domains=[DOMAINS,...]
-          : --dns-authorizations=[DNS_AUTHORIZATIONS,...]]) [--async]
+          : --dns-authorizations=[DNS_AUTHORIZATIONS,...]
+          | --issuance-config=ISSUANCE_CONFIG]) [--async]
         [--description=DESCRIPTION] [--labels=[KEY=VALUE,...]]
         [--scope=SCOPE; default="DEFAULT"] [GCLOUD_WIDE_FLAG ...]
 
@@ -103,18 +104,23 @@ REQUIRED FLAGS
             This flag argument must be specified if any of the other arguments
             in this group are specified.
 
-         --dns-authorizations=[DNS_AUTHORIZATIONS,...]
-            Name(s) of the DNS authorizations for each listed domain.
+         At most one of these can be specified:
 
-            Note that each domain requires a matching authorization, and any
-            domain that fails authorization will prevent issuance and/or
-            renewal of the certificate.
+           --dns-authorizations=[DNS_AUTHORIZATIONS,...]
+              Name(s) of the DNS authorizations for each listed domain.
 
-            To reference multiple DNS authorizations, provide a list of comma
-            separated DNS authorization resource names or URLs. For example:
+              Note that each domain requires a matching authorization, and any
+              domain that fails authorization will prevent issuance and/or
+              renewal of the certificate.
 
-                $ gcloud certificate-manager certificates create \
-                     --dns-authorizations=api-example-com,www-example-com
+              To reference multiple DNS authorizations, provide a list of comma
+              separated DNS authorization resource names or URLs. For example:
+
+                  $ gcloud certificate-manager certificates create \
+                       --dns-authorizations=api-example-com,www-example-com
+
+           --issuance-config=ISSUANCE_CONFIG
+              Name of the Certificate Issuance Config to use for issuance.
 
 OPTIONAL FLAGS
      --async

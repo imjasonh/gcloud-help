@@ -1,0 +1,96 @@
+NAME
+    gcloud beta compute disks stop-group-async-replication - consistently stops
+        a group of asynchronously replicating disks
+
+SYNOPSIS
+    gcloud beta compute disks stop-group-async-replication
+        DISK_CONSISTENCY_GROUP_POLICY [--region=REGION | --zone=ZONE]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) gcloud beta compute disks stop-group-async-replication consistently
+    stops a group of asynchronously replicating disks. This command can be
+    invoked in either in the primary or secondary scope of the replicating
+    disks.
+
+EXAMPLES
+    To stop group replication in the primary scope, include the zone or region
+    of the primary disks. The URL of the disk consistency group resource policy
+    always uses the region of the primary disks:
+
+        $ gcloud beta compute disks stop-group-async-replication \
+            projects/my-project/regions/us-west1/resourcePolicies/\
+        my-policy --zone=us-west1-a
+
+    Alternatively, you can stop replication in the secondary scope. Include the
+    region or zone of the secondary disks. The URL of the disk consistency
+    group resource policy always uses the region of the primary disks:
+
+        $ gcloud beta compute disks stop-group-async-replication \
+            projects/my-project/regions/us-west1/resourcePolicies/\
+        my-policy --zone=us-west2-a
+
+POSITIONAL ARGUMENTS
+     DISK_CONSISTENCY_GROUP_POLICY
+        URL of the disk consistency group resource policy. The resourcepolicy
+        is always in the region of the primary disks.
+
+FLAGS
+     At most one of these can be specified:
+
+       --region=REGION
+          Region of the consistency group's primary or secondary disks. If not
+          specified, you might be prompted to select a region (interactive mode
+          only).
+
+          To avoid prompting when this flag is omitted, you can set the
+          compute/region property:
+
+              $ gcloud config set compute/region REGION
+
+          A list of regions can be fetched by running:
+
+              $ gcloud compute regions list
+
+          To unset the property, run:
+
+              $ gcloud config unset compute/region
+
+          Alternatively, the region can be stored in the environment variable
+          CLOUDSDK_COMPUTE_REGION.
+
+       --zone=ZONE
+          Zone of the consistency group's primary or secondary disks. If not
+          specified and the compute/zone property isn't set, you might be
+          prompted to select a zone (interactive mode only).
+
+          To avoid prompting when this flag is omitted, you can set the
+          compute/zone property:
+
+              $ gcloud config set compute/zone ZONE
+
+          A list of zones can be fetched by running:
+
+              $ gcloud compute zones list
+
+          To unset the property, run:
+
+              $ gcloud config unset compute/zone
+
+          Alternatively, the zone can be stored in the environment variable
+          CLOUDSDK_COMPUTE_ZONE.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud alpha compute disks stop-group-async-replication
+
