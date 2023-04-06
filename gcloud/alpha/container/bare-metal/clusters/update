@@ -6,15 +6,15 @@ SYNOPSIS
     gcloud alpha container bare-metal clusters update
         (CLUSTER : --location=LOCATION) [--admin-users=ADMIN_USERS]
         [--allow-missing] [--async] [--description=DESCRIPTION]
-        [--enable-application-logs]
-        [--island-mode-service-address-cidr-blocks=SERVICE_ADDRESS,[...]]
-        [--login-user=LOGIN_USER]
+        [--enable-application-logs] [--login-user=LOGIN_USER]
         [--maintenance-address-cidr-blocks=[MAINTENANCE_ADDRESS_CIDR_BLOCKS,
           ...]] [--validate-only] [--version=VERSION]
         [--api-server-args=[KEY=VALUE,...]
           --control-plane-node-configs=[labels=LABELS],[node-ip=NODE-IP]
           --control-plane-node-labels=[KEY=VALUE,...]
           --control-plane-node-taints=[KEY=VALUE:EFFECT,...]]
+        [--island-mode-service-address-cidr-blocks=SERVICE_ADDRESS,[...]
+          --disable-sr-iov-config | --enable-sr-iov-config]
         [--metal-lb-address-pools=[addresses=ADDRESSES],
           [avoid-buggy-ips=AVOID-BUGGY-IPS],
           [manual-assign=MANUAL-ASSIGN],[pool=POOL]
@@ -88,13 +88,6 @@ FLAGS
           Whether collection of application logs/metrics should be enabled (in
           addition to system logs/metrics).
 
-     Populate one of the network configs.
-
-       Island mode CIDR network configuration.
-
-         --island-mode-service-address-cidr-blocks=SERVICE_ADDRESS,[...]
-            IPv4 address range for all services in the cluster.
-
      Anthos on bare metal node access related settings for the user cluster.
 
        --login-user=LOGIN_USER
@@ -135,6 +128,25 @@ FLAGS
 
              --control-plane-node-taints=[KEY=VALUE:EFFECT,...]
                 Node taint applied to every Kubernetes node in a node pool.
+
+     Anthos on bare metal cluster network configurations.
+
+       Populate one of the network configs.
+
+         Island mode CIDR network configuration.
+
+           --island-mode-service-address-cidr-blocks=SERVICE_ADDRESS,[...]
+              IPv4 address range for all services in the cluster.
+
+       SR-IOV networking operator configurations.
+
+         At most one of these can be specified:
+
+           --disable-sr-iov-config
+              If set, the SR-IOV operator won't be installed.
+
+           --enable-sr-iov-config
+              If set, install the SR-IOV operator.
 
      Anthos on bare metal cluster load balancer configuration.
 

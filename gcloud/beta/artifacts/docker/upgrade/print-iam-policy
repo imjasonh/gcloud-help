@@ -1,0 +1,64 @@
+NAME
+    gcloud beta artifacts docker upgrade print-iam-policy - print an Artifact
+        Registry IAM policy for Container Registry to Artifact Registry upgrade
+
+SYNOPSIS
+    gcloud beta artifacts docker upgrade print-iam-policy DOMAIN
+        [--folder=FOLDER_ID | --organization=ORGANIZATION_ID]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Print an Artifact Registry IAM policy that is equivalent to the IAM
+    policy applied to the storage bucket for the specified Container Registry
+    hostname. Apply the returned policy to the Artifact Registry repository
+    that will replace the specified host. By default, this command only
+    considers IAM policies within the project-level scope, so policies that are
+    at the folder or organization level will not be included in the generated
+    policy. To change the scope, use the --organization or --folder flags.
+
+EXAMPLES
+    To print an equivalant Artifact Registry IAM policy for 'gcr.io/my-project'
+    within scope projects/my-project:
+
+        $ gcloud beta artifacts docker upgrade print-iam-policy upgrade \
+          print-iam-policy gcr.io --project=my-project
+
+    To print an equivalant Artifact Registry IAM policy for 'gcr.io/my-project'
+    within scope folders/123:
+
+        $ gcloud beta artifacts docker upgrade print-iam-policy upgrade \
+          print-iam-policy gcr.io --project=my-project --folder=123
+
+    To print an equivalant Artifact Registry IAM policy for 'gcr.io/my-project'
+    within scope organizations/123:
+
+        $ gcloud beta artifacts docker upgrade print-iam-policy upgrade \
+          print-iam-policy gcr.io --project=my-project --organization=123
+
+POSITIONAL ARGUMENTS
+     DOMAIN
+        A Container Registry domain. Valid values are: [gcr.io, asia.gcr.io,
+        eu.gcr.io, us.gcr.io]
+
+FLAGS
+     At most one of these can be specified:
+
+       --folder=FOLDER_ID
+          Folder ID on which to scope IAM analysis. Only policies defined at or
+          below this folder will be included in the analysis.
+
+       --organization=ORGANIZATION_ID
+          Organization ID on which to scope IAM analysis. Only policies defined
+          at or below this organization will be included in the analysis.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice.
+

@@ -3,26 +3,29 @@ NAME
         cloud access binding under an organization
 
 SYNOPSIS
-    gcloud access-context-manager cloud-bindings update --level=[LEVEL,...]
+    gcloud access-context-manager cloud-bindings update
         (--binding=BINDING : --organization=ORGANIZATION)
+        [--dry-run-level=[DRY_RUN_LEVEL,...]] [--level=[LEVEL,...]]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    Update a existing cloud access binding. You can only update the level.
+    Update an existing cloud access binding. You can update the level, dry run
+    level or both. They can't be both empty after update.
 
 EXAMPLES
-    To update a existing cloud access binding, run:
+    To update an existing cloud access binding, run:
 
         $ gcloud access-context-manager cloud-bindings update \
-        --binding=my-binding-id \
-        --level=accessPolicies/123/accessLevels/new-abc
+            --binding=my-binding-id \
+            --level=accessPolicies/123/accessLevels/new-abc
+
+    To remove level and add dry run level, run:
+
+        $ gcloud access-context-manager cloud-bindings update \
+            --binding=my-binding-id --level= \
+            --dry-run-level=accessPolicies/123/accessLevels/new-def
 
 REQUIRED FLAGS
-     --level=[LEVEL,...]
-        The access level that will replace the existing level for the given
-        binding. The input must be the full identifier for the access level,
-        such as accessPolicies/123/accessLevels/new-abc.
-
      Cloud access binding resource - The cloud access binding you want to
      update. The arguments in this group can be used to specify the attributes
      of this resource.
@@ -45,6 +48,17 @@ REQUIRED FLAGS
             specified name;
           ▸ provide the argument --organization on the command line;
           ▸ set the property access_context_manager/organization.
+
+OPTIONAL FLAGS
+     --dry-run-level=[DRY_RUN_LEVEL,...]
+        The dry run access level that replaces the existing dry run level for
+        the given binding. The input must be the full identifier of an access
+        level, such as accessPolicies/123/accessLevels/new-def.
+
+     --level=[LEVEL,...]
+        The access level that replaces the existing level for the given
+        binding. The input must be the full identifier of an access level, such
+        as accessPolicies/123/accessLevels/new-abc.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
