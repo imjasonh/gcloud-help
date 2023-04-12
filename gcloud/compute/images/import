@@ -3,13 +3,13 @@ NAME
 
 SYNOPSIS
     gcloud compute images import IMAGE_NAME
-        (--aws-access-key-id=AWS_ACCESS_KEY_ID --aws-region=AWS_REGION
+        (--source-file=SOURCE_FILE | --source-image=SOURCE_IMAGE
+          | --aws-access-key-id=AWS_ACCESS_KEY_ID --aws-region=AWS_REGION
           --aws-secret-access-key=AWS_SECRET_ACCESS_KEY
           --aws-session-token=AWS_SESSION_TOKEN
           (--aws-source-ami-file-path=AWS_SOURCE_AMI_FILE_PATH
           | --aws-ami-export-location=AWS_AMI_EXPORT_LOCATION
-          --aws-ami-id=AWS_AMI_ID) | --source-file=SOURCE_FILE
-          | --source-image=SOURCE_IMAGE) [--no-address] [--async]
+          --aws-ami-id=AWS_AMI_ID)) [--no-address] [--async]
         [--compute-service-account=COMPUTE_SERVICE_ACCOUNT]
         [--description=DESCRIPTION] [--family=FAMILY] [--no-guest-environment]
         [--guest-os-features=[GUEST_OS_FEATURE,...]]
@@ -58,6 +58,20 @@ POSITIONAL ARGUMENTS
 
 REQUIRED FLAGS
      Exactly one of these must be specified:
+
+       Image import from local file, Cloud Storage or Compute Engine image.
+
+       At most one of these can be specified:
+
+         --source-file=SOURCE_FILE
+            A local file, or the Cloud Storage URI of the virtual disk file to
+            import. For example: gs://my-bucket/my-image.vmdk or
+            ./my-local-image.vmdk. For more information about Cloud Storage
+            URIs, see
+            https://cloud.google.com/storage/docs/request-endpoints#json-api.
+
+         --source-image=SOURCE_IMAGE
+            An existing Compute Engine image from which to import.
 
        Image import from AWS.
 
@@ -112,20 +126,6 @@ REQUIRED FLAGS
 
                 This flag argument must be specified if any of the other
                 arguments in this group are specified.
-
-       Image import from local file, Cloud Storage or Compute Engine image.
-
-       At most one of these can be specified:
-
-         --source-file=SOURCE_FILE
-            A local file, or the Cloud Storage URI of the virtual disk file to
-            import. For example: gs://my-bucket/my-image.vmdk or
-            ./my-local-image.vmdk. For more information about Cloud Storage
-            URIs, see
-            https://cloud.google.com/storage/docs/request-endpoints#json-api.
-
-         --source-image=SOURCE_IMAGE
-            An existing Compute Engine image from which to import.
 
 OPTIONAL FLAGS
      --no-address

@@ -1,6 +1,6 @@
 NAME
-    gcloud alpha scc custom-modules sha get-effective - get an effective
-        Security Health Analytics custom module
+    gcloud alpha scc custom-modules sha get-effective - get the details of a
+        Security Health Analytics custom module with effective enablement state
 
 SYNOPSIS
     gcloud alpha scc custom-modules sha get-effective CUSTOM_MODULE
@@ -8,61 +8,52 @@ SYNOPSIS
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) Get an effective Security Health Analytics custom module.
+    (ALPHA) Get the details of a Security Health Analytics custom module. For
+    inherited custom modules, the get-effective command resolves INHERITED
+    enablement states to ENABLED or DISABLED. For example, if an inherited
+    custom module is enabled at the ancestor level, then the get-effective
+    command displays the enablement state as ENABLED instead of INHERITED in a
+    child folder or project.
 
 EXAMPLES
-    To get an effective Security Health Analytics custom module with id 123456
-    for organization 123, run:
+    To get the details of a Security Health Analytics custom module 123456 with
+    its effective enablement state from organization 123, run:
 
         $ gcloud alpha scc custom-modules sha get-effective 123456 \
             --organization=organizations/123
-        $ gcloud alpha scc custom-modules sha get-effective 123456 \
-            --organization=123
-        $ gcloud alpha scc custom-modules sha get-effective \
-            organizations/123/securityHealthAnalyticsSettings/\
-        effectiveCustomModules/123456
 
-    To get an effective Security Health Analytics custom module with id 123456
-    for folder 456, run:
+    To get the details of a Security Health Analytics custom module 123456 with
+    its effective enablement state from folder 456, run:
 
         $ gcloud alpha scc custom-modules sha get-effective 123456 \
             --folder=folders/456
-        $ gcloud alpha scc custom-modules sha get-effective 123456 \
-            --folder=456
-        $ gcloud alpha scc custom-modules sha get-effective \
-            folders/456/securityHealthAnalyticsSettings/\
-        effectiveCustomModules/123456
 
-    To get an effective Security Health Analytics custom module with id 123456
-    for project 789, run:
+    To get the details of a Security Health Analytics custom module 123456 with
+    its effective enablement state from project 789, run:
 
         $ gcloud alpha scc custom-modules sha get-effective 123456 \
             --project=projects/789
-        $ gcloud alpha scc custom-modules sha get-effective 123456 \
-            --project=789
-        $ gcloud alpha scc custom-modules sha get-effective \
-            projects/789/securityHealthAnalyticsSettings/\
-        effectiveCustomModules/123456
 
 POSITIONAL ARGUMENTS
      CUSTOM_MODULE
-        Id or the full resource name of the effective Security Health Analytics
-        custom module.
+        ID or the full resource name of the effective Security Health Analytics
+        custom module. If you specify the full resource name, you do not need
+        to specify the --organization, --folder, or --project flags.
 
 FLAGS
      At most one of these can be specified:
 
        --folder=FOLDER
-          Folder where the effective Security Health Analytics custom module
-          resides. Formatted as folders/456 or just 456.
+          Folder from which to get the custom module details. Formatted as
+          folders/456 or just 456.
 
        --organization=ORGANIZATION
-          Organization where the effective Security Health Analytics custom
-          module resides. Formatted as organizations/123 or just 123.
+          Organization from which to get the custom module details. Formatted
+          as organizations/123 or just 123.
 
        --project=PROJECT
-          Project (id or number) where the effective Security Health Analytics
-          custom module resides. Formatted as projects/789 or just 789.
+          ID or number of the project from which to get the custom module
+          details. Formatted as projects/789 or just 789.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
@@ -80,5 +71,7 @@ NOTES
     This command is currently in alpha and might change without notice. If this
     command fails with API permission errors despite specifying the correct
     project, you might be trying to access an API with an invitation-only early
-    access allowlist.
+    access allowlist. This variant is also available:
+
+        $ gcloud scc custom-modules sha get-effective
 

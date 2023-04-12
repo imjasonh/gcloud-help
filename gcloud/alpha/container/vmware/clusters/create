@@ -20,14 +20,17 @@ SYNOPSIS
           : --f5-config-snat-pool=F5_CONFIG_SNAT_POOL]))
         (--pod-address-cidr-blocks=POD_ADDRESS
           --service-address-cidr-blocks=SERVICE_ADDRESS
-          : --dns-search-domains=[DNS_SEARCH_DOMAINS,...]
+          : --control-plane-ip-block=[gateway=GATEWAY],
+          [ips=IPS],[netmask=NETMASK]
+          --dns-search-domains=[DNS_SEARCH_DOMAINS,...]
           --dns-servers=[DNS_SERVERS,...]
           --ntp-servers=[NTP_SERVERS,...] --enable-dhcp
           | --static-ip-config-ip-blocks=[gateway=GATEWAY],
           [ips=IPS],[netmask=NETMASK]) [--admin-users=ADMIN_USERS]
         [--annotations=[KEY=VALUE,...]] [--async] [--description=DESCRIPTION]
         [--disable-aag-config] [--disable-vsphere-csi] [--enable-auto-repair]
-        [--enable-vm-tracking] [--validate-only] [--version=VERSION]
+        [--enable-control-plane-v2] [--enable-vm-tracking] [--validate-only]
+        [--version=VERSION]
         [--cpus=CPUS --enable-auto-resize --memory=MEMORY --replicas=REPLICAS]
         [--enable-advanced-networking --enable-dataplane-v2]
         [GCLOUD_WIDE_FLAG ...]
@@ -193,6 +196,18 @@ REQUIRED FLAGS
           This flag argument must be specified if any of the other arguments in
           this group are specified.
 
+       Control plane v2 mode configurations.
+
+         --control-plane-ip-block=[gateway=GATEWAY],[ips=IPS],[netmask=NETMASK]
+            Static IP addresses for the control plane nodes. The number of IP
+            addresses should match the number of replicas for the control plane
+            nodes, specified by --replicas.
+
+            To specify the control plane IP block,
+
+                $ gcloud gcloud alpha container vmware clusters create
+                    --control-plane-ip-block 'gateway=192.168.0.1,netmask=255.255.255.0,ips=192.168.1.1;0.0.0.0 localhost;'
+
        Common parameters for all hosts irrespective of their IP address
 
          --dns-search-domains=[DNS_SEARCH_DOMAINS,...]
@@ -269,6 +284,9 @@ OPTIONAL FLAGS
        --enable-auto-repair
           If set, deploy the cluster-health-controller.
 
+     --enable-control-plane-v2
+        If set, enable control plane v2.
+
      --enable-vm-tracking
         If set, enable VM tracking.
 
@@ -319,5 +337,7 @@ NOTES
     This command is currently in alpha and might change without notice. If this
     command fails with API permission errors despite specifying the correct
     project, you might be trying to access an API with an invitation-only early
-    access allowlist.
+    access allowlist. This variant is also available:
+
+        $ gcloud beta container vmware clusters create
 

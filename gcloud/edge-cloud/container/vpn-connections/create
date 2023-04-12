@@ -3,11 +3,11 @@ NAME
         connection between an Edge Container cluster and a VPC network
 
 SYNOPSIS
-    gcloud edge-cloud container vpn-connections create
-        (VPN_CONNECTION : --location=LOCATION) --cluster=CLUSTER
-        --vpc-network=VPC_NETWORK [--async] [--high-availability]
-        [--labels=[KEY=VALUE,...]] [--nat-gateway-ip=NAT_GATEWAY_IP]
-        [--vpc-project=VPC_PROJECT] [GCLOUD_WIDE_FLAG ...]
+    gcloud edge-cloud container vpn-connections create VPN_CONNECTION
+        --cluster=CLUSTER --vpc-network=VPC_NETWORK [--async]
+        [--high-availability] [--labels=[KEY=VALUE,...]] [--location=LOCATION]
+        [--nat-gateway-ip=NAT_GATEWAY_IP] [--vpc-project=VPC_PROJECT]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Creates a new VPN connection.
@@ -24,14 +24,18 @@ EXAMPLES
     Here VPC network and cluster should be under the same project.
 
 POSITIONAL ARGUMENTS
-     Vpn connection resource - VPN connection to create. The arguments in this
-     group can be used to specify the attributes of this resource. (NOTE) Some
-     attributes are not given arguments in this group but can be set in other
-     ways. To set the project attribute:
+     Vpn connection resource - VPN connection to create. This represents a
+     Cloud resource. (NOTE) Some attributes are not given arguments in this
+     group but can be set in other ways. To set the project attribute:
       ◆ provide the argument vpn_connection on the command line with a fully
         specified name;
       ◆ set the property core/project;
-      ◆ provide the argument --project on the command line.
+      ◆ provide the argument --project on the command line. To set the
+        location attribute:
+      ◆ provide the argument vpn_connection on the command line with a fully
+        specified name;
+      ◆ provide the argument --location on the command line;
+      ◆ set the property edge_container/location.
 
      This must be specified.
 
@@ -40,19 +44,27 @@ POSITIONAL ARGUMENTS
           connection. To set the vpn_connection attribute:
           ▸ provide the argument vpn_connection on the command line.
 
-          This positional argument must be specified if any of the other
-          arguments in this group are specified.
-
-       --location=LOCATION
-          The global location name. To set the location attribute:
-          ▸ provide the argument vpn_connection on the command line with a
-            fully specified name;
-          ▸ provide the argument --location on the command line;
-          ▸ set the property edge_container/location.
-
 REQUIRED FLAGS
-     --cluster=CLUSTER
-        The name of the cluster to be connected under current project.
+     Cluster resource - The name of the cluster to be connected under current
+     project. This represents a Cloud resource. (NOTE) Some attributes are not
+     given arguments in this group but can be set in other ways. To set the
+     project attribute:
+      ◆ provide the argument --cluster on the command line with a fully
+        specified name;
+      ◆ set the property core/project;
+      ◆ provide the argument --project on the command line. To set the
+        location attribute:
+      ◆ provide the argument --cluster on the command line with a fully
+        specified name;
+      ◆ provide the argument --location on the command line;
+      ◆ set the property edge_container/location.
+
+     This must be specified.
+
+       --cluster=CLUSTER
+          ID of the cluster or fully qualified identifier for the cluster. To
+          set the cluster attribute:
+          ▸ provide the argument --cluster on the command line.
 
      --vpc-network=VPC_NETWORK
         The name of the VPC network to be connected. By default it is assumed
@@ -76,6 +88,11 @@ OPTIONAL FLAGS
         (-), underscores (_), lowercase characters, and numbers. Values must
         contain only hyphens (-), underscores (_), lowercase characters, and
         numbers.
+
+     --location=LOCATION
+        For resources [vpn connection, cluster], provides fallback value for
+        resource location attribute. When the resource's full URI path is not
+        provided, location will fallback to this flag value.
 
      --nat-gateway-ip=NAT_GATEWAY_IP
         The NAT gateway IP for the gateway floating IPs. Required if cluster

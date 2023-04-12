@@ -8,12 +8,8 @@ SYNOPSIS
         [--async] [--display-name=DISPLAY_NAME] [--validate-only]
         [--node-configs=[labels=LABELS],[node-ip=NODE-IP]
           --node-labels=[KEY=VALUE,...] --node-taints=[KEY=VALUE:EFFECT,...]
-          --cpu-cfs-quota-period=CPU_CFS_QUOTA_PERIOD
-          --cpu-manager-policy=CPU_MANAGER_POLICY
-          --feature-gates=[FEATURE=BOOL,...] --pod-pids-limit=POD_PIDS_LIMIT
           --registry-burst=REGISTRY_BURST
-          --registry-pull-qps=REGISTRY_PULL_QPS --disable-cpu-cfs-quota
-          | --enable-cpu-cfs-quota --disable-serialize-image-pulls
+          --registry-pull-qps=REGISTRY_PULL_QPS --disable-serialize-image-pulls
           | --enable-serialize-image-pulls] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -92,39 +88,14 @@ FLAGS
        --node-taints=[KEY=VALUE:EFFECT,...]
           Node taint applied to every Kubernetes node in a node pool.
 
-       Sets the modifiable kubelet configurations for bare metal machines.
-
-         --cpu-cfs-quota-period=CPU_CFS_QUOTA_PERIOD
-            CPU Completely Fair Scheduler (CFS) quota period value. Specify
-            with seconds as the time unit, such as 0.2s.
-
-         --cpu-manager-policy=CPU_MANAGER_POLICY
-            The kubelet CPU manager policy. CPU_MANAGER_POLICY must be one of:
-            NONE, STATIC.
-
-         --feature-gates=[FEATURE=BOOL,...]
-            A map of feature names to bools that enable or disable experimental
-            features.
-
-         --pod-pids-limit=POD_PIDS_LIMIT
-            Maximum number of PIDs in any pod.
+       Modifiable kubelet configurations for bare metal machines.
 
          --registry-burst=REGISTRY_BURST
-            Maximum size of bursty pulls, temporarily allows pulls to burst to
+            Maximum size of bursty pulls, temporarily allow pulls to burst to
             this number, while still not exceeding registry_pull_qps.
 
          --registry-pull-qps=REGISTRY_PULL_QPS
             Limit of registry pulls per second.
-
-         At most one of these can be specified:
-
-           --disable-cpu-cfs-quota
-              If set, disable CPU Completely Fair Scheduler (CFS) quota
-              enforcement for containers that specify CPU limits.
-
-           --enable-cpu-cfs-quota
-              If set, enable CPU Completely Fair Scheduler (CFS) quota
-              enforcement for containers that specify CPU limits.
 
          At most one of these can be specified:
 
@@ -147,5 +118,7 @@ NOTES
     This command is currently in alpha and might change without notice. If this
     command fails with API permission errors despite specifying the correct
     project, you might be trying to access an API with an invitation-only early
-    access allowlist.
+    access allowlist. This variant is also available:
+
+        $ gcloud beta container bare-metal node-pools update
 

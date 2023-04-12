@@ -12,16 +12,31 @@ SYNOPSIS
         [--api-server-args=[KEY=VALUE,...]
           --control-plane-node-configs=[labels=LABELS],[node-ip=NODE-IP]
           --control-plane-node-labels=[KEY=VALUE,...]
-          --control-plane-node-taints=[KEY=VALUE:EFFECT,...]]
-        [--island-mode-service-address-cidr-blocks=SERVICE_ADDRESS,[...]
-          --disable-sr-iov-config | --enable-sr-iov-config]
-        [--metal-lb-address-pools=[addresses=ADDRESSES],
+          --control-plane-node-taints=[KEY=VALUE:EFFECT,...]
+          --control-plane-registry-burst=CONTROL_PLANE_REGISTRY_BURST
+          --control-plane-registry-pull-qps=CONTROL_PLANE_REGISTRY_PULL_QPS
+          --disable-control-plane-serialize-image-pulls
+          | --enable-control-plane-serialize-image-pulls]
+        [--bgp-address-pools=[addresses=ADDRESSES],
+          [avoid-buggy-ips=AVOID-BUGGY-IPS],
+          [manual-assign=MANUAL-ASSIGN],[pool=POOL] --bgp-asn=BGP_ASN
+          --bgp-peer-configs=[asn=ASN,
+          ip=IP,control-plane-nodes=NODE_IP_1;NODE_IP_2,...]
+          --bgp-load-balancer-node-configs=[node-ip=IP,
+          labels=KEY1=VALUE1;KEY2=VALUE2,...]
+          --bgp-load-balancer-node-labels=[KEY=VALUE,...]
+          --bgp-load-balancer-node-taints=[KEY=VALUE:EFFECT,...]
+          --bgp-load-balancer-registry-burst=BGP_LOAD_BALANCER_REGISTRY_BURST
+          --bgp-load-balancer-registry-pull-qps=BGP_LOAD_BALANCER_REGISTRY_PULL_QPS --disable-bgp-load-balancer-serialize-image-pulls | --enable-bgp-load-balancer-serialize-image-pulls | --metal-lb-address-pools=[addresses=ADDRESSES],
           [avoid-buggy-ips=AVOID-BUGGY-IPS],
           [manual-assign=MANUAL-ASSIGN],[pool=POOL]
           --metal-lb-load-balancer-node-configs=[labels=LABELS],
           [node-ip=NODE-IP]
           --metal-lb-load-balancer-node-labels=[KEY=VALUE,...]
-          --metal-lb-load-balancer-node-taints=[KEY=VALUE:EFFECT,...]]
+          --metal-lb-load-balancer-node-taints=[KEY=VALUE:EFFECT,...]
+          --metal-lb-load-balancer-registry-burst=METAL_LB_LOAD_BALANCER_REGISTRY_BURST --metal-lb-load-balancer-registry-pull-qps=METAL_LB_LOAD_BALANCER_REGISTRY_PULL_QPS --disable-metal-lb-load-balancer-serialize-image-pulls | --enable-metal-lb-load-balancer-serialize-image-pulls]
+        [--island-mode-service-address-cidr-blocks=SERVICE_ADDRESS,[...]
+          --disable-sr-iov-config | --enable-sr-iov-config]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -129,37 +144,126 @@ FLAGS
              --control-plane-node-taints=[KEY=VALUE:EFFECT,...]
                 Node taint applied to every Kubernetes node in a node pool.
 
-     Anthos on bare metal cluster network configurations.
+             Modifiable kubelet configurations for bare metal machines.
 
-       Populate one of the network configs.
+               --control-plane-registry-burst=CONTROL_PLANE_REGISTRY_BURST
+                  Maximum size of bursty pulls, temporarily allow pulls to
+                  burst to this number, while still not exceeding
+                  registry_pull_qps.
 
-         Island mode CIDR network configuration.
+               --control-plane-registry-pull-qps=CONTROL_PLANE_REGISTRY_PULL_QPS
+                  Limit of registry pulls per second.
 
-           --island-mode-service-address-cidr-blocks=SERVICE_ADDRESS,[...]
-              IPv4 address range for all services in the cluster.
+               At most one of these can be specified:
 
-       SR-IOV networking operator configurations.
+                 --disable-control-plane-serialize-image-pulls
+                    If set, prevent the Kubelet from pulling multiple images at
+                    a time.
 
-         At most one of these can be specified:
-
-           --disable-sr-iov-config
-              If set, the SR-IOV operator won't be installed.
-
-           --enable-sr-iov-config
-              If set, install the SR-IOV operator.
+                 --enable-control-plane-serialize-image-pulls
+                    If set, enable the Kubelet to pull multiple images at a
+                    time.
 
      Anthos on bare metal cluster load balancer configuration.
 
        Populate one of the load balancers.
 
-         MetalLB Configuration
+       At most one of these can be specified:
+
+         BGP load balancer configuration.
+
+           --bgp-address-pools=[addresses=ADDRESSES],[avoid-buggy-ips=AVOID-BUGGY-IPS],[manual-assign=MANUAL-ASSIGN],[pool=POOL]
+              BGP load balancer address pools configurations.
+
+              Examples:
+
+              To specify configurations for two address pools pool1 and pool2,
+
+                    $ gcloud alpha container bare-metal clusters update example_cluster
+                        --bgp-address-pools 'pool=pool1,avoid-buggy-ips=True,manual-assign=True,addresses=192.168.1.1/32;192.168.1.2-192.168.1.3'
+                        --bgp-address-pools 'pool=pool2,avoid-buggy-ips=False,manual-assign=False,addresses=192.168.2.1/32;192.168.2.2-192.168.2.3'
+
+              Use quote around the flag value to escape semicolon in the
+              terminal.
+
+           --bgp-asn=BGP_ASN
+              BGP autonomous system number (ASN) of the cluster.
+
+           --bgp-peer-configs=[asn=ASN,ip=IP,control-plane-nodes=NODE_IP_1;NODE_IP_2,...]
+              List of BGP peers that the cluster will connect to. At least one
+              peer must be configured for each control plane node.
+
+              Examples:
+
+              To specify configurations for two peers of BGP autonomous system
+              number (ASN) 10000 and 20000,
+
+                    $ gcloud alpha container bare-metal clusters update example_cluster
+                        --bgp-peer-configs 'asn=10000,ip=192.168.1.1,control-plane-nodes=192.168.1.2;192.168.1.3'
+                        --bgp-peer-configs 'asn=20000,ip=192.168.2.1,control-plane-nodes=192.168.2.2;192.168.2.3'
+
+              Use quote around the flag value to escape semicolon in the
+              terminal.
+
+           --bgp-load-balancer-node-configs=[node-ip=IP,labels=KEY1=VALUE1;KEY2=VALUE2,...]
+              BGP load balancer data plane node configurations.
+
+              Examples:
+
+              To specify configurations for two nodes of IP 192.168.0.1 and
+              192.168.1.1,
+
+                    $ gcloud alpha container bare-metal clusters update example_cluster
+                        --bgp-load-balancer-node-configs 'node-ip=192.168.0.1,labels=KEY1=VALUE1;KEY2=VALUE2'
+                        --bgp-load-balancer-node-configs 'node-ip=192.168.1.1,labels=KEY3=VALUE3'
+
+              Use quote around the flag value to escape semicolon in the
+              terminal.
+
+           --bgp-load-balancer-node-labels=[KEY=VALUE,...]
+              Labels assigned to nodes of a BGP node pool.
+
+           --bgp-load-balancer-node-taints=[KEY=VALUE:EFFECT,...]
+              Node taint applied to every Kubernetes node in a node pool.
+
+           Modifiable kubelet configurations for bare metal machines.
+
+             --bgp-load-balancer-registry-burst=BGP_LOAD_BALANCER_REGISTRY_BURST
+                Maximum size of bursty pulls, temporarily allow pulls to burst
+                to this number, while still not exceeding registry_pull_qps.
+
+             --bgp-load-balancer-registry-pull-qps=BGP_LOAD_BALANCER_REGISTRY_PULL_QPS
+                Limit of registry pulls per second.
+
+             At most one of these can be specified:
+
+               --disable-bgp-load-balancer-serialize-image-pulls
+                  If set, prevent the Kubelet from pulling multiple images at a
+                  time.
+
+               --enable-bgp-load-balancer-serialize-image-pulls
+                  If set, enable the Kubelet to pull multiple images at a time.
+
+         MetalLB load balancer configuration.
 
            MetalLB address pools configuration.
 
            At most one of these can be specified:
 
              --metal-lb-address-pools=[addresses=ADDRESSES],[avoid-buggy-ips=AVOID-BUGGY-IPS],[manual-assign=MANUAL-ASSIGN],[pool=POOL]
-                MetalLB address pools configuration.
+                MetalLB load balancer configurations.
+
+                Examples:
+
+                To specify MetalLB load balancer configurations for two address
+                pools pool1 and pool2,
+
+                      $ gcloud alpha container bare-metal clusters update example_cluster
+                          --metal-lb-address-pools 'pool=pool1,avoid-buggy-ips=True,manual-assign=True,addresses=192.168.1.1/32;192.168.1.2-192.168.1.3'
+                          --metal-lb-address-pools 'pool=pool2,avoid-buggy-ips=False,manual-assign=False,addresses=192.168.2.1/32;192.168.2.2-192.168.2.3'
+
+                Use quote around the flag value to escape semicolon in the
+                terminal.
 
            Anthos on bare metal node pool configuration for MetalLB load
            balancer nodes.
@@ -179,6 +283,45 @@ FLAGS
                --metal-lb-load-balancer-node-taints=[KEY=VALUE:EFFECT,...]
                   Node taint applied to every node in a MetalLB node pool.
 
+               Modifiable kubelet configurations for bare metal machines.
+
+                 --metal-lb-load-balancer-registry-burst=METAL_LB_LOAD_BALANCER_REGISTRY_BURST
+                    Maximum size of bursty pulls, temporarily allow pulls to
+                    burst to this number, while still not exceeding
+                    registry_pull_qps.
+
+                 --metal-lb-load-balancer-registry-pull-qps=METAL_LB_LOAD_BALANCER_REGISTRY_PULL_QPS
+                    Limit of registry pulls per second.
+
+                 At most one of these can be specified:
+
+                   --disable-metal-lb-load-balancer-serialize-image-pulls
+                      If set, prevent the Kubelet from pulling multiple images
+                      at a time.
+
+                   --enable-metal-lb-load-balancer-serialize-image-pulls
+                      If set, enable the Kubelet to pull multiple images at a
+                      time.
+
+     Anthos on bare metal cluster network configurations.
+
+       Populate one of the network configs.
+
+         Island mode CIDR network configuration.
+
+           --island-mode-service-address-cidr-blocks=SERVICE_ADDRESS,[...]
+              IPv4 address range for all services in the cluster.
+
+       SR-IOV networking operator configurations.
+
+         At most one of these can be specified:
+
+           --disable-sr-iov-config
+              If set, the SR-IOV operator won't be installed.
+
+           --enable-sr-iov-config
+              If set, install the SR-IOV operator.
+
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
     --billing-project, --configuration, --flags-file, --flatten, --format,
@@ -191,5 +334,7 @@ NOTES
     This command is currently in alpha and might change without notice. If this
     command fails with API permission errors despite specifying the correct
     project, you might be trying to access an API with an invitation-only early
-    access allowlist.
+    access allowlist. This variant is also available:
+
+        $ gcloud beta container bare-metal clusters update
 
