@@ -31,6 +31,8 @@ SYNOPSIS
           | --stack-type=STACK_TYPE | --start-credential-rotation
           | --start-ip-rotation | --update-addons=[ADDON=ENABLED|DISABLED,...]
           | --update-labels=[KEY=VALUE,...] | --workload-pool=WORKLOAD_POOL
+          | --additional-pod-ipv4-ranges=NAME,[NAME,...]
+          --remove-additional-pod-ipv4-ranges=NAME,[NAME,...]
           | --additional-zones=[ZONE,...] | --node-locations=ZONE,[ZONE,...]
           | --binauthz-policy=BINAUTHZ_POLICY
           --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
@@ -48,8 +50,7 @@ SYNOPSIS
           --enable-resource-consumption-metering
           --resource-usage-bigquery-dataset=RESOURCE_USAGE_BIGQUERY_DATASET
           | --cluster-dns=CLUSTER_DNS --cluster-dns-domain=CLUSTER_DNS_DOMAIN
-          --cluster-dns-scope=CLUSTER_DNS_SCOPE | --disable-managed-prometheus
-          | --enable-managed-prometheus | [--enable-autoprovisioning
+          --cluster-dns-scope=CLUSTER_DNS_SCOPE | [--enable-autoprovisioning
           : --autoprovisioning-config-file=AUTOPROVISIONING_CONFIG_FILE
           | --autoprovisioning-image-type=AUTOPROVISIONING_IMAGE_TYPE
           --autoprovisioning-locations=ZONE,[ZONE,...]
@@ -67,8 +68,9 @@ SYNOPSIS
           [--max-accelerator=[type=TYPE,count=COUNT,...]
           : --min-accelerator=[type=TYPE,count=COUNT,...]]]
           | --enable-tpu --enable-tpu-service-networking | --tpu-ipv4-cidr=CIDR
-          | --logging=[COMPONENT,...] --monitoring=[COMPONENT,...]
-          | --logging-service=LOGGING_SERVICE
+          | --logging=[COMPONENT,...]
+          --monitoring=[COMPONENT,...] --disable-managed-prometheus
+          | --enable-managed-prometheus | --logging-service=LOGGING_SERVICE
           --monitoring-service=MONITORING_SERVICE
           | --password=PASSWORD --enable-basic-auth
           | --username=USERNAME, -u USERNAME) [--async]
@@ -532,6 +534,7 @@ REQUIRED FLAGS
           NodeLocalDNS=ENABLED|DISABLED
           GcePersistentDiskCsiDriver=ENABLED|DISABLED
           GcpFilestoreCsiDriver=ENABLED|DISABLED
+          GcsFuseCsiDriver=ENABLED|DISABLED
 
        --update-labels=[KEY=VALUE,...]
           Labels to apply to the Google Cloud resources in use by the
@@ -554,6 +557,24 @@ REQUIRED FLAGS
           For more information on Workload Identity, see
 
               https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity
+
+       --additional-pod-ipv4-ranges=NAME,[NAME,...]
+          Additional IP address ranges(by name) for pods that need to be added
+          to the cluster.
+
+          Examples:
+
+              $ gcloud beta container clusters update example-cluster \
+                  --additional-pod-ipv4-ranges=range1,range2
+
+       --remove-additional-pod-ipv4-ranges=NAME,[NAME,...]
+          Previously added additional pod ranges(by name) for pods that are to
+          be removed from the cluster.
+
+          Examples:
+
+              $ gcloud beta container clusters update example-cluster \
+                  --remove-additional-pod-ipv4-ranges=range1,range2
 
        At most one of these can be specified:
 
@@ -786,14 +807,6 @@ REQUIRED FLAGS
                 Configures the Cloud DNS zone to be private to the cluster.
              vpc
                 Configures the Cloud DNS zone to be private to the VPC Network.
-
-       At most one of these can be specified:
-
-         --disable-managed-prometheus
-            Disable managed collection for Managed Service for Prometheus.
-
-         --enable-managed-prometheus
-            Enable managed collection for Managed Service for Prometheus.
 
        Node autoprovisioning
 
@@ -1084,6 +1097,14 @@ REQUIRED FLAGS
               $ gcloud beta container clusters update \
                   --monitoring=SYSTEM,API_SERVER
               $ gcloud beta container clusters update --monitoring=NONE
+
+       At most one of these can be specified:
+
+         --disable-managed-prometheus
+            Disable managed collection for Managed Service for Prometheus.
+
+         --enable-managed-prometheus
+            Enable managed collection for Managed Service for Prometheus.
 
        --logging-service=LOGGING_SERVICE
           (DEPRECATED) Logging service to use for the cluster. Options are:

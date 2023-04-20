@@ -1,6 +1,6 @@
 NAME
-    gcloud dataplex lakes authorize - authorize a project service account to
-        manage given resource
+    gcloud dataplex lakes authorize - authorize a service agent to manage
+        resources
 
 SYNOPSIS
     gcloud dataplex lakes authorize
@@ -10,23 +10,23 @@ SYNOPSIS
           --secondary-project=SECONDARY_PROJECT) [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    IAM Bindings for the service account of the primary project will be added
-    to a secondary project, a storage bucket, or BigQuery dataset.
+    The service agent for the primary project will be granted an IAM role on a
+    secondary project, a Cloud Storage bucket, or a BigQuery dataset.
 
 EXAMPLES
-    To authorize the service account in project test-project to manage another
-    project test-project2, run:
+    To authorize the service agent in project test-project to manage resources
+    in the project test-project2, run:
 
         $ gcloud dataplex lakes authorize --project=test-project \
             --project-resource=test-project2
 
-    To authorize the service account in project test-project to manage the
-    storage bucket dataplex-storage-bucket, run:
+    To authorize the service agent in project test-project to manage the Cloud
+    Storage bucket dataplex-storage-bucket, run:
 
         $ gcloud dataplex lakes authorize --project=test-project \
             --storage-bucket-resource=dataplex-storage-bucket
 
-    To authorize the service account in project test-project to manage the
+    To authorize the service agent in project test-project to manage the
     BigQuery dataset test-dataset in project test-project2, run:
 
         $ gcloud dataplex lakes authorize --project=test-project \
@@ -34,27 +34,30 @@ EXAMPLES
             --secondary-project=test-project2
 
 REQUIRED FLAGS
-     Container or Object to bind P4SA.
+     The resource on which to grant a role to the service agent.
 
      Exactly one of these must be specified:
 
        --project-resource=PROJECT_RESOURCE
-          The identifier of the project to authorize.
+          The identifier of the project whose resources the service agent will
+          manage.
 
        --storage-bucket-resource=STORAGE_BUCKET_RESOURCE
-          The identifier of the Cloud Storage bucket to authorize the project
-          on.
+          The identifier of the Cloud Storage bucket that the service agent
+          will manage.
 
-       Fields to help identify the BigQuery Dataset.
+       Fields to identify the BigQuery dataset.
 
          --bigquery-dataset-resource=BIGQUERY_DATASET_RESOURCE
-            The identifier of the BigQuery dataset to authorize.
+            The identifier of the BigQuery dataset that the service agent will
+            manage.
 
             This flag argument must be specified if any of the other arguments
             in this group are specified.
 
          --secondary-project=SECONDARY_PROJECT
-            The identifier of the Project where BigQuery dataset resides.
+            The identifier of the project where the BigQuery dataset is
+            located.
 
             This flag argument must be specified if any of the other arguments
             in this group are specified.

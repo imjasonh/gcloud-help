@@ -10,7 +10,7 @@ SYNOPSIS
         --subnet-id=SUBNET_ID [--annotations=ANNOTATION,[ANNOTATION,...]]
         [--async] [--image-type=IMAGE_TYPE]
         [--instance-placement=INSTANCE_PLACEMENT]
-        [--instance-type=INSTANCE_TYPE] [--max-pods-per-node=MAX_PODS_PER_NODE]
+        [--max-pods-per-node=MAX_PODS_PER_NODE]
         [--node-labels=NODE_LABEL,[NODE_LABEL,...]]
         [--node-taints=NODE_TAINT,[NODE_TAINT,...]]
         [--root-volume-iops=ROOT_VOLUME_IOPS]
@@ -22,6 +22,8 @@ SYNOPSIS
         [--validate-only]
         [--autoscaling-metrics-granularity=AUTOSCALING_METRICS_GRANULARITY
           : --autoscaling-metrics=[AUTOSCALING_METRIC,...]]
+        [--instance-type=INSTANCE_TYPE
+          | --spot-instance-types=[INSTANCE_TYPE,...]]
         [--max-nodes=MAX_NODES --min-nodes=MIN_NODES]
         [--proxy-secret-arn=PROXY_SECRET_ARN
           --proxy-secret-version-id=PROXY_SECRET_VERSION_ID]
@@ -106,9 +108,6 @@ OPTIONAL FLAGS
         Type of the tenancy. INSTANCE_PLACEMENT must be one of: dedicated,
         default, host.
 
-     --instance-type=INSTANCE_TYPE
-        AWS EC2 instance type for the node pool's nodes.
-
      --max-pods-per-node=MAX_PODS_PER_NODE
         Maximum number of pods per node.
 
@@ -165,6 +164,20 @@ OPTIONAL FLAGS
           https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_EnableMetricsCollection.html.
           If granularity is specified but not any metrics, all metrics are
           enabled.
+
+     Node pool instance configuration
+
+     At most one of these can be specified:
+
+       --instance-type=INSTANCE_TYPE
+          AWS EC2 instance type for the node pool's nodes.
+
+       --spot-instance-types=[INSTANCE_TYPE,...]
+          List of AWS EC2 instance types for creating a spot node pool's nodes.
+          The specified instance types must have the same number of CPUs and
+          memory. You can use the Amazon EC2 Instance Selector tool
+          (https://github.com/aws/amazon-ec2-instance-selector) to choose
+          instance types with matching CPU and memory configurations.
 
      Node pool autoscaling
 

@@ -6,8 +6,9 @@ SYNOPSIS
     gcloud alpha compute tpus queued-resources create
         (QUEUED_RESOURCE : --zone=ZONE) --accelerator-type=ACCELERATOR_TYPE
         --runtime-version=RUNTIME_VERSION
-        (--node-id=NODE_ID | --node-count=NODE_COUNT --node-prefix=NODE_PREFIX)
-        [--async] [--best-effort] [--guaranteed] [--internal-ips]
+        (--node-id=NODE_ID
+          | [--node-count=NODE_COUNT : --node-prefix=NODE_PREFIX]) [--async]
+        [--best-effort] [--guaranteed] [--internal-ips]
         [--metadata=[METADATA,...]]
         [--metadata-from-file=[METADATA_FROM_FILE,...]]
         [--network=NETWORK; default="default"]
@@ -15,7 +16,8 @@ SYNOPSIS
         [--reservation-host-organization=RESERVATION_HOST_ORGANIZATION]
         [--reservation-host-project=RESERVATION_HOST_PROJECT] [--reserved]
         [--scopes=[SCOPES,...]] [--service-account=SERVICE_ACCOUNT]
-        [--subnetwork=SUBNETWORK] [--valid-after-duration=VALID_AFTER_DURATION]
+        [--subnetwork=SUBNETWORK] [--tags=[TAGS,...]]
+        [--valid-after-duration=VALID_AFTER_DURATION]
         [--valid-after-time=VALID_AFTER_TIME]
         [--valid-until-duration=VALID_UNTIL_DURATION]
         [--valid-until-time=VALID_UNTIL_TIME] [GCLOUD_WIDE_FLAG ...]
@@ -36,8 +38,8 @@ EXAMPLES
 
         $ gcloud alpha compute tpus queued-resources create \
             my-queued-resource --accelerator-type=v4-8 \
-            --runtime-version=v2-alpha-tpuv4 --node-prefix=my-node \
-            --node-count=2 --zone=us-central2-b --project=my-project
+            --runtime-version=v2-alpha-tpuv4 --node-count=2 \
+            --zone=us-central2-b --project=my-project
 
 POSITIONAL ARGUMENTS
      Queued resource resource - The Queued Resource you want to create. The
@@ -77,8 +79,8 @@ REQUIRED FLAGS
      --runtime-version=RUNTIME_VERSION
         Runtime version for the TPU, such as 2.3.
 
-     Specify TPU node(s) with either a single node id, or a node prefix and
-     node count combination
+     Specify TPU node(s) with either a single node id or a node count and an
+     optional node prefix
 
      Exactly one of these must be specified:
 
@@ -88,9 +90,9 @@ REQUIRED FLAGS
             Unqualified node identifier used to identify the node in the
             project once provisioned.
 
-            To request a resource with multiple nodes, use --node-prefix to
-            specify the prefix for each node and --node-count to specify the
-            number of nodes in place of --node-id.
+            To request a resource with multiple nodes, in place of --node-id,
+            use --node-count to specify the number of nodes and optionally use
+            --node-prefix to specify the prefix for each node.
 
        Multinode creation
 
@@ -99,19 +101,15 @@ REQUIRED FLAGS
             generate the qualified name for nodes in the provision. Value must
             be greater than 1.
 
-            Must also specify --node-prefix.
-
             This flag argument must be specified if any of the other arguments
             in this group are specified.
 
          --node-prefix=NODE_PREFIX
             Node prefix used to generate the qualified name of each node the
-            multislice node provision.
+            multislice node provision. If not supplied, the queued resource id
+            will be used as the prefix.
 
             Must also specify --node-count.
-
-            This flag argument must be specified if any of the other arguments
-            in this group are specified.
 
 OPTIONAL FLAGS
      --async
@@ -169,6 +167,12 @@ OPTIONAL FLAGS
 
      --subnetwork=SUBNETWORK
         Subnetwork that this TPU will be a part of.
+
+     --tags=[TAGS,...]
+        Tags to apply to the TPU Node. Tags are used to identify valid sources
+        or targets for network firewalls. See
+        https://cloud.google.com/vpc/docs/add-remove-network-tags for more
+        details.
 
      --valid-after-duration=VALID_AFTER_DURATION
         A duration before which the TPU must not be provisioned, relative to

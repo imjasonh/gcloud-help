@@ -1,0 +1,101 @@
+NAME
+    gcloud storage insights inventory-reports create - create a new inventory
+        report config
+
+SYNOPSIS
+    gcloud storage insights inventory-reports create SOURCE_BUCKET_URL
+        [--destination=DESTINATION_URL] [--display-name=DISPLAY_NAME]
+        [--metadata-fields=[METADATA_FIELDS,...];
+          default="project,bucket,name,location,size,timeCreated,timeDeleted,
+          updated,storageClass,etag,retentionExpirationTime,crc32c,md5Hash,
+          generation,
+          metageneration,contentType,contentEncoding,timeStorageClassUpdated"]
+        [--schedule-repeats=FREQUENCY; default="daily"]
+        [--schedule-repeats-until=END_DATE] [--schedule-starts=START_DATE]
+        [--parquet | --csv-delimiter=DELIMITER
+          --[no-]csv-header --csv-separator=SEPARATOR] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Create an inventory report config that defines how often inventory reports
+    are generated, the metadata fields you want the reports to include, and a
+    bucket/prefix in which to store the reports, also known as the destination.
+
+EXAMPLES
+    To create an inventory report about "my-bucket" that will store report
+    details in "report-bucket" with the prefix "save-path/".
+
+        $ gcloud storage insights inventory-reports create gs://my-bucket \
+            --destination=gs://report-bucket/save-path/
+
+POSITIONAL ARGUMENTS
+     SOURCE_BUCKET_URL
+        URL of the source bucket that will contain the inventory report
+        configuration.
+
+FLAGS
+     --destination=DESTINATION_URL
+        Sets the URL of the destination bucket and path where generated reports
+        are stored. Defaults to <SOURCE_BUCKET_URL>/inventory_reports/.
+
+     --display-name=DISPLAY_NAME
+        Sets the editable name of the report configuration.
+
+     --metadata-fields=[METADATA_FIELDS,...]; default="project,bucket,name,location,size,timeCreated,timeDeleted,updated,storageClass,etag,retentionExpirationTime,crc32c,md5Hash,generation,metageneration,contentType,contentEncoding,timeStorageClassUpdated"
+        The metadata fields to be included in the inventory report. The fields:
+        "project, bucket, name" are REQUIRED. Defaults to all fields being
+        included. METADATA_FIELDS must be one of: project, bucket, name,
+        location, size, timeCreated, timeDeleted, updated, storageClass, etag,
+        retentionExpirationTime, crc32c, md5Hash, generation, metageneration,
+        contentType, contentEncoding, timeStorageClassUpdated.
+
+     --schedule-repeats=FREQUENCY; default="daily"
+        Sets how often the inventory report configuration will run. Defaults to
+        DAILY. FREQUENCY must be one of: daily, weekly.
+
+     --schedule-repeats-until=END_DATE
+        Sets date after which you want to stop generating inventory reports.
+        For example, 2022-03-30. Defaults to one year from --schedule-starts
+        value.
+
+     --schedule-starts=START_DATE
+        Sets the date you want to start generating inventory reports. For
+        example, 2022-01-30. Should be tomorrow or later based on UTC timezone.
+        Defaults to tomorrow.
+
+     Report format configuration. Any combination of CSV flags is valid as long
+     as the Parquet flag is not present.
+
+     At most one of these can be specified:
+
+       --parquet
+          Generate reports in parquet format.
+
+       Flags for setting CSV format options.
+
+         --csv-delimiter=DELIMITER
+            Sets the delimiter that separates the fields in the inventory
+            report CSV file. For example, ``,``
+
+         --[no-]csv-header
+            Indicates whether or not headers are included in the inventory
+            report CSV file. Default is None. Use --csv-header to enable and
+            --no-csv-header to disable.
+
+         --csv-separator=SEPARATOR
+            Sets the character used to separate the records in the inventory
+            report CSV file. For example, ``\n``. SEPARATOR must be one of: \n,
+            \r\n.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This variant is also available:
+
+        $ gcloud alpha storage insights inventory-reports create
+
