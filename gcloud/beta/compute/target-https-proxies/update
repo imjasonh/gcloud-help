@@ -5,9 +5,11 @@ NAME
 SYNOPSIS
     gcloud beta compute target-https-proxies update NAME
         [--quic-override=QUIC_OVERRIDE] [--url-map=URL_MAP]
-        [--certificate-map=CERTIFICATE_MAP | --clear-certificate-map
+        [--certificate-manager-certificates=[CERTIFICATE_MANAGER_CERTIFICATES,
+          ...] | --clear-ssl-certificates
           | --ssl-certificates=SSL_CERTIFICATE,[...] --global-ssl-certificates
-          | --ssl-certificates-region=SSL_CERTIFICATES_REGION]
+          | --ssl-certificates-region=SSL_CERTIFICATES_REGION
+          | --certificate-map=CERTIFICATE_MAP | --clear-certificate-map]
         [--clear-ssl-policy | --ssl-policy=SSL_POLICY --global-ssl-policy
           | --ssl-policy-region=SSL_POLICY_REGION] [--global | --region=REGION]
         [--global-url-map | --url-map-region=URL_MAP_REGION]
@@ -73,32 +75,33 @@ FLAGS
 
        At most one of these can be specified:
 
-         Certificate map resource - The certificate map to attach. This
-         represents a Cloud resource. (NOTE) Some attributes are not given
+         Certificate resource - certificate-manager-certificates to attach.
+         This represents a Cloud resource. (NOTE) Some attributes are not given
          arguments in this group but can be set in other ways. To set the
          project attribute:
-          ▫ provide the argument --certificate-map on the command line with a
-            fully specified name;
+          ▫ provide the argument --certificate-manager-certificates on the
+            command line with a fully specified name;
           ▫ provide the argument --project on the command line;
           ▫ set the property core/project. To set the location attribute:
-          ▫ provide the argument --certificate-map on the command line with a
-            fully specified name;
+          ▫ provide the argument --certificate-manager-certificates on the
+            command line with a fully specified name;
           ▫ default value of location is [global].
 
-           --certificate-map=CERTIFICATE_MAP
-              ID of the certificate map or fully qualified identifier for the
-              certificate map. To set the map attribute:
-              ◇ provide the argument --certificate-map on the command line.
+           --certificate-manager-certificates=[CERTIFICATE_MANAGER_CERTIFICATES,...]
+              IDs of the certificates or fully qualified identifiers for the
+              certificates. To set the certificate attribute:
+              ◇ provide the argument --certificate-manager-certificates on
+                the command line.
 
-         --clear-certificate-map
-            Removes any attached certificate map from the HTTPS proxy.
+         --clear-ssl-certificates
+            Remove any attached SSL certificates from the HTTPS proxy.
 
-       --ssl-certificates=SSL_CERTIFICATE,[...]
-          References to at most 15 SSL certificate resources that are used for
-          server-side authentication. The first SSL certificate in this list is
-          considered the primary SSL certificate associated with the load
-          balancer. The SSL certificates must exist and cannot be deleted while
-          referenced by a target HTTPS proxy.
+         --ssl-certificates=SSL_CERTIFICATE,[...]
+            References to at most 15 SSL certificate resources that are used
+            for server-side authentication. The first SSL certificate in this
+            list is considered the primary SSL certificate associated with the
+            load balancer. The SSL certificates must exist and cannot be
+            deleted while referenced by a target HTTPS proxy.
 
        At most one of these can be specified:
 
@@ -124,6 +127,28 @@ FLAGS
 
             Alternatively, the region can be stored in the environment variable
             CLOUDSDK_COMPUTE_REGION.
+
+       At most one of these can be specified:
+
+         Certificate map resource - The certificate map to attach. This
+         represents a Cloud resource. (NOTE) Some attributes are not given
+         arguments in this group but can be set in other ways. To set the
+         project attribute:
+          ▫ provide the argument --certificate-map on the command line with a
+            fully specified name;
+          ▫ provide the argument --project on the command line;
+          ▫ set the property core/project. To set the location attribute:
+          ▫ provide the argument --certificate-map on the command line with a
+            fully specified name;
+          ▫ default value of location is [global].
+
+           --certificate-map=CERTIFICATE_MAP
+              ID of the certificate map or fully qualified identifier for the
+              certificate map. To set the map attribute:
+              ◇ provide the argument --certificate-map on the command line.
+
+         --clear-certificate-map
+            Removes any attached certificate map from the HTTPS proxy.
 
      At most one of these can be specified:
 

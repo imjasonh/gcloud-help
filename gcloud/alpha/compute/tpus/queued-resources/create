@@ -4,19 +4,20 @@ NAME
 
 SYNOPSIS
     gcloud alpha compute tpus queued-resources create
-        (QUEUED_RESOURCE : --zone=ZONE) --accelerator-type=ACCELERATOR_TYPE
-        --runtime-version=RUNTIME_VERSION
+        (QUEUED_RESOURCE : --zone=ZONE) --runtime-version=RUNTIME_VERSION
+        (--accelerator-type=ACCELERATOR_TYPE | --topology=TOPOLOGY --type=TYPE)
         (--node-id=NODE_ID
           | [--node-count=NODE_COUNT : --node-prefix=NODE_PREFIX]) [--async]
-        [--best-effort] [--guaranteed] [--internal-ips]
+        [--best-effort] [--data-disk=DATA_DISK] [--description=DESCRIPTION]
+        [--guaranteed] [--internal-ips] [--labels=[LABELS,...]]
         [--metadata=[METADATA,...]]
         [--metadata-from-file=[METADATA_FROM_FILE,...]]
-        [--network=NETWORK; default="default"]
+        [--network=NETWORK; default="default"] [--range=RANGE]
         [--reservation-host-folder=RESERVATION_HOST_FOLDER]
         [--reservation-host-organization=RESERVATION_HOST_ORGANIZATION]
         [--reservation-host-project=RESERVATION_HOST_PROJECT] [--reserved]
         [--scopes=[SCOPES,...]] [--service-account=SERVICE_ACCOUNT]
-        [--subnetwork=SUBNETWORK] [--tags=[TAGS,...]]
+        [--shielded-secure-boot] [--subnetwork=SUBNETWORK] [--tags=[TAGS,...]]
         [--valid-after-duration=VALID_AFTER_DURATION]
         [--valid-after-time=VALID_AFTER_TIME]
         [--valid-until-duration=VALID_UNTIL_DURATION]
@@ -73,11 +74,31 @@ POSITIONAL ARGUMENTS
           ▸ set the property compute/zone.
 
 REQUIRED FLAGS
-     --accelerator-type=ACCELERATOR_TYPE
-        Accelerator type for the TPU.
-
      --runtime-version=RUNTIME_VERSION
         Runtime version for the TPU, such as 2.3.
+
+     Specify a chip-based or core-based TPU node.
+
+     Exactly one of these must be specified:
+
+       Core-based TPU configuration
+
+         --accelerator-type=ACCELERATOR_TYPE
+            Accelerator type for the TPU.
+
+       Chip-based TPU configuration
+
+         --topology=TOPOLOGY
+            Chip topology for TPU.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --type=TYPE
+            Type of TPU. TYPE must be one of: v2, v3, v4.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
 
      Specify TPU node(s) with either a single node id or a node count and an
      optional node prefix
@@ -120,6 +141,30 @@ OPTIONAL FLAGS
         If provided, the Node requested here may be scheduled at the 'best
         effort' tier.
 
+     --data-disk=DATA_DISK
+        Additional data disks for the TPU VM.
+
+        This flag must be repeated to provide multiple data disks. For example:
+
+            $ gcloud alpha compute tpus queued-resources create \
+                --data-disk \
+                source=projects/my-project/zones/us-central1-c/disks/my-disk,\
+            mode=read-only
+
+        The following keys are allowed:
+
+         source
+            Specifies the full path to an existing disk. Required. The disk
+            must be in the same zone.
+
+         mode
+            Specifies the mode in which to attach this disk. Valid options are
+            'read-write', 'read-only'. If not specified, the default is
+            'read-write'.
+
+     --description=DESCRIPTION
+        Text description of the TPU.
+
      --guaranteed
         If provided, the Node requested here will only be scheduled at the
         'guaranteed' tier.
@@ -128,6 +173,10 @@ OPTIONAL FLAGS
         Indicates that the IP addresses for the node should be internal. The
         default is that external IP addresses will be associated with the TPU
         workers.
+
+     --labels=[LABELS,...]
+        Resource labels to represent user-provided metadata. See
+        https://cloud.google.com/compute/docs/labeling-resources for details.
 
      --metadata=[METADATA,...]
         List of comma-separated metadata key-value pairs for the Cloud TPU VM
@@ -139,6 +188,16 @@ OPTIONAL FLAGS
 
      --network=NETWORK; default="default"
         Network that this TPU will be a part of.
+
+     --range=RANGE
+        CIDR range for the TPU.
+
+        The IP range that the TPU will select an IP address from. Must be in
+        CIDR notation and a /29 range, for example 192.168.0.0/29. Errors will
+        occur if the CIDR range has already been used for a currently existing
+        TPU, the CIDR range conflicts with any networks in the user's provided
+        network, or the provided network is peered with another network that is
+        using that CIDR range.
 
      --reservation-host-folder=RESERVATION_HOST_FOLDER
         The folder hosting the reservation that the TPU should use. Only one
@@ -164,6 +223,10 @@ OPTIONAL FLAGS
      --service-account=SERVICE_ACCOUNT
         Email address of the service account. If empty, default Google Compute
         Engine service account will be used.
+
+     --shielded-secure-boot
+        Specifies that the TPU instances are created with secure boot enabled.
+        This implicitly makes them Shielded VM instances.
 
      --subnetwork=SUBNETWORK
         Subnetwork that this TPU will be a part of.

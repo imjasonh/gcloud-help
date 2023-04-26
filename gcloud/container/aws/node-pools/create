@@ -6,10 +6,11 @@ SYNOPSIS
     gcloud container aws node-pools create
         (NODE_POOL : --cluster=CLUSTER --location=LOCATION)
         --config-encryption-kms-key-arn=CONFIG_ENCRYPTION_KMS_KEY_ARN
-        --iam-instance-profile=IAM_INSTANCE_PROFILE --node-version=NODE_VERSION
-        --subnet-id=SUBNET_ID [--annotations=ANNOTATION,[ANNOTATION,...]]
-        [--async] [--instance-type=INSTANCE_TYPE]
-        [--max-pods-per-node=MAX_PODS_PER_NODE]
+        --iam-instance-profile=IAM_INSTANCE_PROFILE
+        --max-pods-per-node=MAX_PODS_PER_NODE --node-version=NODE_VERSION
+        --subnet-id=SUBNET_ID (--max-nodes=MAX_NODES --min-nodes=MIN_NODES)
+        [--annotations=ANNOTATION,[ANNOTATION,...]] [--async]
+        [--instance-type=INSTANCE_TYPE]
         [--node-labels=NODE_LABEL,[NODE_LABEL,...]]
         [--node-taints=NODE_TAINT,[NODE_TAINT,...]]
         [--root-volume-iops=ROOT_VOLUME_IOPS]
@@ -21,7 +22,6 @@ SYNOPSIS
         [--validate-only]
         [--autoscaling-metrics-granularity=AUTOSCALING_METRICS_GRANULARITY
           : --autoscaling-metrics=[AUTOSCALING_METRIC,...]]
-        [--max-nodes=MAX_NODES --min-nodes=MIN_NODES]
         [--proxy-secret-arn=PROXY_SECRET_ARN
           --proxy-secret-version-id=PROXY_SECRET_VERSION_ID]
         [GCLOUD_WIDE_FLAG ...]
@@ -79,11 +79,30 @@ REQUIRED FLAGS
      --iam-instance-profile=IAM_INSTANCE_PROFILE
         Name or ARN of the IAM instance profile associated with the node pool.
 
+     --max-pods-per-node=MAX_PODS_PER_NODE
+        Maximum number of pods per node.
+
      --node-version=NODE_VERSION
         Kubernetes version to use for the node pool.
 
      --subnet-id=SUBNET_ID
         Subnet ID of an existing VNET to use for the node pool.
+
+     Node pool autoscaling
+
+     This must be specified.
+
+       --max-nodes=MAX_NODES
+          Maximum number of nodes in the node pool.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --min-nodes=MIN_NODES
+          Minimum number of nodes in the node pool.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
 
 OPTIONAL FLAGS
      --annotations=ANNOTATION,[ANNOTATION,...]
@@ -97,9 +116,6 @@ OPTIONAL FLAGS
 
        --instance-type=INSTANCE_TYPE
           AWS EC2 instance type for the node pool's nodes.
-
-     --max-pods-per-node=MAX_PODS_PER_NODE
-        Maximum number of pods per node.
 
      --node-labels=NODE_LABEL,[NODE_LABEL,...]
         Labels assigned to nodes of the node pool.
@@ -154,20 +170,6 @@ OPTIONAL FLAGS
           https://docs.aws.amazon.com/autoscaling/ec2/APIReference/API_EnableMetricsCollection.html.
           If granularity is specified but not any metrics, all metrics are
           enabled.
-
-     Node pool autoscaling
-
-       --max-nodes=MAX_NODES
-          Maximum number of nodes in the node pool.
-
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
-
-       --min-nodes=MIN_NODES
-          Minimum number of nodes in the node pool.
-
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
 
      Proxy config
 

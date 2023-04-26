@@ -105,12 +105,12 @@ SYNOPSIS
           | --local-ssd-count=LOCAL_SSD_COUNT
           | --local-ssd-volumes=[[count=COUNT],
           [type=TYPE],[format=FORMAT],...]]
+        [--location=LOCATION | --region=REGION | --zone=ZONE, -z ZONE]
         [--maintenance-window=START_TIME | --maintenance-window-end=TIME_STAMP
           --maintenance-window-recurrence=RRULE
           --maintenance-window-start=TIME_STAMP]
         [--password=PASSWORD --enable-basic-auth
           | --username=USERNAME, -u USERNAME]
-        [--region=REGION | --zone=ZONE, -z ZONE]
         [--reservation=RESERVATION --reservation-affinity=RESERVATION_AFFINITY]
         [--scopes=[SCOPE,...];
           default="gke-default" --service-account=SERVICE_ACCOUNT]
@@ -1162,11 +1162,12 @@ FLAGS
        --node-locations=ZONE,[ZONE,...]
           The set of zones in which the specified node footprint should be
           replicated. All zones must be in the same region as the cluster's
-          master(s), specified by the --zone or --region flag. Additionally,
-          for zonal clusters, --node-locations must contain the cluster's
-          primary zone. If not specified, all nodes will be in the cluster's
-          primary zone (for zonal clusters) or spread across three randomly
-          chosen zones within the cluster's region (for regional clusters).
+          master(s), specified by the -location, --zone, or --region flag.
+          Additionally, for zonal clusters, --node-locations must contain the
+          cluster's primary zone. If not specified, all nodes will be in the
+          cluster's primary zone (for zonal clusters) or spread across three
+          randomly chosen zones within the cluster's region (for regional
+          clusters).
 
           Note that NUM_NODES nodes will be created in each zone, such that if
           you specify --num-nodes=4 and choose two locations, 8 nodes will be
@@ -1176,7 +1177,7 @@ FLAGS
           example:
 
               $ gcloud alpha container clusters create example-cluster \
-                  --zone us-central1-a \
+                  --location us-central1-a \
                   --node-locations us-central1-a,us-central1-b
 
      Flags for Binary Authorization:
@@ -1713,6 +1714,19 @@ FLAGS
           zone. See https://cloud.google.com/compute/docs/disks/local-ssd for
           more information.
 
+     At most one of these can be specified:
+
+       --location=LOCATION
+          Compute zone or region (e.g. us-central1-a or us-central1) for the
+          cluster.
+
+       --region=REGION
+          Compute region (e.g. us-central1) for the cluster.
+
+       --zone=ZONE, -z ZONE
+          Compute zone (e.g. us-central1-a) for the cluster. Overrides the
+          default compute/zone property value for this command invocation.
+
      One of either maintenance-window or the group of maintenance-window flags
      can be set.
 
@@ -1805,15 +1819,6 @@ FLAGS
             The user name to use for basic auth for the cluster. Use --password
             to specify a password; if not, the server will randomly generate
             one.
-
-     At most one of these can be specified:
-
-       --region=REGION
-          Compute region (e.g. us-central1) for the cluster.
-
-       --zone=ZONE, -z ZONE
-          Compute zone (e.g. us-central1-a) for the cluster. Overrides the
-          default compute/zone property value for this command invocation.
 
      Specifies the reservation for the default initial node pool.
 

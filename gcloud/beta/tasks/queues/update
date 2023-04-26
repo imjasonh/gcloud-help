@@ -4,6 +4,20 @@ NAME
 SYNOPSIS
     gcloud beta tasks queues update QUEUE [--location=LOCATION]
         [--type=TYPE; default="push"]
+        [--clear-http-header-override
+          | --http-header-override=HEADER_FIELD: HEADER_VALUE]
+        [--clear-http-method-override
+          | --http-method-override=HTTP_METHOD_OVERRIDE]
+        [--clear-http-oauth-service-account-email-override
+          | --http-oauth-service-account-email-override=HTTP_OAUTH_SERVICE_ACCOUNT_EMAIL_OVERRIDE]
+        [--clear-http-oauth-token-scope-override
+          | --http-oauth-token-scope-override=HTTP_OAUTH_TOKEN_SCOPE_OVERRIDE]
+        [--clear-http-oidc-service-account-email-override
+          | --http-oidc-service-account-email-override=HTTP_OIDC_SERVICE_ACCOUNT_EMAIL_OVERRIDE]
+        [--clear-http-oidc-token-audience-override
+          | --http-oidc-token-audience-override=HTTP_OIDC_TOKEN_AUDIENCE_OVERRIDE]
+        [--clear-http-uri-override
+          | --http-uri-override=KEY:VALUE,[KEY:VALUE,...]]
         [--clear-log-sampling-ratio | --log-sampling-ratio=LOG_SAMPLING_RATIO]
         [--clear-max-attempts | --max-attempts=MAX_ATTEMPTS]
         [--clear-max-backoff | --max-backoff=MAX_BACKOFF]
@@ -43,6 +57,90 @@ FLAGS
      --type=TYPE; default="push"
         Specifies the type of queue. Only available options are 'push' and
         'pull'. The default option is 'push'.
+
+     At most one of these can be specified:
+
+       --clear-http-header-override
+          Clear the field corresponding to --http-header-override.
+
+       --http-header-override=HEADER_FIELD: HEADER_VALUE
+          If provided, the specified HTTP headers override the existing headers
+          for all tasks in the queue. If a task has a header with the same Key
+          as a queue-level header override, then the value of the task header
+          will be overriden with the value of the queue-level header.
+          Otherwise, the queue-level header will be added to the task headers.
+          Header values can contain commas. This flag can be repeated. Repeated
+          header fields will have their values overridden.
+
+     At most one of these can be specified:
+
+       --clear-http-method-override
+          Clear the field corresponding to --http-method-override.
+
+       --http-method-override=HTTP_METHOD_OVERRIDE
+          If provided, the specified HTTP method type override is used for all
+          tasks in the queue, no matter what is set at the task-level.
+
+     At most one of these can be specified:
+
+       --clear-http-oauth-service-account-email-override
+          Clear the field corresponding to
+          --http-oauth-service-account-email-override.
+
+       --http-oauth-service-account-email-override=HTTP_OAUTH_SERVICE_ACCOUNT_EMAIL_OVERRIDE
+          The service account email to be used for generating an OAuth2 access
+          token to be included in the request sent to the target when executing
+          the task. The service account must be within the same project as the
+          queue. The caller must have 'iam.serviceAccounts.actAs' permission
+          for the service account.
+
+     At most one of these can be specified:
+
+       --clear-http-oauth-token-scope-override
+          Clear the field corresponding to --http-oauth-token-scope-override.
+
+       --http-oauth-token-scope-override=HTTP_OAUTH_TOKEN_SCOPE_OVERRIDE
+          The scope to be used when generating an OAuth2 access token to be
+          included in the request sent to the target when executing the task.
+          If not specified, 'https://www.googleapis.com/auth/cloud-platform'
+          will be used.
+
+     At most one of these can be specified:
+
+       --clear-http-oidc-service-account-email-override
+          Clear the field corresponding to
+          --http-oidc-service-account-email-override.
+
+       --http-oidc-service-account-email-override=HTTP_OIDC_SERVICE_ACCOUNT_EMAIL_OVERRIDE
+          The service account email to be used for generating an OpenID Connect
+          token to be included in the request sent to the target when executing
+          the task. The service account must be within the same project as the
+          queue. The caller must have 'iam.serviceAccounts.actAs' permission
+          for the service account.
+
+     At most one of these can be specified:
+
+       --clear-http-oidc-token-audience-override
+          Clear the field corresponding to --http-oidc-token-audience-override.
+
+       --http-oidc-token-audience-override=HTTP_OIDC_TOKEN_AUDIENCE_OVERRIDE
+          The audience to be used when generating an OpenID Connect token to be
+          included in the request sent to the target when executing the task.
+          If not specified, the URI specified in the target will be used.
+
+     At most one of these can be specified:
+
+       --clear-http-uri-override
+          Clear the field corresponding to --http-uri-override.
+
+       --http-uri-override=KEY:VALUE,[KEY:VALUE,...]
+          If provided, the specified HTTP target URI override is used for all
+          tasks in the queue depending on what is set as the mode. Allowed
+          values for mode are: ALWAYS, IF_NOT_EXISTS. If not set, mode defaults
+          to ALWAYS.
+
+          KEY must be at least one of: [scheme, host, port, path, query, mode].
+          Any missing keys will use the default.
 
      At most one of these can be specified:
 

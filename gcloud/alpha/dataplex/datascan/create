@@ -3,7 +3,9 @@ NAME
 
 SYNOPSIS
     gcloud alpha dataplex datascan create (DATASCAN : --location=LOCATION)
-        --data-source-entity=DATA_SOURCE_ENTITY --scan-type=SCAN_TYPE
+        --scan-type=SCAN_TYPE
+        (--data-source-entity=DATA_SOURCE_ENTITY
+          | --data-source-resource=DATA_SOURCE_RESOURCE)
         [--data-quality-spec-file=DATA_QUALITY_SPEC_FILE]
         [--description=DESCRIPTION] [--display-name=DISPLAY_NAME]
         [--labels=[KEY=VALUE,...]] [--async | --validate-only]
@@ -54,16 +56,21 @@ POSITIONAL ARGUMENTS
           ▸ set the property dataplex/location.
 
 REQUIRED FLAGS
+     --scan-type=SCAN_TYPE
+        Specify the type of scan. SCAN_TYPE must be one of: PROFILE, QUALITY.
+
      Data source for the Datascan.
 
-     This must be specified.
+     Exactly one of these must be specified:
 
        --data-source-entity=DATA_SOURCE_ENTITY
           Dataplex entity that contains the data for the Datascan, of the form:
           projects/{project_number}/locations/{location_id}/lakes/{lake_id}/zones/{zone_id}/entities/{entity_id}.
 
-     --scan-type=SCAN_TYPE
-        Specify the type of scan. SCAN_TYPE must be one of: PROFILE, QUALITY.
+       --data-source-resource=DATA_SOURCE_RESOURCE
+          Service-qualified full resource name of the cloud resource that
+          contains the data for the Datascan, of the form:
+          //bigquery.googleapis.com/projects/{project_number}/datasets/{dataset_id}/tables/{table_id}.
 
 OPTIONAL FLAGS
      Additional configuration arguments for the scan.

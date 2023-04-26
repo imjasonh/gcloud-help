@@ -5,17 +5,18 @@ NAME
 SYNOPSIS
     gcloud alpha container azure node-pools create
         (NODE_POOL : --cluster=CLUSTER --location=LOCATION)
-        --node-version=NODE_VERSION --ssh-public-key=SSH_PUBLIC_KEY
-        --subnet-id=SUBNET_ID [--annotations=ANNOTATION,[ANNOTATION,...]]
-        [--async] [--azure-availability-zone=AZURE_AVAILABILITY_ZONE]
+        --max-pods-per-node=MAX_PODS_PER_NODE --node-version=NODE_VERSION
+        --ssh-public-key=SSH_PUBLIC_KEY --subnet-id=SUBNET_ID
+        (--max-nodes=MAX_NODES --min-nodes=MIN_NODES)
+        [--annotations=ANNOTATION,[ANNOTATION,...]] [--async]
+        [--azure-availability-zone=AZURE_AVAILABILITY_ZONE]
         [--config-encryption-key-id=CONFIG_ENCRYPTION_KEY_ID]
         [--config-encryption-public-key=CONFIG_ENCRYPTION_PUBLIC_KEY]
-        [--image-type=IMAGE_TYPE] [--max-pods-per-node=MAX_PODS_PER_NODE]
+        [--enable-autorepair] [--image-type=IMAGE_TYPE]
         [--node-labels=NODE_LABEL,[NODE_LABEL,...]]
         [--node-taints=NODE_TAINT,[NODE_TAINT,...]]
         [--root-volume-size=ROOT_VOLUME_SIZE] [--tags=TAG,[TAG,...]]
         [--validate-only] [--vm-size=VM_SIZE]
-        [--max-nodes=MAX_NODES --min-nodes=MIN_NODES]
         [--proxy-resource-group-id=PROXY_RESOURCE_GROUP_ID
           --proxy-secret-id=PROXY_SECRET_ID] [GCLOUD_WIDE_FLAG ...]
 
@@ -66,6 +67,9 @@ POSITIONAL ARGUMENTS
           ▸ set the property container_azure/location.
 
 REQUIRED FLAGS
+     --max-pods-per-node=MAX_PODS_PER_NODE
+        Maximum number of pods per node.
+
      --node-version=NODE_VERSION
         Kubernetes version to use for the node pool.
 
@@ -74,6 +78,22 @@ REQUIRED FLAGS
 
      --subnet-id=SUBNET_ID
         Subnet ID of an existing VNET to use for the node pool.
+
+     Node pool autoscaling
+
+     This must be specified.
+
+       --max-nodes=MAX_NODES
+          Maximum number of nodes in the node pool.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --min-nodes=MIN_NODES
+          Minimum number of nodes in the node pool.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
 
 OPTIONAL FLAGS
      --annotations=ANNOTATION,[ANNOTATION,...]
@@ -94,6 +114,14 @@ OPTIONAL FLAGS
         RSA key of the Azure Key Vault public key to use for encrypting config
         data.
 
+     --enable-autorepair
+        Enable node autorepair feature for a node pool. Use
+        --no-enable-autorepair to disable.
+
+            $ gcloud alpha container azure node-pools create --enable-autorepair
+
+        Node autorepair is disabled by default.
+
      --image-type=IMAGE_TYPE
         Set the OS image type to use on node pool instances.
 
@@ -101,9 +129,6 @@ OPTIONAL FLAGS
 
             $ gcloud alpha container azure node-pools create --image-type=windows
             $ gcloud alpha container azure node-pools create --image-type=ubuntu
-
-     --max-pods-per-node=MAX_PODS_PER_NODE
-        Maximum number of pods per node.
 
      --node-labels=NODE_LABEL,[NODE_LABEL,...]
         Labels assigned to nodes of the node pool.
@@ -129,20 +154,6 @@ OPTIONAL FLAGS
 
      --vm-size=VM_SIZE
         Azure Virtual Machine Size (e.g. Standard_DS1_v).
-
-     Node pool autoscaling
-
-       --max-nodes=MAX_NODES
-          Maximum number of nodes in the node pool.
-
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
-
-       --min-nodes=MIN_NODES
-          Minimum number of nodes in the node pool.
-
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
 
      Proxy config
 

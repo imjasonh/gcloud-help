@@ -6,11 +6,12 @@ SYNOPSIS
     gcloud alpha container aws node-pools create
         (NODE_POOL : --cluster=CLUSTER --location=LOCATION)
         --config-encryption-kms-key-arn=CONFIG_ENCRYPTION_KMS_KEY_ARN
-        --iam-instance-profile=IAM_INSTANCE_PROFILE --node-version=NODE_VERSION
-        --subnet-id=SUBNET_ID [--annotations=ANNOTATION,[ANNOTATION,...]]
-        [--async] [--image-type=IMAGE_TYPE]
+        --iam-instance-profile=IAM_INSTANCE_PROFILE
+        --max-pods-per-node=MAX_PODS_PER_NODE --node-version=NODE_VERSION
+        --subnet-id=SUBNET_ID (--max-nodes=MAX_NODES --min-nodes=MIN_NODES)
+        [--annotations=ANNOTATION,[ANNOTATION,...]] [--async]
+        [--enable-autorepair] [--image-type=IMAGE_TYPE]
         [--instance-placement=INSTANCE_PLACEMENT]
-        [--max-pods-per-node=MAX_PODS_PER_NODE]
         [--node-labels=NODE_LABEL,[NODE_LABEL,...]]
         [--node-taints=NODE_TAINT,[NODE_TAINT,...]]
         [--root-volume-iops=ROOT_VOLUME_IOPS]
@@ -24,7 +25,6 @@ SYNOPSIS
           : --autoscaling-metrics=[AUTOSCALING_METRIC,...]]
         [--instance-type=INSTANCE_TYPE
           | --spot-instance-types=[INSTANCE_TYPE,...]]
-        [--max-nodes=MAX_NODES --min-nodes=MIN_NODES]
         [--proxy-secret-arn=PROXY_SECRET_ARN
           --proxy-secret-version-id=PROXY_SECRET_VERSION_ID]
         [GCLOUD_WIDE_FLAG ...]
@@ -82,11 +82,30 @@ REQUIRED FLAGS
      --iam-instance-profile=IAM_INSTANCE_PROFILE
         Name or ARN of the IAM instance profile associated with the node pool.
 
+     --max-pods-per-node=MAX_PODS_PER_NODE
+        Maximum number of pods per node.
+
      --node-version=NODE_VERSION
         Kubernetes version to use for the node pool.
 
      --subnet-id=SUBNET_ID
         Subnet ID of an existing VNET to use for the node pool.
+
+     Node pool autoscaling
+
+     This must be specified.
+
+       --max-nodes=MAX_NODES
+          Maximum number of nodes in the node pool.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --min-nodes=MIN_NODES
+          Minimum number of nodes in the node pool.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
 
 OPTIONAL FLAGS
      --annotations=ANNOTATION,[ANNOTATION,...]
@@ -95,6 +114,14 @@ OPTIONAL FLAGS
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
+
+     --enable-autorepair
+        Enable node autorepair feature for a node pool. Use
+        --no-enable-autorepair to disable.
+
+            $ gcloud alpha container aws node-pools create --enable-autorepair
+
+        Node autorepair is disabled by default.
 
      --image-type=IMAGE_TYPE
         Set the OS image type to use on node pool instances.
@@ -107,9 +134,6 @@ OPTIONAL FLAGS
      --instance-placement=INSTANCE_PLACEMENT
         Type of the tenancy. INSTANCE_PLACEMENT must be one of: dedicated,
         default, host.
-
-     --max-pods-per-node=MAX_PODS_PER_NODE
-        Maximum number of pods per node.
 
      --node-labels=NODE_LABEL,[NODE_LABEL,...]
         Labels assigned to nodes of the node pool.
@@ -178,20 +202,6 @@ OPTIONAL FLAGS
           memory. You can use the Amazon EC2 Instance Selector tool
           (https://github.com/aws/amazon-ec2-instance-selector) to choose
           instance types with matching CPU and memory configurations.
-
-     Node pool autoscaling
-
-       --max-nodes=MAX_NODES
-          Maximum number of nodes in the node pool.
-
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
-
-       --min-nodes=MIN_NODES
-          Minimum number of nodes in the node pool.
-
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
 
      Proxy config
 

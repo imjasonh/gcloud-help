@@ -4,7 +4,7 @@ NAME
 SYNOPSIS
     gcloud run jobs create [JOB] --image=IMAGE [--args=[ARG,...]]
         [--binary-authorization=POLICY] [--breakglass=JUSTIFICATION]
-        [--command=[COMMAND,...]] [--cpu=CPU] [--execute-now] [--key=KEY]
+        [--command=[COMMAND,...]] [--cpu=CPU] [--key=KEY]
         [--labels=[KEY=VALUE,...]] [--max-retries=MAX_RETRIES]
         [--memory=MEMORY] [--parallelism=PARALLELISM] [--region=REGION]
         [--service-account=SERVICE_ACCOUNT]
@@ -12,7 +12,7 @@ SYNOPSIS
         [--set-secrets=[KEY=SECRET_NAME:SECRET_VERSION,...]]
         [--task-timeout=TASK_TIMEOUT] [--tasks=TASKS; default=1]
         [--vpc-connector=VPC_CONNECTOR] [--vpc-egress=VPC_EGRESS]
-        [--async | --wait]
+        [--async | --execute-now --wait]
         [--env-vars-file=FILE_PATH | --set-env-vars=[KEY=VALUE,...]]
         [GCLOUD_WIDE_FLAG ...]
 
@@ -81,9 +81,6 @@ OPTIONAL FLAGS
         Cloud Run (fully managed) supports values 1, 2 and 4. For Cloud Run
         (fully managed), 4 cpus also requires a minimum 2Gi --memory value.
         Examples 2, 2.0, 2000m
-
-     --execute-now
-        Execute the job immediately after creation.
 
      --key=KEY
         CMEK key reference to encrypt the container with.
@@ -161,10 +158,17 @@ OPTIONAL FLAGS
           Return immediately, without waiting for the operation in progress to
           complete.
 
-       --wait
-          Wait until the execution has completed running before exiting. If not
-          set, gcloud exits successfully when the execution has started.
-          Implies --execute-now.
+       --async cannot be used if executing the job after the update.
+
+         --execute-now
+            Execute the job immediately after the creation or update completes.
+            gcloud exits once the job has started unless the --wait flag is
+            set.
+
+         --wait
+            Wait until the execution has completed running before exiting. If
+            not set, gcloud exits successfully when the execution has started.
+            Implies --execute-now.
 
      At most one of these can be specified:
 

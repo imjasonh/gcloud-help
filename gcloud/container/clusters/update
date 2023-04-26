@@ -71,10 +71,11 @@ SYNOPSIS
         [--cloud-run-config=[load-balancer-type=EXTERNAL,...]]
         [--master-authorized-networks=NETWORK,[NETWORK,...]]
         [--node-pool=NODE_POOL]
+        [--location=LOCATION | --region=REGION | --zone=ZONE, -z ZONE]
         [--location-policy=LOCATION_POLICY --max-nodes=MAX_NODES
           --min-nodes=MIN_NODES
           --total-max-nodes=TOTAL_MAX_NODES --total-min-nodes=TOTAL_MIN_NODES]
-        [--region=REGION | --zone=ZONE, -z ZONE] [GCLOUD_WIDE_FLAG ...]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Update cluster settings for an existing container cluster.
@@ -339,11 +340,12 @@ REQUIRED FLAGS
        --node-locations=ZONE,[ZONE,...]
           The set of zones in which the specified node footprint should be
           replicated. All zones must be in the same region as the cluster's
-          master(s), specified by the --zone or --region flag. Additionally,
-          for zonal clusters, --node-locations must contain the cluster's
-          primary zone. If not specified, all nodes will be in the cluster's
-          primary zone (for zonal clusters) or spread across three randomly
-          chosen zones within the cluster's region (for regional clusters).
+          master(s), specified by the -location, --zone, or --region flag.
+          Additionally, for zonal clusters, --node-locations must contain the
+          cluster's primary zone. If not specified, all nodes will be in the
+          cluster's primary zone (for zonal clusters) or spread across three
+          randomly chosen zones within the cluster's region (for regional
+          clusters).
 
           Note that NUM_NODES nodes will be created in each zone, such that if
           you specify --num-nodes=4 and choose two locations, 8 nodes will be
@@ -353,7 +355,7 @@ REQUIRED FLAGS
           example:
 
               $ gcloud container clusters update example-cluster \
-                  --zone us-central1-a \
+                  --location us-central1-a \
                   --node-locations us-central1-a,us-central1-b
 
        --notification-config=[pubsub=ENABLED|DISABLED,pubsub-topic=TOPIC,...]
@@ -1054,6 +1056,19 @@ OPTIONAL FLAGS
      --node-pool=NODE_POOL
         Node pool to be updated.
 
+     At most one of these can be specified:
+
+       --location=LOCATION
+          Compute zone or region (e.g. us-central1-a or us-central1) for the
+          cluster.
+
+       --region=REGION
+          Compute region (e.g. us-central1) for the cluster.
+
+       --zone=ZONE, -z ZONE
+          Compute zone (e.g. us-central1-a) for the cluster. Overrides the
+          default compute/zone property value for this command invocation.
+
      Cluster autoscaling
 
        --location-policy=LOCATION_POLICY
@@ -1094,15 +1109,6 @@ OPTIONAL FLAGS
           Minimum number of all nodes to which the node pool specified by
           --node-pool (or default node pool if unspecified) can scale. Ignored
           unless --enable-autoscaling is also specified.
-
-     At most one of these can be specified:
-
-       --region=REGION
-          Compute region (e.g. us-central1) for the cluster.
-
-       --zone=ZONE, -z ZONE
-          Compute zone (e.g. us-central1-a) for the cluster. Overrides the
-          default compute/zone property value for this command invocation.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

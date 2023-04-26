@@ -6,7 +6,9 @@ SYNOPSIS
     gcloud beta compute target-https-proxies create NAME --url-map=URL_MAP
         [--certificate-map=CERTIFICATE_MAP] [--description=DESCRIPTION]
         [--quic-override=QUIC_OVERRIDE; default="NONE"]
-        [--ssl-certificates=SSL_CERTIFICATE,[...]] [--ssl-policy=SSL_POLICY]
+        [--ssl-policy=SSL_POLICY]
+        [--certificate-manager-certificates=[CERTIFICATE_MANAGER_CERTIFICATES,
+          ...] | --ssl-certificates=SSL_CERTIFICATE,[...]]
         [--global | --region=REGION]
         [--global-ssl-certificates
           | --ssl-certificates-region=SSL_CERTIFICATES_REGION]
@@ -83,18 +85,38 @@ OPTIONAL FLAGS
          NONE
             Allows Google to control when QUIC is rolled out.
 
-     --ssl-certificates=SSL_CERTIFICATE,[...]
-        References to at most 15 SSL certificate resources that are used for
-        server-side authentication. The first SSL certificate in this list is
-        considered the primary SSL certificate associated with the load
-        balancer. The SSL certificates must exist and cannot be deleted while
-        referenced by a target HTTPS proxy.
-
      --ssl-policy=SSL_POLICY
         A reference to an SSL policy resource that defines the server-side
         support for SSL features and affects the connections between clients
         and the HTTPS proxy load balancer. The SSL policy must exist and cannot
         be deleted while referenced by a target HTTPS proxy.
+
+     At most one of these can be specified:
+
+       Certificate resource - certificate-manager-certificates to attach. This
+       represents a Cloud resource. (NOTE) Some attributes are not given
+       arguments in this group but can be set in other ways. To set the project
+       attribute:
+        ▸ provide the argument --certificate-manager-certificates on the
+          command line with a fully specified name;
+        ▸ provide the argument --project on the command line;
+        ▸ set the property core/project. To set the location attribute:
+        ▸ provide the argument --certificate-manager-certificates on the
+          command line with a fully specified name;
+        ▸ default value of location is [global].
+
+         --certificate-manager-certificates=[CERTIFICATE_MANAGER_CERTIFICATES,...]
+            IDs of the certificates or fully qualified identifiers for the
+            certificates. To set the certificate attribute:
+            ▫ provide the argument --certificate-manager-certificates on the
+              command line.
+
+       --ssl-certificates=SSL_CERTIFICATE,[...]
+          References to at most 15 SSL certificate resources that are used for
+          server-side authentication. The first SSL certificate in this list is
+          considered the primary SSL certificate associated with the load
+          balancer. The SSL certificates must exist and cannot be deleted while
+          referenced by a target HTTPS proxy.
 
      At most one of these can be specified:
 
