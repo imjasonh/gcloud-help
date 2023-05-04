@@ -4,7 +4,8 @@ NAME
 
 SYNOPSIS
     gcloud alpha compute resource-policies update snapshot-schedule NAME
-        [--description=DESCRIPTION] [--region=REGION]
+        [--description=DESCRIPTION] [--max-retention-days=MAX_RETENTION_DAYS]
+        [--on-source-disk-delete=ON_SOURCE_DISK_DELETE] [--region=REGION]
         [--snapshot-labels=[KEY=VALUE,...]]
         [--weekly-schedule-from-file=WEEKLY_CYCLE_FROM_FILE
           | --start-time=START_TIME (--daily-schedule | --hourly-schedule=HOURS
@@ -13,14 +14,6 @@ SYNOPSIS
 DESCRIPTION
     (ALPHA) Update a Compute Engine Snapshot Schedule Resource Policy.
 
-EXAMPLES
-    The following command updates a Compute Engine Snapshot Schedule Resource
-    Policy to take a daily snapshot taken at 13:00 UTC
-
-        $ gcloud alpha compute resource-policies update snapshot-schedule \
-            my-resource-policy --region=REGION --start-time=13:00 \
-            --daily-schedule
-
 POSITIONAL ARGUMENTS
      NAME
         Name of the resource policy to operate on.
@@ -28,6 +21,20 @@ POSITIONAL ARGUMENTS
 FLAGS
      --description=DESCRIPTION
         An optional, textual description for the backend.
+
+     --max-retention-days=MAX_RETENTION_DAYS
+        Maximum number of days snapshot can be retained.
+
+     --on-source-disk-delete=ON_SOURCE_DISK_DELETE
+        Retention behavior of automatic snapshots in the event of source disk
+        deletion. ON_SOURCE_DISK_DELETE must be one of:
+
+         apply-retention-policy
+            Continue to apply the retention window to automatically-created
+            snapshots when the source disk is deleted.
+         keep-auto-snapshots
+            Keep automatically-created snapshots when the source disk is
+            deleted. This is the default behavior.
 
      --region=REGION
         Region of the resource policy to operate on. If not specified, you

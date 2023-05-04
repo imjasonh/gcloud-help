@@ -4,23 +4,29 @@ NAME
 
 SYNOPSIS
     gcloud alpha firestore databases create --location=LOCATION
-        [--database=DATABASE; default="(default)"]
+        [--database=DATABASE; default="(default)"] [--enable-delete-protection]
         [--type=TYPE; default="firestore-native"] [GCLOUD_WIDE_FLAG ...]
 
 EXAMPLES
-    To create Firestore Native database in nam5.
+    To create a Firestore Native database in nam5.
 
         $ gcloud alpha firestore databases create --location=nam5
 
-    To create Datastore Mode database in us-east1.
+    To create a Datastore Mode database in us-east1.
 
         $ gcloud alpha firestore databases create --location=us-east1 \
           --type=datastore-mode
 
-    To create Datastore Mode database in us-east1 with a databaseId foo.
+    To create a Datastore Mode database in us-east1 with a database ID foo.
 
-        $ gcloud alpha firestore databases create --database=mytest \
+        $ gcloud alpha firestore databases create --database=foo \
           --location=us-east1 --type=datastore-mode
+
+    To create a Firestore Native database in nam5 with delete protection
+    enabled.
+
+        $ gcloud alpha firestore databases create --location=nam5 \
+          --enable-delete-protection
 
 REQUIRED FLAGS
      --location=LOCATION
@@ -39,6 +45,14 @@ OPTIONAL FLAGS
             not be UUID-like /[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/.
 
             Using "(default)" database ID is also allowed.
+
+     --enable-delete-protection
+        Whether to enable delete protection on the created database.
+
+            If set to true, delete protection of the new database will be enabled
+            and delete operations will fail unless delete protection is disabled.
+
+            Default to false.
 
      --type=TYPE; default="firestore-native"
         The type of the database. TYPE must be one of: firestore-native,

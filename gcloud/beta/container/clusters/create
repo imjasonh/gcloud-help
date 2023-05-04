@@ -28,8 +28,9 @@ SYNOPSIS
         [--enable-google-cloud-access] [--enable-gvnic]
         [--enable-identity-service] [--enable-image-streaming]
         [--enable-intra-node-visibility] [--enable-ip-alias]
-        [--enable-kubernetes-alpha] [--enable-l4-ilb-subsetting]
-        [--enable-legacy-authorization]
+        [--enable-kubernetes-alpha]
+        [--enable-kubernetes-unstable-apis=API,[API,...]]
+        [--enable-l4-ilb-subsetting] [--enable-legacy-authorization]
         [--enable-logging-monitoring-system-only] [--enable-managed-prometheus]
         [--enable-master-global-access] [--enable-network-policy]
         [--enable-pod-security-policy] [--enable-service-externalips]
@@ -481,6 +482,11 @@ FLAGS
         Alpha clusters are not covered by the Kubernetes Engine SLA and should
         not be used for production workloads.
 
+     --enable-kubernetes-unstable-apis=API,[API,...]
+        Enable Kubernetes beta API features on this cluster. Beta APIs are not
+        expected to be production ready and should be avoided in
+        production-grade environments.
+
      --enable-l4-ilb-subsetting
         Enable Subsetting for L4 ILB services created on this cluster.
 
@@ -909,9 +915,16 @@ FLAGS
      --release-channel=CHANNEL
         Release channel a cluster is subscribed to.
 
-        When a cluster is subscribed to a release channel, Google maintains
-        both the master version and the node version. Node auto-upgrade
-        defaults to true and cannot be disabled.
+        If left unspecified and a version is specified, the cluster is enrolled
+        in the most mature release channel where the version is available
+        (first checking STABLE, then REGULAR, and finally RAPID). Otherwise, if
+        no release channel and no version is specified, the cluster is enrolled
+        in the REGULAR channel with its default version. When a cluster is
+        subscribed to a release channel, Google maintains both the master
+        version and the node version. Node auto-upgrade is enabled by default
+        for release channel clusters and can be controlled via upgrade-scope
+        exclusions
+        (https://cloud.google.com/kubernetes-engine/docs/concepts/maintenance-windows-and-exclusions#scope_of_maintenance_to_exclude).
 
         CHANNEL must be one of:
 
@@ -1638,14 +1651,14 @@ FLAGS
 
           'count' must be between 1-8
 
-     New nodes, including ones created by resize or recreate, will have these
-     local SSDs.
+          New nodes, including ones created by resize or recreate, will have
+          these local SSDs.
 
-     Local SSDs have a fixed 375 GB capacity per device. The number of disks
-     that can be attached to an instance is limited by the maximum number of
-     disks available on a machine, which differs by compute zone. See
-     https://cloud.google.com/compute/docs/disks/local-ssd for more
-     information.
+          Local SSDs have a fixed 375 GB capacity per device. The number of
+          disks that can be attached to an instance is limited by the maximum
+          number of disks available on a machine, which differs by compute
+          zone. See https://cloud.google.com/compute/docs/disks/local-ssd for
+          more information.
 
        --local-ssd-count=LOCAL_SSD_COUNT
           The number of local SSD disks to provision on each node, formatted
@@ -1673,70 +1686,69 @@ FLAGS
      One of either maintenance-window or the group of maintenance-window flags
      can be set.
 
-    At most one of these can be specified:
+     At most one of these can be specified:
 
-         --maintenance-window=START_TIME
-            Set a time of day when you prefer maintenance to start on this
-            cluster. For example:
+       --maintenance-window=START_TIME
+          Set a time of day when you prefer maintenance to start on this
+          cluster. For example:
 
-                $ gcloud beta container clusters create example-cluster \
-                    --maintenance-window=12:43
+              $ gcloud beta container clusters create example-cluster \
+                  --maintenance-window=12:43
 
-            The time corresponds to the UTC time zone, and must be in HH:MM
-            format.
+          The time corresponds to the UTC time zone, and must be in HH:MM
+          format.
 
-            Non-emergency maintenance will occur in the 4 hour block starting
-            at the specified time.
+          Non-emergency maintenance will occur in the 4 hour block starting at
+          the specified time.
 
-            This is mutually exclusive with the recurring maintenance windows
-            and will overwrite any existing window. Compatible with maintenance
-            exclusions.
+          This is mutually exclusive with the recurring maintenance windows and
+          will overwrite any existing window. Compatible with maintenance
+          exclusions.
 
-         Set a flexible maintenance window by specifying a window that recurs
-         per an RFC 5545 RRULE. Non-emergency maintenance will occur in the
-         recurring windows.
+       Set a flexible maintenance window by specifying a window that recurs per
+       an RFC 5545 RRULE. Non-emergency maintenance will occur in the recurring
+       windows.
 
-         Examples:
+       Examples:
 
-         For a 9-5 Mon-Wed UTC-4 maintenance window:
+       For a 9-5 Mon-Wed UTC-4 maintenance window:
 
-             $ gcloud beta container clusters create example-cluster \
-                 --maintenance-window-start=2000-01-01T09:00:00-04:00 \
-                 --maintenance-window-end=2000-01-01T17:00:00-04:00 \
-                 --maintenance-window-recurrence='FREQ=WEEKLY;BYDAY=MO,TU,WE'
+           $ gcloud beta container clusters create example-cluster \
+               --maintenance-window-start=2000-01-01T09:00:00-04:00 \
+               --maintenance-window-end=2000-01-01T17:00:00-04:00 \
+               --maintenance-window-recurrence='FREQ=WEEKLY;BYDAY=MO,TU,WE'
 
-         For a daily window from 22:00 - 04:00 UTC:
+       For a daily window from 22:00 - 04:00 UTC:
 
-             $ gcloud beta container clusters create example-cluster \
-                 --maintenance-window-start=2000-01-01T22:00:00Z \
-                 --maintenance-window-end=2000-01-02T04:00:00Z \
-                 --maintenance-window-recurrence=FREQ=DAILY
+           $ gcloud beta container clusters create example-cluster \
+               --maintenance-window-start=2000-01-01T22:00:00Z \
+               --maintenance-window-end=2000-01-02T04:00:00Z \
+               --maintenance-window-recurrence=FREQ=DAILY
 
-           --maintenance-window-end=TIME_STAMP
-              End time of the first window (can occur in the past). Must take
-              place after the start time. The difference in start and end time
-              specifies the length of each recurrence. See $ gcloud topic
-              datetimes for information on time formats.
+         --maintenance-window-end=TIME_STAMP
+            End time of the first window (can occur in the past). Must take
+            place after the start time. The difference in start and end time
+            specifies the length of each recurrence. See $ gcloud topic
+            datetimes for information on time formats.
 
-              This flag argument must be specified if any of the other
-              arguments in this group are specified.
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
 
-           --maintenance-window-recurrence=RRULE
-              An RFC 5545 RRULE, specifying how the window will recur. Note
-              that minimum requirements for maintenance periods will be
-              enforced. Note that FREQ=SECONDLY, MINUTELY, and HOURLY are not
-              supported.
+         --maintenance-window-recurrence=RRULE
+            An RFC 5545 RRULE, specifying how the window will recur. Note that
+            minimum requirements for maintenance periods will be enforced. Note
+            that FREQ=SECONDLY, MINUTELY, and HOURLY are not supported.
 
-              This flag argument must be specified if any of the other
-              arguments in this group are specified.
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
 
-           --maintenance-window-start=TIME_STAMP
-              Start time of the first window (can occur in the past). The start
-              time influences when the window will start for recurrences. See $
-              gcloud topic datetimes for information on time formats.
+         --maintenance-window-start=TIME_STAMP
+            Start time of the first window (can occur in the past). The start
+            time influences when the window will start for recurrences. See $
+            gcloud topic datetimes for information on time formats.
 
-              This flag argument must be specified if any of the other
-              arguments in this group are specified.
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
 
      Basic auth
 

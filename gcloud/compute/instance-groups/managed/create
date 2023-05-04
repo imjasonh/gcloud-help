@@ -31,9 +31,23 @@ EXAMPLES
         example-managed-instance-group --zone=us-central1-a \
         --template=example-global-instance-template --size=1
 
-    will create one managed instance group called
-    'example-managed-instance-group' in the us-central1-a zone with global
-    instance template resource: 'example-global-instance-template'.
+    will create a managed instance group called
+    'example-managed-instance-group' in the us-central1-a zone with a global
+    instance template resource 'example-global-instance-template'.
+
+    To use a regional instance template, specify the full or partial URL of the
+    template.
+
+    Running:
+
+        $ gcloud compute instance-groups managed create \
+        example-managed-instance-group --zone=us-central1-a \
+        --template=projects/example-project/regions/us-central1/\
+        instanceTemplates/example-regional-instance-template --size=1
+
+    will create a managed instance group called
+    'example-managed-instance-group' in the us-central1-a zone with a regional
+    instance template resource 'example-regional-instance-template'.
 
 POSITIONAL ARGUMENTS
      NAME
@@ -44,7 +58,8 @@ REQUIRED FLAGS
         Initial number of instances you want in this group.
 
      --template=TEMPLATE
-        Specifies the instance template to use when creating new instances.
+        Specifies the instance template to use when creating new instances. An
+        instance template is either a global or regional resource.
 
 OPTIONAL FLAGS
      --base-instance-name=BASE_INSTANCE_NAME
@@ -177,11 +192,11 @@ OPTIONAL FLAGS
 
               $ gcloud compute regions list
 
-     If you specify --zones flag this flag must be unspecified or specify the
-     region to which the zones you listed belong.
+          If you specify --zones flag this flag must be unspecified or specify
+          the region to which the zones you listed belong.
 
-     Overrides the default compute/region property value for this command
-     invocation.
+          Overrides the default compute/region property value for this command
+          invocation.
 
        --zone=ZONE
           Zone of the managed instance group to create. If not specified, you

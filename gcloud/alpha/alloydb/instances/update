@@ -10,7 +10,8 @@ SYNOPSIS
         [--insights-config-query-string-length=INSIGHTS_CONFIG_QUERY_STRING_LENGTH]
         [--[no-]insights-config-record-application-tags]
         [--[no-]insights-config-record-client-address]
-        [--read-pool-node-count=READ_POOL_NODE_COUNT] [GCLOUD_WIDE_FLAG ...]
+        [--read-pool-node-count=READ_POOL_NODE_COUNT]
+        [--update-mode=UPDATE_MODE] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Updates an AlloyDB instance within a given cluster.
@@ -40,13 +41,16 @@ OPTIONAL FLAGS
         complete.
 
      --availability-type=AVAILABILITY_TYPE
-        Specifies level of availability. AVAILABILITY_TYPE must be (only one
-        value is supported):
+        Specifies level of availability. AVAILABILITY_TYPE must be one of:
 
          REGIONAL
             Provides high availability and is recommended for production
             instances; instance automatically fails over to another zone within
             your selected region.
+         ZONAL
+            Provides zonal availability instances and is not recommended for
+            production instances; instance does not automatically fail over to
+            another zone.
 
      --cpu-count=CPU_COUNT
         Whole number value indicating how many vCPUs the machine should
@@ -85,6 +89,15 @@ OPTIONAL FLAGS
 
      --read-pool-node-count=READ_POOL_NODE_COUNT
         Read capacity, i.e. number of nodes in a read pool instance.
+
+     --update-mode=UPDATE_MODE
+        Specify the mode for updating the instance. If unspecified, the update
+        would follow a least disruptive approach. UPDATE_MODE must be (only one
+        value is supported):
+
+         FORCE_APPLY
+            Performs a forced update when applicable. This will be fast but may
+            incur a downtime.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

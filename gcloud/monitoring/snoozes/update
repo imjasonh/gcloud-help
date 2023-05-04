@@ -1,0 +1,104 @@
+NAME
+    gcloud monitoring snoozes update - updates a snooze
+
+SYNOPSIS
+    gcloud monitoring snoozes update SNOOZE
+        [--snooze-from-file=SNOOZE_FROM_FILE]
+        [--fields=[field,...] | --display-name=DISPLAY_NAME
+          --end-time=END_TIME --start-time=START_TIME] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Update a snooze.
+
+    If --snooze-from-file is specified, then the update rules depend on the
+    value of the (optional) --fields flag:
+
+      ▪ If --fields is specified, then only the specified fields of the
+        snooze are updated.
+      ▪ Else, all fields of the snooze are replaced. The updated snooze can
+        be modified further using the flags from the Snooze Settings group
+        below.
+
+    Otherwise, the snooze will be updated with the values specified in the
+    flags from the Snooze Settings group.
+
+    For information about the JSON/YAML format of a snooze:
+    https://cloud.google.com/monitoring/api/ref_v3/rest/v3/projects.snoozes
+
+EXAMPLES
+    To update a snooze time interval with command-line options, run:
+
+        $ gcloud monitoring snoozes update MY-SNOOZE \
+            --start-time=START_TIME --end-time=END_TIME
+
+    To update a snooze display name with a file, run:
+
+        $ gcloud monitoring snoozes update --snooze-from-file=MY-FILE \
+            --fields=display_name
+
+    Sample contents of MY-FILE:
+
+        criteria:
+          policies:
+          - projects/MY-PROJECT/alertPolicies/MY-POLICY
+        interval:
+          startTime: '2024-03-01T08:00:00Z'
+          endTime: '2024-03-08T04:59:59.500Z'
+        displayName: New Snooze with New Display Name
+
+POSITIONAL ARGUMENTS
+     Snooze resource - Name of the Snooze to be updated. This represents a
+     Cloud resource. (NOTE) Some attributes are not given arguments in this
+     group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument snooze on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       SNOOZE
+          ID of the Snooze or fully qualified identifier for the Snooze.
+
+          To set the snooze attribute:
+          ▸ provide the argument snooze on the command line.
+
+FLAGS
+     --snooze-from-file=SNOOZE_FROM_FILE
+        The path to a JSON or YAML file containing the snooze.
+
+     At most one of these can be specified:
+
+       --fields=[field,...]
+          The list of fields to update. Must specify --snooze-from-file if
+          using this flag.
+
+       Snooze Settings. If any of these are specified, they will overwrite
+       fields in the --snooze-from-file flags if specified.
+
+         --display-name=DISPLAY_NAME
+            The display name for the Snooze.
+
+         --end-time=END_TIME
+            The start time for the Snooze.
+
+         --start-time=START_TIME
+            The start time for the Snooze.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha monitoring snoozes update
+
+        $ gcloud beta monitoring snoozes update
+

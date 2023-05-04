@@ -3,8 +3,9 @@ NAME
 
 SYNOPSIS
     gcloud pubsub lite-topics publish (TOPIC : --location=LOCATION)
-        [--attributes=[KEY=VALUE,...]] [--message=MESSAGE]
-        [--ordering-key=ORDERING_KEY] [GCLOUD_WIDE_FLAG ...]
+        [--attributes=[KEY=VALUE,...]] [--event-time=DATETIME]
+        [--message=MESSAGE] [--ordering-key=ORDERING_KEY]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Publishes a message to the specified Pub/Sub Lite topic. This command
@@ -30,11 +31,19 @@ EXAMPLES
             --location=us-central1-a --message="Hello World!" \
             --ordering-key="key" --attributes=KEY1=VAL1,KEY2=VAL2
 
+    To publish a message to a Pub/Sub Lite topic with an event time, run:
+
+        $ gcloud pubsub lite-topics publish mytopic \
+            --location=us-central1-a --message="Hello World!" \
+            --event-time="2021-01-01T12:00:00Z"
+
 POSITIONAL ARGUMENTS
      Topic resource - The pubsub lite topic to publish to. The arguments in
      this group can be used to specify the attributes of this resource. (NOTE)
      Some attributes are not given arguments in this group but can be set in
-     other ways. To set the project attribute:
+     other ways.
+
+     To set the project attribute:
       ◆ provide the argument topic on the command line with a fully specified
         name;
       ◆ provide the argument --project on the command line;
@@ -43,8 +52,9 @@ POSITIONAL ARGUMENTS
      This must be specified.
 
        TOPIC
-          ID of the topic or fully qualified identifier for the topic. To set
-          the topic attribute:
+          ID of the topic or fully qualified identifier for the topic.
+
+          To set the topic attribute:
           ▸ provide the argument topic on the command line.
 
           This positional argument must be specified if any of the other
@@ -62,6 +72,10 @@ FLAGS
      --attributes=[KEY=VALUE,...]
         Comma-separated list of attributes. Each ATTRIBUTE has the form
         name="value". You can specify up to 100 attributes.
+
+     --event-time=DATETIME
+        A user-specified event time. Run gcloud topic datetimes for information
+        on time formats.
 
      --message=MESSAGE
         The body of the message to publish to the given topic name.

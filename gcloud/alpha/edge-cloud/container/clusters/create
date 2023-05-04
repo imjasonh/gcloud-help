@@ -7,13 +7,20 @@ SYNOPSIS
         (CLUSTER : --location=LOCATION) [--admin-users=ADMIN_USERS] [--async]
         [--cluster-ipv4-cidr=CLUSTER_IPV4_CIDR; default="10.0.0.0/17"]
         [--cluster-ipv6-cidr=CLUSTER_IPV6_CIDR]
+        [--control-plane-machine-filter=CONTROL_PLANE_MACHINE_FILTER]
+        [--control-plane-node-count=CONTROL_PLANE_NODE_COUNT]
+        [--control-plane-node-location=CONTROL_PLANE_NODE_LOCATION]
+        [--control-plane-shared-deployment-policy=CONTROL_PLANE_SHARED_DEPLOYMENT_POLICY]
         [--default-max-pods-per-node=DEFAULT_MAX_PODS_PER_NODE]
+        [--external-lb-ipv4-address-pools=[EXTERNAL_LB_IPV4_ADDRESS,...]]
         [--fleet-project=FLEET_PROJECT] [--labels=[KEY=VALUE,...]]
+        [--lro-timeout=LRO_TIMEOUT]
         [--maintenance-window-end=MAINTENANCE_WINDOW_END]
         [--maintenance-window-recurrence=MAINTENANCE_WINDOW_RECURRENCE]
         [--maintenance-window-start=MAINTENANCE_WINDOW_START]
         [--services-ipv4-cidr=SERVICES_IPV4_CIDR; default="10.96.0.0/12"]
-        [--services-ipv6-cidr=SERVICES_IPV6_CIDR] [GCLOUD_WIDE_FLAG ...]
+        [--services-ipv6-cidr=SERVICES_IPV6_CIDR]
+        [--system-addons-config=SYSTEM_ADDONS_CONFIG] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Create an Edge Container cluster.
@@ -28,7 +35,9 @@ POSITIONAL ARGUMENTS
      Cluster resource - Edge Container cluster to create. The arguments in this
      group can be used to specify the attributes of this resource. (NOTE) Some
      attributes are not given arguments in this group but can be set in other
-     ways. To set the project attribute:
+     ways.
+
+     To set the project attribute:
       ◆ provide the argument cluster on the command line with a fully
         specified name;
       ◆ provide the argument --project on the command line;
@@ -37,15 +46,18 @@ POSITIONAL ARGUMENTS
      This must be specified.
 
        CLUSTER
-          ID of the cluster or fully qualified identifier for the cluster. To
-          set the cluster attribute:
+          ID of the cluster or fully qualified identifier for the cluster.
+
+          To set the cluster attribute:
           ▸ provide the argument cluster on the command line.
 
           This positional argument must be specified if any of the other
           arguments in this group are specified.
 
        --location=LOCATION
-          Google Cloud location for the cluster. To set the location attribute:
+          Google Cloud location for the cluster.
+
+          To set the location attribute:
           ▸ provide the argument cluster on the command line with a fully
             specified name;
           ▸ provide the argument --location on the command line.
@@ -69,8 +81,42 @@ FLAGS
         If specified, all pods in the cluster are assigned an RFC4193 IPv6
         address from this block. This field cannot be changed after creation.
 
+     --control-plane-machine-filter=CONTROL_PLANE_MACHINE_FILTER
+        Only machines matching this filter will be allowed to host local
+        control plane nodes. The filtering language accepts strings like
+        "name=<name>", and is documented here: AIP-160
+        (https://google.aip.dev/160).
+
+     --control-plane-node-count=CONTROL_PLANE_NODE_COUNT
+        The number of local control plane nodes in a cluster. Use one to create
+        a single-node control plane or use three to create a high availability
+        control plane. Any other numbers of nodes will not be accepted.
+
+     --control-plane-node-location=CONTROL_PLANE_NODE_LOCATION
+        Google Edge Cloud zone where the local control plane nodes will be
+        created.
+
+     --control-plane-shared-deployment-policy=CONTROL_PLANE_SHARED_DEPLOYMENT_POLICY
+        Policy configuration about how user application is deployed for local
+        control plane cluster. It supports two values, ALLOWED and DISALLOWED.
+        ALLOWED means that user application can be deployed on control plane
+        nodes. DISALLOWED means that user application can not be deployed on
+        control plane nodes. Instead, it can only be deployed on worker nodes.
+        By default, this value is DISALLOWED. The input is case insensitive.
+
      --default-max-pods-per-node=DEFAULT_MAX_PODS_PER_NODE
         The default maximum number of pods per node.
+
+     --external-lb-ipv4-address-pools=[EXTERNAL_LB_IPV4_ADDRESS,...]
+        IPv4 address pools that are used for data plane load balancing of local
+        control plane clusters. Existing pools cannot be updated after cluster
+        creation; only adding new pools is allowed. Each address pool must be
+        specified as one of the following two types of values: 1. A IPv4
+        address range, for example, "10.0.0.1-10.0.0.10". A range that contains
+        a single IP (e.g. "10.0.0.1-10.0.0.1") is allowed. 2. A IPv4 CIDR
+        block, for example, "10.0.0.1/24" Use comma when specifying multiple
+        address pools, for example: --external-lb-ipv4-address-pools
+        10.0.0.1-10.0.0.10,10.0.0.1/24
 
      --fleet-project=FLEET_PROJECT
         Name of the Fleet host project where the cluster is registered.
@@ -82,6 +128,9 @@ FLAGS
         (-), underscores (_), lowercase characters, and numbers. Values must
         contain only hyphens (-), underscores (_), lowercase characters, and
         numbers.
+
+     --lro-timeout=LRO_TIMEOUT
+        Overwrite the default LRO maximum timeout.
 
      --maintenance-window-end=MAINTENANCE_WINDOW_END
         End time of the recurring cluster maintenance window in the RFC 3339
@@ -105,6 +154,15 @@ FLAGS
      --services-ipv6-cidr=SERVICES_IPV6_CIDR
         If specified, all services in the cluster are assigned an RFC4193 IPv6
         address from this block. This field cannot be changed after creation.
+
+     --system-addons-config=SYSTEM_ADDONS_CONFIG
+        If specified as a YAML/JSON file, customized configuration in this file
+        will be applied to the system add-ons.
+
+        For example,
+
+        { "systemAddonsConfig": { "ingress": { "disabled": true, "ipv4_vip":
+        "10.0.0.1" } } }
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

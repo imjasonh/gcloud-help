@@ -13,6 +13,7 @@ SYNOPSIS
           | --enable-cost-allocation | --enable-fleet | --enable-gke-oidc
           | --enable-google-cloud-access | --enable-identity-service
           | --enable-image-streaming | --enable-intra-node-visibility
+          | --enable-kubernetes-unstable-apis=API,[API,...]
           | --enable-l4-ilb-subsetting | --enable-legacy-authorization
           | --enable-logging-monitoring-system-only
           | --enable-master-authorized-networks | --enable-master-global-access
@@ -255,6 +256,11 @@ REQUIRED FLAGS
           Enabling it on an existing cluster causes the cluster master and the
           cluster nodes to restart, which might cause a disruption.
 
+       --enable-kubernetes-unstable-apis=API,[API,...]
+          Enable Kubernetes beta API features on this cluster. Beta APIs are
+          not expected to be production ready and should be avoided in
+          production-grade environments.
+
        --enable-l4-ilb-subsetting
           Enable Subsetting for L4 ILB services created on this cluster.
 
@@ -451,8 +457,10 @@ REQUIRED FLAGS
           Subscribe or unsubscribe this cluster to a release channel.
 
           When a cluster is subscribed to a release channel, Google maintains
-          both the master version and the node version. Node auto-upgrade
-          defaults to true and cannot be disabled.
+          both the master version and the node version. Node auto-upgrade is
+          enabled by default for release channel clusters and can be controlled
+          via upgrade-scope exclusions
+          (https://cloud.google.com/kubernetes-engine/docs/concepts/maintenance-windows-and-exclusions#scope_of_maintenance_to_exclude).
 
           CHANNEL must be one of:
 

@@ -45,8 +45,8 @@ SYNOPSIS
         [--root-password=ROOT_PASSWORD] [--[no-]storage-auto-increase]
         [--storage-auto-increase-limit=STORAGE_AUTO_INCREASE_LIMIT]
         [--storage-size=STORAGE_SIZE] [--storage-type=STORAGE_TYPE]
-        [--tier=TIER, -t TIER] [--time-zone=TIME_ZONE]
-        [--timeout=TIMEOUT; default=3600]
+        [--threads-per-core=THREADS_PER_CORE] [--tier=TIER, -t TIER]
+        [--time-zone=TIME_ZONE] [--timeout=TIMEOUT; default=3600]
         [--disk-encryption-key=DISK_ENCRYPTION_KEY
           : --disk-encryption-key-keyring=DISK_ENCRYPTION_KEY_KEYRING
           --disk-encryption-key-location=DISK_ENCRYPTION_KEY_LOCATION
@@ -395,6 +395,11 @@ FLAGS
         The storage type for the instance. The default is SSD. STORAGE_TYPE
         must be one of: SSD, HDD.
 
+     --threads-per-core=THREADS_PER_CORE
+        The number of threads per core. The value of this flag can be 1 or 2.
+        To disable SMT, set this flag to 1. Only available in Cloud SQL for SQL
+        Server instances.
+
      --tier=TIER, -t TIER
         Machine type for a shared-core instance e.g. db-g1-small. For all other
         instances, instead of using tiers, customize your instance by
@@ -418,31 +423,36 @@ FLAGS
      the attributes of this resource.
 
        --disk-encryption-key=DISK_ENCRYPTION_KEY
-          ID of the key or fully qualified identifier for the key. To set the
-          kms-key attribute:
+          ID of the key or fully qualified identifier for the key.
+
+          To set the kms-key attribute:
           ▸ provide the argument --disk-encryption-key on the command line.
 
           This flag argument must be specified if any of the other arguments in
           this group are specified.
 
        --disk-encryption-key-keyring=DISK_ENCRYPTION_KEY_KEYRING
-          The KMS keyring of the key. To set the kms-keyring attribute:
+          The KMS keyring of the key.
+
+          To set the kms-keyring attribute:
           ▸ provide the argument --disk-encryption-key on the command line
             with a fully specified name;
           ▸ provide the argument --disk-encryption-key-keyring on the command
             line.
 
        --disk-encryption-key-location=DISK_ENCRYPTION_KEY_LOCATION
-          The Google Cloud location for the key. To set the kms-location
-          attribute:
+          The Google Cloud location for the key.
+
+          To set the kms-location attribute:
           ▸ provide the argument --disk-encryption-key on the command line
             with a fully specified name;
           ▸ provide the argument --disk-encryption-key-location on the
             command line.
 
        --disk-encryption-key-project=DISK_ENCRYPTION_KEY_PROJECT
-          The Google Cloud project for the key. To set the kms-project
-          attribute:
+          The Google Cloud project for the key.
+
+          To set the kms-project attribute:
           ▸ provide the argument --disk-encryption-key on the command line
             with a fully specified name;
           ▸ provide the argument --disk-encryption-key-project on the command
