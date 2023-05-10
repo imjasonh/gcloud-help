@@ -5,8 +5,10 @@ NAME
 SYNOPSIS
     gcloud database-migration migration-jobs create
         (MIGRATION_JOB : --region=REGION) --destination=DESTINATION
-        --source=SOURCE --type=TYPE [--no-async] [--display-name=DISPLAY_NAME]
-        [--dump-path=DUMP_PATH] [--labels=[KEY=VALUE,...]]
+        --source=SOURCE --type=TYPE [--no-async] [--commit-id=COMMIT_ID]
+        [--conversion-workspace=CONVERSION_WORKSPACE]
+        [--display-name=DISPLAY_NAME] [--dump-path=DUMP_PATH] [--filter=FILTER]
+        [--labels=[KEY=VALUE,...]]
         [--peer-vpc=PEER_VPC | --static-ip
           | [--vm-ip=VM_IP --vm-port=VM_PORT --vpc=VPC : --vm=VM]]
         [GCLOUD_WIDE_FLAG ...]
@@ -16,11 +18,12 @@ DESCRIPTION
     creating the migration job:
       ▪ Create a source connection profile. See prerequisites here
         (https://cloud.google.com/database-migration/docs/mysql/configure-source-database).
-      ▪ Create a destination connection profile. For MySQL and PostgreSQL
-        migrations, use the cloudsql connection profile for DMS to create the
-        CloudSQL replica for you.
+      ▪ Create a destination connection profile. For migrating to Cloud SQL
+        for MySQL or Cloud SQL for PostgreSQL, use the cloudsql connection
+        profile for DMS to create the CloudSQL replica for you.
       ▪ Configure the connectivity method. See prerequisites here
         (https://cloud.google.com/database-migration/docs/mysql/configure-connectivity).
+      ▪ [Heterogeneous migrations only] Create a conversion workspace.
 
 EXAMPLES
     To create a continuous migration job with IP allowlist connectivity:
@@ -42,6 +45,12 @@ EXAMPLES
           --region=us-central1 --type=ONE_TIME --source=cp1 \
           --destination=cp2 --vm=vm1 --vm-ip=1.1.1.1 --vm-port=1111 \
           --vpc=projects/my-project/global/networks/my-network
+
+    To create a heterogeneous continuous migration job:
+
+        $ gcloud database-migration migration-jobs create my-migration-job \
+          --region=us-central1 --type=CONTINUOUS --source=cp1 \
+          --destination=cp2 --conversion-workspace=cw
 
 POSITIONAL ARGUMENTS
      Migration job resource - The migration job to create. The arguments in
@@ -133,6 +142,34 @@ OPTIONAL FLAGS
      --no-async
         Waits for the operation in progress to complete before returning.
 
+     --commit-id=COMMIT_ID
+        Commit id for the conversion workspace to use for creating the
+        migration job. If not specified, the latest commit id will be used by
+        default.
+
+     Conversion workspace resource - Name of the conversion workspaces to be
+     used for the migration job This represents a Cloud resource. (NOTE) Some
+     attributes are not given arguments in this group but can be set in other
+     ways.
+
+     To set the project attribute:
+      ◆ provide the argument --conversion-workspace on the command line with
+        a fully specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     To set the region attribute:
+      ◆ provide the argument --conversion-workspace on the command line with
+        a fully specified name;
+      ◆ provide the argument --region on the command line.
+
+       --conversion-workspace=CONVERSION_WORKSPACE
+          ID of the conversion_workspace or fully qualified identifier for the
+          conversion_workspace.
+
+          To set the conversion_workspace attribute:
+          ▸ provide the argument --conversion-workspace on the command line.
+
      --display-name=DISPLAY_NAME
         A user-friendly name for the migration job. The display name can
         include letters, numbers, spaces, and hyphens, and must start with a
@@ -141,6 +178,12 @@ OPTIONAL FLAGS
      --dump-path=DUMP_PATH
         Path to the dump file in Google Cloud Storage, in the format:
         gs://[BUCKET_NAME]/[OBJECT_NAME].
+
+     --filter=FILTER
+        Filter the entities based on (AIP-160)[https://google.aip.dev/160]
+        standard. Example: to filter all tables whose name start with
+        "Employee" and are present under schema "Company", use filter as
+        "parent = Company and TABLE=Employee"
 
      --labels=[KEY=VALUE,...]
         List of label KEY=VALUE pairs to add.

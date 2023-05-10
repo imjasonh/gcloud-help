@@ -4,7 +4,8 @@ NAME
 
 SYNOPSIS
     gcloud alpha pubsub subscriptions pull SUBSCRIPTION [--auto-ack]
-        [--max-messages=MAX_MESSAGES; default=1] [--wait] [--filter=EXPRESSION]
+        [--max-messages=MAX_MESSAGES; default=1]
+        [--return-immediately | --no-wait] [--filter=EXPRESSION]
         [--limit=LIMIT] [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [--uri]
         [GCLOUD_WIDE_FLAG ...]
 
@@ -49,9 +50,24 @@ FLAGS
 
         --max-messages is deprecated. Please use --limit instead.
 
-     --wait
-        Wait (for a bounded amount of time) for new messages from the
-        subscription, if there are none.
+     Pull timeout behavior.
+
+     At most one of these can be specified:
+
+       --return-immediately
+          If this flag is set, the system responds immediately with any
+          messages readily available in memory buffers. If no messages are
+          available in the buffers, returns an empty list of messages as
+          response, even if having messages in the backlog. Do not set this
+          flag as it adversely impacts the performance of pull.
+
+       --wait
+          (DEPRECATED) Wait (for a bounded amount of time) for new messages
+          from the subscription, if there are none.
+
+          --wait is deprecated. This flag is non-operational, as the wait
+          behavior is now the default. Enabled by default, use --no-wait to
+          disable.
 
 LIST COMMAND FLAGS
      --filter=EXPRESSION

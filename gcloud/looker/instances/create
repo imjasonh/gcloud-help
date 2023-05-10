@@ -1,0 +1,222 @@
+NAME
+    gcloud looker instances create - create a Looker instance
+
+SYNOPSIS
+    gcloud looker instances create (INSTANCE : --region=REGION)
+        --edition=EDITION --oauth-client-id=OAUTH_CLIENT_ID
+        --oauth-client-secret=OAUTH_CLIENT_SECRET [--async] [--kms-key=KMS_KEY]
+        [--no-public-ip-enabled]
+        [--consumer-network=CONSUMER_NETWORK --private-ip-enabled
+          : --reserved-range=RESERVED_RANGE]
+        [--deny-maintenance-period-end-date=DENY_MAINTENANCE_PERIOD_END_DATE
+          --deny-maintenance-period-start-date=DENY_MAINTENANCE_PERIOD_START_DATE --deny-maintenance-period-time=DENY_MAINTENANCE_PERIOD_TIME]
+        [--maintenance-window-day=MAINTENANCE_WINDOW_DAY
+          --maintenance-window-time=MAINTENANCE_WINDOW_TIME]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Create a new Looker instance.
+
+    This command can fail for the following reasons:
+      ▪ An instance with the same name already exists.
+      ▪ The active account does not have permission to create instances.
+      ▪ --async flag is not passed
+
+EXAMPLES
+    To create a basic tier instance with the name my-looker-instance in region
+    us-central-1 with an edition of "LOOKER_CORE_STANDARD", run:
+
+        $ gcloud looker instances create my-looker-instance \
+            --region=us-central1 --edition="core-standard" \
+            --oauth-client-id='looker' --oauth-client-secret='looker' \
+            --async
+
+    Note: It is recommended that the --async argument is provided when creating
+    a Looker instance.
+
+POSITIONAL ARGUMENTS
+     Instance resource - Arguments and flags that specify the Looker instance
+     you want to create. The arguments in this group can be used to specify the
+     attributes of this resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument instance on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       INSTANCE
+          ID of the instance or fully qualified identifier for the instance.
+
+          To set the instance attribute:
+          ▸ provide the argument instance on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --region=REGION
+          The name of the Looker region of the instance. Overrides the default
+          looker/region property value for this command invocation.
+
+          To set the region attribute:
+          ▸ provide the argument instance on the command line with a fully
+            specified name;
+          ▸ provide the argument --region on the command line;
+          ▸ set the property looker/region.
+
+REQUIRED FLAGS
+     --edition=EDITION
+        The edition of the Looker instance. EDITION must be one of:
+
+         core-embed-annual
+            A Looker (Google Cloud core) product for deploying and maintaining
+            external analytics and custom applications at scale. This can be
+            purchased via an annual contract.
+
+         core-enterprise-annual
+            A Looker (Google Cloud core) product with enhanced security
+            features for a wide variety of internal BI and analytics use cases.
+            This can be purchased via an annual contract.
+
+         core-standard
+            A Looker (Google Cloud core) product for small organizations or
+            teams with fewer than 50 users. This will be billed monthly while
+            the instance is active.
+
+         core-standard-annual
+            A Looker (Google Cloud core) product for small organizations or
+            teams with fewer than 50 users. This can be purchased via an annual
+            contract.
+
+         core-trial
+            Trial edition of Looker.
+
+     --oauth-client-id=OAUTH_CLIENT_ID
+        The client ID from an external OAuth application.
+
+        OAuth Application Credentials - Looker Instance OAuth login settings.
+        Setup an OAuth app that will allow users to authenticate and access the
+        instance. For more information see:
+        https://developers.google.com/identity/protocols/oauth2/web-server#creatingcred
+
+     --oauth-client-secret=OAUTH_CLIENT_SECRET
+        The client secret from an external OAuth application.
+
+        OAuth Application Credentials - Looker Instance OAuth login settings.
+        Setup an OAuth app that will allow users to authenticate and access the
+        instance. For more information see:
+        https://developers.google.com/identity/protocols/oauth2/web-server#creatingcred
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     Key resource - The Cloud KMS (Key Management Service) cryptokey that will
+     be used to protect the Looker instance and backups. The 'Looker Service
+     Agent' service account must hold permission 'Cloud KMS CryptoKey
+     Encrypter/Decrypter'. The arguments in this group can be used to specify
+     the attributes of this resource.
+
+       --kms-key=KMS_KEY
+          ID of the key or fully qualified identifier for the key. To set the
+          kms-key attribute:
+          ▸ provide the argument --kms-key on the command line.
+
+     --public-ip-enabled
+        This specifies whether public IP is enabled on the Looker instance.
+        Enabled by default, use --no-public-ip-enabled to disable.
+
+     Private IP - Assigns an internal, Google-hosted VPC IP address. Private IP
+     connectivity requires additional APIs and permissions. Private IP cannot
+     be disabled once it has been enabled. If enabled, consumer-network must be
+     assigned.
+
+       --consumer-network=CONSUMER_NETWORK
+          The network name within the consumer project. This MUST be delared if
+          enabling private IP.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --private-ip-enabled
+          This specifies whether private IP is enabled on the Looker instance.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --reserved-range=RESERVED_RANGE
+          The name of a reserved IP address range within the consumer network
+          to be used for private service access connection.
+
+     Deny Maintanence Period - You must allow at least 48 hours of maintenance
+     availability in a 60-day rolling window. Only contiguous availability
+     windows of at least two hours are considered. When setting a maintenance
+     exclusion please be aware that excluding application upgrades cannot
+     exceed 60-days and excluding infrastructure upgrades cannot exceed
+     90-days.
+
+       --deny-maintenance-period-end-date=DENY_MAINTENANCE_PERIOD_END_DATE
+          End date of the deny maintenance period in format: YYYY-MM-DD
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --deny-maintenance-period-start-date=DENY_MAINTENANCE_PERIOD_START_DATE
+          Start date of the deny maintenance period in format: YYYY-MM-DD
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --deny-maintenance-period-time=DENY_MAINTENANCE_PERIOD_TIME
+          Time in UTC when the period starts and ends. A valid time of day must
+          be specified in 24hr format (ex: 13:00, 17:30, 23:45).
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+     Maintenance Window - Maintenance typically only takes place once every few
+     months, and requires your instance to be restarted while updates are made,
+     which disrupts service briefly.
+
+       --maintenance-window-day=MAINTENANCE_WINDOW_DAY
+          Day of week for maintenance window, in UTC time zone. To set the
+          maintenance-window-day attribute:
+          ▸ provide the argument --maintenance-window-day on the command
+            line. MAINTENANCE_WINDOW_DAY must be one of: friday, monday,
+            saturday, sunday, thursday, tuesday, wednesday.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --maintenance-window-time=MAINTENANCE_WINDOW_TIME
+          Hour of day for maintenance window, in UTC time zone. A valid time of
+          day must be specified in 24hr format (ex: 13:00, 17:30, 23:45).
+          Maintenance will be scheduled within 60 minutes. To set the
+          maintenance-window-time attribute:
+          ▸ provide the argument --maintenance-window-time on the command
+            line.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the looker/v1 API. The full documentation for this API
+    can be found at: https://looker.com/
+
+NOTES
+    This variant is also available:
+
+        $ gcloud alpha looker instances create
+
