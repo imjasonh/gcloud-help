@@ -5,8 +5,7 @@ SYNOPSIS
     gcloud alpha storage mv [SOURCE ...] DESTINATION
         [--additional-headers=HEADER=VALUE] [--all-versions, -A]
         [--no-clobber, -n] [--continue-on-error, -c] [--daisy-chain, -D]
-        [--do-not-decompress] [--ignore-symlinks]
-        [--manifest-path=MANIFEST_PATH, -L MANIFEST_PATH]
+        [--do-not-decompress] [--manifest-path=MANIFEST_PATH, -L MANIFEST_PATH]
         [--preserve-posix, -P] [--print-created-message, -v]
         [--read-paths-from-stdin, -I] [--skip-unsupported, -U]
         [--storage-class=STORAGE_CLASS, -s STORAGE_CLASS]
@@ -15,7 +14,7 @@ SYNOPSIS
         [--gzip-in-flight=[FILE_EXTENSIONS,...], -j [FILE_EXTENSIONS,...]
           | --gzip-in-flight-all, -J
           | --gzip-local=[FILE_EXTENSIONS,...], -z [FILE_EXTENSIONS,...]
-          | --gzip-local-all, -Z]
+          | --gzip-local-all, -Z] [--ignore-symlinks | --preserve-symlinks]
         [--decryption-keys=[DECRYPTION_KEY,...]
           --encryption-key=ENCRYPTION_KEY]
         [--cache-control=CACHE_CONTROL
@@ -125,10 +124,6 @@ FLAGS
 
      --do-not-decompress
         Do not automatically decompress downloaded gzip files.
-
-     --ignore-symlinks
-        Ignore file symlinks instead of copying what they point to. Symlinks
-        pointing to directories will always be ignored.
 
      --manifest-path=MANIFEST_PATH, -L MANIFEST_PATH
         Outputs a manifest log file with detailed information about each item
@@ -246,6 +241,30 @@ FLAGS
           CAUTION: If some of the source files don't compress well, such as
           binary data, using this option may result in files taking up more
           space in the cloud than they would if left uncompressed.
+
+     Flags to influence behavior when handling symlinks. Only one value may be
+     set.
+
+     At most one of these can be specified:
+
+       --ignore-symlinks
+          Ignore file symlinks instead of copying what they point to. Symlinks
+          pointing to directories will always be ignored.
+
+       --preserve-symlinks
+          Preserve symlinks instead of copying what they point to. With this
+          feature enabled, uploaded symlinks will be represented as
+          placeholders in the cloud whose content consists of the linked path.
+          Inversely, such placeholders will be converted to symlinks when
+          downloaded while this feature is enabled, as described at
+          https://cloud.google.com/storage-transfer/docs/metadata-preservation#posix_to.
+
+          CAUTION: No validation is applied to the symlink target paths. Once
+          downloaded, preserved symlinks will point to whatever path was
+          specified by the placeholder, regardless of the location or
+          permissions of the path, or whether it actually exists.
+
+          This feature is not supported on Windows.
 
 ENCRYPTION FLAGS
      --decryption-keys=[DECRYPTION_KEY,...]

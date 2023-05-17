@@ -4,7 +4,7 @@ NAME
 
 SYNOPSIS
     gcloud beta container vmware clusters create
-        (CLUSTER : --location=LOCATION)
+        (CLUSTER : --location=LOCATION) --version=VERSION
         (--admin-cluster-membership=ADMIN_CLUSTER_MEMBERSHIP
           : --admin-cluster-membership-location=ADMIN_CLUSTER_MEMBERSHIP_LOCATION --admin-cluster-membership-project=ADMIN_CLUSTER_MEMBERSHIP_PROJECT)
         ((--control-plane-vip=CONTROL_PLANE_VIP --ingress-vip=INGRESS_VIP)
@@ -30,7 +30,6 @@ SYNOPSIS
         [--annotations=[KEY=VALUE,...]] [--async] [--description=DESCRIPTION]
         [--disable-aag-config] [--disable-vsphere-csi] [--enable-auto-repair]
         [--enable-control-plane-v2] [--enable-vm-tracking] [--validate-only]
-        [--version=VERSION]
         [--cpus=CPUS --enable-auto-resize --memory=MEMORY --replicas=REPLICAS]
         [--enable-advanced-networking --enable-dataplane-v2]
         [GCLOUD_WIDE_FLAG ...]
@@ -76,10 +75,25 @@ POSITIONAL ARGUMENTS
           ▸ set the property container_vmware/location.
 
 REQUIRED FLAGS
+     --version=VERSION
+        Anthos Cluster on VMware version for the user cluster resource
+
      Admin cluster membership resource - membership of the admin cluster.
-     Membership can be the membership ID or the full resource name. The
-     arguments in this group can be used to specify the attributes of this
-     resource.
+     Membership name is the same as the admin cluster name.
+
+     Examples:
+
+         $ gcloud beta container vmware clusters create
+               --admin-cluster-membership=projects/example-project-12345/locations/us-west1/memberships/example-admin-cluster-name
+
+     or
+
+         $ gcloud beta container vmware clusters create
+               --admin-cluster-membership-project=example-project-12345
+               --admin-cluster-membership-location=us-west1
+               --admin-cluster-membership=example-admin-cluster-name
+
+         The arguments in this group can be used to specify the attributes of this resource.
 
      This must be specified.
 
@@ -300,9 +314,6 @@ OPTIONAL FLAGS
      --validate-only
         If set, only validate the request, but do not actually perform the
         operation.
-
-     --version=VERSION
-        Anthos Cluster on VMware version for the user cluster resource
 
      Control plane node configurations
 
