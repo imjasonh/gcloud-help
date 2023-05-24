@@ -2,11 +2,12 @@ NAME
     gcloud compute interconnects create - create a Compute Engine interconnect
 
 SYNOPSIS
-    gcloud compute interconnects create NAME --customer-name=CUSTOMER_NAME
+    gcloud compute interconnects create NAME
         --interconnect-type=INTERCONNECT_TYPE --link-type=LINK_TYPE
         --location=LOCATION --requested-link-count=REQUESTED_LINK_COUNT
-        [--admin-enabled] [--description=DESCRIPTION]
-        [--noc-contact-email=NOC_CONTACT_EMAIL] [GCLOUD_WIDE_FLAG ...]
+        [--admin-enabled] [--customer-name=CUSTOMER_NAME]
+        [--description=DESCRIPTION] [--noc-contact-email=NOC_CONTACT_EMAIL]
+        [--remote-location=REMOTE_LOCATION] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     gcloud compute interconnects create is used to create interconnects. An
@@ -26,15 +27,21 @@ EXAMPLES
             --noc-contact-email=noc@example.com \
             --description="Example interconnect"
 
+    To create a Cross-Cloud Interconnect, run:
+
+        $ gcloud compute interconnects create example-cc-interconnect \
+            --interconnect-type=DEDICATED \
+            --link-type=LINK_TYPE_ETHERNET_10G_LR \
+            --location=example-zone1-1 --requested-link-count=1 \
+            --remote-location=example-remote-location \
+            --noc-contact-email=noc@example.com \
+            --description="Example Cross-Cloud Interconnect"
+
 POSITIONAL ARGUMENTS
      NAME
         Name of the interconnect to create.
 
 REQUIRED FLAGS
-     --customer-name=CUSTOMER_NAME
-        Customer name to put in the Letter of Authorization as the party
-        authorized to request an interconnect.
-
      --interconnect-type=INTERCONNECT_TYPE
         Type of the interconnect. INTERCONNECT_TYPE must be one of:
 
@@ -66,12 +73,24 @@ OPTIONAL FLAGS
         operational and will carry traffic across any functioning linked
         interconnect attachments. Use --no-admin-enabled to disable it.
 
+     --customer-name=CUSTOMER_NAME
+        Customer name to put in the Letter of Authorization as the party
+        authorized to request an interconnect. This field is required for most
+        interconnects, however it is prohibited when creating a Cross-Cloud
+        Interconnect.
+
      --description=DESCRIPTION
         An optional, textual description for the interconnect.
 
      --noc-contact-email=NOC_CONTACT_EMAIL
         Email address to contact the customer NOC for operations and
         maintenance notifications regarding this interconnect.
+
+     --remote-location=REMOTE_LOCATION
+        The remote location for a Cross-Cloud Interconnect. The remote
+        locations can be listed by using the gcloud compute interconnects
+        remote-locations list command to find the appropriate remote location
+        to use when creating a Cross-Cloud Interconnect.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
