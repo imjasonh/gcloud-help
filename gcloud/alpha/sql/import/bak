@@ -3,8 +3,9 @@ NAME
         BAK file
 
 SYNOPSIS
-    gcloud alpha sql import bak INSTANCE URI --database=DATABASE, -d DATABASE
-        [--async] [--[no-]striped]
+    gcloud alpha sql import bak INSTANCE [URI] --database=DATABASE, -d DATABASE
+        [--async] [--bak-type=BAK_TYPE; default="FULL"] [--no-recovery]
+        [--recovery-only] [--[no-]striped]
         [--cert-path=CERT_PATH --pvk-path=PVK_PATH (--prompt-for-pvk-password
           | --pvk-password=PVK_PASSWORD)] [GCLOUD_WIDE_FLAG ...]
 
@@ -37,7 +38,7 @@ POSITIONAL ARGUMENTS
      INSTANCE
         Cloud SQL instance ID.
 
-     URI
+     [URI]
         Path to the BAK file file in Google Cloud Storage from which the import
         is made. The URI is in the form gs://bucketName/fileName.
 
@@ -49,6 +50,18 @@ OPTIONAL FLAGS
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
+
+     --bak-type=BAK_TYPE; default="FULL"
+        Type of bak file that will be imported, FULL or DIFF. SQL Server only.
+        BAK_TYPE must be one of: FULL, DIFF.
+
+     --no-recovery
+        Whether or not the SQL Server import is execueted with NORECOVERY
+        keyword.
+
+     --recovery-only
+        Whether or not the SQL Server import skip download and bring database
+        online.
 
      --[no-]striped
         Whether SQL Server import should be striped. Use --striped to enable

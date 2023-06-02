@@ -9,8 +9,8 @@ SYNOPSIS
         [--consumer-reject-list=[REJECT_LIST,...]] [--description=DESCRIPTION]
         [--[no-]enable-proxy-protocol]
         [--nat-subnets=NAT_SUBNETS,[NAT_SUBNETS,...]]
-        [--nat-subnets-region=NAT_SUBNETS_REGION] [--region=REGION]
-        [GCLOUD_WIDE_FLAG ...]
+        [--nat-subnets-region=NAT_SUBNETS_REGION]
+        [--[no-]reconcile-connections] [--region=REGION] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) gcloud beta compute service-attachments update is used to update
@@ -92,6 +92,23 @@ FLAGS
         Region of the subnetworks to operate on. If not specified, it will be
         set to the region of the service attachment. Overrides the default
         compute/region property value for this command invocation.
+
+     --[no-]reconcile-connections
+        Determines whether to apply changes to consumer accept or reject lists
+        to existing connections or only to new connections.
+
+        If false, existing endpoints with a connection status of ACCEPTED or
+        REJECTED are not updated.
+
+        If true, existing endpoints with a connection status of ACCEPTED or
+        REJECTED are updated based on the connection policy update. For
+        example, if a project or network is removed from the
+        --consumer-accept-list and added to --consumer-reject-list, all the
+        endpoints in that project or network with the ACCEPTED state are set to
+        REJECTED.
+
+        Use --reconcile-connections to enable and --no-reconcile-connections to
+        disable.
 
      --region=REGION
         Region of the service attachment to update. If not specified, you might

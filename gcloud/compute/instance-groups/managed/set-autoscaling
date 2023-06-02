@@ -46,12 +46,18 @@ REQUIRED FLAGS
 
 OPTIONAL FLAGS
      --cool-down-period=COOL_DOWN_PERIOD
-        The time period that the autoscaler should wait before it starts
-        collecting information from a new instance. This prevents the
-        autoscaler from collecting information when the instance is
-        initializing, during which the collected usage would not be reliable.
-        The default is 60s. See $ gcloud topic datetimes for information on
-        duration formats.
+        The number of seconds that your application takes to initialize on a VM
+        instance. This is referred to as the initialization period
+        (https://cloud.google.com/compute/docs/autoscaler#cool_down_period).
+        Specifying an accurate initialization period improves autoscaler
+        decisions. For example, when scaling out, the autoscaler ignores data
+        from VMs that are still initializing because those VMs might not yet
+        represent normal usage of your application. The default initialization
+        period is 60 seconds. See $ gcloud topic datetimes for information on
+        duration formats. Initialization periods might vary because of numerous
+        factors. We recommend that you test how long your application may take
+        to initialize. To do this, create a VM and time your application's
+        startup process.
 
      --cpu-utilization-predictive-method=CPU_UTILIZATION_PREDICTIVE_METHOD
         Indicates whether to use a predictive algorithm when scaling based on

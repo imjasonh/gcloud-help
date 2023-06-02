@@ -13,7 +13,7 @@ SYNOPSIS
         [--domain-names=[DOMAIN_NAMES,...]] [--enable-proxy-protocol]
         [--nat-subnets-region=NAT_SUBNETS_REGION]
         [--producer-forwarding-rule-region=PRODUCER_FORWARDING_RULE_REGION]
-        [--region=REGION] [GCLOUD_WIDE_FLAG ...]
+        [--reconcile-connections] [--region=REGION] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     gcloud compute service-attachments create is used to create service
@@ -126,6 +126,20 @@ OPTIONAL FLAGS
 
         Alternatively, the region can be stored in the environment variable
         CLOUDSDK_COMPUTE_REGION.
+
+     --reconcile-connections
+        Determines whether to apply changes to consumer accept or reject lists
+        to existing connections or only to new connections.
+
+        If false, existing endpoints with a connection status of ACCEPTED or
+        REJECTED are not updated.
+
+        If true, existing endpoints with a connection status of ACCEPTED or
+        REJECTED are updated based on the connection policy update. For
+        example, if a project or network is removed from the
+        --consumer-accept-list and added to --consumer-reject-list, all the
+        endpoints in that project or network with the ACCEPTED state are set to
+        REJECTED.
 
      --region=REGION
         Region of the service attachment to create. If not specified, you might
