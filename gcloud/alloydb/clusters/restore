@@ -1,16 +1,19 @@
 NAME
     gcloud alloydb clusters restore - restore an AlloyDB cluster from a given
-        backup
+        backup or a source cluster and a timestamp
 
 SYNOPSIS
-    gcloud alloydb clusters restore CLUSTER --backup=BACKUP --region=REGION
+    gcloud alloydb clusters restore CLUSTER --region=REGION
+        (--backup=BACKUP
+          | --point-in-time=POINT_IN_TIME --source-cluster=SOURCE_CLUSTER)
         [--async] [--network=NETWORK]
         [--kms-key=KMS_KEY : --kms-keyring=KMS_KEYRING
           --kms-location=KMS_LOCATION --kms-project=KMS_PROJECT]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    Restore an AlloyDB cluster from a given backup.
+    Restore an AlloyDB cluster from a given backup or a source cluster and a
+    timestamp.
 
 EXAMPLES
     To restore a cluster from a backup, run:
@@ -18,17 +21,42 @@ EXAMPLES
         $ gcloud alloydb clusters restore my-cluster --region=us-central1 \
           --backup=my-backup
 
+    To restore a cluster from a source cluster and a timestamp, run:
+
+        $ gcloud alloydb clusters restore my-cluster --region=us-central1 \
+          --source-cluster=old-cluster \
+          --point-in-time=2012-11-15T16:19:00.094Z
+
 POSITIONAL ARGUMENTS
      CLUSTER
         AlloyDB cluster ID
 
 REQUIRED FLAGS
-     --backup=BACKUP
-        AlloyDB backup ID
-
      --region=REGION
         Regional location (e.g. asia-east1, us-east1). See the full list of
         regions at https://cloud.google.com/sql/docs/instance-locations.
+
+     RestoreCluster source types.
+
+     Exactly one of these must be specified:
+
+       --backup=BACKUP
+          AlloyDB backup ID
+
+       Restore a cluster from a source cluster at a given point in time.
+
+         --point-in-time=POINT_IN_TIME
+            Point in time to restore to, in RFC 3339 format. For example,
+            2012-11-15T16:19:00.094Z.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --source-cluster=SOURCE_CLUSTER
+            Source cluster name.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
 
 OPTIONAL FLAGS
      --async

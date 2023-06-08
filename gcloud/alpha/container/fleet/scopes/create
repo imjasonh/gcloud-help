@@ -3,7 +3,10 @@ NAME
 
 SYNOPSIS
     gcloud alpha container fleet scopes create SCOPE [--async]
-        [GCLOUD_WIDE_FLAG ...]
+        [--default-upgrade-soaking=DEFAULT_UPGRADE_SOAKING
+          --upstream-scope=UPSTREAM_SCOPE
+          --add-upgrade-soaking-override=ADD_UPGRADE_SOAKING_OVERRIDE
+          --upgrade-selector=[UPGRADE_SELECTOR,...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Create a Fleet Scope resource.
@@ -41,6 +44,70 @@ FLAGS
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
+
+     Rollout Sequencing
+
+     These flags are not compatible with the --async flag.
+
+       --default-upgrade-soaking=DEFAULT_UPGRADE_SOAKING
+          Configures the default soaking duration for each upgrade propagating
+          through the current scope to become "COMPLETE". Soaking begins after
+          all clusters in the scope are on the target version, or after 30 days
+          if all cluster upgrades are not complete. Once an upgrade state
+          becomes "COMPLETE", it will automatically be propagated to the
+          downstream scope. Max is 30 days.
+
+          See $ gcloud topic datetimes for information on duration formats.
+
+          To configure Rollout Sequencing for a given scope, SCOPE_NAME, this
+          attribute must be set. To do this while specifying a default soaking
+          duration of 7 days, run:
+
+              $ gcloud alpha container fleet scopes create SCOPE_NAME \
+                  default-upgrade-soaking=7d
+
+       --upstream-scope=UPSTREAM_SCOPE
+          Full resource name of the upstream scope in the format of
+          projects/{project}/locations/{location}/scopes/{scope}. GKE will
+          finish upgrades on the upstream scope before applying the same
+          upgrades to the current scope.
+
+          To configure the upstream scope for SCOPE_NAME, run:
+
+              $ gcloud alpha container fleet scopes create SCOPE_NAME \
+                --upstream-scope=projects/{upstream_project}/locations/global/scopes/{upstream_scope}
+
+       Upgrade soaking override.
+
+       Defines a specific soaking time override for a particular upgrade
+       propagating through the current scope that supercedes the default
+       soaking duration configured by --default-upgrade-soaking.
+
+       To set an upgrade soaking override of 12 hours for the upgrade with
+       name, k8s_control_plane, and version, 1.23.1-gke.1000, run:
+
+           $ gcloud alpha container fleet scopes create SCOPE_NAME \
+             --add-upgrade-soaking-override=12h \
+             --upgrade-selector=name="k8s_control_plane",version="1.23.1-gke.1000"
+
+         --add-upgrade-soaking-override=ADD_UPGRADE_SOAKING_OVERRIDE
+            Overrides the soaking time for a particular upgrade name and
+            version propagating through the current scope. Set soaking to 0
+            days to bypass soaking and fast-forward the upgrade to the
+            downstream scope.
+
+            See $ gcloud topic datetimes for information on duration formats.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --upgrade-selector=[UPGRADE_SELECTOR,...]
+            Name and version of the upgrade to be overridden where version is a
+            full GKE version. Currently, name can be either k8s_control_plane
+            or k8s_node.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

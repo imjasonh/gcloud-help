@@ -1,0 +1,162 @@
+NAME
+    gcloud alpha container fleet scopes update - update a scope
+
+SYNOPSIS
+    gcloud alpha container fleet scopes update (SCOPE : --location=LOCATION)
+        [--default-upgrade-soaking=DEFAULT_UPGRADE_SOAKING
+          --remove-upgrade-soaking-overrides
+          | --add-upgrade-soaking-override=ADD_UPGRADE_SOAKING_OVERRIDE
+          --upgrade-selector=[UPGRADE_SELECTOR,...] --reset-upstream-scope
+          | --upstream-scope=UPSTREAM_SCOPE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Update an existing Fleet Scope.
+
+EXAMPLES
+    First retrieve the ID of the scope using the command below.
+
+        $ gcloud alpha container fleet scopes list
+
+    Update a scope.
+
+        $ gcloud alpha container fleet scopes update SCOPE_NAME
+
+POSITIONAL ARGUMENTS
+     Scope resource - fleet scope resource. The arguments in this group can be
+     used to specify the attributes of this resource. (NOTE) Some attributes
+     are not given arguments in this group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument scope on the command line with a fully specified
+        name;
+      ◆ set the property core/project;
+      ◆ provide the argument --project on the command line.
+
+     This must be specified.
+
+       SCOPE
+          ID of the scope or fully qualified identifier for the scope.
+
+          To set the scope attribute:
+          ▸ provide the argument scope on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          The location name.
+
+          To set the location attribute:
+          ▸ provide the argument scope on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ global is the only supported location.
+
+FLAGS
+     Rollout Sequencing
+
+       --default-upgrade-soaking=DEFAULT_UPGRADE_SOAKING
+          Configures the default soaking duration for each upgrade propagating
+          through the current scope to become "COMPLETE". Soaking begins after
+          all clusters in the scope are on the target version, or after 30 days
+          if all cluster upgrades are not complete. Once an upgrade state
+          becomes "COMPLETE", it will automatically be propagated to the
+          downstream scope. Max is 30 days.
+
+          See $ gcloud topic datetimes for information on duration formats.
+
+          To configure Rollout Sequencing for a given scope, SCOPE_NAME, this
+          attribute must be set. To do this while specifying a default soaking
+          duration of 7 days, run:
+
+              $ gcloud alpha container fleet scopes update SCOPE_NAME \
+                  default-upgrade-soaking=7d
+
+       At most one of these can be specified:
+
+         --remove-upgrade-soaking-overrides
+            Removes soaking time overrides for all upgrades propagating through
+            the current scope. Consequently, all upgrades will follow the soak
+            time configured by --default-upgrade-soaking until new overrides
+            are configured with --add_upgrade_soaking_override and
+            --upgrade_selector.
+
+            To remove all soaking time overrides configured for SCOPE_NAME,
+            run:
+
+                $ gcloud alpha container fleet scopes update SCOPE_NAME \
+                    --remove-upgrade-soaking-overrides
+
+         Upgrade soaking override.
+
+         Defines a specific soaking time override for a particular upgrade
+         propagating through the current scope that supercedes the default
+         soaking duration configured by --default-upgrade-soaking.
+
+         To set an upgrade soaking override of 12 hours for the upgrade with
+         name, k8s_control_plane, and version, 1.23.1-gke.1000, run:
+
+             $ gcloud alpha container fleet scopes update SCOPE_NAME \
+               --add-upgrade-soaking-override=12h \
+               --upgrade-selector=name="k8s_control_plane",version="1.23.1-gke.1000"
+
+           --add-upgrade-soaking-override=ADD_UPGRADE_SOAKING_OVERRIDE
+              Overrides the soaking time for a particular upgrade name and
+              version propagating through the current scope. Set soaking to 0
+              days to bypass soaking and fast-forward the upgrade to the
+              downstream scope.
+
+              See $ gcloud topic datetimes for information on duration formats.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --upgrade-selector=[UPGRADE_SELECTOR,...]
+              Name and version of the upgrade to be overridden where version is
+              a full GKE version. Currently, name can be either
+              k8s_control_plane or k8s_node.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+       At most one of these can be specified:
+
+         --reset-upstream-scope
+            Clears the relationship between the current scope and its upstream
+            scope in the rollout sequence.
+
+            To remove the link between SCOPE_NAME and its upstream scope, run:
+
+                $ gcloud alpha container fleet scopes update SCOPE_NAME \
+                    --reset-upstream-scope
+
+         --upstream-scope=UPSTREAM_SCOPE
+            Full resource name of the upstream scope in the format of
+            projects/{project}/locations/{location}/scopes/{scope}. GKE will
+            finish upgrades on the upstream scope before applying the same
+            upgrades to the current scope.
+
+            To configure the upstream scope for SCOPE_NAME, run:
+
+                $ gcloud alpha container fleet scopes update SCOPE_NAME \
+                  --upstream-scope=projects/{upstream_project}/locations/global/scopes/{upstream_scope}
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the gkehub/v1alpha API. The full documentation for this
+    API can be found at:
+    https://cloud.google.com/anthos/multicluster-management/connect/registering-a-cluster
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

@@ -1,24 +1,31 @@
 NAME
     gcloud alpha alloydb clusters restore - restore an AlloyDB cluster from a
-        given backup
+        given backup or a source cluster and a timestamp
 
 SYNOPSIS
-    gcloud alpha alloydb clusters restore CLUSTER --region=REGION [--async]
-        [--network=NETWORK]
-        [--backup=BACKUP
-          | --point-in-time=POINT_IN_TIME --source-cluster=SOURCE_CLUSTER]
+    gcloud alpha alloydb clusters restore CLUSTER --region=REGION
+        (--backup=BACKUP
+          | --point-in-time=POINT_IN_TIME --source-cluster=SOURCE_CLUSTER)
+        [--async] [--network=NETWORK]
         [--kms-key=KMS_KEY : --kms-keyring=KMS_KEYRING
           --kms-location=KMS_LOCATION --kms-project=KMS_PROJECT]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) Restore an AlloyDB cluster from a given backup.
+    (ALPHA) Restore an AlloyDB cluster from a given backup or a source cluster
+    and a timestamp.
 
 EXAMPLES
     To restore a cluster from a backup, run:
 
         $ gcloud alpha alloydb clusters restore my-cluster \
           --region=us-central1 --backup=my-backup
+
+    To restore a cluster from a source cluster and a timestamp, run:
+
+        $ gcloud alpha alloydb clusters restore my-cluster \
+          --region=us-central1 --source-cluster=old-cluster \
+          --point-in-time=2012-11-15T16:19:00.094Z
 
 POSITIONAL ARGUMENTS
      CLUSTER
@@ -29,26 +36,12 @@ REQUIRED FLAGS
         Regional location (e.g. asia-east1, us-east1). See the full list of
         regions at https://cloud.google.com/sql/docs/instance-locations.
 
-OPTIONAL FLAGS
-     --async
-        Return immediately, without waiting for the operation in progress to
-        complete.
-
-     --network=NETWORK
-        Network in the current project that the instance will be part of. To
-        specify using a network with a shared VPC, use the full URL of the
-        network. For an example host project, 'testproject', and shared
-        network, 'testsharednetwork', this would be of the
-        form:--network=projects/testproject/global/networks/testsharednetwork
-
      RestoreCluster source types.
 
-     At most one of these can be specified:
+     Exactly one of these must be specified:
 
-       Restore a cluster using a specific backup as the source.
-
-         --backup=BACKUP
-            AlloyDB backup ID
+       --backup=BACKUP
+          AlloyDB backup ID
 
        Restore a cluster from a source cluster at a given point in time.
 
@@ -64,6 +57,18 @@ OPTIONAL FLAGS
 
             This flag argument must be specified if any of the other arguments
             in this group are specified.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --network=NETWORK
+        Network in the current project that the instance will be part of. To
+        specify using a network with a shared VPC, use the full URL of the
+        network. For an example host project, 'testproject', and shared
+        network, 'testsharednetwork', this would be of the
+        form:--network=projects/testproject/global/networks/testsharednetwork
 
      Key resource - The Cloud KMS (Key Management Service) cryptokey that will
      be used to protect the cluster. The 'AlloyDB Service Agent' service
