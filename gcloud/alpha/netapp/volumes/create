@@ -3,10 +3,9 @@ NAME
 
 SYNOPSIS
     gcloud alpha netapp volumes create (VOLUME : --location=LOCATION)
-        --capacity=CAPACITY --network=[name=NAME],[psa-range=PSA-RANGE]
-        --protocols=PROTOCOL,[PROTOCOL,...] --share-name=SHARE_NAME
-        --storage-pool=STORAGE_POOL [--async] [--description=DESCRIPTION]
-        [--enable-kerberos=ENABLE_KERBEROS] [--enable-ldap=ENABLE_LDAP]
+        --capacity=CAPACITY --protocols=PROTOCOL,[PROTOCOL,...]
+        --share-name=SHARE_NAME --storage-pool=STORAGE_POOL [--async]
+        [--description=DESCRIPTION] [--enable-kerberos=ENABLE_KERBEROS]
         [--export-policy=[access-type=ACCESS-TYPE],
           [allowed-clients=ALLOWED-CLIENTS],[has-root-access=HAS-ROOT-ACCESS],
           [kerberos-5-read-only=KERBEROS-5-READ-ONLY],
@@ -32,7 +31,25 @@ SYNOPSIS
         [--unix-permissions=UNIX_PERMISSIONS] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) Create a Cloud NetApp Volume.
+    (ALPHA) Create a Cloud NetApp Volume
+
+EXAMPLES
+    The following command creates a NFS Volume named NAME asynchronously using
+    the specified arguments
+
+        $ gcloud alpha netapp volumes create NAME --capacity=1024 \
+          --protocols=nfsv3,nfsv4 --share-name=share1 --storage-pool=sp1 \
+          --description="test description" --enable-kerberos=true \
+          --unix-permissions=0755 --async
+
+    The following command creates a SMB Volume named NAME asynchronously using
+    the specified arguments
+
+        $ gcloud alpha netapp volumes create NAME --capacity=1024 \
+          --protocols=smb --share-name=share2 --storage-pool=sp2 \
+          --description="test smb" --security-style=ntfs \
+          --smb-settings=SHOW_SNAPSHOT,SHOW_PREVIOUS_VERSIONS,\
+        ACCESS_BASED_ENUMERATION --snap-reserve=0.1 --async
 
 POSITIONAL ARGUMENTS
      Volume resource - The Volume to create. The arguments in this group can be
@@ -70,18 +87,6 @@ REQUIRED FLAGS
      --capacity=CAPACITY
         The desired capacity of the Volume in GiB or TiB units.If no capacity
         unit is specified, GiB is assumed.
-
-     --network=[name=NAME],[psa-range=PSA-RANGE]
-        Network configuration for a Cloud NetApp Files Volume. Specifying
-        psa-range is optional.
-         name
-            The name of the Google Compute Engine VPC network to which the
-            volume is connected.
-         psa-range
-            The psa-range is the name of the allocated range of the Private
-            Service Access connection. The range you specify can't overlap with
-            either existing subnets or assigned IP address ranges for other
-            Cloud NetApp Files Volumes in the selected VPC network.
 
      --protocols=PROTOCOL,[PROTOCOL,...]
         Type of File System protocols for the Cloud NetApp Files VolumeValid
@@ -128,9 +133,6 @@ OPTIONAL FLAGS
 
      --enable-kerberos=ENABLE_KERBEROS
         Boolean flag indicating whether Volume is a kerberos Volume or not
-
-     --enable-ldap=ENABLE_LDAP
-        Boolean flag indicating whether Volume is a NFS LDAP Volume or not
 
      --export-policy=[access-type=ACCESS-TYPE],[allowed-clients=ALLOWED-CLIENTS],[has-root-access=HAS-ROOT-ACCESS],[kerberos-5-read-only=KERBEROS-5-READ-ONLY],[kerberos-5-read-write=KERBEROS-5-READ-WRITE],[kerberos-5i-read-only=KERBEROS-5I-READ-ONLY],[kerberos-5i-read-write=KERBEROS-5I-READ-WRITE],[kerberos-5p-read-only=KERBEROS-5P-READ-ONLY],[kerberos-5p-read-write=KERBEROS-5P-READ-WRITE],[nfsv3=NFSV3],[nfsv4=NFSV4]
         Export Policy of a Cloud NetApp Files Volume. This will be a field
@@ -235,5 +237,7 @@ NOTES
     This command is currently in alpha and might change without notice. If this
     command fails with API permission errors despite specifying the correct
     project, you might be trying to access an API with an invitation-only early
-    access allowlist.
+    access allowlist. This variant is also available:
+
+        $ gcloud beta netapp volumes create
 

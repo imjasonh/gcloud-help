@@ -13,6 +13,7 @@ SYNOPSIS
         [--root-volume-iops=ROOT_VOLUME_IOPS]
         [--root-volume-kms-key-arn=ROOT_VOLUME_KMS_KEY_ARN]
         [--root-volume-size=ROOT_VOLUME_SIZE]
+        [--root-volume-throughput=ROOT_VOLUME_THROUGHPUT]
         [--root-volume-type=ROOT_VOLUME_TYPE] [--validate-only]
         [--annotations=ANNOTATION,[ANNOTATION,...] | --clear-annotations]
         [--clear-description | --description=DESCRIPTION]
@@ -23,6 +24,7 @@ SYNOPSIS
         [--clear-ssh-ec2-key-pair | --ssh-ec2-key-pair=SSH_EC2_KEY_PAIR]
         [--clear-tags | --tags=TAG,[TAG,...]]
         [--disable-managed-prometheus | --enable-managed-prometheus]
+        [--disable-per-node-pool-sg-rules | --enable-per-node-pool-sg-rules]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -116,6 +118,10 @@ FLAGS
         size unit of GB for gigabyte, or TB for terabyte. If no size unit is
         specified, GB is assumed.
 
+     --root-volume-throughput=ROOT_VOLUME_THROUGHPUT
+        Throughput to provision for the root volume, in MiB/s. Only valid if
+        the volume type is GP3.
+
      --root-volume-type=ROOT_VOLUME_TYPE
         Type of the root volume. ROOT_VOLUME_TYPE must be one of: gp2, gp3.
 
@@ -206,6 +212,20 @@ FLAGS
 
        --enable-managed-prometheus
           Enable managed collection for Managed Service for Prometheus.
+
+     Default per node pool security group rules
+
+     At most one of these can be specified:
+
+       --disable-per-node-pool-sg-rules
+          Disable the default per node pool subnet security group rules on the
+          control plane security group. When disabled, at least one security
+          group that allows node pools to send traffic to the control plane on
+          ports TCP/443 and TCP/8132 must be provided.
+
+       --enable-per-node-pool-sg-rules
+          Enable the default per node pool subnet security group rules on the
+          control plane security group.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

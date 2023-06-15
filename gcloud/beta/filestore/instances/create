@@ -9,8 +9,10 @@ SYNOPSIS
         --network=[connect-mode=CONNECT-MODE],
           [name=NAME],[reserved-ip-range=RESERVED-IP-RANGE] [--async]
         [--description=DESCRIPTION] [--labels=[KEY=VALUE,...]]
-        [--location=LOCATION] [--protocol=PROTOCOL; default="NFS_V3"]
-        [--region=REGION] [--tier=TIER; default="BASIC_HDD"]
+        [--location=LOCATION]
+        [--managed-ad=[computer=COMPUTER],[domain=DOMAIN]]
+        [--protocol=PROTOCOL; default="NFS_V3"] [--region=REGION]
+        [--tier=TIER; default="BASIC_HDD"]
         [--kms-key=KMS_KEY : --kms-keyring=KMS_KEYRING
           --kms-location=KMS_LOCATION --kms-project=KMS_PROJECT]
         [GCLOUD_WIDE_FLAG ...]
@@ -29,6 +31,7 @@ EXAMPLES
         reserved-ip-range=RESERVED_IP_RANGE,connect-mode=CONNECT_MODE \
             --zone=ZONE --kms-key=KMS-KEY --kms-keyring=KMS_KEYRING \
             --kms-location=KMS_LOCATION --kms-project=KMS_PROJECT \
+            --managed-ad=domain=DOMAIN,computer=COMPUTER \
             --flags-file=FLAGS_FILE
 
         Example json configuration file:
@@ -41,6 +44,10 @@ EXAMPLES
               "10.0.0.0/8",
             ],
             "squash-mode": "NO_ROOT_SQUASH",
+            "security-flavors": [
+                "AUTH_SYS",
+                "KRB5P",
+            ],
           },
            {
             "access-mode": "READ_ONLY",
@@ -148,6 +155,20 @@ REQUIRED FLAGS
             NO_ROOT_SQUASH is specified, an error will be returned. The default
             value is 65534.
 
+         security-flavors
+            A list of security flavors that are allowed to be used during mount
+            command in NFSv4.1 filestore instances. The security flavors
+            supported are:
+         ◆ SECURITY_FLAVOR_UNSPECIFIED: SecurityFlavor not set. Defaults to
+           AUTH_SYS.
+         ◆ AUTH_SYS: The user's UNIX user-id and group-ids are passed in the
+           clear.
+         ◆ KRB5: The end-user authentication is done using Kerberos V5.
+         ◆ KRB5I: KRB5 plus integrity protection (data packets are tamper
+           proof).
+         ◆ KRB5P: KRB5I plus privacy protection (data packets are tamper
+           proof and encrypted).
+
          source-backup
             The name of the backup to restore from.
 
@@ -199,6 +220,19 @@ OPTIONAL FLAGS
 
      --location=LOCATION
         Location of the Cloud Filestore instance/operation.
+
+     --managed-ad=[computer=COMPUTER],[domain=DOMAIN]
+        Managed Active Directory configuration for an instance. Specifying both
+        domain name and a computer name (unique to the domain) to be created by
+        filestore instance.
+
+            domain
+               The desired domain full uri. i.e:
+               projects/PROJECT/locations/global/domains/DOMAIN
+
+            computer
+               The desired active directory computer name to be created by
+               filestore instance when connecting to the domain.
 
      --protocol=PROTOCOL; default="NFS_V3"
         The service protocol for the Cloud Filestore instance. PROTOCOL must be

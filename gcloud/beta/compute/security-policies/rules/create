@@ -4,7 +4,15 @@ NAME
 
 SYNOPSIS
     gcloud beta compute security-policies rules create PRIORITY --action=ACTION
-        (--expression=EXPRESSION | --src-ip-ranges=[SRC_IP_RANGE,...])
+        (--expression=EXPRESSION --network-dest-ip-ranges=[DEST_IP_RANGE,...]
+          --network-dest-ports=[DEST_PORT,...]
+          --network-ip-protocols=[IP_PROTOCOL,...]
+          --network-src-asns=[SRC_ASN,...]
+          --network-src-ip-ranges=[SRC_IP_RANGE,...]
+          --network-src-ports=[SRC_PORT,...]
+          --network-src-region-codes=[SRC_REGION_CODE,...]
+          --network-user-defined-fields=[NAME;VALUE:VALUE:...,...]
+          --src-ip-ranges=[SRC_IP_RANGE,...])
         [--ban-duration-sec=BAN_DURATION_SEC]
         [--ban-threshold-count=BAN_THRESHOLD_COUNT]
         [--ban-threshold-interval-sec=BAN_THRESHOLD_INTERVAL_SEC]
@@ -19,6 +27,8 @@ SYNOPSIS
         [--exceed-redirect-type=EXCEED_REDIRECT_TYPE] [--preview]
         [--rate-limit-threshold-count=RATE_LIMIT_THRESHOLD_COUNT]
         [--rate-limit-threshold-interval-sec=RATE_LIMIT_THRESHOLD_INTERVAL_SEC]
+        [--recaptcha-action-site-keys=[SITE_KEY,...]]
+        [--recaptcha-session-site-keys=[SITE_KEY,...]]
         [--redirect-target=REDIRECT_TARGET] [--redirect-type=REDIRECT_TYPE]
         [--region=REGION]
         [--request-headers-to-add=[REQUEST_HEADERS_TO_ADD,...]]
@@ -73,10 +83,47 @@ REQUIRED FLAGS
 
      Security policy rule matcher.
 
-     Exactly one of these must be specified:
+     At least one of these must be specified:
 
        --expression=EXPRESSION
           The Cloud Armor rules language expression to match for this rule.
+
+       --network-dest-ip-ranges=[DEST_IP_RANGE,...]
+          The destination IPs/IP ranges to match for this rule. To match all
+          IPs specify *.
+
+       --network-dest-ports=[DEST_PORT,...]
+          The destination ports to match for this rule. Each element can be an
+          16-bit unsigned decimal number (e.g. "80") or range (e.g."0-1023"),
+          To match all destination ports specify *.
+
+       --network-ip-protocols=[IP_PROTOCOL,...]
+          The IP protocols to match for this rule. Each element can be an 8-bit
+          unsigned decimal number (e.g. "6"), range (e.g."253-254"), or one of
+          the following protocol names: "tcp", "udp", "icmp", "esp", "ah",
+          "ipip", or "sctp". To match all protocols specify *.
+
+       --network-src-asns=[SRC_ASN,...]
+          BGP Autonomous System Number associated with the source IP address to
+          match for this rule.
+
+       --network-src-ip-ranges=[SRC_IP_RANGE,...]
+          The source IPs/IP ranges to match for this rule. To match all IPs
+          specify *.
+
+       --network-src-ports=[SRC_PORT,...]
+          The source ports to match for this rule. Each element can be an
+          16-bit unsigned decimal number (e.g. "80") or range (e.g."0-1023"),
+          To match all source ports specify *.
+
+       --network-src-region-codes=[SRC_REGION_CODE,...]
+          The two letter ISO 3166-1 alpha-2 country code associated with the
+          source IP address to match for this rule. To match all region codes
+          specify *.
+
+       --network-user-defined-fields=[NAME;VALUE:VALUE:...,...]
+          Each element names a defined field and lists the matching values for
+          that field.
 
        --src-ip-ranges=[SRC_IP_RANGE,...]
           The source IPs/IP ranges to match for this rule. To match all IPs
@@ -189,6 +236,18 @@ OPTIONAL FLAGS
      --rate-limit-threshold-interval-sec=RATE_LIMIT_THRESHOLD_INTERVAL_SEC
         Interval over which the threshold for rate limiting requests is
         computed.
+
+     --recaptcha-action-site-keys=[SITE_KEY,...]
+        A comma-separated list of site keys to be used during the validation of
+        reCAPTCHA action-tokens. The provided site keys need to be created from
+        the reCAPTCHA API under the same project where the security policy is
+        created.
+
+     --recaptcha-session-site-keys=[SITE_KEY,...]
+        A comma-separated list of site keys to be used during the validation of
+        reCAPTCHA session-tokens. The provided site keys need to be created
+        from the reCAPTCHA API under the same project where the security policy
+        is created.
 
      --redirect-target=REDIRECT_TARGET
         URL target for the redirect action. Must be specified if the redirect

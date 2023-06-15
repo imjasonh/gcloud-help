@@ -1,0 +1,251 @@
+NAME
+    gcloud beta netapp volumes update - update a Cloud NetApp Volume
+
+SYNOPSIS
+    gcloud beta netapp volumes update (VOLUME : --location=LOCATION) [--async]
+        [--capacity=CAPACITY] [--description=DESCRIPTION]
+        [--enable-kerberos=ENABLE_KERBEROS]
+        [--export-policy=[access-type=ACCESS-TYPE],
+          [allowed-clients=ALLOWED-CLIENTS],[has-root-access=HAS-ROOT-ACCESS],
+          [kerberos-5-read-only=KERBEROS-5-READ-ONLY],
+          [kerberos-5-read-write=KERBEROS-5-READ-WRITE],
+          [kerberos-5i-read-only=KERBEROS-5I-READ-ONLY],
+          [kerberos-5i-read-write=KERBEROS-5I-READ-WRITE],
+          [kerberos-5p-read-only=KERBEROS-5P-READ-ONLY],
+          [kerberos-5p-read-write=KERBEROS-5P-READ-WRITE],
+          [nfsv3=NFSV3],[nfsv4=NFSV4]] [--protocols=PROTOCOL,[PROTOCOL,...]]
+        [--security-style=SECURITY_STYLE; default="SECURITY_STYLE_UNSPECIFIED"]
+        [--share-name=SHARE_NAME]
+        [--smb-settings=SMB_SETTING,[SMB_SETTING,...]]
+        [--snap-reserve=SNAP_RESERVE]
+        [--snapshot-daily=[hour=HOUR],
+          [minute=MINUTE],[snapshots-to-keep=SNAPSHOTS-TO-KEEP]]
+        [--snapshot-directory=SNAPSHOT_DIRECTORY; default="true"]
+        [--snapshot-hourly=[minute=MINUTE],
+          [snapshots-to-keep=SNAPSHOTS-TO-KEEP]]
+        [--snapshot-monthly=[day=DAY],
+          [hour=HOUR],[minute=MINUTE],[snapshots-to-keep=SNAPSHOTS-TO-KEEP]]
+        [--snapshot-weekly=[day=DAY],
+          [hour=HOUR],[minute=MINUTE],[snapshots-to-keep=SNAPSHOTS-TO-KEEP]]
+        [--source-snapshot=SOURCE_SNAPSHOT] [--storage-pool=STORAGE_POOL]
+        [--unix-permissions=UNIX_PERMISSIONS] [--update-labels=[KEY=VALUE,...]]
+        [--clear-labels | --remove-labels=[KEY,...]] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Update a Cloud NetApp Volume and its specified parameters
+
+EXAMPLES
+    The following command updates a Volume named NAME and its specified
+    parameters
+
+        $ gcloud beta netapp volumes update NAME --location=us-central1 \
+          --capacity=4096 --description="new description" \
+          --enable-kerberos=false --storage-pool=sp3 \
+          --unix-permissions=0777
+
+POSITIONAL ARGUMENTS
+     Volume resource - The Volume to update. The arguments in this group can be
+     used to specify the attributes of this resource. (NOTE) Some attributes
+     are not given arguments in this group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument volume on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       VOLUME
+          ID of the volume or fully qualified identifier for the volume.
+
+          To set the volume attribute:
+          ▸ provide the argument volume on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          The location of the volume.
+
+          To set the location attribute:
+          ▸ provide the argument volume on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property netapp/location;
+          ▸ set the property netapp/region.
+
+FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --capacity=CAPACITY
+        The desired capacity of the Volume in GiB or TiB units.If no capacity
+        unit is specified, GiB is assumed.
+
+     --description=DESCRIPTION
+        A description of the Cloud NetApp Volume
+
+     --enable-kerberos=ENABLE_KERBEROS
+        Boolean flag indicating whether Volume is a kerberos Volume or not
+
+     --export-policy=[access-type=ACCESS-TYPE],[allowed-clients=ALLOWED-CLIENTS],[has-root-access=HAS-ROOT-ACCESS],[kerberos-5-read-only=KERBEROS-5-READ-ONLY],[kerberos-5-read-write=KERBEROS-5-READ-WRITE],[kerberos-5i-read-only=KERBEROS-5I-READ-ONLY],[kerberos-5i-read-write=KERBEROS-5I-READ-WRITE],[kerberos-5p-read-only=KERBEROS-5P-READ-ONLY],[kerberos-5p-read-write=KERBEROS-5P-READ-WRITE],[nfsv3=NFSV3],[nfsv4=NFSV4]
+        Export Policy of a Cloud NetApp Files Volume. This will be a field
+        similar to network in which export policy fields can be specified as
+        such: --export-policy=allowed-clients=ALLOWED_CLIENTS_IP_ADDRESSES,
+        has-root-access=HAS_ROOT_ACCESS_BOOL,access=ACCESS_TYPE,nfsv3=NFSV3,
+        nfsv4=NFSV4,kerberos-5-read-only=KERBEROS_5_READ_ONLY,
+        kerberos-5-read-write=KERBEROS_5_READ_WRITE,
+        kerberos-5i-read-only=KERBEROS_5I_READ_ONLY,
+        kerberos-5i-read-write=KERBEROS_5I_READ_WRITE,
+        kerberos-5p-read-only=KERBEROS_5P_READ_ONLY,
+        kerberos-5p-read-write=KERBEROS_5P_READ_WRITE
+
+     --protocols=PROTOCOL,[PROTOCOL,...]
+        Type of File System protocols for the Cloud NetApp Files VolumeValid
+        component values are: NFSV3, NFSV4, SMB
+
+            For more information, look athttps://cloud.google.com/netapp/docs/reference/rest/v1alpha1/projects.locations.volumes#protocols.
+
+     --security-style=SECURITY_STYLE; default="SECURITY_STYLE_UNSPECIFIED"
+        The security style of the Volume. This can either be UNIX or NTFS.
+
+        SECURITY_STYLE must be one of:
+
+         ntfs
+            NTFS security style for Volume.
+         unix
+            UNIX security style for Volume
+
+     --share-name=SHARE_NAME
+        Share name of the Mount path clients will use.
+
+     --smb-settings=SMB_SETTING,[SMB_SETTING,...]
+        List of settings specific to SMB protocolfor a Cloud NetApp Files
+        VolumeValid component values are: ENCRYPT_DATA, BROWSABLE,
+        CHANGE_NOTIFY, NON_BROWSABLE, OPLOCKS, SHOW_SNAPSHOT,
+        SHOW_PREVIOUS_VERSIONS, ACCESS_BASED_ENUMERATION,
+        CONTINUOUSLY_AVAILABLE
+
+            For more information, look at https://cloud.google.com/netapp/docs/reference/rest/v1alpha1/projects.locations.volumes#smbsettings.
+
+     --snap-reserve=SNAP_RESERVE
+        The percentage of volume storage reserved for snapshot storage. The
+        default value for this is 0 percent
+
+     --snapshot-daily=[hour=HOUR],[minute=MINUTE],[snapshots-to-keep=SNAPSHOTS-TO-KEEP]
+        Make a snapshot every day e.g. at 06:00, 05:20, 23:50
+
+     --snapshot-directory=SNAPSHOT_DIRECTORY; default="true"
+        Snapshot Directory if enabled (true) makes the Volume contain a
+        read-only .snapshot directory which provides access to each of the
+        volume's snapshots
+
+     --snapshot-hourly=[minute=MINUTE],[snapshots-to-keep=SNAPSHOTS-TO-KEEP]
+        Make a snapshot every hour e.g. at 04:00, 05:20, 06:00
+
+     --snapshot-monthly=[day=DAY],[hour=HOUR],[minute=MINUTE],[snapshots-to-keep=SNAPSHOTS-TO-KEEP]
+        Make a snapshot once a month e.g. at 2nd 04:00, 7th 05:20, 24th 23:50
+
+     --snapshot-weekly=[day=DAY],[hour=HOUR],[minute=MINUTE],[snapshots-to-keep=SNAPSHOTS-TO-KEEP]
+        Make a snapshot every week e.g. at Monday 04:00, Wednesday 05:20,
+        Sunday 23:50
+
+     Snapshot resource - The source Snapshot to create the Volume from. This
+     represents a Cloud resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument --source-snapshot on the command line with a
+        fully specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument --source-snapshot on the command line with a
+        fully specified name;
+      ◆ set the property netapp/location;
+      ◆ set the property netapp/region.
+
+     To set the volume attribute:
+      ◆ provide the argument --source-snapshot on the command line with a
+        fully specified name.
+
+       --source-snapshot=SOURCE_SNAPSHOT
+          ID of the snapshot or fully qualified identifier for the snapshot.
+
+          To set the snapshot attribute:
+          ▸ provide the argument --source-snapshot on the command line.
+
+     Storage pool resource - The Storage Pool to associate with Volume. This
+     represents a Cloud resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument --storage-pool on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument --storage-pool on the command line with a fully
+        specified name;
+      ◆ provide the argument --location on the command line;
+      ◆ set the property netapp/location;
+      ◆ set the property netapp/region.
+
+       --storage-pool=STORAGE_POOL
+          ID of the storage_pool or fully qualified identifier for the
+          storage_pool.
+
+          To set the storage_pool attribute:
+          ▸ provide the argument --storage-pool on the command line.
+
+     --unix-permissions=UNIX_PERMISSIONS
+        Unix permissions the mount point will be created with.Unix permissions
+        are only applicable with NFS protocol only
+
+     --update-labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to update. If a label exists, its value
+        is modified. Otherwise, a new label is created.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     At most one of these can be specified:
+
+       --clear-labels
+          Remove all labels. If --update-labels is also specified then
+          --clear-labels is applied first.
+
+          For example, to remove all labels:
+
+              $ gcloud beta netapp volumes update --clear-labels
+
+          To remove all existing labels and create two new labels, foo and baz:
+
+              $ gcloud beta netapp volumes update --clear-labels \
+                --update-labels foo=bar,baz=qux
+
+       --remove-labels=[KEY,...]
+          List of label keys to remove. If a label does not exist it is
+          silently ignored. If --update-labels is also specified then
+          --update-labels is applied first.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud alpha netapp volumes update
+

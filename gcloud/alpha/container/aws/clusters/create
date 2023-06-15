@@ -14,17 +14,19 @@ SYNOPSIS
         --subnet-ids=[SUBNET_ID,...] --vpc-id=VPC_ID
         [--admin-users=USER,[USER,...]]
         [--annotations=ANNOTATION,[ANNOTATION,...]] [--async]
-        [--description=DESCRIPTION] [--enable-managed-prometheus]
-        [--instance-placement=INSTANCE_PLACEMENT]
+        [--description=DESCRIPTION] [--disable-per-node-pool-sg-rules]
+        [--enable-managed-prometheus] [--instance-placement=INSTANCE_PLACEMENT]
         [--instance-type=INSTANCE_TYPE] [--logging=COMPONENT,[COMPONENT,...]]
         [--main-volume-iops=MAIN_VOLUME_IOPS]
         [--main-volume-kms-key-arn=MAIN_VOLUME_KMS_KEY_ARN]
         [--main-volume-size=MAIN_VOLUME_SIZE]
+        [--main-volume-throughput=MAIN_VOLUME_THROUGHPUT]
         [--main-volume-type=MAIN_VOLUME_TYPE]
         [--role-session-name=ROLE_SESSION_NAME]
         [--root-volume-iops=ROOT_VOLUME_IOPS]
         [--root-volume-kms-key-arn=ROOT_VOLUME_KMS_KEY_ARN]
         [--root-volume-size=ROOT_VOLUME_SIZE]
+        [--root-volume-throughput=ROOT_VOLUME_THROUGHPUT]
         [--root-volume-type=ROOT_VOLUME_TYPE]
         [--security-group-ids=[SECURITY_GROUP_ID,...]]
         [--ssh-ec2-key-pair=SSH_EC2_KEY_PAIR] [--tags=TAG,[TAG,...]]
@@ -133,6 +135,12 @@ OPTIONAL FLAGS
      --description=DESCRIPTION
         Description for the cluster.
 
+     --disable-per-node-pool-sg-rules
+        Disable the default per node pool subnet security group rules on the
+        control plane security group. When disabled, at least one security
+        group that allows node pools to send traffic to the control plane on
+        ports TCP/443 and TCP/8132 must be provided.
+
      --enable-managed-prometheus
         Enable managed collection for Managed Service for Prometheus.
 
@@ -167,6 +175,10 @@ OPTIONAL FLAGS
         size unit of GB for gigabyte, or TB for terabyte. If no size unit is
         specified, GB is assumed.
 
+     --main-volume-throughput=MAIN_VOLUME_THROUGHPUT
+        Throughput to provision for the main volume, in MiB/s. Only valid if
+        the volume type is GP3.
+
      --main-volume-type=MAIN_VOLUME_TYPE
         Type of the main volume. MAIN_VOLUME_TYPE must be one of: gp2, gp3.
 
@@ -185,6 +197,10 @@ OPTIONAL FLAGS
         Size of the root volume. The value must be a whole number followed by a
         size unit of GB for gigabyte, or TB for terabyte. If no size unit is
         specified, GB is assumed.
+
+     --root-volume-throughput=ROOT_VOLUME_THROUGHPUT
+        Throughput to provision for the root volume, in MiB/s. Only valid if
+        the volume type is GP3.
 
      --root-volume-type=ROOT_VOLUME_TYPE
         Type of the root volume. ROOT_VOLUME_TYPE must be one of: gp2, gp3.

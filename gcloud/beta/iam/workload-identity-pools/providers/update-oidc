@@ -10,7 +10,8 @@ SYNOPSIS
         [--attribute-condition=ATTRIBUTE_CONDITION]
         [--attribute-mapping=[ATTRIBUTE_MAPPING,...]]
         [--description=DESCRIPTION] [--disabled] [--display-name=DISPLAY_NAME]
-        [--issuer-uri=ISSUER_URI] [GCLOUD_WIDE_FLAG ...]
+        [--issuer-uri=ISSUER_URI] [--jwk-json-path=JWK_JSON_PATH]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) Update an OIDC workload identity pool provider.
@@ -29,7 +30,7 @@ EXAMPLES
             --attribute-condition="true" \
             --issuer-uri="https://test-idp.com" \
             --allowed-audiences=https://test-audience-1.com,https://\
-        test-audience-2.com
+        test-audience-2.com --jwk-json-path="path/to/jwk.json"
 
 POSITIONAL ARGUMENTS
      Workload identity pool provider resource - The workload identity pool
@@ -204,6 +205,25 @@ FLAGS
 
      --issuer-uri=ISSUER_URI
         The OIDC issuer URL.
+
+     --jwk-json-path=JWK_JSON_PATH
+        Optional file containing jwk public keys. The file format must follow
+        jwk specifications (https://www.rfc-editor.org/rfc/rfc7517#section-4).
+        Example file format:            {
+              "keys": [
+                 {
+                      "kty": "RSA/EC",
+                      "alg": "<algorithm>",
+                      "use": "sig",
+                      "kid": "<key-id>",
+                      "n": "",
+                      "e": ""
+                      "x": ""
+                      "y": ""
+                      "crv": ""
+                 }
+              ]
+            }
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

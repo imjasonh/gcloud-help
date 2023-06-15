@@ -14,6 +14,7 @@ SYNOPSIS
         [--enable-google-cloud-access]
         [--enable-kubernetes-unstable-apis=API,[API,...]]
         [--enable-master-global-access] [--fleet-project=PROJECT_ID_OR_NUMBER]
+        [--logging=[COMPONENT,...]] [--monitoring=[COMPONENT,...]]
         [--network=NETWORK] [--private-endpoint-subnetwork=NAME]
         [--release-channel=CHANNEL] [--security-group=SECURITY_GROUP]
         [--services-ipv4-cidr=CIDR] [--services-secondary-range-name=NAME]
@@ -184,6 +185,34 @@ FLAGS
         Example: $ gcloud beta container clusters create-auto \
         --fleet-project=my-project
 
+     --logging=[COMPONENT,...]
+        Set the components that have logging enabled. Valid component values
+        are: SYSTEM, WORKLOAD, API_SERVER, CONTROLLER_MANAGER, SCHEDULER, NONE
+
+        For more information, see
+        https://cloud.google.com/stackdriver/docs/solutions/gke/installing#available-logs
+
+        Examples:
+
+            $ gcloud beta container clusters create-auto --logging=SYSTEM
+            $ gcloud beta container clusters create-auto \
+                --logging=SYSTEM,API_SERVER,WORKLOAD
+            $ gcloud beta container clusters create-auto --logging=NONE
+
+     --monitoring=[COMPONENT,...]
+        Set the components that have monitoring enabled. Valid component values
+        are: SYSTEM, WORKLOAD (Deprecated), NONE, API_SERVER,
+        CONTROLLER_MANAGER, SCHEDULER
+
+        For more information, see
+        https://cloud.google.com/stackdriver/docs/solutions/gke/installing#available-metrics
+
+        Examples:
+
+            $ gcloud beta container clusters create-auto \
+                --monitoring=SYSTEM,API_SERVER
+            $ gcloud beta container clusters create-auto --monitoring=NONE
+
      --network=NETWORK
         The Compute Engine Network that the cluster will connect to. Google
         Kubernetes Engine will use this network when creating routes and
@@ -272,9 +301,9 @@ FLAGS
 
        --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
           Enable Binary Authorization for this cluster.
-          BINAUTHZ_EVALUATION_MODE must be one of: BOUND_POLICIES,
-          BOUND_POLICIES_AND_PROJECT_SINGLETON_POLICY_ENFORCE, DISABLED,
-          MONITORING, MONITORING_AND_PROJECT_SINGLETON_POLICY_ENFORCE,
+          BINAUTHZ_EVALUATION_MODE must be one of: DISABLED, MONITORING,
+          MONITORING_AND_PROJECT_SINGLETON_POLICY_ENFORCE, POLICY_BINDINGS,
+          POLICY_BINDINGS_AND_PROJECT_SINGLETON_POLICY_ENFORCE,
           PROJECT_SINGLETON_POLICY_ENFORCE.
 
        --binauthz-policy=BINAUTHZ_POLICY
