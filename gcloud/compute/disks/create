@@ -6,16 +6,20 @@ SYNOPSIS
         [--architecture=ARCHITECTURE] [--csek-key-file=FILE]
         [--description=DESCRIPTION]
         [--guest-os-features=[GUEST_OS_FEATURE,...]] [--labels=[KEY=VALUE,...]]
-        [--licenses=[LICENSE,...]] [--provisioned-iops=PROVISIONED_IOPS]
+        [--licenses=[LICENSE,...]]
+        [--primary-disk-project=PRIMARY_DISK_PROJECT]
+        [--provisioned-iops=PROVISIONED_IOPS]
         [--provisioned-throughput=PROVISIONED_THROUGHPUT]
         [--replica-zones=ZONE,ZONE] [--no-require-csek-key-create]
         [--resource-policies=[RESOURCE_POLICY,...]] [--size=SIZE] [--type=TYPE]
         [--image-family-scope=IMAGE_FAMILY_SCOPE
           --image-project=IMAGE_PROJECT --image=IMAGE
-          | --image-family=IMAGE_FAMILY | --source-disk=SOURCE_DISK
-          | --source-snapshot=SOURCE_SNAPSHOT]
+          | --image-family=IMAGE_FAMILY | --primary-disk=PRIMARY_DISK
+          | --source-disk=SOURCE_DISK | --source-snapshot=SOURCE_SNAPSHOT]
         [--kms-key=KMS_KEY : --kms-keyring=KMS_KEYRING
           --kms-location=KMS_LOCATION --kms-project=KMS_PROJECT]
+        [--primary-disk-region=PRIMARY_DISK_REGION
+          | --primary-disk-zone=PRIMARY_DISK_ZONE]
         [--region=REGION | --zone=ZONE]
         [--source-disk-region=SOURCE_DISK_REGION
           | --source-disk-zone=SOURCE_DISK_ZONE] [GCLOUD_WIDE_FLAG ...]
@@ -89,6 +93,9 @@ FLAGS
         A list of URIs to license resources. The provided licenses will be
         added onto the created disks to indicate the licensing and billing
         policies.
+
+     --primary-disk-project=PRIMARY_DISK_PROJECT
+        Project of the primary disk for asynchronous replication.
 
      --provisioned-iops=PROVISIONED_IOPS
         Provisioned IOPS of disk to create. Only for use with disks of type
@@ -173,6 +180,10 @@ FLAGS
           practice to use --image-family when the latest version of an image is
           needed.
 
+       --primary-disk=PRIMARY_DISK
+          Primary disk for asynchronous replication. This flag is required when
+          creating a secondary disk.
+
        --source-disk=SOURCE_DISK
           Source disk used to create the disk(s). It is safe to delete a source
           disk after a disk has been created from the source disk. To get a
@@ -237,6 +248,18 @@ FLAGS
             specified name;
           ▸ provide the argument --kms-project on the command line;
           ▸ set the property core/project.
+
+     At most one of these can be specified:
+
+       --primary-disk-region=PRIMARY_DISK_REGION
+          Region of the primary disk for asynchronous replication. The primary
+          and secondary disks must not be in the same region. Overrides the
+          default compute/region property value for this command invocation.
+
+       --primary-disk-zone=PRIMARY_DISK_ZONE
+          Zone of the primary disk for asynchronous replication. The primary
+          and secondary disks must not be in the same region. Overrides the
+          default compute/zone property value for this command invocation.
 
      At most one of these can be specified:
 

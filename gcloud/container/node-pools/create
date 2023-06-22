@@ -5,6 +5,7 @@ NAME
 SYNOPSIS
     gcloud container node-pools create NAME
         [--accelerator=[type=TYPE,[count=COUNT,
+          gpu-driver-version=GPU_DRIVER_VERSION,
           gpu-partition-size=GPU_PARTITION_SIZE,
           gpu-sharing-strategy=GPU_SHARING_STRATEGY,
           max-shared-clients-per-gpu=MAX_SHARED_CLIENTS_PER_GPU],...]]
@@ -30,7 +31,9 @@ SYNOPSIS
         [--node-taints=[NODE_TAINT,...]] [--node-version=NODE_VERSION]
         [--num-nodes=NUM_NODES; default=3] [--placement-type=PLACEMENT_TYPE]
         [--preemptible] [--sandbox=[type=TYPE]]
-        [--shielded-integrity-monitoring] [--shielded-secure-boot] [--spot]
+        [--shielded-integrity-monitoring] [--shielded-secure-boot]
+        [--sole-tenant-node-affinity-file=SOLE_TENANT_NODE_AFFINITY_FILE]
+        [--spot]
         [--standard-rollout-policy=[batch-node-count=BATCH_NODE_COUNT,
           batch-percent=BATCH_NODE_PERCENTAGE,
           batch-soak-duration=BATCH_SOAK_DURATION,...]]
@@ -78,7 +81,7 @@ POSITIONAL ARGUMENTS
         The name of the node pool to create.
 
 FLAGS
-     --accelerator=[type=TYPE,[count=COUNT,gpu-partition-size=GPU_PARTITION_SIZE,gpu-sharing-strategy=GPU_SHARING_STRATEGY,max-shared-clients-per-gpu=MAX_SHARED_CLIENTS_PER_GPU],...]
+     --accelerator=[type=TYPE,[count=COUNT,gpu-driver-version=GPU_DRIVER_VERSION,gpu-partition-size=GPU_PARTITION_SIZE,gpu-sharing-strategy=GPU_SHARING_STRATEGY,max-shared-clients-per-gpu=MAX_SHARED_CLIENTS_PER_GPU],...]
         Attaches accelerators (e.g. GPUs) to all nodes.
 
          type
@@ -90,6 +93,20 @@ FLAGS
          count
             (Optional) The number of accelerators to attach to the instances.
             The default value is 1.
+
+         gpu-driver-version
+            (Optional) The NVIDIA driver version to install. GPU_DRIVER_VERSION
+            must be one of:
+
+                `default`: Install the default driver version. If you omit the flag `gpu-driver-version`,
+                this is the default option.
+
+                `latest`: Install the latest available driver version. Available only for
+                nodes that use Container-Optimized OS.
+
+                `disabled`: Skip automatic driver installation. You must [manually install a
+                driver](https://cloud.google.com/kubernetes-engine/docs/how-to/gpus#installing_drivers)
+                after you create the cluster.
 
          gpu-partition-size
             (Optional) The GPU partition size used when running multi-instance
@@ -466,6 +483,27 @@ FLAGS
      --shielded-secure-boot
         The instance will boot with secure boot enabled.
 
+     --sole-tenant-node-affinity-file=SOLE_TENANT_NODE_AFFINITY_FILE
+        JSON/YAML file containing the configuration of desired sole tenant
+        nodes onto which this node pool could be backed by. These rules filter
+        the nodes according to their node affinity labels. A node's affinity
+        labels come from the node template of the group the node is in.
+
+        The file should contain a list of a JSON/YAML objects. For an example,
+        see
+        https://cloud.google.com/compute/docs/nodes/provisioning-sole-tenant-vms#configure_node_affinity_labels.
+        The following list describes the fields:
+
+         key
+            Corresponds to the node affinity label keys of the Node resource.
+         operator
+            Specifies the node selection type. Must be one of: IN: Requires
+            Compute Engine to seek for matched nodes. NOT_IN: Requires Compute
+            Engine to avoid certain nodes.
+         values
+            Optional. A list of values which correspond to the node affinity
+            label values of the Node resource.
+
      --spot
         Create nodes using spot VM instances in the new node pool.
 
@@ -478,7 +516,7 @@ FLAGS
      --standard-rollout-policy=[batch-node-count=BATCH_NODE_COUNT,batch-percent=BATCH_NODE_PERCENTAGE,batch-soak-duration=BATCH_SOAK_DURATION,...]
         Standard rollout policy options for blue-green upgrade.
 
-        Batch sizes are specfied by one of, batch-node-count or batch-percent.
+        Batch sizes are specified by one of, batch-node-count or batch-percent.
         The duration between batches is specified by batch-soak-duration.
 
             $ gcloud container node-pools create example-cluster  \

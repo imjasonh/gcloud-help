@@ -29,10 +29,15 @@ SYNOPSIS
           pubsub-topic=TOPIC,...]
           | --private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE
           | --release-channel=CHANNEL | --remove-labels=[KEY,...]
-          | --security-group=SECURITY_GROUP | --set-password
+          | --remove-workload-policies=REMOVE_WORKLOAD_POLICIES
+          | --security-group=SECURITY_GROUP
+          | --security-posture=SECURITY_POSTURE | --set-password
           | --stack-type=STACK_TYPE | --start-credential-rotation
           | --start-ip-rotation | --update-addons=[ADDON=ENABLED|DISABLED,...]
-          | --update-labels=[KEY=VALUE,...] | --workload-pool=WORKLOAD_POOL
+          | --update-labels=[KEY=VALUE,...]
+          | --workload-policies=WORKLOAD_POLICIES
+          | --workload-pool=WORKLOAD_POOL
+          | --workload-vulnerability-scanning=WORKLOAD_VULNERABILITY_SCANNING
           | --additional-pod-ipv4-ranges=NAME,[NAME,...]
           --remove-additional-pod-ipv4-ranges=NAME,[NAME,...]
           | --additional-zones=[ZONE,...] | --node-locations=ZONE,[ZONE,...]
@@ -498,6 +503,16 @@ REQUIRED FLAGS
               $ gcloud beta container clusters update example-cluster \
                   --remove-labels=label_a,label_b
 
+       --remove-workload-policies=REMOVE_WORKLOAD_POLICIES
+          Remove Autopilot workload policies from the cluster.
+
+          Examples:
+
+              $ gcloud beta container clusters update example-cluster \
+                  --remove-workload-policies=allow-net-admin
+
+          The only supported workload policy is 'allow-net-admin'.
+
        --security-group=SECURITY_GROUP
           The name of the RBAC security group for use with Google security
           groups in Kubernetes RBAC
@@ -508,6 +523,18 @@ REQUIRED FLAGS
           by including it as a direct member of this group.
 
           If unspecified, no groups will be returned for use with RBAC.
+
+       --security-posture=SECURITY_POSTURE
+          Sets the mode of the Kubernetes security posture API's off-cluster
+          features.
+
+          To enable in standard mode explicitly set the flag to
+          --security-posture=standard
+
+          To disable in an existing cluster, explicitly set the flag to
+          --security-posture=disabled.
+
+          SECURITY_POSTURE must be one of: disabled, standard.
 
        --set-password
           Set the basic auth password to the specified value, keeping the
@@ -559,6 +586,16 @@ REQUIRED FLAGS
               $ gcloud beta container clusters update example-cluster \
                   --update-labels=label_a=value1,label_b=value2
 
+       --workload-policies=WORKLOAD_POLICIES
+          Add Autopilot workload policies to the cluster.
+
+          Examples:
+
+              $ gcloud beta container clusters update example-cluster \
+                  --workload-policies=allow-net-admin
+
+          The only supported workload policy is 'allow-net-admin'.
+
        --workload-pool=WORKLOAD_POOL
           Enable Workload Identity on the cluster.
 
@@ -571,6 +608,18 @@ REQUIRED FLAGS
           For more information on Workload Identity, see
 
               https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity
+
+       --workload-vulnerability-scanning=WORKLOAD_VULNERABILITY_SCANNING
+          Sets the mode of the Kubernetes security posture API's workload
+          vulnerability scanning.
+
+          To enable in standard mode explicitly set the flag to
+          --workload-vulnerability-scanning=standard.
+
+          To disable in an existing cluster, explicitly set the flag to
+          --workload-vulnerability-scanning=disabled.
+
+          WORKLOAD_VULNERABILITY_SCANNING must be one of: disabled, standard.
 
        --additional-pod-ipv4-ranges=NAME,[NAME,...]
           Additional IP address ranges(by name) for pods that need to be added

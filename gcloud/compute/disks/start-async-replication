@@ -1,0 +1,107 @@
+NAME
+    gcloud compute disks start-async-replication - start asynchronous
+        replication on a Compute Engine persistent disk
+
+SYNOPSIS
+    gcloud compute disks start-async-replication DISK_NAME
+        --secondary-disk=SECONDARY_DISK (--region=REGION | --zone=ZONE)
+        (--secondary-disk-region=SECONDARY_DISK_REGION
+          | --secondary-disk-zone=SECONDARY_DISK_ZONE)
+        [--secondary-disk-project=SECONDARY_DISK_PROJECT]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    gcloud compute disks start-async-replication starts async replication on a
+    Compute Engine persistent disk. This command must be invoked on the primary
+    disk and --secondary-disk must be provided.
+
+EXAMPLES
+    Start replication from the primary disk 'my-disk-1' in zone us-east1-a to
+    the secondary disk 'my-disk-2' in zone us-west1-a:
+
+        $ gcloud compute disks start-async-replication my-disk-1 \
+            --zone=us-east1-a --secondary-disk=my-disk-2 \
+            --secondary-disk-zone=us-west1-a
+
+POSITIONAL ARGUMENTS
+     DISK_NAME
+        Name of the disk to operate on.
+
+REQUIRED FLAGS
+     --secondary-disk=SECONDARY_DISK
+        Secondary disk for asynchronous replication. This flag is required when
+        starting replication.
+
+     Exactly one of these must be specified:
+
+       --region=REGION
+          Region of the disk to operate on. If not specified, you might be
+          prompted to select a region (interactive mode only).
+
+          To avoid prompting when this flag is omitted, you can set the
+          compute/region property:
+
+              $ gcloud config set compute/region REGION
+
+          A list of regions can be fetched by running:
+
+              $ gcloud compute regions list
+
+          To unset the property, run:
+
+              $ gcloud config unset compute/region
+
+          Alternatively, the region can be stored in the environment variable
+          CLOUDSDK_COMPUTE_REGION.
+
+       --zone=ZONE
+          Zone of the disk to operate on. If not specified and the compute/zone
+          property isn't set, you might be prompted to select a zone
+          (interactive mode only).
+
+          To avoid prompting when this flag is omitted, you can set the
+          compute/zone property:
+
+              $ gcloud config set compute/zone ZONE
+
+          A list of zones can be fetched by running:
+
+              $ gcloud compute zones list
+
+          To unset the property, run:
+
+              $ gcloud config unset compute/zone
+
+          Alternatively, the zone can be stored in the environment variable
+          CLOUDSDK_COMPUTE_ZONE.
+
+     Exactly one of these must be specified:
+
+       --secondary-disk-region=SECONDARY_DISK_REGION
+          Region of the secondary disk for asynchronous replication. Overrides
+          the default compute/region property value for this command
+          invocation.
+
+       --secondary-disk-zone=SECONDARY_DISK_ZONE
+          Zone of the secondary disk for asynchronous replication. Overrides
+          the default compute/zone property value for this command invocation.
+
+SECONDARY DISK FLAGS
+     --secondary-disk-project=SECONDARY_DISK_PROJECT
+        Project of the secondary disk for asynchronous replication.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha compute disks start-async-replication
+
+        $ gcloud beta compute disks start-async-replication
+

@@ -17,8 +17,10 @@ SYNOPSIS
         [--logging=[COMPONENT,...]] [--monitoring=[COMPONENT,...]]
         [--network=NETWORK] [--private-endpoint-subnetwork=NAME]
         [--release-channel=CHANNEL] [--security-group=SECURITY_GROUP]
-        [--services-ipv4-cidr=CIDR] [--services-secondary-range-name=NAME]
-        [--subnetwork=SUBNETWORK]
+        [--security-posture=SECURITY_POSTURE] [--services-ipv4-cidr=CIDR]
+        [--services-secondary-range-name=NAME] [--subnetwork=SUBNETWORK]
+        [--workload-policies=WORKLOAD_POLICIES]
+        [--workload-vulnerability-scanning=WORKLOAD_VULNERABILITY_SCANNING]
         [--binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
           --binauthz-policy=BINAUTHZ_POLICY]
         [--enable-master-authorized-networks
@@ -269,6 +271,18 @@ FLAGS
 
         If unspecified, no groups will be returned for use with RBAC.
 
+     --security-posture=SECURITY_POSTURE
+        Sets the mode of the Kubernetes security posture API's off-cluster
+        features.
+
+        To enable in standard mode explicitly set the flag to
+        --security-posture=standard
+
+        To disable in an existing cluster, explicitly set the flag to
+        --security-posture=disabled.
+
+        SECURITY_POSTURE must be one of: disabled, standard.
+
      --services-ipv4-cidr=CIDR
         Set the IP range for the services IPs.
 
@@ -296,6 +310,28 @@ FLAGS
         specified by --network.
 
         Cannot be used with the "--create-subnetwork" option.
+
+     --workload-policies=WORKLOAD_POLICIES
+        Add Autopilot workload policies to the cluster.
+
+        Examples:
+
+            $ gcloud beta container clusters create-auto example-cluster \
+                --workload-policies=allow-net-admin
+
+        The only supported workload policy is 'allow-net-admin'.
+
+     --workload-vulnerability-scanning=WORKLOAD_VULNERABILITY_SCANNING
+        Sets the mode of the Kubernetes security posture API's workload
+        vulnerability scanning.
+
+        To enable in standard mode explicitly set the flag to
+        --workload-vulnerability-scanning=standard.
+
+        To disable in an existing cluster, explicitly set the flag to
+        --workload-vulnerability-scanning=disabled.
+
+        WORKLOAD_VULNERABILITY_SCANNING must be one of: disabled, standard.
 
      Flags for Binary Authorization:
 

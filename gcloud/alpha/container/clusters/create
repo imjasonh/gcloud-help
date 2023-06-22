@@ -5,6 +5,7 @@ NAME
 SYNOPSIS
     gcloud alpha container clusters create NAME
         [--accelerator=[type=TYPE,[count=COUNT,
+          gpu-driver-version=GPU_DRIVER_VERSION,
           gpu-partition-size=GPU_PARTITION_SIZE,
           gpu-sharing-strategy=GPU_SHARING_STRATEGY,
           max-shared-clients-per-gpu=MAX_SHARED_CLIENTS_PER_GPU],...]]
@@ -59,12 +60,14 @@ SYNOPSIS
         [--private-endpoint-subnetwork=NAME]
         [--private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE]
         [--release-channel=CHANNEL] [--security-group=SECURITY_GROUP]
-        [--services-ipv4-cidr=CIDR] [--services-secondary-range-name=NAME]
+        [--security-posture=SECURITY_POSTURE] [--services-ipv4-cidr=CIDR]
+        [--services-secondary-range-name=NAME]
         [--shielded-integrity-monitoring] [--shielded-secure-boot] [--spot]
         [--stack-type=STACK_TYPE] [--subnetwork=SUBNETWORK]
         [--system-config-from-file=SYSTEM_CONFIG_FROM_FILE]
         [--tags=TAG,[TAG,...]] [--threads-per-core=THREADS_PER_CORE]
         [--workload-metadata=WORKLOAD_METADATA] [--workload-pool=WORKLOAD_POOL]
+        [--workload-vulnerability-scanning=WORKLOAD_VULNERABILITY_SCANNING]
         [--additional-zones=ZONE,[ZONE,...] | --node-locations=ZONE,[ZONE,...]]
         [--binauthz-policy=BINAUTHZ_POLICY
           --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
@@ -135,7 +138,7 @@ POSITIONAL ARGUMENTS
         40 characters.
 
 FLAGS
-     --accelerator=[type=TYPE,[count=COUNT,gpu-partition-size=GPU_PARTITION_SIZE,gpu-sharing-strategy=GPU_SHARING_STRATEGY,max-shared-clients-per-gpu=MAX_SHARED_CLIENTS_PER_GPU],...]
+     --accelerator=[type=TYPE,[count=COUNT,gpu-driver-version=GPU_DRIVER_VERSION,gpu-partition-size=GPU_PARTITION_SIZE,gpu-sharing-strategy=GPU_SHARING_STRATEGY,max-shared-clients-per-gpu=MAX_SHARED_CLIENTS_PER_GPU],...]
         Attaches accelerators (e.g. GPUs) to all nodes.
 
          type
@@ -147,6 +150,20 @@ FLAGS
          count
             (Optional) The number of accelerators to attach to the instances.
             The default value is 1.
+
+         gpu-driver-version
+            (Optional) The NVIDIA driver version to install. GPU_DRIVER_VERSION
+            must be one of:
+
+                `default`: Install the default driver version. If you omit the flag `gpu-driver-version`,
+                this is the default option.
+
+                `latest`: Install the latest available driver version. Available only for
+                nodes that use Container-Optimized OS.
+
+                `disabled`: Skip automatic driver installation. You must [manually install a
+                driver](https://cloud.google.com/kubernetes-engine/docs/how-to/gpus#installing_drivers)
+                after you create the cluster.
 
          gpu-partition-size
             (Optional) The GPU partition size used when running multi-instance
@@ -997,6 +1014,18 @@ FLAGS
 
         If unspecified, no groups will be returned for use with RBAC.
 
+     --security-posture=SECURITY_POSTURE
+        Sets the mode of the Kubernetes security posture API's off-cluster
+        features.
+
+        To enable in standard mode explicitly set the flag to
+        --security-posture=standard
+
+        To disable in an existing cluster, explicitly set the flag to
+        --security-posture=disabled.
+
+        SECURITY_POSTURE must be one of: disabled, standard.
+
      --services-ipv4-cidr=CIDR
         Set the IP range for the services IPs.
 
@@ -1157,6 +1186,18 @@ FLAGS
         For more information on Workload Identity, see
 
             https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity
+
+     --workload-vulnerability-scanning=WORKLOAD_VULNERABILITY_SCANNING
+        Sets the mode of the Kubernetes security posture API's workload
+        vulnerability scanning.
+
+        To enable in standard mode explicitly set the flag to
+        --workload-vulnerability-scanning=standard.
+
+        To disable in an existing cluster, explicitly set the flag to
+        --workload-vulnerability-scanning=disabled.
+
+        WORKLOAD_VULNERABILITY_SCANNING must be one of: disabled, standard.
 
      At most one of these can be specified:
 

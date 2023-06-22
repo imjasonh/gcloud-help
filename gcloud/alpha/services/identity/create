@@ -4,21 +4,53 @@ NAME
 
 SYNOPSIS
     gcloud alpha services identity create --service=SERVICE
+        [--folder=FOLDER | --organization=ORGANIZATION | --project=PROJECT_ID]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) This command creates a service identity for a consumer. The
-    supported consumers are projects.
+    supported consumers are projects, folders, and organizations.
 
 EXAMPLES
-    To create a service identity for a project, run:
+    To create a service identity for a project, folder, or organization, run:
 
         $ gcloud alpha services identity create \
             --service=example.googleapis.com --project=helloworld
+        $ gcloud alpha services identity create \
+            --service=example.googleapis.com --project=1234567890
+        $ gcloud alpha services identity create \
+            --service=example.googleapis.com --folder=1234567890
+        $ gcloud alpha services identity create \
+            --service=example.googleapis.com --organization=1234567890
 
 REQUIRED FLAGS
      --service=SERVICE
         The service to create a service identity for.
+
+OPTIONAL FLAGS
+     Container resource where the service identity will be used.
+
+     At most one of these can be specified:
+
+       --folder=FOLDER
+          Folder where the service identity will be used.
+
+       --organization=ORGANIZATION
+          Organization where the service identity will be used.
+
+       --project=PROJECT_ID
+          Project where the service identity will be used.
+
+          The Google Cloud project ID to use for this invocation. If omitted,
+          then the current project is assumed; the current project can be
+          listed using gcloud config list --format='text(core.project)' and can
+          be set using gcloud config set project PROJECTID.
+
+          --project and its fallback core/project property play two roles in
+          the invocation. It specifies the project of the resource to operate
+          on. It also specifies the project for API enablement check, quota,
+          and billing. To specify a different project for quota and billing,
+          use --billing-project or billing/quota_project property.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
