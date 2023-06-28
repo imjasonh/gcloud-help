@@ -2,9 +2,10 @@ NAME
     gcloud alpha compute tpus tpu-vm update - update a Cloud TPU VM node
 
 SYNOPSIS
-    gcloud alpha compute tpus tpu-vm update (TPU : --zone=ZONE) [--async]
-        [--update-labels=[KEY=VALUE,...]]
-        [--clear-labels | --remove-labels=[KEY,...]] [GCLOUD_WIDE_FLAG ...]
+    gcloud alpha compute tpus tpu-vm update (TPU : --zone=ZONE)
+        [--add-tags=[TAGS,...]] [--async] [--update-labels=[KEY=VALUE,...]]
+        [--clear-labels | --remove-labels=[KEY,...]]
+        [--clear-tags | --remove-tags=[TAG,...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Update a Cloud TPU VM node.
@@ -64,6 +65,12 @@ POSITIONAL ARGUMENTS
           ▸ set the property compute/zone.
 
 FLAGS
+     --add-tags=[TAGS,...]
+        Tags to add to the TPU Node. Tags are used to identify valid sources or
+        targets for network firewalls. See
+        https://cloud.google.com/vpc/docs/add-remove-network-tags for more
+        details.
+
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
@@ -94,6 +101,26 @@ FLAGS
           List of label keys to remove. If a label does not exist it is
           silently ignored. If --update-labels is also specified then
           --update-labels is applied first.
+
+     At most one of these can be specified:
+
+       --clear-tags
+          Remove all tags. If --add-tags is also specified then --clear-tags is
+          applied first.
+
+          For example, to remove all tags:
+
+              $ gcloud alpha compute tpus tpu-vm update --clear-tags
+
+          To remove all existing tags and create two new tags, 'foo' and 'bar':
+
+              $ gcloud alpha compute tpus tpu-vm update --clear-tags \
+                  --add-tags foo,bar
+
+       --remove-tags=[TAG,...]
+          List of tags to remove. If a tag does not exist it is silently
+          ignored. If --add-tags is also specified then --add-tags is applied
+          first.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
