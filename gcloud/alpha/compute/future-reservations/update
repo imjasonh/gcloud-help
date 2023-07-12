@@ -4,15 +4,17 @@ NAME
 
 SYNOPSIS
     gcloud alpha compute future-reservations update FUTURE_RESERVATION
+        [--description=DESCRIPTION] [--name-prefix=NAME_PREFIX]
         [--planning-status=PLANNING_STATUS] [--total-count=TOTAL_COUNT]
         [--zone=ZONE]
-        [--accelerator=[count=COUNT],[type=TYPE]
-          --local-ssd=[count=COUNT],[interface=INTERFACE],[size=SIZE]
-          --machine-type=MACHINE_TYPE
-          --maintenance-interval=MAINTENANCE_INTERVAL
-          --min-cpu-platform=MIN_CPU_PLATFORM]
         [--clear-share-settings
           | --share-setting=SHARE_SETTING --share-with=PROJECT,[PROJECT,...]]
+        [--machine-type=MACHINE_TYPE
+          --maintenance-interval=MAINTENANCE_INTERVAL
+          --min-cpu-platform=MIN_CPU_PLATFORM
+          --accelerator=[count=COUNT],[type=TYPE]
+          | --clear-accelerator --clear-local-ssd
+          | --local-ssd=[count=COUNT],[interface=INTERFACE],[size=SIZE]]
         [--start-time=START_TIME --duration=DURATION | --end-time=END_TIME]
         [GCLOUD_WIDE_FLAG ...]
 
@@ -33,6 +35,13 @@ POSITIONAL ARGUMENTS
         Name of the future reservation to update.
 
 FLAGS
+     --description=DESCRIPTION
+        An optional description of the reservation to create.
+
+     --name-prefix=NAME_PREFIX
+        User provided name prefix for system generated reservations when
+        capacity is delivered at start time.
+
      --planning-status=PLANNING_STATUS
         The planning status of the future reservation. The default value is
         DRAFT. While in DRAFT, any changes to the future reservation's
@@ -72,33 +81,28 @@ FLAGS
         Alternatively, the zone can be stored in the environment variable
         CLOUDSDK_COMPUTE_ZONE.
 
+     Manage the properties of a shared future reservation.
+
+     At most one of these can be specified:
+
+       --clear-share-settings
+          Clear share settings on future reservation. This will result in
+          non-shared future reservation.
+
+       Manage the share settings of a future reservation.
+
+         --share-setting=SHARE_SETTING
+            Specify if this future reservation is shared, and if so, the type
+            of sharing. If you omit this flag, this value is local (not shared)
+            by default. SHARE_SETTING must be one of: local, projects.
+
+         --share-with=PROJECT,[PROJECT,...]
+            If this future reservation is shared (--share-setting is not
+            local), provide a list of all of the specific projects that this
+            future reservation is shared with. List must contain project IDs or
+            project numbers.
+
      Manage the specific SKU reservation properties.
-
-       --accelerator=[count=COUNT],[type=TYPE]
-          Manage the configuration of the type and number of accelerator cards
-          attached.
-           count
-              The number of accelerators to attach to each instance in the
-              reservation.
-           type
-              The specific type (e.g. nvidia-tesla-k80 for nVidia Tesla K80) of
-              accelerator to attach to instances in the reservation. Use gcloud
-              compute accelerator-types list to learn about all available
-              accelerator types.
-
-       --local-ssd=[count=COUNT],[interface=INTERFACE],[size=SIZE]
-          Manage the size and the interface of local SSD to use. See
-          https://cloud.google.com/compute/docs/disks/local-ssd for more
-          information.
-           interface
-              The kind of disk interface exposed to the VM for this SSD. Valid
-              values are scsi and nvme. SCSI is the default and is supported by
-              more guest operating systems. NVME may provide higher
-              performance.
-           size
-              The size of the local SSD in base-2 GB.
-           count
-              The number of local SSD to use per VM. Default value is 1.
 
        --machine-type=MACHINE_TYPE
           The type of machine (name only) that has a fixed number of vCPUs and
@@ -127,26 +131,45 @@ FLAGS
        --min-cpu-platform=MIN_CPU_PLATFORM
           Optional minimum CPU platform of the reservation to create.
 
-     Manage the properties of a shared future reservation.
+       Manage the accelerators of a future reservation.
 
-     At most one of these can be specified:
+       At most one of these can be specified:
 
-       --clear-share-settings
-          Clear share settings on future reservation. This will result in
-          non-shared future reservation.
+         --accelerator=[count=COUNT],[type=TYPE]
+            Manage the configuration of the type and number of accelerator
+            cards attached.
+             count
+                The number of accelerators to attach to each instance in the
+                reservation.
+             type
+                The specific type (e.g. nvidia-tesla-k80 for nVidia Tesla K80)
+                of accelerator to attach to instances in the reservation. Use
+                gcloud compute accelerator-types list to learn about all
+                available accelerator types.
 
-       Manage the share settings of a future reservation.
+         --clear-accelerator
+            Remove all accelerators from the future reservation.
 
-         --share-setting=SHARE_SETTING
-            Specify if this future reservation is shared, and if so, the type
-            of sharing. If you omit this flag, this value is local (not shared)
-            by default. SHARE_SETTING must be one of: local, projects.
+       Manage the local ssd of a future reservation.
 
-         --share-with=PROJECT,[PROJECT,...]
-            If this future reservation is shared (--share-setting is not
-            local), provide a list of all of the specific projects that this
-            future reservation is shared with. List must contain project IDs or
-            project numbers.
+       At most one of these can be specified:
+
+         --clear-local-ssd
+            Remove all local ssd information on the future reservation.
+
+         --local-ssd=[count=COUNT],[interface=INTERFACE],[size=SIZE]
+            Manage the size and the interface of local SSD to use. See
+            https://cloud.google.com/compute/docs/disks/local-ssd for more
+            information.
+             interface
+                The kind of disk interface exposed to the VM for this SSD.
+                Valid values are scsi and nvme. SCSI is the default and is
+                supported by more guest operating systems. NVME may provide
+                higher performance.
+             size
+                The size of the local SSD in base-2 GB.
+             count
+                The number of local SSD to use per VM. Default value is 1.
 
      Manage the time specific properties for requesting future capacity
 

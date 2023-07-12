@@ -1,0 +1,107 @@
+NAME
+    gcloud beta network-services service-lb-policies update - update a service
+        LB policy
+
+SYNOPSIS
+    gcloud beta network-services service-lb-policies update
+        (SERVICE_LB_POLICY : --location=LOCATION) [--async]
+        [--auto-capacity-drain] [--description=DESCRIPTION]
+        [--load-balancing-algorithm=LOAD_BALANCING_ALGORITHM;
+          default="waterfall-by-region"] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Update the detail of a service LB Policy.
+
+EXAMPLES
+    Update load-balancing-algorithm of a service LB policy named
+    my-service-lb-policy:
+
+        $ gcloud beta network-services service-lb-policies update \
+            my-service-lb-policy \
+            --load-balancing-algorithm=waterfall-by-zone
+
+POSITIONAL ARGUMENTS
+     Service lb policy resource - Name of the service LB policy to be updated.
+     The arguments in this group can be used to specify the attributes of this
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument service_lb_policy on the command line with a
+        fully specified name;
+      ◆ set the property core/project;
+      ◆ provide the argument --project on the command line.
+
+     This must be specified.
+
+       SERVICE_LB_POLICY
+          ID of the service lb policy or fully qualified identifier for the
+          service lb policy.
+
+          To set the service_lb_policy attribute:
+          ▸ provide the argument service_lb_policy on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          The location Id.
+
+          To set the location attribute:
+          ▸ provide the argument service_lb_policy on the command line with a
+            fully specified name;
+          ▸ provide the argument --location on the command line.
+
+FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --auto-capacity-drain
+        If specified, an unhealthy MIG/NEG will be removed from Global load
+        balancing and traffic routing for the service. A MIG/NEG is considered
+        to be unhealthy if less than 25% of the instance/endpoints in the
+        MIG/NEG are healthy. autoCapacityDrain will never drain more than 50%
+        of the configured MIGs/NEGs of a Backend Service.
+
+     --description=DESCRIPTION
+        The description for the service LB policy.
+
+     --load-balancing-algorithm=LOAD_BALANCING_ALGORITHM; default="waterfall-by-region"
+        The global load balancing algorithm to be used.
+        LOAD_BALANCING_ALGORITHM must be one of:
+
+         spray-to-region
+            Spread the traffic from each client to all the MIGs/NEGs in a
+            region.
+
+         spray-to-world
+            Balance traffic across all backends across the world proportionally
+            based on capacity.
+
+         waterfall-by-region
+            Direct traffic to the nearest region with endpoints and capacity
+            before spilling over to other regions.
+
+         waterfall-by-zone
+            Attempt to keep traffic in a single zone closest to the client,
+            before spilling over to other zones.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the networkservices/v1beta1 API. The full documentation
+    for this API can be found at: https://cloud.google.com/networking
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud alpha network-services service-lb-policies update
+

@@ -3,9 +3,13 @@ NAME
 
 SYNOPSIS
     gcloud alpha compute tpus tpu-vm update (TPU : --zone=ZONE)
-        [--add-tags=[TAGS,...]] [--async] [--update-labels=[KEY=VALUE,...]]
+        [--add-tags=[TAGS,...]] [--async] [--description=DESCRIPTION]
+        [--update-labels=[KEY=VALUE,...]]
         [--clear-labels | --remove-labels=[KEY,...]]
-        [--clear-tags | --remove-tags=[TAG,...]] [GCLOUD_WIDE_FLAG ...]
+        [--clear-tags | --remove-tags=[TAG,...]]
+        [--metadata-from-file=[METADATA_FROM_FILE,...]
+          | --update-metadata=[KEY=VALUE,...] --clear-metadata
+          | --remove-metadata=[KEY,...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Update a Cloud TPU VM node.
@@ -75,6 +79,9 @@ FLAGS
         Return immediately, without waiting for the operation in progress to
         complete.
 
+     --description=DESCRIPTION
+        Text description of the TPU.
+
      --update-labels=[KEY=VALUE,...]
         Resource labels to update that represent user-provided metadata. If a
         label exists, its value is modified. Otherwise, a new label is created.
@@ -121,6 +128,38 @@ FLAGS
           List of tags to remove. If a tag does not exist it is silently
           ignored. If --add-tags is also specified then --add-tags is applied
           first.
+
+     At most one of these can be specified:
+
+       --metadata-from-file=[METADATA_FROM_FILE,...]
+          Same as --metadata except the value for the entry will be read from a
+          local file. Example: --metadata-from-file='key1=value1.txt'
+
+       --update-metadata=[KEY=VALUE,...]
+          List of comma-separated metadata key-value pairs for the Cloud TPU VM
+          node. If a key exists, its value is modified. Otherwise, a new
+          key-value pair is created.
+
+       At most one of these can be specified:
+
+         --clear-metadata
+            Remove all metadata. If --update-metadata is also specified then
+            --clear-metadata is applied first.
+
+            For example, to remove all metadata:
+
+                $ gcloud alpha compute tpus tpu-vm update --clear-metadata
+
+            To remove all existing metadata and create two new metadata
+            key-value pairs, 'foo=bar' and 'baz=qux':
+
+                $ gcloud alpha compute tpus tpu-vm update --clear-metadata \
+                    --update-metadata foo=bar,baz=qux
+
+         --remove-metadata=[KEY,...]
+            List of comma-separated metadata keys to remove. If a key does not
+            exist it is silently ignored. If --update-metadata is also
+            specified then --update-metadata is applied first.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

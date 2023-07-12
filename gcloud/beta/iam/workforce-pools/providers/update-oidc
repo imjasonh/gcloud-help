@@ -9,8 +9,9 @@ SYNOPSIS
         [--attribute-mapping=[ATTRIBUTE_MAPPING,...]] [--client-id=CLIENT_ID]
         [--description=DESCRIPTION] [--disabled] [--display-name=DISPLAY_NAME]
         [--issuer-uri=ISSUER_URI]
-        [--web-sso-assertion-claims-behavior=WEB_SSO_ASSERTION_CLAIMS_BEHAVIOR,
-          [...]] [--web-sso-response-type=WEB_SSO_RESPONSE_TYPE]
+        [--web-sso-assertion-claims-behavior=WEB_SSO_ASSERTION_CLAIMS_BEHAVIOR]
+        [--web-sso-response-type=WEB_SSO_RESPONSE_TYPE]
+        [--clear-client-secret | --client-secret-value=CLIENT_SECRET_VALUE]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -191,18 +192,34 @@ FLAGS
      --issuer-uri=ISSUER_URI
         The OIDC issuer URI. Must be a valid URI using the 'https' scheme.
 
-     --web-sso-assertion-claims-behavior=WEB_SSO_ASSERTION_CLAIMS_BEHAVIOR,[...]
+     --web-sso-assertion-claims-behavior=WEB_SSO_ASSERTION_CLAIMS_BEHAVIOR
         The behavior for how OIDC Claims are included in the assertion object
         used for attribute mapping and attribute condition. Use
-        only-id-token-claims to include only ID token claims.
-        WEB_SSO_ASSERTION_CLAIMS_BEHAVIOR must be (only one value is
-        supported): only-id-token-claims.
+        merge-user-info-over-id-token-claims to merge the UserInfo Endpoint
+        Claims with ID Token Claims, preferring UserInfo Claim Values for the
+        same Claim Name. Currently this option is only available for
+        Authorization Code flow. Use only-id-token-claims to include only ID
+        token claims. WEB_SSO_ASSERTION_CLAIMS_BEHAVIOR must be one of:
+        assertion-claims-behavior-unspecified,
+        merge-user-info-over-id-token-claims, only-id-token-claims.
 
      --web-sso-response-type=WEB_SSO_RESPONSE_TYPE
         Response Type to request for in the OIDC Authorization Request for web
-        sign-in. Use id-token to select the implicit flow
+        sign-in. Use code to select the authorization code flow
+        (https://openid.net/specs/openid-connect-core-1_0.html#CodeFlowAuth)
+        Use id-token to select the implicit flow
         (https://openid.net/specs/openid-connect-core-1_0.html#ImplicitFlowAuth).
-        WEB_SSO_RESPONSE_TYPE must be (only one value is supported): id-token.
+        WEB_SSO_RESPONSE_TYPE must be one of: code, id-token,
+        response-type-unspecified.
+
+     At most one of these can be specified:
+
+       --clear-client-secret
+          Clear the OIDC client secret.
+
+       --client-secret-value=CLIENT_SECRET_VALUE
+          The OIDC client secret. Required to enable Authorization Code flow
+          for web sign-in.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

@@ -12,8 +12,15 @@ SYNOPSIS
         [--push-auth-service-account=SERVICE_ACCOUNT_EMAIL]
         [--push-auth-token-audience=OPTIONAL_AUDIENCE_OVERRIDE]
         [--push-endpoint=PUSH_ENDPOINT] [--retain-acked-messages]
-        [--bigquery-table=BIGQUERY_TABLE
+        [[--bigquery-table=BIGQUERY_TABLE
           : --drop-unknown-fields --use-topic-schema --write-metadata]
+          | [--cloud-storage-bucket=CLOUD_STORAGE_BUCKET
+          : --cloud-storage-file-prefix=CLOUD_STORAGE_FILE_PREFIX
+          --cloud-storage-file-suffix=CLOUD_STORAGE_FILE_SUFFIX
+          --cloud-storage-max-bytes=CLOUD_STORAGE_MAX_BYTES
+          --cloud-storage-max-duration=CLOUD_STORAGE_MAX_DURATION
+          --cloud-storage-output-format=OUTPUT_FORMAT;
+          default="text" --cloud-storage-write-metadata]]
         [--max-delivery-attempts=MAX_DELIVERY_ATTEMPTS
           [--dead-letter-topic=DEAD_LETTER_TOPIC
           : --dead-letter-topic-project=DEAD_LETTER_TOPIC_PROJECT]]
@@ -140,31 +147,76 @@ OPTIONAL FLAGS
         --message-retention-duration window. Acknowledged messages are not
         retained by default.
 
-     BigQuery Config Options. The Cloud Pub/Sub service account associated with
-     the enclosing subscription's parent project (i.e.,
-     service-{project_number}@gcp-sa-pubsub.iam.gserviceaccount.com) must have
-     permission to write to this BigQuery table.
+     At most one of these can be specified:
 
-       --bigquery-table=BIGQUERY_TABLE
-          A BigQuery table of the form {project}:{dataset_name}.{table_name} to
-          which to write messages for this subscription.
+       BigQuery Config Options. The Cloud Pub/Sub service account associated
+       with the enclosing subscription's parent project (i.e.,
+       service-{project_number}@gcp-sa-pubsub.iam.gserviceaccount.com) must
+       have permission to write to this BigQuery table.
 
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
+         --bigquery-table=BIGQUERY_TABLE
+            A BigQuery table of the form {project}:{dataset_name}.{table_name}
+            to which to write messages for this subscription.
 
-       --drop-unknown-fields
-          When --use-topic-schema is set, whether or not to ignore fields in
-          the topic schema that do not appear in the BigQuery schema. If false,
-          then the BigQuery schema must contain all fields that are also
-          present in the topic schema.
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
 
-       --use-topic-schema
-          Whether or not to use the schema for the subscription's topic (if it
-          exists) when writing messages to BigQuery.
+         --drop-unknown-fields
+            When --use-topic-schema is set, whether or not to ignore fields in
+            the topic schema that do not appear in the BigQuery schema. If
+            false, then the BigQuery schema must contain all fields that are
+            also present in the topic schema.
 
-       --write-metadata
-          Whether or not to write message metadata including message ID,
-          publish timestamp, ordering key, and attributes to BigQuery.
+         --use-topic-schema
+            Whether or not to use the schema for the subscription's topic (if
+            it exists) when writing messages to BigQuery.
+
+         --write-metadata
+            Whether or not to write message metadata including message ID,
+            publish timestamp, ordering key, and attributes to BigQuery.
+
+       Cloud Storage Config Options. The Cloud Pub/Sub service account
+       associated with the enclosing subscription's parent project (i.e.,
+       service-{project_number}@gcp-sa-pubsub.iam.gserviceaccount.com) must
+       have permission to write to this Cloud Storage bucket and to read this
+       bucket's metadata.
+
+         --cloud-storage-bucket=CLOUD_STORAGE_BUCKET
+            A Cloud Storage bucket to which to write messages for this
+            subscription.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --cloud-storage-file-prefix=CLOUD_STORAGE_FILE_PREFIX
+            The prefix for Cloud Storage filename.
+
+         --cloud-storage-file-suffix=CLOUD_STORAGE_FILE_SUFFIX
+            The suffix for Cloud Storage filename.
+
+         --cloud-storage-max-bytes=CLOUD_STORAGE_MAX_BYTES
+            The maximum bytes that can be written to a Cloud Storage file
+            before a new file is created. The value must be between 1KB to
+            10GB. If the unit is omitted, KB is assumed.
+
+         --cloud-storage-max-duration=CLOUD_STORAGE_MAX_DURATION
+            The maximum duration that can elapse before a new Cloud Storage
+            file is created. The value must be between 1m and 10m. Valid values
+            are strings of the form INTEGER[UNIT], where UNIT is one of "s",
+            "m", "h", and "d" for seconds, minutes, hours, and days,
+            respectively. If the unit is omitted, seconds is assumed.
+
+         --cloud-storage-output-format=OUTPUT_FORMAT; default="text"
+            The output format for data written to Cloud Storage. Values: text
+            (messages will be written as raw text, separated by a newline) or
+            avro (messages will be written as an Avro binary). OUTPUT_FORMAT
+            must be one of: text, avro.
+
+         --cloud-storage-write-metadata
+            Whether or not to write the subscription name, message_id,
+            publish_time, attributes, and ordering_key as additional fields in
+            the output. This has an effect only for subscriptions with
+            --cloud-storage-output-format=avro.
 
      Dead Letter Queue Options. The Cloud Pub/Sub service account associated
      with the enclosing subscription's parent project (i.e.,

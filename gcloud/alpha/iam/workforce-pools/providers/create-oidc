@@ -6,12 +6,12 @@ SYNOPSIS
     gcloud alpha iam workforce-pools providers create-oidc
         (PROVIDER : --location=LOCATION --workforce-pool=WORKFORCE_POOL)
         --attribute-mapping=[ATTRIBUTE_MAPPING,...] --client-id=CLIENT_ID
-        --issuer-uri=ISSUER_URI [--async]
-        [--attribute-condition=ATTRIBUTE_CONDITION] [--description=DESCRIPTION]
-        [--disabled] [--display-name=DISPLAY_NAME]
-        [--web-sso-assertion-claims-behavior=WEB_SSO_ASSERTION_CLAIMS_BEHAVIOR,
-          [...]] [--web-sso-response-type=WEB_SSO_RESPONSE_TYPE]
-        [GCLOUD_WIDE_FLAG ...]
+        --issuer-uri=ISSUER_URI
+        (--web-sso-assertion-claims-behavior=WEB_SSO_ASSERTION_CLAIMS_BEHAVIOR
+          --web-sso-response-type=WEB_SSO_RESPONSE_TYPE) [--async]
+        [--attribute-condition=ATTRIBUTE_CONDITION]
+        [--client-secret-value=CLIENT_SECRET_VALUE] [--description=DESCRIPTION]
+        [--disabled] [--display-name=DISPLAY_NAME] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Create a new OIDC workforce pool provider.
@@ -146,6 +146,42 @@ REQUIRED FLAGS
      --issuer-uri=ISSUER_URI
         The OIDC issuer URI. Must be a valid URI using the 'https' scheme.
 
+     This must be specified.
+
+       --web-sso-assertion-claims-behavior=WEB_SSO_ASSERTION_CLAIMS_BEHAVIOR
+          The behavior for how OIDC Claims are included in the assertion object
+          used for attribute mapping and attribute condition.
+
+          Use merge-user-info-over-id-token-claims to merge the UserInfo
+          Endpoint Claims with ID Token Claims, preferring UserInfo Claim
+          Values for the same Claim Name. Currently this option is only
+          available for Authorization Code flow.
+
+          Use only-id-token-claims to include only ID token claims.
+
+          WEB_SSO_ASSERTION_CLAIMS_BEHAVIOR must be one of:
+          assertion-claims-behavior-unspecified,
+          merge-user-info-over-id-token-claims, only-id-token-claims.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --web-sso-response-type=WEB_SSO_RESPONSE_TYPE
+          Response Type to request for in the OIDC Authorization Request for
+          web sign-in.
+
+          Use code to select the authorization code flow
+          (https://openid.net/specs/openid-connect-core-1_0.html#CodeFlowAuth)
+
+          Use id-token to select the implicit flow
+          (https://openid.net/specs/openid-connect-core-1_0.html#ImplicitFlowAuth).
+
+          WEB_SSO_RESPONSE_TYPE must be one of: code, id-token,
+          response-type-unspecified.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
 OPTIONAL FLAGS
      --async
         Return immediately, without waiting for the operation in progress to
@@ -178,6 +214,10 @@ OPTIONAL FLAGS
 
             "'admins' in google.groups"
 
+     --client-secret-value=CLIENT_SECRET_VALUE
+        The OIDC client secret. Required to enable Authorization Code flow for
+        web sign-in.
+
      --description=DESCRIPTION
         A description for the workforce pool provider. Cannot exceed 256
         characters in length.
@@ -191,19 +231,6 @@ OPTIONAL FLAGS
      --display-name=DISPLAY_NAME
         A display name for the workforce pool provider. Cannot exceed 32
         characters in length.
-
-     --web-sso-assertion-claims-behavior=WEB_SSO_ASSERTION_CLAIMS_BEHAVIOR,[...]
-        The behavior for how OIDC Claims are included in the assertion object
-        used for attribute mapping and attribute condition. Use
-        only-id-token-claims to include only ID token claims.
-        WEB_SSO_ASSERTION_CLAIMS_BEHAVIOR must be (only one value is
-        supported): only-id-token-claims.
-
-     --web-sso-response-type=WEB_SSO_RESPONSE_TYPE
-        Response Type to request for in the OIDC Authorization Request for web
-        sign-in. Use id-token to select the implicit flow
-        (https://openid.net/specs/openid-connect-core-1_0.html#ImplicitFlowAuth).
-        WEB_SSO_RESPONSE_TYPE must be (only one value is supported): id-token.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

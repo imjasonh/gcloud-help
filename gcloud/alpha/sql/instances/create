@@ -20,8 +20,9 @@ SYNOPSIS
         [--deny-maintenance-period-end-date=DENY_MAINTENANCE_PERIOD_END_DATE]
         [--deny-maintenance-period-start-date=DENY_MAINTENANCE_PERIOD_START_DATE]
         [--deny-maintenance-period-time=DENY_MAINTENANCE_PERIOD_TIME]
-        [--enable-bin-log] [--enable-google-private-path]
-        [--enable-password-policy] [--enable-point-in-time-recovery]
+        [--edition=EDITION] [--enable-bin-log] [--enable-data-cache]
+        [--enable-google-private-path] [--enable-password-policy]
+        [--enable-point-in-time-recovery]
         [--failover-replica-name=FAILOVER_REPLICA_NAME]
         [--[no-]insights-config-query-insights-enabled]
         [--insights-config-query-plans-per-minute=INSIGHTS_CONFIG_QUERY_PLANS_PER_MINUTE]
@@ -35,6 +36,7 @@ SYNOPSIS
         [--master-instance-name=MASTER_INSTANCE_NAME] [--memory=MEMORY]
         [--network=NETWORK]
         [--password-policy-complexity=PASSWORD_POLICY_COMPLEXITY]
+        [--[no-]password-policy-disallow-compromised-credentials]
         [--[no-]password-policy-disallow-username-substring]
         [--password-policy-min-length=PASSWORD_POLICY_MIN_LENGTH]
         [--password-policy-password-change-interval=PASSWORD_POLICY_PASSWORD_CHANGE_INTERVAL]
@@ -214,10 +216,18 @@ FLAGS
      --deny-maintenance-period-time=DENY_MAINTENANCE_PERIOD_TIME
         Time when the deny maintenance period starts or ends, that is 05:00:00.
 
+     --edition=EDITION
+        Specifies the edition of Cloud SQL instance. EDITION must be one of:
+        enterprise, enterprise-plus.
+
      --enable-bin-log
         Allows for data recovery from a specific point in time, down to a
         fraction of a second. Must have automatic backups enabled to use. Make
         sure storage can support at least 7 days of logs.
+
+     --enable-data-cache
+        Enable use of data cache for accelerated read performance. This flag is
+        only available for Enterprise_Plus edition instances.
 
      --enable-google-private-path
         Enable a private path for Google Cloud services. This flag specifies
@@ -327,6 +337,11 @@ FLAGS
             The default value if COMPLEXITY_DEFAULT is not specified. It
             implies that complexity check is not enabled.
 
+     --[no-]password-policy-disallow-compromised-credentials
+        Disallow credentials that have been compromised by a data breach. Use
+        --password-policy-disallow-compromised-credentials to enable and
+        --no-password-policy-disallow-compromised-credentials to disable.
+
      --[no-]password-policy-disallow-username-substring
         Disallow username as a part of the password. Use
         --password-policy-disallow-username-substring to enable and
@@ -357,16 +372,20 @@ FLAGS
         Specified if users connecting over IP must use SSL.
 
      --retained-backups-count=RETAINED_BACKUPS_COUNT
-        How many backups to keep. The valid range is between 1 and 365. The
-        default value is 7 if not specified. Applicable only if --no-backups is
-        not specified.
+        How many backups to keep. The valid range is between 1 and 365. Default
+        value is 7 for Enterprise edition instances. For Enterprise_Plus
+        Postgres and MySQL instances, default values are 15 and 8 respectively.
+        Applicable only if --no-backups is not specified.
 
      --retained-transaction-log-days=RETAINED_TRANSACTION_LOG_DAYS
         How many days of transaction logs to keep. The valid range is between 1
-        and 35. The default value is 7. The 35 days log retention feature is
-        only enabled for specific customer. Only use this option when
-        point-in-time recovery is enabled. Storage size for transaction logs
-        increases when the number of days for log retention increases.
+        and 35. Only use this option when point-in-time recovery is enabled. If
+        logs are stored on disk, storage size for transaction logs could
+        increase when the number of days for log retention increases. For
+        Enterprise, default and max retention values are 7 and 7 respectively.
+        For MySQL Enterprise_Plus, default and max retention values are 7 and
+        7. For Postgres Enterprise_Plus, default and max retention values are
+        14 and 35.
 
      --root-password=ROOT_PASSWORD
         Root Cloud SQL user's password.

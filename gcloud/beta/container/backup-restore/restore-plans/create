@@ -7,14 +7,18 @@ SYNOPSIS
         (RESTORE_PLAN : --location=LOCATION) --backup-plan=BACKUP_PLAN
         --cluster=CLUSTER
         --namespaced-resource-restore-mode=NAMESPACED_RESOURCE_RESTORE_MODE
-        (--all-namespaces | --selected-applications=SELECTED_APPLICATIONS
+        (--all-namespaces | --excluded-namespaces=[EXCLUDED_NAMESPACES,...]
+          | --no-namespaces | --selected-applications=SELECTED_APPLICATIONS
           | --selected-namespaces=[SELECTED_NAMESPACES,...]) [--async]
+        [--cluster-resource-conflict-policy=CLUSTER_RESOURCE_CONFLICT_POLICY]
         [--description=DESCRIPTION] [--labels=[KEY=VALUE,...]]
         [--substitution-rules-file=SUBSTITUTION_RULES_FILE]
         [--volume-data-restore-policy=VOLUME_DATA_RESTORE_POLICY;
           default="no-volume-data-restoration"]
-        [--cluster-resource-conflict-policy=CLUSTER_RESOURCE_CONFLICT_POLICY
-          --cluster-resource-restore-scope=[CLUSTER_RESOURCE_RESTORE_SCOPE,
+        [--cluster-resource-scope-all-group-kinds
+          | --cluster-resource-scope-excluded-group-kinds=[CLUSTER_RESOURCE_SCOPE_EXCLUDED_GROUP_KINDS,
+          ...] | --cluster-resource-scope-no-group-kinds
+          | --cluster-resource-scope-selected-group-kinds=[CLUSTER_RESOURCE_SCOPE_SELECTED_GROUP_KINDS,
           ...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -110,10 +114,19 @@ REQUIRED FLAGS
             out of band process creates conflicting resources), a conflict will
             be reported.
 
+     The scope of namespaced resources to restore.
+
      Exactly one of these must be specified:
 
        --all-namespaces
           If true, restore all namespaced resources in the backup.
+
+       --excluded-namespaces=[EXCLUDED_NAMESPACES,...]
+          List of selected namespaces to skip. All namespaced resources in all
+          namespaces excluding selected namespaces are restored.
+
+       --no-namespaces
+          If true, do not restore any namespaced resources in the backup.
 
        --selected-applications=SELECTED_APPLICATIONS
           List of selected applications to restore. Only those namespaced
@@ -128,6 +141,24 @@ OPTIONAL FLAGS
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
+
+     --cluster-resource-conflict-policy=CLUSTER_RESOURCE_CONFLICT_POLICY
+        Define how to handle restore-time conflicts for cluster-scoped
+        resources. CLUSTER_RESOURCE_CONFLICT_POLICY must be one of:
+
+         use-backup-version
+            Selecting 'use-existing-version' means deleting the existing
+            version of the conflicting resources before re-creating them from
+            the Backup.
+
+            Note that this is a dangerous option which could cause
+            unintentional data loss if used inappropriately. For example,
+            deleting a CRD will cause Kubernetes to delete all CRs of that
+            type.
+
+         use-existing-version
+            Selecting 'use-existing-version' means no conflicting resources
+            will be restored.
 
      --description=DESCRIPTION
         The description of the restore plan.
@@ -166,29 +197,29 @@ OPTIONAL FLAGS
             pre-provisioned using the volume handle of the original PV in the
             Backup.
 
-     --cluster-resource-conflict-policy=CLUSTER_RESOURCE_CONFLICT_POLICY
-        Define how to handle restore-time conflicts for cluster-scoped
-        resources. CLUSTER_RESOURCE_CONFLICT_POLICY must be one of:
+     The scope of cluster-scoped resources to restore.
 
-         use-backup-version
-            Selecting 'use-existing-version' means deleting the existing
-            version of the conflicting resources before re-creating them from
-            the Backup.
+     At most one of these can be specified:
 
-            Note that this is a dangerous option which could cause
-            unintentional data loss if used inappropriately. For example,
-            deleting a CRD will cause Kubernetes to delete all CRs of that
-            type.
+       --cluster-resource-scope-all-group-kinds
+          If true, all valid cluster-scoped resources will be restored.
 
-         use-existing-version
-            Selecting 'use-existing-version' means no conflicting resources
-            will be restored.
+       --cluster-resource-scope-excluded-group-kinds=[CLUSTER_RESOURCE_SCOPE_EXCLUDED_GROUP_KINDS,...]
+          List of cluster-scoped resource group kinds to NOT restore from the
+          backup. If specified, all valid cluster-scoped resources will be
+          restored except for those specified in the list. The format of a
+          resource is "<group>/<kind>", e.g. storage.k8s.io/StorageClass for
+          StorageClass. Use an empty string for core API group.
 
-     --cluster-resource-restore-scope=[CLUSTER_RESOURCE_RESTORE_SCOPE,...]
-        List of cluster-scoped resource types to be restored. Not specifying
-        this means NO cluster resource will be restored. The format of a
-        resource is "<group>/<kind>", e.g. storage.k8s.io/StorageClass for
-        StorageClass. Use an empty string for core API group.
+       --cluster-resource-scope-no-group-kinds
+          If true, no cluster-scoped resources will be restored.
+
+       --cluster-resource-scope-selected-group-kinds=[CLUSTER_RESOURCE_SCOPE_SELECTED_GROUP_KINDS,...]
+          List of cluster-scoped resource group kinds to restore from the
+          backup. If specified, only the selected resources will be restored.
+          The format of a resource is "<group>/<kind>", e.g.
+          storage.k8s.io/StorageClass for StorageClass. Use an empty string for
+          core API group.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

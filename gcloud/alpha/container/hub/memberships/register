@@ -28,6 +28,8 @@ DESCRIPTION
     To register a GKE cluster, use --gke-cluster or --gke-uri flag (no
     --kubeconfig flag is required). Connect agent will not be installed by
     default for GKE clusters. To install it, specify --install-connect-agent.
+    The default value for --location is the same as the cluster's region or
+    zone, can be specified as global.
 
     Anthos clusters on VMware, bare metal, AWS, and Azure are registered with a
     fleet when the clusters are created. To register Amazon EKS clusters, see
@@ -77,7 +79,7 @@ EXAMPLES
             --service-account-key-file=/tmp/keyfile.json
 
     Register a non-GKE cluster and output a manifest that can be used to
-    install the Connect agent:
+    install the Connect agent by kubectl:
 
         $ gcloud alpha container hub memberships register my-cluster \
             --context=my-cluster-context \
@@ -95,6 +97,14 @@ EXAMPLES
         $ gcloud alpha container hub memberships register my-cluster \
             --gke-uri=my-cluster-gke-uri --install-connect-agent \
             --service-account-key-file=/tmp/keyfile.json
+
+    Register a GKE cluster and output a manifest that can be used to install
+    the Connect agent by kubectl:
+
+        $ gcloud alpha container hub memberships register my-cluster \
+            --gke-uri=my-cluster-gke-uri --enable-workload-identity \
+            --install-connect-agent \
+            --manifest-output-file=/tmp/manifest.yaml
 
     Register a GKE cluster first, and install the Connect agent later.
 
