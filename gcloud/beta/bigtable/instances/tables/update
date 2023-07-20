@@ -4,7 +4,9 @@ NAME
 
 SYNOPSIS
     gcloud beta bigtable instances tables update (TABLE : --instance=INSTANCE)
-        [--async] [--deletion-protection] [GCLOUD_WIDE_FLAG ...]
+        [--async] [--deletion-protection]
+        [--change-stream-retention-period=CHANGE_STREAM_RETENTION_PERIOD
+          | --clear-change-stream-retention-period] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) Update an existing new Cloud Bigtable table with the specified
@@ -20,6 +22,17 @@ EXAMPLES
 
         $ gcloud beta bigtable instances tables update my-table \
             --instance=my-instance --no-deletion-protection
+
+    To enable a change stream with a retention period of 1 day, or to update
+    your table's change stream retention period to 1 day, run:
+
+        $ gcloud beta bigtable instances tables update my-table \
+            --instance=my-instance --change-stream-retention-period=1d
+
+    To disable a change stream, run:
+
+        $ gcloud beta bigtable instances tables update my-table \
+            --instance=my-instance --clear-change-stream-retention-period
 
 POSITIONAL ARGUMENTS
      Table resource - Cloud Bigtable table to update. The arguments in this
@@ -59,6 +72,18 @@ FLAGS
 
      --deletion-protection
         Once specified, the table is deletion protected.
+
+     At most one of these can be specified:
+
+       --change-stream-retention-period=CHANGE_STREAM_RETENTION_PERIOD
+          The length of time to retain change stream data for the table, in the
+          range of [1 day, 7 days]. Acceptable units are days (d), hours (h),
+          minutes (m), and seconds (s). If not already specified, enables a
+          change stream for the table. Examples: 5d or 48h.
+
+       --clear-change-stream-retention-period
+          This disables the change stream and eventually removes the change
+          stream data.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

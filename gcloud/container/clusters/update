@@ -8,10 +8,12 @@ SYNOPSIS
           | --autoscaling-profile=AUTOSCALING_PROFILE
           | --complete-credential-rotation | --complete-ip-rotation
           | --database-encryption-key=DATABASE_ENCRYPTION_KEY
+          | --dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE
           | --disable-database-encryption | --disable-default-snat
           | --disable-workload-identity | --enable-autoscaling
           | --enable-cost-allocation | --enable-google-cloud-access
           | --enable-identity-service | --enable-image-streaming
+          | --enable-insecure-kubelet-readonly-port
           | --enable-intra-node-visibility
           | --enable-kubernetes-unstable-apis=API,[API,...]
           | --enable-l4-ilb-subsetting | --enable-legacy-authorization
@@ -52,7 +54,9 @@ SYNOPSIS
           --enable-resource-consumption-metering
           --resource-usage-bigquery-dataset=RESOURCE_USAGE_BIGQUERY_DATASET
           | --cluster-dns=CLUSTER_DNS --cluster-dns-domain=CLUSTER_DNS_DOMAIN
-          --cluster-dns-scope=CLUSTER_DNS_SCOPE | [--enable-autoprovisioning
+          --cluster-dns-scope=CLUSTER_DNS_SCOPE
+          | --disable-dataplane-v2-metrics | --enable-dataplane-v2-metrics
+          | [--enable-autoprovisioning
           : --autoprovisioning-config-file=AUTOPROVISIONING_CONFIG_FILE
           | --autoprovisioning-image-type=AUTOPROVISIONING_IMAGE_TYPE
           --autoprovisioning-locations=ZONE,[ZONE,...]
@@ -152,6 +156,35 @@ REQUIRED FLAGS
           For more information, see
           https://cloud.google.com/kubernetes-engine/docs/how-to/encrypting-secrets.
 
+       --dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE
+          Select Advanced Datapath Observability mode for the cluster. Defaults
+          to DISABLED.
+
+          Advanced Datapath Observability allows for a real-time view into
+          pod-to-pod traffic within your cluster.
+
+          Examples:
+
+              $ gcloud container clusters update \
+                  --dataplane-v2-observability-mode=DISABLED
+
+              $ gcloud container clusters update \
+                  --dataplane-v2-observability-mode=INTERNAL_VPC_LB
+
+              $ gcloud container clusters update \
+                  --dataplane-v2-observability-mode=EXTERNAL_LB
+
+          DATAPLANE_V2_OBSERVABILITY_MODE must be one of:
+
+           DISABLED
+              Disables Advanced Datapath Observability.
+           EXTERNAL_LB
+              Makes Advanced Datapath Observability available to the external
+              network.
+           INTERNAL_VPC_LB
+              Makes Advanced Datapath Observability available from the VPC
+              network.
+
        --disable-database-encryption
           Disable database encryption.
 
@@ -220,6 +253,12 @@ REQUIRED FLAGS
 
        --enable-image-streaming
           Specifies whether to enable image streaming on cluster.
+
+       --enable-insecure-kubelet-readonly-port
+          Enables the Kubelet's insecure Read Only Port.
+
+          To disable in an existing cluster, explicitly set flag to
+          --no-enable-insecure-kubelet-readonly-port.
 
        --enable-intra-node-visibility
           Enable Intra-node visibility for this cluster.
@@ -602,8 +641,6 @@ REQUIRED FLAGS
            --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
               Enable Binary Authorization for this cluster.
               BINAUTHZ_EVALUATION_MODE must be one of: DISABLED,
-              POLICY_BINDINGS,
-              POLICY_BINDINGS_AND_PROJECT_SINGLETON_POLICY_ENFORCE,
               PROJECT_SINGLETON_POLICY_ENFORCE.
 
            --enable-binauthz
@@ -776,6 +813,14 @@ REQUIRED FLAGS
                 Configures the Cloud DNS zone to be private to the cluster.
              vpc
                 Configures the Cloud DNS zone to be private to the VPC Network.
+
+       At most one of these can be specified:
+
+         --disable-dataplane-v2-metrics
+            Stops exposing advanced datapath flow metrics on node port.
+
+         --enable-dataplane-v2-metrics
+            Exposes advanced datapath flow metrics on node port.
 
        Node autoprovisioning
 

@@ -8,8 +8,9 @@ SYNOPSIS
         --attribute-mapping=[ATTRIBUTE_MAPPING,...] --client-id=CLIENT_ID
         --issuer-uri=ISSUER_URI
         (--web-sso-assertion-claims-behavior=WEB_SSO_ASSERTION_CLAIMS_BEHAVIOR
-          --web-sso-response-type=WEB_SSO_RESPONSE_TYPE) [--async]
-        [--attribute-condition=ATTRIBUTE_CONDITION]
+          --web-sso-response-type=WEB_SSO_RESPONSE_TYPE
+          : --web-sso-additional-scopes=[WEB_SSO_ADDITIONAL_SCOPES,...])
+        [--async] [--attribute-condition=ATTRIBUTE_CONDITION]
         [--client-secret-value=CLIENT_SECRET_VALUE] [--description=DESCRIPTION]
         [--disabled] [--display-name=DISPLAY_NAME] [GCLOUD_WIDE_FLAG ...]
 
@@ -28,9 +29,11 @@ EXAMPLES
             --description="My workforce pool provider description." \
             --disabled --attribute-mapping="google.subject=assertion.sub" \
             --attribute-condition="true" --client-id="client-id" \
+            --client-secret-value="client-secret" \
             --issuer-uri="https://test-idp.com" \
-            --web-sso-response-type=id-token \
-            --web-sso-assertion-claims-behavior=only-id-token-claims
+            --web-sso-response-type="code" \
+            --web-sso-assertion-claims-behavior="merge-user-info-over-id-tok\
+        en-claims" --web-sso-additional-scopes="groups,photos"
 
 POSITIONAL ARGUMENTS
      Workforce pool provider resource - The workforce pool provider to create.
@@ -181,6 +184,15 @@ REQUIRED FLAGS
 
           This flag argument must be specified if any of the other arguments in
           this group are specified.
+
+       --web-sso-additional-scopes=[WEB_SSO_ADDITIONAL_SCOPES,...]
+          Additional scopes to request for the OIDC authentication on top of
+          scopes requested by default. By default, the openid, profile and
+          email scopes that are supported by the identity provider are
+          requested.
+
+          Each additional scope may be at most 256 characters. A maximum of 10
+          additional scopes may be configured.
 
 OPTIONAL FLAGS
      --async

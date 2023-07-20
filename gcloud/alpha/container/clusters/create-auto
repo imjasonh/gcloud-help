@@ -10,8 +10,10 @@ SYNOPSIS
         [--cluster-secondary-range-name=NAME]
         [--cluster-version=CLUSTER_VERSION]
         [--create-subnetwork=[KEY=VALUE,...]]
-        [--database-encryption-key=DATABASE_ENCRYPTION_KEY] [--enable-fleet]
-        [--enable-google-cloud-access]
+        [--database-encryption-key=DATABASE_ENCRYPTION_KEY]
+        [--dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE]
+        [--enable-fleet] [--enable-google-cloud-access]
+        [--enable-insecure-kubelet-readonly-port]
         [--enable-kubernetes-unstable-apis=API,[API,...]]
         [--enable-master-global-access] [--fleet-project=PROJECT_ID_OR_NUMBER]
         [--logging=[COMPONENT,...]] [--monitoring=[COMPONENT,...]]
@@ -22,7 +24,7 @@ SYNOPSIS
         [--workload-policies=WORKLOAD_POLICIES]
         [--workload-vulnerability-scanning=WORKLOAD_VULNERABILITY_SCANNING]
         [--binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
-          --binauthz-policy=BINAUTHZ_POLICY]
+          --binauthz-policy-bindings=[name=BINAUTHZ_POLICY,...]]
         [--enable-master-authorized-networks
           --master-authorized-networks=NETWORK,[NETWORK,...]]
         [--enable-private-endpoint
@@ -155,6 +157,35 @@ FLAGS
         For more information, see
         https://cloud.google.com/kubernetes-engine/docs/how-to/encrypting-secrets.
 
+     --dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE
+        Select Advanced Datapath Observability mode for the cluster. Defaults
+        to DISABLED.
+
+        Advanced Datapath Observability allows for a real-time view into
+        pod-to-pod traffic within your cluster.
+
+        Examples:
+
+            $ gcloud alpha container clusters create-auto \
+                --dataplane-v2-observability-mode=DISABLED
+
+            $ gcloud alpha container clusters create-auto \
+                --dataplane-v2-observability-mode=INTERNAL_VPC_LB
+
+            $ gcloud alpha container clusters create-auto \
+                --dataplane-v2-observability-mode=EXTERNAL_LB
+
+        DATAPLANE_V2_OBSERVABILITY_MODE must be one of:
+
+         DISABLED
+            Disables Advanced Datapath Observability.
+         EXTERNAL_LB
+            Makes Advanced Datapath Observability available to the external
+            network.
+         INTERNAL_VPC_LB
+            Makes Advanced Datapath Observability available from the VPC
+            network.
+
      --enable-fleet
         Set cluster project as the fleet host project. This will register the
         cluster to the same project. To register the cluster to a fleet in a
@@ -165,6 +196,12 @@ FLAGS
         When you enable Google Cloud Access, any public IP addresses owned by
         Google Cloud can reach the public control plane endpoint of your
         cluster.
+
+     --enable-insecure-kubelet-readonly-port
+        Enables the Kubelet's insecure Read Only Port.
+
+        To disable in an existing cluster, explicitly set flag to
+        --no-enable-insecure-kubelet-readonly-port.
 
      --enable-kubernetes-unstable-apis=API,[API,...]
         Enable Kubernetes beta API features on this cluster. Beta APIs are not
@@ -342,7 +379,7 @@ FLAGS
           POLICY_BINDINGS_AND_PROJECT_SINGLETON_POLICY_ENFORCE,
           PROJECT_SINGLETON_POLICY_ENFORCE.
 
-       --binauthz-policy=BINAUTHZ_POLICY
+       --binauthz-policy-bindings=[name=BINAUTHZ_POLICY,...]
           The relative resource name of the Binary Authorization policy to
           audit and/or enforce. GKE policies have the following format:
           projects/{project_number}/platforms/gke/policies/{policy_id}.

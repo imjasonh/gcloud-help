@@ -6,7 +6,8 @@ SYNOPSIS
     gcloud compute routers add-bgp-peer NAME --interface=INTERFACE
         --peer-asn=PEER_ASN --peer-name=PEER_NAME
         [--advertised-route-priority=ADVERTISED_ROUTE_PRIORITY]
-        [--advertisement-mode=MODE] [--async] [--[no-]enable-ipv6]
+        [--advertisement-mode=MODE] [--async]
+        [--custom-learned-route-priority=PRIORITY] [--[no-]enable-ipv6]
         [--[no-]enabled] [--instance=INSTANCE] [--instance-zone=INSTANCE_ZONE]
         [--ipv6-nexthop-address=IPV6_NEXTHOP_ADDRESS]
         [--md5-authentication-key=MD5_AUTHENTICATION_KEY]
@@ -14,6 +15,7 @@ SYNOPSIS
         [--peer-ipv6-nexthop-address=PEER_IPV6_NEXTHOP_ADDRESS]
         [--region=REGION] [--set-advertisement-groups=[GROUP,...]]
         [--set-advertisement-ranges=[CIDR_RANGE=DESC,...]]
+        [--set-custom-learned-route-ranges=[CIDR_RANGE,...]]
         [--bfd-min-receive-interval=BFD_MIN_RECEIVE_INTERVAL
           --bfd-min-transmit-interval=BFD_MIN_TRANSMIT_INTERVAL
           --bfd-multiplier=BFD_MULTIPLIER
@@ -57,6 +59,12 @@ OPTIONAL FLAGS
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
+
+     --custom-learned-route-priority=PRIORITY
+        An integral value 0 <= priority <= 65535, to be applied to all custom
+        learned route IP address ranges for this peer. If not specified, a
+        Google-managed priority value of 100 is used. The routes with the
+        lowest priority value win.
 
      --[no-]enable-ipv6
         If IPv6 is enabled, the peer connection can be established with IPv6
@@ -154,6 +162,14 @@ OPTIONAL FLAGS
         --set-advertisement-ranges=192.168.10.0/24. To store a description with
         the range, use --set-advertisement-ranges=192.168.10.0/24=my-networks.
         This list can only be specified in custom advertisement mode.
+
+     --set-custom-learned-route-ranges=[CIDR_RANGE,...]
+        The list of user-defined custom learned route IP address ranges for
+        this peer. This list is a comma separated IP address ranges such as
+        1.2.3.4,6.7.0.0/16,2001:db8:abcd:12::/64 where each IP address range
+        must be a valid CIDR-formatted prefix. If an IP address is provided
+        without a subnet mask, it is interpreted as a /32 singular IP address
+        range for IPv4, and /128 for IPv6.
 
      Arguments to configure BFD (Bidirectional Forwarding Detection) settings:
 
