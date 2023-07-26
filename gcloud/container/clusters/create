@@ -27,18 +27,18 @@ SYNOPSIS
         [--enable-cost-allocation] [--enable-dataplane-v2]
         [--enable-google-cloud-access] [--enable-gvnic]
         [--enable-identity-service] [--enable-image-streaming]
-        [--enable-insecure-kubelet-readonly-port]
         [--enable-intra-node-visibility] [--enable-ip-alias]
         [--enable-kubernetes-alpha]
         [--enable-kubernetes-unstable-apis=API,[API,...]]
         [--enable-l4-ilb-subsetting] [--enable-legacy-authorization]
         [--enable-managed-prometheus] [--enable-master-global-access]
-        [--enable-network-policy] [--enable-service-externalips]
-        [--enable-shielded-nodes] [--enable-stackdriver-kubernetes]
-        [--enable-vertical-pod-autoscaling] [--gateway-api=GATEWAY_API]
-        [--image-type=IMAGE_TYPE] [--ipv6-access-type=IPV6_ACCESS_TYPE]
-        [--issue-client-certificate] [--labels=[KEY=VALUE,...]]
-        [--logging=[COMPONENT,...]] [--logging-variant=LOGGING_VARIANT]
+        [--enable-multi-networking] [--enable-network-policy]
+        [--enable-service-externalips] [--enable-shielded-nodes]
+        [--enable-stackdriver-kubernetes] [--enable-vertical-pod-autoscaling]
+        [--gateway-api=GATEWAY_API] [--image-type=IMAGE_TYPE]
+        [--ipv6-access-type=IPV6_ACCESS_TYPE] [--issue-client-certificate]
+        [--labels=[KEY=VALUE,...]] [--logging=[COMPONENT,...]]
+        [--logging-variant=LOGGING_VARIANT]
         [--machine-type=MACHINE_TYPE, -m MACHINE_TYPE]
         [--max-nodes-per-pool=MAX_NODES_PER_POOL]
         [--max-pods-per-node=MAX_PODS_PER_NODE]
@@ -47,13 +47,14 @@ SYNOPSIS
         [--metadata=KEY=VALUE,[KEY=VALUE,...]]
         [--metadata-from-file=KEY=LOCAL_FILE_PATH,[...]]
         [--min-cpu-platform=PLATFORM] [--monitoring=[COMPONENT,...]]
-        [--network=NETWORK] [--node-labels=[NODE_LABEL,...]]
-        [--node-locations=ZONE,[ZONE,...]] [--node-taints=[NODE_TAINT,...]]
-        [--node-version=NODE_VERSION]
+        [--network=NETWORK]
+        [--network-performance-configs=[PROPERTY1=VALUE1,...]]
+        [--node-labels=[NODE_LABEL,...]] [--node-locations=ZONE,[ZONE,...]]
+        [--node-taints=[NODE_TAINT,...]] [--node-version=NODE_VERSION]
         [--notification-config=[pubsub=ENABLED|DISABLED,
           pubsub-topic=TOPIC,...]] [--num-nodes=NUM_NODES; default=3]
-        [--placement-type=PLACEMENT_TYPE] [--preemptible]
-        [--private-endpoint-subnetwork=NAME]
+        [--placement-policy=PLACEMENT_POLICY] [--placement-type=PLACEMENT_TYPE]
+        [--preemptible] [--private-endpoint-subnetwork=NAME]
         [--private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE]
         [--release-channel=CHANNEL] [--security-group=SECURITY_GROUP]
         [--security-posture=SECURITY_POSTURE] [--services-ipv4-cidr=CIDR]
@@ -480,12 +481,6 @@ FLAGS
      --enable-image-streaming
         Specifies whether to enable image streaming on cluster.
 
-     --enable-insecure-kubelet-readonly-port
-        Enables the Kubelet's insecure Read Only Port.
-
-        To disable in an existing cluster, explicitly set flag to
-        --no-enable-insecure-kubelet-readonly-port.
-
      --enable-intra-node-visibility
         Enable Intra-node visibility for this cluster.
 
@@ -538,6 +533,10 @@ FLAGS
 
         Must be used in conjunction with '--enable-ip-alias' and
         '--enable-private-nodes'.
+
+     --enable-multi-networking
+        Enables multi-networking on the cluster. Multi-networking is disabled
+        by default.
 
      --enable-network-policy
         Enable network policy enforcement for this cluster. If you are enabling
@@ -773,6 +772,20 @@ FLAGS
         Kubernetes Engine will use this network when creating routes and
         firewalls for the clusters. Defaults to the 'default' network.
 
+     --network-performance-configs=[PROPERTY1=VALUE1,...]
+        Configures network performance settings for the cluster. Node pools can
+        override with their own settings.
+
+         total-egress-bandwidth-tier
+            Total egress bandwidth is the available outbound bandwidth from a
+            VM, regardless of whether the traffic is going to internal IP or
+            external IP destinations. The following tier values are allowed:
+            [DEFAULT,TIER_1].
+
+            See
+            https://cloud.google.com/compute/docs/networking/configure-vm-with-high-bandwidth-configuration
+            for more information.
+
      --node-labels=[NODE_LABEL,...]
         Applies the given Kubernetes labels on all nodes in the new node pool.
 
@@ -857,6 +870,12 @@ FLAGS
 
      --num-nodes=NUM_NODES; default=3
         The number of nodes to be created in each of the cluster's zones.
+
+     --placement-policy=PLACEMENT_POLICY
+        Indicates the desired resource policy to use.
+
+            $ gcloud container clusters create node-pool-1 \
+                --cluster=example-cluster --placement-policy my-placement
 
      --placement-type=PLACEMENT_TYPE
         Placement type allows to define the type of node placement within the
@@ -946,7 +965,6 @@ FLAGS
             Clusters subscribed to 'regular' receive versions that are
             considered GA quality. 'regular' is intended for production users
             who want to take advantage of new features.
-
          stable
             Clusters subscribed to 'stable' receive versions that are known to
             be stable and reliable in production.
@@ -1046,8 +1064,6 @@ FLAGS
           podPidsLimit                         integer (The value must be
                                                greater than or equal to 1024 and
                                                less than 4194304.)
-          insecureKubeletReadonlyPortEnabled   true or false (enabled by
-                                               default)
 
         List of supported sysctls in 'linuxConfig'.
 

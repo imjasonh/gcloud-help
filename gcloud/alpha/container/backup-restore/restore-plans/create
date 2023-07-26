@@ -6,20 +6,22 @@ SYNOPSIS
     gcloud alpha container backup-restore restore-plans create
         (RESTORE_PLAN : --location=LOCATION) --backup-plan=BACKUP_PLAN
         --cluster=CLUSTER
-        --namespaced-resource-restore-mode=NAMESPACED_RESOURCE_RESTORE_MODE
         (--all-namespaces | --excluded-namespaces=[EXCLUDED_NAMESPACES,...]
           | --no-namespaces | --selected-applications=SELECTED_APPLICATIONS
           | --selected-namespaces=[SELECTED_NAMESPACES,...]) [--async]
         [--cluster-resource-conflict-policy=CLUSTER_RESOURCE_CONFLICT_POLICY]
         [--description=DESCRIPTION] [--labels=[KEY=VALUE,...]]
-        [--substitution-rules-file=SUBSTITUTION_RULES_FILE]
+        [--namespaced-resource-restore-mode=NAMESPACED_RESOURCE_RESTORE_MODE]
         [--volume-data-restore-policy=VOLUME_DATA_RESTORE_POLICY;
           default="no-volume-data-restoration"]
         [--cluster-resource-scope-all-group-kinds
           | --cluster-resource-scope-excluded-group-kinds=[CLUSTER_RESOURCE_SCOPE_EXCLUDED_GROUP_KINDS,
           ...] | --cluster-resource-scope-no-group-kinds
           | --cluster-resource-scope-selected-group-kinds=[CLUSTER_RESOURCE_SCOPE_SELECTED_GROUP_KINDS,
-          ...]] [GCLOUD_WIDE_FLAG ...]
+          ...]]
+        [--substitution-rules-file=SUBSTITUTION_RULES_FILE
+          | --transformation-rules-file=TRANSFORMATION_RULES_FILE]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Create a Backup for GKE restore plan.
@@ -92,28 +94,6 @@ REQUIRED FLAGS
         regional cluster or projects/<project>/zones/<zone>/clusters/<cluster>
         for a zonal cluster.
 
-     --namespaced-resource-restore-mode=NAMESPACED_RESOURCE_RESTORE_MODE
-        Define how to handle restore-time conflicts for namespaced resources.
-        NAMESPACED_RESOURCE_RESTORE_MODE must be one of:
-
-         delete-and-restore
-            When conflicting top-level resources (either Namespaces or
-            ProtectedApplications, depending upon the scope) are encountered,
-            this will first trigger a delete of the conflicting resource AND
-            ALL OF ITS REFERENCED RESOURCES (e.g., all resources in the
-            Namespace or all resources referenced by the ProtectedApplication)
-            before restoring the resources from the Backup. This mode should
-            only be used when you are intending to revert some portion of a
-            cluster to an earlier state.
-
-         fail-on-conflict
-            If conflicting top-level resources (either Namespaces or
-            ProtectedApplications, depending upon the scope) are encountered at
-            the beginning of a restore process, the Restore will fail. If a
-            conflict occurs during the restore process itself (e.g., because an
-            out of band process creates conflicting resources), a conflict will
-            be reported.
-
      The scope of namespaced resources to restore.
 
      Exactly one of these must be specified:
@@ -171,10 +151,27 @@ OPTIONAL FLAGS
         contain only hyphens (-), underscores (_), lowercase characters, and
         numbers.
 
-     --substitution-rules-file=SUBSTITUTION_RULES_FILE
-        If provided, defines a set of resource transformations that will be
-        applied to resources from the source backup before they are created in
-        the target cluster.
+     --namespaced-resource-restore-mode=NAMESPACED_RESOURCE_RESTORE_MODE
+        Define how to handle restore-time conflicts for namespaced resources.
+        NAMESPACED_RESOURCE_RESTORE_MODE must be one of:
+
+         delete-and-restore
+            When conflicting top-level resources (either Namespaces or
+            ProtectedApplications, depending upon the scope) are encountered,
+            this will first trigger a delete of the conflicting resource AND
+            ALL OF ITS REFERENCED RESOURCES (e.g., all resources in the
+            Namespace or all resources referenced by the ProtectedApplication)
+            before restoring the resources from the Backup. This mode should
+            only be used when you are intending to revert some portion of a
+            cluster to an earlier state.
+
+         fail-on-conflict
+            If conflicting top-level resources (either Namespaces or
+            ProtectedApplications, depending upon the scope) are encountered at
+            the beginning of a restore process, the Restore will fail. If a
+            conflict occurs during the restore process itself (e.g., because an
+            out of band process creates conflicting resources), a conflict will
+            be reported.
 
      --volume-data-restore-policy=VOLUME_DATA_RESTORE_POLICY; default="no-volume-data-restoration"
         Define how data is populated for restored volumes. If this flag is not
@@ -220,6 +217,18 @@ OPTIONAL FLAGS
           The format of a resource is "<group>/<kind>", e.g.
           storage.k8s.io/StorageClass for StorageClass. Use an empty string for
           core API group.
+
+     At most one of these can be specified:
+
+       --substitution-rules-file=SUBSTITUTION_RULES_FILE
+          If provided, defines a set of resource transformations that will be
+          applied to resources from the source backup before they are created
+          in the target cluster.
+
+       --transformation-rules-file=TRANSFORMATION_RULES_FILE
+          If provided, defines a set of resource transformations that will be
+          applied to resources from the source backup before they are created
+          in the target cluster.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

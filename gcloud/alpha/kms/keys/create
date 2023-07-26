@@ -68,13 +68,13 @@ EXAMPLES
             --keyring=rangers --purpose=encryption --rotation-period=30d \
             --next-rotation-time=2017-10-12T12:34:56.1234Z
 
-    The following command creates a key named foo with protection level
-    software within the keyring fellowship and location us-east1 with two
-    specified labels:
+    The following command creates a raw encryption key named foo with
+    protection level software within the keyring fellowship and location
+    us-east1 with two specified labels:
 
         $ gcloud alpha kms keys create foo --location=us-east1 \
-            --keyring=fellowship --purpose=encryption \
-            --labels=env=prod,team=kms
+            --keyring=fellowship --purpose=raw-encryption \
+            --default-algorithm=aes-128-cbc --labels=env=prod,team=kms
 
     The following command creates an asymmetric key named samwise with
     protection level software and default algorithm ec-sign-p256-sha256 within
@@ -153,7 +153,8 @@ POSITIONAL ARGUMENTS
 REQUIRED FLAGS
      --purpose=PURPOSE
         The "purpose" of the key. PURPOSE must be one of:
-        asymmetric-encryption, asymmetric-signing, encryption, mac.
+        asymmetric-encryption, asymmetric-signing, encryption, mac,
+        raw-encryption.
 
 OPTIONAL FLAGS
      --crypto-key-backend=CRYPTO_KEY_BACKEND
@@ -166,7 +167,8 @@ OPTIONAL FLAGS
         The default algorithm for the crypto key. For more information about
         choosing an algorithm, see
         https://cloud.google.com/kms/docs/algorithms. DEFAULT_ALGORITHM must be
-        one of: ec-sign-p256-sha256, ec-sign-p384-sha384,
+        one of: aes-128-cbc, aes-128-ctr, aes-128-gcm, aes-256-cbc,
+        aes-256-ctr, aes-256-gcm, ec-sign-p256-sha256, ec-sign-p384-sha384,
         ec-sign-secp256k1-sha256, external-symmetric-encryption,
         google-symmetric-encryption, hmac-sha1, hmac-sha224, hmac-sha256,
         hmac-sha384, hmac-sha512, rsa-decrypt-oaep-2048-sha1,

@@ -4,9 +4,10 @@ NAME
 
 SYNOPSIS
     gcloud beta compute routers nats rules create RULE_NUMBER --match=MATCH
-        --nat=NAT --router=ROUTER
-        --source-nat-active-ips=IP_ADDRESS,[IP_ADDRESS,...] [--async]
-        [--region=REGION] [GCLOUD_WIDE_FLAG ...]
+        --nat=NAT --router=ROUTER [--async] [--region=REGION]
+        [--source-nat-active-ips=IP_ADDRESS,[IP_ADDRESS,...]]
+        [--source-nat-active-ranges=SUBNETWORK,[SUBNETWORK,...]]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) gcloud beta compute routers nats rules create is used to create a
@@ -28,26 +29,28 @@ POSITIONAL ARGUMENTS
 REQUIRED FLAGS
      --match=MATCH
         CEL Expression used to identify traffic to which this rule applies.
-        ◆ Supported attributes: destination.ip
-        ◆ Supported operators: ||, ==
-        ◆ Supported methods: inIpRange
 
-        Examples of allowed Match expressions:
+        ◆ Supported attributes (Public NAT): destination.ip
+        ◆ Supported attributes (Private NAT): nexthop.hub
+        ◆ Supported methods (Public Nat): inIpRange
+        ◆ Supported operators (Public NAT): ||, ==
+        ◆ Supported operators (Private NAT): ==
+
+        Examples of allowed Match expressions (Public NAT):
         ◆ 'inIpRange(destination.ip, "203.0.113.0/24")''
         ◆ 'destination.ip == "203.0.113.7"'
         ◆ 'destination.ip == "203.0.113.7" || inIpRange(destination.ip,
           "203.0.113.16/25")'
+
+        Example of allowed Match expression (Private NAT):
+        ◆ nexthop.hub ==
+          "//networkconnectivity.googleapis.com/projects/p1/locations/global/hubs/h1"
 
      --nat=NAT
         Name of the NAT that contains the Rule
 
      --router=ROUTER
         The Router to use for NAT.
-
-     --source-nat-active-ips=IP_ADDRESS,[IP_ADDRESS,...]
-        External IP Addresses to use for connections matching this rule.
-
-        These must be valid reserved external IPs in the same region.
 
 OPTIONAL FLAGS
      --async
@@ -73,6 +76,19 @@ OPTIONAL FLAGS
 
         Alternatively, the region can be stored in the environment variable
         CLOUDSDK_COMPUTE_REGION.
+
+     --source-nat-active-ips=IP_ADDRESS,[IP_ADDRESS,...]
+        External IP Addresses to use for connections matching this rule.
+
+        These must be valid reserved external IPs in the same region.
+
+     --source-nat-active-ranges=SUBNETWORK,[SUBNETWORK,...]
+        Subnetworks from which addresses are used for connections matching this
+        rule. This is only supported for Private NAT, and is required when
+        creating a Private NAT gateway.
+
+        These must be Subnetwork resources in the same region, with purpose set
+        to PRIVATE_NAT.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

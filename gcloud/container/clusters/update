@@ -13,7 +13,6 @@ SYNOPSIS
           | --disable-workload-identity | --enable-autoscaling
           | --enable-cost-allocation | --enable-google-cloud-access
           | --enable-identity-service | --enable-image-streaming
-          | --enable-insecure-kubelet-readonly-port
           | --enable-intra-node-visibility
           | --enable-kubernetes-unstable-apis=API,[API,...]
           | --enable-l4-ilb-subsetting | --enable-legacy-authorization
@@ -23,6 +22,7 @@ SYNOPSIS
           | --enable-stackdriver-kubernetes | --enable-vertical-pod-autoscaling
           | --gateway-api=GATEWAY_API | --generate-password
           | --logging-variant=LOGGING_VARIANT | --maintenance-window=START_TIME
+          | --network-performance-configs=[PROPERTY1=VALUE1,...]
           | --node-locations=ZONE,[ZONE,...]
           | --notification-config=[pubsub=ENABLED|DISABLED,
           pubsub-topic=TOPIC,...]
@@ -254,12 +254,6 @@ REQUIRED FLAGS
        --enable-image-streaming
           Specifies whether to enable image streaming on cluster.
 
-       --enable-insecure-kubelet-readonly-port
-          Enables the Kubelet's insecure Read Only Port.
-
-          To disable in an existing cluster, explicitly set flag to
-          --no-enable-insecure-kubelet-readonly-port.
-
        --enable-intra-node-visibility
           Enable Intra-node visibility for this cluster.
 
@@ -388,6 +382,20 @@ REQUIRED FLAGS
           To remove an existing maintenance window from the cluster, use
           '--clear-maintenance-window'.
 
+       --network-performance-configs=[PROPERTY1=VALUE1,...]
+          Configures network performance settings for the cluster. Node pools
+          can override with their own settings.
+
+           total-egress-bandwidth-tier
+              Total egress bandwidth is the available outbound bandwidth from a
+              VM, regardless of whether the traffic is going to internal IP or
+              external IP destinations. The following tier values are allowed:
+              [DEFAULT,TIER_1].
+
+              See
+              https://cloud.google.com/compute/docs/networking/configure-vm-with-high-bandwidth-configuration
+              for more information.
+
        --node-locations=ZONE,[ZONE,...]
           The set of zones in which the specified node footprint should be
           replicated. All zones must be in the same region as the cluster's
@@ -485,7 +493,6 @@ REQUIRED FLAGS
               Clusters subscribed to 'regular' receive versions that are
               considered GA quality. 'regular' is intended for production users
               who want to take advantage of new features.
-
            stable
               Clusters subscribed to 'stable' receive versions that are known
               to be stable and reliable in production.

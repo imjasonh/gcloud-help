@@ -1,0 +1,130 @@
+NAME
+    gcloud compute resource-policies update snapshot-schedule - update a
+        Compute Engine Snapshot Schedule Resource Policy
+
+SYNOPSIS
+    gcloud compute resource-policies update snapshot-schedule NAME
+        [--description=DESCRIPTION] [--max-retention-days=MAX_RETENTION_DAYS]
+        [--on-source-disk-delete=ON_SOURCE_DISK_DELETE] [--region=REGION]
+        [--snapshot-labels=[KEY=VALUE,...]]
+        [--weekly-schedule-from-file=WEEKLY_CYCLE_FROM_FILE
+          | --start-time=START_TIME (--daily-schedule | --hourly-schedule=HOURS
+          | --weekly-schedule=WEEKLY_CYCLE)] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Update a Compute Engine Snapshot Schedule Resource Policy.
+
+EXAMPLES
+    The following command updates a Compute Engine Snapshot Schedule Resource
+    Policy to take a daily snapshot at 13:00 UTC
+
+        $ gcloud compute resource-policies update snapshot-schedule \
+            my-resource-policy --region=REGION --start-time=13:00 \
+            --daily-schedule
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the resource policy to operate on.
+
+FLAGS
+     --description=DESCRIPTION
+        An optional, textual description for the backend.
+
+     --max-retention-days=MAX_RETENTION_DAYS
+        Maximum number of days snapshot can be retained.
+
+     --on-source-disk-delete=ON_SOURCE_DISK_DELETE
+        Retention behavior of automatic snapshots in the event of source disk
+        deletion. ON_SOURCE_DISK_DELETE must be one of:
+
+         apply-retention-policy
+            Continue to apply the retention window to automatically-created
+            snapshots when the source disk is deleted.
+         keep-auto-snapshots
+            Keep automatically-created snapshots when the source disk is
+            deleted. This is the default behavior.
+
+     --region=REGION
+        Region of the resource policy to operate on. If not specified, you
+        might be prompted to select a region (interactive mode only).
+
+        To avoid prompting when this flag is omitted, you can set the
+        compute/region property:
+
+            $ gcloud config set compute/region REGION
+
+        A list of regions can be fetched by running:
+
+            $ gcloud compute regions list
+
+        To unset the property, run:
+
+            $ gcloud config unset compute/region
+
+        Alternatively, the region can be stored in the environment variable
+        CLOUDSDK_COMPUTE_REGION.
+
+     --snapshot-labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+        The label is added to each snapshot created by the schedule.
+
+     Cycle Frequency Group.
+
+     At most one of these can be specified:
+
+       Using a file:
+
+         --weekly-schedule-from-file=WEEKLY_CYCLE_FROM_FILE
+            A JSON/YAML file which specifies a weekly schedule. The file should
+            contain the following fields:
+
+            day: Day of the week with the same choices as --weekly-schedule.
+            startTime: Start time of the snapshot schedule with the same format
+            as --start-time.
+
+            For more information about using a file, see
+            https://cloud.google.com/compute/docs/disks/scheduled-snapshots#create_snapshot_schedule
+
+       Using command flags:
+
+         --start-time=START_TIME
+            Start time for the disk snapshot schedule in UTC. For example,
+            --start-time="15:00".
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         Exactly one of these must be specified:
+
+           --daily-schedule
+              Snapshot schedule starts daily at START_TIME.
+
+           --hourly-schedule=HOURS
+              Snapshot schedule occurs every n hours starting at START_TIME.
+
+           --weekly-schedule=WEEKLY_CYCLE
+              Snapshot schedule occurs weekly on WEEKLY_SCHEDULE at START_TIME.
+              WEEKLY_CYCLE must be one of: monday, tuesday, wednesday,
+              thursday, friday, saturday, sunday.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha compute resource-policies update snapshot-schedule
+
+        $ gcloud beta compute resource-policies update snapshot-schedule
+

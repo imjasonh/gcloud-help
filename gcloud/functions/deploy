@@ -42,7 +42,7 @@ SYNOPSIS
           | --trigger-topic=TRIGGER_TOPIC
           | --trigger-event=EVENT_TYPE --trigger-resource=RESOURCE
           | --trigger-event-filters=[ATTRIBUTE=VALUE,...]
-          --trigger-event-filters-path-pattern=[ATTRIBUTE=VALUE,...]]
+          --trigger-event-filters-path-pattern=[ATTRIBUTE=PATH_PATTERN,...]]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -554,15 +554,20 @@ FLAGS
             ▫ provide the argument --vpc-connector on the command line.
 
      If you don't specify a trigger when deploying an update to an existing
-     function it will keep its current trigger. You must specify
-     --trigger-topic, --trigger-bucket, --trigger-http, --trigger-event-filters
-     or (--trigger-event AND --trigger-resource) when deploying a new function.
+     function it will keep its current trigger. You must specify one of the
+     following when deploying a new function:
+      ◆ --trigger-topic,
+      ◆ --trigger-bucket,
+      ◆ --trigger-http,
+      ◆ --trigger-event AND --trigger-resource,
+      ◆ --trigger-event-filters and optionally
+        --trigger-event-filters-path-pattern.
 
      At most one of these can be specified:
 
        --trigger-bucket=TRIGGER_BUCKET
-          Google Cloud Storage bucket name. Every change in files in this
-          bucket will trigger function execution.
+          Google Cloud Storage bucket name. Trigger the function when an object
+          is created or overwritten in the specified Cloud Storage bucket.
 
        --trigger-http
           Function will be assigned an endpoint, which you can view by using
@@ -592,9 +597,11 @@ FLAGS
        --trigger-event-filters=[ATTRIBUTE=VALUE,...]
           The Eventarc matching criteria for the trigger. The criteria can be
           specified either as a single comma-separated argument or as multiple
-          arguments. This is only relevant when --gen2 is provided.
+          arguments. The filters must include the type attribute, as well as
+          any other attributes that are expected for the chosen type. This is
+          only relevant when --gen2 is provided.
 
-       --trigger-event-filters-path-pattern=[ATTRIBUTE=VALUE,...]
+       --trigger-event-filters-path-pattern=[ATTRIBUTE=PATH_PATTERN,...]
           The Eventarc matching criteria for the trigger in path pattern
           format. The criteria can be specified as a single comma-separated
           argument or as multiple arguments. This is only relevant when --gen2

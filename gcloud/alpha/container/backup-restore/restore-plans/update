@@ -8,7 +8,6 @@ SYNOPSIS
         [--cluster-resource-conflict-policy=CLUSTER_RESOURCE_CONFLICT_POLICY]
         [--description=DESCRIPTION] [--etag=ETAG]
         [--namespaced-resource-restore-mode=NAMESPACED_RESOURCE_RESTORE_MODE]
-        [--substitution-rules-file=SUBSTITUTION_RULES_FILE]
         [--update-labels=[KEY=VALUE,...]]
         [--volume-data-restore-policy=VOLUME_DATA_RESTORE_POLICY;
           default="no-volume-data-restoration"]
@@ -20,7 +19,10 @@ SYNOPSIS
           | --cluster-resource-scope-excluded-group-kinds=[CLUSTER_RESOURCE_SCOPE_EXCLUDED_GROUP_KINDS,
           ...] | --cluster-resource-scope-no-group-kinds
           | --cluster-resource-scope-selected-group-kinds=[CLUSTER_RESOURCE_SCOPE_SELECTED_GROUP_KINDS,
-          ...]] [GCLOUD_WIDE_FLAG ...]
+          ...]]
+        [--substitution-rules-file=SUBSTITUTION_RULES_FILE
+          | --transformation-rules-file=TRANSFORMATION_RULES_FILE]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Update a Backup for GKE restore plan.
@@ -123,11 +125,6 @@ FLAGS
             out of band process creates conflicting resources), a conflict will
             be reported.
 
-     --substitution-rules-file=SUBSTITUTION_RULES_FILE
-        If provided, defines a set of resource transformations that will be
-        applied to resources from the source backup before they are created in
-        the target cluster.
-
      --update-labels=[KEY=VALUE,...]
         List of label KEY=VALUE pairs to update. If a label exists, its value
         is modified. Otherwise, a new label is created.
@@ -225,6 +222,18 @@ FLAGS
           The format of a resource is "<group>/<kind>", e.g.
           storage.k8s.io/StorageClass for StorageClass. Use an empty string for
           core API group.
+
+     At most one of these can be specified:
+
+       --substitution-rules-file=SUBSTITUTION_RULES_FILE
+          If provided, defines a set of resource transformations that will be
+          applied to resources from the source backup before they are created
+          in the target cluster.
+
+       --transformation-rules-file=TRANSFORMATION_RULES_FILE
+          If provided, defines a set of resource transformations that will be
+          applied to resources from the source backup before they are created
+          in the target cluster.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

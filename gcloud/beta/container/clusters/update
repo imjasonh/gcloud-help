@@ -14,8 +14,7 @@ SYNOPSIS
           | --enable-cost-allocation | --enable-fleet
           | --enable-fqdn-network-policy | --enable-gke-oidc
           | --enable-google-cloud-access | --enable-identity-service
-          | --enable-image-streaming | --enable-insecure-kubelet-readonly-port
-          | --enable-intra-node-visibility
+          | --enable-image-streaming | --enable-intra-node-visibility
           | --enable-kubernetes-unstable-apis=API,[API,...]
           | --enable-l4-ilb-subsetting | --enable-legacy-authorization
           | --enable-logging-monitoring-system-only
@@ -27,6 +26,7 @@ SYNOPSIS
           | --fleet-project=PROJECT_ID_OR_NUMBER | --gateway-api=GATEWAY_API
           | --generate-password | --identity-provider=IDENTITY_PROVIDER
           | --logging-variant=LOGGING_VARIANT | --maintenance-window=START_TIME
+          | --network-performance-configs=[PROPERTY1=VALUE1,...]
           | --notification-config=[pubsub=ENABLED|DISABLED,
           pubsub-topic=TOPIC,...]
           | --private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE
@@ -289,12 +289,6 @@ REQUIRED FLAGS
        --enable-image-streaming
           Specifies whether to enable image streaming on cluster.
 
-       --enable-insecure-kubelet-readonly-port
-          Enables the Kubelet's insecure Read Only Port.
-
-          To disable in an existing cluster, explicitly set flag to
-          --no-enable-insecure-kubelet-readonly-port.
-
        --enable-intra-node-visibility
           Enable Intra-node visibility for this cluster.
 
@@ -452,6 +446,20 @@ REQUIRED FLAGS
           To remove an existing maintenance window from the cluster, use
           '--clear-maintenance-window'.
 
+       --network-performance-configs=[PROPERTY1=VALUE1,...]
+          Configures network performance settings for the cluster. Node pools
+          can override with their own settings.
+
+           total-egress-bandwidth-tier
+              Total egress bandwidth is the available outbound bandwidth from a
+              VM, regardless of whether the traffic is going to internal IP or
+              external IP destinations. The following tier values are allowed:
+              [DEFAULT,TIER_1].
+
+              See
+              https://cloud.google.com/compute/docs/networking/configure-vm-with-high-bandwidth-configuration
+              for more information.
+
        --notification-config=[pubsub=ENABLED|DISABLED,pubsub-topic=TOPIC,...]
           The notification configuration of the cluster. GKE supports
           publishing cluster upgrade notifications to any Pub/Sub topic you
@@ -528,7 +536,6 @@ REQUIRED FLAGS
               Clusters subscribed to 'regular' receive versions that are
               considered GA quality. 'regular' is intended for production users
               who want to take advantage of new features.
-
            stable
               Clusters subscribed to 'stable' receive versions that are known
               to be stable and reliable in production.

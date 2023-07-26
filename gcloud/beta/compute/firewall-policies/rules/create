@@ -11,13 +11,14 @@ SYNOPSIS
         [--dest-threat-intelligence=[DEST_THREAT_INTELLIGENCE_LISTS,...]]
         [--direction=DIRECTION] [--[no-]disabled] [--[no-]enable-logging]
         [--layer4-configs=[LAYER4_CONFIG,...]] [--organization=ORGANIZATION]
+        [--security-profile-group=SECURITY_PROFILE_GROUP]
         [--src-address-groups=[SOURCE_ADDRESS_GROUPS,...]]
         [--src-fqdns=[SOURCE_FQDNS,...]] [--src-ip-ranges=[SRC_IP_RANGE,...]]
         [--src-region-codes=[SOURCE_REGION_CODES,...]]
         [--src-threat-intelligence=[SOURCE_THREAT_INTELLIGENCE_LISTS,...]]
         [--target-resources=[TARGET_RESOURCES,...]]
         [--target-service-accounts=[TARGET_SERVICE_ACCOUNTS,...]]
-        [GCLOUD_WIDE_FLAG ...]
+        [--[no-]tls-inspect] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) gcloud beta compute firewall-policies rules create is used to create
@@ -38,7 +39,7 @@ POSITIONAL ARGUMENTS
 REQUIRED FLAGS
      --action=ACTION
         Action to take if the request matches the match condition. ACTION must
-        be one of: allow, deny, goto_next.
+        be one of: allow, deny, goto_next, apply_security_profile_group.
 
      --firewall-policy=FIREWALL_POLICY
         Short name of the firewall policy into which the rule should be
@@ -90,6 +91,18 @@ OPTIONAL FLAGS
         Organization which the organization firewall policy belongs to. Must be
         set if FIREWALL_POLICY is short name.
 
+     --security-profile-group=SECURITY_PROFILE_GROUP
+        An org-based security profile group to be used with
+        apply_security_profile_group action. Allowed formats are: a)
+        http(s)://<namespace>/<api>/organizations/<org_id>/locations/global/securityProfileGroups/<profile>
+        b)
+        (//)<namespace>/organizations/<org_id>/locations/global/securityProfileGroups/<profile>
+        c) <profile>. In case "c" gCloud CLI will create a reference matching
+        format "a", but to make it work
+        CLOUDSDK_API_ENDPOINT_OVERRIDES_NETWORKSECURITY property must be set.
+        In order to set this property, please run the command gcloud config set
+        api_endpoint_overrides/networksecurity https://<namespace>/.
+
      --src-address-groups=[SOURCE_ADDRESS_GROUPS,...]
         Source address groups to match for this rule. Can only be specified if
         DIRECTION is ingress.
@@ -116,6 +129,12 @@ OPTIONAL FLAGS
 
      --target-service-accounts=[TARGET_SERVICE_ACCOUNTS,...]
         List of target service accounts for the rule.
+
+     --[no-]tls-inspect
+        Use this flag to indicate whether TLS traffic should be inspected using
+        the TLS inspection policy when the security profile group is applied.
+        Default: no TLS inspection. Use --tls-inspect to enable and
+        --no-tls-inspect to disable.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

@@ -9,7 +9,12 @@ SYNOPSIS
           gpu-partition-size=GPU_PARTITION_SIZE,
           gpu-sharing-strategy=GPU_SHARING_STRATEGY,
           max-shared-clients-per-gpu=MAX_SHARED_CLIENTS_PER_GPU],...]]
-        [--async] [--boot-disk-kms-key=BOOT_DISK_KMS_KEY] [--cluster=CLUSTER]
+        [--additional-node-network=[network=NETWORK_NAME,
+          subnetwork=SUBNETWORK_NAME,...]]
+        [--additional-pod-network=[subnetwork=SUBNETWORK_NAME,
+          pod-ipv4-range=SECONDARY_RANGE_NAME,
+          [max-pods-per-node=NUM_PODS],...]] [--async]
+        [--boot-disk-kms-key=BOOT_DISK_KMS_KEY] [--cluster=CLUSTER]
         [--disable-pod-cidr-overprovision] [--disk-size=DISK_SIZE]
         [--disk-type=DISK_TYPE] [--enable-autoprovisioning]
         [--enable-autorepair] [--no-enable-autoupgrade]
@@ -30,7 +35,8 @@ SYNOPSIS
         [--node-locations=ZONE,[ZONE,...]]
         [--node-pool-soak-duration=NODE_POOL_SOAK_DURATION]
         [--node-taints=[NODE_TAINT,...]] [--node-version=NODE_VERSION]
-        [--num-nodes=NUM_NODES; default=3] [--placement-type=PLACEMENT_TYPE]
+        [--num-nodes=NUM_NODES; default=3]
+        [--placement-policy=PLACEMENT_POLICY] [--placement-type=PLACEMENT_TYPE]
         [--preemptible] [--sandbox=[type=TYPE]]
         [--shielded-integrity-monitoring] [--shielded-secure-boot]
         [--sole-tenant-node-affinity-file=SOLE_TENANT_NODE_AFFINITY_FILE]
@@ -125,6 +131,40 @@ FLAGS
          max-shared-clients-per-gpu
             (Optional) The max number of containers allowed to share each GPU
             on the node. This field is used together with gpu-sharing-strategy.
+
+     --additional-node-network=[network=NETWORK_NAME,subnetwork=SUBNETWORK_NAME,...]
+        Attach an additional network interface to each node in the pool. This
+        parameter can be specified up to 7 times.
+
+        e.g. --additional-node-network network=dataplane,subnetwork=subnet-dp
+
+         network
+            (Required) The network to attach the new interface to.
+
+         subnetwork
+            (Required) The subnetwork to attach the new interface to.
+
+     --additional-pod-network=[subnetwork=SUBNETWORK_NAME,pod-ipv4-range=SECONDARY_RANGE_NAME,[max-pods-per-node=NUM_PODS],...]
+        Specify the details of a secondary range to be used for an additional
+        pod network. Not needed if you use "host" typed NIC from this network.
+        This parameter can be specified up to 35 times.
+
+        e.g. --additional-pod-network
+        subnetwork=subnet-dp,pod-ipv4-range=sec-range-blue,max-pods-per-node=8.
+
+         subnetwork
+            (Optional) The name of the subnetwork to link the pod network to.
+            If not specified, the pod network defaults to the subnet connected
+            to the default network interface.
+
+         pod-ipv4-range
+            (Required) The name of the secondary range in the subnetwork. The
+            range must hold at least (2 * MAX_PODS_PER_NODE *
+            MAX_NODES_IN_RANGE) IPs.
+
+         max-pods-per-node
+            (Optional) Maximum amount of pods per node that can utilize this
+            ipv4-range. Defaults to NodePool (if specified) or Cluster value.
 
      --async
         Return immediately, without waiting for the operation in progress to
@@ -458,6 +498,12 @@ FLAGS
      --num-nodes=NUM_NODES; default=3
         The number of nodes in the node pool in each of the cluster's zones.
 
+     --placement-policy=PLACEMENT_POLICY
+        Indicates the desired resource policy to use.
+
+            $ gcloud alpha container node-pools create node-pool-1 \
+                --cluster=example-cluster --placement-policy my-placement
+
      --placement-type=PLACEMENT_TYPE
         Placement type allows to define the type of node placement within this
         node pool.
@@ -573,8 +619,6 @@ FLAGS
           podPidsLimit                         integer (The value must be
                                                greater than or equal to 1024 and
                                                less than 4194304.)
-          insecureKubeletReadonlyPortEnabled   true or false (enabled by
-                                               default)
 
         List of supported sysctls in 'linuxConfig'.
 
