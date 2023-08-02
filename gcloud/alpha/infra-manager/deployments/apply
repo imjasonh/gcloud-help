@@ -9,12 +9,11 @@ SYNOPSIS
         [--import-existing-resources=IMPORT_EXISTING_RESOURCES]
         [--labels=[KEY=VALUE,...]] [--service-account=SERVICE_ACCOUNT]
         [--worker-pool=WORKER_POOL]
-        [--input-values=[KEY=VALUE,...] --gcs-source=GCS_SOURCE
-          | --git-source-directory=GIT_SOURCE_DIRECTORY
+        [--gcs-source=GCS_SOURCE | --git-source-directory=GIT_SOURCE_DIRECTORY
           --git-source-ref=GIT_SOURCE_REF --git-source-repo=GIT_SOURCE_REPO
-          | --ignore-file=IGNORE_FILE
-          --local-source=LOCAL_SOURCE --stage-bucket=STAGE_BUCKET]
-        [GCLOUD_WIDE_FLAG ...]
+          | --ignore-file=IGNORE_FILE --local-source=LOCAL_SOURCE
+          --stage-bucket=STAGE_BUCKET --input-values=[KEY=VALUE,...]
+          | --inputs-file=INPUTS_FILE] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) This command updates a deployment when it already exists, otherwise
@@ -130,19 +129,6 @@ FLAGS
         execute. Format:
         projects/{project}/locations/{location}/workerPools/{workerPoolId}
 
-     --input-values=[KEY=VALUE,...]
-        Input variable values for the Terraform blueprint. It only accepts
-        (key, value) pairs where value is a scalar value.
-
-        Examples:
-
-        Pass input values on command line:
-
-            $ gcloud alpha infra-manager deployments apply \
-                projects/p1/location/us-central1/deployments/my-deployment \
-                --gcs-source="gs://my-bucket" \
-                --input-values=projects=p1,region=r
-
      At most one of these can be specified:
 
        --gcs-source=GCS_SOURCE
@@ -239,6 +225,34 @@ FLAGS
                   projects/p1/location/us-central1/deployments/my-deployment \
                   --local-source="./path/to/blueprint" \
                   --stage-bucket="gs://my-bucket"
+
+     At most one of these can be specified:
+
+       --input-values=[KEY=VALUE,...]
+          Input variable values for the Terraform blueprint. It only accepts
+          (key, value) pairs where value is a scalar value.
+
+          Examples:
+
+          Pass input values on command line:
+
+              $ gcloud alpha infra-manager deployments apply \
+                  projects/p1/location/us-central1/deployments/my-deployment \
+                  --gcs-source="gs://my-bucket" \
+                  --input-values=projects=p1,region=r
+
+       --inputs-file=INPUTS_FILE
+          A .tfvars file containing terraform variable values. --inputs-file
+          flag is supported for python version 3.6 and above.
+
+          Examples:
+
+          Pass input values on the command line:
+
+              $ gcloud alpha infra-manager deployments apply \
+                  projects/p1/location/us-central1/deployments/my-deployment \
+                  --gcs-source="gs://my-bucket" \
+                  --inputs-file=path-to-tfvar-file.tfvar
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

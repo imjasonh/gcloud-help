@@ -27,7 +27,9 @@ SYNOPSIS
           --binary-authorization=POLICY
           | --clear-binary-authorization --clear-encryption-key-shutdown-hours
           | --encryption-key-shutdown-hours=ENCRYPTION_KEY_SHUTDOWN_HOURS
-          --clear-key | --key=KEY --clear-post-key-revocation-action-type
+          --clear-key | --key=KEY --clear-network
+          | --network=NETWORK --subnet=SUBNET --clear-network-tags
+          | --network-tags=[TAG,...] --clear-post-key-revocation-action-type
           | --post-key-revocation-action-type=POST_KEY_REVOCATION_ACTION_TYPE]
         [--clear-env-vars | --env-vars-file=FILE_PATH
           | --set-env-vars=[KEY=VALUE,...]
@@ -335,6 +337,39 @@ FLAGS
 
          --key=KEY
             CMEK key reference to encrypt the container with.
+
+       At most one of these can be specified:
+
+         --clear-network
+            Disconnect this Cloud Run Service from the Google Compute Engine
+            subnetwork it has connected to.
+
+         Direct VPC egress setting flags group.
+
+           --network=NETWORK
+              The Compute Engine network that the Cloud Run Service will
+              connect to. If --subnet is also specified, subnet must be a
+              subnetwork of the network specified by this --network flag. To
+              reset this field to its default, pass an empty string.
+
+           --subnet=SUBNET
+              The Google Compute Engine subnetwork that the Cloud Run Service
+              will connect to. If --network is also specified, subnet must be a
+              subnetwork of the network specified by the --network flag. If
+              --network is not specified, network will be looked up from this
+              subnetwork. To reset this field to its default, pass an empty
+              string.
+
+           At most one of these can be specified:
+
+             --clear-network-tags
+                Clears all existing Compute Engine tags from the Cloud Run
+                Service.
+
+             --network-tags=[TAG,...]
+                Applies the given Compute Engine tags (comma separated) on the
+                Cloud Run Service. To reset this field to its default, pass an
+                empty string.
 
        At most one of these can be specified:
 

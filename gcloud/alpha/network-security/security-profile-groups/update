@@ -6,68 +6,139 @@ SYNOPSIS
     gcloud alpha network-security security-profile-groups update
         (SECURITY_PROFILE_GROUP
           : --location=LOCATION --organization=ORGANIZATION) [--async]
-        [--description=DESCRIPTION]
-        [--threat-prevention-profile=THREAT_PREVENTION_PROFILE]
+        [--description=DESCRIPTION] [--update-labels=[KEY=VALUE,...]]
+        [--clear-labels | --remove-labels=[KEY,...]]
+        [--threat-prevention-profile=THREAT_PREVENTION_PROFILE
+          : --security-profile-location=SECURITY_PROFILE_LOCATION
+          --security-profile-organization=SECURITY_PROFILE_ORGANIZATION]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) Update the details of a Security Profile Group.
+    (ALPHA) Update details of a Security Profile Group.
 
 EXAMPLES
     To update a Security Profile Group with new threat prevention profile
     my-new-security-profile, run:
 
         $ gcloud alpha network-security security-profile-groups update \
-            my-security-profile-group --organization=1234 \
-            --location=global \
-            --threat-prevention-profile=`organizations/1234/locations/\
+          my-security-profile-group --organization=1234 \
+          --location=global \
+          --threat-prevention-profile=`organizations/1234/locations/\
         global/securityProfiles/my-new-security-profile` \
             --description='New Security Profile of type threat prevention'
 
 POSITIONAL ARGUMENTS
-     Security profile group resource - Name of the Security Profile Group to be
-     updated. The arguments in this group can be used to specify the attributes
-     of this resource.
+     Security profile group resource - Security Profile Group Name. The
+     arguments in this group can be used to specify the attributes of this
+     resource.
 
      This must be specified.
 
        SECURITY_PROFILE_GROUP
-          ID of the security profile group or fully qualified identifier for
-          the security profile group.
+          ID of the security_profile_group or fully qualified identifier for
+          the security_profile_group.
 
           To set the security_profile_group attribute:
-          ▸ provide the argument security_profile_group on the command line.
+          ▸ provide the argument SECURITY_PROFILE_GROUP on the command line.
 
           This positional argument must be specified if any of the other
           arguments in this group are specified.
 
        --location=LOCATION
-          Location ID of the resource.
+          location of the security_profile_group - Global.
 
           To set the location attribute:
-          ▸ provide the argument security_profile_group on the command line
+          ▸ provide the argument SECURITY_PROFILE_GROUP on the command line
             with a fully specified name;
-          ▸ provide the argument --location on the command line;
-          ▸ use default global location .
+          ▸ provide the argument --location on the command line.
 
        --organization=ORGANIZATION
-          Organization number.
+          Organization ID of Security Profile Group
 
           To set the organization attribute:
-          ▸ provide the argument security_profile_group on the command line
+          ▸ provide the argument SECURITY_PROFILE_GROUP on the command line
             with a fully specified name;
           ▸ provide the argument --organization on the command line.
 
 FLAGS
      --async
         Return immediately, without waiting for the operation in progress to
-        complete.
+        complete. The default is False.
 
      --description=DESCRIPTION
-        New description of the Security Profile Group.
+        Brief description of the security profile group
 
-     --threat-prevention-profile=THREAT_PREVENTION_PROFILE
-        Name of the security profile of type threat prevention.
+     --update-labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to update. If a label exists, its value
+        is modified. Otherwise, a new label is created.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     At most one of these can be specified:
+
+       --clear-labels
+          Remove all labels. If --update-labels is also specified then
+          --clear-labels is applied first.
+
+          For example, to remove all labels:
+
+              $ gcloud alpha network-security security-profile-groups update \
+                --clear-labels
+
+          To remove all existing labels and create two new labels, foo and baz:
+
+              $ gcloud alpha network-security security-profile-groups update \
+                --clear-labels --update-labels foo=bar,baz=qux
+
+       --remove-labels=[KEY,...]
+          List of label keys to remove. If a label does not exist it is
+          silently ignored. If --update-labels is also specified then
+          --update-labels is applied first.
+
+     Security Profile resource - Path to Security Profile resource. The
+     arguments in this group can be used to specify the attributes of this
+     resource.
+
+       --threat-prevention-profile=THREAT_PREVENTION_PROFILE
+          ID of the Security Profile or fully qualified identifier for the
+          Security Profile.
+
+          To set the security_profile attribute:
+          ▸ provide the argument --threat-prevention-profile on the command
+            line.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --security-profile-location=SECURITY_PROFILE_LOCATION
+          Location of the Security Profile. NOTE: Only global security profiles
+          are supported.
+
+          To set the security-profile-location attribute:
+          ▸ provide the argument --threat-prevention-profile on the command
+            line with a fully specified name;
+          ▸ provide the argument --security-profile-location on the command
+            line;
+          ▸ provide the argument --location on the command line;
+          ▸ provide the argument
+            networksecurity.organizations.locations.securityProfileGroups on
+            the command line with a fully specified name.
+
+       --security-profile-organization=SECURITY_PROFILE_ORGANIZATION
+          Organization ID of the Security Profile.
+
+          To set the security-profile-organization attribute:
+          ▸ provide the argument --threat-prevention-profile on the command
+            line with a fully specified name;
+          ▸ provide the argument --security-profile-organization on the
+            command line;
+          ▸ provide the argument --organization on the command line;
+          ▸ provide the argument
+            networksecurity.organizations.locations.securityProfileGroups on
+            the command line with a fully specified name.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
@@ -76,10 +147,6 @@ GCLOUD WIDE FLAGS
     --trace-token, --user-output-enabled, --verbosity.
 
     Run $ gcloud help for details.
-
-API REFERENCE
-    This command uses the networksecurity/v1alpha1 API. The full documentation
-    for this API can be found at: https://cloud.google.com/networking
 
 NOTES
     This command is currently in alpha and might change without notice. If this

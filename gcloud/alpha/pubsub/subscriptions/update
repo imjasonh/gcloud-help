@@ -144,7 +144,11 @@ FLAGS
 
            --write-metadata
               Whether or not to write message metadata including message ID,
-              publish timestamp, ordering key, and attributes to BigQuery.
+              publish timestamp, ordering key, and attributes to BigQuery. The
+              subscription name, message_id, and publish_time fields are put in
+              their own columns while all other message properties other than
+              data (for example, an ordering_key, if present) are written to a
+              JSON object in the attributes column.
 
        At most one of these can be specified:
 
@@ -195,7 +199,11 @@ FLAGS
            --cloud-storage-write-metadata
               Whether or not to write the subscription name, message_id,
               publish_time, attributes, and ordering_key as additional fields
-              in the output. This has an effect only for subscriptions with
+              in the output. The subscription name, message_id, and
+              publish_time fields are put in their own fields while all other
+              message properties other than data (for example, an ordering_key,
+              if present) are added as entries in the attributes map. This has
+              an effect only for subscriptions with
               --cloud-storage-output-format=avro.
 
      At most one of these can be specified:
