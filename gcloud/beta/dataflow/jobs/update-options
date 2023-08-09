@@ -1,0 +1,63 @@
+NAME
+    gcloud beta dataflow jobs update-options - update pipeline options
+        on-the-fly for running Dataflow jobs
+
+SYNOPSIS
+    gcloud beta dataflow jobs update-options JOB_ID
+        [--max-num-workers=MAX_NUM_WORKERS] [--min-num-workers=MIN_NUM_WORKERS]
+        [--region=REGION_ID] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) This command can modify properties of running Dataflow jobs.
+    Currently, only updating autoscaling settings for Streaming Engine jobs is
+    supported.
+
+    Adjust the autoscaling settings for Streaming Engine Dataflow jobs by
+    providing at-least one of --min-num-workers or --max-num-workers (or both).
+    Allow a few minutes for the changes to take effect.
+
+    Note that autoscaling settings can only be modified on-the-fly for
+    Streaming Engine jobs. Attempts to modify batch job or Streaming Appliance
+    jobs will fail.
+
+EXAMPLES
+    Modify autoscaling settings to scale between 5-10 workers:
+
+        $ gcloud beta dataflow jobs update-options --min-num-workers=5 \
+            --max-num-workers=10
+
+    Require a job to use at least 2 workers:
+
+        $ gcloud beta dataflow jobs update-options --min-num-workers=2
+
+    Require a job to use at most 20 workers:
+
+        $ gcloud beta dataflow jobs update-options --max-num-workers=20
+
+POSITIONAL ARGUMENTS
+     JOB_ID
+        Job ID to operate on.
+
+FLAGS
+     --max-num-workers=MAX_NUM_WORKERS
+        Upper-bound for autoscaling, between 1-1000. Only supported for
+        streaming-engine jobs.
+
+     --min-num-workers=MIN_NUM_WORKERS
+        Lower-bound for autoscaling, between 1-1000. Only supported for
+        streaming-engine jobs.
+
+     --region=REGION_ID
+        Region ID of the job's regional endpoint. Defaults to 'us-central1'.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice.
+

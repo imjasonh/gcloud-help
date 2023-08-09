@@ -4,9 +4,11 @@ NAME
 
 SYNOPSIS
     gcloud alpha compute future-reservations update FUTURE_RESERVATION
-        [--description=DESCRIPTION] [--name-prefix=NAME_PREFIX]
+        [--auto-delete-auto-created-reservations] [--description=DESCRIPTION]
         [--planning-status=PLANNING_STATUS] [--total-count=TOTAL_COUNT]
         [--zone=ZONE]
+        [--auto-created-reservations-delete-time=AUTO_CREATED_RESERVATIONS_DELETE_TIME | --auto-created-reservations-duration=AUTO_CREATED_RESERVATIONS_DURATION]
+        [--clear-name-prefix | --name-prefix=NAME_PREFIX]
         [--clear-share-settings
           | --share-setting=SHARE_SETTING --share-with=PROJECT,[PROJECT,...]]
         [--machine-type=MACHINE_TYPE
@@ -35,12 +37,12 @@ POSITIONAL ARGUMENTS
         Name of the future reservation to update.
 
 FLAGS
+     --auto-delete-auto-created-reservations
+        If specified, the auto-created reservations for a future reservation
+        are deleted at the end time (default) or at a specified delete time.
+
      --description=DESCRIPTION
         An optional description of the reservation to create.
-
-     --name-prefix=NAME_PREFIX
-        User provided name prefix for system generated reservations when
-        capacity is delivered at start time.
 
      --planning-status=PLANNING_STATUS
         The planning status of the future reservation. The default value is
@@ -80,6 +82,35 @@ FLAGS
 
         Alternatively, the zone can be stored in the environment variable
         CLOUDSDK_COMPUTE_ZONE.
+
+     Manage the auto-delete time properties.
+
+     At most one of these can be specified:
+
+       --auto-created-reservations-delete-time=AUTO_CREATED_RESERVATIONS_DELETE_TIME
+          Automatically deletes an auto-created reservations at a specific
+          time. The specified time must be an RFC3339 timestamp, which must be
+          formatted as "YYYY-MM-DDTHH:MM:SSZ" where YYYY = year, MM = month, DD
+          = day, HH = hours, MM = minutes, SS = seconds, and Z = time zone in
+          Coordinated Universal Time (UTC). For example, specify
+          2021-11-20T07:00:00Z.
+
+       --auto-created-reservations-duration=AUTO_CREATED_RESERVATIONS_DURATION
+          Automatically deletes an auto-created reservations after a specified
+          number of days, hours, minutes, or seconds. For example, specify 30m
+          for 30 minutes, or 1d2h3m4s for 1 day, 2 hours, 3 minutes, and 4
+          seconds. For more information, see $ gcloud topic datetimes.
+
+     Manage the name-prefix of a future reservation.
+
+     At most one of these can be specified:
+
+       --clear-name-prefix
+          Clears the name prefix for the system generated reservations.
+
+       --name-prefix=NAME_PREFIX
+          User provided name prefix for system generated reservations when
+          capacity is delivered at start time.
 
      Manage the properties of a shared future reservation.
 

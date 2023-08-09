@@ -1,0 +1,93 @@
+NAME
+    gcloud artifacts sbom list - list SBOM file references
+
+SYNOPSIS
+    gcloud artifacts sbom list
+        [--dependency=DEPENDENCY | --resource=RESOURCE
+          | --resource-prefix=RESOURCE_PREFIX] [--filter=EXPRESSION]
+        [--limit=LIMIT] [--page-size=PAGE_SIZE]
+        [--sort-by=[FIELD,...]; default="occ.create_time"]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    List SBOM file references.
+
+EXAMPLES
+    To list SBOM file references:
+
+        $ gcloud artifacts sbom list
+
+    To list SBOM file references related to the image with the tag
+    "us-east1-docker.pkg.dev/project/repo/my-image:1.0":
+
+        $ gcloud artifacts sbom list \
+            --resource="us-east1-docker.pkg.dev/project/repo/my-image:1.0"
+
+    To list SBOM file references related to the image with the digest
+    "us-east1-docker.pkg.dev/project/repo/my-image@sha256:88b205d7995332e10e836514fbfd59ecaf8976fc15060cd66e85cdcebe7fb356":
+
+        $ gcloud artifacts sbom list \
+            --resource="us-east1-docker.pkg.dev/project/repo/my-image@sha256\
+        :88b205d7995332e10e836514fbfd59ecaf8976fc15060cd66e85cdcebe7fb356"
+
+    To list SBOM file references related to the images with the resource path
+    prefix "us-east1-docker.pkg.dev/project/repo":
+
+        $ gcloud artifacts sbom list \
+            --resource-prefix="us-east1-docker.pkg.dev/project/repo"
+
+    To list SBOM file references generated when the images were pushed to
+    Artifact Registry and related to the installed package dependency "perl":
+
+        $ gcloud artifacts sbom list --dependency="perl"
+
+FLAGS
+     At most one of these can be specified:
+
+       --dependency=DEPENDENCY
+          List SBOM file references generated when the images were pushed to
+          Artifact Registry and related to the installed package dependency.
+          See https://cloud.google.com/container-analysis/docs/scanning-types
+          for supported packages.
+
+       --resource=RESOURCE
+          List SBOM file references related to the image resource uri.
+
+       --resource-prefix=RESOURCE_PREFIX
+          List SBOM file references related to the resource uri with the
+          resource path prefix.
+
+LIST COMMAND FLAGS
+     --filter=EXPRESSION
+        Apply a Boolean filter EXPRESSION to each resource item to be listed.
+        If the expression evaluates True, then that item is listed. For more
+        details and examples of filter expressions, run $ gcloud topic filters.
+        This flag interacts with other flags that are applied in this order:
+        --flatten, --sort-by, --filter, --limit.
+
+     --limit=LIMIT
+        Maximum number of resources to list. The default is unlimited. This
+        flag interacts with other flags that are applied in this order:
+        --flatten, --sort-by, --filter, --limit.
+
+     --page-size=PAGE_SIZE
+        Some services group resource list output into pages. This flag
+        specifies the maximum number of resources per page. The default is
+        determined by the service if it supports paging, otherwise it is
+        unlimited (no paging). Paging may be applied before or after --filter
+        and --limit depending on the service.
+
+     --sort-by=[FIELD,...]; default="occ.create_time"
+        Comma-separated list of resource field key names to sort by. The
+        default order is ascending. Prefix a field with ``~'' for descending
+        order on that field. This flag interacts with other flags that are
+        applied in this order: --flatten, --sort-by, --filter, --limit. The
+        default is occ.create_time.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.

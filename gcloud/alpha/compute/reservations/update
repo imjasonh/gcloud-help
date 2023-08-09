@@ -7,29 +7,36 @@ SYNOPSIS
         [--add-share-with=PROJECT,[PROJECT,...]]
         [--remove-share-with=PROJECT,[PROJECT,...]]
         [--share-with=SHARE_WITH,[SHARE_WITH,...]] [--vm-count=VM_COUNT]
-        [--zone=ZONE] [GCLOUD_WIDE_FLAG ...]
+        [--zone=ZONE]
+        [--delete-after-duration=DELETE_AFTER_DURATION
+          | --delete-at-time=DELETE_AT_TIME | --disable-auto-delete]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Update Compute Engine reservations.
 
 EXAMPLES
-    To add my-project to the list of projects that are shared with a Compute
-    Engine reservation, my-reservation in zone: us-central1-a, run:
+    To add project-1,project-2,project-3 to the list of projects that are
+    shared with a Compute Engine reservation, my-reservation in zone:
+    us-central1-a, run:
 
         $ gcloud alpha compute reservations update my-reservation \
-          --add-share-with=my-project --zone=us-central1-a
+          --add-share-with=project-1,project-2,project-3 \
+          --zone=us-central1-a
 
-    To remove my-project from the list of projects that are shared with a
-    Compute Engine reservation, my-reservation in zone: us-central1-a, run:
+    To remove project-1,project-2,project-3 from the list of projects that are
+    shared with a Compute Engine reservation, my-reservation in zone:
+    us-central1-a, run:
 
         $ gcloud alpha compute reservations update my-reservation \
-          --remove-share-with=my-project --zone=us-central1-a
+          --remove-share-with=project-1,project-2,project-3 \
+          --zone=us-central1-a
 
     To update the entire list of projects that are shared with a Compute Engine
     reservation, my-reservation in zone: us-central1-a, run:
 
         $ gcloud alpha compute reservations update my-reservation \
-          --share-with=my-project --zone=us-central1-a
+          --share-with=project-1,project-2,project-3 --zone=us-central1-a
 
     To update the number of reserved VM instances to 500 for a Compute Engine
     reservation, my-reservation in zone: us-central1-a, run:
@@ -82,6 +89,28 @@ FLAGS
 
         Alternatively, the zone can be stored in the environment variable
         CLOUDSDK_COMPUTE_ZONE.
+
+     Manage auto-delete properties for reservations.
+
+     At most one of these can be specified:
+
+       --delete-after-duration=DELETE_AFTER_DURATION
+          Automatically deletes the reservations after a specified number of
+          days, hours, minutes, or seconds from its creation. For example,
+          specify 30m for 30 minutes, or 1d2h3m4s for 1 day, 2 hours, 3
+          minutes, and 4 seconds. For more information, see $ gcloud topic
+          datetimes.
+
+       --delete-at-time=DELETE_AT_TIME
+          Automatically deletes the reservation at a specific time from its
+          creation. The specified time must be an RFC3339 timestamp, which must
+          be formatted as "YYYY-MM-DDTHH:MM:SSZ" where YYYY = year, MM = month,
+          DD = day, HH = hours, MM = minutes, SS = seconds, and Z = time zone
+          in Coordinated Universal Time (UTC). For example, specify
+          2021-11-20T07:00:00Z.
+
+       --disable-auto-delete
+          Disables the auto-delete setting for the reservation.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

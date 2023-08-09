@@ -4,7 +4,7 @@ NAME
 
 SYNOPSIS
     gcloud alpha compute future-reservations create FUTURE_RESERVATION
-        --total-count=TOTAL_COUNT
+        --auto-delete-auto-created-reservations --total-count=TOTAL_COUNT
         (--source-instance-template=SOURCE_INSTANCE_TEMPLATE
           | [--machine-type=MACHINE_TYPE
           : --accelerator=[count=COUNT],[type=TYPE]
@@ -15,6 +15,7 @@ SYNOPSIS
         (--start-time=START_TIME (--duration=DURATION | --end-time=END_TIME))
         [--description=DESCRIPTION] [--name-prefix=NAME_PREFIX]
         [--planning-status=PLANNING_STATUS] [--zone=ZONE]
+        [--auto-created-reservations-delete-time=AUTO_CREATED_RESERVATIONS_DELETE_TIME | --auto-created-reservations-duration=AUTO_CREATED_RESERVATIONS_DURATION]
         [--share-setting=SHARE_SETTING --share-with=PROJECT,[PROJECT,...]]
         [GCLOUD_WIDE_FLAG ...]
 
@@ -48,6 +49,10 @@ POSITIONAL ARGUMENTS
         Name of the future reservation to create.
 
 REQUIRED FLAGS
+     --auto-delete-auto-created-reservations
+        If specified, the auto-created reservations for a future reservation
+        are deleted at the end time (default) or at a specified delete time.
+
      --total-count=TOTAL_COUNT
         The total number of instances for which capacity assurance is requested
         at a future time period.
@@ -196,6 +201,24 @@ OPTIONAL FLAGS
 
         Alternatively, the zone can be stored in the environment variable
         CLOUDSDK_COMPUTE_ZONE.
+
+     Manage the auto-delete time properties.
+
+     At most one of these can be specified:
+
+       --auto-created-reservations-delete-time=AUTO_CREATED_RESERVATIONS_DELETE_TIME
+          Automatically deletes an auto-created reservations at a specific
+          time. The specified time must be an RFC3339 timestamp, which must be
+          formatted as "YYYY-MM-DDTHH:MM:SSZ" where YYYY = year, MM = month, DD
+          = day, HH = hours, MM = minutes, SS = seconds, and Z = time zone in
+          Coordinated Universal Time (UTC). For example, specify
+          2021-11-20T07:00:00Z.
+
+       --auto-created-reservations-duration=AUTO_CREATED_RESERVATIONS_DURATION
+          Automatically deletes an auto-created reservations after a specified
+          number of days, hours, minutes, or seconds. For example, specify 30m
+          for 30 minutes, or 1d2h3m4s for 1 day, 2 hours, 3 minutes, and 4
+          seconds. For more information, see $ gcloud topic datetimes.
 
      Manage the properties of a shared reservation.
 

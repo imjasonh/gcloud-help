@@ -14,6 +14,7 @@ SYNOPSIS
         [--vpc-connector=VPC_CONNECTOR] [--vpc-egress=VPC_EGRESS]
         [--async | --execute-now --wait]
         [--env-vars-file=FILE_PATH | --set-env-vars=[KEY=VALUE,...]]
+        [--network=NETWORK --network-tags=[TAG,...] --subnet=SUBNET]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -134,8 +135,8 @@ OPTIONAL FLAGS
         example, "10" is 10 seconds.
 
      --tasks=TASKS; default=1
-        Number of tasks that must run to completion for the job to be
-        considered done. Use this flag to trigger multiple runs of the job.
+        Number of tasks that must run to completion for the execution to be
+        considered done.
 
      --vpc-connector=VPC_CONNECTOR
         Set a VPC connector for this resource.
@@ -184,6 +185,26 @@ OPTIONAL FLAGS
 
        --set-env-vars=[KEY=VALUE,...]
           List of key-value pairs to set as environment variables.
+
+     Direct VPC egress setting flags group.
+
+       --network=NETWORK
+          The VPC network that the Cloud Run job will be able to send traffic
+          to. If --subnet is also specified, subnet must be a subnetwork of the
+          network specified by this --network flag. To clear existing VPC
+          network settings, use --clear-network.
+
+       --network-tags=[TAG,...]
+          Applies the given Compute Engine tags (comma separated) to the Cloud
+          Run job. To clear existing tags, use --clear-network-tags.
+
+       --subnet=SUBNET
+          The VPC subnetwork that the Cloud Run job will get IPs from. The
+          subnetwork must be /26 or larger. If --network is also specified,
+          subnet must be a subnetwork of the network specified by the --network
+          flag. If --network is not specified, network will be looked up from
+          this subnetwork. To clear existing VPC network settings, use
+          --clear-network.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
