@@ -3,9 +3,9 @@ NAME
 
 SYNOPSIS
     gcloud alpha compute tpus tpu-vm create (TPU : --zone=ZONE)
-        --version=VERSION [--async] [--data-disk=DATA_DISK]
-        [--description=DESCRIPTION] [--internal-ips] [--labels=[LABELS,...]]
-        [--metadata=[METADATA,...]]
+        --version=VERSION [--async] [--boot-disk=[BOOT_DISK,...]]
+        [--data-disk=DATA_DISK] [--description=DESCRIPTION] [--internal-ips]
+        [--labels=[LABELS,...]] [--metadata=[METADATA,...]]
         [--metadata-from-file=[METADATA_FROM_FILE,...]]
         [--network=NETWORK; default="default"] [--preemptible] [--range=RANGE]
         [--reserved] [--scopes=[SCOPES,...]]
@@ -81,6 +81,24 @@ OPTIONAL FLAGS
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
+
+     --boot-disk=[BOOT_DISK,...]
+        Specifies if the boot disk should be created in confidential-compute
+        mode.
+
+            $ gcloud alpha compute tpus tpu-vm create \
+                  --boot-disk confidential-compute=True,kms-key=<full_kms_key_name_here>
+
+        The following keys are allowed:
+
+         confidential-compute
+            Create the boot disk in confidential compute mode, CMEK layer is
+            required and only applicable to HyperDisk series.
+
+         kms-key
+            Specifies fully qualified Cloud KMS cryptokey name which will be
+            used to protect the disk. KMS cryptokey name format:
+            projects/<kms-project>/locations/<kms-location>/keyRings/<kms-keyring>/cryptoKeys/<key-name>
 
      --data-disk=DATA_DISK
         Additional data disks for the TPU VM.

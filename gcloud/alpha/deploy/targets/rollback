@@ -6,8 +6,9 @@ SYNOPSIS
     gcloud alpha deploy targets rollback (TARGET : --region=REGION)
         --delivery-pipeline=DELIVERY_PIPELINE [--annotations=[KEY=VALUE,...]]
         [--description=DESCRIPTION] [--labels=[KEY=VALUE,...]]
-        [--release=RELEASE] [--rollout-id=ROLLOUT_ID]
-        [--starting-phase-id=STARTING_PHASE_ID] [GCLOUD_WIDE_FLAG ...]
+        [--release=RELEASE] [--rollback-of-rollout=ROLLBACK_OF_ROLLOUT]
+        [--rollout-id=ROLLOUT_ID] [--starting-phase-id=STARTING_PHASE_ID]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) If release is not specified, the command rollbacks the target with
@@ -85,6 +86,19 @@ OPTIONAL FLAGS
 
      --release=RELEASE
         Name of the release to rollback to.
+
+     --rollback-of-rollout=ROLLBACK_OF_ROLLOUT
+        If set, this validates whether the rollout name specified by the flag
+        matches the rollout on the target.
+
+        Examples:
+
+        Validate that test-rollout is the rollout to rollback on the target.
+
+            $ gcloud alpha deploy targets rollback \
+                --rollback-of-rollout=projects/test-project/locations/\
+            us-central1/deliveryPipelines/test-pipeline/releases/test-release/\
+            rollouts/test-rollout
 
      --rollout-id=ROLLOUT_ID
         ID to assign to the generated rollout for promotion.

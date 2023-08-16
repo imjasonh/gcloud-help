@@ -778,7 +778,7 @@ FLAGS
             Total egress bandwidth is the available outbound bandwidth from a
             VM, regardless of whether the traffic is going to internal IP or
             external IP destinations. The following tier values are allowed:
-            [DEFAULT,TIER_1].
+            [TIER_UNSPECIFIED,TIER_1].
 
             See
             https://cloud.google.com/compute/docs/networking/configure-vm-with-high-bandwidth-configuration
@@ -1051,6 +1051,9 @@ FLAGS
               sysctl:
                 net.core.somaxconn: '2048'
                 net.ipv4.tcp_rmem: '4096 87380 6291456'
+            hugepageConfig:
+              hugepage_size2m: '1024'
+              hugepage_size1g: '2'
 
         List of supported kubelet configs in 'kubeletConfig'.
 
@@ -1080,6 +1083,19 @@ FLAGS
           net.ipv4.tcp_rmem                           Any positive integer tuple
           net.ipv4.tcp_wmem                           Any positive integer tuple
           net.ipv4.tcp_tw_reuse                       Must be {0, 1}
+
+        List of supported hugepage size in 'hugepageConfig'.
+
+          KEY               VALUE
+          hugepage_size2m   Number of 2M huge pages, any positive integer
+          hugepage_size1g   Number of 1G huge pages, any positive integer
+
+        Allocated hugepage size should not exceed 60% of available memory on
+        the node. For example, c2d-highcpu-4 has 8GB memory, total allocated
+        hugepage of 2m and 1g should not exceed 8GB * 0.6 = 4.8GB.
+
+        1G hugepages are only available in following machine familes: c3, m2,
+        c2d, c3d, h3, m3, a2, a3, g2.
 
         Note, updating the system configuration of an existing node pool
         requires recreation of the nodes which which might cause a disruption.

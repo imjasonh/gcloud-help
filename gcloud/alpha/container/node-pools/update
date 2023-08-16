@@ -12,18 +12,18 @@ SYNOPSIS
           | --node-taints=[NODE_TAINT,...]
           | --system-config-from-file=SYSTEM_CONFIG_FROM_FILE
           | --tags=[TAG,...] | --windows-os-version=WINDOWS_OS_VERSION
-          | --workload-metadata=WORKLOAD_METADATA | --enable-autoprovisioning
-          --enable-autoscaling --location-policy=LOCATION_POLICY
-          --max-nodes=MAX_NODES --min-nodes=MIN_NODES
-          --total-max-nodes=TOTAL_MAX_NODES --total-min-nodes=TOTAL_MIN_NODES
-          | --enable-autorepair --enable-autoupgrade
-          | --enable-blue-green-upgrade --enable-surge-upgrade
-          --max-surge-upgrade=MAX_SURGE_UPGRADE
+          | --workload-metadata=WORKLOAD_METADATA | --enable-blue-green-upgrade
+          --enable-surge-upgrade --max-surge-upgrade=MAX_SURGE_UPGRADE
           --max-unavailable-upgrade=MAX_UNAVAILABLE_UPGRADE
           --node-pool-soak-duration=NODE_POOL_SOAK_DURATION
           --standard-rollout-policy=[batch-node-count=BATCH_NODE_COUNT,
           batch-percent=BATCH_NODE_PERCENTAGE,
-          batch-soak-duration=BATCH_SOAK_DURATION,...]) [--async]
+          batch-soak-duration=BATCH_SOAK_DURATION,...]
+          | --enable-autoprovisioning --enable-autoscaling
+          --location-policy=LOCATION_POLICY --max-nodes=MAX_NODES
+          --min-nodes=MIN_NODES
+          --total-max-nodes=TOTAL_MAX_NODES --total-min-nodes=TOTAL_MIN_NODES
+          | --enable-autorepair --enable-autoupgrade) [--async]
         [--cluster=CLUSTER]
         [--location=LOCATION | --region=REGION | --zone=ZONE, -z ZONE]
         [GCLOUD_WIDE_FLAG ...]
@@ -157,6 +157,9 @@ REQUIRED FLAGS
                 sysctl:
                   net.core.somaxconn: '2048'
                   net.ipv4.tcp_rmem: '4096 87380 6291456'
+              hugepageConfig:
+                hugepage_size2m: '1024'
+                hugepage_size1g: '2'
 
           List of supported kubelet configs in 'kubeletConfig'.
 
@@ -189,6 +192,19 @@ REQUIRED FLAGS
             net.ipv4.tcp_wmem                           Any positive integer
                                                         tuple
             net.ipv4.tcp_tw_reuse                       Must be {0, 1}
+
+          List of supported hugepage size in 'hugepageConfig'.
+
+            KEY               VALUE
+            hugepage_size2m   Number of 2M huge pages, any positive integer
+            hugepage_size1g   Number of 1G huge pages, any positive integer
+
+          Allocated hugepage size should not exceed 60% of available memory on
+          the node. For example, c2d-highcpu-4 has 8GB memory, total allocated
+          hugepage of 2m and 1g should not exceed 8GB * 0.6 = 4.8GB.
+
+          1G hugepages are only available in following machine familes: c3, m2,
+          c2d, c3d, h3, m3, a2, a3, g2.
 
           Note, updating the system configuration of an existing node pool
           requires recreation of the nodes which which might cause a
@@ -249,6 +265,70 @@ REQUIRED FLAGS
               process for cluster nodes is being redesigned with significant
               security improvements. This feature is scheduled to be deprecated
               in the future and later removed.
+
+       Upgrade settings
+
+         --enable-blue-green-upgrade
+            Changes node pool upgrade strategy to blue-green upgrade.
+
+         --enable-surge-upgrade
+            Changes node pool upgrade strategy to surge upgrade.
+
+         --max-surge-upgrade=MAX_SURGE_UPGRADE
+            Number of extra (surge) nodes to be created on each upgrade of the
+            node pool.
+
+            Specifies the number of extra (surge) nodes to be created during
+            this node pool's upgrades. For example, running the following
+            command will result in creating an extra node each time the node
+            pool is upgraded:
+
+                $ gcloud alpha container node-pools update node-pool-1 \
+                    --cluster=example-cluster --max-surge-upgrade=1   \
+                    --max-unavailable-upgrade=0
+
+            Must be used in conjunction with '--max-unavailable-upgrade'.
+
+         --max-unavailable-upgrade=MAX_UNAVAILABLE_UPGRADE
+            Number of nodes that can be unavailable at the same time on each
+            upgrade of the node pool.
+
+            Specifies the number of nodes that can be unavailable at the same
+            time during this node pool's upgrades. For example, assume the node
+            pool has 5 nodes, running the following command will result in
+            having 3 nodes being upgraded in parallel (1 + 2), but keeping
+            always at least 3 (5 - 2) available each time the node pool is
+            upgraded:
+
+                $ gcloud alpha container node-pools update node-pool-1 \
+                    --cluster=example-cluster --max-surge-upgrade=1   \
+                    --max-unavailable-upgrade=2
+
+            Must be used in conjunction with '--max-surge-upgrade'.
+
+         --node-pool-soak-duration=NODE_POOL_SOAK_DURATION
+            Time in seconds to be spent waiting during blue-green upgrade
+            before deleting the blue pool and completing the upgrade.
+
+                $ gcloud alpha container node-pools update node-pool-1 \
+                    --cluster=example-cluster  --node-pool-soak-duration=600s
+
+         --standard-rollout-policy=[batch-node-count=BATCH_NODE_COUNT,batch-percent=BATCH_NODE_PERCENTAGE,batch-soak-duration=BATCH_SOAK_DURATION,...]
+            Standard rollout policy options for blue-green upgrade.
+
+            Batch sizes are specified by one of, batch-node-count or
+            batch-percent. The duration between batches is specified by
+            batch-soak-duration.
+
+                $ gcloud alpha container node-pools update node-pool-1 \
+                    --cluster=example-cluster  \
+                    --standard-rollout-policy=batch-node-count=3,\
+                batch-soak-duration=60s
+
+                $ gcloud alpha container node-pools update node-pool-1 \
+                    --cluster=example-cluster  \
+                    --standard-rollout-policy=batch-percent=0.3,\
+                batch-soak-duration=60s
 
        Cluster autoscaling
 
@@ -327,70 +407,6 @@ REQUIRED FLAGS
             See
             https://cloud.google.com/kubernetes-engine/docs/node-auto-upgrades
             for more info.
-
-       Upgrade settings
-
-         --enable-blue-green-upgrade
-            Changes node pool upgrade strategy to blue-green upgrade.
-
-         --enable-surge-upgrade
-            Changes node pool upgrade strategy to surge upgrade.
-
-         --max-surge-upgrade=MAX_SURGE_UPGRADE
-            Number of extra (surge) nodes to be created on each upgrade of the
-            node pool.
-
-            Specifies the number of extra (surge) nodes to be created during
-            this node pool's upgrades. For example, running the following
-            command will result in creating an extra node each time the node
-            pool is upgraded:
-
-                $ gcloud alpha container node-pools update node-pool-1 \
-                    --cluster=example-cluster --max-surge-upgrade=1   \
-                    --max-unavailable-upgrade=0
-
-            Must be used in conjunction with '--max-unavailable-upgrade'.
-
-         --max-unavailable-upgrade=MAX_UNAVAILABLE_UPGRADE
-            Number of nodes that can be unavailable at the same time on each
-            upgrade of the node pool.
-
-            Specifies the number of nodes that can be unavailable at the same
-            time during this node pool's upgrades. For example, assume the node
-            pool has 5 nodes, running the following command will result in
-            having 3 nodes being upgraded in parallel (1 + 2), but keeping
-            always at least 3 (5 - 2) available each time the node pool is
-            upgraded:
-
-                $ gcloud alpha container node-pools update node-pool-1 \
-                    --cluster=example-cluster --max-surge-upgrade=1   \
-                    --max-unavailable-upgrade=2
-
-            Must be used in conjunction with '--max-surge-upgrade'.
-
-         --node-pool-soak-duration=NODE_POOL_SOAK_DURATION
-            Time in seconds to be spent waiting during blue-green upgrade
-            before deleting the blue pool and completing the upgrade.
-
-                $ gcloud alpha container node-pools update node-pool-1 \
-                    --cluster=example-cluster  --node-pool-soak-duration=600s
-
-         --standard-rollout-policy=[batch-node-count=BATCH_NODE_COUNT,batch-percent=BATCH_NODE_PERCENTAGE,batch-soak-duration=BATCH_SOAK_DURATION,...]
-            Standard rollout policy options for blue-green upgrade.
-
-            Batch sizes are specified by one of, batch-node-count or
-            batch-percent. The duration between batches is specified by
-            batch-soak-duration.
-
-                $ gcloud alpha container node-pools update node-pool-1 \
-                    --cluster=example-cluster  \
-                    --standard-rollout-policy=batch-node-count=3,\
-                batch-soak-duration=60s
-
-                $ gcloud alpha container node-pools update node-pool-1 \
-                    --cluster=example-cluster  \
-                    --standard-rollout-policy=batch-percent=0.3,\
-                batch-soak-duration=60s
 
 OPTIONAL FLAGS
      --async

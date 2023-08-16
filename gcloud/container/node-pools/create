@@ -45,7 +45,7 @@ SYNOPSIS
           batch-soak-duration=BATCH_SOAK_DURATION,...]]
         [--system-config-from-file=SYSTEM_CONFIG_FROM_FILE]
         [--tags=TAG,[TAG,...]] [--threads-per-core=THREADS_PER_CORE]
-        [--windows-os-version=WINDOWS_OS_VERSION]
+        [--tpu-topology=TPU_TOPOLOGY] [--windows-os-version=WINDOWS_OS_VERSION]
         [--workload-metadata=WORKLOAD_METADATA]
         [--create-pod-ipv4-range=[KEY=VALUE,...] | --pod-ipv4-range=NAME]
         [--enable-autoscaling --location-policy=LOCATION_POLICY
@@ -586,6 +586,9 @@ FLAGS
               sysctl:
                 net.core.somaxconn: '2048'
                 net.ipv4.tcp_rmem: '4096 87380 6291456'
+            hugepageConfig:
+              hugepage_size2m: '1024'
+              hugepage_size1g: '2'
 
         List of supported kubelet configs in 'kubeletConfig'.
 
@@ -616,6 +619,19 @@ FLAGS
           net.ipv4.tcp_wmem                           Any positive integer tuple
           net.ipv4.tcp_tw_reuse                       Must be {0, 1}
 
+        List of supported hugepage size in 'hugepageConfig'.
+
+          KEY               VALUE
+          hugepage_size2m   Number of 2M huge pages, any positive integer
+          hugepage_size1g   Number of 1G huge pages, any positive integer
+
+        Allocated hugepage size should not exceed 60% of available memory on
+        the node. For example, c2d-highcpu-4 has 8GB memory, total allocated
+        hugepage of 2m and 1g should not exceed 8GB * 0.6 = 4.8GB.
+
+        1G hugepages are only available in following machine familes: c3, m2,
+        c2d, c3d, h3, m3, a2, a3, g2.
+
         Note, updating the system configuration of an existing node pool
         requires recreation of the nodes which which might cause a disruption.
 
@@ -635,6 +651,12 @@ FLAGS
      --threads-per-core=THREADS_PER_CORE
         The number of visible threads per physical core for each node. To
         disable simultaneous multithreading (SMT) set this to 1.
+
+     --tpu-topology=TPU_TOPOLOGY
+        The desired physical topology for the PodSlice.
+
+            $ gcloud container node-pools create node-pool-1 \
+                --cluster=example-cluster --tpu-topology
 
      --windows-os-version=WINDOWS_OS_VERSION
         Specifies the Windows Server Image to use when creating a Windows node

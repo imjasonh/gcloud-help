@@ -1,0 +1,134 @@
+NAME
+    gcloud alpha redis clusters create - create a new Memorystore for Redis
+        Cluster instance
+
+SYNOPSIS
+    gcloud alpha redis clusters create (CLUSTER : --region=REGION)
+        --network=NETWORK --shard-count=SHARD_COUNT [--async]
+        [--auth-mode=AUTH_MODE] [--replica-count=REPLICA_COUNT]
+        [--transit-encryption-mode=TRANSIT_ENCRYPTION_MODE]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Create a new Memorystore for Redis Cluster instance, and uses
+    Private Service Connect service connectivity automation to automate
+    connectivity for instances.
+
+    This command can fail for the following reasons:
+      ▪ A cluster with the same name already exists.
+      ▪ The active account does not have permission to create clusters.
+      ▪ Some required APIs not enabled yet.
+      ▪ No connection policy defined yet on the network and in the region a
+        cluster will be created.
+      ▪ Miss the steps for creating and configuring a service account (to
+        grant permissions) in both host project and service project, if a
+        shared VPC network is used.
+
+    Refer to
+    https://cloud.google.com/memorystore/docs/cluster/networking#prerequisites_required_before_creating_a_cluster
+    for prerequisites.
+
+EXAMPLES
+    To create a cluster with name my-redis-cluster in region us-central1 with 3
+    shards and with a discovery endpoint created on network "default", run:
+
+        $ gcloud alpha redis clusters create my-redis-cluster \
+            --region=us-central1 --shard-count=3 \
+            --network=projects/NETWORK_PROJECT_ID/global/networks/default
+
+POSITIONAL ARGUMENTS
+     Cluster resource - Arguments and flags that specify the cluster you want
+     to create. Your cluster ID must be 1 to 63 characters and use only
+     lowercase letters, numbers, or hyphens. It must start with a lowercase
+     letter and end with a lowercase letter or number. The arguments in this
+     group can be used to specify the attributes of this resource. (NOTE) Some
+     attributes are not given arguments in this group but can be set in other
+     ways.
+
+     To set the project attribute:
+      ◆ provide the argument cluster on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       CLUSTER
+          ID of the cluster or fully qualified identifier for the cluster.
+
+          To set the cluster attribute:
+          ▸ provide the argument cluster on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --region=REGION
+          The name of the Redis region of the cluster. Overrides the default
+          redis/region property value for this command invocation.
+
+          To set the region attribute:
+          ▸ provide the argument cluster on the command line with a fully
+            specified name;
+          ▸ provide the argument --region on the command line;
+          ▸ set the property redis/region.
+
+REQUIRED FLAGS
+     --network=NETWORK
+        The network used to create your instance. It must use the format:
+        projects/NETWORK_PROJECT_ID/global/networks/NETWORK_ID. The network ID
+        used here must match the network ID used by the service connection
+        policy. Otherwise, the create operation fails
+
+     --shard-count=SHARD_COUNT
+        The shard count of the cluster.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --auth-mode=AUTH_MODE
+        Available authorization mode of a Redis cluster. AUTH_MODE must be one
+        of:
+
+         disabled
+            Authorization is disabled for the cluster.
+
+         iam-auth
+            IAM basic authorization is enabled for the cluster.
+
+     --replica-count=REPLICA_COUNT
+        The replica count of each shard.
+
+     --transit-encryption-mode=TRANSIT_ENCRYPTION_MODE
+        Transit encryption mode used for the Redis cluster. If not provided,
+        encryption is disabled for the cluster. TRANSIT_ENCRYPTION_MODE must be
+        one of:
+
+         disabled
+            In-transit encryption is disabled for the cluster.
+
+         server-authentication
+            The cluster uses server managed encryption for in-transit
+            encryption.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the redis/v1alpha1 API. The full documentation for this
+    API can be found at: https://cloud.google.com/memorystore/docs/redis/
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. This variant is also available:
+
+        $ gcloud beta redis clusters create
+
