@@ -59,7 +59,7 @@ REQUIRED FLAGS
         The total number of instances for which capacity assurance is requested
         at a future time period.
 
-     Manage the instance properties for the Specific SKU reservation. You must
+     Manage the instance properties for the auto-created reservations. You must
      either provide a source instance template or define the instance
      properties.
 
@@ -163,11 +163,12 @@ REQUIRED FLAGS
 
 OPTIONAL FLAGS
      --description=DESCRIPTION
-        An optional description of the reservation to create.
+        An optional description of the future reservation to create.
 
      --name-prefix=NAME_PREFIX
-        User provided name prefix for system generated reservations when
-        capacity is delivered at start time.
+        A name prefix for the auto-created reservations when capacity is
+        delivered at the start time. Each auto-created reservation name starts
+        with the name prefix.
 
      --planning-status=PLANNING_STATUS
         The planning status of the future reservation. The default value is
@@ -226,14 +227,13 @@ OPTIONAL FLAGS
 
        --share-setting=SHARE_SETTING
           Specify if this future reservation is shared, and if so, the type of
-          sharing. If you omit this flag, this value is local (not shared) by
-          default. SHARE_SETTING must be one of: local, projects.
+          sharing. If you omit this flag, this value is local by default.
+          SHARE_SETTING must be one of: local, projects.
 
        --share-with=PROJECT,[PROJECT,...]
-          If this future reservation is shared (--share-setting is not local),
-          provide a list of all of the specific projects that this future
-          reservation is shared with. List must contain project IDs or project
-          numbers.
+          If this future reservation is shared, provide a comma-separated list
+          of projects that this future reservation is shared with. The list
+          must contain project IDs or project numbers.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
@@ -247,5 +247,7 @@ NOTES
     This command is currently in alpha and might change without notice. If this
     command fails with API permission errors despite specifying the correct
     project, you might be trying to access an API with an invitation-only early
-    access allowlist.
+    access allowlist. This variant is also available:
+
+        $ gcloud beta compute future-reservations create
 

@@ -11,6 +11,7 @@ SYNOPSIS
         [--[no-]insights-config-record-application-tags]
         [--[no-]insights-config-record-client-address]
         [--read-pool-node-count=READ_POOL_NODE_COUNT]
+        [--[no-]require-connectors] [--ssl-mode=SSL_MODE]
         [--update-mode=UPDATE_MODE] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -41,13 +42,16 @@ OPTIONAL FLAGS
         complete.
 
      --availability-type=AVAILABILITY_TYPE
-        Specifies level of availability. AVAILABILITY_TYPE must be (only one
-        value is supported):
+        Specifies level of availability. AVAILABILITY_TYPE must be one of:
 
          REGIONAL
-            Provides high availability and is recommended for production
-            instances; instance automatically fails over to another zone within
+            Provide high availability instances. Recommended for production
+            instances; instances automatically fail over to another zone within
             your selected region.
+         ZONAL
+            Provide zonal availability instances. Not recommended for
+            production instances; instance does not automatically fail over to
+            another zone.
 
      --cpu-count=CPU_COUNT
         Whole number value indicating how many vCPUs the machine should
@@ -86,6 +90,20 @@ OPTIONAL FLAGS
 
      --read-pool-node-count=READ_POOL_NODE_COUNT
         Read capacity, i.e. number of nodes in a read pool instance.
+
+     --[no-]require-connectors
+        Enable or disable enforcing connectors only (ex: AuthProxy)connections
+        to the database. Use --require-connectors to enable and
+        --no-require-connectors to disable.
+
+     --ssl-mode=SSL_MODE
+        Specify the SSL mode to use when the instance connects to the database.
+        SSL_MODE must be one of:
+
+         ALLOW_UNENCRYPTED_AND_ENCRYPTED
+            SSL connections are optional. CA verification is not enforced.
+         ENCRYPTED_ONLY
+            SSL connections are required. CA verification is not enforced.
 
      --update-mode=UPDATE_MODE
         Specify the mode for updating the instance. If unspecified, the update

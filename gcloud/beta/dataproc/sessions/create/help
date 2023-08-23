@@ -1,0 +1,135 @@
+NAME
+    gcloud beta dataproc sessions create - create a Dataproc session
+
+SYNOPSIS
+    gcloud beta dataproc sessions create COMMAND [--async]
+        [--container-image=CONTAINER_IMAGE]
+        [--history-server-cluster=HISTORY_SERVER_CLUSTER] [--kernel=KERNEL]
+        [--kms-key=KMS_KEY] [--labels=[KEY=VALUE,...]] [--max-idle=MAX_IDLE]
+        [--metastore-service=METASTORE_SERVICE]
+        [--property=[PROPERTY=VALUE,...]] [--request-id=REQUEST_ID]
+        [--service-account=SERVICE_ACCOUNT]
+        [--session_template=SESSION_TEMPLATE] [--staging-bucket=STAGING_BUCKET]
+        [--tags=[TAGS,...]] [--ttl=TTL] [--user=USER] [--version=VERSION]
+        [--network=NETWORK | --subnet=SUBNET] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Create various sessions, such as Spark.
+
+EXAMPLES
+    To create a Spark session, run:
+
+        $ gcloud beta dataproc sessions create spark my-session \
+            --location='us-central1'
+
+FLAGS
+     --async
+        Return immediately without waiting for the operation in progress to
+        complete.
+
+     --container-image=CONTAINER_IMAGE
+        Optional custom container image to use for the batch/session runtime
+        environment. If not specified, a default container image will be used.
+        The value should follow the container image naming format:
+        {registry}/{repository}/{name}:{tag}, for example,
+        gcr.io/my-project/my-image:1.2.3
+
+     --history-server-cluster=HISTORY_SERVER_CLUSTER
+        Spark History Server configuration for the batch/session job. Resource
+        name of an existing Dataproc cluster to act as a Spark History Server
+        for the workload in the format:
+        "projects/{project_id}/regions/{region}/clusters/{cluster_name}".
+
+     --kernel=KERNEL
+        Jupyter kernel type. The value could be "python" or "scala". KERNEL
+        must be one of: python, scala.
+
+     --kms-key=KMS_KEY
+        Cloud KMS key to use for encryption.
+
+     --labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     --max-idle=MAX_IDLE
+        The duration after which an idle session will be automatically
+        terminated, for example, "20m" or "2h". A session is considered idle if
+        it has no active Spark applications and no active Jupyter kernels. Run
+        gcloud topic datetimes
+        (https://cloud.google.com/sdk/gcloud/reference/topic/datetimes) for
+        information on duration formats.
+
+     --metastore-service=METASTORE_SERVICE
+        Name of a Dataproc Metastore service to be used as an external
+        metastore in the format:
+        "projects/{project-id}/locations/{region}/services/{service-name}".
+
+     --property=[PROPERTY=VALUE,...]
+        Specifies configuration properties.
+
+     --request-id=REQUEST_ID
+        A unique ID that identifies the request. If the service receives two
+        session create requests with the same request_id, the second request is
+        ignored and the operation that corresponds to the first session created
+        and stored in the backend is returned. Recommendation: Always set this
+        value to a UUID. The value must contain only letters (a-z, A-Z),
+        numbers (0-9), underscores (), and hyphens (-). The maximum length is
+        40 characters.
+
+     --service-account=SERVICE_ACCOUNT
+        The IAM service account to be used for a batch/session job.
+
+     --session_template=SESSION_TEMPLATE
+        The session template to use for creating the session.
+
+     --staging-bucket=STAGING_BUCKET
+        The Cloud Storage bucket to use to store job dependencies, config
+        files, and job driver console output. If not specified, the default
+        [staging bucket]
+        (https://cloud.google.com/dataproc-serverless/docs/concepts/buckets) is
+        used.
+
+     --tags=[TAGS,...]
+        Network tags for traffic control.
+
+     --ttl=TTL
+        The duration after the workload will be unconditionally terminated, for
+        example, '20m' or '1h'. Run gcloud topic datetimes
+        (https://cloud.google.com/sdk/gcloud/reference/topic/datetimes) for
+        information on duration formats.
+
+     --user=USER
+        The email address of the user who owns the session. The session will be
+        authenticated as this user if credentials injection is enabled.
+
+     --version=VERSION
+        Optional runtime version. If not specified, a default version will be
+        used.
+
+     At most one of these can be specified:
+
+       --network=NETWORK
+          Network URI to connect network to.
+
+       --subnet=SUBNET
+          Subnetwork URI to connect network to. Subnet must have Private Google
+          Access enabled.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --help.
+
+    Run $ gcloud help for details.
+
+COMMANDS
+    COMMAND is one of the following:
+
+     spark
+        (BETA) Create a Spark session.
+
+NOTES
+    This command is currently in beta and might change without notice.
+

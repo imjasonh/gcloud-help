@@ -11,7 +11,9 @@ SYNOPSIS
         [--insights-config-query-string-length=INSIGHTS_CONFIG_QUERY_STRING_LENGTH]
         [--[no-]insights-config-record-application-tags]
         [--[no-]insights-config-record-client-address]
-        [--read-pool-node-count=READ_POOL_NODE_COUNT] [GCLOUD_WIDE_FLAG ...]
+        [--read-pool-node-count=READ_POOL_NODE_COUNT]
+        [--[no-]require-connectors]
+        [--ssl-mode=SSL_MODE; default="ENCRYPTED_ONLY"] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Creates a new AlloyDB instance within a given cluster.
@@ -64,13 +66,16 @@ OPTIONAL FLAGS
         complete.
 
      --availability-type=AVAILABILITY_TYPE
-        Specifies level of availability. AVAILABILITY_TYPE must be (only one
-        value is supported):
+        Specifies level of availability. AVAILABILITY_TYPE must be one of:
 
          REGIONAL
-            Provides high availability and is recommended for production
-            instances; instance automatically fails over to another zone within
+            Provide high availability instances. Recommended for production
+            instances; instances automatically fail over to another zone within
             your selected region.
+         ZONAL
+            Provide zonal availability instances. Not recommended for
+            production instances; instance does not automatically fail over to
+            another zone.
 
      --database-flags=FLAG=VALUE,[FLAG=VALUE,...]
         Comma-separated list of database flags to set on the instance. Use an
@@ -103,6 +108,20 @@ OPTIONAL FLAGS
 
      --read-pool-node-count=READ_POOL_NODE_COUNT
         Read capacity, i.e. number of nodes in a read pool instance.
+
+     --[no-]require-connectors
+        Enable or disable enforcing connectors only (ex: AuthProxy)connections
+        to the database. Use --require-connectors to enable and
+        --no-require-connectors to disable.
+
+     --ssl-mode=SSL_MODE; default="ENCRYPTED_ONLY"
+        Specify the SSL mode to use when the instance connects to the database.
+        Default SSL mode is ENCRYPTED_ONLY. SSL_MODE must be one of:
+
+         ALLOW_UNENCRYPTED_AND_ENCRYPTED
+            SSL connections are optional. CA verification is not enforced.
+         ENCRYPTED_ONLY
+            SSL connections are required. CA verification is not enforced.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

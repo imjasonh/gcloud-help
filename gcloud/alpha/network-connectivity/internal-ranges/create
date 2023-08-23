@@ -7,7 +7,7 @@ SYNOPSIS
         (INTERNAL_RANGE : --region=REGION) --network=NETWORK
         (--ip-cidr-range=IP_CIDR_RANGE | [--prefix-length=PREFIX_LENGTH
           : --target-cidr-range=[TARGET_CIDR_RANGE,...]]) [--async]
-        [--description=DESCRIPTION] [--labels=KEY=VALUE]
+        [--description=DESCRIPTION] [--labels=[KEY=VALUE,...]]
         [--overlaps=[OVERLAPS,...]] [--peering=PEERING; default="for-self"]
         [--usage=USAGE; default="for-vpc"] [GCLOUD_WIDE_FLAG ...]
 
@@ -102,12 +102,16 @@ OPTIONAL FLAGS
      --description=DESCRIPTION
         Description of the internal range to be created.
 
-     --labels=KEY=VALUE
+     --labels=[KEY=VALUE,...]
         List of label KEY=VALUE pairs to add.
 
      --overlaps=[OVERLAPS,...]
         Overlap specifications for the range being created. OVERLAPS must be
-        (only one value is supported):
+        one of:
+
+         overlap-existing-subnet-range
+            Allows for creation of internal ranges that overlap with existing
+            subnets.
 
          overlap-route-range
             Allows for creation or existence of routes that have a more
