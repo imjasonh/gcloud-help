@@ -42,6 +42,8 @@ SYNOPSIS
           | --additional-pod-ipv4-ranges=NAME,[NAME,...]
           --remove-additional-pod-ipv4-ranges=NAME,[NAME,...]
           | --additional-zones=[ZONE,...] | --node-locations=ZONE,[ZONE,...]
+          | --cluster-dns=CLUSTER_DNS --cluster-dns-domain=CLUSTER_DNS_DOMAIN
+          --cluster-dns-scope=CLUSTER_DNS_SCOPE
           | --binauthz-policy-bindings=[name=BINAUTHZ_POLICY,...]
           --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
           | --enable-binauthz | --clear-maintenance-window
@@ -57,8 +59,6 @@ SYNOPSIS
           | --enable-network-egress-metering
           --enable-resource-consumption-metering
           --resource-usage-bigquery-dataset=RESOURCE_USAGE_BIGQUERY_DATASET
-          | --cluster-dns=CLUSTER_DNS --cluster-dns-domain=CLUSTER_DNS_DOMAIN
-          --cluster-dns-scope=CLUSTER_DNS_SCOPE
           | --dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE
           --disable-dataplane-v2-metrics | --enable-dataplane-v2-metrics
           | [--enable-autoprovisioning
@@ -636,7 +636,8 @@ REQUIRED FLAGS
           To disable in an existing cluster, explicitly set the flag to
           --workload-vulnerability-scanning=disabled.
 
-          WORKLOAD_VULNERABILITY_SCANNING must be one of: disabled, standard.
+          WORKLOAD_VULNERABILITY_SCANNING must be one of: disabled, standard,
+          enterprise.
 
        --additional-pod-ipv4-ranges=NAME,[NAME,...]
           Additional IP address ranges(by name) for pods that need to be added
@@ -705,6 +706,35 @@ REQUIRED FLAGS
                     --location us-central1-a \
                     --node-locations us-central1-a,us-central1-b
 
+       ClusterDNS
+
+         --cluster-dns=CLUSTER_DNS
+            DNS provider to use for this cluster. CLUSTER_DNS must be one of:
+
+             clouddns
+                Selects Cloud DNS as the DNS provider for the cluster.
+             default
+                Selects the default DNS provider (kube-dns) for the cluster.
+             kubedns
+                Selects Kube DNS as the DNS provider for the cluster.
+
+         --cluster-dns-domain=CLUSTER_DNS_DOMAIN
+            DNS domain for this cluster. The default value is cluster.local.
+            This is configurable when --cluster-dns=clouddns and
+            --cluster-dns-scope=vpc are set. The value must be a valid DNS
+            subdomain as defined in RFC 1123.
+
+         --cluster-dns-scope=CLUSTER_DNS_SCOPE
+            DNS scope for the Cloud DNS zone created - valid only with
+            --cluster-dns=clouddns. Defaults to cluster.
+
+            CLUSTER_DNS_SCOPE must be one of:
+
+             cluster
+                Configures the Cloud DNS zone to be private to the cluster.
+             vpc
+                Configures the Cloud DNS zone to be private to the VPC Network.
+
        Flags for Binary Authorization:
 
          --binauthz-policy-bindings=[name=BINAUTHZ_POLICY,...]
@@ -716,8 +746,8 @@ REQUIRED FLAGS
 
            --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
               Enable Binary Authorization for this cluster.
-              BINAUTHZ_EVALUATION_MODE must be one of: DISABLED, MONITORING,
-              MONITORING_AND_PROJECT_SINGLETON_POLICY_ENFORCE, POLICY_BINDINGS,
+              BINAUTHZ_EVALUATION_MODE must be one of: DISABLED,
+              POLICY_BINDINGS,
               POLICY_BINDINGS_AND_PROJECT_SINGLETON_POLICY_ENFORCE,
               PROJECT_SINGLETON_POLICY_ENFORCE.
 
@@ -862,35 +892,6 @@ REQUIRED FLAGS
 
                 $ gcloud beta container clusters update example-cluster \
                     --resource-usage-bigquery-dataset=example_bigquery_dataset_name
-
-       ClusterDNS
-
-         --cluster-dns=CLUSTER_DNS
-            DNS provider to use for this cluster. CLUSTER_DNS must be one of:
-
-             clouddns
-                Selects Cloud DNS as the DNS provider for the cluster.
-             default
-                Selects the default DNS provider (kube-dns) for the cluster.
-             kubedns
-                Selects Kube DNS as the DNS provider for the cluster.
-
-         --cluster-dns-domain=CLUSTER_DNS_DOMAIN
-            DNS domain for this cluster. The default value is cluster.local.
-            This is configurable when --cluster-dns=clouddns and
-            --cluster-dns-scope=vpc are set. The value must be a valid DNS
-            subdomain as defined in RFC 1123.
-
-         --cluster-dns-scope=CLUSTER_DNS_SCOPE
-            DNS scope for the Cloud DNS zone created - valid only with
-            --cluster-dns=clouddns. Defaults to cluster.
-
-            CLUSTER_DNS_SCOPE must be one of:
-
-             cluster
-                Configures the Cloud DNS zone to be private to the cluster.
-             vpc
-                Configures the Cloud DNS zone to be private to the VPC Network.
 
        --dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE
           Select Advanced Datapath Observability mode for the cluster. Defaults

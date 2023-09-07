@@ -3,12 +3,12 @@ NAME
 
 SYNOPSIS
     gcloud alpha builds submit [[SOURCE] --no-source] [--async] [--no-cache]
-        [--default-buckets-behavior=DEFAULT_BUCKETS_BEHAVIOR]
+        [--default-buckets-behavior=DEFAULT_BUCKETS_BEHAVIOR] [--dir=DIR]
         [--disk-size=DISK_SIZE] [--gcs-log-dir=GCS_LOG_DIR]
         [--gcs-source-staging-dir=GCS_SOURCE_STAGING_DIR]
         [--git-source-dir=GIT_SOURCE_DIR]
         [--git-source-revision=GIT_SOURCE_REVISION] [--ignore-file=IGNORE_FILE]
-        [--machine-type=MACHINE_TYPE] [--region=REGION]
+        [--machine-type=MACHINE_TYPE] [--region=REGION] [--revision=REVISION]
         [--substitutions=[KEY=VALUE,...]] [--suppress-logs] [--timeout=TIMEOUT]
         [--worker-pool=WORKER_POOL]
         [--config=CONFIG; default="cloudbuild.yaml"
@@ -77,6 +77,13 @@ FLAGS
         How default buckets are setup. DEFAULT_BUCKETS_BEHAVIOR must be one of:
         default-logs-bucket-behavior-unspecified, regional-user-owned-bucket.
 
+     --dir=DIR
+        Directory, relative to the source root, in which to run the build. This
+        is used when the build source is a 2nd-gen Google Cloud Build
+        repository resource. This must be a relative path. If a step's dir is
+        specified and is an absolute path, this value is ignored for that
+        step's execution.
+
      --disk-size=DISK_SIZE
         Machine disk size (GB) to run the build.
 
@@ -125,6 +132,18 @@ FLAGS
         supported region name (e.g. us-central1). If unset, builds/region,
         which is the default region to use when working with Cloud Build
         resources, is used. If builds/region is unset, region is set to global.
+
+     --revision=REVISION
+        Revision to fetch from the Git repository such as a branch, a tag, a
+        commit SHA, or any Git ref to run the build. This is used when the
+        build source is a 2nd-gen Google Cloud Build repository resource.
+
+        Cloud Build uses git fetch to fetch the revision from the Git
+        repository; therefore make sure that the string you provide for
+        revision is parsable by the command. For information on string values
+        accepted by git fetch, see
+        https://git-scm.com/docs/gitrevisions#_specifying_revisions. For
+        information on git fetch, see https://git-scm.com/docs/git-fetch.
 
      --substitutions=[KEY=VALUE,...]
         Parameters to be substituted in the build specification.

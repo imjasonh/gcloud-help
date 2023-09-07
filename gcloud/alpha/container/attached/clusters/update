@@ -4,12 +4,17 @@ NAME
 
 SYNOPSIS
     gcloud alpha container attached clusters update
-        (CLUSTER : --location=LOCATION) [--admin-users=[USER,...]]
+        (CLUSTER : --location=LOCATION)
         [--annotations=ANNOTATION,[ANNOTATION,...]] [--async]
+        [--binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE]
         [--clear-description] [--description=DESCRIPTION]
         [--logging=COMPONENT,[COMPONENT,...]]
         [--platform-version=PLATFORM_VERSION] [--validate-only]
+        [--admin-groups=[GROUP,...] | --clear-admin-groups]
+        [--admin-users=[USER,...] | --clear-admin-users]
         [--disable-managed-prometheus | --enable-managed-prometheus]
+        [--proxy-secret-name=PROXY_SECRET_NAME
+          --proxy-secret-namespace=PROXY_SECRET_NAMESPACE]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -53,17 +58,17 @@ POSITIONAL ARGUMENTS
           ▸ set the property container_attached/location.
 
 FLAGS
-     --admin-users=[USER,...]
-        Users that can perform operations as a cluster administrator.
-
-        There is no way to completely remove admin users after setting.
-
      --annotations=ANNOTATION,[ANNOTATION,...]
         Annotations for the cluster.
 
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
+
+     --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
+        Set Binary Authorization evaluation mode for this cluster.
+        BINAUTHZ_EVALUATION_MODE must be one of: DISABLED,
+        PROJECT_SINGLETON_POLICY_ENFORCE.
 
      --clear-description
         Clear the description for the cluster.
@@ -96,6 +101,27 @@ FLAGS
      --validate-only
         Validate the update of the cluster, but don't actually perform it.
 
+     Admin groups
+
+     At most one of these can be specified:
+
+       --admin-groups=[GROUP,...]
+          Groups of users that can perform operations as a cluster
+          administrator.
+
+       --clear-admin-groups
+          Clear the admin groups associated with the cluster
+
+     Admin users
+
+     At most one of these can be specified:
+
+       --admin-users=[USER,...]
+          Users that can perform operations as a cluster administrator.
+
+       --clear-admin-users
+          Clear the admin users associated with the cluster
+
      Monitoring Config
 
      At most one of these can be specified:
@@ -105,6 +131,22 @@ FLAGS
 
        --enable-managed-prometheus
           Enable managed collection for Managed Service for Prometheus.
+
+     Proxy config
+
+       --proxy-secret-name=PROXY_SECRET_NAME
+          Name of the Kubernetes secret that contains the HTTP/HTTPS proxy
+          configuration.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --proxy-secret-namespace=PROXY_SECRET_NAMESPACE
+          Namespace of the Kubernetes secret that contains the HTTP/HTTPS proxy
+          configuration.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

@@ -4,7 +4,7 @@ NAME
 
 SYNOPSIS
     gcloud alpha compute tpus queued-resources ssh [USER@]QR
-        [--batch-size=BATCH_SIZE; default="all"] [--dry-run]
+        [--batch-size=BATCH_SIZE; default=64] [--dry-run]
         [--force-key-file-overwrite] [--node=NODE; default="0"] [--plain]
         [--ssh-flag=SSH_FLAG] [--ssh-key-file=SSH_KEY_FILE]
         [--strict-host-key-checking=STRICT_HOST_KEY_CHECKING]
@@ -26,7 +26,7 @@ EXAMPLES
           --command="last boot"
 
     To run the same command in all nodes and workers in a Cloud TPU Queued
-    Resource simultaneously, run:
+    Resource (with the default batch size), run:
 
         $ gcloud alpha compute tpus queued-resources ssh my-qr \
           --command="last boot" --worker=all --node=all
@@ -57,17 +57,17 @@ POSITIONAL ARGUMENTS
             --zone=us-central1-a -- -vvv -L 80:%TPU%:80
 
 FLAGS
-     --batch-size=BATCH_SIZE; default="all"
-        Batch size for simultaneous command execution. When using a
-        comma-separated list (e.g. '1,4,6') or a range (e.g. '1-3') or ``all``
-        keyword in --worker flag, it executes the command concurrently in
-        groups of the batch size. This flag takes a value greater than 0 to
-        specify the batch size to control the concurrent connections that can
-        be established with the TPU workers, or the special keyword ``all`` to
-        allow the concurrent command executions on all the specified workers in
-        --worker flag. Maximum value of this flag should not be more than the
-        number of specified workers, otherwise the value will be treated as
-        ``--batch-size=all``.
+     --batch-size=BATCH_SIZE; default=64
+        Batch size for simultaneous command execution on the client's side.
+        When using a comma-separated list (e.g. '1,4,6') or a range (e.g.
+        '1-3') or ``all`` keyword in --worker flag, it executes the command
+        concurrently in groups of the batch size. This flag takes a value
+        greater than 0 to specify the batch size to control the concurrent
+        connections that can be established with the TPU workers, or the
+        special keyword ``all`` to allow the concurrent command executions on
+        all the specified workers in --worker flag. Maximum value of this flag
+        should not be more than the number of specified workers, otherwise the
+        value will be treated as ``--batch-size=all``.
 
      --dry-run
         Print the equivalent scp/ssh command that would be run to stdout,

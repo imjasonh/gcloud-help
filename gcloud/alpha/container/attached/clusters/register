@@ -8,9 +8,13 @@ SYNOPSIS
         --fleet-project=FLEET_PROJECT --platform-version=PLATFORM_VERSION
         (--context=CONTEXT : --kubeconfig=KUBECONFIG)
         (--has-private-issuer | --issuer-url=ISSUER_URL)
-        [--admin-users=[USER,...]] [--annotations=ANNOTATION,[ANNOTATION,...]]
+        [--admin-groups=[GROUP,...]] [--admin-users=[USER,...]]
+        [--annotations=ANNOTATION,[ANNOTATION,...]]
+        [--binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE]
         [--description=DESCRIPTION] [--enable-managed-prometheus]
         [--logging=COMPONENT,[COMPONENT,...]] [--validate-only]
+        [--proxy-secret-name=PROXY_SECRET_NAME
+          --proxy-secret-namespace=PROXY_SECRET_NAMESPACE]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -134,13 +138,19 @@ REQUIRED FLAGS
           Issuer url of the cluster to attach.
 
 OPTIONAL FLAGS
+     --admin-groups=[GROUP,...]
+        Groups of users that can perform operations as a cluster administrator.
+
      --admin-users=[USER,...]
         Users that can perform operations as a cluster administrator.
 
-        There is no way to completely remove admin users after setting.
-
      --annotations=ANNOTATION,[ANNOTATION,...]
         Annotations for the cluster.
+
+     --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
+        Set Binary Authorization evaluation mode for this cluster.
+        BINAUTHZ_EVALUATION_MODE must be one of: DISABLED,
+        PROJECT_SINGLETON_POLICY_ENFORCE.
 
      --description=DESCRIPTION
         Description for the cluster.
@@ -162,6 +172,22 @@ OPTIONAL FLAGS
 
      --validate-only
         Validate the cluster to create, but don't actually perform it.
+
+     Proxy config
+
+       --proxy-secret-name=PROXY_SECRET_NAME
+          Name of the Kubernetes secret that contains the HTTP/HTTPS proxy
+          configuration.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --proxy-secret-namespace=PROXY_SECRET_NAMESPACE
+          Namespace of the Kubernetes secret that contains the HTTP/HTTPS proxy
+          configuration.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

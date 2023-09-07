@@ -70,11 +70,11 @@ SYNOPSIS
         [--workload-metadata=WORKLOAD_METADATA] [--workload-pool=WORKLOAD_POOL]
         [--workload-vulnerability-scanning=WORKLOAD_VULNERABILITY_SCANNING]
         [--additional-zones=ZONE,[ZONE,...] | --node-locations=ZONE,[ZONE,...]]
+        [--cluster-dns=CLUSTER_DNS --cluster-dns-domain=CLUSTER_DNS_DOMAIN
+          --cluster-dns-scope=CLUSTER_DNS_SCOPE]
         [--binauthz-policy-bindings=[name=BINAUTHZ_POLICY,...]
           --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
           | --enable-binauthz]
-        [--cluster-dns=CLUSTER_DNS --cluster-dns-domain=CLUSTER_DNS_DOMAIN
-          --cluster-dns-scope=CLUSTER_DNS_SCOPE]
         [--disable-dataplane-v2-metrics | --enable-dataplane-v2-metrics]
         [[--enable-autoprovisioning
           : --autoprovisioning-config-file=AUTOPROVISIONING_CONFIG_FILE
@@ -1232,7 +1232,8 @@ FLAGS
         To disable in an existing cluster, explicitly set the flag to
         --workload-vulnerability-scanning=disabled.
 
-        WORKLOAD_VULNERABILITY_SCANNING must be one of: disabled, standard.
+        WORKLOAD_VULNERABILITY_SCANNING must be one of: disabled, standard,
+        enterprise.
 
      At most one of these can be specified:
 
@@ -1277,28 +1278,6 @@ FLAGS
                   --location us-central1-a \
                   --node-locations us-central1-a,us-central1-b
 
-     Flags for Binary Authorization:
-
-       --binauthz-policy-bindings=[name=BINAUTHZ_POLICY,...]
-          The relative resource name of the Binary Authorization policy to
-          audit and/or enforce. GKE policies have the following format:
-          projects/{project_number}/platforms/gke/policies/{policy_id}.
-
-       At most one of these can be specified:
-
-         --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
-            Enable Binary Authorization for this cluster.
-            BINAUTHZ_EVALUATION_MODE must be one of: DISABLED, MONITORING,
-            MONITORING_AND_PROJECT_SINGLETON_POLICY_ENFORCE, POLICY_BINDINGS,
-            POLICY_BINDINGS_AND_PROJECT_SINGLETON_POLICY_ENFORCE,
-            PROJECT_SINGLETON_POLICY_ENFORCE.
-
-         --enable-binauthz
-            (DEPRECATED) Enable Binary Authorization for this cluster.
-
-            The --enable-binauthz flag is deprecated. Please use
-            --binauthz-evaluation-mode instead.
-
      ClusterDNS
 
        --cluster-dns=CLUSTER_DNS
@@ -1327,6 +1306,27 @@ FLAGS
               Configures the Cloud DNS zone to be private to the cluster.
            vpc
               Configures the Cloud DNS zone to be private to the VPC Network.
+
+     Flags for Binary Authorization:
+
+       --binauthz-policy-bindings=[name=BINAUTHZ_POLICY,...]
+          The relative resource name of the Binary Authorization policy to
+          audit and/or enforce. GKE policies have the following format:
+          projects/{project_number}/platforms/gke/policies/{policy_id}.
+
+       At most one of these can be specified:
+
+         --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
+            Enable Binary Authorization for this cluster.
+            BINAUTHZ_EVALUATION_MODE must be one of: DISABLED, POLICY_BINDINGS,
+            POLICY_BINDINGS_AND_PROJECT_SINGLETON_POLICY_ENFORCE,
+            PROJECT_SINGLETON_POLICY_ENFORCE.
+
+         --enable-binauthz
+            (DEPRECATED) Enable Binary Authorization for this cluster.
+
+            The --enable-binauthz flag is deprecated. Please use
+            --binauthz-evaluation-mode instead.
 
      At most one of these can be specified:
 

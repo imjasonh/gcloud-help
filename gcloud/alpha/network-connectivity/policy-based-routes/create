@@ -4,14 +4,17 @@ NAME
 
 SYNOPSIS
     gcloud alpha network-connectivity policy-based-routes create
-        POLICY_BASED_ROUTE --network=NETWORK --next-hop-ilb-ip=NEXT_HOP_ILB_IP
-        [--async] [--description=DESCRIPTION]
-        [--destination-range=DESTINATION_RANGE] [--ip-protocol=IP_PROTOCOL]
-        [--labels=[KEY=VALUE,...]] [--priority=PRIORITY]
+        POLICY_BASED_ROUTE --network=NETWORK [--async]
+        [--description=DESCRIPTION] [--destination-range=DESTINATION_RANGE]
+        [--ip-protocol=IP_PROTOCOL] [--labels=[KEY=VALUE,...]]
+        [--priority=PRIORITY]
         [--protocol-version=PROTOCOL_VERSION; default="IPv4"]
         [--source-range=SOURCE_RANGE]
         [--interconnect-attachment-region=INTERCONNECT_ATTACHMENT_REGION
-          | --tags=[TAGS,...]] [GCLOUD_WIDE_FLAG ...]
+          | --tags=[TAGS,...]]
+        [--next-hop-ilb-ip=NEXT_HOP_ILB_IP
+          | --next-hop-other-routes=NEXT_HOP_OTHER_ROUTES]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Create a new policy based route with the given name.
@@ -48,10 +51,6 @@ REQUIRED FLAGS
      --network=NETWORK
         Fully-qualified URL of the network that this route applies to. E.g.
         projects/my-project/global/networks/my-network
-
-     --next-hop-ilb-ip=NEXT_HOP_ILB_IP
-        IP of a global access enabled L4 ILB that should be the next hop to
-        handle packets.
 
 OPTIONAL FLAGS
      --async
@@ -112,6 +111,18 @@ OPTIONAL FLAGS
           both --tags and --interconnect-attachment-region are not set, then
           the policy based route will be installed in all endpoints, including
           VMs, VPNs, and Interconnect attachements, in the network.
+
+     At most one of these can be specified:
+
+       --next-hop-ilb-ip=NEXT_HOP_ILB_IP
+          IP of a global access enabled L4 ILB that should be the next hop to
+          handle packets.
+
+       --next-hop-other-routes=NEXT_HOP_OTHER_ROUTES
+          Next hop should be other routes that handle packets. This will
+          effectively exclude matching packets being applied on other PBRs with
+          a lower priority. NEXT_HOP_OTHER_ROUTES must be one of:
+          default-routing, other-routes-unspecified.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

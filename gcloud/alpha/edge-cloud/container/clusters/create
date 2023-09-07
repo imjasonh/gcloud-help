@@ -18,9 +18,12 @@ SYNOPSIS
         [--maintenance-window-end=MAINTENANCE_WINDOW_END]
         [--maintenance-window-recurrence=MAINTENANCE_WINDOW_RECURRENCE]
         [--maintenance-window-start=MAINTENANCE_WINDOW_START]
+        [--release-channel=RELEASE_CHANNEL;
+          default="RELEASE_CHANNEL_UNSPECIFIED"]
         [--services-ipv4-cidr=SERVICES_IPV4_CIDR; default="10.96.0.0/12"]
         [--services-ipv6-cidr=SERVICES_IPV6_CIDR]
-        [--system-addons-config=SYSTEM_ADDONS_CONFIG] [GCLOUD_WIDE_FLAG ...]
+        [--system-addons-config=SYSTEM_ADDONS_CONFIG] [--version=VERSION]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Create an Edge Container cluster.
@@ -147,6 +150,15 @@ FLAGS
         (https://www.ietf.org/rfc/rfc3339.txt) format. E.g.
         "2021-01-01T00:00:00Z" or "2021-01-01T00:00:00-05:00"
 
+     --release-channel=RELEASE_CHANNEL; default="RELEASE_CHANNEL_UNSPECIFIED"
+        Release channel a cluster is subscribed to. It supports two values,
+        NONE and REGULAR. NONE is used to opt out of any release channel.
+        Clusters subscribed to the REGULAR channel will be automatically
+        upgraded to versions that are considered GA quality, and cannot be
+        manually upgraded. Additionally, if the REGULAR channel is used, a
+        specific target version cannot be set with the 'version' flag. If left
+        unspecified, the release channel will default to REGULAR.
+
      --services-ipv4-cidr=SERVICES_IPV4_CIDR; default="10.96.0.0/12"
         All services in the cluster are assigned an RFC1918 IPv4 address from
         this block. This field cannot be changed after creation.
@@ -163,6 +175,9 @@ FLAGS
 
         { "systemAddonsConfig": { "ingress": { "disabled": true, "ipv4_vip":
         "10.0.0.1" } } }
+
+     --version=VERSION
+        Target cluster version. For example: "1.5.0".
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

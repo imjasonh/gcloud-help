@@ -3,10 +3,11 @@ NAME
         policy files for connected clusters by the user
 
 SYNOPSIS
-    gcloud container fleet memberships generate-gateway-rbac [--anthos-support]
-        [--apply] [--context=CONTEXT] [--kubeconfig=KUBECONFIG]
-        [--membership=MEMBERSHIP] [--rbac-output-file=RBAC_OUTPUT_FILE]
-        [--revoke] [--role=ROLE] [--users=USERS] [GCLOUD_WIDE_FLAG ...]
+    gcloud container fleet memberships generate-gateway-rbac
+        (--anthos-support | --groups=GROUPS | --users=USERS) [--apply]
+        [--context=CONTEXT] [--kubeconfig=KUBECONFIG] [--membership=MEMBERSHIP]
+        [--rbac-output-file=RBAC_OUTPUT_FILE] [--revoke] [--role=ROLE]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     gcloud container fleet memberships generate-gateway-rbac generates RBAC
@@ -84,11 +85,31 @@ EXAMPLES
             --role=clusterrole/cluster-admin --context=my-cluster-context \
             --kubeconfig=/home/user/custom_kubeconfig --apply
 
-FLAGS
-     --anthos-support
-        If specified, this command will generate RBAC policy file for anthos
-        support.
+    The groups can be provided as a Google identity (only email) or an external
+    identity (starting with "principalSet://iam.googleapis.com"):
 
+        $ gcloud container fleet memberships generate-gateway-rbac \
+            --membership=my-cluster \
+            --groups=group@example.com,principalSet://iam.googleapis.com/\
+        locations/global/workforcePools/pool/group/ExampleGroup \
+            --role=clusterrole/cluster-admin --context=my-cluster-context \
+            --kubeconfig=/home/user/custom_kubeconfig --apply
+
+REQUIRED FLAGS
+     Exactly one of these must be specified:
+
+       --anthos-support
+          If specified, this command will generate RBAC policy file for anthos
+          support.
+
+       --groups=GROUPS
+          Group email address or third-party IAM group principal.
+
+       --users=USERS
+          User's email address, service account email address, or third-party
+          IAM subject principal.
+
+OPTIONAL FLAGS
      --apply
         If specified, this command will generate RBAC policy and apply to the
         specified cluster.
@@ -118,9 +139,6 @@ FLAGS
 
      --role=ROLE
         Namespace scoped role or cluster role.
-
-     --users=USERS
-        User's email address or service account email address.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
