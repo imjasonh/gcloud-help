@@ -5,6 +5,7 @@ NAME
 SYNOPSIS
     gcloud compute instances import INSTANCE_NAME --source-uri=SOURCE_URI
         [--no-address] [--async] [--byol] [--can-ip-forward]
+        [--cloudbuild-service-account=CLOUDBUILD_SERVICE_ACCOUNT]
         [--compute-service-account=COMPUTE_SERVICE_ACCOUNT]
         [--deletion-protection] [--description=DESCRIPTION]
         [--no-guest-environment] [--guest-os-features=[GUEST_OS_FEATURE,...]]
@@ -89,6 +90,28 @@ OPTIONAL FLAGS
         If provided, allows the instances to send and receive packets with
         non-matching destination or source IP addresses.
 
+     --cloudbuild-service-account=CLOUDBUILD_SERVICE_ACCOUNT
+        Image import amd export tools use Cloud Build to import and export
+        images to and from your project. Cloud Build uses a specific service
+        account to execute builds on your behalf. The Cloud Build service
+        account generates access token for other service accounts and it is
+        also used for authentication when building the artifacts for the image
+        import tool.
+
+        Use this flag to to specify a custom Cloud Build service account for
+        image import and export. If you don't specify this flag, Cloud Build
+        runs using your project's default Cloud Build service account. To set
+        this option, specify the email address corresponding to the required
+        Cloud Build service account. Note: You must specify the --logs-location
+        flag when you set the custom Cloud Build service account.
+
+        At minimum, the specified Cloud Build service account needs to have the
+        following roles assigned:
+
+        ◆ roles/compute.admin
+        ◆ roles/iam.serviceAccountTokenCreator
+        ◆ roles/iam.serviceAccountUser
+
      --compute-service-account=COMPUTE_SERVICE_ACCOUNT
         A temporary virtual machine instance is created in your project during
         instance import. Instance import tooling on this temporary instance
@@ -104,8 +127,8 @@ OPTIONAL FLAGS
         import on the temporary instance uses the project's default Compute
         Engine service account.
 
-        At minimum, the specified Compute Engine service account needs to have
-        the following roles assigned:
+        At a minimum, you need to grant the following roles to the specified
+        Cloud Build service account:
 
         ◆ roles/compute.storageAdmin
         ◆ roles/storage.objectViewer

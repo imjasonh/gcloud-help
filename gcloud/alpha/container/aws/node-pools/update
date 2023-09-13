@@ -7,6 +7,8 @@ SYNOPSIS
         (NODE_POOL : --cluster=CLUSTER --location=LOCATION) [--async]
         [--config-encryption-kms-key-arn=CONFIG_ENCRYPTION_KMS_KEY_ARN]
         [--enable-autorepair] [--iam-instance-profile=IAM_INSTANCE_PROFILE]
+        [--instance-type=INSTANCE_TYPE] [--max-surge-update=MAX_SURGE_UPDATE]
+        [--max-unavailable-update=MAX_UNAVAILABLE_UPDATE]
         [--node-version=NODE_VERSION] [--root-volume-iops=ROOT_VOLUME_IOPS]
         [--root-volume-kms-key-arn=ROOT_VOLUME_KMS_KEY_ARN]
         [--root-volume-size=ROOT_VOLUME_SIZE]
@@ -91,6 +93,33 @@ FLAGS
 
      --iam-instance-profile=IAM_INSTANCE_PROFILE
         Name or ARN of the IAM instance profile associated with the node pool.
+
+     --instance-type=INSTANCE_TYPE
+        AWS EC2 instance type for the node pool's nodes.
+
+     --max-surge-update=MAX_SURGE_UPDATE
+        Maximum number of extra (surge) nodes to be created beyond the current
+        size of the node pool during its update process. Use
+        --max-unavailable-update as well, if needed, to control the overall
+        surge settings.
+
+        To create an extra node each time the node pool is rolling updated,
+        run:
+
+            $ gcloud alpha container aws node-pools update \
+                --max-surge-update=1 --max-unavailable-update=0
+
+     --max-unavailable-update=MAX_UNAVAILABLE_UPDATE
+        Maximum number of nodes that can be simultaneously unavailable during
+        this node pool's update process. Use --max-surge-update as well, if
+        needed, to control the overall surge settings.
+
+        To modify a node pool with 6 nodes such that, 3 nodes are updated in
+        parallel (1 + 2), but keep at least 4 nodes (6 - 2) available each time
+        this node pool is rolling updated, run:
+
+            $ gcloud alpha container aws node-pools update \
+                --max-surge-update=1 --max-unavailable-update=2
 
      --node-version=NODE_VERSION
         Kubernetes version to use for the node pool.

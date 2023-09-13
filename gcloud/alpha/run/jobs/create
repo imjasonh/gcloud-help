@@ -143,19 +143,27 @@ OPTIONAL FLAGS
         Set a VPC connector for this resource.
 
      --vpc-egress=VPC_EGRESS
-        The outbound traffic to send through the VPC connector for this
-        resource. This resource must have a VPC connector to set VPC egress.
-        VPC_EGRESS must be one of:
+        Specify which of the outbound traffic to send through Direct VPC egress
+        or the VPC connector for this resource. This resource must have Direct
+        VPC egress enabled or a VPC connector to set this flag. VPC_EGRESS must
+        be one of:
 
          all
-            (DEPRECATED) Sends all outbound traffic through the VPC connector.
-            Provides the same functionality as 'all-traffic'. Prefer to use
-            'all-traffic' instead.
+            (DEPRECATED) Sends all outbound traffic through Direct VPC egress
+            or the VPC connector. Provides the same functionality as
+            'all-traffic'. Prefer to use 'all-traffic' instead.
          all-traffic
-            Sends all outbound traffic through the VPC connector.
+            Sends all outbound traffic through Direct VPC egress or the VPC
+            connector.
          private-ranges-only
-            Default option. Sends outbound traffic to private IP addresses
-            defined by RFC1918 through the VPC connector.
+            Default option. Sends outbound traffic to private IP addresses (RFC
+            1918 and Private Google Access IPs) through Direct VPC egress or
+            the VPC connector.
+
+            Traffic to other Cloud Run services might require additional
+            configuration. See
+            https://cloud.google.com/run/docs/securing/private-networking#send_requests_to_other_services_and_services
+            for more information.
 
      At most one of these can be specified:
 
