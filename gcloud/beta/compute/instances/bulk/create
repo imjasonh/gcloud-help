@@ -946,12 +946,28 @@ OPTIONAL FLAGS
      Specifies the reservation for the instance.
 
        --reservation=RESERVATION
-          The name of the reservation, required when
-          --reservation-affinity=specific.
+          The name of the reservation, required when --reservation-affinity is
+          one of: specific, specific-then-any-reservation or
+          specific-then-no-reservation.
 
        --reservation-affinity=RESERVATION_AFFINITY; default="any"
           The type of reservation for the instance. RESERVATION_AFFINITY must
-          be one of: any, none, specific.
+          be one of:
+
+           any
+              Consume any available, matching reservation.
+           none
+              Do not consume from any reserved capacity.
+           specific
+              Must consume from a specific reservation.
+           specific-then-any-reservation
+              Prefer to consume from a specific reservation, but still consume
+              any available matching reservation if the specified reservation
+              is not available or exhausted.
+           specific-then-no-reservation
+              Prefer to consume from a specific reservation, but still consume
+              from the on-demand pool if the specified reservation is not
+              available or exhausted.
 
      At most one of these can be specified:
 

@@ -1,25 +1,45 @@
 NAME
-    gcloud beta container hub namespaces list - list fleet namespaces in a
-        project
+    gcloud beta compute backend-services list-usable - list usable backend
+        services
 
 SYNOPSIS
-    gcloud beta container hub namespaces list [--filter=EXPRESSION]
-        [--limit=LIMIT] [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [--uri]
+    gcloud beta compute backend-services list-usable [BACKEND_SERVICE_NAME]
+        [--global | --region=REGION] [--filter=EXPRESSION] [--limit=LIMIT]
+        [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [--uri]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (BETA) This command can fail for the following reasons:
-      ▪ The project specified does not exist.
-      ▪ The user does not have access to the project specified.
+    (BETA) $ gcloud beta compute backend-services list-usable retrieves the
+    list of backend service resources in the specified project for which you
+    have compute.backendService.get and compute.backendService.use permissions.
+    This command is useful when you're creating load balancers in a Shared VPC
+    environment and you want to use cross-project service referencing
+    (https://cloud.google.com/load-balancing/docs/https#cross-project). You can
+    use this command to find out which backend services in other projects are
+    available to you for referencing.
 
 EXAMPLES
-    The following command lists namespaces in the active project:
+    To list all global backend services in a project, run:
 
-        $ gcloud beta container hub namespaces list
+        $ gcloud beta compute backend-services list-usable --global
 
-    The following command lists namespaces in project PROJECT_ID:
+    To list all backend services in a region, run:
 
-        $ gcloud beta container hub namespaces list --project=PROJECT_ID
+        $ gcloud beta compute backend-services list-usable --region=REGION
+
+POSITIONAL ARGUMENTS
+     [BACKEND_SERVICE_NAME]
+        Name of the backend service to operate on.
+
+FLAGS
+     At most one of these can be specified:
+
+       --global
+          If set, the backend service is global.
+
+       --region=REGION
+          Region of the backend service to operate on. Overrides the default
+          compute/region property value for this command invocation.
 
 LIST COMMAND FLAGS
      --filter=EXPRESSION
@@ -65,5 +85,5 @@ NOTES
     This command is currently in beta and might change without notice. This
     variant is also available:
 
-        $ gcloud alpha container hub namespaces list
+        $ gcloud alpha compute backend-services list-usable
 

@@ -26,22 +26,22 @@ SYNOPSIS
           --add-custom-audiences=[CUSTOM-AUDIENCES,...]
           | --clear-custom-audiences
           | --remove-custom-audiences=[CUSTOM-AUDIENCES,...]
-          | --set-custom-audiences=[CUSTOM-AUDIENCES,...]
-          --binary-authorization=POLICY
-          | --clear-binary-authorization --clear-encryption-key-shutdown-hours
-          | --encryption-key-shutdown-hours=ENCRYPTION_KEY_SHUTDOWN_HOURS
-          --clear-key | --key=KEY --clear-network
-          | --network=NETWORK --subnet=SUBNET --clear-network-tags
-          | --network-tags=[TAG,...] --clear-post-key-revocation-action-type
-          | --post-key-revocation-action-type=POST_KEY_REVOCATION_ACTION_TYPE
-          --container=CONTAINER | --args=[ARG,...] --command=[COMMAND,...]
-          --cpu=CPU
+          | --set-custom-audiences=[CUSTOM-AUDIENCES,...] --args=[ARG,...]
+          --command=[COMMAND,...] --cpu=CPU
           --memory=MEMORY --port=PORT --[no-]use-http2 --clear-env-vars
           | --env-vars-file=FILE_PATH | --set-env-vars=[KEY=VALUE,...]
           | --remove-env-vars=[KEY,...]
           --update-env-vars=[KEY=VALUE,...] --clear-secrets
           | --set-secrets=[KEY=VALUE,...] | --remove-secrets=[KEY,...]
-          --update-secrets=[KEY=VALUE,...] --image=IMAGE | --source=SOURCE]
+          --update-secrets=[KEY=VALUE,...] --image=IMAGE | --source=SOURCE
+          | --container=CONTAINER
+          --remove-containers=[CONTAINERS,...] --binary-authorization=POLICY
+          | --clear-binary-authorization --clear-encryption-key-shutdown-hours
+          | --encryption-key-shutdown-hours=ENCRYPTION_KEY_SHUTDOWN_HOURS
+          --clear-key | --key=KEY --clear-network
+          | --network=NETWORK --subnet=SUBNET --clear-network-tags
+          | --network-tags=[TAG,...] --clear-post-key-revocation-action-type
+          | --post-key-revocation-action-type=POST_KEY_REVOCATION_ACTION_TYPE]
         [--region=REGION
           | --cluster=CLUSTER --cluster-location=CLUSTER_LOCATION
           | --context=CONTEXT --kubeconfig=KUBECONFIG] [GCLOUD_WIDE_FLAG ...]
@@ -378,80 +378,6 @@ FLAGS
             Completely replace the current custom audiences with the given
             values.
 
-       At most one of these can be specified:
-
-         --binary-authorization=POLICY
-            Binary Authorization policy to check against. This must be set to
-            "default".
-
-         --clear-binary-authorization
-            Remove any previously set Binary Authorization policy.
-
-       At most one of these can be specified:
-
-         --clear-encryption-key-shutdown-hours
-            Remove any previously set CMEK key shutdown hours setting.
-
-         --encryption-key-shutdown-hours=ENCRYPTION_KEY_SHUTDOWN_HOURS
-            The number of hours to wait before an automatic shutdown server
-            after CMEK key revocation is detected.
-
-       At most one of these can be specified:
-
-         --clear-key
-            Remove any previously set CMEK key reference.
-
-         --key=KEY
-            CMEK key reference to encrypt the container with.
-
-       At most one of these can be specified:
-
-         --clear-network
-            Disconnect this Cloud Run service from the VPC network it is
-            connected to.
-
-         Direct VPC egress setting flags group.
-
-           --network=NETWORK
-              The VPC network that the Cloud Run service will be able to send
-              traffic to. If --subnet is also specified, subnet must be a
-              subnetwork of the network specified by this --network flag. To
-              clear existing VPC network settings, use --clear-network.
-
-           --subnet=SUBNET
-              The VPC subnetwork that the Cloud Run service will get IPs from.
-              The subnetwork must be /26 or larger. If --network is also
-              specified, subnet must be a subnetwork of the network specified
-              by the --network flag. If --network is not specified, network
-              will be looked up from this subnetwork. To clear existing VPC
-              network settings, use --clear-network.
-
-           At most one of these can be specified:
-
-             --clear-network-tags
-                Clears all existing Compute Engine tags from the Cloud Run
-                service.
-
-             --network-tags=[TAG,...]
-                Applies the given Compute Engine tags (comma separated) to the
-                Cloud Run service. To clear existing tags, use
-                --clear-network-tags.
-
-       At most one of these can be specified:
-
-         --clear-post-key-revocation-action-type
-            Remove any previously set post CMEK key revocation action type.
-
-         --post-key-revocation-action-type=POST_KEY_REVOCATION_ACTION_TYPE
-            Action type after CMEK key revocation.
-            POST_KEY_REVOCATION_ACTION_TYPE must be one of:
-
-             prevent-new
-                No new instances will be started after CMEK key revocation.
-             shut-down
-                No new instances will be started and the existing instances
-                will be shut down after CMEK key revocation.
-
          Container Flags
 
          If the --container flag is not specified, container flags apply to the
@@ -464,130 +390,205 @@ FLAGS
          $ gcloud alpha run deploy --container=A --image=IMAGE-A \
            --container=B --image=IMAGE-B
 
-           --container=CONTAINER
-              Specifies a container by name. The following container flags
-              apply to the specified container.
+          If the --container or --remove-containers flag is specified the following
+          arguments may only be specified after a --container flag.
 
-              If the --container flag is specified the following arguments may only be
-              specified after a --container flag.
+            --args=[ARG,...]
+               Comma-separated arguments passed to the command run by the
+               container image. If not specified and no '--command' is
+               provided, the container image's default Cmd is used. Otherwise,
+               if not specified, no arguments are passed. To reset this field
+               to its default, pass an empty string.
 
-               --args=[ARG,...]
-                  Comma-separated arguments passed to the command run by the
-                  container image. If not specified and no '--command' is
-                  provided, the container image's default Cmd is used.
-                  Otherwise, if not specified, no arguments are passed. To
-                  reset this field to its default, pass an empty string.
+            --command=[COMMAND,...]
+               Entrypoint for the container image. If not specified, the
+               container image's default Entrypoint is run. To reset this field
+               to its default, pass an empty string.
 
-               --command=[COMMAND,...]
-                  Entrypoint for the container image. If not specified, the
-                  container image's default Entrypoint is run. To reset this
-                  field to its default, pass an empty string.
+            --cpu=CPU
+               Set a CPU limit in Kubernetes cpu units.
 
-               --cpu=CPU
-                  Set a CPU limit in Kubernetes cpu units.
+               Cloud Run (fully managed) supports values 1, 2 and 4. For Cloud
+               Run (fully managed), 4 cpus also requires a minimum 2Gi --memory
+               value. Examples 2, 2.0, 2000m
 
-                  Cloud Run (fully managed) supports values 1, 2 and 4. For
-                  Cloud Run (fully managed), 4 cpus also requires a minimum 2Gi
-                  --memory value. Examples 2, 2.0, 2000m
+               Cloud Run for Anthos and Knative-compatible Kubernetes clusters
+               support fractional values. Examples .5, 500m, 2
 
-                  Cloud Run for Anthos and Knative-compatible Kubernetes
-                  clusters support fractional values. Examples .5, 500m, 2
+            --memory=MEMORY
+               Set a memory limit. Ex: 1024Mi, 4Gi.
 
-               --memory=MEMORY
-                  Set a memory limit. Ex: 1024Mi, 4Gi.
+            --port=PORT
+               Container port to receive requests at. Also sets the $PORT
+               environment variable. Must be a number between 1 and 65535,
+               inclusive. To unset this field, pass the special value
+               "default". If updating an existing service with a TCP startup
+               probe pointing to the previous container port, this will also
+               update the probe port.
 
-               --port=PORT
-                  Container port to receive requests at. Also sets the $PORT
-                  environment variable. Must be a number between 1 and 65535,
-                  inclusive. To unset this field, pass the special value
-                  "default". If updating an existing service with a TCP startup
-                  probe pointing to the previous container port, this will also
-                  update the probe port.
+            --[no-]use-http2
+               Whether to use HTTP/2 for connections to the service. Use
+               --use-http2 to enable and --no-use-http2 to disable.
 
-               --[no-]use-http2
-                  Whether to use HTTP/2 for connections to the service. Use
-                  --use-http2 to enable and --no-use-http2 to disable.
+            At most one of these can be specified:
 
-               At most one of these can be specified:
+              --clear-env-vars
+                 Remove all environment variables.
 
-                 --clear-env-vars
-                    Remove all environment variables.
+              --env-vars-file=FILE_PATH
+                 Path to a local YAML file with definitions for all environment
+                 variables. All existing environment variables will be removed
+                 before the new environment variables are added. Example YAML
+                 content:
 
-                 --env-vars-file=FILE_PATH
-                    Path to a local YAML file with definitions for all
-                    environment variables. All existing environment variables
-                    will be removed before the new environment variables are
-                    added. Example YAML content:
+                     KEY_1: "value1"
+                     KEY_2: "value 2"
 
-                        KEY_1: "value1"
-                        KEY_2: "value 2"
+              --set-env-vars=[KEY=VALUE,...]
+                 List of key-value pairs to set as environment variables. All
+                 existing environment variables will be removed first.
 
-                 --set-env-vars=[KEY=VALUE,...]
-                    List of key-value pairs to set as environment variables.
-                    All existing environment variables will be removed first.
+              Only --update-env-vars and --remove-env-vars can be used
+              together. If both are specified, --remove-env-vars will be
+              applied first.
 
-                 Only --update-env-vars and --remove-env-vars can be used
-                 together. If both are specified, --remove-env-vars will be
-                 applied first.
+                --remove-env-vars=[KEY,...]
+                   List of environment variables to be removed.
 
-                   --remove-env-vars=[KEY,...]
-                      List of environment variables to be removed.
+                --update-env-vars=[KEY=VALUE,...]
+                   List of key-value pairs to set as environment variables.
 
-                   --update-env-vars=[KEY=VALUE,...]
-                      List of key-value pairs to set as environment variables.
+            Specify secrets to mount or provide as environment variables. Keys
+            starting with a forward slash '/' are mount paths. All other keys
+            correspond to environment variables. Values should be in the form
+            SECRET_NAME:SECRET_VERSION. For example:
+            '--update-secrets=/secrets/api/key=mysecret:latest,ENV=othersecret:1'
+            will mount a volume at '/secrets/api' containing a file 'key' with
+            the latest version of secret 'mysecret'. An environment variable
+            named ENV will also be created whose value is version 1 of secret
+            'othersecret'.
 
-               Specify secrets to mount or provide as environment variables.
-               Keys starting with a forward slash '/' are mount paths. All
-               other keys correspond to environment variables. Values should be
-               in the form SECRET_NAME:SECRET_VERSION. For example:
-               '--update-secrets=/secrets/api/key=mysecret:latest,ENV=othersecret:1'
-               will mount a volume at '/secrets/api' containing a file 'key'
-               with the latest version of secret 'mysecret'. An environment
-               variable named ENV will also be created whose value is version 1
-               of secret 'othersecret'.
+            At most one of these can be specified:
 
-               At most one of these can be specified:
+              --clear-secrets
+                 Remove all secrets.
 
-                 --clear-secrets
-                    Remove all secrets.
+              --set-secrets=[KEY=VALUE,...]
+                 List of key-value pairs to set as secrets. All existing
+                 secrets will be removed first.
 
-                 --set-secrets=[KEY=VALUE,...]
-                    List of key-value pairs to set as secrets. All existing
-                    secrets will be removed first.
+              Only --update-secrets and --remove-secrets can be used together.
+              If both are specified, --remove-secrets will be applied first.
 
-                 Only --update-secrets and --remove-secrets can be used
-                 together. If both are specified, --remove-secrets will be
-                 applied first.
+                --remove-secrets=[KEY,...]
+                   List of secrets to be removed.
 
-                   --remove-secrets=[KEY,...]
-                      List of secrets to be removed.
+                --update-secrets=[KEY=VALUE,...]
+                   List of key-value pairs to set as secrets.
 
-                   --update-secrets=[KEY=VALUE,...]
-                      List of key-value pairs to set as secrets.
+            At most one of these can be specified:
 
-               At most one of these can be specified:
+              --image=IMAGE
+                 Name of the container image to deploy (e.g.
+                 gcr.io/cloudrun/hello:latest).
 
-                 --image=IMAGE
-                    Name of the container image to deploy (e.g.
-                    gcr.io/cloudrun/hello:latest).
+              --source=SOURCE
+                 The location of the source to build. If a Dockerfile is
+                 present in the source code directory, it will be built using
+                 that Dockerfile, otherwise it will use Google Cloud
+                 buildpacks. See
+                 https://cloud.google.com/run/docs/deploying-source-code for
+                 more details. The location can be a directory on a local disk
+                 or a gzipped archive file (.tar.gz) in Google Cloud Storage.
+                 If the source is a local directory, this command skips the
+                 files specified in the --ignore-file. If --ignore-file is not
+                 specified, use .gcloudignore file. If a .gcloudignore file is
+                 absent and a .gitignore file is present in the local source
+                 directory, gcloud will use a generated Git-compatible
+                 .gcloudignore file that respects your .gitignored files. The
+                 global .gitignore is not respected. For more information on
+                 .gcloudignore, see gcloud topic gcloudignore.
 
-                 --source=SOURCE
-                    The location of the source to build. If a Dockerfile is
-                    present in the source code directory, it will be built
-                    using that Dockerfile, otherwise it will use Google Cloud
-                    buildpacks. See
-                    https://cloud.google.com/run/docs/deploying-source-code for
-                    more details. The location can be a directory on a local
-                    disk or a gzipped archive file (.tar.gz) in Google Cloud
-                    Storage. If the source is a local directory, this command
-                    skips the files specified in the --ignore-file. If
-                    --ignore-file is not specified, use .gcloudignore file. If
-                    a .gcloudignore file is absent and a .gitignore file is
-                    present in the local source directory, gcloud will use a
-                    generated Git-compatible .gcloudignore file that respects
-                    your .gitignored files. The global .gitignore is not
-                    respected. For more information on .gcloudignore, see
-                    gcloud topic gcloudignore.
+        --container=CONTAINER
+           Specifies a container by name. The following container flags apply
+           to the specified container.
+
+        --remove-containers=[CONTAINERS,...]
+           List of containers to remove.
+
+      At most one of these can be specified:
+
+        --binary-authorization=POLICY
+           Binary Authorization policy to check against. This must be set to
+           "default".
+
+        --clear-binary-authorization
+           Remove any previously set Binary Authorization policy.
+
+      At most one of these can be specified:
+
+        --clear-encryption-key-shutdown-hours
+           Remove any previously set CMEK key shutdown hours setting.
+
+        --encryption-key-shutdown-hours=ENCRYPTION_KEY_SHUTDOWN_HOURS
+           The number of hours to wait before an automatic shutdown server
+           after CMEK key revocation is detected.
+
+      At most one of these can be specified:
+
+        --clear-key
+           Remove any previously set CMEK key reference.
+
+        --key=KEY
+           CMEK key reference to encrypt the container with.
+
+      At most one of these can be specified:
+
+        --clear-network
+           Disconnect this Cloud Run service from the VPC network it is
+           connected to.
+
+        Direct VPC egress setting flags group.
+
+          --network=NETWORK
+             The VPC network that the Cloud Run service will be able to send
+             traffic to. If --subnet is also specified, subnet must be a
+             subnetwork of the network specified by this --network flag. To
+             clear existing VPC network settings, use --clear-network.
+
+          --subnet=SUBNET
+             The VPC subnetwork that the Cloud Run service will get IPs from.
+             The subnetwork must be /26 or larger. If --network is also
+             specified, subnet must be a subnetwork of the network specified by
+             the --network flag. If --network is not specified, network will be
+             looked up from this subnetwork. To clear existing VPC network
+             settings, use --clear-network.
+
+          At most one of these can be specified:
+
+            --clear-network-tags
+               Clears all existing Compute Engine tags from the Cloud Run
+               service.
+
+            --network-tags=[TAG,...]
+               Applies the given Compute Engine tags (comma separated) to the
+               Cloud Run service. To clear existing tags, use
+               --clear-network-tags.
+
+      At most one of these can be specified:
+
+        --clear-post-key-revocation-action-type
+           Remove any previously set post CMEK key revocation action type.
+
+        --post-key-revocation-action-type=POST_KEY_REVOCATION_ACTION_TYPE
+           Action type after CMEK key revocation.
+           POST_KEY_REVOCATION_ACTION_TYPE must be one of:
+
+            prevent-new
+               No new instances will be started after CMEK key revocation.
+            shut-down
+               No new instances will be started and the existing instances will
+               be shut down after CMEK key revocation.
 
      Arguments to locate resources, depending on the platform used.
 
@@ -609,35 +610,36 @@ FLAGS
          but can be set in other ways.
 
          To set the project attribute:
-          ▫ provide the argument --cluster on the command line with a fully
-            specified name;
-          ▫ set the property run/cluster with a fully specified name;
-          ▫ specify the cluster from a list of available clusters with a
-            fully specified name;
-          ▫ provide the argument --project on the command line;
-          ▫ set the property core/project.
+         ▸ provide the argument --cluster on the command line with a fully
+           specified name;
+         ▸ set the property run/cluster with a fully specified name;
+         ▸ specify the cluster from a list of available clusters with a fully
+           specified name;
+         ▸ provide the argument --project on the command line;
+         ▸ set the property core/project.
 
-           --cluster=CLUSTER
-              ID of the cluster or fully qualified identifier for the cluster.
+             --cluster=CLUSTER
+                ID of the cluster or fully qualified identifier for the
+                cluster.
 
-              To set the cluster attribute:
-              ◇ provide the argument --cluster on the command line;
-              ◇ set the property run/cluster;
-              ◇ specify the cluster from a list of available clusters.
+                To set the cluster attribute:
+             ▫ provide the argument --cluster on the command line;
+             ▫ set the property run/cluster;
+             ▫ specify the cluster from a list of available clusters.
 
-           --cluster-location=CLUSTER_LOCATION
-              Zone in which the cluster is located. Alternatively, set the
-              property [run/cluster_location].
+             --cluster-location=CLUSTER_LOCATION
+                Zone in which the cluster is located. Alternatively, set the
+                property [run/cluster_location].
 
-              To set the location attribute:
-              ◇ provide the argument --cluster on the command line with a
-                fully specified name;
-              ◇ set the property run/cluster with a fully specified name;
-              ◇ specify the cluster from a list of available clusters with a
-                fully specified name;
-              ◇ provide the argument --cluster-location on the command line;
-              ◇ set the property run/cluster_location;
-              ◇ specify the cluster location from a list of available zones.
+                To set the location attribute:
+             ▫ provide the argument --cluster on the command line with a
+               fully specified name;
+             ▫ set the property run/cluster with a fully specified name;
+             ▫ specify the cluster from a list of available clusters with a
+               fully specified name;
+             ▫ provide the argument --cluster-location on the command line;
+             ▫ set the property run/cluster_location;
+             ▫ specify the cluster location from a list of available zones.
 
        Only applicable if connecting to Cloud Run for Anthos deployed on
        VMware. Specify --platform=kubernetes to use:

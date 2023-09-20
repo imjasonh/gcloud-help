@@ -12,7 +12,8 @@ SYNOPSIS
           : --web-sso-additional-scopes=[WEB_SSO_ADDITIONAL_SCOPES,...])
         [--async] [--attribute-condition=ATTRIBUTE_CONDITION]
         [--client-secret-value=CLIENT_SECRET_VALUE] [--description=DESCRIPTION]
-        [--disabled] [--display-name=DISPLAY_NAME] [GCLOUD_WIDE_FLAG ...]
+        [--disabled] [--display-name=DISPLAY_NAME]
+        [--jwk-json-path=JWK_JSON_PATH] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) Create a new OIDC workforce pool provider.
@@ -33,7 +34,8 @@ EXAMPLES
             --issuer-uri="https://test-idp.com" \
             --web-sso-response-type="code" \
             --web-sso-assertion-claims-behavior="merge-user-info-over-id-tok\
-        en-claims" --web-sso-additional-scopes="groups,photos"
+        en-claims" --web-sso-additional-scopes="groups,photos" \
+            --jwk-json-path="path/to/jwk.json"
 
 POSITIONAL ARGUMENTS
      Workforce pool provider resource - The workforce pool provider to create.
@@ -243,6 +245,26 @@ OPTIONAL FLAGS
      --display-name=DISPLAY_NAME
         A display name for the workforce pool provider. Cannot exceed 32
         characters in length.
+
+     --jwk-json-path=JWK_JSON_PATH
+        Optional file containing JSON Web Key (JWK) public keys. The file
+        format must follow JWK specifications
+        (https://www.rfc-editor.org/rfc/rfc7517#section-4). Example file
+        format:            {
+              "keys": [
+                 {
+                      "kty": "RSA/EC",
+                      "alg": "<algorithm>",
+                      "use": "sig",
+                      "kid": "<key-id>",
+                      "n": "",
+                      "e": "",
+                      "x": "",
+                      "y": "",
+                      "crv": ""
+                 }
+              ]
+            }
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

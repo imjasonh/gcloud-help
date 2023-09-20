@@ -8,7 +8,7 @@ SYNOPSIS
         [--async] [--attribute-condition=ATTRIBUTE_CONDITION]
         [--attribute-mapping=[KEY=VALUE,...]] [--client-id=CLIENT_ID]
         [--description=DESCRIPTION] [--disabled] [--display-name=DISPLAY_NAME]
-        [--issuer-uri=ISSUER_URI]
+        [--issuer-uri=ISSUER_URI] [--jwk-json-path=JWK_JSON_PATH]
         [--web-sso-additional-scopes=[WEB_SSO_ADDITIONAL_SCOPES,...]]
         [--web-sso-assertion-claims-behavior=WEB_SSO_ASSERTION_CLAIMS_BEHAVIOR]
         [--web-sso-response-type=WEB_SSO_RESPONSE_TYPE]
@@ -34,7 +34,8 @@ EXAMPLES
             --issuer-uri="https://test-idp.com" \
             --web-sso-response-type="code" \
             --web-sso-assertion-claims-behavior="merge-user-info-over-id-tok\
-        en-claims" --web-sso-additional-scopes="groups,photos"
+        en-claims" --web-sso-additional-scopes="groups,photos" \
+            --jwk-json-path="path/to/jwk.json"
 
 POSITIONAL ARGUMENTS
      Workforce pool provider resource - The workforce pool provider to update.
@@ -194,6 +195,26 @@ FLAGS
 
      --issuer-uri=ISSUER_URI
         The OIDC issuer URI. Must be a valid URI using the 'https' scheme.
+
+     --jwk-json-path=JWK_JSON_PATH
+        Optional file containing JSON Web Key (JWK) public keys. The file
+        format must follow JWK specifications
+        (https://www.rfc-editor.org/rfc/rfc7517#section-4). Example file
+        format:            {
+              "keys": [
+                 {
+                      "kty": "RSA/EC",
+                      "alg": "<algorithm>",
+                      "use": "sig",
+                      "kid": "<key-id>",
+                      "n": "",
+                      "e": "",
+                      "x": "",
+                      "y": "",
+                      "crv": ""
+                 }
+              ]
+            }
 
      --web-sso-additional-scopes=[WEB_SSO_ADDITIONAL_SCOPES,...]
         Additional scopes to request for the OIDC authentication on top of
