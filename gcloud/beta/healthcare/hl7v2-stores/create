@@ -5,7 +5,8 @@ NAME
 SYNOPSIS
     gcloud beta healthcare hl7v2-stores create
         (HL7V2_STORE : --dataset=DATASET --location=LOCATION)
-        [--pubsub-topic=PUBSUB_TOPIC] [GCLOUD_WIDE_FLAG ...]
+        [--parser-version=PARSER_VERSION] [--pubsub-topic=PUBSUB_TOPIC]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) Create a Cloud Healthcare API HL7v2 store.
@@ -65,6 +66,32 @@ POSITIONAL ARGUMENTS
           ▸ set the property healthcare/location.
 
 FLAGS
+     --parser-version=PARSER_VERSION
+        Immutable. Determines the version of both the default parser to be used
+        when schema
+        (https://cloud.google.com/healthcare-api/docs/reference/rest/v1/projects.locations.datasets.hl7V2Stores#ParserConfig.FIELDS.schema)
+        is not given, as well as the schematized parser used when schema
+        (https://cloud.google.com/healthcare-api/docs/reference/rest/v1/projects.locations.datasets.hl7V2Stores#ParserConfig.FIELDS.schema)
+        is specified. This field is immutable after HL7v2 store creation.
+        PARSER_VERSION must be one of:
+
+         v1
+            The parsedData includes every given non-empty message field except
+            the Field Separator (MSH-1) field. As a result, the parsed MSH
+            segment starts with the MSH-2 field and the field numbers are
+            off-by-one with respect to the HL7 standard.
+         v2
+            The parsedData includes every given non-empty message field.
+
+         v3
+            This version is the same as V2, with the following change. The
+            parsedData contains unescaped escaped field separators, component
+            separators, sub-component separators, repetition separators, escape
+            characters, and truncation characters. If schema
+            (https://cloud.google.com/healthcare-api/docs/reference/rest/v1/projects.locations.datasets.hl7V2Stores#ParserConfig.FIELDS.schema)
+            is specified, the schematized parser uses improved parsing
+            heuristics compared to previous versions.
+
      --pubsub-topic=PUBSUB_TOPIC
         A Google Cloud Pub/Sub topic name for notifications.
 

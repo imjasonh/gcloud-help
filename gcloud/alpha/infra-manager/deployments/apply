@@ -11,8 +11,8 @@ SYNOPSIS
         [--worker-pool=WORKER_POOL]
         [--gcs-source=GCS_SOURCE | --git-source-directory=GIT_SOURCE_DIRECTORY
           --git-source-ref=GIT_SOURCE_REF --git-source-repo=GIT_SOURCE_REPO
-          | --ignore-file=IGNORE_FILE --local-source=LOCAL_SOURCE
-          --stage-bucket=STAGE_BUCKET --input-values=[KEY=VALUE,...]
+          | --ignore-file=IGNORE_FILE
+          --local-source=LOCAL_SOURCE --input-values=[KEY=VALUE,...]
           | --inputs-file=INPUTS_FILE] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -205,26 +205,6 @@ FLAGS
                   projects/p1/location/us-central1/deployments/my-deployment \
                   --local-source="./path/to/blueprint"
 
-       --stage-bucket=STAGE_BUCKET
-          Use in conjunction with --local-source to specify a destination
-          storage bucket for uploading local files.
-
-          If unspecified, the bucket defaults to gs://PROJECT_NAME_blueprints.
-          Uploaded content will appear in the source object under a name
-          comprised of the timestamp and a UUID. The final output destination
-          looks like this:
-          gs://BUCKET/source/1615850562.234312-044e784992744951b0cd71c0b011edce/
-
-          Examples:
-
-          Create a deployment from a local storage path ./path/to/blueprint and
-          stage-bucket gs://my-bucket:
-
-              $ gcloud alpha infra-manager deployments apply \
-                  projects/p1/location/us-central1/deployments/my-deployment \
-                  --local-source="./path/to/blueprint" \
-                  --stage-bucket="gs://my-bucket"
-
      At most one of these can be specified:
 
        --input-values=[KEY=VALUE,...]
@@ -265,5 +245,7 @@ NOTES
     This command is currently in alpha and might change without notice. If this
     command fails with API permission errors despite specifying the correct
     project, you might be trying to access an API with an invitation-only early
-    access allowlist.
+    access allowlist. This variant is also available:
+
+        $ gcloud infra-manager deployments apply
 

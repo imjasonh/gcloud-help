@@ -4,9 +4,10 @@ NAME
 
 SYNOPSIS
     gcloud vmware private-clouds clusters update
-        (CLUSTER : --location=LOCATION --private-cloud=PRIVATE_CLOUD)
-        --node-type-config=[count=COUNT],
-          [custom-core-count=CUSTOM-CORE-COUNT],[type=TYPE] [--async]
+        (CLUSTER : --location=LOCATION --private-cloud=PRIVATE_CLOUD) [--async]
+        [--node-type-config=[[count=COUNT],[type=TYPE],...]]
+        [--remove-nodes-config=TYPE]
+        [--update-nodes-config=[count=COUNT],[type=TYPE]]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -16,18 +17,18 @@ DESCRIPTION
 
 EXAMPLES
     To resize a cluster called my-cluster in private cloud my-private-cloud and
-    zone us-west2-a to have 3 nodes, run:
+    zone us-west2-a to have 3 nodes of type standard-72, run:
 
         $ gcloud vmware private-clouds clusters update my-cluster \
             --location=us-west2-a --project=my-project \
             --private-cloud=my-private-cloud \
-            --node-type-config=type=standard-72,count=3
+            --update-nodes-config=type=standard-72,count=3
 
         Or:
 
         $ gcloud vmware private-clouds clusters update my-cluster \
             --private-cloud=my-private-cloud \
-            --node-type-config=type=standard-72,count=3
+            --update-nodes-config=type=standard-72,count=3
 
         In the second example, the project and location are taken from gcloud properties core/project and compute/zone.
 
@@ -70,25 +71,35 @@ POSITIONAL ARGUMENTS
             specified name;
           ▸ provide the argument --private-cloud on the command line.
 
-REQUIRED FLAGS
-     --node-type-config=[count=COUNT],[custom-core-count=CUSTOM-CORE-COUNT],[type=TYPE]
+FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete. The default is True. Enabled by default, use --no-async to
+        disable.
+
+     --node-type-config=[[count=COUNT],[type=TYPE],...]
+        (DEPRECATED) Information about the type and number of nodes associated
+        with the cluster.
+
+            type (required): canonical identifier of the node type.
+
+            count (required): number of nodes of this type in the cluster.
+
+            custom_core_count: can be passed, but the value will be ignored. Updating custom core count is not supported.
+
+        The --node-type-config option is deprecated; please use
+        --update-nodes-config and --remove-nodes-config instead.
+
+     --remove-nodes-config=TYPE
+        Type of node that should be removed from the cluster
+
+     --update-nodes-config=[count=COUNT],[type=TYPE]
         Information about the type and number of nodes associated with the
         cluster.
 
         type (required): canonical identifier of the node type.
 
         count (required): number of nodes of this type in the cluster.
-
-        custom-core-count (optional): customized number of cores available to
-        each node of the type. To get a list of valid values for your node
-        type, run the gcloud vmware node-types describe command and reference
-        the availableCustomCoreCounts field in the output.
-
-OPTIONAL FLAGS
-     --async
-        Return immediately, without waiting for the operation in progress to
-        complete. The default is True. Enabled by default, use --no-async to
-        disable.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
