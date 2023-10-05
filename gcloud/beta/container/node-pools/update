@@ -10,6 +10,7 @@ SYNOPSIS
           | --network-performance-configs=[PROPERTY=VALUE,...]
           | --node-labels=[NODE_LABEL,...] | --node-locations=ZONE,[ZONE,...]
           | --node-taints=[NODE_TAINT,...]
+          | --resource-manager-tags=[KEY=VALUE,...]
           | --system-config-from-file=SYSTEM_CONFIG_FROM_FILE
           | --tags=[TAG,...] | --windows-os-version=WINDOWS_OS_VERSION
           | --workload-metadata=WORKLOAD_METADATA | --enable-blue-green-upgrade
@@ -144,6 +145,29 @@ REQUIRED FLAGS
 
           To read more about node-taints, see
           https://cloud.google.com/kubernetes-engine/docs/node-taints.
+
+       --resource-manager-tags=[KEY=VALUE,...]
+          Replaces all the user specified resource manager tags on all nodes in
+          an existing standard or auto-provisioned node pool in a Standard
+          cluster with the given comma-separated resource manager tags that has
+          the GCE_FIREWALL purpose.
+
+          Examples:
+
+              $ gcloud beta container node-pools update example-node-pool \
+                  --resource-manager-tags=tagKeys/1234=tagValues/2345
+              $ gcloud beta container node-pools update example-node-pool \
+                  --resource-manager-tags=my-project/key1=value1
+              $ gcloud beta container node-pools update example-node-pool \
+                  --resource-manager-tags=12345/key1=value1,23456/key2=value2
+              $ gcloud beta container node-pools update example-node-pool \
+                  --resource-manager-tags=
+
+          All nodes, including nodes that are resized or re-created, will have
+          the specified tags on the corresponding Instance object in the
+          Compute Engine API. You can reference these tags in network firewall
+          policy rules. For instructions, see
+          https://cloud.google.com/firewall/docs/use-tags-for-firewalls.
 
        --system-config-from-file=SYSTEM_CONFIG_FROM_FILE
           Path of the YAML/JSON file that contains the node configuration,

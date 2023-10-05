@@ -36,8 +36,9 @@ SYNOPSIS
         [--node-taints=[NODE_TAINT,...]] [--node-version=NODE_VERSION]
         [--num-nodes=NUM_NODES; default=3]
         [--placement-policy=PLACEMENT_POLICY] [--placement-type=PLACEMENT_TYPE]
-        [--preemptible] [--sandbox=[type=TYPE]]
-        [--shielded-integrity-monitoring] [--shielded-secure-boot]
+        [--preemptible] [--resource-manager-tags=[KEY=VALUE,...]]
+        [--sandbox=[type=TYPE]] [--shielded-integrity-monitoring]
+        [--shielded-secure-boot]
         [--sole-tenant-node-affinity-file=SOLE_TENANT_NODE_AFFINITY_FILE]
         [--spot]
         [--standard-rollout-policy=[batch-node-count=BATCH_NODE_COUNT,
@@ -515,6 +516,27 @@ FLAGS
         preemptible VM instances. See
         https://cloud.google.com/kubernetes-engine/docs/preemptible-vm for more
         information on how to use Preemptible VMs with Kubernetes Engine.
+
+     --resource-manager-tags=[KEY=VALUE,...]
+        Applies the specified comma-separated resource manager tags that has
+        the GCE_FIREWALL purpose to all nodes in the new node pool.
+
+        Examples:
+
+            $ gcloud beta container node-pools create example-node-pool \
+                --resource-manager-tags=tagKeys/1234=tagValues/2345
+            $ gcloud beta container node-pools create example-node-pool \
+                --resource-manager-tags=my-project/key1=value1
+            $ gcloud beta container node-pools create example-node-pool \
+                --resource-manager-tags=12345/key1=value1,23456/key2=value2
+            $ gcloud beta container node-pools create example-node-pool \
+                --resource-manager-tags=
+
+        All nodes, including nodes that are resized or re-created, will have
+        the specified tags on the corresponding Instance object in the Compute
+        Engine API. You can reference these tags in network firewall policy
+        rules. For instructions, see
+        https://cloud.google.com/firewall/docs/use-tags-for-firewalls.
 
      --sandbox=[type=TYPE]
         Enables the requested sandbox on all nodes in the node pool.

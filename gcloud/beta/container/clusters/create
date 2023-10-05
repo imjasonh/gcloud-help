@@ -11,6 +11,7 @@ SYNOPSIS
           max-shared-clients-per-gpu=MAX_SHARED_CLIENTS_PER_GPU],...]]
         [--addons=[ADDON,...]] [--allow-route-overlap] [--async]
         [--autoprovisioning-network-tags=TAGS,[TAGS,...]]
+        [--autoprovisioning-resource-manager-tags=[KEY=VALUE,...]]
         [--autoscaling-profile=AUTOSCALING_PROFILE]
         [--boot-disk-kms-key=BOOT_DISK_KMS_KEY]
         [--cloud-run-config=[load-balancer-type=EXTERNAL,...]]
@@ -60,9 +61,9 @@ SYNOPSIS
         [--placement-policy=PLACEMENT_POLICY] [--placement-type=PLACEMENT_TYPE]
         [--preemptible] [--private-endpoint-subnetwork=NAME]
         [--private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE]
-        [--release-channel=CHANNEL] [--security-group=SECURITY_GROUP]
-        [--security-posture=SECURITY_POSTURE] [--services-ipv4-cidr=CIDR]
-        [--services-secondary-range-name=NAME]
+        [--release-channel=CHANNEL] [--resource-manager-tags=[KEY=VALUE,...]]
+        [--security-group=SECURITY_GROUP] [--security-posture=SECURITY_POSTURE]
+        [--services-ipv4-cidr=CIDR] [--services-secondary-range-name=NAME]
         [--shielded-integrity-monitoring] [--shielded-secure-boot] [--spot]
         [--stack-type=STACK_TYPE] [--subnetwork=SUBNETWORK]
         [--system-config-from-file=SYSTEM_CONFIG_FROM_FILE]
@@ -222,6 +223,31 @@ FLAGS
         instance object and can be used in firewall rules. See
         https://cloud.google.com/sdk/gcloud/reference/compute/firewall-rules/create
         for examples.
+
+     --autoprovisioning-resource-manager-tags=[KEY=VALUE,...]
+        Applies the specified comma-separated resource manager tags that has
+        the GCE_FIREWALL purpose to all nodes in the new Autopilot cluster or
+        all auto-provisioned nodes in the new Standard cluster.
+
+        Examples:
+
+            $ gcloud beta container clusters create example-cluster \
+                --autoprovisioning-resource-manager-tags=tagKeys/\
+            1234=tagValues/2345
+            $ gcloud beta container clusters create example-cluster \
+                --autoprovisioning-resource-manager-tags=my-project/key1=value1
+            $ gcloud beta container clusters create example-cluster \
+                --autoprovisioning-resource-manager-tags=12345/key1=value1,\
+            23456/key2=value2
+            $ gcloud beta container clusters create example-cluster \
+                --autoprovisioning-resource-manager-tags=
+
+        All nodes in an Autopilot cluster or all auto-provisioned nodes in a
+        Standard cluster, including nodes that are resized or re-created, will
+        have the specified tags on the corresponding Instance object in the
+        Compute Engine API. You can reference these tags in network firewall
+        policy rules. For instructions, see
+        https://cloud.google.com/firewall/docs/use-tags-for-firewalls.
 
      --autoscaling-profile=AUTOSCALING_PROFILE
         Set autoscaling behaviour, choices are 'optimize-utilization' and
@@ -1023,6 +1049,28 @@ FLAGS
          stable
             Clusters subscribed to 'stable' receive versions that are known to
             be stable and reliable in production.
+
+     --resource-manager-tags=[KEY=VALUE,...]
+        Applies the specified comma-separated resource manager tags that has
+        the GCE_FIREWALL purpose to all nodes in the new default node pool(s)
+        of a new cluster.
+
+        Examples:
+
+            $ gcloud beta container clusters create example-cluster \
+                --resource-manager-tags=tagKeys/1234=tagValues/2345
+            $ gcloud beta container clusters create example-cluster \
+                --resource-manager-tags=my-project/key1=value1
+            $ gcloud beta container clusters create example-cluster \
+                --resource-manager-tags=12345/key1=value1,23456/key2=value2
+            $ gcloud beta container clusters create example-cluster \
+                --resource-manager-tags=
+
+        All nodes, including nodes that are resized or re-created, will have
+        the specified tags on the corresponding Instance object in the Compute
+        Engine API. You can reference these tags in network firewall policy
+        rules. For instructions, see
+        https://cloud.google.com/firewall/docs/use-tags-for-firewalls.
 
      --security-group=SECURITY_GROUP
         The name of the RBAC security group for use with Google security groups

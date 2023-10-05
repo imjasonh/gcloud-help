@@ -1,0 +1,78 @@
+NAME
+    gcloud alpha scc posture-deployments update - update the given Cloud
+        Security Command Center posture deployment
+
+SYNOPSIS
+    gcloud alpha scc posture-deployments update POSTURE_DEPLOYMENT_NAME
+        [--description=DESCRIPTION] [--etag=ETAG] [--update-mask=UPDATE_MASK]
+        [--posture-id=POSTURE_ID --posture-revision-id=POSTURE_REVISION_ID]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Update a Cloud Security Command Center (SCC) posture deployment.
+
+    Fields specified in update-mask flag are updated. Updatable fields are
+    description and posture_name with posture_revision-id. The target_resource
+    for a posture deployment cannot be updated. The posture deployment to be
+    updated should be in ACTIVE State. If posture details of posture deployment
+    need to be updated, then the desired posture needs to be in ACTIVE state.
+    LRO operation ID is returned as the response of the command.
+
+EXAMPLES
+    Update the description of the posture deployment named
+    foo-posture-deployment in the organization
+    organizations/123/locations/global:        $ gcloud alpha scc posture-deployments update \
+            organizations/123/locations/global/postureDeployments/\
+        foo-posture-deployment --update-mask=description \
+            --description="updated-description"
+
+    Update posture deployment named foo-posture-deployment with the posture
+    named foo-posture and revision_id abcdefgh in the organization
+    organizations/123/locations/global:        $ gcloud alpha scc posture-deployments update \
+            organizations/123/locations/global/postureDeployments/\
+        foo-posture-deployment \
+            --update-mask=posture_id,posture_revision-id \
+            --posture-id=foo-posture --posture-revision-id=abcdefgh
+
+POSITIONAL ARGUMENTS
+     POSTURE_DEPLOYMENT_NAME
+        Relative resource name of the posture-deployment, like
+        organizations/<organizationID>/locations/<location>/postureDeployments/<postureDeploymentID>.
+
+FLAGS
+     --description=DESCRIPTION
+        Updated description of posture deployment.
+
+     --etag=ETAG
+        Etag is an optional flag. If the provided Etag doesn't match the server
+        generated Etag, the update operation won't proceed.
+
+     --update-mask=UPDATE_MASK
+        Comma-separated string containing list of fields to be updated.
+
+     --posture-id=POSTURE_ID
+        Relative name of the posture to be updated, like
+        organizations/<organizationID>/locations/<location>/postures/<postureID>.
+
+     --posture-revision-id=POSTURE_REVISION_ID
+        Revision ID of the posture to be updated.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the securityposture/v1alpha API. The full documentation
+    for this API can be found at:
+    https://cloud.google.com/security-command-center
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

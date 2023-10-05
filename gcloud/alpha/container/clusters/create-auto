@@ -5,6 +5,7 @@ NAME
 SYNOPSIS
     gcloud alpha container clusters create-auto NAME [--async]
         [--autoprovisioning-network-tags=TAGS,[TAGS,...]]
+        [--autoprovisioning-resource-manager-tags=[KEY=VALUE,...]]
         [--boot-disk-kms-key=BOOT_DISK_KMS_KEY]
         [--cluster-ipv4-cidr=CLUSTER_IPV4_CIDR]
         [--cluster-secondary-range-name=NAME]
@@ -70,6 +71,31 @@ FLAGS
         instance object and can be used in firewall rules. See
         https://cloud.google.com/sdk/gcloud/reference/compute/firewall-rules/create
         for examples.
+
+     --autoprovisioning-resource-manager-tags=[KEY=VALUE,...]
+        Applies the specified comma-separated resource manager tags that has
+        the GCE_FIREWALL purpose to all nodes in the new Autopilot cluster or
+        all auto-provisioned nodes in the new Standard cluster.
+
+        Examples:
+
+            $ gcloud alpha container clusters create-auto example-cluster \
+                --autoprovisioning-resource-manager-tags=tagKeys/\
+            1234=tagValues/2345
+            $ gcloud alpha container clusters create-auto example-cluster \
+                --autoprovisioning-resource-manager-tags=my-project/key1=value1
+            $ gcloud alpha container clusters create-auto example-cluster \
+                --autoprovisioning-resource-manager-tags=12345/key1=value1,\
+            23456/key2=value2
+            $ gcloud alpha container clusters create-auto example-cluster \
+                --autoprovisioning-resource-manager-tags=
+
+        All nodes in an Autopilot cluster or all auto-provisioned nodes in a
+        Standard cluster, including nodes that are resized or re-created, will
+        have the specified tags on the corresponding Instance object in the
+        Compute Engine API. You can reference these tags in network firewall
+        policy rules. For instructions, see
+        https://cloud.google.com/firewall/docs/use-tags-for-firewalls.
 
      --boot-disk-kms-key=BOOT_DISK_KMS_KEY
         The Customer Managed Encryption Key used to encrypt the boot disk

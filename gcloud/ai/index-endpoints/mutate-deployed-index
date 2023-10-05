@@ -7,20 +7,23 @@ SYNOPSIS
         (INDEX_ENDPOINT : --region=REGION)
         --deployed-index-id=DEPLOYED_INDEX_ID
         [--max-replica-count=MAX_REPLICA_COUNT]
-        [--min-replica-count=MIN_REPLICA_COUNT] [GCLOUD_WIDE_FLAG ...]
+        [--min-replica-count=MIN_REPLICA_COUNT]
+        [--reserved-ip-ranges=[RESERVED_IP_RANGES,...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Mutate an existing deployed index from a Vertex AI index endpoint.
 
 EXAMPLES
-    To mutated an deployed index deployed-index-123 from an index endpoint 456
+    To mutated a deployed index deployed-index-123 from an index endpoint 456
     with 2 min replica count and 10 max replica count under project example in
-    region us-central1, run:
+    region us-central1, within vertex-ai-ip-ranges-1 and vertex-ai-ip-ranges-2
+    run:
 
         $ gcloud ai index-endpoints mutate-deployed-index 456 \
             --project=example --region=us-central1 \
             --deployed-index-id=deployed-index-123 --min-replica-count=2 \
-            --max-replica-count=10
+            --max-replica-count=10 \
+            --reserved-ip-ranges=vertex-ai-ip-ranges-1,vertex-ai-ip-ranges-2
 
 POSITIONAL ARGUMENTS
      Index endpoint resource - The index endpoint ID of the index endpoint..
@@ -68,6 +71,9 @@ OPTIONAL FLAGS
      --min-replica-count=MIN_REPLICA_COUNT
         Minimum number of machine replicas the deployed index will be always
         deployed on. If specified, the value must be equal to or larger than 1.
+
+     --reserved-ip-ranges=[RESERVED_IP_RANGES,...]
+        List of reserved IP ranges deployed index will be deployed to.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

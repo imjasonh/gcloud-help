@@ -1,0 +1,142 @@
+NAME
+    gcloud alpha scc postures update - update the given Cloud Security Command
+        Center posture
+
+SYNOPSIS
+    gcloud alpha scc postures update
+        (POSTURE : --location=LOCATION --organization=ORGANIZATION)
+        --posture-from-file=POSTURE_FROM_FILE --revision-id=REVISION_ID
+        [--async] [--update-mask=UPDATE_MASK] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Update a Cloud Security Command Center (SCC) posture.
+
+    Fields specified in update-mask flag are updated. Updatable fields are
+    state, description and policy_sets. State of the posture can't be updated
+    along with update of other fields. An empty or "" as field mask will result
+    in update of policy_sets and description. In case of the update of
+    policy_sets, the value mentioned in the update posture request overwrites
+    the exisiting value of policy_sets.
+
+    Valid state transitions are: a) ACTIVE to DRAFT b) ACTIVE to DEPRECATED c)
+    DRAFT to ACTIVE d) DEPRECATED to ACTIVE
+
+    The update operation will result in the update of the revision-id specified
+    in the request, unless the posture revision is currently deployed on a
+    workload. A new revision is created for an already deployed posture
+    revision.
+
+EXAMPLES
+    Update the revision-id abcdefgh of the posture named foo-posture in the
+    organization organizations/123/locations/global: Change State to ACTIVE.        $ gcloud alpha scc postures update \
+            organizations/123/locations/global/postures/foo-posture \
+            --posture-from-file=update_posture.yaml --revision-id=abcdefgh \
+            update_mask=state
+
+        Contents of update_posture.yaml are |
+            name: organizations/123/locations/global/postures/foo-posture
+            state: ACTIVE
+
+    Update the revision-id abcdefgh of the posture named foo-posture in the
+    organization organizations/123/locations/global: Change description and
+    policy_sets to the values mentioned in update_posture.yaml        $ gcloud alpha scc postures update \
+            organizations/123/locations/global/postures/foo-posture \
+            --posture-from-file=update_posture.yaml --revision-id=abcdefgh \
+            update_mask=description,policy_sets
+
+        Contents of update_posture.yaml are |
+            name: organizations/123/locations/global/postures/foo-posture
+            description: updated description
+            policy_sets:
+            - policy_set_id: newPolicySet1
+              policies:
+                - policy_id: newPolicy
+                  constraint:
+                    org_policy_canned_constraint:
+                      canned_constraint_id: storage.uniformBucketLevelAccess
+                      policy_rules:
+                        enforce: false
+            - policy_set_id: PolicySet2
+              policies:
+                - policy_id: Policy3
+                  constraint:
+                    org_policy_custom_constraint:
+                      custom_constraint:
+                        name: organizations/9454078371/customConstraints/custom.newConstraint
+                        resource_types: container.$$UNIVERSE_DOMAIN$$/NodePool
+                        method_types: UPDATE
+                        condition: resource.management.autoUpgrade == false
+                        action_type: ALLOW
+                      policy_rules:
+                        enforce: true
+
+POSITIONAL ARGUMENTS
+     Posture resource - Arguments and flags that specify the Posture instance
+     to update. The arguments in this group can be used to specify the
+     attributes of this resource.
+
+     This must be specified.
+
+       POSTURE
+          ID of the posture or fully qualified identifier for the posture.
+
+          To set the posture attribute:
+          ▸ provide the argument posture on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          The location Id.
+
+          To set the location attribute:
+          ▸ provide the argument posture on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line.
+
+       --organization=ORGANIZATION
+          The organization Id.
+
+          To set the organization attribute:
+          ▸ provide the argument posture on the command line with a fully
+            specified name;
+          ▸ provide the argument --organization on the command line.
+
+REQUIRED FLAGS
+     --posture-from-file=POSTURE_FROM_FILE
+        Path of the file containing the details of the field to be updated.
+        Contents include the name of the posture to be updated and value of the
+        fields to be updated.
+
+     --revision-id=REVISION_ID
+        Revision ID of the posture to be updated. The same revision ID will be
+        updated in case the posture revision is not deployed on any workload. A
+        new revision will be created for a deployed posture.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --update-mask=UPDATE_MASK
+        Comma separated string containing list of fields to be updated.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the securityposture/v1alpha API. The full documentation
+    for this API can be found at:
+    https://cloud.google.com/security-command-center
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

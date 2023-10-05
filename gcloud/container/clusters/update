@@ -5,22 +5,23 @@ NAME
 SYNOPSIS
     gcloud container clusters update NAME
         (--autoprovisioning-network-tags=[TAGS,...]
-          | --autoscaling-profile=AUTOSCALING_PROFILE
+          | --autoscaling-profile=AUTOSCALING_PROFILE | --clear-fleet-project
           | --complete-credential-rotation | --complete-ip-rotation
           | --database-encryption-key=DATABASE_ENCRYPTION_KEY
           | --disable-database-encryption | --disable-default-snat
           | --disable-workload-identity | --enable-autoscaling
-          | --enable-cost-allocation | --enable-google-cloud-access
-          | --enable-identity-service | --enable-image-streaming
-          | --enable-intra-node-visibility
+          | --enable-cost-allocation | --enable-fleet
+          | --enable-google-cloud-access | --enable-identity-service
+          | --enable-image-streaming | --enable-intra-node-visibility
           | --enable-kubernetes-unstable-apis=API,[API,...]
           | --enable-l4-ilb-subsetting | --enable-legacy-authorization
           | --enable-master-authorized-networks | --enable-master-global-access
           | --enable-network-policy | --enable-private-endpoint
           | --enable-service-externalips | --enable-shielded-nodes
           | --enable-stackdriver-kubernetes | --enable-vertical-pod-autoscaling
-          | --gateway-api=GATEWAY_API | --generate-password
-          | --logging-variant=LOGGING_VARIANT | --maintenance-window=START_TIME
+          | --fleet-project=PROJECT_ID_OR_NUMBER | --gateway-api=GATEWAY_API
+          | --generate-password | --logging-variant=LOGGING_VARIANT
+          | --maintenance-window=START_TIME
           | --network-performance-configs=[PROPERTY1=VALUE1,...]
           | --node-locations=ZONE,[ZONE,...]
           | --notification-config=[pubsub=ENABLED|DISABLED,
@@ -124,6 +125,10 @@ REQUIRED FLAGS
           Set autoscaling behaviour, choices are 'optimize-utilization' and
           'balanced'. Default is 'balanced'.
 
+       --clear-fleet-project
+          Remove the cluster from current fleet host project. Example: $ gcloud
+          container clusters update --clear-fleet-project
+
        --complete-credential-rotation
           Complete the IP and credential rotation for this cluster. For
           example:
@@ -206,6 +211,12 @@ REQUIRED FLAGS
           (https://cloud.google.com/billing/docs/how-to/export-data-bigquery).
 
           Use --no-enable-cost-allocation to disable this feature.
+
+       --enable-fleet
+          Set cluster project as the fleet host project. This will register the
+          cluster to the same project. To register the cluster to a fleet in a
+          different project, please use --fleet-project=FLEET_HOST_PROJECT.
+          Example: $ gcloud container clusters update --enable-fleet
 
        --enable-google-cloud-access
           When you enable Google Cloud Access, any public IP addresses owned by
@@ -302,6 +313,14 @@ REQUIRED FLAGS
 
          --enable-vertical-pod-autoscaling
             Enable vertical pod autoscaling for a cluster.
+
+       --fleet-project=PROJECT_ID_OR_NUMBER
+          Sets fleet host project for the cluster. If specified, the current
+          cluster will be registered as a fleet membership under the fleet host
+          project.
+
+          Example: $ gcloud container clusters update
+          --fleet-project=my-project
 
        --gateway-api=GATEWAY_API
           Enables GKE Gateway controller in this cluster. The value of the flag

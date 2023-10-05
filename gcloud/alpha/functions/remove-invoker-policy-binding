@@ -4,16 +4,19 @@ NAME
 
 SYNOPSIS
     gcloud alpha functions remove-invoker-policy-binding
-        (NAME : --region=REGION) --member=PRINCIPAL [GCLOUD_WIDE_FLAG ...]
+        (NAME : --region=REGION) --member=PRINCIPAL [--gen2]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) Removes the Cloud Run Invoker binding from the IAM policy of a
-    Google Cloud Function's underlying Cloud Run service.
+    (ALPHA) Removes the invoker role IAM policy binding that allows the
+    specified member to invoke the specified function.
 
-    This command applies to Cloud Functions (2nd gen) only. Cloud Functions
-    (2nd gen) currently requires the Cloud Run Invoke permission on the
-    underlying Cloud Run service to be able to call functions. This command
-    removes the given member permission to invoke the given 2nd gen function.
+    For Cloud Functions (1st gen), this removes the Cloud Functions Invoker
+    binding from the IAM policy of the specified function.
+
+    For Cloud Functions (2nd gen), this removes the Cloud Run Invoker binding
+    from the IAM policy of the specified function's underlying Cloud Run
+    service.
 
 EXAMPLES
     To remove the invoker role policy binding for FUNCTION-1 for member
@@ -73,6 +76,15 @@ REQUIRED FLAGS
           internet, with or without a Google account.
         ◆ allAuthenticatedUsers - Special identifier that represents anyone
           who is authenticated with a Google account or a service account.
+
+OPTIONAL FLAGS
+     --gen2
+        If enabled, this command will use Cloud Functions (Second generation).
+        If disabled with --no-gen2, Cloud Functions (First generation) will be
+        used. If not specified, the value of this flag will be taken from the
+        functions/gen2 configuration property. If the functions/gen2
+        configuration property is not set, defaults to looking up the given
+        function and using its generation.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

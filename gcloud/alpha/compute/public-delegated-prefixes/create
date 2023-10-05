@@ -3,9 +3,11 @@ NAME
         Engine public delegated prefix
 
 SYNOPSIS
-    gcloud alpha compute public-delegated-prefixes create NAME
-        --public-advertised-prefix=PUBLIC_ADVERTISED_PREFIX --range=RANGE
-        [--description=DESCRIPTION] [--enable-live-migration]
+    gcloud alpha compute public-delegated-prefixes create NAME --range=RANGE
+        (--public-advertised-prefix=PUBLIC_ADVERTISED_PREFIX
+          | --public-delegated-prefix=PUBLIC_DELEGATED_PREFIX)
+        [--allocatable-prefix-length=ALLOCATABLE_PREFIX_LENGTH]
+        [--description=DESCRIPTION] [--enable-live-migration] [--mode=MODE]
         [--global | --region=REGION] [GCLOUD_WIDE_FLAG ...]
 
 EXAMPLES
@@ -20,20 +22,33 @@ POSITIONAL ARGUMENTS
         Name of the public delegated prefix to operate on.
 
 REQUIRED FLAGS
-     --public-advertised-prefix=PUBLIC_ADVERTISED_PREFIX
-        Public advertised prefix that this delegated prefix is created from.
-
      --range=RANGE
         IPv4 range from this public delegated prefix that should be delegated,
         in CIDR format. It must be smaller than parent public advertised prefix
         range.
 
+     Exactly one of these must be specified:
+
+       --public-advertised-prefix=PUBLIC_ADVERTISED_PREFIX
+          Public advertised prefix that this delegated prefix is created from.
+
+       --public-delegated-prefix=PUBLIC_DELEGATED_PREFIX
+          Regional Public delegated prefix that this delegated prefix is
+          created from.
+
 OPTIONAL FLAGS
+     --allocatable-prefix-length=ALLOCATABLE_PREFIX_LENGTH
+        The allocatable prefix length supported by this PDP.
+
      --description=DESCRIPTION
         Description of this public delegated prefix.
 
      --enable-live-migration
         Specify if this public delegated prefix is meant to be live migrated.
+
+     --mode=MODE
+        Specifies the mode of this IPv6 PDP. MODE must be one of:
+        EXTERNAL_IPV6_FORWARDING_RULE_CREATION, DELEGATION.
 
      At most one of these can be specified:
 

@@ -5,6 +5,7 @@ NAME
 SYNOPSIS
     gcloud beta container clusters update NAME
         (--autoprovisioning-network-tags=[TAGS,...]
+          | --autoprovisioning-resource-manager-tags=[KEY=VALUE,...]
           | --autoscaling-profile=AUTOSCALING_PROFILE | --clear-fleet-project
           | --complete-credential-rotation | --complete-ip-rotation
           | --database-encryption-key=DATABASE_ENCRYPTION_KEY
@@ -126,6 +127,39 @@ REQUIRED FLAGS
           instance object and these tags can be used in firewall rules. See
           https://cloud.google.com/sdk/gcloud/reference/compute/firewall-rules/create
           for examples.
+
+       --autoprovisioning-resource-manager-tags=[KEY=VALUE,...]
+          For an Autopilot cluster, the specified comma-separated resource
+          manager tags that has the GCP_FIREWALL purpose replace the existing
+          tags on all nodes in the cluster.
+
+          For a Standard cluster, the specified comma-separated resource
+          manager tags that has the GCE_FIREWALL purpose are applied to all
+          nodes in the new newly created auto-provisioned node pools. Existing
+          auto-provisioned node pools retain the tags that they had before the
+          update. To update tags on an existing auto-provisioned node pool, use
+          the node pool level flag '--resource-manager-tags'.
+
+          Examples:
+
+              $ gcloud beta container clusters update example-cluster \
+                  --autoprovisioning-resource-manager-tags=tagKeys/\
+              1234=tagValues/2345
+              $ gcloud beta container clusters update example-cluster \
+                  --autoprovisioning-resource-manager-tags=my-project/key1=value1
+              $ gcloud beta container clusters update example-cluster \
+                  --autoprovisioning-resource-manager-tags=12345/key1=value1,\
+              23456/key2=value2
+              $ gcloud beta container clusters update example-cluster \
+                  --autoprovisioning-resource-manager-tags=
+
+          All nodes in an Autopilot cluster or all newly created
+          auto-provisioned nodes in a Standard cluster, including nodes that
+          are resized or re-created, will have the specified tags on the
+          corresponding Instance object in the Compute Engine API. You can
+          reference these tags in network firewall policy rules. For
+          instructions, see
+          https://cloud.google.com/firewall/docs/use-tags-for-firewalls.
 
        --autoscaling-profile=AUTOSCALING_PROFILE
           Set autoscaling behaviour, choices are 'optimize-utilization' and
