@@ -6,7 +6,8 @@ SYNOPSIS
     gcloud firestore export OUTPUT_URI_PREFIX [--async]
         [--collection-ids=[COLLECTION_IDS,...]]
         [--database=DATABASE; default="(default)"]
-        [--namespace-ids=[NAMESPACE_IDS,...]] [GCLOUD_WIDE_FLAG ...]
+        [--namespace-ids=[NAMESPACE_IDS,...]] [--snapshot-time=SNAPSHOT_TIME]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     export Cloud Firestore documents to Google Cloud Storage.
@@ -27,6 +28,11 @@ EXAMPLES
 
         $ gcloud firestore export gs://mybucket/my/path \
             --namespace-ids='specific namespace id'
+
+    To export from a snapshot at '2023-05-26T10:20:00.00Z', run:
+
+        $ gcloud firestore export gs://mybucket/my/path \
+            --snapshot-time='2023-05-26T10:20:00.00Z'
 
 POSITIONAL ARGUMENTS
      OUTPUT_URI_PREFIX
@@ -69,6 +75,22 @@ FLAGS
         For example, to operate on only the customers and orders namespaces:
 
             $ gcloud firestore export --namespaces-ids='customers','orders'
+
+     --snapshot-time=SNAPSHOT_TIME
+        The version of the database to export.
+
+        The timestamp must be rounded to the minute, in the past, and not older
+        than 5 days. Please choose a reasonable timestamp based on prior
+        knowledge on how long exports take as data at provided snapshot
+        timestamp can expire during export.
+
+        If specified, then the exported documents will represent a consistent
+        view of the database at the provided time. Otherwise, there are no
+        guarantees about the consistency of the exported documents.
+
+        For example, to operate on snapshot time 2023-05-26T10:20:00.00Z:
+
+            $ gcloud firestore export --snapshot-time='2023-05-26T10:20:00.00Z'
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

@@ -9,9 +9,10 @@ SYNOPSIS
         (--node-id=NODE_ID
           | [--node-count=NODE_COUNT : --node-prefix=NODE_PREFIX]) [--async]
         [--autocheckpoint-enabled] [--best-effort]
-        [--data-disk=[mode=MODE],[source=SOURCE]] [--description=DESCRIPTION]
-        [--guaranteed] [--internal-ips] [--labels=[KEY=VALUE,...]]
-        [--metadata=[KEY=VALUE,...]] [--metadata-from-file=[KEY=VALUE,...]]
+        [--boot-disk=[KEY=VALUE,...]] [--data-disk=[mode=MODE],[source=SOURCE]]
+        [--description=DESCRIPTION] [--guaranteed] [--internal-ips]
+        [--labels=[KEY=VALUE,...]] [--metadata=[KEY=VALUE,...]]
+        [--metadata-from-file=[KEY=VALUE,...]]
         [--network=NETWORK; default="default"] [--range=RANGE]
         [--reservation-host-folder=RESERVATION_HOST_FOLDER]
         [--reservation-host-organization=RESERVATION_HOST_ORGANIZATION]
@@ -148,6 +149,24 @@ OPTIONAL FLAGS
      --best-effort
         If provided, the Node requested here may be scheduled at the 'best
         effort' tier.
+
+     --boot-disk=[KEY=VALUE,...]
+        Specifies if the boot disk should be created in confidential-compute
+        mode.
+
+            $ gcloud alpha compute tpus queued-resources create \
+                  --boot-disk confidential-compute=True,kms-key=<full_kms_key_name_here>
+
+        The following keys are allowed:
+
+         confidential-compute
+            Create the boot disk in confidential compute mode, CMEK layer is
+            required and only applicable to HyperDisk series.
+
+         kms-key
+            Specifies fully qualified Cloud KMS cryptokey name which will be
+            used to protect the disk. KMS cryptokey name format:
+            projects/<kms-project>/locations/<kms-location>/keyRings/<kms-keyring>/cryptoKeys/<key-name>
 
      --data-disk=[mode=MODE],[source=SOURCE]
         Additional data disks for the TPU VM.

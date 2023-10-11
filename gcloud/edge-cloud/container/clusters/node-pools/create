@@ -7,20 +7,21 @@ SYNOPSIS
         (NODE_POOL : --cluster=CLUSTER --location=LOCATION)
         --node-count=NODE_COUNT --node-location=NODE_LOCATION [--async]
         [--labels=[KEY=VALUE,...]] [--local-disk-kms-key=LOCAL_DISK_KMS_KEY]
-        [--machine-filter=MACHINE_FILTER] [GCLOUD_WIDE_FLAG ...]
+        [--lro-timeout=LRO_TIMEOUT] [--machine-filter=MACHINE_FILTER]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    Create a new Edge Container nodePool.
+    Create an Edge Container node pool.
 
 EXAMPLES
-    To create a node pool called 'my-nodePool', containing 3 nodes in region
+    To create a node pool called my-nodePool, containing 3 nodes in region
     us-central1, run:
 
         $ gcloud edge-cloud container clusters node-pools create \
             my-nodePool --cluster=<my-cluster> --location=us-central1 \
             --node-location=<my-node-location> --node-count=3
 
-    To create a node pool called 'my-nodePool', containing 3 nodes in region
+    To create a node pool called my-nodePool, containing 3 nodes in region
     us-central1, using only machine names matching a specific pattern, run:
 
         $ gcloud edge-cloud container clusters node-pools create \
@@ -28,7 +29,7 @@ EXAMPLES
             --node-location=<my-node-location> --node-count=3 \
             --machine-filter="name:<name>"
 
-    To create a node pool called 'my-nodePool', containing 3 nodes in region
+    To create a node pool called my-nodePool, containing 3 nodes in region
     us-central1, using only machine names NOT matching a specific pattern, run:
 
         $ gcloud edge-cloud container clusters node-pools create \
@@ -45,22 +46,22 @@ POSITIONAL ARGUMENTS
      To set the project attribute:
       ◆ provide the argument node_pool on the command line with a fully
         specified name;
-      ◆ set the property core/project;
-      ◆ provide the argument --project on the command line.
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
 
      This must be specified.
 
        NODE_POOL
           ID of the node pool or fully qualified identifier for the node pool.
 
-          To set the node_pool attribute:
+          To set the nodePool attribute:
           ▸ provide the argument node_pool on the command line.
 
           This positional argument must be specified if any of the other
           arguments in this group are specified.
 
        --cluster=CLUSTER
-          Kubernetes cluster.
+          Cluster of the node pool.
 
           To set the cluster attribute:
           ▸ provide the argument node_pool on the command line with a fully
@@ -68,13 +69,12 @@ POSITIONAL ARGUMENTS
           ▸ provide the argument --cluster on the command line.
 
        --location=LOCATION
-          The global location name.
+          Google Cloud location for the node pool.
 
           To set the location attribute:
           ▸ provide the argument node_pool on the command line with a fully
             specified name;
-          ▸ provide the argument --location on the command line;
-          ▸ set the property edge_container/location.
+          ▸ provide the argument --location on the command line.
 
 REQUIRED FLAGS
      --node-count=NODE_COUNT
@@ -102,6 +102,9 @@ OPTIONAL FLAGS
         must have roles/cloudkms.cryptoKeyEncrypterDecrypter on the key.
 
         If not provided, a Google-managed key will be used instead.
+
+     --lro-timeout=LRO_TIMEOUT
+        Overwrite the default LRO maximum timeout.
 
      --machine-filter=MACHINE_FILTER
         Only machines matching this filter will be allowed to join the node

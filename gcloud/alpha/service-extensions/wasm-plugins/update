@@ -1,0 +1,156 @@
+NAME
+    gcloud alpha service-extensions wasm-plugins update - update a WasmPlugin
+
+SYNOPSIS
+    gcloud alpha service-extensions wasm-plugins update
+        (WASM_PLUGIN : --location=LOCATION) [--async]
+        [--description=DESCRIPTION] [--labels=[KEY=VALUE,...]]
+        [--log-config=[LOG_CONFIG,...]]
+        [--image=IMAGE
+          --main-version=MAIN_VERSION --plugin-config=PLUGIN_CONFIG
+          | --plugin-config-file=PLUGIN_CONFIG_FILE
+          | --plugin-config-uri=PLUGIN_CONFIG_URI] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Update an existing WasmPlugin and optionally create a
+    WasmPluginVersion and set it as main (serving) one.
+
+    If --image is not specified:
+      ▪ the method only updates the WasmPlugin resource without creating a
+        WasmPluginVersion.
+      ▪ the --plugin-config** flags are disallowed.
+      ▪ if --main-version is set, then the referenced WasmPluginVersion must
+        already exists and it will be set as main (serving) one.
+
+    If --image is specified:
+      ▪ the --main-version flag should also be specified.
+      ▪ the method updates the WasmPlugin resource and creates a new
+        WasmPluginVersion with --main-version name and sets it as main
+        (serving) one.
+      ▪ the --plugin-config** flags are allowed.
+      ▪ the --async flag is disallowed.
+
+EXAMPLES
+    To update a WasmPlugin called my-plugin, run:
+
+        $ gcloud alpha service-extensions wasm-plugins update my-plugin \
+            --main-version=new-version --description="A new description." \
+            --labels=label1=value1
+
+    To update a WasmPlugin called my-plugin and also create a new version
+    called v1 and set it as main:
+
+        $ gcloud alpha service-extensions wasm-plugins update my-plugin \
+            --main-version=v1 --description="A new description." \
+            --labels=label1=value1 \
+            --image=...-docker.pkg.dev/my-project/repository/container:tag
+
+POSITIONAL ARGUMENTS
+     WasmPlugin resource - The ID of the WasmPlugin to update. The arguments in
+     this group can be used to specify the attributes of this resource. (NOTE)
+     Some attributes are not given arguments in this group but can be set in
+     other ways.
+
+     To set the project attribute:
+      ◆ provide the argument wasm_plugin on the command line with a fully
+        specified name;
+      ◆ set the property core/project;
+      ◆ provide the argument --project on the command line.
+
+     This must be specified.
+
+       WASM_PLUGIN
+          ID of the WasmPlugin or fully qualified identifier for the
+          WasmPlugin.
+
+          To set the wasm_plugin attribute:
+          ▸ provide the argument wasm_plugin on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          The location Id.
+
+          To set the location attribute:
+          ▸ provide the argument wasm_plugin on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ use global location.
+
+FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --description=DESCRIPTION
+        Provides an optional, human-readable description of the service.
+
+     --labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     --log-config=[LOG_CONFIG,...]
+        Logging options for the activity performed by this WasmPlugin.
+        Following options can be set:
+        ◆ enable - whether to enable logging. If log-config flag is set,
+          enable option is required.
+
+        ◆ sample-rate - configures the sampling rate of activity logs, where
+          1.0 means all logged activity is reported and 0.0 means no activity
+          is reported. The default value is 1.0, and the value of the field
+          must be in [0, 1].
+
+        ◆ min-log-level - specificies the lowest level of the logs which
+          should be exported to Cloud Logging. The default value is INFO.
+
+        Example usage:
+        --log-config=enable=True,sample-rate=0.5,min-log-level=INFO
+        --log_config=enable=False
+
+     --image=IMAGE
+        URI of the container image containing the Wasm module, stored in the
+        Artifact Registry.
+
+     --main-version=MAIN_VERSION
+        The ID of the WasmPluginVersion that should be the currently serving
+        one. The version referred to must be a child of this WasmPlugin.
+
+        If the --image flag was also provided, the WasmPluginVersion will be
+        created for that WasmPlugin and will be set as the current main
+        version.
+
+     Configuration for the WasmPlugin, provided to the plugin at runtime via
+     the proxy_on_configure call (the exact name of the invoked function
+     depends on the Proxy-Wasm SDK used).
+
+     At most one of these can be specified:
+
+       --plugin-config=PLUGIN_CONFIG
+          WasmPlugin configuration in the textual format.
+
+       --plugin-config-file=PLUGIN_CONFIG_FILE
+          Path to a local file containing the plugin configuration.
+
+       --plugin-config-uri=PLUGIN_CONFIG_URI
+          URI of the container image containing the plugin configuration,
+          stored in the Artifact Registry.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

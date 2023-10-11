@@ -8,7 +8,13 @@ SYNOPSIS
         [--instance-redistribution-type=TYPE]
         [--list-managed-instances-results=MODE]
         [--remove-stateful-disks=DEVICE_NAME,[DEVICE_NAME,...]]
+        [--remove-stateful-external-ips=INTERFACE_NAME,[...]]
+        [--remove-stateful-internal-ips=INTERFACE_NAME,[...]]
         [--stateful-disk=[auto-delete=AUTO-DELETE],[device-name=DEVICE-NAME]]
+        [--stateful-external-ip=[enabled],
+          [auto-delete=AUTO-DELETE],[interface-name=INTERFACE-NAME]]
+        [--stateful-internal-ip=[enabled],
+          [auto-delete=AUTO-DELETE],[interface-name=INTERFACE-NAME]]
         [--target-distribution-shape=SHAPE]
         [--clear-autohealing
           | --initial-delay=INITIAL_DELAY --health-check=HEALTH_CHECK
@@ -103,6 +109,14 @@ FLAGS
      --remove-stateful-disks=DEVICE_NAME,[DEVICE_NAME,...]
         Remove stateful configuration for the specified disks.
 
+     --remove-stateful-external-ips=INTERFACE_NAME,[...]
+        Remove stateful configuration for the specified interfaces for external
+        IPs.
+
+     --remove-stateful-internal-ips=INTERFACE_NAME,[...]
+        Remove stateful configuration for the specified interfaces for internal
+        IPs.
+
      --stateful-disk=[auto-delete=AUTO-DELETE],[device-name=DEVICE-NAME]
         Disks considered stateful by the instance group. Managed instance
         groups preserve and reattach stateful disks on VM autohealing, update,
@@ -127,6 +141,84 @@ FLAGS
               the instance that it's attached to is permanently deleted from
               the group; for example, when the instance is deleted manually or
               when the group size is decreased.
+
+     --stateful-external-ip=[enabled],[auto-delete=AUTO-DELETE],[interface-name=INTERFACE-NAME]
+        Managed instance groups preserve stateful IPs on VM autohealing,
+        update, and recreate events.
+
+        Use this argument multiple times to update more IPs.
+
+        If a stateful external IP with the given interface name already exists
+        in the current instance configuration, its properties are replaced by
+        the newly provided ones. Otherwise, a new stateful external IP
+        definition is added to the instance configuration.
+
+        At least one of the following is required:
+
+         enabled
+            Marks the IP address as stateful. The network interface named nic0
+            is assumed by default when interface-name is not specified. This
+            flag can be omitted when interface-name is provided explicitly.
+
+         interface-name
+            Marks the IP address from this network interface as stateful. This
+            flag can be omitted when enabled is provided.
+
+            Additional arguments:
+
+         auto-delete
+            (Optional) Prescribes what should happen to an associated static
+            Address resource when a VM instance is permanently deleted.
+            Regardless of the value of the delete rule, stateful IP addresses
+            are always preserved on instance autohealing, update, and
+            recreation operations. The following options are available:
+            ▸ never: (Default) Never delete the static IP address. Instead,
+              unassign the address when its instance is permanently deleted and
+              keep the address reserved.
+            ▸ on-permanent-instance-deletion: Delete the static IP address
+              reservation when the instance that it's assigned to is
+              permanently deleted from the instance group; for example, when
+              the instance is deleted manually or when the group size is
+              decreased.
+
+     --stateful-internal-ip=[enabled],[auto-delete=AUTO-DELETE],[interface-name=INTERFACE-NAME]
+        Managed instance groups preserve stateful IPs on VM autohealing,
+        update, and recreate events.
+
+        Use this argument multiple times to update more IPs.
+
+        If a stateful internal IP with the given interface name already exists
+        in the current instance configuration, its properties are replaced by
+        the newly provided ones. Otherwise, a new stateful internal IP
+        definition is added to the instance configuration.
+
+        At least one of the following is required:
+
+         enabled
+            Marks the IP address as stateful. The network interface named nic0
+            is assumed by default when interface-name is not specified. This
+            flag can be omitted when interface-name is provided explicitly.
+
+         interface-name
+            Marks the IP address from this network interface as stateful. This
+            flag can be omitted when enabled is provided.
+
+            Additional arguments:
+
+         auto-delete
+            (Optional) Prescribes what should happen to an associated static
+            Address resource when a VM instance is permanently deleted.
+            Regardless of the value of the delete rule, stateful IP addresses
+            are always preserved on instance autohealing, update, and
+            recreation operations. The following options are available:
+            ▸ never: (Default) Never delete the static IP address. Instead,
+              unassign the address when its instance is permanently deleted and
+              keep the address reserved.
+            ▸ on-permanent-instance-deletion: Delete the static IP address
+              reservation when the instance that it's assigned to is
+              permanently deleted from the instance group; for example, when
+              the instance is deleted manually or when the group size is
+              decreased.
 
      --target-distribution-shape=SHAPE
         Specifies how a regional managed instance group distributes its

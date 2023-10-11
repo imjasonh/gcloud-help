@@ -9,6 +9,10 @@ SYNOPSIS
           default="none"]
         [--stateful-disk=[auto-delete=AUTO-DELETE],
           [device-name=DEVICE-NAME],[mode=MODE],[source=SOURCE]]
+        [--stateful-external-ip=[address=ADDRESS],
+          [auto-delete=AUTO-DELETE],[interface-name=INTERFACE-NAME]]
+        [--stateful-internal-ip=[address=ADDRESS],
+          [auto-delete=AUTO-DELETE],[interface-name=INTERFACE-NAME]]
         [--stateful-metadata=KEY=VALUE,[KEY=VALUE,...]] [--no-update-instance]
         [--region=REGION | --zone=ZONE] [GCLOUD_WIDE_FLAG ...]
 
@@ -35,6 +39,20 @@ EXAMPLES
     If my-disk did not exist previously in the per-instance config, and if it
     does not exist in the group's instance template, then the command adds
     my-disk to my-instance.
+
+    To create a per-instance config with a stateful internal IP 192.168.0.10
+    and a stateful external IP reserved in address my-address, on instance
+    my-instance, run:
+
+        $ gcloud compute instance-groups managed instance-configs create \
+            my-group --region=europe-west4 --instance=my-instance \
+            --stateful-internal-ip=address=192.168.0.10,\
+        interface-name=nic0 \
+            --stateful-external-ip=address=/projects/example-project/\
+        regions/europe-west4/addresses/my-address,interface-name=nic0
+
+    If the provided IP address is not yet reserved, the MIG automatically
+    creates a corresponding IP address reservation.
 
 POSITIONAL ARGUMENTS
      NAME
@@ -98,6 +116,90 @@ OPTIONAL FLAGS
               the instance that it's attached to is permanently deleted from
               the group; for example, when the instance is deleted manually or
               when the group size is decreased.
+
+     --stateful-external-ip=[address=ADDRESS],[auto-delete=AUTO-DELETE],[interface-name=INTERFACE-NAME]
+        Managed instance groups preserve stateful IPs on VM autohealing,
+        update, and recreate events.
+
+        You can preserve the IP address that's specified in a network interface
+        for a specific managed instance, even if that network interface is not
+        defined in the group's instance template.
+
+        Use this argument multiple times to attach and preserve multiple IPs.
+
+         interface-name
+            (Optional) Network interface name. If omitted, the default network
+            interface named nic0 is assumed.
+
+                *address*::: Static IP address to assign to the instance in one of
+                the following formats:
+
+            + Address: URL of a static IP address reservation. For example:
+            projects/example-project/regions/us-east1/addresses/example-ip-name.
+
+            + Literal: For example: 130.211.181.55.
+
+            If the provided IP address is not yet reserved, the managed
+            instance group automatically creates the corresponding IP address
+            reservation. If the provided IP address is reserved, the group
+            assigns the reservation to the instance.
+
+         auto-delete
+            (Optional) Prescribes what should happen to an associated static
+            Address resource when a VM instance is permanently deleted.
+            Regardless of the value of the delete rule, stateful IP addresses
+            are always preserved on instance autohealing, update, and
+            recreation operations. The following options are available:
+            ▸ never: (Default) Never delete the static IP address. Instead,
+              unassign the address when its instance is permanently deleted and
+              keep the address reserved.
+            ▸ on-permanent-instance-deletion: Delete the static IP address
+              reservation when the instance that it's assigned to is
+              permanently deleted from the instance group; for example, when
+              the instance is deleted manually or when the group size is
+              decreased.
+
+     --stateful-internal-ip=[address=ADDRESS],[auto-delete=AUTO-DELETE],[interface-name=INTERFACE-NAME]
+        Managed instance groups preserve stateful IPs on VM autohealing,
+        update, and recreate events.
+
+        You can preserve the IP address that's specified in a network interface
+        for a specific managed instance, even if that network interface is not
+        defined in the group's instance template.
+
+        Use this argument multiple times to attach and preserve multiple IPs.
+
+         interface-name
+            (Optional) Network interface name. If omitted, the default network
+            interface named nic0 is assumed.
+
+                *address*::: Static IP address to assign to the instance in one of
+                the following formats:
+
+            + Address: URL of a static IP address reservation. For example:
+            projects/example-project/regions/us-east1/addresses/example-ip-name.
+
+            + Literal: For example: 130.211.181.55.
+
+            If the provided IP address is not yet reserved, the managed
+            instance group automatically creates the corresponding IP address
+            reservation. If the provided IP address is reserved, the group
+            assigns the reservation to the instance.
+
+         auto-delete
+            (Optional) Prescribes what should happen to an associated static
+            Address resource when a VM instance is permanently deleted.
+            Regardless of the value of the delete rule, stateful IP addresses
+            are always preserved on instance autohealing, update, and
+            recreation operations. The following options are available:
+            ▸ never: (Default) Never delete the static IP address. Instead,
+              unassign the address when its instance is permanently deleted and
+              keep the address reserved.
+            ▸ on-permanent-instance-deletion: Delete the static IP address
+              reservation when the instance that it's assigned to is
+              permanently deleted from the instance group; for example, when
+              the instance is deleted manually or when the group size is
+              decreased.
 
      --stateful-metadata=KEY=VALUE,[KEY=VALUE,...]
         Additional metadata to be made available to the guest operating system
