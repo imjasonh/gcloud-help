@@ -5,7 +5,8 @@ NAME
 SYNOPSIS
     gcloud sql import bak INSTANCE [URI] --database=DATABASE, -d DATABASE
         [--async] [--bak-type=BAK_TYPE; default="FULL"] [--no-recovery]
-        [--recovery-only] [--[no-]striped]
+        [--recovery-only] [--stop-at=STOP_AT] [--stop-at-mark=STOP_AT_MARK]
+        [--[no-]striped]
         [--cert-path=CERT_PATH --pvk-path=PVK_PATH (--prompt-for-pvk-password
           | --pvk-password=PVK_PASSWORD)] [GCLOUD_WIDE_FLAG ...]
 
@@ -51,8 +52,8 @@ OPTIONAL FLAGS
         complete.
 
      --bak-type=BAK_TYPE; default="FULL"
-        Type of bak file that will be imported, FULL or DIFF. SQL Server only.
-        BAK_TYPE must be one of: FULL, DIFF.
+        Type of bak file that will be imported. Applicable to SQL Server only.
+        BAK_TYPE must be one of: FULL, DIFF, TLOG.
 
      --no-recovery
         Whether or not the SQL Server import is execueted with NORECOVERY
@@ -61,6 +62,16 @@ OPTIONAL FLAGS
      --recovery-only
         Whether or not the SQL Server import skip download and bring database
         online.
+
+     --stop-at=STOP_AT
+        Equivalent to SQL Server STOPAT keyword. Used in transaction log import
+        only. Transaction log import stop at this timestamp. Format:
+        YYYY-MM-DDTHH:MM:SS.
+
+     --stop-at-mark=STOP_AT_MARK
+        Equivalent to SQL Server STOPATMARK keyword. Used in transaction log
+        import only. Transaction log import stop at the given mark. To stop at
+        given LSN, use --stop-at-mark=lsn:xxx.
 
      --[no-]striped
         Whether SQL Server import should be striped. Use --striped to enable

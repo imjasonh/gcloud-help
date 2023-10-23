@@ -11,8 +11,9 @@ SYNOPSIS
         [--exclude=[REGEX,...], -x [REGEX,...]]
         [--gzip-in-flight=[FILE_EXTENSIONS,...], -j [FILE_EXTENSIONS,...]]
         [--gzip-in-flight-all, -J] [--no-ignore-symlinks]
-        [--preserve-posix, -P] [--recursive, -R, -r]
-        [--skip-if-dest-has-newer-mtime, -u] [--skip-unsupported, -U]
+        [--include-managed-folders] [--preserve-posix, -P]
+        [--recursive, -R, -r] [--skip-if-dest-has-newer-mtime, -u]
+        [--skip-unsupported, -U]
         [--decryption-keys=[DECRYPTION_KEY,...]
           --encryption-key=ENCRYPTION_KEY]
         [--cache-control=CACHE_CONTROL
@@ -74,7 +75,7 @@ EXAMPLES
         $ gcloud alpha storage rsync dir1 dir2 --recursive - \
             --delete-unmatched-destination-objects
 
-    To mirror your content across cloud providers:
+    To mirror your objects across cloud providers:
 
         $ gcloud alpha storage rsync gs://my-gs-bucket s3://my-s3-bucket \
             --recursive --delete-unmatched-destination-objects
@@ -132,7 +133,8 @@ FLAGS
 
      --delete-unmatched-destination-objects
         Delete extra files under DESTINATION not found under SOURCE. By default
-        extra files are not deleted.
+        extra files are not deleted. Managed folders are not affected by this
+        flag.
 
         Note: this option can delete data quickly if you specify the wrong
         source and destination combination.
@@ -176,6 +178,12 @@ FLAGS
      --ignore-symlinks
         Ignore file symlinks instead of copying what they point to. Enabled by
         default, use --no-ignore-symlinks to disable.
+
+     --include-managed-folders
+        Includes managed folders in command operations. For transfers, gcloud
+        storage will set up managed folders in the destination with the same
+        IAM policy bindings as the source. Managed folders are only included
+        with recursive cloud-to-cloud transfers.
 
      --preserve-posix, -P
         Causes POSIX attributes to be preserved when objects are copied. With

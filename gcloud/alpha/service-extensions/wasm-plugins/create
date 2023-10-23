@@ -1,5 +1,6 @@
 NAME
     gcloud alpha service-extensions wasm-plugins create - create a WasmPlugin
+        resource
 
 SYNOPSIS
     gcloud alpha service-extensions wasm-plugins create
@@ -12,8 +13,7 @@ SYNOPSIS
           | --plugin-config-uri=PLUGIN_CONFIG_URI] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) Create a new WasmPlugin and optionally create a WasmPluginVersion
-    and set it as main (serving) one.
+    (ALPHA) Create a new WasmPlugin resource.
 
 EXAMPLES
     To create a WasmPlugin called my-plugin, run:
@@ -28,10 +28,10 @@ EXAMPLES
             --image=...-docker.pkg.dev/my-project/repository/container:tag
 
 POSITIONAL ARGUMENTS
-     WasmPlugin resource - The ID of the WasmPlugin to create. The arguments in
-     this group can be used to specify the attributes of this resource. (NOTE)
-     Some attributes are not given arguments in this group but can be set in
-     other ways.
+     WasmPlugin resource - The ID of the WasmPlugin resource to create. The
+     arguments in this group can be used to specify the attributes of this
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways.
 
      To set the project attribute:
       ◆ provide the argument wasm_plugin on the command line with a fully
@@ -52,7 +52,7 @@ POSITIONAL ARGUMENTS
           arguments in this group are specified.
 
        --location=LOCATION
-          The location Id.
+          The location ID.
 
           To set the location attribute:
           ▸ provide the argument wasm_plugin on the command line with a fully
@@ -66,7 +66,7 @@ FLAGS
         complete.
 
      --description=DESCRIPTION
-        Provides an optional, human-readable description of the service.
+        A human-readable description of the resource.
 
      --labels=[KEY=VALUE,...]
         List of label KEY=VALUE pairs to add.
@@ -77,46 +77,46 @@ FLAGS
         numbers.
 
      --log-config=[LOG_CONFIG,...]
-        Logging options for the activity performed by this WasmPlugin.
-        Following options can be set:
-        ◆ enable - whether to enable logging. If log-config flag is set,
+        Logging options for the activity performed by this plugin. The
+        following options can be set:
+        ◆ enable: whether to enable logging. If log-config flag is set,
           enable option is required.
 
-        ◆ sample-rate - configures the sampling rate of activity logs, where
+        ◆ sample-rate: configures the sampling rate of activity logs, where
           1.0 means all logged activity is reported and 0.0 means no activity
           is reported. The default value is 1.0, and the value of the field
-          must be in [0, 1].
+          must be in range 0 to 1 (inclusive).
 
-        ◆ min-log-level - specificies the lowest level of the logs which
-          should be exported to Cloud Logging. The default value is INFO.
+        ◆ min-log-level: specifies the lowest level of the logs that should
+          be exported to Cloud Logging. The default value is INFO.
 
         Example usage:
         --log-config=enable=True,sample-rate=0.5,min-log-level=INFO
         --log_config=enable=False
 
      --image=IMAGE
-        URI of the container image containing the Wasm module, stored in the
-        Artifact Registry.
+        URI of the container image containing the plugin's Wasm module, stored
+        in the Artifact Registry.
 
      --main-version=MAIN_VERSION
-        ID of the WasmPluginVersion that will be created for that WasmPlugin
-        and that will be set as the current main version.
+        ID of the WasmPluginVersion resource that will be created for that
+        WasmPlugin and that will be set as the current main version.
 
-     Configuration for the WasmPlugin, provided to the plugin at runtime via
-     the proxy_on_configure call (the exact name of the invoked function
-     depends on the Proxy-Wasm SDK used).
+     Configuration for the plugin, provided at runtime by the on_configure
+     function (Rust Proxy-Wasm SDK) or the onConfigure method (C++ Proxy-Wasm
+     SDK).
 
      At most one of these can be specified:
 
        --plugin-config=PLUGIN_CONFIG
-          WasmPlugin configuration in the textual format.
+          Plugin runtime configuration in the textual format.
 
        --plugin-config-file=PLUGIN_CONFIG_FILE
-          Path to a local file containing the plugin configuration.
+          Path to a local file containing the plugin runtime configuration.
 
        --plugin-config-uri=PLUGIN_CONFIG_URI
-          URI of the container image containing the plugin configuration,
-          stored in the Artifact Registry.
+          URI of the container image containing the plugin's runtime
+          configuration, stored in the Artifact Registry.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

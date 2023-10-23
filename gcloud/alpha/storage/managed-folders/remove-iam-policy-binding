@@ -1,0 +1,107 @@
+NAME
+    gcloud alpha storage managed-folders remove-iam-policy-binding - remove an
+        IAM policy binding from a managed folder
+
+SYNOPSIS
+    gcloud alpha storage managed-folders remove-iam-policy-binding URL
+        --member=PRINCIPAL --role=ROLE
+        [--all | --condition=[KEY=VALUE,...]
+          | --condition-from-file=CONDITION_FROM_FILE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Remove a policy binding from the IAM policy of a managed folder,
+    given a managed folder URL and the binding. For more information, see Cloud
+    Identity and Access Management
+    (https://cloud.google.com/storage/docs/access-control/iam).
+
+EXAMPLES
+    To remove an IAM policy binding from the role of
+    roles/storage.objectCreator for the user john.doe@example.com on a managed
+    folder managed-folder in a bucket bucket:
+
+        $ gcloud alpha storage managed-folders remove-iam-policy-binding \
+            gs://bucket/managed-folder --member=user:john.doe@example.com \
+            --role=roles/storage.objectCreator
+
+POSITIONAL ARGUMENTS
+     URL
+        URL of managed folder to remove IAM policy binding from.
+
+REQUIRED FLAGS
+     --member=PRINCIPAL
+        The principal to remove the binding for. Should be of the form
+        user|group|serviceAccount:email or domain:domain.
+
+        Examples: user:test-user@gmail.com, group:admins@example.com,
+        serviceAccount:test123@example.domain.com, or
+        domain:example.domain.com.
+
+        Deleted principals have an additional deleted: prefix and a ?uid=UID
+        suffix, where UID is a unique identifier for the principal. Example:
+        deleted:user:test-user@gmail.com?uid=123456789012345678901.
+
+        Some resources also accept the following special values:
+        ◆ allUsers - Special identifier that represents anyone who is on the
+          internet, with or without a Google account.
+        ◆ allAuthenticatedUsers - Special identifier that represents anyone
+          who is authenticated with a Google account or a service account.
+
+     --role=ROLE
+        The role to remove the principal from.
+
+OPTIONAL FLAGS
+     At most one of these can be specified:
+
+       --all
+          Remove all bindings with this role and principal, irrespective of any
+          conditions.
+
+       --condition=[KEY=VALUE,...]
+          The condition of the binding that you want to remove. When the
+          condition is explicitly specified as None (--condition=None), a
+          binding without a condition is removed. Otherwise, only a binding
+          with a condition that exactly matches the specified condition
+          (including the optional description) is removed. For more on
+          conditions, refer to the conditions overview guide:
+          https://cloud.google.com/iam/docs/conditions-overview
+
+          When using the --condition flag, include the following key-value
+          pairs:
+
+           expression
+              (Required) Condition expression that evaluates to True or False.
+              This uses a subset of Common Expression Language syntax.
+
+              If the condition expression includes a comma, use a different
+              delimiter to separate the key-value pairs. Specify the delimiter
+              before listing the key-value pairs. For example, to specify a
+              colon (:) as the delimiter, do the following:
+              --condition=^:^title=TITLE:expression=EXPRESSION. For more
+              information, see
+              https://cloud.google.com/sdk/gcloud/reference/topic/escaping.
+
+           title
+              (Required) A short string describing the purpose of the
+              expression.
+
+           description
+              (Optional) Additional description for the expression.
+
+       --condition-from-file=CONDITION_FROM_FILE
+          Path to a local JSON or YAML file that defines the condition. To see
+          available fields, see the help for --condition.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+
