@@ -11,9 +11,27 @@ SYNOPSIS
 
 DESCRIPTION
     (ALPHA) gcloud alpha compute network-attachments update is used to update
-    network attachments. A service consumer creates a network attachment to
-    make a network available to producers. Service producers use Private
-    Service Connect Interfaces to privately connect to the network attachment.
+    network attachments. You can update the following fields: description,
+    subnets, producer-accept-list and producer-reject-list. If you update the
+    producer-accept-list or producer-reject-list, the full new list should be
+    specified.
+
+EXAMPLES
+    To update all the parameters with the new list, run:
+
+        $ gcloud alpha compute network-attachments update \
+            NETWORK_ATTACHMENT_NAME --region=us-central1 \
+            --subnets=MY_SUBNET2 \
+            --description='default network attachment' \
+            --producer-accept-list=PROJECT5,PROJECT6 \
+            --producer-reject-list=PROJECT7,PROJECT8
+
+    To update a network attachment to change only the subnet to MY_SUBNET3,
+    run:
+
+        $ gcloud alpha compute network-attachments update \
+            NETWORK_ATTACHMENT_NAME --region=us-central1 \
+            --subnets=MY_SUBNET3
 
 POSITIONAL ARGUMENTS
      NAME
@@ -68,5 +86,9 @@ NOTES
     This command is currently in alpha and might change without notice. If this
     command fails with API permission errors despite specifying the correct
     project, you might be trying to access an API with an invitation-only early
-    access allowlist.
+    access allowlist. These variants are also available:
+
+        $ gcloud compute network-attachments update
+
+        $ gcloud beta compute network-attachments update
 

@@ -12,9 +12,11 @@ SYNOPSIS
           | --node-taints=[NODE_TAINT,...]
           | --system-config-from-file=SYSTEM_CONFIG_FROM_FILE
           | --tags=[TAG,...] | --windows-os-version=WINDOWS_OS_VERSION
-          | --workload-metadata=WORKLOAD_METADATA | --enable-autoprovisioning
-          --enable-autoscaling --location-policy=LOCATION_POLICY
-          --max-nodes=MAX_NODES --min-nodes=MIN_NODES
+          | --workload-metadata=WORKLOAD_METADATA | --disk-size=DISK_SIZE
+          --disk-type=DISK_TYPE --machine-type=MACHINE_TYPE
+          | --enable-autoprovisioning --enable-autoscaling
+          --location-policy=LOCATION_POLICY --max-nodes=MAX_NODES
+          --min-nodes=MIN_NODES
           --total-max-nodes=TOTAL_MAX_NODES --total-min-nodes=TOTAL_MIN_NODES
           | --enable-autorepair --enable-autoupgrade
           | --enable-blue-green-upgrade --enable-surge-upgrade
@@ -247,6 +249,35 @@ REQUIRED FLAGS
               exposed by the Compute Engine and App Engine Metadata Servers.
               This feature can only be enabled if Workload Identity is enabled
               at the cluster level.
+
+       Node config
+
+         --disk-size=DISK_SIZE
+            Size for node VM boot disks in GB. Defaults to 100GB.
+
+         --disk-type=DISK_TYPE
+            Type of the node VM boot disk. For version 1.24 and later, defaults
+            to pd-balanced. For versions earlier than 1.24, defaults to
+            pd-standard. DISK_TYPE must be one of: pd-standard, pd-ssd,
+            pd-balanced, hyperdisk-balanced, hyperdisk-extreme,
+            hyperdisk-throughput.
+
+         --machine-type=MACHINE_TYPE
+            The type of machine to use for nodes. Defaults to e2-medium. The
+            list of predefined machine types is available using the following
+            command:
+
+                $ gcloud compute machine-types list
+
+            You can also specify custom machine types by providing a string
+            with the format "custom-CPUS-RAM" where "CPUS" is the number of
+            virtual CPUs and "RAM" is the amount of RAM in MiB.
+
+            For example, to create a node pool using custom machines with 2
+            vCPUs and 12 GB of RAM:
+
+                $ gcloud container node-pools update high-mem-pool \
+                    --machine-type=custom-2-12288
 
        Cluster autoscaling
 

@@ -29,7 +29,9 @@ SYNOPSIS
           [ips=IPS],[netmask=NETMASK]) [--admin-users=ADMIN_USERS]
         [--annotations=[KEY=VALUE,...]] [--async] [--description=DESCRIPTION]
         [--disable-aag-config] [--disable-vsphere-csi] [--enable-auto-repair]
-        [--enable-vm-tracking] [--validate-only]
+        [--enable-vm-tracking]
+        [--upgrade-policy=[control-plane-only=CONTROL-PLANE-ONLY]]
+        [--validate-only]
         [--cpus=CPUS --enable-auto-resize --memory=MEMORY --replicas=REPLICAS]
         [--disable-control-plane-v2 | --enable-control-plane-v2]
         [--enable-advanced-networking --enable-dataplane-v2]
@@ -332,6 +334,40 @@ OPTIONAL FLAGS
 
      --enable-vm-tracking
         If set, enable VM tracking.
+
+     Upgrade policy for the cluster.
+
+       --upgrade-policy=[control-plane-only=CONTROL-PLANE-ONLY]
+          If not specified, control-plane-only is set to False. In the next
+          upgrade operation, all worker node pools will be upgraded together
+          with the control plane.
+
+          Example:
+
+              To upgrade the control plane only and keep worker node pools version unchanged, first specify the policy:
+
+              $ gcloud container vmware clusters create CLUSTER \
+                --upgrade-policy control-plane-only=True
+
+              Then to start the upgrade operation using the specified policy, run:
+
+              $ gcloud container vmware clusters upgrade CLUSTER --version=VERSION
+
+              After upgrading only the cluster control plane, to upgrade an individual node pool, run:
+
+              $ gcloud container vmware node-pools update NODE_POOL \
+                --version=VERSION
+
+          Example:
+
+              Alternatively, to upgrade both the control plane and all worker node pools, first specify the policy:
+
+              $ gcloud container vmware clusters create CLUSTER \
+                --upgrade-policy control-plane-only=False
+
+              Then to start the upgrade operation using the specified policy, run:
+
+              $ gcloud container vmware clusters upgrade CLUSTER --version=VERSION
 
      --validate-only
         If set, only validate the request, but do not actually perform the

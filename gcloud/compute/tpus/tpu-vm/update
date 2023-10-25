@@ -2,8 +2,10 @@ NAME
     gcloud compute tpus tpu-vm update - update a Cloud TPU VM node
 
 SYNOPSIS
-    gcloud compute tpus tpu-vm update (TPU : --zone=ZONE) [--async]
-        [--description=DESCRIPTION] [--internal-ips] [GCLOUD_WIDE_FLAG ...]
+    gcloud compute tpus tpu-vm update (TPU : --zone=ZONE)
+        [--add-tags=[TAGS,...]] [--async] [--description=DESCRIPTION]
+        [--internal-ips] [--clear-tags | --remove-tags=[TAG,...]]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Update a Cloud TPU VM node.
@@ -50,6 +52,12 @@ POSITIONAL ARGUMENTS
           ▸ set the property compute/zone.
 
 FLAGS
+     --add-tags=[TAGS,...]
+        Tags to add to the TPU Node. Tags are used to identify valid sources or
+        targets for network firewalls. See
+        https://cloud.google.com/vpc/docs/add-remove-network-tags for more
+        details.
+
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
@@ -61,6 +69,25 @@ FLAGS
         Indicate that the IP addresses for the node should be internal. The
         default is that external IP addresses will be associated with the TPU
         workers.
+
+     At most one of these can be specified:
+
+       --clear-tags
+          Remove all tags. If --add-tags is also specified then --clear-tags is
+          applied first.
+
+          For example, to remove all tags:
+
+              $ gcloud compute tpus tpu-vm update --clear-tags
+
+          To remove all existing tags and create two new tags, 'foo' and 'bar':
+
+              $ gcloud compute tpus tpu-vm update --clear-tags --add-tags foo,bar
+
+       --remove-tags=[TAG,...]
+          List of tags to remove. If a tag does not exist it is silently
+          ignored. If --add-tags is also specified then --add-tags is applied
+          first.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

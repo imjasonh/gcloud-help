@@ -10,7 +10,9 @@ SYNOPSIS
           [avoid-buggy-ips=AVOID-BUGGY-IPS],
           [manual-assign=MANUAL-ASSIGN],[pool=POOL]]
         [--static-ip-config-ip-blocks=[gateway=GATEWAY],
-          [ips=IPS],[netmask=NETMASK]] [--validate-only] [--version=VERSION]
+          [ips=IPS],[netmask=NETMASK]]
+        [--upgrade-policy=[control-plane-only=CONTROL-PLANE-ONLY]]
+        [--validate-only] [--version=VERSION]
         [--add-annotations=[KEY1=VALUE1,KEY2=VALUE2,...]
           | --remove-annotations=[KEY1,KEY2,...]]
         [--cpus=CPUS --memory=MEMORY --disable-auto-resize
@@ -130,6 +132,42 @@ FLAGS
 
               Use quote around the flag value to escape semicolon in the
               terminal.
+
+     Upgrade policy for the cluster.
+
+       --upgrade-policy=[control-plane-only=CONTROL-PLANE-ONLY]
+          If not specified, control-plane-only is set to False. In the next
+          upgrade operation, all worker node pools will be upgraded together
+          with the control plane.
+
+          Example:
+
+              To upgrade the control plane only and keep worker node pools version unchanged, first specify the policy:
+
+              $ gcloud beta container vmware clusters update CLUSTER \
+                --upgrade-policy control-plane-only=True
+
+              Then to start the upgrade operation using the specified policy, run:
+
+              $ gcloud beta container vmware clusters upgrade CLUSTER \
+                --version=VERSION
+
+              After upgrading only the cluster control plane, to upgrade an individual node pool, run:
+
+              $ gcloud beta container vmware node-pools update NODE_POOL \
+                --version=VERSION
+
+          Example:
+
+              Alternatively, to upgrade both the control plane and all worker node pools, first specify the policy:
+
+              $ gcloud beta container vmware clusters update CLUSTER \
+                --upgrade-policy control-plane-only=False
+
+              Then to start the upgrade operation using the specified policy, run:
+
+              $ gcloud beta container vmware clusters upgrade CLUSTER \
+                --version=VERSION
 
      --validate-only
         If set, only validate the request, but do not actually perform the

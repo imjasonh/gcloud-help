@@ -7,7 +7,8 @@ SYNOPSIS
         (APP_PROFILE : --instance=INSTANCE)
         ([--route-any : --restrict-to=[RESTRICT_TO,...]]
           | [--route-to=ROUTE_TO : --transactional-writes])
-        [--description=DESCRIPTION] [--force] [GCLOUD_WIDE_FLAG ...]
+        [--description=DESCRIPTION] [--force] [--priority=PRIORITY]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) Create a new Bigtable app profile.
@@ -30,6 +31,11 @@ EXAMPLES
         $ gcloud beta bigtable app-profiles create my-app-profile-id \
             --instance=my-instance-id --route-any \
             --description="Routes requests for my use case"
+
+    To create an app profile with a request priority of PRIORITY_MEDIUM, run:
+
+        $ gcloud beta bigtable app-profiles create my-app-profile-id \
+            --instance=my-instance-id --route-any --priority=PRIORITY_MEDIUM
 
 POSITIONAL ARGUMENTS
      App profile resource - The app profile to create. The arguments in this
@@ -95,6 +101,17 @@ OPTIONAL FLAGS
 
      --force
         Ignore warnings and force create.
+
+     --priority=PRIORITY
+        Specify the request priority. If not specified, the app profile uses
+        PRIORITY_HIGH by default. PRIORITY must be one of:
+
+         PRIORITY_HIGH
+            Requests are treated with high priority.
+         PRIORITY_LOW
+            Requests are treated with low priority.
+         PRIORITY_MEDIUM
+            Requests are treated with medium priority.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

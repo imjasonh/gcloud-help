@@ -91,12 +91,14 @@ OPTIONAL FLAGS
         message with a given value of message_id on this subscription: The
         message sent to a subscriber is guaranteed not to be resent before the
         message's acknowledgment deadline expires. An acknowledged message will
-        not be resent to a subscriber.
+        not be resent to a subscriber. Use --no-enable-exactly-once-delivery to
+        disable this flag.
 
      --enable-message-ordering
         Whether to receive messages with the same ordering key in order. If
         set, messages with the same ordering key are sent to subscribers in the
-        order that Pub/Sub receives them.
+        order that Pub/Sub receives them. Use --no-enable-message-ordering to
+        disable this flag.
 
      --expiration-period=EXPIRATION_PERIOD
         The subscription will expire if it is inactive for the given period.
@@ -146,7 +148,8 @@ OPTIONAL FLAGS
         Whether or not to retain acknowledged messages. If true, messages are
         not expunged from the subscription's backlog until they fall out of the
         --message-retention-duration window. Acknowledged messages are not
-        retained by default.
+        retained by default. Use --no-retain-acked-messages to disable this
+        flag.
 
      At most one of these can be specified:
 
@@ -166,11 +169,13 @@ OPTIONAL FLAGS
             When --use-topic-schema is set, whether or not to ignore fields in
             the topic schema that do not appear in the BigQuery schema. If
             false, then the BigQuery schema must contain all fields that are
-            also present in the topic schema.
+            also present in the topic schema. Use --no-drop-unknown-fields to
+            disable this flag.
 
          --use-topic-schema
             Whether or not to use the schema for the subscription's topic (if
-            it exists) when writing messages to BigQuery.
+            it exists) when writing messages to BigQuery. Use
+            --no-use-topic-schema to disable this flag.
 
          --write-metadata
             Whether or not to write message metadata including message ID,
@@ -178,7 +183,8 @@ OPTIONAL FLAGS
             subscription name, message_id, and publish_time fields are put in
             their own columns while all other message properties other than
             data (for example, an ordering_key, if present) are written to a
-            JSON object in the attributes column.
+            JSON object in the attributes column. Use --no-write-metadata to
+            disable this flag.
 
        Cloud Storage Config Options. The Cloud Pub/Sub service account
        associated with the enclosing subscription's parent project (i.e.,
@@ -225,7 +231,8 @@ OPTIONAL FLAGS
             properties other than data (for example, an ordering_key, if
             present) are added as entries in the attributes map. This has an
             effect only for subscriptions with
-            --cloud-storage-output-format=avro.
+            --cloud-storage-output-format=avro. Use
+            --no-cloud-storage-write-metadata to disable this flag.
 
      Dead Letter Queue Options. The Cloud Pub/Sub service account associated
      with the enclosing subscription's parent project (i.e.,
@@ -284,6 +291,7 @@ OPTIONAL FLAGS
 
        --push-no-wrapper
           When set, the message data is delivered directly as the HTTP body.
+          Use --no-push-no-wrapper to disable this flag.
 
           This flag argument must be specified if any of the other arguments in
           this group are specified.
@@ -292,7 +300,8 @@ OPTIONAL FLAGS
           When true, writes the Pub/Sub message metadata to
           x-goog-pubsub-<KEY>:<VAL> headers of the HTTP request. Writes the
           Pub/Sub message attributes to <KEY>:<VAL> headers of the HTTP
-          request.
+          request. Use --no-push-no-wrapper-write-metadata to disable this
+          flag.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

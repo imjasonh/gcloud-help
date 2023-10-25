@@ -17,7 +17,8 @@ SYNOPSIS
           --clear-vpc-connector --[no-]cpu-boost --[no-]cpu-throttling
           --[no-]default-url --description=DESCRIPTION
           --execution-environment=EXECUTION_ENVIRONMENT
-          --revision-suffix=REVISION_SUFFIX --[no-]session-affinity
+          --revision-suffix=REVISION_SUFFIX
+          --service-min-instances=SERVICE_MIN_INSTANCES --[no-]session-affinity
           --vpc-connector=VPC_CONNECTOR --vpc-egress=VPC_EGRESS
           --add-cloudsql-instances=[CLOUDSQL-INSTANCES,...]
           | --clear-cloudsql-instances
@@ -27,13 +28,14 @@ SYNOPSIS
           | --clear-custom-audiences
           | --remove-custom-audiences=[CUSTOM-AUDIENCES,...]
           | --set-custom-audiences=[CUSTOM-AUDIENCES,...]
-          --add-volume=[KEY=VALUE,...] --remove-volume=[VOLUME,...]
-          --add-volume-mount=[KEY=VALUE,...] --args=[ARG,...]
-          --command=[COMMAND,...] --cpu=CPU --depends-on=[CONTAINER,...]
-          --memory=MEMORY --port=PORT
-          --remove-volume-mount=[MOUNT,...] --[no-]use-http2 --clear-env-vars
-          | --env-vars-file=FILE_PATH | --set-env-vars=[KEY=VALUE,...]
-          | --remove-env-vars=[KEY,...]
+          --add-volume=[KEY=VALUE,...] --clear-volumes
+          --remove-volume=[VOLUME,...]
+          --add-volume-mount=[volume=NAME,mount-path=MOUNT_PATH,...]
+          --args=[ARG,...] --clear-volume-mounts --command=[COMMAND,...]
+          --cpu=CPU --depends-on=[CONTAINER,...] --memory=MEMORY --port=PORT
+          --remove-volume-mount=[MOUNT_PATH,...]
+          --[no-]use-http2 --clear-env-vars | --env-vars-file=FILE_PATH
+          | --set-env-vars=[KEY=VALUE,...] | --remove-env-vars=[KEY,...]
           --update-env-vars=[KEY=VALUE,...] --clear-secrets
           | --set-secrets=[KEY=VALUE,...] | --remove-secrets=[KEY,...]
           --update-secrets=[KEY=VALUE,...] --image=IMAGE | --source=SOURCE
@@ -316,6 +318,11 @@ FLAGS
           [--revision-suffix=v1] for a service named 'helloworld', would lead
           to a revision named 'helloworld-v1'.
 
+       --service-min-instances=SERVICE_MIN_INSTANCES
+          The minimum number of container instances for this Service to run or
+          'default' to remove any minimum. These instances will be divided
+          among all Revisions receiving a percentage of traffic.
+
        --[no-]session-affinity
           Whether to enable session affinity for connections to the service.
           Use --session-affinity to enable and --no-session-affinity to
@@ -406,7 +413,9 @@ FLAGS
           instances and all data will be lost when the instance it is on is
           terminated. Additional keys:
           ▸ size-limit: (required) A quantity representing the maximum amount
-            of memory allocated to this volume, such as "512Mi" or "3G".
+            of memory allocated to this volume, such as "512Mi" or "3G". Data
+            stored in an in-memory volume consumes the memory allocation of the
+            container that wrote the data.
 
           nfs: Represents a volume backed by an NFS server. Additional keys:
           ▸ location: (required) The location of the NFS Server, in the form
@@ -423,6 +432,10 @@ FLAGS
             in the volume.
           ▸ path: (required) The relative path within the volume to mount
             that version.
+
+       --clear-volumes
+          Remove all existing volumes from the Cloud Run resource, including
+          volumes mounted as secrets
 
        --remove-volume=[VOLUME,...]
           Removes volumes from the Cloud Run resource.
@@ -442,7 +455,7 @@ FLAGS
           If the --container or --remove-containers flag is specified the following
           arguments may only be specified after a --container flag.
 
-            --add-volume-mount=[KEY=VALUE,...]
+            --add-volume-mount=[volume=NAME,mount-path=MOUNT_PATH,...]
                Adds a mount to the current container. Must contain the keys
                volume=NAME and mount-path=/PATH where NAME is the name of a
                volume on this resource and PATH is the path within the
@@ -454,6 +467,9 @@ FLAGS
                provided, the container image's default Cmd is used. Otherwise,
                if not specified, no arguments are passed. To reset this field
                to its default, pass an empty string.
+
+            --clear-volume-mounts
+               Remove all existing mounts from the current container.
 
             --command=[COMMAND,...]
                Entrypoint for the container image. If not specified, the
@@ -484,8 +500,9 @@ FLAGS
                probe pointing to the previous container port, this will also
                update the probe port.
 
-            --remove-volume-mount=[MOUNT,...]
-               Removes a mount from the current container.
+            --remove-volume-mount=[MOUNT_PATH,...]
+               Removes the volume mounted at the specified path from the
+               current container.
 
             --[no-]use-http2
                Whether to use HTTP/2 for connections to the service. Use

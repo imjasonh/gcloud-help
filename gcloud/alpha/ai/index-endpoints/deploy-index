@@ -6,7 +6,9 @@ SYNOPSIS
     gcloud alpha ai index-endpoints deploy-index
         (INDEX_ENDPOINT : --region=REGION)
         --deployed-index-id=DEPLOYED_INDEX_ID --display-name=DISPLAY_NAME
-        --index=INDEX [--machine-type=MACHINE_TYPE]
+        --index=INDEX [--allowed-issuers=[ALLOWED_ISSUERS,...]]
+        [--audiences=[AUDIENCES,...]] [--deployment-group=DEPLOYMENT_GROUP]
+        [--enable-access-logging] [--machine-type=MACHINE_TYPE]
         [--max-replica-count=MAX_REPLICA_COUNT]
         [--min-replica-count=MIN_REPLICA_COUNT]
         [--reserved-ip-ranges=[RESERVED_IP_RANGES,...]] [GCLOUD_WIDE_FLAG ...]
@@ -17,14 +19,14 @@ DESCRIPTION
 EXAMPLES
     To deploy index 345 to an index endpoint 456 with 2 min replica count and
     10 max replica count under project example in region us-central1, within
-    reserved ip ranges vertex-ai-ip-ranges-1 and vertex-ai-ip-ranges-2 run:
+    reserved ip ranges vertex-ai-ip-range-1 and vertex-ai-ip-range-2 run:
 
         $ gcloud alpha ai index-endpoints deploy-index 456 \
             --project=example --region=us-central1 --index=345 \
             --deployed-index-id=deployed-index-345 \
             --display-name=deployed-index-345 --min-replica-count=2 \
             --max-replica-count=10 \
-            --reserved-ip-ranges=vertex-ai-ip-ranges-1,vertex-ai-ip-ranges-2
+            --reserved-ip-ranges=vertex-ai-ip-range-1,vertex-ai-ip-range-2
 
 POSITIONAL ARGUMENTS
      Index endpoint resource - The index endpoint to deploy an index. The
@@ -71,6 +73,34 @@ REQUIRED FLAGS
         ID of the index.
 
 OPTIONAL FLAGS
+     --allowed-issuers=[ALLOWED_ISSUERS,...]
+        List of allowed JWT issuers for a deployed index.
+
+        Each entry must be a valid Google service account, in the following
+        format: service-account-name@project-id.iam.gserviceaccount.com
+
+     --audiences=[AUDIENCES,...]
+        List of JWT audiences that are allowed to access a deployed index.
+
+        JWT containing any of these audiences
+        (https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32#section
+        -4.1.3) will be accepted.
+
+     --deployment-group=DEPLOYMENT_GROUP
+        Deployment group can be no longer than 64 characters (eg:test, prod).
+        If not set, we will use the default deployment group.
+
+        Creating deployment_groups with reserved_ip_ranges is a recommended
+        practice when the peered network has multiple peering ranges.This
+        creates your deployments from predictable IP spaces for easier traffic
+        administration.
+
+     --enable-access-logging
+        If true, online prediction access logs are sent to Cloud Logging.
+
+        These logs are standard server access logs, containing information like
+        timestamp and latency for each prediction request.
+
      --machine-type=MACHINE_TYPE
         The machine resources to be used for each node of this deployment. For
         available machine types, see
