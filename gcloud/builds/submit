@@ -1,5 +1,5 @@
 NAME
-    gcloud builds submit - submit a build using Google Cloud Build
+    gcloud builds submit - submit a build using Cloud Build
 
 SYNOPSIS
     gcloud builds submit [[SOURCE] --no-source] [--async] [--no-cache]
@@ -16,7 +16,7 @@ SYNOPSIS
           | --tag=TAG, -t TAG] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    Submit a build using Google Cloud Build.
+    Submit a build using Cloud Build.
 
     When the builds/use_kaniko property is True, builds submitted with --tag
     will use Kaniko (https://github.com/GoogleContainerTools/kaniko) to execute
@@ -41,6 +41,20 @@ EXAMPLES
 
         $ gcloud builds submit "source.tgz" --tag=gcr.io/my-project/image \
             --async
+
+    To submit a build with source from a Git repository
+    https://github.com/owner/repo:
+
+        $ gcloud builds submit "https://github.com/owner/repo" \
+            --git-source-revision=main --config=config.yaml
+
+    To submit a build with source from a 2nd-gen Cloud Build repository
+    resource
+    projects/my-project/locations/us-west1/connections/my-conn/repositories/my-repo:
+
+        $ gcloud builds submit \
+            "projects/my-project/locations/us-west1/connections/my-conn/repo\
+        sitories/my-repo" --revision=main
 
 POSITIONAL ARGUMENTS
      At most one of these can be specified:
@@ -79,10 +93,10 @@ FLAGS
 
      --dir=DIR
         Directory, relative to the source root, in which to run the build. This
-        is used when the build source is a 2nd-gen Google Cloud Build
-        repository resource. This must be a relative path. If a step's dir is
-        specified and is an absolute path, this value is ignored for that
-        step's execution.
+        is used when the build source is a 2nd-gen Cloud Build repository
+        resource. This must be a relative path. If a step's dir is specified
+        and is an absolute path, this value is ignored for that step's
+        execution.
 
      --disk-size=DISK_SIZE
         Machine disk size (GB) to run the build.
@@ -136,7 +150,7 @@ FLAGS
      --revision=REVISION
         Revision to fetch from the Git repository such as a branch, a tag, a
         commit SHA, or any Git ref to run the build. This is used when the
-        build source is a 2nd-gen Google Cloud Build repository resource.
+        build source is a 2nd-gen Cloud Build repository resource.
 
         Cloud Build uses git fetch to fetch the revision from the Git
         repository; therefore make sure that the string you provide for

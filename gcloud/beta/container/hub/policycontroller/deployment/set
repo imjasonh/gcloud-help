@@ -1,0 +1,143 @@
+NAME
+    gcloud beta container hub policycontroller deployment set - sets
+        configuration of the Policy Controller components
+
+SYNOPSIS
+    gcloud beta container hub policycontroller deployment set DEPLOYMENT
+        PROPERTY VALUE [--effect=EFFECT]
+        [--all-memberships
+          | [--memberships=[MEMBERSHIPS,...] : --location=LOCATION]]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Customizes on-cluster components of Policy Controller. Supported
+    properties may be set with this command, or removed with 'remove'. These
+    components are managed as individual kubernetes deployments (e.g.
+    'admission') in the gatekeeper-system namespace.
+
+    When setting cpu or memory limits and requests, Kubernetes-standard
+    resource units are used.
+
+    All properties set using this command will overwrite previous properties,
+    with the exception of tolerations which can only be added, and any number
+    may be added. To edit a toleration, use 'remove' to first delete it, and
+    then 'set' the desired toleration.
+
+EXAMPLES
+    To set the replica count for a component:
+
+        $ gcloud beta container hub policycontroller deployment set \
+            admission replica-count 3
+
+    To set the replica count for a component across all fleet memberships:
+
+        $ gcloud beta container hub policycontroller deployment set \
+            admission replica-count 3 --all-memberships
+
+    To set a toleration with key 'my-key' on a component (which is an 'Exists'
+    operator):
+
+        $ gcloud beta container hub policycontroller deployment set \
+            admission toleration my-key
+
+    To set a toleration with key 'my-key' and 'my-value' on a component (which
+    is an 'Equal' operator):
+
+        $ gcloud beta container hub policycontroller deployment set \
+            admission toleration my-key=my-value
+
+    To set a toleration with key 'my-key' and 'my-value' on a component, along
+    with the effect 'NoSchedule' (which is an 'Equal' operator):
+
+        $ gcloud beta container hub policycontroller deployment set \
+            admission toleration my-key=my-value --effect=NoSchedule
+
+    To set a memory limit:
+
+        $ gcloud beta container hub policycontroller deployment set audit \
+            memory-limit 4Gi
+
+    To set a memory request:
+
+        $ gcloud beta container hub policycontroller deployment set \
+            mutation memory-request 2Gi
+
+    To set a cpu limit:
+
+        $ gcloud beta container hub policycontroller deployment set \
+            admission cpu-limit 500m
+
+    To set a cpu request:
+
+        $ gcloud beta container hub policycontroller deployment set audit \
+            cpu-request 250m
+
+POSITIONAL ARGUMENTS
+     DEPLOYMENT
+        The PolicyController deployment component (e.g. "admission", "audit" or
+        "mutation") upon which to set configuration.
+
+     PROPERTY
+        Property to be set.
+
+     VALUE
+        The value to set the property to. Valid input varies based on the
+        property being set.
+
+FLAGS
+     --effect=EFFECT
+        Applies only to "toleration" property. EFFECT must be one of:
+        NoSchedule, PreferNoSchedule, NoExecute.
+
+     Membership flags.
+
+     At most one of these can be specified:
+
+       --all-memberships
+          If supplied, apply to all Policy Controllers memberships in the
+          fleet.
+
+       Membership resource - The group of arguments defining one or more
+       memberships. The arguments in this group can be used to specify the
+       attributes of this resource. (NOTE) Some attributes are not given
+       arguments in this group but can be set in other ways.
+
+       To set the project attribute:
+        ▸ provide the argument --memberships on the command line with a fully
+          specified name;
+        ▸ provide the argument --project on the command line;
+        ▸ set the property core/project.
+
+         --memberships=[MEMBERSHIPS,...]
+            IDs of the memberships or fully qualified identifiers for the
+            memberships.
+
+            To set the memberships attribute:
+            ▫ provide the argument --memberships on the command line.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --location=LOCATION
+            Location for the memberships.
+
+            To set the location attribute:
+            ▫ provide the argument --memberships on the command line with a
+              fully specified name;
+            ▫ provide the argument --location on the command line;
+            ▫ set the property gkehub/location.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud alpha container hub policycontroller deployment set
+

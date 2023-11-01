@@ -1,0 +1,254 @@
+NAME
+    gcloud alpha transfer appliances orders create - create an order for a
+        transfer appliance
+
+SYNOPSIS
+    gcloud alpha transfer appliances orders create NAME --country=COUNTRY
+        [--submit] [--clone=CLONE : --clone-region=CLONE_REGION]
+        [[--model=MODEL : --cmek=CMEK --display-name=DISPLAY_NAME
+          --internet-enabled
+          --offline-export=[manifest=MANIFEST],[source=SOURCE]
+          --offline-import=OFFLINE_IMPORT --online-import=ONLINE_IMPORT]]
+        [--address=[administrative-area=ADMINISTRATIVE-AREA],
+          [lines=LINES],[locality=LOCALITY],[postal-code=POSTAL-CODE]
+          --delivery-notes=DELIVERY_NOTES
+          --order-contact=[business=BUSINESS],
+          [emails=EMAILS],[name=NAME],[phone=PHONE]
+          --shipping-contact=[business=BUSINESS],
+          [emails=EMAILS],[name=NAME],[phone=PHONE]] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) gcloud alpha transfer appliances orders create facilitates the
+    creation of Transfer Appliance orders. When an order is created, an
+    appliance record is created as well.
+
+EXAMPLES
+    To order a rackable appliance with 40 TB of storage, named my-appliance, a
+    Cloud Storage destination of my-bucket and the minimum amount of contact
+    information.
+
+        $ gcloud alpha transfer appliances orders create my-appliance \
+            --model=TA40_RACKABLE \
+            --shipping-contact="name=Jane \
+        Doe,emails=[jane@example.com],phone=12345678910" \
+            --offline-import=gs://my-bucket \
+            --order-contact="name=John \
+        Doe,phone=123456578910,emails=[john@example.com]" --country=US \
+            --address="lines=['1600 Amphitheatre \
+        Parkway'],locality=Mountain \
+        View,administrative-area=CA,postal-code=94043"
+
+    To clone an appliance order with the ID my-appliance and location
+    us-central1, only changing the name and Cloud Storage destination:
+
+        $ gcloud alpha transfer appliances orders create \
+            my-other-appliance --country=US --clone=my-appliance \
+            --clone-region=us-central1 --offline-import=my-other-bucket
+
+    To use a flags file to create an appliance rather than provide a long list
+    of flags:
+
+        $ gcloud alpha transfer appliances orders create my-appliance \
+            --flags-file=FLAGS_FILE
+
+    Example file with all possible flags set:
+
+        --address:
+          lines:
+          - 1600 Amphitheatre Parkway
+          locality: Mountain View
+          administrative-area: California
+          postal-code: 94043
+        --cmek: projects/p/locations/global/keyRings/kr/cryptoKeys/ck
+        --country: US
+        --delivery-notes: None
+        --display-name: test
+        --internet-enabled:
+        --model: TA40_RACKABLE
+        --offline-export:
+          source: gs://my-bucket/path
+          manifest: gs://my-other-bucket/manifest
+        --offline-import: gs://my-bucket/path
+        --online-import: gs://my-bucket/path
+        --order-contact:
+          business: Google
+          name: Jane Doe
+          phone: 1234567890
+          emails:
+          - janedoe@example.com
+        --shipping-contact:
+          business: Google
+          name: John Doe
+          phone: 1234567890
+          emails:
+          - johndoe@example.com
+
+POSITIONAL ARGUMENTS
+     NAME
+        Immutable ID that will uniquely identify the appliance.
+
+REQUIRED FLAGS
+     --country=COUNTRY
+        Country where the appliance will be shipped. Note that this cannot be
+        changed. To ship the appliance to a different country, clone the order
+        instead and set a different country and delivery address. To view a
+        complete list of country codes and names see
+        https://support.google.com/business/answer/6270107. COUNTRY must be one
+        of: US, AT, BE, BG, HR, CY, CZ, DK, EE, FI, FR, DE, GR, HU, IE, IT, LV,
+        LT, LU, MT, NL, PL, PT, RO, SK, SI, ES, SE, GB, CA, NO, CH, SG.
+
+FLAGS
+     --submit
+        When specified the order will be submitted immediately. By default,
+        orders are created in a draft state. Use gcloud alpha transfer
+        appliances orders update --submit to submit the order later.
+
+     Order resource - The order to clone. The arguments in this group can be
+     used to specify the attributes of this resource. (NOTE) Some attributes
+     are not given arguments in this group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument --clone on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+       --clone=CLONE
+          ID of the order or fully qualified identifier for the order.
+
+          To set the order attribute:
+          ▸ provide the argument --clone on the command line.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --clone-region=CLONE_REGION
+          The region affiliated with the order.
+
+          To set the region attribute:
+          ▸ provide the argument --clone on the command line with a fully
+            specified name;
+          ▸ provide the argument --clone-region on the command line;
+          ▸ provide the argument --region on the command line.
+
+APPLIANCE FLAGS
+     --model=MODEL
+        Model of the appliance to order. MODEL must be one of: TA40_RACKABLE,
+        TA40_STANDALONE, TA300_RACKABLE, TA300_STANDALONE, TA7, EA_STORAGE_7,
+        EA_GPU_T4.
+
+     --cmek=CMEK
+        Customer-managed key which will add additional layer of security. By
+        default data is encrypted with a Google-managed key.
+
+     --display-name=DISPLAY_NAME
+        A mutable, user-settable name for both the appliance and the order.
+
+     --internet-enabled
+        Gives the option to put the appliance into online mode, allowing it to
+        transfer data and/or remotely report progress to the cloud over the
+        network. When disabled only offline transfers are possible.
+
+     --offline-export=[manifest=MANIFEST],[source=SOURCE]
+        Configuration for an offline export transfer, where data is downloaded
+        onto the appliance at Google and copied from the appliance at the
+        customer site.
+
+         source
+            The Cloud Storage bucket or folder where the data is located, in
+            the form of gs://my-bucket/path/to/folder/.
+
+         manifest
+            Specifies the path to the manifest in Cloud Storage. An example
+            path is gs://bucket_name/path/manifest.csv. The paths in the
+            manifest file are relative to bucketname. For example, to export
+            SOURCE_PATH/object1.pdf, manifest will have object1.pdf in the
+            first column, followed by object version (optional). For more
+            information see
+            https://cloud.google.com/storage-transfer/docs/manifest#object_storage_transfers.
+
+     --offline-import=OFFLINE_IMPORT
+        Destination for a offline import, where data is loaded onto the
+        appliance at the customer site and ingested at Google. Should be in the
+        form of gs://my-bucket/path/to/folder/.
+
+     --online-import=ONLINE_IMPORT
+        Destination for a online import, where data is loaded onto the
+        appliance and automatically transferred to Cloud Storage whenever it
+        has an internet connection. Should be in the form of
+        gs://my-bucket/path/to/folder/.
+
+DELIVERY FLAGS
+     --address=[administrative-area=ADMINISTRATIVE-AREA],[lines=LINES],[locality=LOCALITY],[postal-code=POSTAL-CODE]
+        Address where the appliance will be shipped. All fields (or list items)
+        have a maximum of 80 characters. For more information see
+        https://support.google.com/business/answer/6397478.
+
+         lines
+            Line of the postal address that doesn't fit in the other fields.
+            For most countries/regions, the first line will include a street
+            number and street name. You can have up to 5 address lines.
+
+         locality
+            Generally refers to the city/town portion of the address.
+
+         administrative_area
+            The state or province where the business is located. Enter the full
+            name (e.g. "California"), common postal abbreviation (e.g. "CA"),
+            or subdivision (ISO 3166-2) code (e.g. "US-CA").
+
+         postal_code
+            The postal code of the address.
+
+     --delivery-notes=DELIVERY_NOTES
+        Add any additional details about your order, such as site details and a
+        preference date when the appliance should be delivered.
+
+     --order-contact=[business=BUSINESS],[emails=EMAILS],[name=NAME],[phone=PHONE]
+         business
+            Name of the business, if applicable.
+
+         name
+            Name of the primary contact.
+
+         phone
+            The phone number of the primary contact. Should be given in E.164
+            format consisting of the country calling code (1 to 3 digits) and
+            the subscriber number, with no additional spaces or formatting,
+            e.g. 15552220123.
+
+         emails
+            The email of the primary contact along with any additional email
+            addresses to include with all correspondence.
+
+     --shipping-contact=[business=BUSINESS],[emails=EMAILS],[name=NAME],[phone=PHONE]
+         business
+            Name of the business, if applicable.
+
+         name
+            Name of the primary contact.
+
+         phone
+            The phone number of the primary contact. Should be given in E.164
+            format consisting of the country calling code (1 to 3 digits) and
+            the subscriber number, with no additional spaces or formatting,
+            e.g. 15552220123.
+
+         emails
+            The email of the primary contact along with any additional email
+            addresses to include with all correspondence.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

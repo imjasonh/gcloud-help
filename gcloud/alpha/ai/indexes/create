@@ -4,16 +4,19 @@ NAME
 SYNOPSIS
     gcloud alpha ai indexes create --display-name=DISPLAY_NAME
         --metadata-file=METADATA_FILE [--description=DESCRIPTION]
+        [--encryption-kms-key-name=ENCRYPTION_KMS_KEY_NAME]
         [--index-update-method=INDEX_UPDATE_METHOD] [--labels=[KEY=VALUE,...]]
         [--metadata-schema-uri=METADATA_SCHEMA_URI] [--region=REGION]
         [GCLOUD_WIDE_FLAG ...]
 
 EXAMPLES
-    To create an index under project example in region us-central1, run:
+    To create an index under project example in region us-central1, encrypted
+    with KMS key kms-key-name, run:
 
         $ gcloud alpha ai indexes create --display-name=index \
             --description=test --metadata-file=path/to/your/metadata.json \
-            --project=example --region=us-central1
+            --project=example --region=us-central1 \
+            --encryption-kms-key-name=kms-key-name
 
 REQUIRED FLAGS
      --display-name=DISPLAY_NAME
@@ -26,6 +29,14 @@ REQUIRED FLAGS
 OPTIONAL FLAGS
      --description=DESCRIPTION
         Description of the index.
+
+     --encryption-kms-key-name=ENCRYPTION_KMS_KEY_NAME
+        The Cloud KMS resource identifier of the customer managed encryption
+        key used to protect a resource. Has the form:
+        projects/my-project/locations/my-region/keyRings/my-kr/cryptoKeys/my-key.
+
+        The key needs to be in the same region as where the compute resource is
+        created.
 
      --index-update-method=INDEX_UPDATE_METHOD
         The update method to use with this index. Choose stream_update or

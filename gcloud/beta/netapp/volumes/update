@@ -3,6 +3,9 @@ NAME
 
 SYNOPSIS
     gcloud beta netapp volumes update (VOLUME : --location=LOCATION) [--async]
+        [--backup-config=[backup-policies=BACKUP-POLICIES],
+          [backup-vault=BACKUP-VAULT],
+          [enable-scheduled-backups=ENABLE-SCHEDULED-BACKUPS]]
         [--capacity=CAPACITY] [--description=DESCRIPTION]
         [--enable-kerberos=ENABLE_KERBEROS]
         [--export-policy=[access-type=ACCESS-TYPE],
@@ -30,7 +33,9 @@ SYNOPSIS
           [hour=HOUR],[minute=MINUTE],[snapshots-to-keep=SNAPSHOTS-TO-KEEP]]
         [--source-snapshot=SOURCE_SNAPSHOT] [--storage-pool=STORAGE_POOL]
         [--unix-permissions=UNIX_PERMISSIONS] [--update-labels=[KEY=VALUE,...]]
-        [--clear-labels | --remove-labels=[KEY,...]] [GCLOUD_WIDE_FLAG ...]
+        [--clear-labels | --remove-labels=[KEY,...]]
+        [--source-backup=SOURCE_BACKUP : --backup_vault=BACKUP_VAULT]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) Update a Cloud NetApp Volume and its specified parameters
@@ -80,6 +85,19 @@ FLAGS
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
+
+     --backup-config=[backup-policies=BACKUP-POLICIES],[backup-vault=BACKUP-VAULT],[enable-scheduled-backups=ENABLE-SCHEDULED-BACKUPS]
+        Backup Config contains backup related config on a volume.
+
+            Backup Config will have the following format
+            `--backup-config=backup-policies=BACKUP_POLICIES,
+            backup-vault=BACKUP_VAULT_NAME,
+            enable-scheduled-backups=ENABLE_SCHEDULED_BACKUPS
+
+        backup-policies is a pound-separated (#) list of backup policy names,
+        backup-vault can include a single backup-vault resource name, and
+        enable-scheduled-backups is a Boolean value indicating whether or not
+        scheduled backups are enabled on the volume.
 
      --capacity=CAPACITY
         The desired capacity of the Volume in GiB or TiB units.If no capacity
@@ -235,6 +253,41 @@ FLAGS
           List of label keys to remove. If a label does not exist it is
           silently ignored. If --update-labels is also specified then
           --update-labels is applied first.
+
+     Backup resource - The source Backup to create the Volume from. The
+     arguments in this group can be used to specify the attributes of this
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument --source-backup on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument --source-backup on the command line with a fully
+        specified name;
+      ◆ set the property netapp/location;
+      ◆ set the property netapp/region.
+
+       --source-backup=SOURCE_BACKUP
+          ID of the backup or fully qualified identifier for the backup.
+
+          To set the backup attribute:
+          ▸ provide the argument --source-backup on the command line.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --backup_vault=BACKUP_VAULT
+          The Backup Vault of the backup.
+
+          To set the backup_vault attribute:
+          ▸ provide the argument --source-backup on the command line with a
+            fully specified name;
+          ▸ provide the argument --backup_vault on the command line;
+          ▸ provide the argument --backup-vault on the command line.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
