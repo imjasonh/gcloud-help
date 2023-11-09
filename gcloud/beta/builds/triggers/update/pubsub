@@ -6,8 +6,8 @@ SYNOPSIS
     gcloud beta builds triggers update pubsub (TRIGGER : --region=REGION)
         (--trigger-config=PATH | --description=DESCRIPTION
           --[no-]require-approval --service-account=SERVICE_ACCOUNT
-          --subscription-filter=SUBSCRIPTION_FILTER
-          --topic=TOPIC --clear-substitutions
+          --topic=TOPIC --clear-subscription-filter
+          | --subscription-filter=SUBSCRIPTION_FILTER --clear-substitutions
           | --remove-substitutions=[KEY,...]
           | --update-substitutions=[KEY=VALUE,...] --inline-config=PATH
           | [--dockerfile=DOCKERFILE : --dockerfile-dir=DOCKERFILE_DIR
@@ -90,13 +90,18 @@ REQUIRED FLAGS
             used instead. Format:
             projects/{PROJECT_ID}/serviceAccounts/{ACCOUNT_ID_OR_EMAIL}.
 
-         --subscription-filter=SUBSCRIPTION_FILTER
-            CEL filter expression for the trigger. See
-            https://cloud.google.com/build/docs/filter-build-events-using-cel
-            for more details.
-
          --topic=TOPIC
             The topic to which this trigger should subscribe.
+
+         At most one of these can be specified:
+
+           --clear-subscription-filter
+              Clear existing subscription filter.
+
+           --subscription-filter=SUBSCRIPTION_FILTER
+              CEL filter expression for the trigger. See
+              https://cloud.google.com/build/docs/filter-build-events-using-cel
+              for more details.
 
          At most one of these can be specified:
 

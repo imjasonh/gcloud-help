@@ -4,8 +4,9 @@ NAME
 SYNOPSIS
     gcloud compute tpus tpu-vm update (TPU : --zone=ZONE)
         [--add-tags=[TAGS,...]] [--async] [--description=DESCRIPTION]
-        [--internal-ips] [--clear-tags | --remove-tags=[TAG,...]]
-        [GCLOUD_WIDE_FLAG ...]
+        [--internal-ips] [--update-labels=[KEY=VALUE,...]]
+        [--clear-labels | --remove-labels=[KEY,...]]
+        [--clear-tags | --remove-tags=[TAG,...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Update a Cloud TPU VM node.
@@ -16,6 +17,25 @@ EXAMPLES
 
         $ gcloud compute tpus tpu-vm update my-tpu \
             --description="A new description"
+
+    To modify a TPU VM node with ID my-tpu in the default user project, network
+    and compute/zone (with other defaults supplied by API) by adding labels k0,
+    with value value0 and label k1 with value value1 and removing labels with
+    key k2, run:
+
+        $ gcloud compute tpus tpu-vm update my-tpu \
+            --update-labels=k0=value0,k1=value1 --remove-labels=k2
+
+    Labels can be used to identify the TPU VM node. To list TPU VM nodes with
+    the k1:value1 label, run:
+
+        $ gcloud compute tpus tpu-vm list --filter='labels.k1=value1'
+
+    To list only the labels when describing a resource, use --format to filter
+    the result:
+
+        $ gcloud compute tpus tpu-vm describe my-tpu \
+            --format="default(labels)"
 
 POSITIONAL ARGUMENTS
      Tpu resource - Name of the Cloud TPU VM node to update. The arguments in
@@ -69,6 +89,33 @@ FLAGS
         Indicate that the IP addresses for the node should be internal. The
         default is that external IP addresses will be associated with the TPU
         workers.
+
+     --update-labels=[KEY=VALUE,...]
+        Resource labels to update that represent user-provided metadata. If a
+        label exists, its value is modified. Otherwise, a new label is created.
+        See https://cloud.google.com/compute/docs/labeling-resources for
+        details.
+
+     At most one of these can be specified:
+
+       --clear-labels
+          Remove all labels. If --update-labels is also specified then
+          --clear-labels is applied first.
+
+          For example, to remove all labels:
+
+              $ gcloud compute tpus tpu-vm update --clear-labels
+
+          To remove all existing labels and create two new labels, 'foo' and
+          'baz':
+
+              $ gcloud compute tpus tpu-vm update --clear-labels \
+                  --update-labels foo=bar,baz=qux
+
+       --remove-labels=[KEY,...]
+          List of label keys to remove. If a label does not exist it is
+          silently ignored. If --update-labels is also specified then
+          --update-labels is applied first.
 
      At most one of these can be specified:
 

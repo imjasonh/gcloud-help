@@ -1,0 +1,118 @@
+NAME
+    gcloud storage restore - restore one or more soft-deleted objects
+
+SYNOPSIS
+    gcloud storage restore [URLS ...] [--all-versions, -a] [--async]
+        [--[no-]preserve-acl, -p] [--read-paths-from-stdin, -I]
+        [--allow-overwrite --deleted-after-time=DELETED_AFTER_TIME
+          --deleted-before-time=DELETED_BEFORE_TIME]
+        [--if-generation-match=GENERATION
+          --if-metageneration-match=METAGENERATION] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    The restore command restores soft-deleted objects:
+
+        $ gcloud storage restore url...
+
+EXAMPLES
+    Restore specific version of object in a bucket. Note: Generation number is
+    required.
+
+        $ gcloud storage restore gs://bucket/file1.txt#123
+
+    Restore two objects in a bucket:
+
+        $ gcloud storage restore gs://bucket/file1.txt#123 \
+            gs://bucket/file2.txt#456
+
+    Restore all text objects in a bucket:
+
+        $ gcloud storage restore gs://bucket/**.txt
+
+    Read list of files to restore from stdin:
+
+        $ cat list-of-files.txt | gcloud storage restore \
+            --read-paths-from-stdin
+
+    Restore object with its original ACL policy:
+
+        $ gcloud storage restore gs://bucket/file1.txt --preserve-acl
+
+    Restore all objects in a bucket asynchronously:
+
+        $ gcloud storage restore gs://bucket/** --async
+
+    Restore all text files in a bucket asynchronously:
+
+        $ gcloud storage restore gs://bucket/**.txt --async
+
+POSITIONAL ARGUMENTS
+     [URLS ...]
+        The url of objects to list.
+
+FLAGS
+     SYNCHRONOUS RESTORE OPTIONS
+
+       --all-versions, -a
+          Restores all versions of soft-deleted objects.
+
+          This flag is only useful for buckets with [object versioning]
+          (https://cloud.google.com/storage/docs/object-versioning) enabled. In
+          this case, the latest soft-deleted version will become live and the
+          previous generations will become noncurrent.
+
+          If versioning is disabled, the latest soft-deleted version will
+          become live and previous generations will be soft-deleted again.
+
+          This flag disables parallelism to preserve version order.
+
+     --async
+        Initiates an asynchronous bulk restore operation on the specified
+        bucket.
+
+     --[no-]preserve-acl, -p
+        Preserves ACLs when copying in the cloud. This option is Cloud
+        Storage-only, and you need OWNER access to all copied objects. If all
+        objects in the destination bucket should have the same ACL, you can
+        also set a default object ACL on that bucket instead of using this
+        flag. Preserving ACLs is the default behavior for updating existing
+        objects. Use --preserve-acl to enable and --no-preserve-acl to disable.
+
+     --read-paths-from-stdin, -I
+        Read the list of URLs from stdin.
+
+     BULK RESTORE OPTIONS
+
+       --allow-overwrite
+          If included, live objects will be overwritten. If versioning is
+          enabled, this will result in a noncurrent object. If versioning is
+          not enabled, this will result in a soft-deleted object.
+
+       --deleted-after-time=DELETED_AFTER_TIME
+          Restores only the objects that were soft-deleted after this time.
+
+       --deleted-before-time=DELETED_BEFORE_TIME
+          Restores only the objects that were soft-deleted before this time.
+
+PRECONDITION FLAGS
+     --if-generation-match=GENERATION
+        Execute only if the generation matches the generation of the requested
+        object.
+
+     --if-metageneration-match=METAGENERATION
+        Execute only if the metageneration matches the metageneration of the
+        requested object.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This variant is also available:
+
+        $ gcloud alpha storage restore
+

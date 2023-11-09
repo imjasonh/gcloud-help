@@ -3,10 +3,12 @@ NAME
 
 SYNOPSIS
     gcloud storage objects list URLS [URLS ...]
-        [--additional-headers=HEADER=VALUE] [--fetch-encrypted-object-hashes]
-        [--raw] [--stat] [--decryption-keys=[DECRYPTION_KEY,...]]
-        [--filter=EXPRESSION] [--limit=LIMIT] [--page-size=PAGE_SIZE]
-        [--sort-by=[FIELD,...]] [--uri] [GCLOUD_WIDE_FLAG ...]
+        [--additional-headers=HEADER=VALUE] [--exhaustive]
+        [--fetch-encrypted-object-hashes] [--next-page-token=NEXT_PAGE_TOKEN]
+        [--raw] [--soft-deleted] [--stat]
+        [--decryption-keys=[DECRYPTION_KEY,...]] [--filter=EXPRESSION]
+        [--limit=LIMIT] [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [--uri]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     List Cloud Storage objects.
@@ -39,15 +41,27 @@ FLAGS
         Overrides the default storage/additional_headers property value for
         this command invocation.
 
+     --exhaustive
+        For features like soft delete, the API may return an empty list. If
+        present, continue querying. This may incur costs from repeated LIST
+        calls and may not return any additional objects.
+
      --fetch-encrypted-object-hashes
         API requests to the LIST endpoint do not fetch the hashes for encrypted
         objects by default. If this flag is set, a GET request is sent for each
         encrypted object in order to fetch hashes. This can significantly
         increase the cost of the command.
 
+     --next-page-token=NEXT_PAGE_TOKEN
+        Page token for resuming LIST calls.
+
      --raw
         Shows metadata in the format returned by the API instead of
         standardizing it.
+
+     --soft-deleted
+        Displays soft-deleted objects only. Excludes live and noncurrent
+        objects.
 
      --stat
         Emulates gsutil stat-style behavior. Does not show past object versions

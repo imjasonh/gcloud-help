@@ -6,13 +6,12 @@ SYNOPSIS
     gcloud privateca subordinates create
         (CERTIFICATE_AUTHORITY : --location=LOCATION --pool=POOL)
         (--create-csr --csr-output-file=CSR_OUTPUT_FILE
-          | --issuer-ca=ISSUER_CA [--issuer-pool=ISSUER_POOL
-          : --issuer-location=ISSUER_LOCATION]) [--auto-enable]
-        [--bucket=BUCKET] [--dns-san=[DNS_SAN,...]]
+          | [--issuer-pool=ISSUER_POOL : --issuer-location=ISSUER_LOCATION])
+        [--auto-enable] [--bucket=BUCKET] [--dns-san=[DNS_SAN,...]]
         [--email-san=[EMAIL_SAN,...]] [--from-ca=FROM_CA]
-        [--ip-san=[IP_SAN,...]] [--labels=[KEY=VALUE,...]]
-        [--subject=[SUBJECT,...]] [--uri-san=[URI_SAN,...]]
-        [--validity=VALIDITY; default="P3Y"]
+        [--ip-san=[IP_SAN,...]] [--issuer-ca=ISSUER_CA]
+        [--labels=[KEY=VALUE,...]] [--subject=[SUBJECT,...]]
+        [--uri-san=[URI_SAN,...]] [--validity=VALIDITY; default="P3Y"]
         [--key-algorithm=KEY_ALGORITHM; default="rsa-pkcs1-2048-sha256"
           | [--kms-key-version=KMS_KEY_VERSION : --kms-key=KMS_KEY
           --kms-keyring=KMS_KEYRING
@@ -125,11 +124,6 @@ REQUIRED FLAGS
 
        The issuing resource used for this CA certificate.
 
-         --issuer-ca=ISSUER_CA
-            The Certificate Authority ID of the CA to issue the subordinate CA
-            certificate from. This ID is optional. If ommitted, any available
-            ENABLED CA in the issuing CA pool will be chosen.
-
          Issuer resource - The issuing CA Pool to use, if it is on Private CA.
          The arguments in this group can be used to specify the attributes of
          this resource. (NOTE) Some attributes are not given arguments in this
@@ -207,6 +201,11 @@ OPTIONAL FLAGS
 
      --ip-san=[IP_SAN,...]
         One or more comma-separated IP Subject Alternative Names.
+
+     --issuer-ca=ISSUER_CA
+        The Certificate Authority ID of the CA to issue the subordinate CA
+        certificate from. This ID is optional. If ommitted, any available
+        ENABLED CA in the issuing CA pool will be chosen.
 
      --labels=[KEY=VALUE,...]
         List of label KEY=VALUE pairs to add.

@@ -3,9 +3,10 @@ NAME
 
 SYNOPSIS
     gcloud alpha storage ls [PATH ...] [--additional-headers=HEADER=VALUE]
-        [--all-versions, -a] [--buckets, -b] [--etag, -e]
+        [--all-versions, -a] [--buckets, -b] [--etag, -e] [--exhaustive]
         [--fetch-encrypted-object-hashes] [--format=FORMAT]
-        [--read-paths-from-stdin, -I] [--readable-sizes] [--recursive, -R, -r]
+        [--next-page-token=NEXT_PAGE_TOKEN] [--read-paths-from-stdin, -I]
+        [--readable-sizes] [--recursive, -R, -r] [--soft-deleted]
         [--full, -L | --json, -j | --long, -l]
         [--decryption-keys=[DECRYPTION_KEY,...]] [GCLOUD_WIDE_FLAG ...]
 
@@ -91,6 +92,11 @@ FLAGS
      --etag, -e
         Include ETag metadata in listings that use the --long flag.
 
+     --exhaustive
+        For features like soft delete, the API may return an empty list. If
+        present, continue querying. This may incur costs from repeated LIST
+        calls and may not return any additional objects.
+
      --fetch-encrypted-object-hashes
         API requests to the LIST endpoint do not fetch the hashes for encrypted
         objects by default. If this flag is set, a GET request is sent for each
@@ -102,6 +108,9 @@ FLAGS
         "--format=gsutil"). Other format values (e.g. "json") do not work. See
         different ls flags and commands for alternative formatting.
 
+     --next-page-token=NEXT_PAGE_TOKEN
+        Page token for resuming LIST calls.
+
      --read-paths-from-stdin, -I
         Read the list of URLs from stdin.
 
@@ -112,6 +121,10 @@ FLAGS
      --recursive, -R, -r
         Recursively list the contents of any directories that match the path
         expression.
+
+     --soft-deleted
+        Displays soft-deleted objects only. Excludes live and noncurrent
+        objects.
 
      At most one of these can be specified:
 

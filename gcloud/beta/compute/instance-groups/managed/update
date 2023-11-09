@@ -11,11 +11,14 @@ SYNOPSIS
         [--remove-stateful-disks=DEVICE_NAME,[DEVICE_NAME,...]]
         [--remove-stateful-external-ips=INTERFACE_NAME,[...]]
         [--remove-stateful-internal-ips=INTERFACE_NAME,[...]]
+        [--standby-policy-initial-delay=STANDBY_POLICY_INITIAL_DELAY]
+        [--standby-policy-mode=STANDBY_POLICY_MODE]
         [--stateful-disk=[auto-delete=AUTO-DELETE],[device-name=DEVICE-NAME]]
         [--stateful-external-ip=[enabled],
           [auto-delete=AUTO-DELETE],[interface-name=INTERFACE-NAME]]
         [--stateful-internal-ip=[enabled],
           [auto-delete=AUTO-DELETE],[interface-name=INTERFACE-NAME]]
+        [--stopped-size=STOPPED_SIZE] [--suspended-size=SUSPENDED_SIZE]
         [--target-distribution-shape=SHAPE]
         [--clear-autohealing
           | --initial-delay=INITIAL_DELAY --health-check=HEALTH_CHECK
@@ -130,6 +133,23 @@ FLAGS
         Remove stateful configuration for the specified interfaces for internal
         IPs.
 
+     --standby-policy-initial-delay=STANDBY_POLICY_INITIAL_DELAY
+        Specifies the number of seconds that the MIG should wait before
+        suspending or stopping a VM. The initial delay gives the initialization
+        script the time to prepare your VM for a quick scale out.
+
+     --standby-policy-mode=STANDBY_POLICY_MODE
+        Defines how a MIG resumes or starts VMs from a standby pool when the
+        group scales out. The default mode is manual. STANDBY_POLICY_MODE must
+        be one of:
+
+         manual
+            MIG does not automatically resume or start VMs in the standby pool
+            when the group scales out.
+         scale-out-pool
+            MIG automatically resumes or starts VMs in the standby pool when
+            the group scales out, and replenishes the standby pool afterwards.
+
      --stateful-disk=[auto-delete=AUTO-DELETE],[device-name=DEVICE-NAME]
         Disks considered stateful by the instance group. Managed instance
         groups preserve and reattach stateful disks on VM autohealing, update,
@@ -232,6 +252,12 @@ FLAGS
               permanently deleted from the instance group; for example, when
               the instance is deleted manually or when the group size is
               decreased.
+
+     --stopped-size=STOPPED_SIZE
+        Specifies the target size of stopped VMs in the group.
+
+     --suspended-size=SUSPENDED_SIZE
+        Specifies the target size of suspended VMs in the group.
 
      --target-distribution-shape=SHAPE
         Specifies how a regional managed instance group distributes its
