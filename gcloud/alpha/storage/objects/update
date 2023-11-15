@@ -25,7 +25,10 @@ SYNOPSIS
           | --remove-custom-metadata=[METADATA_KEYS,...]
           --update-custom-metadata=[CUSTOM_METADATA_KEYS_AND_VALUES,...]]
         [--if-generation-match=GENERATION
-          --if-metageneration-match=METAGENERATION] [GCLOUD_WIDE_FLAG ...]
+          --if-metageneration-match=METAGENERATION]
+        [--clear-retention --override-unlocked-retention
+          --retain-until=DATETIME --retention-mode=RETENTION_MODE]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Update Cloud Storage objects.
@@ -217,6 +220,26 @@ PRECONDITION FLAGS
      --if-metageneration-match=METAGENERATION
         Execute only if the metageneration matches the metageneration of the
         requested object.
+
+RETENTION FLAGS
+     --clear-retention
+        Clears object retention settings and unlocks the configuration.
+        Requires --override-unlocked-retention flag as confirmation.
+
+     --override-unlocked-retention
+        Needed for certain retention configuration modifications, such as
+        clearing retention settings and reducing retention time. Note that
+        locked configurations cannot be edited even with this flag.
+
+     --retain-until=DATETIME
+        Ensures the object is retained until the specified time in RFC 3339
+        format. Requires --override-unlocked-retention flag to shorten the
+        retain-until time in unlocked configurations.
+
+     --retention-mode=RETENTION_MODE
+        Sets the object retention mode to either "Locked" or "Unlocked". When
+        retention mode is "Locked", the retain until time can only be
+        increased. RETENTION_MODE must be one of: Locked, Unlocked.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

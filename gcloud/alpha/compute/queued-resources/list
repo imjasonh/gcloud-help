@@ -4,26 +4,31 @@ NAME
 
 SYNOPSIS
     gcloud alpha compute queued-resources list [NAME ...]
-        --zones=ZONE,[ZONE,...] [--regexp=REGEXP, -r REGEXP]
+        [--regexp=REGEXP, -r REGEXP] [--zones=ZONE,[ZONE,...]]
         [--filter=EXPRESSION] [--limit=LIMIT] [--page-size=PAGE_SIZE]
         [--sort-by=[FIELD,...]] [--uri] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) gcloud alpha compute queued-resources list displays all Google
-    Compute Engine queued resources in a project in given zones.
+    Compute Engine queued resources in a project.
+
+    By default, queued resources from all zones are listed. The results can be
+    narrowed down using a filter: --filter="zone:( ZONE ... )".
 
 EXAMPLES
-    To list all queued resources in us-central1-b and europe-west1-d zones in a
-    project in table form, run:
+    To list all queued resources in a project in table form, run:
+
+        $ gcloud alpha compute queued-resources list
+
+    To list the URIs of all queued resources in a project, run:
+
+        $ gcloud alpha compute queued-resources list --uri
+
+    To list all queued resources in the us-central1-b and europe-west1-d zones,
+    run:
 
         $ gcloud alpha compute queued-resources list \
-            --zones=us-central1-b,europe-west1-d
-
-    To list the URIs of all queued resources in us-central1-b zone in a
-    project, run:
-
-        $ gcloud alpha compute queued-resources list --zones=us-central1-b \
-            --uri
+            --filter="zone:( us-central1-b europe-west1-d )"
 
 POSITIONAL ARGUMENTS
      [NAME ...]
@@ -33,10 +38,6 @@ POSITIONAL ARGUMENTS
         Argument NAME is deprecated. Use --filter="name=( 'NAME' ... )"
         instead.
 
-REQUIRED FLAGS
-     --zones=ZONE,[ZONE,...]
-        Only resources from the given zones are queried.
-
 FLAGS
      --regexp=REGEXP, -r REGEXP
         (DEPRECATED) Regular expression to filter the names of the results on.
@@ -44,6 +45,9 @@ FLAGS
         filtered out.
 
         Flag --regexp is deprecated. Use --filter="name~'REGEXP'" instead.
+
+     --zones=ZONE,[ZONE,...]
+        If provided, only resources from the given zones are queried.
 
 LIST COMMAND FLAGS
      --filter=EXPRESSION

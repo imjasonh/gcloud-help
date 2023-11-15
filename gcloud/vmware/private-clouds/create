@@ -7,7 +7,9 @@ SYNOPSIS
         --node-type-config=[count=COUNT],
           [custom-core-count=CUSTOM-CORE-COUNT],[type=TYPE]
         --vmware-engine-network=VMWARE_ENGINE_NETWORK [--async]
-        [--description=DESCRIPTION] [GCLOUD_WIDE_FLAG ...]
+        [--description=DESCRIPTION] [--preferred-zone=PREFERRED_ZONE]
+        [--secondary-zone=SECONDARY_ZONE] [--type=TYPE; default="STANDARD"]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Create a VMware Engine private cloud. Private cloud creation is considered
@@ -139,6 +141,31 @@ OPTIONAL FLAGS
 
      --description=DESCRIPTION
         Text describing the private cloud.
+
+     --preferred-zone=PREFERRED_ZONE
+        Zone that will remain operational when connection between the two zones
+        is lost. Specify the resource name of a zone that belongs to the region
+        of the private cloud.
+
+     --secondary-zone=SECONDARY_ZONE
+        Additional zone for a higher level of availability and load balancing.
+        Specify the resource name of a zone that belongs to the region of the
+        private cloud.
+
+     --type=TYPE; default="STANDARD"
+        Type of the private cloud. TYPE must be one of:
+
+         STANDARD
+            Standard private is a zonal resource, with 3 or more nodes nodes.
+            Default type.
+         STRETCHED
+            Stretched private cloud is a regional resource with redundancy,
+            with a minimum of 6 nodes, nodes count has to be even.
+         TIME_LIMITED
+            Time limited private cloud is a zonal resource, can have only 1
+            node and has limited life span. Will be deleted after defined
+            period of time, can be converted into standard private cloud by
+            expanding it up to 3 or more nodes.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

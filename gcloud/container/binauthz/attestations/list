@@ -3,17 +3,18 @@ NAME
         attestations
 
 SYNOPSIS
-    gcloud container binauthz attestations list
-        (--attestor=ATTESTOR : --attestor-project=ATTESTOR_PROJECT)
-        [--artifact-url=ARTIFACT_URL] [--filter=EXPRESSION] [--limit=LIMIT]
-        [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [--uri]
-        [GCLOUD_WIDE_FLAG ...]
+    gcloud container binauthz attestations list [--artifact-url=ARTIFACT_URL]
+        [--attestor=ATTESTOR : --attestor-project=ATTESTOR_PROJECT]
+        [--filter=EXPRESSION] [--limit=LIMIT] [--page-size=PAGE_SIZE]
+        [--sort-by=[FIELD,...]] [--uri] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     This command lists Binary Authorization attestations for your project.
-    Command line flags specify which artifact to list the attestations for. If
-    no artifact is specified, then this lists all URLs with associated
-    occurrences.
+    Command line flags specify which attestor and artifact to list the
+    attestations for. If no attestor is specified, this lists all attestations
+    in the project, which requires the containeranalysis.occurrences.get
+    permission. If no artifact is specified, then this lists all URLs with
+    associated occurrences.
 
 EXAMPLES
     List the Occurrence messages for all attestations bound to the passed
@@ -29,14 +30,16 @@ EXAMPLES
           --attestor=projects/foo/attestors/bar \
           --artifact-url='gcr.io/foo/example-image@sha256:abcd'
 
-REQUIRED FLAGS
+FLAGS
+     --artifact-url=ARTIFACT_URL
+        Container URL. May be in the gcr.io/repository/image format, or may
+        optionally contain the http or https scheme
+
      Attestor resource - The Attestor whose Container Analysis Note will be
      queried for attestations. Note that the caller must have the
      containeranalysis.notes.listOccurrences permission on the note being
      queried. The arguments in this group can be used to specify the attributes
      of this resource.
-
-     This must be specified.
 
        --attestor=ATTESTOR
           ID of the attestor or fully qualified identifier for the attestor.
@@ -56,11 +59,6 @@ REQUIRED FLAGS
           ▸ provide the argument --attestor-project on the command line;
           ▸ provide the argument --project on the command line;
           ▸ set the property core/project.
-
-FLAGS
-     --artifact-url=ARTIFACT_URL
-        Container URL. May be in the gcr.io/repository/image format, or may
-        optionally contain the http or https scheme
 
 LIST COMMAND FLAGS
      --filter=EXPRESSION

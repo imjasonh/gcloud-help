@@ -1,19 +1,16 @@
 NAME
-    gcloud alpha container hub identity-service apply - update an Identity
-        Service Feature Spec
+    gcloud alpha container hub identity-service apply - update the Identity
+        Service Feature
 
 SYNOPSIS
     gcloud alpha container hub identity-service apply
-        ([--config=CONFIG : [--membership=MEMBERSHIP : --location=LOCATION]])
+        (--fleet-default-member-config=FLEET_DEFAULT_MEMBER_CONFIG
+          [(--config=CONFIG | --origin=ORIGIN)
+          : [--membership=MEMBERSHIP : --location=LOCATION]])
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) Applies the authentication configuration to the Identity Service
-    feature spec for this membership. This configuration is now the "source of
-    truth" for the cluster and can only be updated by using this command or the
-    Cloud Console. Any local authentication configuration on the cluster is
-    overwritten by this configuration, including any local updates made after
-    you run this command.
+    (ALPHA) This command updates the Identity Service Feature in a fleet.
 
 EXAMPLES
     To apply an Identity Service configuration to a membership, run:
@@ -22,14 +19,31 @@ EXAMPLES
             --membership=MEMBERSHIP_NAME \
             --config=/path/to/identity-service.yaml
 
+    To create or modify a fleet-level default membership configuration, run:
+
+        $ gcloud alpha container hub identity-service apply \
+            --fleet-default-member-config=/path/to/identity-service.yaml
+
+    To apply an existing fleet-level default membership configuration to a
+    membership, run:
+
+        $ gcloud alpha container hub identity-service apply --origin=fleet \
+            --membership=MEMBERSHIP_NAME
+
 REQUIRED FLAGS
      At least one of these must be specified:
 
-       --config=CONFIG
-          The path to an identity-service.yaml config file.
+       --fleet-default-member-config=FLEET_DEFAULT_MEMBER_CONFIG
+          The path to an identity-service.yaml configuration file.
 
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
+       Exactly one of these must be specified:
+
+         --config=CONFIG
+            The path to an identity-service.yaml configuration file.
+
+         --origin=ORIGIN
+            Applies the fleet-level default membership configuration to a
+            membership. ORIGIN must be (only one value is supported): fleet.
 
        Membership resource - The group of arguments defining a membership. The
        arguments in this group can be used to specify the attributes of this

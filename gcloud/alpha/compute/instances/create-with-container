@@ -10,9 +10,8 @@ SYNOPSIS
         [--boot-disk-provisioned-iops=BOOT_DISK_PROVISIONED_IOPS]
         [--boot-disk-provisioned-throughput=BOOT_DISK_PROVISIONED_THROUGHPUT]
         [--boot-disk-size=BOOT_DISK_SIZE] [--boot-disk-type=BOOT_DISK_TYPE]
-        [--can-ip-forward] [--confidential-compute]
-        [--confidential-compute-type=CONFIDENTIAL_COMPUTE_TYPE]
-        [--container-arg=CONTAINER_ARG] [--container-command=CONTAINER_COMMAND]
+        [--can-ip-forward] [--container-arg=CONTAINER_ARG]
+        [--container-command=CONTAINER_COMMAND]
         [--container-env=[KEY=VALUE, ...,...]]
         [--container-env-file=CONTAINER_ENV_FILE]
         [--container-image=CONTAINER_IMAGE]
@@ -56,6 +55,8 @@ SYNOPSIS
         [--threads-per-core=THREADS_PER_CORE]
         [--visible-core-count=VISIBLE_CORE_COUNT] [--zone=ZONE]
         [--address=ADDRESS | --no-address]
+        [--confidential-compute
+          | --confidential-compute-type=CONFIDENTIAL_COMPUTE_TYPE]
         [--custom-cpu=CUSTOM_CPU --custom-memory=CUSTOM_MEMORY
           : --custom-extensions --custom-vm-type=CUSTOM_VM_TYPE]
         [--image-project=IMAGE_PROJECT --image=IMAGE
@@ -150,27 +151,6 @@ FLAGS
      --can-ip-forward
         If provided, allows the instances to send and receive packets with
         non-matching destination or source IP addresses.
-
-     --confidential-compute
-        The instance boots with Confidential Computing enabled. Confidential
-        Computing is based on Secure Encrypted Virtualization (SEV), an AMD
-        virtualization feature for running confidential instances.
-
-     --confidential-compute-type=CONFIDENTIAL_COMPUTE_TYPE
-        The instance boots with Confidential Computing enabled. Confidential
-        Computing can be based on Secure Encrypted Virtualization (SEV) or
-        Secure Encrypted Virtualization - Secure Nested Paging (SEV-SNP), both
-        of which are AMD virtualization features for running confidential
-        instances. Trust Domain eXtension based on Intel virtualization
-        features for running confidential instances is also supported.
-        CONFIDENTIAL_COMPUTE_TYPE must be one of:
-
-         SEV
-            Secure Encrypted Virtualization
-         SEV_SNP
-            Secure Encrypted Virtualization - Secure Nested Paging
-         TDX
-            Trust Domain eXtension
 
      --container-arg=CONTAINER_ARG
         Argument to append to container entrypoint or to override container
@@ -852,6 +832,33 @@ FLAGS
           access container images directly. For more information, see:
           ▸ https://cloud.google.com/vpc/docs/configure-private-google-access
           ▸ https://cloud.google.com/nat/docs/using-nat
+
+     At most one of these can be specified:
+
+       --confidential-compute
+          (DEPRECATED) The instance boots with Confidential Computing enabled.
+          Confidential Computing is based on Secure Encrypted Virtualization
+          (SEV), an AMD virtualization feature for running confidential
+          instances.
+
+          The --confidential-compute flag will soon be deprecated. Please use
+          --confidential-compute-type=SEV instead
+
+       --confidential-compute-type=CONFIDENTIAL_COMPUTE_TYPE
+          The instance boots with Confidential Computing enabled. Confidential
+          Computing can be based on Secure Encrypted Virtualization (SEV) or
+          Secure Encrypted Virtualization - Secure Nested Paging (SEV-SNP),
+          both of which are AMD virtualization features for running
+          confidential instances. Trust Domain eXtension based on Intel
+          virtualization features for running confidential instances is also
+          supported. CONFIDENTIAL_COMPUTE_TYPE must be one of:
+
+           SEV
+              Secure Encrypted Virtualization
+           SEV_SNP
+              Secure Encrypted Virtualization - Secure Nested Paging
+           TDX
+              Trust Domain eXtension
 
      Custom machine type extensions.
 
