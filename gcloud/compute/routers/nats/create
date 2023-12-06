@@ -3,10 +3,8 @@ NAME
 
 SYNOPSIS
     gcloud compute routers nats create NAME --router=ROUTER
-        (--auto-allocate-nat-external-ips
-          | --nat-external-ip-pool=IP_ADDRESS,[IP_ADDRESS,...])
         (--nat-all-subnet-ip-ranges
-          | --nat-custom-subnet-ip-ranges=SUBNETWORK[:RANGE_NAME],[...]
+          | --nat-custom-subnet-ip-ranges=SUBNETWORK[:RANGE_NAME|:ALL],[...]
           | --nat-primary-subnet-ip-ranges) [--async]
         [--auto-network-tier=AUTO_NETWORK_TIER]
         [--[no-]enable-dynamic-port-allocation]
@@ -18,7 +16,10 @@ SYNOPSIS
         [--tcp-established-idle-timeout=TCP_ESTABLISHED_IDLE_TIMEOUT]
         [--tcp-time-wait-timeout=TCP_TIME_WAIT_TIMEOUT]
         [--tcp-transitory-idle-timeout=TCP_TRANSITORY_IDLE_TIMEOUT]
-        [--udp-idle-timeout=UDP_IDLE_TIMEOUT] [GCLOUD_WIDE_FLAG ...]
+        [--type=TYPE] [--udp-idle-timeout=UDP_IDLE_TIMEOUT]
+        [--auto-allocate-nat-external-ips
+          | --nat-external-ip-pool=IP_ADDRESS,[IP_ADDRESS,...]]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     gcloud compute routers nats create is used to create a NAT on a Compute
@@ -57,22 +58,16 @@ REQUIRED FLAGS
 
      Exactly one of these must be specified:
 
-       --auto-allocate-nat-external-ips
-          Automatically allocate external IP addresses for Cloud NAT
-
-       --nat-external-ip-pool=IP_ADDRESS,[IP_ADDRESS,...]
-          External IP Addresses to use for Cloud NAT
-
-     Exactly one of these must be specified:
-
        --nat-all-subnet-ip-ranges
           Allow all IP ranges of all subnetworks in the region, including
           primary and secondary ranges, to use NAT.
 
-       --nat-custom-subnet-ip-ranges=SUBNETWORK[:RANGE_NAME],[...]
+       --nat-custom-subnet-ip-ranges=SUBNETWORK[:RANGE_NAME|:ALL],[...]
           List of subnetwork primary and secondary IP ranges to be allowed to
           use NAT.
 
+          ▸ SUBNETWORK:ALL - specifying a subnetwork name with ALL includes
+            the primary range and all secondary ranges of the subnet.
           ▸ SUBNETWORK - including a subnetwork name includes only the
             primary subnet range of the subnetwork.
           ▸ SUBNETWORK:RANGE_NAME - specifying a subnetwork and secondary
@@ -221,10 +216,29 @@ OPTIONAL FLAGS
         https://cloud.google.com/sdk/gcloud/reference/topic/datetimes for
         information on duration formats.
 
+     --type=TYPE
+        Type of the NAT Gateway. Defaults to PUBLIC if not specified. TYPE must
+        be one of:
+
+         PRIVATE
+            Used for private-to-private NAT translations. Allows communication
+            between VPC Networks.
+         PUBLIC
+            Used for private-to-public NAT translations. Allows VM instances to
+            communicate with the internet.
+
      --udp-idle-timeout=UDP_IDLE_TIMEOUT
         Timeout for UDP connections. See
         https://cloud.google.com/sdk/gcloud/reference/topic/datetimes for
         information on duration formats.
+
+     At most one of these can be specified:
+
+       --auto-allocate-nat-external-ips
+          Automatically allocate external IP addresses for Cloud NAT
+
+       --nat-external-ip-pool=IP_ADDRESS,[IP_ADDRESS,...]
+          External IP Addresses to use for Cloud NAT
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

@@ -3,13 +3,19 @@ NAME
         Detection custom modules
 
 SYNOPSIS
-    gcloud alpha scc custom-modules etd list --organization=ORGANIZATION
+    gcloud alpha scc custom-modules etd list
+        (--folder=FOLDER | --organization=ORGANIZATION | --project=PROJECT)
         [--filter=EXPRESSION] [--limit=LIMIT] [--page-size=PAGE_SIZE]
         [--sort-by=[FIELD,...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) List the details of the Event Threat Detection custom modules for
-    the specified organization.
+    (ALPHA) List the details of the resident and inherited Event Threat
+    Detection custom modules for the specified folder or project. For an
+    organization, this command lists only the custom modules that were created
+    at the organization level. Custom modules created in child folders or
+    projects are not included in the list. To list the resident custom modules
+    and the modules that are created in child folders or projects, use gcloud
+    alpha scc custom-modules etd list-descendant.
 
 EXAMPLES
     To list Event Threat Detection custom modules for organization 123, run:
@@ -17,11 +23,33 @@ EXAMPLES
         $ gcloud alpha scc custom-modules etd list \
             --organization=organizations/123
 
+    To list resident and inherited Event Threat Detection custom modules for
+    folder 456, run:
+
+        $ gcloud alpha scc custom-modules etd list --folder=folders/456
+
+    To list resident and inherited Event Threat Detection custom modules for
+    project 789, run:
+
+        $ gcloud alpha scc custom-modules etd list --project=projects/789
+
 REQUIRED FLAGS
-     --organization=ORGANIZATION
-        Organization for listing the Event Threat Detection custom modules
-        created at the organization level. Formatted as organizations/123 or
-        just 123.
+     Exactly one of these must be specified:
+
+       --folder=FOLDER
+          Folder for listing the Event Threat Detection custom modules created
+          at the current folder level and inherited modules from CRM ancestors.
+          Formatted as folders/456 or just 456.
+
+       --organization=ORGANIZATION
+          Organization for listing the Event Threat Detection custom modules
+          created at the organization level. Formatted as organizations/123 or
+          just 123.
+
+       --project=PROJECT
+          ID or number of the project for listing the Event Threat Detections
+          custom modules created at current project level and inherited modules
+          from CRM ancestors. Formatted as projects/789 or just 789.
 
 LIST COMMAND FLAGS
      --filter=EXPRESSION

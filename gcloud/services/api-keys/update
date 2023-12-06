@@ -1,0 +1,168 @@
+NAME
+    gcloud services api-keys update - update an API key's metadata
+
+SYNOPSIS
+    gcloud services api-keys update (KEY : --location=LOCATION) [--async]
+        [--display-name=DISPLAY_NAME]
+        [--annotations=[KEY=VALUE,...] | --clear-annotations]
+        [--clear-restrictions | --api-target=service=SERVICE,[...]
+          --allowed-application=[sha1_fingerprint=SHA1_FINGERPRINT,
+          package_name=PACKAGE_NAME,...]
+          | --allowed-bundle-ids=[ALLOWED_BUNDLE_IDS,...]
+          | --allowed-ips=[ALLOWED_IPS,...]
+          | --allowed-referrers=[ALLOWED_REFERRERS,...]] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Update an API key's metadata.
+
+EXAMPLES
+    To remove all restrictions of the key:
+
+        $ gcloud services api-keys update \
+            projects/myproject/keys/my-key-id --clear-restrictions
+
+    To update display name and set allowed ips as server key restrictions:
+
+        $ gcloud services api-keys update \
+            projects/myproject/keys/my-key-id --display-name="test name" \
+            --allowed-ips=2620:15c:2c4:203:2776:1f90:6b3b:217,104.133.8.78
+
+    To update annotations:
+
+        $ gcloud services api-keys update \
+            projects/myproject/keys/my-key-id --annotations=foo=bar,abc=def
+
+    To update key's allowed referrers restriction:
+
+        $ gcloud services api-keys update \
+            projects/myproject/keys/my-key-id \
+            --allowed-referrers="https://www.example.com/*,http://sub.exampl\
+        e.com/*"
+
+    To update key's allowed ios app bundle ids:
+
+        $ gcloud services api-keys update \
+            projects/myproject/keys/my-key-id --allowed-bundle-ids=my.app
+
+    To update key's allowed android application:
+
+        $ gcloud services api-keys update \
+            projects/myproject/keys/my-key-id \
+            --allowed-application=sha1_fingerprint=foo1,package_name=bar1 \
+            --allowed-application=sha1_fingerprint=foo2,package_name=bar2
+
+    To update keys' allowed api target with multiple services:
+
+        $ gcloud services api-keys update \
+            projects/myproject/keys/my-key-id \
+            --api-target=service=bar.service.com \
+            --api-target=service=foo.service.com
+
+    To update keys' allowed api target with service and method:
+
+        $ gcloud services api-keys update \
+            projects/myproject/keys/my-key-id --flags-file=my-flags.yaml
+
+        The content of 'my-flags.yaml' is as following:
+
+          - --api-target:
+              service: "foo.service.com"
+          - --api-target:
+              service: "bar.service.com"
+              methods:
+              - "foomethod"
+              - "barmethod"
+
+POSITIONAL ARGUMENTS
+     Key resource - The name of the key to update. The arguments in this group
+     can be used to specify the attributes of this resource. (NOTE) Some
+     attributes are not given arguments in this group but can be set in other
+     ways.
+
+     To set the project attribute:
+      ◆ provide the argument key on the command line with a fully specified
+        name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       KEY
+          ID of the key or fully qualified identifier for the key.
+
+          To set the key attribute:
+          ▸ provide the argument key on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          Location of the key.
+
+          To set the location attribute:
+          ▸ provide the argument key on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ location will default to global.
+
+FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --display-name=DISPLAY_NAME
+        Display name of the key to update.
+
+     At most one of these can be specified:
+
+       --annotations=[KEY=VALUE,...]
+          Annotations are key resource. Specify annotations as a key-value
+          dictionary for small amounts of arbitrary client data.
+
+       --clear-annotations
+          If set, clear all annotations on the key.
+
+     At most one of these can be specified:
+
+       --clear-restrictions
+          If set, clear all restrictions on the key.
+
+       --api-target=service=SERVICE,[...]
+          Repeatable. Specify service and optionally one or multiple specific
+          methods. Both fields are case insensitive. If you need to specify
+          methods, it should be specified with the --flags-file. See $ gcloud
+          topic flags-file for details. See the examples section for how to use
+          --api-target in --flags-file.
+
+       At most one of these can be specified:
+
+         --allowed-application=[sha1_fingerprint=SHA1_FINGERPRINT,package_name=PACKAGE_NAME,...]
+            Repeatable. Specify multiple allowed applications. The accepted
+            keys are sha1_fingerprint and package_name.
+
+         --allowed-bundle-ids=[ALLOWED_BUNDLE_IDS,...]
+            iOS app's bundle ids that are allowed to use the key.
+
+         --allowed-ips=[ALLOWED_IPS,...]
+            A list of the caller IP addresses that are allowed to make API
+            calls with this key.
+
+         --allowed-referrers=[ALLOWED_REFERRERS,...]
+            A list of regular expressions for the referrer URLs that are
+            allowed to make API calls with this key.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha services api-keys update
+
+        $ gcloud beta services api-keys update
+

@@ -3,29 +3,28 @@ NAME
         recommendation
 
 SYNOPSIS
-    gcloud alpha recommender recommendations list --location=LOCATION
+    gcloud alpha recommender recommendations list
         (--billing-account=BILLING_ACCOUNT | --folder=FOLDER_ID
           | --organization=ORGANIZATION_ID | --project=PROJECT_ID)
-        [--recommender=RECOMMENDER] [--filter=EXPRESSION] [--limit=LIMIT]
-        [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [--uri]
+        [--location=LOCATION] [--recommender=RECOMMENDER] [--filter=EXPRESSION]
+        [--limit=LIMIT] [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [--uri]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) This command lists all recommendations for a given cloud_entity_id,
-    location and recommender. Supported recommenders can be found here:
+    location, and recommender. If recommender or location is not specified,
+    recommendations for all supported recommenders and locations are listed.
+    Supported recommenders can be found here:
     https://cloud.google.com/recommender/docs/recommenders. Currently the
     following cloud_entity_types are supported: project, billing_account,
     folder and organization.
 
 EXAMPLES
     Lists recommendations for a Cloud project.        $ gcloud alpha recommender recommendations list \
-            --project=project-name --location=global \
+            --project=project-id --location=global \
             --recommender=google.compute.instance.MachineTypeRecommender
 
 REQUIRED FLAGS
-     --location=LOCATION
-        Location
-
      Resource that is associated with cloud entity type. Currently four
      mutually exclusive flags are supported, --project, --billing-account,
      --folder, --organization.
@@ -47,9 +46,13 @@ REQUIRED FLAGS
           core/project property value for this command invocation.
 
 FLAGS
+     --location=LOCATION
+        Location to list recommendations for. If no location is specified,
+        recommendations for all supported locations are listed.
+
      --recommender=RECOMMENDER
         Recommender to list recommendations for. If no recommender is
-        specified, recommendations for all supported recommenders is listed.
+        specified, recommendations for all supported recommenders are listed.
         Supported recommenders can be found here:
         https://cloud.google.com/recommender/docs/recommenders
 

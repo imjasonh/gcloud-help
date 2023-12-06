@@ -7,11 +7,14 @@ SYNOPSIS
         --peer-asn=PEER_ASN --peer-name=PEER_NAME
         [--advertised-route-priority=ADVERTISED_ROUTE_PRIORITY]
         [--advertisement-mode=MODE] [--async]
-        [--custom-learned-route-priority=PRIORITY] [--[no-]enable-ipv6]
-        [--[no-]enabled] [--instance=INSTANCE] [--instance-zone=INSTANCE_ZONE]
+        [--custom-learned-route-priority=PRIORITY] [--[no-]enable-ipv4]
+        [--[no-]enable-ipv6] [--[no-]enabled] [--instance=INSTANCE]
+        [--instance-zone=INSTANCE_ZONE]
+        [--ipv4-nexthop-address=IPV4_NEXTHOP_ADDRESS]
         [--ipv6-nexthop-address=IPV6_NEXTHOP_ADDRESS]
         [--md5-authentication-key=MD5_AUTHENTICATION_KEY]
         [--peer-ip-address=PEER_IP_ADDRESS]
+        [--peer-ipv4-nexthop-address=PEER_IPV4_NEXTHOP_ADDRESS]
         [--peer-ipv6-nexthop-address=PEER_IPV6_NEXTHOP_ADDRESS]
         [--region=REGION] [--set-advertisement-groups=[GROUP,...]]
         [--set-advertisement-ranges=[CIDR_RANGE=DESC,...]]
@@ -66,6 +69,12 @@ OPTIONAL FLAGS
         Google-managed priority value of 100 is used. The routes with the
         lowest priority value win.
 
+     --[no-]enable-ipv4
+        If IPv4 is enabled, the peer connection can be established with IPv4
+        route exchange. If disabled, no IPv4 route exchange is allowed on any
+        active session. By default enabled for IPv4-based BGP sessions. Use
+        --enable-ipv4 to enable and --no-enable-ipv4 to disable.
+
      --[no-]enable-ipv6
         If IPv6 is enabled, the peer connection can be established with IPv6
         route exchange. If disabled, no IPv6 route exchange is allowed on any
@@ -105,22 +114,37 @@ OPTIONAL FLAGS
         Alternatively, the zone can be stored in the environment variable
         CLOUDSDK_COMPUTE_ZONE.
 
+     --ipv4-nexthop-address=IPV4_NEXTHOP_ADDRESS
+        If IPv4 route exchange is enabled for IPv6-based BGP, the IPv4 next hop
+        address of the Cloud Router interface for this BGP peer. Ignored
+        otherwise. Must be a Google owned link-local IPv4 address in the range
+        169.254.0.0/16 and must belong to the same subnet as the interface
+        address of the peer router.
+
      --ipv6-nexthop-address=IPV6_NEXTHOP_ADDRESS
-        The IPv6 next hop address of the Cloud Router interface for this BGP
-        peer. Must be a Google owned global unicast IPv6 address belonging to
-        the range 2600:2d00:0:2:0:0:0:0/64 or 2600:2d00:0:3:0:0:0:0/64 and must
-        belong to same subnet as the interface address of the peer router.
+        If IPv6 route exchange is enabled for IPv4-based BGP, the IPv6 next hop
+        address of the Cloud Router interface for this BGP peer. Ignored
+        otherwise. Must be a Google owned global unicast IPv6 address belonging
+        to the range 2600:2d00:0:2:0:0:0:0/64 or 2600:2d00:0:3:0:0:0:0/64 and
+        must belong to same subnet as the interface address of the peer router.
 
      --md5-authentication-key=MD5_AUTHENTICATION_KEY
         The MD5 authentication key for this BGP peer. Maximum length is 80
         characters. Can contain only printable ASCII characters.
 
      --peer-ip-address=PEER_IP_ADDRESS
-        The link-local address of the peer router. Must be a link-local IPv4
-        address belonging to the range 169.254.0.0/16.
+        The address of the peer router. Must be a link-local IPv4 address in
+        the the range 169.254.0.0/16 or an ULA IPv6 address in the range
+        fdff:1::/64.
+
+     --peer-ipv4-nexthop-address=PEER_IPV4_NEXTHOP_ADDRESS
+        If IPv4 route exchange is enabled for IPv6-based BGP, the IPv4 next hop
+        address of the peer router. Ignored otherwise. Must be a Google owned
+        link-local IPv4 address in the range 169.254.0.0/16.
 
      --peer-ipv6-nexthop-address=PEER_IPV6_NEXTHOP_ADDRESS
-        The IPv6 next hop address of the peer router. Must be a Google owned
+        If IPv6 route exchange is enabled for IPv4-based BGP, the IPv6 next hop
+        address of the peer router. Ignored otherwise. Must be a Google owned
         global unicast IPv6 address belonging to the range
         2600:2d00:0:2:0:0:0:0/64 or 2600:2d00:0:3:0:0:0:0/64.
 

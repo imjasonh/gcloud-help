@@ -12,7 +12,6 @@ SYNOPSIS
         [--cluster-version=CLUSTER_VERSION]
         [--create-subnetwork=[KEY=VALUE,...]]
         [--database-encryption-key=DATABASE_ENCRYPTION_KEY]
-        [--dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE]
         [--enable-backup-restore] [--enable-fleet]
         [--enable-google-cloud-access]
         [--enable-kubernetes-unstable-apis=API,[API,...]]
@@ -25,7 +24,10 @@ SYNOPSIS
         [--subnetwork=SUBNETWORK] [--workload-policies=WORKLOAD_POLICIES]
         [--workload-vulnerability-scanning=WORKLOAD_VULNERABILITY_SCANNING]
         [--binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
-          --binauthz-policy-bindings=[name=BINAUTHZ_POLICY,...]]
+          --binauthz-policy-bindings=[name=BINAUTHZ_POLICY]]
+        [--dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE
+          | --disable-dataplane-v2-flow-observability
+          | --enable-dataplane-v2-flow-observability]
         [--enable-master-authorized-networks
           --master-authorized-networks=NETWORK,[NETWORK,...]]
         [--enable-private-endpoint
@@ -182,35 +184,6 @@ FLAGS
         projects/[KEY_PROJECT_ID]/locations/[LOCATION]/keyRings/[RING_NAME]/cryptoKeys/[KEY_NAME].
         For more information, see
         https://cloud.google.com/kubernetes-engine/docs/how-to/encrypting-secrets.
-
-     --dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE
-        Select Advanced Datapath Observability mode for the cluster. Defaults
-        to DISABLED.
-
-        Advanced Datapath Observability allows for a real-time view into
-        pod-to-pod traffic within your cluster.
-
-        Examples:
-
-            $ gcloud beta container clusters create-auto \
-                --dataplane-v2-observability-mode=DISABLED
-
-            $ gcloud beta container clusters create-auto \
-                --dataplane-v2-observability-mode=INTERNAL_VPC_LB
-
-            $ gcloud beta container clusters create-auto \
-                --dataplane-v2-observability-mode=EXTERNAL_LB
-
-        DATAPLANE_V2_OBSERVABILITY_MODE must be one of:
-
-         DISABLED
-            Disables Advanced Datapath Observability.
-         EXTERNAL_LB
-            Makes Advanced Datapath Observability available to the external
-            network.
-         INTERNAL_VPC_LB
-            Makes Advanced Datapath Observability available from the VPC
-            network.
 
      --enable-backup-restore
         Enable the Backup for GKE add-on. This add-on is disabled by default.
@@ -403,14 +376,52 @@ FLAGS
 
        --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
           Enable Binary Authorization for this cluster.
-          BINAUTHZ_EVALUATION_MODE must be one of: DISABLED, POLICY_BINDINGS,
-          POLICY_BINDINGS_AND_PROJECT_SINGLETON_POLICY_ENFORCE,
-          PROJECT_SINGLETON_POLICY_ENFORCE.
+          BINAUTHZ_EVALUATION_MODE must be one of: disabled, policy-bindings,
+          policy-bindings-and-project-singleton-policy-enforce,
+          project-singleton-policy-enforce.
 
-       --binauthz-policy-bindings=[name=BINAUTHZ_POLICY,...]
+       --binauthz-policy-bindings=[name=BINAUTHZ_POLICY]
           The relative resource name of the Binary Authorization policy to
           audit and/or enforce. GKE policies have the following format:
           projects/{project_number}/platforms/gke/policies/{policy_id}.
+
+     At most one of these can be specified:
+
+       --dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE
+          Select Advanced Datapath Observability mode for the cluster. Defaults
+          to DISABLED.
+
+          Advanced Datapath Observability allows for a real-time view into
+          pod-to-pod traffic within your cluster.
+
+          Examples:
+
+              $ gcloud beta container clusters create-auto \
+                  --dataplane-v2-observability-mode=DISABLED
+
+              $ gcloud beta container clusters create-auto \
+                  --dataplane-v2-observability-mode=INTERNAL_VPC_LB
+
+              $ gcloud beta container clusters create-auto \
+                  --dataplane-v2-observability-mode=EXTERNAL_LB
+
+          DATAPLANE_V2_OBSERVABILITY_MODE must be one of:
+
+           DISABLED
+              Disables Advanced Datapath Observability.
+           EXTERNAL_LB
+              Makes Advanced Datapath Observability available to the external
+              network.
+           INTERNAL_VPC_LB
+              Makes Advanced Datapath Observability available from the VPC
+              network.
+
+       --disable-dataplane-v2-flow-observability
+          Disables Advanced Datapath Observability.
+
+       --enable-dataplane-v2-flow-observability
+          Enables Advanced Datapath Observability which allows for a real-time
+          view into pod-to-pod traffic within your cluster.
 
      Master Authorized Networks
 

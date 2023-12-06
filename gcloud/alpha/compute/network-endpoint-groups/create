@@ -4,6 +4,7 @@ NAME
 
 SYNOPSIS
     gcloud alpha compute network-endpoint-groups create NAME
+        [--client-port-mapping-mode=CLIENT_PORT_MAPPING_MODE]
         [--default-port=DEFAULT_PORT] [--network=NETWORK]
         [--network-endpoint-type=NETWORK_ENDPOINT_TYPE;
           default="gce-vm-ip-port"] [--psc-target-service=PSC_TARGET_SERVICE]
@@ -35,6 +36,17 @@ POSITIONAL ARGUMENTS
         Name of the network endpoint group to operate on.
 
 FLAGS
+     --client-port-mapping-mode=CLIENT_PORT_MAPPING_MODE
+        Determines the spec of client port maping mode of this group. Port
+        Mapping is a use case in which NEG specifies routing by mapping client
+        ports to destinations (e.g. ip and port).
+
+         port-mapping-disabled
+            Group should not be used for mapping client port to destination.
+
+         client-port-per-endpoint
+            For each endpoint there is exactly one client port.
+
      --default-port=DEFAULT_PORT
         The default port to use if the port number is not specified in the
         network endpoint.
@@ -56,8 +68,8 @@ FLAGS
         network is used if unspecified.
 
         This is only supported for NEGs with endpoint type gce-vm-ip-port,
-        non-gcp-private-ip-port, gce-vm-primary-ip, gce-vm-ip,
-        private-service-connect, internet-ip-port, or internet-fqdn-port.
+        non-gcp-private-ip-port, gce-vm-ip, private-service-connect,
+        internet-ip-port, or internet-fqdn-port.
 
         For Private Service Connect NEGs, you can optionally specify --network
         and --subnet if --psc-target-service points to a published service. If
@@ -96,15 +108,15 @@ FLAGS
             must be specified or every network endpoint in the network endpoint
             group must have a port specified.
 
-         gce-vm-primary-ip
-            Endpoint IP address must be the primary IP of a VM's primary
-            network interface in Compute Engine.
-
          serverless
             The network endpoint is handled by specified serverless
             infrastructure, such as Cloud Run, App Engine, or Cloud Function.
             Default port, network, and subnet are not effective for serverless
             endpoints.
+
+         private-service-connect
+            The network endpoint corresponds to a service outside the VPC,
+            accessed via Private Service Connect.
 
          gce-vm-ip
             Endpoint must be the IP address of a VM's network interface in
@@ -112,13 +124,9 @@ FLAGS
             optional. If unspecified, the primary NIC address is used. A port
             must not be specified.
 
-         private-service-connect
-            The network endpoint corresponds to a service outside the VPC,
-            accessed via Private Service Connect.
-
             NETWORK_ENDPOINT_TYPE must be one of: gce-vm-ip-port,
             internet-ip-port, internet-fqdn-port, non-gcp-private-ip-port,
-            gce-vm-primary-ip, serverless, gce-vm-ip, private-service-connect.
+            serverless, gce-vm-ip, private-service-connect.
 
      --psc-target-service=PSC_TARGET_SERVICE
         PSC target service name to add to the private service connect network
@@ -131,9 +139,9 @@ FLAGS
         region where the network endpoint group is created.
 
         This is only supported for NEGs with endpoint type gce-vm-ip-port,
-        gce-vm-primary-ip, gce-vm-ip, or private-service-connect. For Private
-        Service Connect NEGs, you can optionally specify --network and --subnet
-        if --psc-target-service points to a published service. If
+        gce-vm-ip, or private-service-connect. For Private Service Connect
+        NEGs, you can optionally specify --network and --subnet if
+        --psc-target-service points to a published service. If
         --psc-target-service points to the regional service endpoint of a
         Google API, do not specify --network or --subnet.
 

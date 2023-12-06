@@ -5,8 +5,8 @@ NAME
 SYNOPSIS
     gcloud alpha anthos auth login [--cluster=CLUSTER] [--dry-run]
         [--kubeconfig=KUBECONFIG] [--login-config=LOGIN_CONFIG]
-        [--login-config-cert=LOGIN_CONFIG_CERT] [--set-preferred-auth]
-        [--user=USER] [GCLOUD_WIDE_FLAG ...]
+        [--login-config-cert=LOGIN_CONFIG_CERT] [--server=SERVER]
+        [--set-preferred-auth] [--user=USER] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Authenticate clusters using the Anthos client.
@@ -28,6 +28,16 @@ EXAMPLES
         $ gcloud alpha anthos auth login --cluster=testcluster \
           --login-config=kubectl-anthos-config.yaml --dry-run
 
+    To add credentials to default kubeconfig file using server side login:
+
+        $ gcloud alpha anthos auth login --cluster=testcluster \
+          --server=<server-url>
+
+    To add credentials to custom kubeconfig file using server side login:
+
+        $ gcloud alpha anthos auth login --cluster=testcluster \
+          --server=<server-url> --kubeconfig=my.kubeconfig
+
 FLAGS
      --cluster=CLUSTER
         Cluster to authenticate against. If no cluster is specified, the
@@ -47,6 +57,9 @@ FLAGS
      --login-config-cert=LOGIN_CONFIG_CERT
         Specifies the CA certificate file to be added to trusted pool for
         making HTTPS connections to a --login-config URL.
+
+     --server=SERVER
+        Specifies the URL of API server of the cluster to authenticate against.
 
      --set-preferred-auth
         If set, forces update of preferred authentication for given cluster

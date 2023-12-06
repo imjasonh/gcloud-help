@@ -2,16 +2,18 @@ NAME
     gcloud alpha recommender insights list - list insights for a cloud entity
 
 SYNOPSIS
-    gcloud alpha recommender insights list --location=LOCATION
+    gcloud alpha recommender insights list
         (--billing-account=BILLING_ACCOUNT | --folder=FOLDER_ID
           | --organization=ORGANIZATION_ID | --project=PROJECT_ID)
-        [--insight-type=INSIGHT_TYPE] [--filter=EXPRESSION] [--limit=LIMIT]
-        [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [--uri]
-        [GCLOUD_WIDE_FLAG ...]
+        [--insight-type=INSIGHT_TYPE] [--location=LOCATION]
+        [--filter=EXPRESSION] [--limit=LIMIT] [--page-size=PAGE_SIZE]
+        [--sort-by=[FIELD,...]] [--uri] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) This command lists all insights for a given cloud entity, location
-    and insight type. Supported insight-types can be found here:
+    and insight type. If insight-type or location is not specified, insights
+    for all supported insight-types and locations are listed. Supported
+    insight-types can be found here:
     https://cloud.google.com/recommender/docs/insights/insight-types. Currently
     the following cloud_entity_types are supported: project, billing_account,
     folder and organization.
@@ -19,13 +21,10 @@ DESCRIPTION
 EXAMPLES
     To list all insights for a billing account:
 
-        $ gcloud alpha recommender insights list --project=project-name \
+        $ gcloud alpha recommender insights list --project=project-id \
             --location=global --insight-type=google.compute.firewall.Insight
 
 REQUIRED FLAGS
-     --location=LOCATION
-        Location
-
      Resource that is associated with cloud entity type. Currently four
      mutually exclusive flags are supported, --project, --billing-account,
      --folder, --organization.
@@ -50,6 +49,10 @@ FLAGS
      --insight-type=INSIGHT_TYPE
         Insight type to list insights for. Supported insight-types can be found
         here: https://cloud.google.com/recommender/docs/insights/insight-types
+
+     --location=LOCATION
+        Location to list insights for. If no location is specified, insights
+        for all supported locations are listed.
 
 LIST COMMAND FLAGS
      --filter=EXPRESSION

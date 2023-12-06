@@ -47,7 +47,7 @@ SYNOPSIS
           | --additional-zones=[ZONE,...] | --node-locations=ZONE,[ZONE,...]
           | --cluster-dns=CLUSTER_DNS --cluster-dns-domain=CLUSTER_DNS_DOMAIN
           --cluster-dns-scope=CLUSTER_DNS_SCOPE
-          | --binauthz-policy-bindings=[name=BINAUTHZ_POLICY,...]
+          | --binauthz-policy-bindings=[name=BINAUTHZ_POLICY]
           --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
           | --enable-binauthz | --clear-maintenance-window
           | --remove-maintenance-exclusion=NAME
@@ -63,6 +63,8 @@ SYNOPSIS
           --enable-resource-consumption-metering
           --resource-usage-bigquery-dataset=RESOURCE_USAGE_BIGQUERY_DATASET
           | --dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE
+          | --disable-dataplane-v2-flow-observability
+          | --enable-dataplane-v2-flow-observability
           --disable-dataplane-v2-metrics | --enable-dataplane-v2-metrics
           | [--enable-autoprovisioning
           : --autoprovisioning-config-file=AUTOPROVISIONING_CONFIG_FILE
@@ -788,7 +790,7 @@ REQUIRED FLAGS
 
        Flags for Binary Authorization:
 
-         --binauthz-policy-bindings=[name=BINAUTHZ_POLICY,...]
+         --binauthz-policy-bindings=[name=BINAUTHZ_POLICY]
             The relative resource name of the Binary Authorization policy to
             audit and/or enforce. GKE policies have the following format:
             projects/{project_number}/platforms/gke/policies/{policy_id}.
@@ -797,10 +799,10 @@ REQUIRED FLAGS
 
            --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
               Enable Binary Authorization for this cluster.
-              BINAUTHZ_EVALUATION_MODE must be one of: DISABLED,
-              POLICY_BINDINGS,
-              POLICY_BINDINGS_AND_PROJECT_SINGLETON_POLICY_ENFORCE,
-              PROJECT_SINGLETON_POLICY_ENFORCE.
+              BINAUTHZ_EVALUATION_MODE must be one of: disabled,
+              policy-bindings,
+              policy-bindings-and-project-singleton-policy-enforce,
+              project-singleton-policy-enforce.
 
            --enable-binauthz
               (DEPRECATED) Enable Binary Authorization for this cluster.
@@ -944,34 +946,43 @@ REQUIRED FLAGS
                 $ gcloud alpha container clusters update example-cluster \
                     --resource-usage-bigquery-dataset=example_bigquery_dataset_name
 
-       --dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE
-          Select Advanced Datapath Observability mode for the cluster. Defaults
-          to DISABLED.
+       At most one of these can be specified:
 
-          Advanced Datapath Observability allows for a real-time view into
-          pod-to-pod traffic within your cluster.
+         --dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE
+            Select Advanced Datapath Observability mode for the cluster.
+            Defaults to DISABLED.
 
-          Examples:
+            Advanced Datapath Observability allows for a real-time view into
+            pod-to-pod traffic within your cluster.
 
-              $ gcloud alpha container clusters update \
-                  --dataplane-v2-observability-mode=DISABLED
+            Examples:
 
-              $ gcloud alpha container clusters update \
-                  --dataplane-v2-observability-mode=INTERNAL_VPC_LB
+                $ gcloud alpha container clusters update \
+                    --dataplane-v2-observability-mode=DISABLED
 
-              $ gcloud alpha container clusters update \
-                  --dataplane-v2-observability-mode=EXTERNAL_LB
+                $ gcloud alpha container clusters update \
+                    --dataplane-v2-observability-mode=INTERNAL_VPC_LB
 
-          DATAPLANE_V2_OBSERVABILITY_MODE must be one of:
+                $ gcloud alpha container clusters update \
+                    --dataplane-v2-observability-mode=EXTERNAL_LB
 
-           DISABLED
-              Disables Advanced Datapath Observability.
-           EXTERNAL_LB
-              Makes Advanced Datapath Observability available to the external
-              network.
-           INTERNAL_VPC_LB
-              Makes Advanced Datapath Observability available from the VPC
-              network.
+            DATAPLANE_V2_OBSERVABILITY_MODE must be one of:
+
+             DISABLED
+                Disables Advanced Datapath Observability.
+             EXTERNAL_LB
+                Makes Advanced Datapath Observability available to the external
+                network.
+             INTERNAL_VPC_LB
+                Makes Advanced Datapath Observability available from the VPC
+                network.
+
+         --disable-dataplane-v2-flow-observability
+            Disables Advanced Datapath Observability.
+
+         --enable-dataplane-v2-flow-observability
+            Enables Advanced Datapath Observability which allows for a
+            real-time view into pod-to-pod traffic within your cluster.
 
        At most one of these can be specified:
 

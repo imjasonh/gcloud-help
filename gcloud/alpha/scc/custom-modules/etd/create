@@ -6,7 +6,8 @@ SYNOPSIS
     gcloud alpha scc custom-modules etd create
         --custom-config-from-file=CUSTOM_CONFIG_FROM_FILE
         --display-name=DISPLAY_NAME --enablement-state=ENABLEMENT_STATE
-        --module-type=MODULE_TYPE [--organization=ORGANIZATION]
+        --module-type=MODULE_TYPE
+        [--folder=FOLDER | --organization=ORGANIZATION | --project=PROJECT]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -19,6 +20,22 @@ EXAMPLES
         $ gcloud alpha scc custom-modules etd create \
             --organization=organizations/123 \
             --display-name="test_display_name" \
+            --module-type="CONFIGURABLE_BAD_IP" \
+            --enablement-state="ENABLED" \
+            --custom-config-from-file=config.json
+
+    To create an Event Threat Detection custom module for folder 456, run:
+
+        $ gcloud alpha scc custom-modules etd create --folder=folders/456 \
+            --display-name="test_display_name" \
+            --module-type="CONFIGURABLE_BAD_IP" \
+            --enablement-state="ENABLED" \
+            --custom-config-from-file=config.json
+
+    To create an Event Threat Detection custom module for project 789, run:
+
+        $ gcloud alpha scc custom-modules etd create \
+            --project=projects/789 --display-name="test_display_name" \
             --module-type="CONFIGURABLE_BAD_IP" \
             --enablement-state="ENABLED" \
             --custom-config-from-file=config.json
@@ -45,9 +62,19 @@ REQUIRED FLAGS
         Sets the module type of the Event Threat Detection custom module.
 
 OPTIONAL FLAGS
-     --organization=ORGANIZATION
-        Organization where the Event Threat Detection custom module resides.
-        Formatted as organizations/123 or just 123.
+     At most one of these can be specified:
+
+       --folder=FOLDER
+          Folder where the Event Threat Detection custom module resides.
+          Formatted as folders/456 or just 456.
+
+       --organization=ORGANIZATION
+          Organization where the Event Threat Detection custom module resides.
+          Formatted as organizations/123 or just 123.
+
+       --project=PROJECT
+          ID or number of the project where the Event Threat Detection custom
+          module resides. Formatted as projects/789 or just 789.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

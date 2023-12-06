@@ -18,7 +18,6 @@ SYNOPSIS
         [--cluster-version=CLUSTER_VERSION]
         [--create-subnetwork=[KEY=VALUE,...]]
         [--database-encryption-key=DATABASE_ENCRYPTION_KEY]
-        [--dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE]
         [--default-max-pods-per-node=DEFAULT_MAX_PODS_PER_NODE]
         [--disable-default-snat] [--disk-size=DISK_SIZE]
         [--disk-type=DISK_TYPE] [--enable-autorepair] [--no-enable-autoupgrade]
@@ -69,6 +68,9 @@ SYNOPSIS
           | --enable-binauthz]
         [--cluster-dns=CLUSTER_DNS --cluster-dns-domain=CLUSTER_DNS_DOMAIN
           --cluster-dns-scope=CLUSTER_DNS_SCOPE]
+        [--dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE
+          | --disable-dataplane-v2-flow-observability
+          | --enable-dataplane-v2-flow-observability]
         [--disable-dataplane-v2-metrics | --enable-dataplane-v2-metrics]
         [[--enable-autoprovisioning
           : --autoprovisioning-config-file=AUTOPROVISIONING_CONFIG_FILE
@@ -323,35 +325,6 @@ FLAGS
         projects/[KEY_PROJECT_ID]/locations/[LOCATION]/keyRings/[RING_NAME]/cryptoKeys/[KEY_NAME].
         For more information, see
         https://cloud.google.com/kubernetes-engine/docs/how-to/encrypting-secrets.
-
-     --dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE
-        Select Advanced Datapath Observability mode for the cluster. Defaults
-        to DISABLED.
-
-        Advanced Datapath Observability allows for a real-time view into
-        pod-to-pod traffic within your cluster.
-
-        Examples:
-
-            $ gcloud container clusters create \
-                --dataplane-v2-observability-mode=DISABLED
-
-            $ gcloud container clusters create \
-                --dataplane-v2-observability-mode=INTERNAL_VPC_LB
-
-            $ gcloud container clusters create \
-                --dataplane-v2-observability-mode=EXTERNAL_LB
-
-        DATAPLANE_V2_OBSERVABILITY_MODE must be one of:
-
-         DISABLED
-            Disables Advanced Datapath Observability.
-         EXTERNAL_LB
-            Makes Advanced Datapath Observability available to the external
-            network.
-         INTERNAL_VPC_LB
-            Makes Advanced Datapath Observability available from the VPC
-            network.
 
      --default-max-pods-per-node=DEFAULT_MAX_PODS_PER_NODE
         The default max number of pods per node for node pools in the cluster.
@@ -1178,8 +1151,8 @@ FLAGS
 
          --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
             Enable Binary Authorization for this cluster.
-            BINAUTHZ_EVALUATION_MODE must be one of: DISABLED,
-            PROJECT_SINGLETON_POLICY_ENFORCE.
+            BINAUTHZ_EVALUATION_MODE must be one of: disabled,
+            project-singleton-policy-enforce.
 
          --enable-binauthz
             (DEPRECATED) Enable Binary Authorization for this cluster.
@@ -1215,6 +1188,44 @@ FLAGS
               Configures the Cloud DNS zone to be private to the cluster.
            vpc
               Configures the Cloud DNS zone to be private to the VPC Network.
+
+     At most one of these can be specified:
+
+       --dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE
+          Select Advanced Datapath Observability mode for the cluster. Defaults
+          to DISABLED.
+
+          Advanced Datapath Observability allows for a real-time view into
+          pod-to-pod traffic within your cluster.
+
+          Examples:
+
+              $ gcloud container clusters create \
+                  --dataplane-v2-observability-mode=DISABLED
+
+              $ gcloud container clusters create \
+                  --dataplane-v2-observability-mode=INTERNAL_VPC_LB
+
+              $ gcloud container clusters create \
+                  --dataplane-v2-observability-mode=EXTERNAL_LB
+
+          DATAPLANE_V2_OBSERVABILITY_MODE must be one of:
+
+           DISABLED
+              Disables Advanced Datapath Observability.
+           EXTERNAL_LB
+              Makes Advanced Datapath Observability available to the external
+              network.
+           INTERNAL_VPC_LB
+              Makes Advanced Datapath Observability available from the VPC
+              network.
+
+       --disable-dataplane-v2-flow-observability
+          Disables Advanced Datapath Observability.
+
+       --enable-dataplane-v2-flow-observability
+          Enables Advanced Datapath Observability which allows for a real-time
+          view into pod-to-pod traffic within your cluster.
 
      At most one of these can be specified:
 

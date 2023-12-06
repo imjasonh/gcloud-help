@@ -4,18 +4,28 @@ NAME
 
 SYNOPSIS
     gcloud alpha domains registrations configure management REGISTRATION
-        [--async] [--transfer-lock-state=TRANSFER_LOCK_STATE]
-        [GCLOUD_WIDE_FLAG ...]
+        [--async] [--preferred-renewal-method=PREFERRED_RENEWAL_METHOD]
+        [--transfer-lock-state=TRANSFER_LOCK_STATE] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Configure management settings of a registration. This includes
     settings related to transfers, billing and renewals of a registration.
 
 EXAMPLES
+    To start an interactive flow to configure management settings for
+    example.com, run:
+
+        $ gcloud alpha domains registrations configure management example.com
+
     To unlock a transfer lock of a registration for example.com, run:
 
         $ gcloud alpha domains registrations configure management \
             example.com --transfer-lock-state=unlocked
+
+    To disable automatic renewals for example.com, run:
+
+        $ gcloud alpha domains registrations configure management \
+            example.com --preferred-renewal-method=renewal-disabled
 
 POSITIONAL ARGUMENTS
      Registration resource - The domain registration to configure management
@@ -46,6 +56,17 @@ FLAGS
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
+
+     --preferred-renewal-method=PREFERRED_RENEWAL_METHOD
+        Preferred Renewal Method of a registration. It defines how the
+        registration should be renewed. The actual Renewal Method can be set to
+        renewal-disabled in case of e.g. problems with the Billing Account or
+        reporeted domain abuse. PREFERRED_RENEWAL_METHOD must be one of:
+
+         automatic-renewal
+            The domain is automatically renewed each year.
+         renewal-disabled
+            The domain won't be renewed and will expire at its expiration time.
 
      --transfer-lock-state=TRANSFER_LOCK_STATE
         Transfer Lock of a registration. It needs to be unlocked in order to

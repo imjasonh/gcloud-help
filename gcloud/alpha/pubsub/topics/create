@@ -6,11 +6,12 @@ SYNOPSIS
     gcloud alpha pubsub topics create TOPIC [TOPIC ...]
         [--labels=[KEY=VALUE,...]]
         [--message-retention-duration=MESSAGE_RETENTION_DURATION]
-        [--message-storage-policy-allowed-regions=[REGION,...]]
         [--message-encoding=ENCODING (--schema=SCHEMA
           : --schema-project=SCHEMA_PROJECT)
           : --first-revision-id=FIRST_REVISION_ID
           --last-revision-id=LAST_REVISION_ID]
+        [--message-storage-policy-allowed-regions=[REGION,...]
+          : --message-storage-policy-enforce-in-transit]
         [--topic-encryption-key=TOPIC_ENCRYPTION_KEY
           : --topic-encryption-key-keyring=TOPIC_ENCRYPTION_KEY_KEYRING
           --topic-encryption-key-location=TOPIC_ENCRYPTION_KEY_LOCATION
@@ -65,10 +66,6 @@ FLAGS
         is one of "s", "m", "h", and "d" for seconds, minutes, hours, and days,
         respectively. If the unit is omitted, seconds is assumed.
 
-     --message-storage-policy-allowed-regions=[REGION,...]
-        A list of one or more Cloud regions where messages are allowed to be
-        stored at rest.
-
      Schema settings. The schema that messages published to this topic must
      conform to and the expected message encoding.
 
@@ -109,6 +106,19 @@ FLAGS
             ▫ provide the argument --schema-project on the command line;
             ▫ provide the argument --project on the command line;
             ▫ set the property core/project.
+
+     Options for explicitly specifying the message storage policy for a topic.
+
+       --message-storage-policy-allowed-regions=[REGION,...]
+          A list of one or more Cloud regions where messages are allowed to be
+          stored at rest.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --message-storage-policy-enforce-in-transit
+          Whether or not to enforce in-transit guarantees for this topic using
+          the allowed regions.
 
      Key resource - The Cloud KMS (Key Management Service) cryptokey that will
      be used to protect the topic. The specified Cloud KMS key should have

@@ -10,7 +10,9 @@ SYNOPSIS
         --max-pods-per-node=MAX_PODS_PER_NODE --node-version=NODE_VERSION
         --subnet-id=SUBNET_ID (--max-nodes=MAX_NODES --min-nodes=MIN_NODES)
         [--annotations=ANNOTATION,[ANNOTATION,...]] [--async]
-        [--enable-autorepair] [--node-labels=NODE_LABEL,[NODE_LABEL,...]]
+        [--enable-autorepair] [--max-surge-update=MAX_SURGE_UPDATE]
+        [--max-unavailable-update=MAX_UNAVAILABLE_UPDATE]
+        [--node-labels=NODE_LABEL,[NODE_LABEL,...]]
         [--node-taints=NODE_TAINT,[NODE_TAINT,...]]
         [--root-volume-iops=ROOT_VOLUME_IOPS]
         [--root-volume-kms-key-arn=ROOT_VOLUME_KMS_KEY_ARN]
@@ -126,6 +128,29 @@ OPTIONAL FLAGS
             $ gcloud container aws node-pools create --enable-autorepair
 
         Node autorepair is disabled by default.
+
+     --max-surge-update=MAX_SURGE_UPDATE
+        Maximum number of extra (surge) nodes to be created beyond the current
+        size of the node pool during its update process. Use
+        --max-unavailable-update as well, if needed, to control the overall
+        surge settings.
+
+        To create an extra node each time the node pool is rolling updated,
+        run:
+
+            $ gcloud container aws node-pools create --max-surge-update=1 \
+                --max-unavailable-update=0
+
+     --max-unavailable-update=MAX_UNAVAILABLE_UPDATE
+        Maximum number of nodes that can be simultaneously unavailable during
+        this node pool's update process. Use --max-surge-update as well, if
+        needed, to control the overall surge settings.
+
+        To update 3 nodes in parallel (1 + 2), but keep at least 4 nodes (6 -
+        2) available each time the node pool is rolling updated, run:
+
+            $ gcloud container aws node-pools create --min-nodes=6 \
+                --max-surge-update=1 --max-unavailable-update=2
 
      --node-labels=NODE_LABEL,[NODE_LABEL,...]
         Labels assigned to the node pool's nodes.

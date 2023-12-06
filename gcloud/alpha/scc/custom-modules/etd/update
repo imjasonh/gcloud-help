@@ -5,8 +5,9 @@ NAME
 SYNOPSIS
     gcloud alpha scc custom-modules etd update CUSTOM_MODULE
         [--custom-config-from-file=CUSTOM_CONFIG_FROM_FILE]
-        [--enablement-state=ENABLEMENT_STATE] [--organization=ORGANIZATION]
-        [--update-mask=UPDATE_MASK] [GCLOUD_WIDE_FLAG ...]
+        [--enablement-state=ENABLEMENT_STATE] [--update-mask=UPDATE_MASK]
+        [--folder=FOLDER | --organization=ORGANIZATION | --project=PROJECT]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Update an Event Threat Detection custom module.
@@ -17,6 +18,20 @@ EXAMPLES
 
         $ gcloud alpha scc custom-modules etd update 123456 \
             --organization=organizations/123 --enablement-state="ENABLED" \
+            --custom-config-from-file=custom_config.json
+
+    To update an Event Threat Detection custom module with ID 123456 for folder
+    456, run:
+
+        $ gcloud alpha scc custom-modules etd update 123456 \
+            --folder=folders/456 --enablement-state="ENABLED" \
+            --custom-config-from-file=custom_config.json
+
+    To update an Event Threat Detection custom module with ID 123456 for
+    project 789, run:
+
+        $ gcloud alpha scc custom-modules etd update 123456 \
+            --project=projects/789 --enablement-state="ENABLED" \
             --custom-config-from-file=custom_config.json
 
 POSITIONAL ARGUMENTS
@@ -32,17 +47,28 @@ FLAGS
 
      --enablement-state=ENABLEMENT_STATE
         Sets the enablement state of the Event Threat Detection custom module.
-        Valid options are ENABLED and DISABLED. ENABLEMENT_STATE must be one
-        of: disabled, enabled, enablement-state-unspecified, inherited.
-
-     --organization=ORGANIZATION
-        Organization where the Event Threat Detection custom module resides.
-        Formatted as organizations/123 or just 123.
+        Valid options are ENABLED, DISABLED, and INHERITED. ENABLEMENT_STATE
+        must be one of: disabled, enabled, enablement-state-unspecified,
+        inherited.
 
      --update-mask=UPDATE_MASK
         Optional: If left unspecified (default), an update mask is
         automatically created using the flags specified in the command and only
         those values are updated.
+
+     At most one of these can be specified:
+
+       --folder=FOLDER
+          Folder where the Event Threat Detection custom module resides.
+          Formatted as folders/456 or just 456.
+
+       --organization=ORGANIZATION
+          Organization where the Event Threat Detection custom module resides.
+          Formatted as organizations/123 or just 123.
+
+       --project=PROJECT
+          ID or number of the project where the Event Threat Detection custom
+          module resides. Formatted as projects/789 or just 789.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
