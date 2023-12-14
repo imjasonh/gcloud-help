@@ -13,8 +13,8 @@ SYNOPSIS
         [--push-auth-token-audience=OPTIONAL_AUDIENCE_OVERRIDE]
         [--push-endpoint=PUSH_ENDPOINT] [--retain-acked-messages]
         [[--bigquery-table=BIGQUERY_TABLE
-          : --drop-unknown-fields --use-topic-schema --write-metadata]
-          | [--cloud-storage-bucket=CLOUD_STORAGE_BUCKET
+          : --drop-unknown-fields --write-metadata --use-table-schema
+          | --use-topic-schema] | [--cloud-storage-bucket=CLOUD_STORAGE_BUCKET
           : --cloud-storage-file-prefix=CLOUD_STORAGE_FILE_PREFIX
           --cloud-storage-file-suffix=CLOUD_STORAGE_FILE_SUFFIX
           --cloud-storage-max-bytes=CLOUD_STORAGE_MAX_BYTES
@@ -166,16 +166,10 @@ OPTIONAL FLAGS
             in this group are specified.
 
          --drop-unknown-fields
-            When --use-topic-schema is set, whether or not to ignore fields in
-            the topic schema that do not appear in the BigQuery schema. If
-            false, then the BigQuery schema must contain all fields that are
-            also present in the topic schema. Use --no-drop-unknown-fields to
-            disable this flag.
-
-         --use-topic-schema
-            Whether or not to use the schema for the subscription's topic (if
-            it exists) when writing messages to BigQuery. Use
-            --no-use-topic-schema to disable this flag.
+            If either --use-topic-schema or --use-table-schema is set, whether
+            or not to ignore fields in the message that do not appear in the
+            BigQuery table schema. Use --no-drop-unknown-fields to disable this
+            flag.
 
          --write-metadata
             Whether or not to write message metadata including message ID,
@@ -185,6 +179,20 @@ OPTIONAL FLAGS
             data (for example, an ordering_key, if present) are written to a
             JSON object in the attributes column. Use --no-write-metadata to
             disable this flag.
+
+         At most one of these can be specified:
+
+           --use-table-schema
+              Whether or not to use the BigQuery table schema when writing
+              messages to BigQuery. Use --no-use-table-schema to disable this
+              flag.
+
+           --use-topic-schema
+              Whether or not to use the schema for the subscription's topic (if
+              it exists) when writing messages to BigQuery. If
+              --drop-unknown-fields is not set, then the BigQuery schema must
+              contain all fields that are present in the topic schema. Use
+              --no-use-topic-schema to disable this flag.
 
        Cloud Storage Config Options. The Cloud Pub/Sub service account
        associated with the enclosing subscription's parent project (i.e.,

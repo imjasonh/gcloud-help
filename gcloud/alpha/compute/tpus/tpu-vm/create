@@ -7,10 +7,11 @@ SYNOPSIS
         [--boot-disk=[KEY=VALUE,...]] [--data-disk=[mode=MODE],[source=SOURCE]]
         [--description=DESCRIPTION] [--internal-ips] [--labels=[KEY=VALUE,...]]
         [--metadata=[KEY=VALUE,...]] [--metadata-from-file=[KEY=VALUE,...]]
-        [--network=NETWORK; default="default"] [--preemptible] [--range=RANGE]
-        [--reserved] [--scopes=[SCOPES,...]]
-        [--service-account=SERVICE_ACCOUNT] [--shielded-secure-boot] [--spot]
-        [--subnetwork=SUBNETWORK] [--tags=[TAGS,...]]
+        [--network=NETWORK; default="default"] [--preemptible]
+        [--queue-count=QUEUE_COUNT] [--range=RANGE] [--reserved]
+        [--scopes=[SCOPES,...]] [--service-account=SERVICE_ACCOUNT]
+        [--shielded-secure-boot] [--spot] [--subnetwork=SUBNETWORK]
+        [--tags=[TAGS,...]]
         [--accelerator-type=ACCELERATOR_TYPE; default="v2-8"
           | --topology=TOPOLOGY --type=TYPE] [GCLOUD_WIDE_FLAG ...]
 
@@ -154,6 +155,13 @@ OPTIONAL FLAGS
         to run for a limited amount of time.
 
         Preemptible TPUs cannot be restarted.
+
+     --queue-count=QUEUE_COUNT
+        Specifies the networking queue count for TPU VM instances. Both Rx and
+        Tx queues will be set to this number. If it's not specified, a default
+        queue count will be assigned. For Virtio-net, each interface will get
+        min(floor(#vCPU / #vNIC), 32) queues. For gVNIC, each interface will
+        get min(floor(#vCPU / #vNIC / 2), 16) queues.
 
      --range=RANGE
         CIDR Range for the TPU.
