@@ -6,8 +6,8 @@ SYNOPSIS
     gcloud alpha builds triggers create gitlab
         (--trigger-config=PATH | [(--branch-pattern=REGEX | --tag-pattern=REGEX
           | [--pull-request-pattern=REGEX : --comment-control=COMMENT_CONTROL;
-          default=CommentControlValueValuesEnum(COMMENTS_ENABLED,
-          1)]) (--build-config=PATH | --inline-config=PATH
+          default="COMMENTS_ENABLED"]) (--build-config=PATH
+          | --inline-config=PATH
           | [--dockerfile=DOCKERFILE --dockerfile-image=DOCKERFILE_IMAGE
           : --dockerfile-dir=DOCKERFILE_DIR; default="/"])
           : --description=DESCRIPTION --ignored-files=[GLOB,...]
@@ -25,17 +25,18 @@ EXAMPLES
         $ gcloud alpha builds triggers create gitlab --name="my-trigger" \
             --service-account="projects/my-project/serviceAccounts/my-byosa@\
         my-project.iam.gserviceaccount.com" \
-            --repository="projects/1234/locations/global/connections/myconn/\
-        repositories/myrepo" --branch-pattern=".*" \
-            --build-config="cloudbuild.yaml"
+            --repository="projects/1234/locations/us-central1/connections/my\
+        conn/repositories/myrepo" --branch-pattern=".*" \
+            --build-config="cloudbuild.yaml" --region=us-central1
 
-    To create a pull request trigger with a 1st-gen repository for main:
+    To create a pull request trigger with a 2nd-gen repository for main:
 
         $ gcloud alpha builds triggers create gitlab --name="my-trigger" \
             --service-account="projects/my-project/serviceAccounts/my-byosa@\
         my-project.iam.gserviceaccount.com" \
-            --repository="projects/1234/locations/global/connections/myconn/\
-        repositories/myrepo" --build-config="cloudbuild.yaml"
+            --repository="projects/1234/locations/us-central1/connections/my\
+        conn/repositories/myrepo" --build-config="cloudbuild.yaml" \
+            --pull-request-pattern="^main$" --region=us-central1
 
 REQUIRED FLAGS
      Exactly one of these must be specified:
@@ -66,7 +67,8 @@ REQUIRED FLAGS
             supported region name (e.g. us-central1). If unset, builds/region,
             which is the default region to use when working with Cloud Build
             resources, is used. If builds/region is unset, region is set to
-            global.
+            global. Note: Region must be specified in 2nd gen repo; global is
+            not supported.
 
          --repository=REPOSITORY
             Repository resource (2nd gen) to use, in the format
@@ -147,7 +149,7 @@ REQUIRED FLAGS
                 This flag argument must be specified if any of the other
                 arguments in this group are specified.
 
-             --comment-control=COMMENT_CONTROL; default=CommentControlValueValuesEnum(COMMENTS_ENABLED, 1)
+             --comment-control=COMMENT_CONTROL; default="COMMENTS_ENABLED"
                 Require a repository collaborator or owner to comment '/gcbrun'
                 on a pull request before running the build. COMMENT_CONTROL
                 must be one of:

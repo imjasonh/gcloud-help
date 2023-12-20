@@ -21,8 +21,8 @@ SYNOPSIS
           | --enable-service-externalips | --enable-shielded-nodes
           | --enable-stackdriver-kubernetes | --enable-vertical-pod-autoscaling
           | --fleet-project=PROJECT_ID_OR_NUMBER | --gateway-api=GATEWAY_API
-          | --generate-password | --logging-variant=LOGGING_VARIANT
-          | --maintenance-window=START_TIME
+          | --generate-password | --in-transit-encryption=IN_TRANSIT_ENCRYPTION
+          | --logging-variant=LOGGING_VARIANT | --maintenance-window=START_TIME
           | --network-performance-configs=[PROPERTY1=VALUE1,...]
           | --node-locations=ZONE,[ZONE,...]
           | --notification-config=[pubsub=ENABLED|DISABLED,
@@ -375,6 +375,11 @@ REQUIRED FLAGS
           Ask the server to generate a secure password and use that as the
           basic auth password, keeping the existing username.
 
+       --in-transit-encryption=IN_TRANSIT_ENCRYPTION
+          Enable Dataplane V2 in-transit encryption. Dataplane v2 in-transit
+          encryption is disabled by default. IN_TRANSIT_ENCRYPTION must be one
+          of: inter-node-transparent, none.
+
        --logging-variant=LOGGING_VARIANT
           Specifies the logging variant that will be deployed on all the nodes
           in the cluster. Valid logging variants are MAX_THROUGHPUT, DEFAULT.
@@ -641,13 +646,17 @@ REQUIRED FLAGS
           Sets the mode of the Kubernetes security posture API's workload
           vulnerability scanning.
 
+          To enable Advanced vulnerability insights mode explicitly set the
+          flag to --workload-vulnerability-scanning=enterprise.
+
           To enable in standard mode explicitly set the flag to
           --workload-vulnerability-scanning=standard.
 
           To disable in an existing cluster, explicitly set the flag to
           --workload-vulnerability-scanning=disabled.
 
-          WORKLOAD_VULNERABILITY_SCANNING must be one of: disabled, standard.
+          WORKLOAD_VULNERABILITY_SCANNING must be one of: disabled, standard,
+          enterprise.
 
        --additional-pod-ipv4-ranges=NAME,[NAME,...]
           Additional IP address ranges(by name) for pods that need to be added
