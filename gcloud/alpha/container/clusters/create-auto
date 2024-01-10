@@ -15,13 +15,14 @@ SYNOPSIS
         [--enable-backup-restore] [--enable-fleet]
         [--enable-google-cloud-access]
         [--enable-kubernetes-unstable-apis=API,[API,...]]
-        [--enable-master-global-access] [--fleet-project=PROJECT_ID_OR_NUMBER]
-        [--labels=[KEY=VALUE,...]] [--logging=[COMPONENT,...]]
-        [--monitoring=[COMPONENT,...]] [--network=NETWORK]
-        [--private-endpoint-subnetwork=NAME] [--release-channel=CHANNEL]
-        [--security-group=SECURITY_GROUP] [--security-posture=SECURITY_POSTURE]
-        [--services-ipv4-cidr=CIDR] [--services-secondary-range-name=NAME]
-        [--subnetwork=SUBNETWORK] [--workload-policies=WORKLOAD_POLICIES]
+        [--enable-master-global-access] [--enable-secret-manager]
+        [--fleet-project=PROJECT_ID_OR_NUMBER] [--labels=[KEY=VALUE,...]]
+        [--logging=[COMPONENT,...]] [--monitoring=[COMPONENT,...]]
+        [--network=NETWORK] [--private-endpoint-subnetwork=NAME]
+        [--release-channel=CHANNEL] [--security-group=SECURITY_GROUP]
+        [--security-posture=SECURITY_POSTURE] [--services-ipv4-cidr=CIDR]
+        [--services-secondary-range-name=NAME] [--subnetwork=SUBNETWORK]
+        [--workload-policies=WORKLOAD_POLICIES]
         [--workload-vulnerability-scanning=WORKLOAD_VULNERABILITY_SCANNING]
         [--binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
           --binauthz-policy-bindings=[name=BINAUTHZ_POLICY]]
@@ -211,6 +212,14 @@ FLAGS
         endpoint from any Google Cloud region or on-premises environment
         regardless of the private cluster's region.
 
+     --enable-secret-manager
+        Enables the Secret Manager CSI driver provider component. See
+        https://secrets-store-csi-driver.sigs.k8s.io/introduction
+        https://github.com/GoogleCloudPlatform/secrets-store-csi-driver-provider-gcp
+
+        To disable in an existing cluster, explicitly set flag to
+        --no-enable-secret-manager
+
      --fleet-project=PROJECT_ID_OR_NUMBER
         Sets fleet host project for the cluster. If specified, the current
         cluster will be registered as a fleet membership under the fleet host
@@ -230,17 +239,22 @@ FLAGS
 
      --logging=[COMPONENT,...]
         Set the components that have logging enabled. Valid component values
-        are: SYSTEM, WORKLOAD, API_SERVER, CONTROLLER_MANAGER, SCHEDULER, NONE
+        are: SYSTEM, WORKLOAD, API_SERVER, CONTROLLER_MANAGER, SCHEDULER
+
+        The default is SYSTEM,WORKLOAD. If this flag is set, then SYSTEM must
+        be included.
 
         For more information, see
         https://cloud.google.com/stackdriver/docs/solutions/gke/installing#available-logs
 
         Examples:
 
+            $ gcloud alpha container clusters create-auto --logging=SYSTEM
             $ gcloud alpha container clusters create-auto \
                 --logging=SYSTEM,WORKLOAD
             $ gcloud alpha container clusters create-auto \
-                --logging=SYSTEM,API_SERVER,WORKLOAD
+                --logging=SYSTEM,WORKLOAD,API_SERVER,CONTROLLER_MANAGER,\
+            SCHEDULER
 
      --monitoring=[COMPONENT,...]
         Set the components that have monitoring enabled. Valid component values
@@ -391,8 +405,8 @@ FLAGS
      At most one of these can be specified:
 
        --dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE
-          Select Advanced Datapath Observability mode for the cluster. Defaults
-          to DISABLED.
+          (DEPRECATED) Select Advanced Datapath Observability mode for the
+          cluster. Defaults to DISABLED.
 
           Advanced Datapath Observability allows for a real-time view into
           pod-to-pod traffic within your cluster.
@@ -407,6 +421,11 @@ FLAGS
 
               $ gcloud alpha container clusters create-auto \
                   --dataplane-v2-observability-mode=EXTERNAL_LB
+
+          The --dataplane-v2-observability-mode flag is deprecated and will be
+          removed in an upcoming release. Please use
+          --enable-dataplane-v2-flow-observability or
+          --disable-dataplane-v2-flow-observability.
 
           DATAPLANE_V2_OBSERVABILITY_MODE must be one of:
 

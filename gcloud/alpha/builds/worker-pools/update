@@ -1,6 +1,6 @@
 NAME
-    gcloud alpha builds worker-pools update - update a private or hybrid pool
-        used by Cloud Build
+    gcloud alpha builds worker-pools update - update a private pool used by
+        Cloud Build
 
 SYNOPSIS
     gcloud alpha builds worker-pools update WORKER_POOL --region=REGION
@@ -9,7 +9,7 @@ SYNOPSIS
           --worker-machine-type=WORKER_MACHINE_TYPE) [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) Update a private or hybrid pool used by Cloud Build.
+    (ALPHA) Update a private pool used by Cloud Build.
 
 EXAMPLES
       ▪ Private pools
@@ -19,14 +19,6 @@ EXAMPLES
         $ gcloud alpha builds worker-pools update pwp1 \
             --region=us-central1 --worker-machine-type=e2-standard-2 \
             --worker-disk-size=64GB
-
-      ▪ Hybrid pools
-
-    To change the default build disk size and default build vcpu count of a
-    hybrid pool named hwp1, run:
-
-        $ gcloud alpha builds worker-pools update hwp1 --region=us-west4 \
-            --default-build-disk-size=100GB --default-build-vcpu-count=3.5
 
 POSITIONAL ARGUMENTS
      WORKER_POOL
@@ -48,38 +40,32 @@ REQUIRED FLAGS
 
               https://cloud.google.com/build/docs/private-pools/worker-pool-config-file-schema
 
-          Hybrid pool options:
+       Command-line flags to configure the private pool:
 
-              https://cloud.google.com/build/docs/hybrid/hybrid-pool-config-file-schema
+         At most one of these can be specified:
 
-       At most one of these can be specified:
+           --public-egress
+              If set, workers in the worker pool are created with an external
+              IP address.
 
-         Command-line flags to configure the private pool:
+           --no-public-egress
+              If set, workers in the worker pool are created without an
+              external IP address.
 
-           At most one of these can be specified:
+              If the worker pool is within a VPC Service Control perimeter, use
+              this flag.
 
-             --public-egress
-                If set, workers in the worker pool are created with an external
-                IP address.
+         Configuration to be used for creating workers in the worker pool:
 
-             --no-public-egress
-                If set, workers in the worker pool are created without an
-                external IP address.
+           --worker-disk-size=WORKER_DISK_SIZE
+              Size of the disk attached to the worker.
 
-                If the worker pool is within a VPC Service Control perimeter,
-                use this flag.
+              If not given, Cloud Build will use a standard disk size.
 
-           Configuration to be used for creating workers in the worker pool:
+           --worker-machine-type=WORKER_MACHINE_TYPE
+              Compute Engine machine type for a worker pool.
 
-             --worker-disk-size=WORKER_DISK_SIZE
-                Size of the disk attached to the worker.
-
-                If not given, Cloud Build will use a standard disk size.
-
-             --worker-machine-type=WORKER_MACHINE_TYPE
-                Compute Engine machine type for a worker pool.
-
-                If unspecified, Cloud Build uses a standard machine type.
+              If unspecified, Cloud Build uses a standard machine type.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

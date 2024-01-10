@@ -37,8 +37,9 @@ SYNOPSIS
         [--enable-logging-monitoring-system-only] [--enable-managed-prometheus]
         [--enable-master-global-access] [--enable-multi-networking]
         [--enable-network-policy] [--enable-pod-security-policy]
-        [--enable-service-externalips] [--enable-shielded-nodes]
-        [--enable-stackdriver-kubernetes] [--enable-vertical-pod-autoscaling]
+        [--enable-secret-manager] [--enable-service-externalips]
+        [--enable-shielded-nodes] [--enable-stackdriver-kubernetes]
+        [--enable-vertical-pod-autoscaling]
         [--fleet-project=PROJECT_ID_OR_NUMBER] [--gateway-api=GATEWAY_API]
         [--identity-provider=IDENTITY_PROVIDER] [--image-type=IMAGE_TYPE]
         [--in-transit-encryption=IN_TRANSIT_ENCRYPTION]
@@ -592,6 +593,14 @@ FLAGS
         API objects. For more information, see
         https://cloud.google.com/kubernetes-engine/docs/how-to/pod-security-policies.
 
+     --enable-secret-manager
+        Enables the Secret Manager CSI driver provider component. See
+        https://secrets-store-csi-driver.sigs.k8s.io/introduction
+        https://github.com/GoogleCloudPlatform/secrets-store-csi-driver-provider-gcp
+
+        To disable in an existing cluster, explicitly set flag to
+        --no-enable-secret-manager
+
      --enable-service-externalips
         Enables use of services with externalIPs field.
 
@@ -741,7 +750,7 @@ FLAGS
         The maximum number of nodes to allocate per default initial node pool.
         Kubernetes Engine will automatically create enough nodes pools such
         that each node pool contains less than --max-nodes-per-pool nodes.
-        Defaults to 1000 nodes, but can be set as low as 100 nodes per pool on
+        Defaults to 2000 nodes, but can be set as low as 100 nodes per pool on
         initial create.
 
      --max-pods-per-node=MAX_PODS_PER_NODE
@@ -1366,8 +1375,8 @@ FLAGS
      At most one of these can be specified:
 
        --dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE
-          Select Advanced Datapath Observability mode for the cluster. Defaults
-          to DISABLED.
+          (DEPRECATED) Select Advanced Datapath Observability mode for the
+          cluster. Defaults to DISABLED.
 
           Advanced Datapath Observability allows for a real-time view into
           pod-to-pod traffic within your cluster.
@@ -1382,6 +1391,11 @@ FLAGS
 
               $ gcloud beta container clusters create \
                   --dataplane-v2-observability-mode=EXTERNAL_LB
+
+          The --dataplane-v2-observability-mode flag is deprecated and will be
+          removed in an upcoming release. Please use
+          --enable-dataplane-v2-flow-observability or
+          --disable-dataplane-v2-flow-observability.
 
           DATAPLANE_V2_OBSERVABILITY_MODE must be one of:
 

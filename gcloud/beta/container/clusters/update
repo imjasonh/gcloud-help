@@ -20,9 +20,9 @@ SYNOPSIS
           | --enable-logging-monitoring-system-only
           | --enable-master-authorized-networks | --enable-master-global-access
           | --enable-network-policy | --enable-pod-security-policy
-          | --enable-private-endpoint | --enable-service-externalips
-          | --enable-shielded-nodes | --enable-stackdriver-kubernetes
-          | --enable-vertical-pod-autoscaling
+          | --enable-private-endpoint | --enable-secret-manager
+          | --enable-service-externalips | --enable-shielded-nodes
+          | --enable-stackdriver-kubernetes | --enable-vertical-pod-autoscaling
           | --fleet-project=PROJECT_ID_OR_NUMBER | --gateway-api=GATEWAY_API
           | --generate-password | --identity-provider=IDENTITY_PROVIDER
           | --in-transit-encryption=IN_TRANSIT_ENCRYPTION
@@ -368,6 +368,14 @@ REQUIRED FLAGS
        --enable-private-endpoint
           Enables cluster's control plane to be accessible using private IP
           address only.
+
+       --enable-secret-manager
+          Enables the Secret Manager CSI driver provider component. See
+          https://secrets-store-csi-driver.sigs.k8s.io/introduction
+          https://github.com/GoogleCloudPlatform/secrets-store-csi-driver-provider-gcp
+
+          To disable in an existing cluster, explicitly set flag to
+          --no-enable-secret-manager
 
        --enable-service-externalips
           Enables use of services with externalIPs field.
@@ -941,8 +949,8 @@ REQUIRED FLAGS
        At most one of these can be specified:
 
          --dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE
-            Select Advanced Datapath Observability mode for the cluster.
-            Defaults to DISABLED.
+            (DEPRECATED) Select Advanced Datapath Observability mode for the
+            cluster. Defaults to DISABLED.
 
             Advanced Datapath Observability allows for a real-time view into
             pod-to-pod traffic within your cluster.
@@ -957,6 +965,11 @@ REQUIRED FLAGS
 
                 $ gcloud beta container clusters update \
                     --dataplane-v2-observability-mode=EXTERNAL_LB
+
+            The --dataplane-v2-observability-mode flag is deprecated and will
+            be removed in an upcoming release. Please use
+            --enable-dataplane-v2-flow-observability or
+            --disable-dataplane-v2-flow-observability.
 
             DATAPLANE_V2_OBSERVABILITY_MODE must be one of:
 

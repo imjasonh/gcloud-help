@@ -5,9 +5,10 @@ NAME
 SYNOPSIS
     gcloud beta container binauthz attestations create
         --artifact-url=ARTIFACT_URL --public-key-id=PUBLIC_KEY_ID
-        --signature-file=SIGNATURE_FILE
-        (--attestor=ATTESTOR : --attestor-project=ATTESTOR_PROJECT)
-        [--payload-file=PAYLOAD_FILE] [--validate] [GCLOUD_WIDE_FLAG ...]
+        --signature-file=SIGNATURE_FILE [--payload-file=PAYLOAD_FILE]
+        [[--note=NOTE : --note-project=NOTE_PROJECT]
+          | --validate [--attestor=ATTESTOR
+          : --attestor-project=ATTESTOR_PROJECT]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) This command creates a Binary Authorization attestation for your
@@ -23,6 +24,16 @@ EXAMPLES
           --project=my_proj \
           --artifact-url='gcr.io/example-project/example-image@sha256:abcd\
         ' --attestor=projects/foo/attestors/bar \
+            --signature-file=signed_artifact_attestation.pgp.sig \
+            --public-key-id=AAAA0000000000000000FFFFFFFFFFFFFFFFFFFF
+
+    To create an attestation in the project "my_proj" in note
+    "projects/foo/notes/bar", run:
+
+        $ gcloud beta container binauthz attestations create \
+          --project=my_proj \
+          --artifact-url='gcr.io/example-project/example-image@sha256:abcd\
+        ' --note=projects/foo/notes/bar \
             --signature-file=signed_artifact_attestation.pgp.sig \
             --public-key-id=AAAA0000000000000000FFFFFFFFFFFFFFFFFFFF
 
@@ -47,35 +58,6 @@ REQUIRED FLAGS
         Path to file containing the signature to store, or - to read signature
         from stdin.
 
-     Attestor resource - The Attestor whose Container Analysis Note will be
-     used to host the created attestation. In order to successfully attach the
-     attestation, the active gcloud account (core/account) must be able to read
-     this attestor and must have the containeranalysis.notes.attachOccurrence
-     permission for the Attestor's underlying Note resource (usually via the
-     containeranalysis.notes.attacher role). The arguments in this group can be
-     used to specify the attributes of this resource.
-
-     This must be specified.
-
-       --attestor=ATTESTOR
-          ID of the attestor or fully qualified identifier for the attestor.
-
-          To set the name attribute:
-          ▸ provide the argument --attestor on the command line.
-
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
-
-       --attestor-project=ATTESTOR_PROJECT
-          Project ID of the Google Cloud project for the attestor.
-
-          To set the project attribute:
-          ▸ provide the argument --attestor on the command line with a fully
-            specified name;
-          ▸ provide the argument --attestor-project on the command line;
-          ▸ provide the argument --project on the command line;
-          ▸ set the property core/project.
-
 OPTIONAL FLAGS
      --payload-file=PAYLOAD_FILE
         Path to file containing the payload over which the signature was
@@ -89,9 +71,63 @@ OPTIONAL FLAGS
         formatting, you must explicitly provide the payload content via this
         flag.
 
-     --validate
-        Whether to validate that the Attestation can be verified by the
-        provided Attestor.
+     At most one of these can be specified:
+
+       Note resource - The Container Analysis Note which will be used to host
+       the created attestation. In order to successfully attach the
+       attestation, the active gcloud account (core/account) must have the
+       containeranalysis.notes.attachOccurrence permission for the Note
+       (usually via the containeranalysis.notes.attacher role). The arguments
+       in this group can be used to specify the attributes of this resource.
+
+         --note=NOTE
+            ID of the note or fully qualified identifier for the note.
+
+            To set the note attribute:
+            ▫ provide the argument --note on the command line.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --note-project=NOTE_PROJECT
+            The Container Analysis project for the note.
+
+            To set the project attribute:
+            ▫ provide the argument --note on the command line with a fully
+              specified name;
+            ▫ provide the argument --note-project on the command line.
+
+       --validate
+          Whether to validate that the Attestation can be verified by the
+          provided Attestor.
+
+       Attestor resource - The Attestor whose Container Analysis Note will be
+       used to host the created attestation. In order to successfully attach
+       the attestation, the active gcloud account (core/account) must be able
+       to read this attestor and must have the
+       containeranalysis.notes.attachOccurrence permission for the Attestor's
+       underlying Note resource (usually via the
+       containeranalysis.notes.attacher role). The arguments in this group can
+       be used to specify the attributes of this resource.
+
+         --attestor=ATTESTOR
+            ID of the attestor or fully qualified identifier for the attestor.
+
+            To set the name attribute:
+            ▫ provide the argument --attestor on the command line.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --attestor-project=ATTESTOR_PROJECT
+            Project ID of the Google Cloud project for the attestor.
+
+            To set the project attribute:
+            ▫ provide the argument --attestor on the command line with a
+              fully specified name;
+            ▫ provide the argument --attestor-project on the command line;
+            ▫ provide the argument --project on the command line;
+            ▫ set the property core/project.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

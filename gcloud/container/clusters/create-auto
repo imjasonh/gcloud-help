@@ -236,16 +236,21 @@ FLAGS
 
      --logging=[COMPONENT,...]
         Set the components that have logging enabled. Valid component values
-        are: SYSTEM, WORKLOAD, API_SERVER, CONTROLLER_MANAGER, SCHEDULER, NONE
+        are: SYSTEM, WORKLOAD, API_SERVER, CONTROLLER_MANAGER, SCHEDULER
+
+        The default is SYSTEM,WORKLOAD. If this flag is set, then SYSTEM must
+        be included.
 
         For more information, see
         https://cloud.google.com/stackdriver/docs/solutions/gke/installing#available-logs
 
         Examples:
 
+            $ gcloud container clusters create-auto --logging=SYSTEM
             $ gcloud container clusters create-auto --logging=SYSTEM,WORKLOAD
             $ gcloud container clusters create-auto \
-                --logging=SYSTEM,API_SERVER,WORKLOAD
+                --logging=SYSTEM,WORKLOAD,API_SERVER,CONTROLLER_MANAGER,\
+            SCHEDULER
 
      --monitoring=[COMPONENT,...]
         Set the components that have monitoring enabled. Valid component values
@@ -383,8 +388,8 @@ FLAGS
      At most one of these can be specified:
 
        --dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE
-          Select Advanced Datapath Observability mode for the cluster. Defaults
-          to DISABLED.
+          (DEPRECATED) Select Advanced Datapath Observability mode for the
+          cluster. Defaults to DISABLED.
 
           Advanced Datapath Observability allows for a real-time view into
           pod-to-pod traffic within your cluster.
@@ -399,6 +404,11 @@ FLAGS
 
               $ gcloud container clusters create-auto \
                   --dataplane-v2-observability-mode=EXTERNAL_LB
+
+          The --dataplane-v2-observability-mode flag is deprecated and will be
+          removed in an upcoming release. Please use
+          --enable-dataplane-v2-flow-observability or
+          --disable-dataplane-v2-flow-observability.
 
           DATAPLANE_V2_OBSERVABILITY_MODE must be one of:
 

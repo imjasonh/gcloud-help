@@ -3,10 +3,11 @@ NAME
 
 SYNOPSIS
     gcloud alpha functions deploy (NAME : --region=REGION)
-        [--[no-]allow-unauthenticated] [--buildpack-stack=BUILDPACK_STACK]
-        [--concurrency=CONCURRENCY] [--docker-registry=DOCKER_REGISTRY]
-        [--egress-settings=EGRESS_SETTINGS] [--entry-point=ENTRY_POINT]
-        [--gen2] [--ignore-file=IGNORE_FILE]
+        [--[no-]allow-unauthenticated]
+        [--build-service-account=BUILD_SERVICE_ACCOUNT]
+        [--buildpack-stack=BUILDPACK_STACK] [--concurrency=CONCURRENCY]
+        [--docker-registry=DOCKER_REGISTRY] [--egress-settings=EGRESS_SETTINGS]
+        [--entry-point=ENTRY_POINT] [--gen2] [--ignore-file=IGNORE_FILE]
         [--ingress-settings=INGRESS_SETTINGS] [--retry]
         [--run-service-account=RUN_SERVICE_ACCOUNT] [--runtime=RUNTIME]
         [--runtime-update-policy=RUNTIME_UPDATE_POLICY]
@@ -102,6 +103,16 @@ FLAGS
         If set, makes this a public function. This will allow all callers,
         without checking authentication. Use --allow-unauthenticated to enable
         and --no-allow-unauthenticated to disable.
+
+     --build-service-account=BUILD_SERVICE_ACCOUNT
+        IAM service account whose credentials will be used for the build step.
+        Must be of the format
+        projects/${PROJECT_ID}/serviceAccounts/${ACCOUNT_EMAIL_ADDRESS}.
+
+        If not provided, the function will use the project's default service
+        account for Cloud Build.
+
+        Only applicable when the --gen2 flag is provided.
 
      --buildpack-stack=BUILDPACK_STACK
         Specifies one of the Google provided buildpack stacks.
@@ -543,7 +554,8 @@ FLAGS
        To set the region attribute:
         ▸ provide the argument --vpc-connector on the command line with a
           fully specified name;
-        ▸ provide the argument --region on the command line.
+        ▸ provide the argument --region on the command line;
+        ▸ set the property functions/region.
 
          --vpc-connector=VPC_CONNECTOR
             ID of the connector or fully qualified identifier for the
