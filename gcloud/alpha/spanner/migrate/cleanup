@@ -1,0 +1,70 @@
+NAME
+    gcloud alpha spanner migrate cleanup - cleanup migration resources given a
+        data migration job id
+
+SYNOPSIS
+    gcloud alpha spanner migrate cleanup --job-id=JOB_ID
+        --target-profile=TARGET_PROFILE [--data-shard-ids=DATA_SHARD_IDS]
+        [--dataflow] [--datastream] [--log-level=LOG_LEVEL] [--monitoring]
+        [--pub-sub] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Cleanup migration resources given a data migration job id.
+
+EXAMPLES
+    To cleanup resources for a data migration job, specify the jobId and the
+    boolean flags for the resources that need to be cleaned up. For sharded
+    migrations, specific data shard Ids can also be provided.
+
+        For a all shards of a sharded migration, or a non-sharded migration:
+        $ gcloud alpha spanner migrate cleanup --job-id="XXX" \
+            --target-profile="XXX" --datastream --dataflow --pub-sub \
+            --monitoring
+
+        For a subset of shards of a sharded migration:
+        $ gcloud alpha spanner migrate cleanup --job-id="XXX" \
+            --data-shard-ids="lorem,epsum" --target-profile="XXX" \
+            --datastream --dataflow --pub-sub --monitoring
+
+REQUIRED FLAGS
+     --job-id=JOB_ID
+        The job Id of an existing migration job.
+
+     --target-profile=TARGET_PROFILE
+        Flag for specifying connection profile for target database (e.g.,
+        "dialect=postgresql)".
+
+OPTIONAL FLAGS
+     --data-shard-ids=DATA_SHARD_IDS
+        Relevant to sharded migrations. Optional comma separated list of data
+        shard Ids, if nothing is specified, all shards are cleaned up.
+
+     --dataflow
+        Cleanup dataflow resource(s).
+
+     --datastream
+        Cleanup datastream resource(s).
+
+     --log-level=LOG_LEVEL
+        To configure the log level for the execution (INFO, VERBOSE).
+
+     --monitoring
+        Cleanup monitoring dashboard(s).
+
+     --pub-sub
+        Cleanup pubsub resource(s).
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

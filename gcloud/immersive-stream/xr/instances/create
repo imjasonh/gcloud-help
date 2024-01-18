@@ -9,7 +9,8 @@ SYNOPSIS
           [capacity=CAPACITY],
           [enable_autoscaling=ENABLE_AUTOSCALING],[region=REGION]
         --version=VERSION (--content=CONTENT : --location=LOCATION) [--async]
-        [--fallback-url=FALLBACK_URL] [GCLOUD_WIDE_FLAG ...]
+        [--fallback-url=FALLBACK_URL] [--gpu-class=GPU_CLASS] [--mode=MODE]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Create an Immersive Stream for XR service instance.
@@ -35,6 +36,22 @@ EXAMPLES
             --content=my-content --version=my-version \
             --add-region=region=us-west1,capacity=2 \
             --fallback-url="https://www.google.com"
+
+        By default, the instance is created with mode=ar, which supports both
+        3D and AR experiences. Instances can also be configured to use
+        3D-only mode. This configuration cannot be updated later.
+        To use 3D-only mode, include:
+
+        --mode=3d
+
+        By default, the instance is created with gpu-class=t4. This uses the
+        NVIDIA T4 GPU for the instance. Instances can also be configured to
+        use NVIDIA L4 GPUs at creation. Note that only certain regions are
+        available for L4, and only 3D-only mode is supported. This
+        configuration cannot be updated later.
+        To use NVIDIA L4 GPU for the instance, include:
+
+        --gpu-class=l4
 
 POSITIONAL ARGUMENTS
      INSTANCE
@@ -93,6 +110,12 @@ OPTIONAL FLAGS
      --fallback-url=FALLBACK_URL
         Fallback url to redirect users to when this service instance is unable
         to provide the streaming experience
+
+     --gpu-class=GPU_CLASS
+        The class of GPU that is used by this service instance
+
+     --mode=MODE
+        The rendering mode that is supported by this service instance
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

@@ -1,5 +1,6 @@
 NAME
-    gcloud alpha monitoring uptime update - update an existing uptime check
+    gcloud alpha monitoring uptime update - update an existing uptime check or
+        synthetic monitor
 
 SYNOPSIS
     gcloud alpha monitoring uptime update CHECK_ID
@@ -29,15 +30,25 @@ SYNOPSIS
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) Updates an existing uptime check.
+    (ALPHA) Updates an existing uptime check or synthetic monitor.
+
+    Flags only apply to uptime checks unless noted that they apply to synthetic
+    monitors.
 
     For information about the JSON/YAML format of an uptime check:
     https://cloud.google.com/monitoring/api/ref_v3/rest/v3/projects.uptimeCheckConfigs
 
+EXAMPLES
+    To update an uptime check or synthetic monitor, run:
+
+        $ gcloud alpha monitoring uptime update CHECK_ID --period=5 \
+            --timeout=30
+
 POSITIONAL ARGUMENTS
-     Uptime Check resource - Name of the Uptime Check to be updated. This
-     represents a Cloud resource. (NOTE) Some attributes are not given
-     arguments in this group but can be set in other ways.
+     Uptime check or synthetic monitor resource - Name of the uptime check or
+     synthetic monitor to be updated. This represents a Cloud resource. (NOTE)
+     Some attributes are not given arguments in this group but can be set in
+     other ways.
 
      To set the project attribute:
       ◆ provide the argument check_id on the command line with a fully
@@ -48,23 +59,22 @@ POSITIONAL ARGUMENTS
      This must be specified.
 
        CHECK_ID
-          ID of the Uptime Check or fully qualified identifier for the Uptime
-          Check.
+          ID of the uptime check or synthetic monitor or fully qualified
+          identifier for the uptime check or synthetic monitor.
 
-          To set the uptime_check attribute:
+          To set the check_id attribute:
           ▸ provide the argument check_id on the command line.
 
 FLAGS
-     Uptime check protocol settings. Cannot be used if --synthetic-target is
-     set.
+     Uptime check protocol settings.
 
        --body=BODY
           The request body associated with the HTTP POST request. Can only be
-          set if --protocol is "http" or "https".
+          set if --protocol is http or https.
 
        --content-type=CONTENT_TYPE
           The content type header to use for the check, defaults to
-          "unspecified". Can only be set if --protocol is "http" or "https".
+          unspecified. Can only be set if --protocol is http or https.
 
           CONTENT_TYPE must be one of:
 
@@ -77,31 +87,31 @@ FLAGS
 
        --custom-content-type=CUSTOM_CONTENT_TYPE
           A user-provided content type header to use for the check. Can only be
-          set if --protocol is "http" or "https".
+          set if --protocol is http or https.
 
        --mask-headers=MASK_HEADERS
-          Whether to encrypt the header information, defaults to "false". Can
-          only be set if --protocol is "http" or "https".
+          Whether to encrypt the header information, defaults to false. Can
+          only be set if --protocol is http or https.
 
        --password=PASSWORD
           The password to use when authenticating with the HTTP server. Can
-          only be set if --protocol is "http" or "https".
+          only be set if --protocol is http or https.
 
        --path=PATH
-          The path to the page against which to run the check, defaults to "/".
-          Can only be set if --protocol is "http" or "https".
+          The path to the page against which to run the check, defaults to /.
+          Can only be set if --protocol is http or https.
 
        --pings-count=PINGS_COUNT
           Number of ICMP pings to send alongside the request.
 
        --port=PORT
-          The port on the server against which to run the check. Defaults to
-          "80" when --protocol is "http". Defaults to "443" when --protocol is
-          "https". Required if --protocol is "tcp".
+          The port on the server against which to run the check. Defaults to 80
+          when --protocol is http. Defaults to 443 when --protocol is https.
+          Required if --protocol is tcp.
 
        --request-method=REQUEST_METHOD
-          The HTTP request method to use, defaults to "get". Can only be set if
-          --protocol is "http" or "https".
+          The HTTP request method to use, defaults to get. Can only be set if
+          --protocol is http or https.
 
           REQUEST_METHOD must be one of:
 
@@ -112,22 +122,23 @@ FLAGS
 
        --username=USERNAME
           The username to use when authenticating with the HTTP server. Can
-          only be set if --protocol is "http" or "https".
+          only be set if --protocol is http or https.
 
        --validate-ssl=VALIDATE_SSL
-          Whether to include SSL certificate validation as a part of the Uptime
-          Check, defaults to "false". Can only be set if --protocol is "https".
+          Whether to include SSL certificate validation as a part of the uptime
+          check, defaults to false. Can only be set if --protocol is http or
+          https.
 
-       Uptime Status
+       Uptime check status.
 
        At most one of these can be specified:
 
-         Uptime Status Classes
+         Uptime check status classes.
 
          At most one of these can be specified:
 
            --add-status-classes=[status-class,...]
-              The list of HTTP Status Classes to add to the Uptime Check.
+              The list of HTTP status classes to add to the uptime check.
               status-class must be one of:
 
                1xx
@@ -144,11 +155,11 @@ FLAGS
                   Any response code
 
            --clear-status-classes=CLEAR_STATUS_CLASSES
-              Clear all HTTP Status Classes on the Uptime Check. This will act
-              the same as if only "2xx" was selected.
+              Clear all HTTP status classes on the uptime check. Setting this
+              flag is the same as selecting only the 2xx status class.
 
            --remove-status-classes=[status-class,...]
-              The list of HTTP Status Classes to remove from the Uptime Check.
+              The list of HTTP status classes to remove from the uptime check.
               status-class must be one of:
 
                1xx
@@ -165,7 +176,7 @@ FLAGS
                   Any response code
 
            --set-status-classes=[status-class,...]
-              List of HTTP Status Classes. The Uptime Check will only pass if
+              List of HTTP status classes. The uptime check will only pass if
               the response code is contained in this list.
 
               status-class must be one of:
@@ -183,49 +194,50 @@ FLAGS
                any
                   Any response code
 
-         Uptime Status Codes
+         Uptime check status codes.
 
          At most one of these can be specified:
 
            --add-status-codes=[status-code,...]
-              The list of HTTP Status Codes to add to the Uptime Check.
+              The list of HTTP status codes to add to the uptime check.
 
            --clear-status-codes=CLEAR_STATUS_CODES
-              Clear all HTTP Status Codes on the Uptime Check. This will act
-              the same as if only the "2xx" HTTP Status Class was selected.
+              Clear all HTTP status codes on the uptime check. Setting this
+              flag is the same as selecting only the 2xx status class.
 
            --remove-status-codes=[status-code,...]
-              The list of HTTP Status Codes to remove from the Uptime Check.
+              The list of HTTP status codes to remove from the uptime check.
 
            --set-status-codes=[status-code,...]
-              List of HTTP Status Codes. The Uptime Check will only pass if the
+              List of HTTP status codes. The uptime check will only pass if the
               response code is present in this list.
 
-       Uptime Headers
+       Uptime check headers.
 
          --update-headers=[KEY=VALUE,...]
-            The list of headers to add to the Uptime Check. Any existing
-            headers with matching "key" will be overridden by the provided
-            values.
+            The list of headers to add to the uptime check. Any existing
+            headers with matching "key" are overridden by the provided values.
 
-         Uptime remove Headers
+         Uptime check remove headers.
 
          At most one of these can be specified:
 
            --clear-headers=CLEAR_HEADERS
-              Clear all headers on the Uptime Check.
+              Clear all headers on the uptime check.
 
            --remove-headers=[KEY,...]
-              The list of header keys to remove from the Uptime Check.
+              The list of header keys to remove from the uptime check.
 
-     Uptime check settings
+     Settings.
 
        --display-name=DISPLAY_NAME
-          The display name for the Uptime Check.
+          The display name for the uptime check or synthetic monitor.
 
        --period=PERIOD
-          How often, in minutes, the Uptime check is performed, defaults to
-          "1". PERIOD must be one of:
+          The time between uptime check or synthetic monitor executions in
+          minutes, defaults to 1. Can be set for synthetic monitors.
+
+          PERIOD must be one of:
 
            1
               One minute
@@ -238,14 +250,14 @@ FLAGS
 
        --timeout=TIMEOUT
           The maximum amount of time in seconds to wait for the request to
-          complete, defaults to "60".
+          complete, defaults to 60. Can be set for synthetic monitors.
 
-       Uptime Selected Regions. Cannot be used if --synthetic-target is set.
+       Uptime check selected regions.
 
        At most one of these can be specified:
 
          --add-regions=[region,...]
-            The list of regions to add to the Uptime Check. region must be one
+            The list of regions to add to the uptime check. region must be one
             of:
 
              asia-pacific
@@ -262,11 +274,11 @@ FLAGS
                 us-east4
 
          --clear-regions=CLEAR_REGIONS
-            Clear all regions on the Uptime Check. This will act the same as if
-            all available regions were selected.
+            Clear all regions on the uptime check. This setting acts the same
+            as if all available regions were selected.
 
          --remove-regions=[region,...]
-            The list of regions to remove from the Uptime Check. region must be
+            The list of regions to remove from the uptime check. region must be
             one of:
 
              asia-pacific
@@ -283,8 +295,8 @@ FLAGS
                 us-east4
 
          --set-regions=[region,...]
-            The list of regions from which the check will be run. At least 3
-            regions must be selected.
+            The list of regions from which the check is run. At least 3 regions
+            must be selected.
 
             region must be one of:
 
@@ -301,7 +313,7 @@ FLAGS
              usa-virginia
                 us-east4
 
-       uptime check
+       User labels. Can be set for synthetic monitors.
 
          --update-user-labels=[KEY=VALUE,...]
             List of label KEY=VALUE pairs to update. If a label exists, its
@@ -333,7 +345,7 @@ FLAGS
               silently ignored. If --update-user-labels is also specified then
               --update-user-labels is applied first.
 
-     Uptime matcher settings. Cannot be used if --synthetic-target is set.
+     Uptime check matcher settings.
 
        --matcher-content=MATCHER_CONTENT
           String, regex or JSON content to match.
@@ -342,8 +354,8 @@ FLAGS
           this group are specified.
 
        --matcher-type=MATCHER_TYPE
-          The type of content matcher that will be applied to the server
-          output, defaults to "contains-string".
+          The type of content matcher that is applied to the server output,
+          defaults to contains-string.
 
           MATCHER_TYPE must be one of:
 
@@ -360,20 +372,20 @@ FLAGS
            not-matches-regex
               Response does not match regex
 
-       Uptime matcher settings for JSON responses
+       Uptime check matcher settings for JSON responses.
 
          --json-path=JSON_PATH
             JSONPath within the response output pointing to the expected
-            content to match. Only used if matcher-type is "matches-json-path"
-            or "not-matches-json-path".
+            content to match. Only used if --matcher-type is matches-json-path
+            or not-matches-json-path.
 
             This flag argument must be specified if any of the other arguments
             in this group are specified.
 
          --json-path-matcher-type=JSON_PATH_MATCHER_TYPE
-            The type of JSONPath match that will be applied to the JSON output,
-            defaults to "exact-match". Only used if matcher-type is
-            "matches-json-path" or "not-matches-json-path".
+            The type of JSONPath match that is applied to the JSON output,
+            defaults to exact-match. Only used if --matcher-type is
+            matches-json-path or not-matches-json-path.
 
             JSON_PATH_MATCHER_TYPE must be one of:
 
@@ -394,5 +406,9 @@ NOTES
     This command is currently in alpha and might change without notice. If this
     command fails with API permission errors despite specifying the correct
     project, you might be trying to access an API with an invitation-only early
-    access allowlist.
+    access allowlist. These variants are also available:
+
+        $ gcloud monitoring uptime update
+
+        $ gcloud beta monitoring uptime update
 

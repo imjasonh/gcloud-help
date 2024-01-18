@@ -17,13 +17,24 @@ DESCRIPTION
 
 EXAMPLES
     The following command creates a Storage Pool named NAME using all possible
-    arguments
+    arguments with a VPC network in the same project
 
         $ gcloud alpha netapp storage-pools create NAME \
           --location=us-central1 --service-level=standard \
           --capacity=2048 --network=name=default --active-directory=ad1 \
           --kms-config=kms-config1 --enable-ldap=true \
           --description="example description"
+
+    The following command creates a Storage pool named NAME using all possible
+    arguments with a shared VPC network in a separate project called
+    VPC_PROJECT
+
+        $ gcloud alpha netapp storage-pools create NAME \
+          --location=us-central1 --service-level=standard \
+          --capacity=2048 \
+          --network=name=projects/VPC_PROJECT/locations/us-central1/\
+        networks/default --active-directory=ad1 --kms-config=kms-config1 \
+            --enable-ldap=true --description="example description"
 
 POSITIONAL ARGUMENTS
      Storage pool resource - The Storage Pool to create. The arguments in this
@@ -68,7 +79,11 @@ REQUIRED FLAGS
         psa-range is optional.
          name
             The name of the Google Compute Engine VPC network to which the
-            volume is connected.
+            volume is connected. Short-form (VPC network ID) or long-form (full
+            VPC network name:
+            projects/PROJECT/locations/LOCATION/networks/NETWORK) are both
+            accepted, but please use the long-form when attempting to create a
+            Storage Pool using a shared VPC.
          psa-range
             The psa-range is the name of the allocated range of the Private
             Service Access connection. The range you specify can't overlap with
