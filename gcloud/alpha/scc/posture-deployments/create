@@ -3,9 +3,9 @@ NAME
         Command Center posture deployment
 
 SYNOPSIS
-    gcloud alpha scc posture-deployments create POSTURE_DEPLOYMENT_PARENT
-        POSTURE_DEPLOYMENT_ID --posture-name=POSTURE_NAME
-        --posture-revision-id=POSTURE_REVISION_ID
+    gcloud alpha scc posture-deployments create
+        (POSTURE_DEPLOYMENT : --location=LOCATION --organization=ORGANIZATION)
+        --posture-name=POSTURE_NAME --posture-revision-id=POSTURE_REVISION_ID
         --target-resource=TARGET_RESOURCE [--async] [--description=DESCRIPTION]
         [GCLOUD_WIDE_FLAG ...]
 
@@ -18,14 +18,52 @@ DESCRIPTION
 
     LRO operation ID is returned as the response of the command.
 
-POSITIONAL ARGUMENTS
-     POSTURE_DEPLOYMENT_PARENT
-        Name of the organization of the workload where posture-deployment is to
-        be created. Format: organizations/<organizationID>/locations/<location>
+EXAMPLES
+    Create a posture deployment named posture-deployment-foo-1 within parent
+    organizations/123/locations/global(i.e. a posture-deployment in
+    organization 123, location global, with id posture-deployment-foo-1, which
+    deploys posture organizations/123/locations/foo-posture with revision-id
+    foo-posture-revision-id):
 
-     POSTURE_DEPLOYMENT_ID
-        Name of the posture deployment to be created. It has to be unique for
-        an organization.
+        $ gcloud alpha scc posture-deployments create \
+           organizations/123/locations/global posture-deployment-foo-1 \
+           --posture-name=organizations/123/locations/global/foo-posture \
+           --posture-revision-id=foo-posture-revision-id
+
+POSITIONAL ARGUMENTS
+     Posture deployment resource - The name of the posture deployment to be
+     created. For example
+     organizations/<organizationID>/locations/<location>/postureDeployments/<postureDeploymentID>.
+     The arguments in this group can be used to specify the attributes of this
+     resource.
+
+     This must be specified.
+
+       POSTURE_DEPLOYMENT
+          ID of the posture_deployment or fully qualified identifier for the
+          posture_deployment.
+
+          To set the posture_deployment attribute:
+          ▸ provide the argument posture_deployment on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          ID of the location where the resource exists (for example, global).
+
+          To set the location attribute:
+          ▸ provide the argument posture_deployment on the command line with
+            a fully specified name;
+          ▸ provide the argument --location on the command line.
+
+       --organization=ORGANIZATION
+          ID of the organization which is the parent of the resource.
+
+          To set the organization attribute:
+          ▸ provide the argument posture_deployment on the command line with
+            a fully specified name;
+          ▸ provide the argument --organization on the command line.
 
 REQUIRED FLAGS
      --posture-name=POSTURE_NAME
@@ -67,5 +105,7 @@ NOTES
     This command is currently in alpha and might change without notice. If this
     command fails with API permission errors despite specifying the correct
     project, you might be trying to access an API with an invitation-only early
-    access allowlist.
+    access allowlist. This variant is also available:
+
+        $ gcloud scc posture-deployments create
 

@@ -3,7 +3,8 @@ NAME
         posture from a workload
 
 SYNOPSIS
-    gcloud alpha scc postures extract POSTURE_PARENT POSTURE_ID
+    gcloud alpha scc postures extract
+        (POSTURE : --location=LOCATION --organization=ORGANIZATION)
         --workload=WORKLOAD [--async] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -16,14 +17,47 @@ DESCRIPTION
     Extracted posture is returned as the response of the command. LRO operation
     ID is printed as the standard output.
 
-POSITIONAL ARGUMENTS
-     POSTURE_PARENT
-        Organization where posture is to be created. Format:
-        organizations/<organizationID>/locations/<location>
+EXAMPLES
+    Extract a posture named posture-foo-1 within parent
+    organizations/123/locations/global(i.e. a posture in organization 123,
+    location global, with id posture-foo-1) from workload projects/456:
 
-     POSTURE_ID
-        Name of the posture to be created. It has to be unique for an
-        organization.
+        $ gcloud alpha scc postures extract \
+           organizations/123/locations/global posture-foo-1 \
+           --workload=projects/456
+
+POSITIONAL ARGUMENTS
+     Posture resource - The name of the posture to be created. For example
+     organizations/<organizationID>/locations/<location>/postures/<postureID>.
+     The arguments in this group can be used to specify the attributes of this
+     resource.
+
+     This must be specified.
+
+       POSTURE
+          ID of the posture or fully qualified identifier for the posture.
+
+          To set the posture attribute:
+          ▸ provide the argument posture on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          ID of the location where the resource exists (for example, global).
+
+          To set the location attribute:
+          ▸ provide the argument posture on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line.
+
+       --organization=ORGANIZATION
+          ID of the organization which is the parent of the resource.
+
+          To set the organization attribute:
+          ▸ provide the argument posture on the command line with a fully
+            specified name;
+          ▸ provide the argument --organization on the command line.
 
 REQUIRED FLAGS
      --workload=WORKLOAD
@@ -53,5 +87,7 @@ NOTES
     This command is currently in alpha and might change without notice. If this
     command fails with API permission errors despite specifying the correct
     project, you might be trying to access an API with an invitation-only early
-    access allowlist.
+    access allowlist. This variant is also available:
+
+        $ gcloud scc postures extract
 

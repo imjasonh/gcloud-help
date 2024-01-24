@@ -13,17 +13,23 @@ SYNOPSIS
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    This command can fail for the following reasons:
-      ▪ The active account does not have permission to create the Batch job.
+    This command creates and submits a Batch job. After you create and submit
+    the job, Batch automatically queues, schedules, and executes it.
 
 EXAMPLES
-    To submit the job with config.json sample config file and name
-    projects/foo/locations/us-central1/jobs/bar, run:
+    To submit a job with a sample JSON configuration file (config.json) and
+    name projects/foo/locations/us-central1/jobs/bar, run:
 
         $ gcloud batch jobs submit \
             projects/foo/locations/us-central1/jobs/bar --config=config.json
 
-    To submit the job through stdin with json job config and name
+    To submit a job with a sample YAML configuration file (config.yaml) and
+    name projects/foo/locations/us-central1/jobs/bar, run:
+
+        $ gcloud batch jobs submit \
+            projects/foo/locations/us-central1/jobs/bar --config=config.yaml
+
+    To submit a job through stdin with a sample job configuration and name
     projects/foo/locations/us-central1/jobs/bar, run:
 
         $ gcloud batch jobs submit \
@@ -31,19 +37,23 @@ EXAMPLES
 
         then input json job config via stdin
         {
-          json job config
+          job config
         }
 
-    To submit the job through HereDoc with json job config and name
+    To submit a job through HereDoc with a sample job configuration and name
     projects/foo/locations/us-central1/jobs/bar, run:
 
         $ gcloud batch jobs submit \
             projects/foo/locations/us-central1/jobs/bar --config=- << EOF
 
         {
-          json job config
+          job config
         }
         EOF
+
+    For details about how to define a job's configuration using JSON, see the
+    projects.locations.jobs resource in the Batch API Reference. If you want to
+    define a job's configuration using YAML, convert the JSON syntax to YAML.
 
 POSITIONAL ARGUMENTS
      Job resource - The Batch job resource. If --location not specified,the
@@ -81,9 +91,9 @@ REQUIRED FLAGS
      At least one of these must be specified:
 
        --config=CONFIG
-          The file path of the JSON job config JSON. It also supports direct
-          input from stdin with '-' or HereDoc (in shells with HereDoc support
-          like Bash) with '- <<DELIMITER'.
+          The file path of the job config file in either JSON or YAML format.
+          It also supports direct input from stdin with '-' or HereDoc (in
+          shells with HereDoc support like Bash) with '- <<DELIMITER'.
 
        Either specify the config file for the job or the first runnable in the
        task spec. Specify either a script file or container arguments for the

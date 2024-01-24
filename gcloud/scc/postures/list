@@ -1,35 +1,31 @@
 NAME
-    gcloud beta domains registrations list-importable-domains - list Google
-        Domains registrations importable into Cloud Domains
+    gcloud scc postures list - lists all the Cloud Security Command Center
+        postures for an organization
 
 SYNOPSIS
-    gcloud beta domains registrations list-importable-domains
-        [--filter=EXPRESSION] [--limit=LIMIT] [--page-size=PAGE_SIZE]
-        [--sort-by=[FIELD,...]] [GCLOUD_WIDE_FLAG ...]
+    gcloud scc postures list PARENT [--filter=EXPRESSION] [--limit=LIMIT]
+        [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (BETA) (DEPRECATED) List Google Domains registrations importable into Cloud
-    Domains.
+    Lists all Cloud Security Command Center (SCC) postures for an organization.
 
-    This command is deprecated. See
-    https://cloud.google.com/domains/docs/deprecations/feature-deprecations.
-
-    List Google Domains registrations that can be imported to a Cloud Domains
-    project.
-
-    Registrations with an IMPORTABLE resource state can be imported from Google
-    Domains registrar to Cloud Domains.
-
-    Registrations with a SUSPENDED, EXPIRED, or DELETED resource state must
-    have their states resolved with Google Domains registrar to be imported.
-
-    Registrations with an UNSUPPORTED resource state are not currently
-    supported for import.
+    By default, postures created in global location are returned.
 
 EXAMPLES
-    To list Google Domains registrations that can be imported, run:
+    List all postures in organization 123. If location is omitted, this returns
+    postures from location 'global'. For a posture with multiple revisions,
+    only the latest updated revision of the posture is returned in the output.
 
-        $ gcloud beta domains registrations list-importable-domains
+        $ gcloud scc postures list organizations/123
+
+    List all postures in organization 123, location global
+
+        $ gcloud scc postures list organizations/123/locations/global
+
+POSITIONAL ARGUMENTS
+     PARENT
+        Resource name of the parent, like organizations/<organizationID> or
+        organizations/<organizationID>/locations/<location>.
 
 LIST COMMAND FLAGS
      --filter=EXPRESSION
@@ -65,11 +61,12 @@ GCLOUD WIDE FLAGS
 
     Run $ gcloud help for details.
 
+API REFERENCE
+    This command uses the securityposture/v1 API. The full documentation for
+    this API can be found at: https://cloud.google.com/security-command-center
+
 NOTES
-    This command is currently in beta and might change without notice. These
-    variants are also available:
+    This variant is also available:
 
-        $ gcloud domains registrations list-importable-domains
-
-        $ gcloud alpha domains registrations list-importable-domains
+        $ gcloud alpha scc postures list
 
