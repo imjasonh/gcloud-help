@@ -2,9 +2,9 @@ NAME
     gcloud beta dataproc clusters create - create a cluster
 
 SYNOPSIS
-    gcloud beta dataproc clusters create (CLUSTER : --region=REGION)
-        [--no-address] [--async] [--autoscaling-policy=AUTOSCALING_POLICY]
-        [--bucket=BUCKET] [--dataproc-metastore=DATAPROC_METASTORE]
+    gcloud beta dataproc clusters create (CLUSTER : --region=REGION) [--async]
+        [--autoscaling-policy=AUTOSCALING_POLICY] [--bucket=BUCKET]
+        [--dataproc-metastore=DATAPROC_METASTORE]
         [--driver-pool-accelerator=[type=TYPE,[count=COUNT],...]]
         [--driver-pool-boot-disk-size=DRIVER_POOL_BOOT_DISK_SIZE]
         [--driver-pool-boot-disk-type=DRIVER_POOL_BOOT_DISK_TYPE]
@@ -60,6 +60,7 @@ SYNOPSIS
           --kerberos-root-principal-password-uri=KERBEROS_ROOT_PRINCIPAL_PASSWORD_URI [--kerberos-kms-key=KERBEROS_KMS_KEY : --kerberos-kms-key-keyring=KERBEROS_KMS_KEY_KEYRING --kerberos-kms-key-location=KERBEROS_KMS_KEY_LOCATION --kerberos-kms-key-project=KERBEROS_KMS_KEY_PROJECT]]
         [--kms-key=KMS_KEY : --kms-keyring=KMS_KEYRING
           --kms-location=KMS_LOCATION --kms-project=KMS_PROJECT]
+        [--no-address | --public-ip-address]
         [--single-node | --min-num-workers=MIN_NUM_WORKERS
           --num-secondary-workers=NUM_SECONDARY_WORKERS
           --num-workers=NUM_WORKERS
@@ -111,17 +112,6 @@ POSITIONAL ARGUMENTS
           ▸ set the property dataproc/region.
 
 FLAGS
-     --no-address
-        If provided, the instances in the cluster will not be assigned external
-        IP addresses.
-
-        If omitted the instances in the cluster will each be assigned an
-        ephemeral external IP address.
-
-        Note: Dataproc VMs need access to the Dataproc API. This can be
-        achieved without external IP addresses using Private Google Access
-        (https://cloud.google.com/compute/docs/private-google-access).
-
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
@@ -800,6 +790,31 @@ FLAGS
             specified name;
           ▸ provide the argument --kms-project on the command line;
           ▸ set the property core/project.
+
+     At most one of these can be specified:
+
+       --no-address
+          If provided, the instances in the cluster will not be assigned
+          external IP addresses.
+
+          If omitted, then the Dataproc service will apply a default policy to
+          determine if each instance in the cluster gets an external IP address
+          or not.
+
+          Note: Dataproc VMs need access to the Dataproc API. This can be
+          achieved without external IP addresses using Private Google Access
+          (https://cloud.google.com/compute/docs/private-google-access).
+
+       --public-ip-address
+          If provided, cluster instances are assigned external IP addresses.
+
+          If omitted, the Dataproc service applies a default policy to
+          determine whether or not each instance in the cluster gets an
+          external IP address.
+
+          Note: Dataproc VMs need access to the Dataproc API. This can be
+          achieved without external IP addresses using Private Google Access
+          (https://cloud.google.com/compute/docs/private-google-access).
 
      At most one of these can be specified:
 

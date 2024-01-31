@@ -11,8 +11,9 @@ SYNOPSIS
           : --schema-project=SCHEMA_PROJECT)
           : --first-revision-id=FIRST_REVISION_ID
           --last-revision-id=LAST_REVISION_ID]]
-        [--message-storage-policy-allowed-regions=[REGION,...]
-          | --recompute-message-storage-policy]
+        [--recompute-message-storage-policy
+          | [--message-storage-policy-allowed-regions=[REGION,...]
+          : --message-storage-policy-enforce-in-transit]]
         [--topic-encryption-key=TOPIC_ENCRYPTION_KEY
           : --topic-encryption-key-keyring=TOPIC_ENCRYPTION_KEY_KEYRING
           --topic-encryption-key-location=TOPIC_ENCRYPTION_KEY_LOCATION
@@ -64,6 +65,13 @@ EXAMPLES
 
         $ gcloud beta pubsub topics update mytopic \
           --recompute-message-storage-policy
+
+    To enforce both at-rest and in-transit guarantees for messages published to
+    the topic, run:
+
+        $ gcloud beta pubsub topics update mytopic \
+          --message-storage-policy-allowed-regions=some-cloud-region1,\
+        some-cloud-region2 --message-storage-policy-enforce-in-transit
 
 POSITIONAL ARGUMENTS
      Topic resource - Name of the topic to update. This represents a Cloud
@@ -184,18 +192,27 @@ FLAGS
 
      At most one of these can be specified:
 
-       Options for explicitly specifying the message storage policy for a
-       topic. These fields can be set only if the
+       --recompute-message-storage-policy
+          If given, Pub/Sub recomputes the regions where messages can be stored
+          at rest, based on your organization's "Resource Location Restriction"
+          policy.
+
+       Options for explicitly specifying the message storage policy
+       (https://cloud.google.com/pubsub/docs/resource-location-restriction) for
+       a topic. These fields can be set only if the
        --recompute-message-storage-policy flag is not set.
 
          --message-storage-policy-allowed-regions=[REGION,...]
             A list of one or more Cloud regions where messages are allowed to
             be stored at rest.
 
-       --recompute-message-storage-policy
-          If given, Pub/Sub recomputes the regions where messages can be stored
-          at rest, based on your organization's "Resource Location Restriction"
-          policy.
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --message-storage-policy-enforce-in-transit
+            Whether or not to enforce in-transit guarantees for this topic
+            using the allowed regions. This ensures that publishing, pulling,
+            and push delivery are only handled in allowed Cloud regions.
 
      Key resource - The Cloud KMS (Key Management Service) cryptokey that will
      be used to protect the topic. The specified Cloud KMS key should have

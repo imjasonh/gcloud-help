@@ -4,10 +4,9 @@ NAME
 
 SYNOPSIS
     gcloud alpha dataproc workflow-templates set-managed-cluster
-        (TEMPLATE : --region=REGION) [--no-address]
-        [--autoscaling-policy=AUTOSCALING_POLICY] [--bucket=BUCKET]
-        [--cluster-name=CLUSTER_NAME] [--dataproc-metastore=DATAPROC_METASTORE]
-        [--enable-component-gateway]
+        (TEMPLATE : --region=REGION) [--autoscaling-policy=AUTOSCALING_POLICY]
+        [--bucket=BUCKET] [--cluster-name=CLUSTER_NAME]
+        [--dataproc-metastore=DATAPROC_METASTORE] [--enable-component-gateway]
         [--initialization-action-timeout=TIMEOUT; default="10m"]
         [--initialization-actions=CLOUD_STORAGE_URI,[...]]
         [--labels=[KEY=VALUE,...]]
@@ -51,6 +50,7 @@ SYNOPSIS
           --tags=TAG,[TAG,...] --network=NETWORK | --subnet=SUBNET
           --reservation=RESERVATION
           --reservation-affinity=RESERVATION_AFFINITY; default="any"]
+        [--no-address | --public-ip-address]
         [--single-node | --min-num-workers=MIN_NUM_WORKERS
           --num-secondary-workers=NUM_SECONDARY_WORKERS
           --num-workers=NUM_WORKERS
@@ -103,17 +103,6 @@ POSITIONAL ARGUMENTS
           ▸ set the property dataproc/region.
 
 FLAGS
-     --no-address
-        If provided, the instances in the cluster will not be assigned external
-        IP addresses.
-
-        If omitted the instances in the cluster will each be assigned an
-        ephemeral external IP address.
-
-        Note: Dataproc VMs need access to the Dataproc API. This can be
-        achieved without external IP addresses using Private Google Access
-        (https://cloud.google.com/compute/docs/private-google-access).
-
      --autoscaling-policy=AUTOSCALING_POLICY
         ID of the autoscaling policy or fully qualified identifier for the
         autoscaling policy.
@@ -682,6 +671,31 @@ FLAGS
          --reservation-affinity=RESERVATION_AFFINITY; default="any"
             The type of reservation for the instance. RESERVATION_AFFINITY must
             be one of: any, none, specific.
+
+     At most one of these can be specified:
+
+       --no-address
+          If provided, the instances in the cluster will not be assigned
+          external IP addresses.
+
+          If omitted, then the Dataproc service will apply a default policy to
+          determine if each instance in the cluster gets an external IP address
+          or not.
+
+          Note: Dataproc VMs need access to the Dataproc API. This can be
+          achieved without external IP addresses using Private Google Access
+          (https://cloud.google.com/compute/docs/private-google-access).
+
+       --public-ip-address
+          If provided, cluster instances are assigned external IP addresses.
+
+          If omitted, the Dataproc service applies a default policy to
+          determine whether or not each instance in the cluster gets an
+          external IP address.
+
+          Note: Dataproc VMs need access to the Dataproc API. This can be
+          achieved without external IP addresses using Private Google Access
+          (https://cloud.google.com/compute/docs/private-google-access).
 
      At most one of these can be specified:
 

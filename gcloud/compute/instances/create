@@ -247,9 +247,9 @@ FLAGS
             pd-standard.
 
          device-name
-            An optional name that indicates the disk name the guest operating
-            system will see. If omitted, a device name of the form
-            persistent-disk-N will be used.
+            An optional name to display the disk name in the guest operating
+            system. If omitted, a device name of the form persistent-disk-N is
+            used.
 
          provisioned-iops
             Indicates how many IOPS to provision for the disk. This sets the
@@ -372,36 +372,37 @@ FLAGS
         Specifies a textual description of the instances.
 
      --disk=[auto-delete=AUTO-DELETE],[boot=BOOT],[device-name=DEVICE-NAME],[force-attach=FORCE-ATTACH],[mode=MODE],[name=NAME],[scope=SCOPE]
-        Attaches persistent disks to the instances. The disks specified must
-        already exist.
+        Attaches an existing persistent disk to the instances.
 
          name
-            The disk to attach to the instances. When creating more than one
-            instance and using this property, the only valid mode for attaching
-            the disk is read-only (see mode below).
+            The disk to attach to the instances. If you create more than one
+            instance, you can only attach a disk in read-only mode. By default,
+            you attach a zonal persistent disk located in the same zone of the
+            instance. If you want to attach a regional persistent disk, you
+            must specify the disk using its URI; for example,
+            projects/myproject/regions/us-central1/disks/my-regional-disk.
 
          mode
-            Specifies the mode of the disk. Supported options are ro for
-            read-only and rw for read-write. If omitted, rw is used as a
-            default. It is an error for mode to be rw when creating more than
-            one instance because read-write disks can only be attached to a
-            single instance.
+            The mode of the disk. Supported options are ro for read-only mode
+            and rw for read-write mode. If omitted, rw is used as a default
+            value. If you use rw when creating more than one instance, you
+            encounter errors.
 
          boot
-            If yes, indicates that this is a boot disk. The virtual machines
-            will use the first partition of the disk for their root file
-            systems. The default value for this is no.
+            If set to yes, you attach a boot disk. The virtual machine then
+            uses the first partition of the disk for the root file systems. The
+            default value for this is no.
 
          device-name
-            An optional name that indicates the disk name the guest operating
-            system will see. If omitted, a device name of the form
-            persistent-disk-N will be used.
+            An optional name to display the disk name in the guest operating
+            system. If omitted, a device name of the form persistent-disk-N is
+            used.
 
          auto-delete
-            If yes, this persistent disk will be automatically deleted when the
-            instance is deleted. However, if the disk is later detached from
-            the instance, this option won't apply. The default value for this
-            is yes.
+            If set to yes, the persistent disk is automatically deleted when
+            the instance is deleted. However, if you detach the disk from the
+            instance, deleting the instance doesn't delete the disk. The
+            default value for this is yes.
 
          scope
             Can be zonal or regional. If zonal, the disk is interpreted as a
