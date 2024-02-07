@@ -8,7 +8,8 @@ SYNOPSIS
         [--merge-source-commitments=MERGE_SOURCE_COMMITMENTS] [--region=REGION]
         [--split-source-commitment=SPLIT_SOURCE_COMMITMENT]
         [--type=TYPE; default="general-purpose"]
-        [--reservations-from-file=RESERVATIONS_FROM_FILE
+        [--existing-reservation=[name=NAME],[zone=ZONE]
+          | --reservations-from-file=RESERVATIONS_FROM_FILE
           | [--reservation=RESERVATION : --reservation-zone=RESERVATION_ZONE
           --accelerator=[count=COUNT],[type=TYPE]
           --local-ssd=[interface=INTERFACE],[size=SIZE]
@@ -108,6 +109,20 @@ OPTIONAL FLAGS
      Manage the reservations to be created with the commitment.
 
      At most one of these can be specified:
+
+       --existing-reservation=[name=NAME],[zone=ZONE]
+          Details of the existing on-demand reservation or auto-created future
+          reservation that you want to attach to your commitment. Specify a new
+          instance of this flag for every existing reservation that you want to
+          attach. The reservations must be in the same region as the
+          commitment.
+           name
+              The name of the reservation.
+           zone
+              The zone of the reservation. For example, to attach an existing
+              reservation named reservation-name in the zone reservation-zone,
+              use the following text:
+              --existing-reservation=name=reservation-name,zone=reservation-zone
 
        --reservations-from-file=RESERVATIONS_FROM_FILE
           Path to a YAML file of multiple reservations' configuration.
