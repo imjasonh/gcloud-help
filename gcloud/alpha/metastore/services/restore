@@ -4,12 +4,13 @@ NAME
 
 SYNOPSIS
     gcloud alpha metastore services restore (SERVICE : --location=LOCATION)
-        --backup=BACKUP [--async]
+        (--backup=BACKUP | --backup-location=BACKUP_LOCATION) [--async]
         [--restore-type=RESTORE_TYPE; default="metadata-only"]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) Restore a Dataproc Metastore service from the given backup.
+    (ALPHA) Restore a Dataproc Metastore service from the given backup or
+    backup-location
 
     If run asynchronously with --async, exits after printing an operation name
     that can be used to poll the status of the creation via:
@@ -22,6 +23,12 @@ EXAMPLES
 
         $ gcloud alpha metastore services restore my-service \
           --backup=my-backup --restore-type=full
+
+    To restore a Dataproc Metastore service with the name my-service from the
+    backup-location gs://gcs_bucket with a FULL restore type, run:
+
+        $ gcloud alpha metastore services restore my-service \
+          --backup-location=gs://gcs_bucket --restore-type=full
 
 POSITIONAL ARGUMENTS
      Service resource - Arguments and flags that specify the Dataproc Metastore
@@ -58,10 +65,20 @@ POSITIONAL ARGUMENTS
           ▸ set the property metastore/location.
 
 REQUIRED FLAGS
-     --backup=BACKUP
-        The backup resource to restore from. This can be the backup's ID,
-        fully-qualified URL, or relative name in the form
-        projects/{project_id}/locations/{location_id}/services/{service_id}/backups/{backup_id}.
+     The backup resource or the location of the backup artifacts to store from.
+
+     Exactly one of these must be specified:
+
+       --backup=BACKUP
+          The backup resource to restore from. This can be the backup's ID,
+          fully-qualified URL, or relative name in the form
+          projects/{project_id}/locations/{location_id}/services/{service_id}/backups/{backup_id}.
+
+       --backup-location=BACKUP_LOCATION
+          The location of the backup artifacts to restore from. This should be
+          a Cloud Storage URI, contains backup avro files under "avro/",
+          backup_metastore.json and service.json, in the form
+          gs://<path_to_backup>.
 
 OPTIONAL FLAGS
      --async

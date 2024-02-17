@@ -2,11 +2,10 @@ NAME
     gcloud alpha run jobs update - update a Cloud Run Job
 
 SYNOPSIS
-    gcloud alpha run jobs update [JOB] [--args=[ARG,...]]
-        [--breakglass=JUSTIFICATION] [--clear-vpc-connector]
-        [--command=[COMMAND,...]] [--cpu=CPU] [--image=IMAGE] [--key=KEY]
-        [--max-retries=MAX_RETRIES] [--memory=MEMORY]
-        [--parallelism=PARALLELISM] [--region=REGION]
+    gcloud alpha run jobs update [JOB] [--breakglass=JUSTIFICATION]
+        [--clear-vpc-connector] [--container=CONTAINER] [--key=KEY]
+        [--max-retries=MAX_RETRIES] [--parallelism=PARALLELISM]
+        [--region=REGION] [--remove-containers=[CONTAINER,...]]
         [--service-account=SERVICE_ACCOUNT] [--task-timeout=TASK_TIMEOUT]
         [--tasks=TASKS; default=1] [--vpc-connector=VPC_CONNECTOR]
         [--vpc-egress=VPC_EGRESS]
@@ -17,20 +16,21 @@ SYNOPSIS
         [--add-volume=[KEY=VALUE,...]
           --clear-volumes --remove-volume=[VOLUME,...]]
         [--add-volume-mount=[volume=NAME,mount-path=MOUNT_PATH,...]
-          --clear-volume-mounts --remove-volume-mount=[MOUNT_PATH,...]]
+          --args=[ARG,...] --clear-volume-mounts --command=[COMMAND,...]
+          --cpu=CPU --image=IMAGE --memory=MEMORY
+          --remove-volume-mount=[MOUNT_PATH,...] --clear-env-vars
+          | --env-vars-file=FILE_PATH | --set-env-vars=[KEY=VALUE,...]
+          | --remove-env-vars=[KEY,...]
+          --update-env-vars=[KEY=VALUE,...] --clear-secrets
+          | --set-secrets=[KEY=VALUE,...]
+          | --remove-secrets=[KEY,...] --update-secrets=[KEY=VALUE,...]]
         [--async | --execute-now --wait]
         [--binary-authorization=POLICY | --clear-binary-authorization]
-        [--clear-env-vars | --env-vars-file=FILE_PATH
-          | --set-env-vars=[KEY=VALUE,...]
-          | --remove-env-vars=[KEY,...] --update-env-vars=[KEY=VALUE,...]]
         [--clear-labels | --remove-labels=[KEY,...] --labels=[KEY=VALUE,...]
           | --update-labels=[KEY=VALUE,...]]
         [--clear-network
           | --network=NETWORK --subnet=SUBNET --clear-network-tags
-          | --network-tags=[TAG,...]]
-        [--clear-secrets | --set-secrets=[KEY=VALUE,...]
-          | --remove-secrets=[KEY,...] --update-secrets=[KEY=VALUE,...]]
-        [GCLOUD_WIDE_FLAG ...]
+          | --network-tags=[TAG,...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Updates a Cloud Run job.
@@ -62,12 +62,6 @@ POSITIONAL ARGUMENTS
           ▸ specify the job name from an interactive prompt.
 
 FLAGS
-     --args=[ARG,...]
-        Comma-separated arguments passed to the command run by the container
-        image. If not specified and no '--command' is provided, the container
-        image's default Cmd is used. Otherwise, if not specified, no arguments
-        are passed. To reset this field to its default, pass an empty string.
-
      --breakglass=JUSTIFICATION
         Justification to bypass Binary Authorization policy constraints and
         allow the operation. See
@@ -78,21 +72,9 @@ FLAGS
      --clear-vpc-connector
         Remove the VPC connector for this resource.
 
-     --command=[COMMAND,...]
-        Entrypoint for the container image. If not specified, the container
-        image's default Entrypoint is run. To reset this field to its default,
-        pass an empty string.
-
-     --cpu=CPU
-        Set a CPU limit in Kubernetes cpu units.
-
-        Cloud Run (fully managed) supports values 1, 2 and 4. For Cloud Run
-        (fully managed), 4 cpus also requires a minimum 2Gi --memory value.
-        Examples 2, 2.0, 2000m
-
-     --image=IMAGE
-        Name of the container image to deploy (e.g.
-        us-docker.pkg.dev/cloudrun/container/job:latest).
+     --container=CONTAINER
+        Specifies a container by name. Flags following --container will apply
+        to the specified container.
 
      --key=KEY
         CMEK key reference to encrypt the container with.
@@ -102,9 +84,6 @@ FLAGS
         being failed permanently. This applies per-task, not per-job. If set to
         0, tasks will only run once and never be retried on failure.
 
-     --memory=MEMORY
-        Set a memory limit. Ex: 1024Mi, 4Gi.
-
      --parallelism=PARALLELISM
         Number of tasks that may run concurrently. Must be less than or equal
         to the number of tasks. Set to 0 to unset.
@@ -112,6 +91,9 @@ FLAGS
      --region=REGION
         Region in which the resource can be found. Alternatively, set the
         property [run/region].
+
+     --remove-containers=[CONTAINER,...]
+        List of containers to remove.
 
      --service-account=SERVICE_ACCOUNT
         Service account associated with the revision of the service. The
@@ -179,7 +161,7 @@ FLAGS
 
      --add-volume=[KEY=VALUE,...]
         Adds a volume to the Cloud Run resource. To add more than one volume,
-        specify this flag mulitple times. Volumes must have a name and type
+        specify this flag multiple times. Volumes must have a name and type
         key. Only certain values are supported for type. Depending on the
         provided type, other keys will be required. The following types are
         supported with the specified additional keys:
@@ -226,18 +208,106 @@ FLAGS
      --remove-volume=[VOLUME,...]
         Removes volumes from the Cloud Run resource.
 
-     --add-volume-mount=[volume=NAME,mount-path=MOUNT_PATH,...]
-        Adds a mount to the current container. Must contain the keys
-        volume=NAME and mount-path=/PATH where NAME is the name of a volume on
-        this resource and PATH is the path within the container's filesystem to
-        mount this volume.
+    Container Flags
 
-     --clear-volume-mounts
-        Remove all existing mounts from the current container.
+        If the --container or --remove-containers flag is specified the following
+        arguments may only be specified after a --container flag.
 
-     --remove-volume-mount=[MOUNT_PATH,...]
-        Removes the volume mounted at the specified path from the current
-        container.
+         --add-volume-mount=[volume=NAME,mount-path=MOUNT_PATH,...]
+            Adds a mount to the current container. Must contain the keys
+            volume=NAME and mount-path=/PATH where NAME is the name of a volume
+            on this resource and PATH is the path within the container's
+            filesystem to mount this volume.
+
+         --args=[ARG,...]
+            Comma-separated arguments passed to the command run by the
+            container image. If not specified and no '--command' is provided,
+            the container image's default Cmd is used. Otherwise, if not
+            specified, no arguments are passed. To reset this field to its
+            default, pass an empty string.
+
+         --clear-volume-mounts
+            Remove all existing mounts from the current container.
+
+         --command=[COMMAND,...]
+            Entrypoint for the container image. If not specified, the container
+            image's default Entrypoint is run. To reset this field to its
+            default, pass an empty string.
+
+         --cpu=CPU
+            Set a CPU limit in Kubernetes cpu units.
+
+            Cloud Run (fully managed) supports values 1, 2 and 4. For Cloud Run
+            (fully managed), 4 cpus also requires a minimum 2Gi --memory value.
+            Examples 2, 2.0, 2000m
+
+            Cloud Run for Anthos and Knative-compatible Kubernetes clusters
+            support fractional values. Examples .5, 500m, 2
+
+         --image=IMAGE
+            Name of the container image to deploy (e.g.
+            us-docker.pkg.dev/cloudrun/container/job:latest).
+
+         --memory=MEMORY
+            Set a memory limit. Ex: 1024Mi, 4Gi.
+
+         --remove-volume-mount=[MOUNT_PATH,...]
+            Removes the volume mounted at the specified path from the current
+            container.
+
+         At most one of these can be specified:
+
+           --clear-env-vars
+              Remove all environment variables.
+
+           --env-vars-file=FILE_PATH
+              Path to a local YAML file with definitions for all environment
+              variables. All existing environment variables will be removed
+              before the new environment variables are added. Example YAML
+              content:
+
+                  KEY_1: "value1"
+                  KEY_2: "value 2"
+
+           --set-env-vars=[KEY=VALUE,...]
+              List of key-value pairs to set as environment variables. All
+              existing environment variables will be removed first.
+
+           Only --update-env-vars and --remove-env-vars can be used together.
+           If both are specified, --remove-env-vars will be applied first.
+
+             --remove-env-vars=[KEY,...]
+                List of environment variables to be removed.
+
+             --update-env-vars=[KEY=VALUE,...]
+                List of key-value pairs to set as environment variables.
+
+         Specify secrets to mount or provide as environment variables. Keys
+         starting with a forward slash '/' are mount paths. All other keys
+         correspond to environment variables. Values should be in the form
+         SECRET_NAME:SECRET_VERSION. For example:
+         '--update-secrets=/secrets/api/key=mysecret:latest,ENV=othersecret:1'
+         will mount a volume at '/secrets/api' containing a file 'key' with the
+         latest version of secret 'mysecret'. An environment variable named ENV
+         will also be created whose value is version 1 of secret 'othersecret'.
+
+         At most one of these can be specified:
+
+           --clear-secrets
+              Remove all secrets.
+
+           --set-secrets=[KEY=VALUE,...]
+              List of key-value pairs to set as secrets. All existing secrets
+              will be removed first.
+
+           Only --update-secrets and --remove-secrets can be used together. If
+           both are specified, --remove-secrets will be applied first.
+
+             --remove-secrets=[KEY,...]
+                List of secrets to be removed.
+
+             --update-secrets=[KEY=VALUE,...]
+                List of key-value pairs to set as secrets.
 
      At most one of these can be specified:
 
@@ -265,32 +335,6 @@ FLAGS
 
        --clear-binary-authorization
           Remove any previously set Binary Authorization policy.
-
-     At most one of these can be specified:
-
-       --clear-env-vars
-          Remove all environment variables.
-
-       --env-vars-file=FILE_PATH
-          Path to a local YAML file with definitions for all environment
-          variables. All existing environment variables will be removed before
-          the new environment variables are added. Example YAML content:
-
-              KEY_1: "value1"
-              KEY_2: "value 2"
-
-       --set-env-vars=[KEY=VALUE,...]
-          List of key-value pairs to set as environment variables. All existing
-          environment variables will be removed first.
-
-       Only --update-env-vars and --remove-env-vars can be used together. If
-       both are specified, --remove-env-vars will be applied first.
-
-         --remove-env-vars=[KEY,...]
-            List of environment variables to be removed.
-
-         --update-env-vars=[KEY=VALUE,...]
-            List of key-value pairs to set as environment variables.
 
      At most one of these can be specified:
 
@@ -353,33 +397,6 @@ FLAGS
            --network-tags=[TAG,...]
               Applies the given Compute Engine tags (comma separated) to the
               Cloud Run job. To clear existing tags, use --clear-network-tags.
-
-     Specify secrets to mount or provide as environment variables. Keys
-     starting with a forward slash '/' are mount paths. All other keys
-     correspond to environment variables. Values should be in the form
-     SECRET_NAME:SECRET_VERSION. For example:
-     '--update-secrets=/secrets/api/key=mysecret:latest,ENV=othersecret:1' will
-     mount a volume at '/secrets/api' containing a file 'key' with the latest
-     version of secret 'mysecret'. An environment variable named ENV will also
-     be created whose value is version 1 of secret 'othersecret'.
-
-     At most one of these can be specified:
-
-       --clear-secrets
-          Remove all secrets.
-
-       --set-secrets=[KEY=VALUE,...]
-          List of key-value pairs to set as secrets. All existing secrets will
-          be removed first.
-
-       Only --update-secrets and --remove-secrets can be used together. If both
-       are specified, --remove-secrets will be applied first.
-
-         --remove-secrets=[KEY,...]
-            List of secrets to be removed.
-
-         --update-secrets=[KEY=VALUE,...]
-            List of key-value pairs to set as secrets.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

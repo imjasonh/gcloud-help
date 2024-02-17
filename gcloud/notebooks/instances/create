@@ -3,23 +3,24 @@ NAME
 
 SYNOPSIS
     gcloud notebooks instances create (INSTANCE : --location=LOCATION)
-        ([--container-repository=CONTAINER_REPOSITORY
-          : --container-tag=CONTAINER_TAG] | [--environment=ENVIRONMENT
-          : --environment-location=ENVIRONMENT_LOCATION]
-          | [(--vm-image-family=VM_IMAGE_FAMILY; default="common-cpu"
-          | --vm-image-name=VM_IMAGE_NAME)
-          : --vm-image-project=VM_IMAGE_PROJECT;
-          default="deeplearning-platform-release"]) [--async]
-        [--instance-owners=INSTANCE_OWNERS] [--labels=[KEY=VALUE,...]]
+        [--async] [--instance-owners=INSTANCE_OWNERS]
+        [--labels=[KEY=VALUE,...]]
         [--machine-type=MACHINE_TYPE; default="n1-standard-1"]
         [--metadata=[KEY=VALUE,...]]
         [--post-startup-script=POST_STARTUP_SCRIPT]
         [--service-account=SERVICE_ACCOUNT]
         [--no-shielded-integrity-monitoring] [--shielded-secure-boot]
-        [--no-shielded-vtpm]
+        [--no-shielded-vtpm] [--tags=[TAGS,...]]
         [--accelerator-core-count=ACCELERATOR_CORE_COUNT
           --accelerator-type=ACCELERATOR_TYPE]
         [--boot-disk-size=BOOT_DISK_SIZE --boot-disk-type=BOOT_DISK_TYPE]
+        [[--container-repository=CONTAINER_REPOSITORY
+          : --container-tag=CONTAINER_TAG] | [--environment=ENVIRONMENT
+          : --environment-location=ENVIRONMENT_LOCATION]
+          | --vm-image-project=VM_IMAGE_PROJECT;
+          default="deeplearning-platform-release"
+          --vm-image-family=VM_IMAGE_FAMILY; default="common-cpu"
+          | --vm-image-name=VM_IMAGE_NAME]
         [--custom-gpu-driver-path=CUSTOM_GPU_DRIVER_PATH --install-gpu-driver]
         [--data-disk-size=DATA_DISK_SIZE
           --data-disk-type=DATA_DISK_TYPE --no-remove-data-disk]
@@ -98,8 +99,86 @@ POSITIONAL ARGUMENTS
           ▸ provide the argument --location on the command line;
           ▸ set the property notebooks/location.
 
-REQUIRED FLAGS
-     Exactly one of these must be specified:
+FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --instance-owners=INSTANCE_OWNERS
+        The owners of this instance after creation. Format:alias@example.com.
+        Currently supports one owner only.If not specified, all of the service
+        account users of the VM instance's service account can use the
+        instance.
+
+     --labels=[KEY=VALUE,...]
+        Labels to apply to this instance. These can be later modified by the
+        setLabels method.
+
+     --machine-type=MACHINE_TYPE; default="n1-standard-1"
+        The Compute Engine machine type
+        (https://cloud.google.com/sdk/gcloud/reference/compute/machine-types)
+        of this instance.
+
+     --metadata=[KEY=VALUE,...]
+        Custom metadata to apply to this instance.
+
+        For example, to specify a Cloud Storage bucket for automatic backup,
+        you can use the gcs-data-bucket metadata tag. Format:
+        "--metadata=gcs-data-bucket=BUCKET".
+
+     --post-startup-script=POST_STARTUP_SCRIPT
+        Path to a Bash script that automatically runs after a notebook instance
+        fully boots up. The path must be a URL or Cloud Storage path
+        (gs://path-to-file/file-name).
+
+     --service-account=SERVICE_ACCOUNT
+        The service account on this instance, giving access to other Google
+        Cloud services. You can use any service account within the same
+        project, but you must have the service account user permission to use
+        the instance. If not specified, the Compute Engine default service
+        account is used.
+
+     --shielded-integrity-monitoring
+        Enable monitoring of the boot integrity of the instance. Enabled by
+        default, use --no-shielded-integrity-monitoring to disable.
+
+     --shielded-secure-boot
+        Boot instance with secure boot enabled. Disabled by default.
+
+     --shielded-vtpm
+        Boot instance with TPM (Trusted Platform Module) enabled. Enabled by
+        default, use --no-shielded-vtpm to disable.
+
+     --tags=[TAGS,...]
+        Tags to apply to this instance.
+
+     The hardware accelerator used on this instance. If you use accelerators,
+     make sure that your configuration has enough vCPUs and memory to support
+     the `machine_type` you have selected.
+
+       --accelerator-core-count=ACCELERATOR_CORE_COUNT
+          Count of cores of this accelerator.
+
+       --accelerator-type=ACCELERATOR_TYPE
+          Type of this accelerator. ACCELERATOR_TYPE must be one of:
+          NVIDIA_TESLA_A100, NVIDIA_TESLA_K80, NVIDIA_TESLA_P100,
+          NVIDIA_TESLA_V100, NVIDIA_TESLA_P4, NVIDIA_TESLA_T4,
+          NVIDIA_TESLA_T4_VWS, NVIDIA_TESLA_P100_VWS, NVIDIA_TESLA_P4_VWS,
+          TPU_V2, TPU_V3.
+
+     Boot disk configurations.
+
+       --boot-disk-size=BOOT_DISK_SIZE
+          Size of boot disk in GB attached to this instance, up to a maximum of
+          64000 GB (64 TB). The minimum recommended value is 100 GB. If not
+          specified, this defaults to 100.
+
+       --boot-disk-type=BOOT_DISK_TYPE
+          Type of boot disk attached to this instance, defaults to standard
+          persistent disk (PD_STANDARD). BOOT_DISK_TYPE must be one of:
+          PD_STANDARD, PD_SSD, PD_BALANCED, PD_EXTREME.
+
+     At most one of these can be specified:
 
        --container-repository=CONTAINER_REPOSITORY
           The path to the container image repository. For example:
@@ -152,7 +231,7 @@ REQUIRED FLAGS
           The ID of the Google Cloud project that this VM image belongs to.
           Format: projects/{project_id}.
 
-       Exactly one of these must be specified:
+       At most one of these can be specified:
 
          --vm-image-family=VM_IMAGE_FAMILY; default="common-cpu"
             Use this VM image family to find the image; the newest image in
@@ -160,82 +239,6 @@ REQUIRED FLAGS
 
          --vm-image-name=VM_IMAGE_NAME
             Use this VM image name to find the image.
-
-OPTIONAL FLAGS
-     --async
-        Return immediately, without waiting for the operation in progress to
-        complete.
-
-     --instance-owners=INSTANCE_OWNERS
-        The owners of this instance after creation. Format:alias@example.com.
-        Currently supports one owner only.If not specified, all of the service
-        account users of the VM instance's service account can use the
-        instance.
-
-     --labels=[KEY=VALUE,...]
-        Labels to apply to this instance. These can be later modified by the
-        setLabels method.
-
-     --machine-type=MACHINE_TYPE; default="n1-standard-1"
-        The Compute Engine machine type
-        (https://cloud.google.com/sdk/gcloud/reference/compute/machine-types)
-        of this instance.
-
-     --metadata=[KEY=VALUE,...]
-        Custom metadata to apply to this instance.
-
-        For example, to specify a Cloud Storage bucket for automatic backup,
-        you can use the gcs-data-bucket metadata tag. Format:
-        "--metadata=gcs-data-bucket=BUCKET".
-
-     --post-startup-script=POST_STARTUP_SCRIPT
-        Path to a Bash script that automatically runs after a notebook instance
-        fully boots up. The path must be a URL or Cloud Storage path
-        (gs://path-to-file/file-name).
-
-     --service-account=SERVICE_ACCOUNT
-        The service account on this instance, giving access to other Google
-        Cloud services. You can use any service account within the same
-        project, but you must have the service account user permission to use
-        the instance. If not specified, the Compute Engine default service
-        account is used.
-
-     --shielded-integrity-monitoring
-        Enable monitoring of the boot integrity of the instance. Enabled by
-        default, use --no-shielded-integrity-monitoring to disable.
-
-     --shielded-secure-boot
-        Boot instance with secure boot enabled. Disabled by default.
-
-     --shielded-vtpm
-        Boot instance with TPM (Trusted Platform Module) enabled. Enabled by
-        default, use --no-shielded-vtpm to disable.
-
-     The hardware accelerator used on this instance. If you use accelerators,
-     make sure that your configuration has enough vCPUs and memory to support
-     the `machine_type` you have selected.
-
-       --accelerator-core-count=ACCELERATOR_CORE_COUNT
-          Count of cores of this accelerator.
-
-       --accelerator-type=ACCELERATOR_TYPE
-          Type of this accelerator. ACCELERATOR_TYPE must be one of:
-          NVIDIA_TESLA_A100, NVIDIA_TESLA_K80, NVIDIA_TESLA_P100,
-          NVIDIA_TESLA_V100, NVIDIA_TESLA_P4, NVIDIA_TESLA_T4,
-          NVIDIA_TESLA_T4_VWS, NVIDIA_TESLA_P100_VWS, NVIDIA_TESLA_P4_VWS,
-          TPU_V2, TPU_V3.
-
-     Boot disk configurations.
-
-       --boot-disk-size=BOOT_DISK_SIZE
-          Size of boot disk in GB attached to this instance, up to a maximum of
-          64000 GB (64 TB). The minimum recommended value is 100 GB. If not
-          specified, this defaults to 100.
-
-       --boot-disk-type=BOOT_DISK_TYPE
-          Type of boot disk attached to this instance, defaults to standard
-          persistent disk (PD_STANDARD). BOOT_DISK_TYPE must be one of:
-          PD_STANDARD, PD_SSD, PD_BALANCED, PD_EXTREME.
 
      GPU driver configurations.
 

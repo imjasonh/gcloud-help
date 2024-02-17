@@ -20,7 +20,8 @@ SYNOPSIS
           | --set-secrets=[KEY=VALUE,...]
           | --remove-secrets=[KEY,...] --update-secrets=[KEY=VALUE,...]]
         [--breakglass=JUSTIFICATION --clear-vpc-connector --[no-]cpu-boost
-          --[no-]cpu-throttling --execution-environment=EXECUTION_ENVIRONMENT
+          --[no-]cpu-throttling --[no-]default-url
+          --execution-environment=EXECUTION_ENVIRONMENT
           --remove-containers=[CONTAINER,...] --revision-suffix=REVISION_SUFFIX
           --[no-]session-affinity --vpc-connector=VPC_CONNECTOR
           --vpc-egress=VPC_EGRESS
@@ -179,6 +180,8 @@ FLAGS
         revision by default, run the gcloud run services update-traffic command
         with --to-latest.
 
+    Container Flags
+
         If the --container or --remove-containers flag is specified the following
         arguments may only be specified after a --container flag.
 
@@ -317,6 +320,11 @@ FLAGS
           serving requests. Use --cpu-throttling to enable and
           --no-cpu-throttling to disable.
 
+       --[no-]default-url
+          Toggles the default url for a run service. This is enabled by default
+          if not specified. Use --default-url to enable and --no-default-url to
+          disable.
+
        --execution-environment=EXECUTION_ENVIRONMENT
           Selects the execution environment where the application will run.
           EXECUTION_ENVIRONMENT must be one of:
@@ -406,7 +414,7 @@ FLAGS
 
        --add-volume=[KEY=VALUE,...]
           Adds a volume to the Cloud Run resource. To add more than one volume,
-          specify this flag mulitple times. Volumes must have a name and type
+          specify this flag multiple times. Volumes must have a name and type
           key. Only certain values are supported for type. Depending on the
           provided type, other keys will be required. The following types are
           supported with the specified additional keys:
