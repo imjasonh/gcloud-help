@@ -15,21 +15,29 @@ DESCRIPTION
         $ gcloud storage restore url...
 
 EXAMPLES
-    Restore specific version of object in a bucket. Note: Generation number is
-    required.
+    Restore latest soft-deleted version of object in a bucket.
+
+        $ gcloud storage restore gs://bucket/file1.txt
+
+    Restore a specific soft-deleted version of object in a bucket by specifying
+    the generation.
 
         $ gcloud storage restore gs://bucket/file1.txt#123
 
-    Restore two objects in a bucket:
+    Restore all soft-deleted versions of object in a bucket.
 
-        $ gcloud storage restore gs://bucket/file1.txt#123 \
+        $ gcloud storage restore gs://bucket/file1.txt --all-versions
+
+    Restore several objects in a bucket (with or without generation):
+
+        $ gcloud storage restore gs://bucket/file1.txt \
             gs://bucket/file2.txt#456
 
-    Restore all text objects in a bucket:
+    Restore the latest soft-deleted version of all text objects in a bucket:
 
         $ gcloud storage restore gs://bucket/**.txt
 
-    Read list of files to restore from stdin:
+    Restore a list of objects read from stdin (with or without generation):
 
         $ cat list-of-files.txt | gcloud storage restore \
             --read-paths-from-stdin

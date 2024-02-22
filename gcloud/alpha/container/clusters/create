@@ -23,12 +23,12 @@ SYNOPSIS
         [--default-max-pods-per-node=DEFAULT_MAX_PODS_PER_NODE]
         [--disable-default-snat] [--disable-pod-cidr-overprovision]
         [--disk-size=DISK_SIZE] [--disk-type=DISK_TYPE] [--enable-autorepair]
-        [--no-enable-autoupgrade] [--enable-cloud-logging]
-        [--enable-cloud-monitoring] [--enable-cloud-run-alpha]
-        [--enable-confidential-nodes] [--enable-confidential-storage]
-        [--enable-cost-allocation] [--enable-dataplane-v2] [--enable-fleet]
-        [--enable-fqdn-network-policy] [--enable-gke-oidc]
-        [--enable-google-cloud-access] [--enable-gvnic]
+        [--no-enable-autoupgrade] [--enable-cilium-clusterwide-network-policy]
+        [--enable-cloud-logging] [--enable-cloud-monitoring]
+        [--enable-cloud-run-alpha] [--enable-confidential-nodes]
+        [--enable-confidential-storage] [--enable-cost-allocation]
+        [--enable-dataplane-v2] [--enable-fleet] [--enable-fqdn-network-policy]
+        [--enable-gke-oidc] [--enable-google-cloud-access] [--enable-gvnic]
         [--enable-identity-service] [--enable-image-streaming]
         [--enable-intra-node-visibility] [--enable-ip-alias]
         [--enable-kubernetes-alpha]
@@ -301,8 +301,8 @@ FLAGS
         ranges will be allocated from this secondary range. NAME must be the
         name of an existing secondary range in the cluster subnetwork.
 
-        Must be used in conjunction with '--enable-ip-alias'. Cannot be used
-        with --create-subnetwork.
+        Cannot be specified unless '--enable-ip-alias' option is also
+        specified. Cannot be used with '--create-subnetwork' option.
 
      --cluster-version=CLUSTER_VERSION
         The Kubernetes version to use for the master and nodes. Defaults to
@@ -347,8 +347,8 @@ FLAGS
             $ gcloud alpha container clusters create \
                 --create-subnetwork name=my-subnet
 
-        Can not be specified unless '--enable-ip-alias' is also specified. Can
-        not be used in conjunction with the '--subnetwork' option.
+        Cannot be specified unless '--enable-ip-alias' option is also
+        specified. Cannot be used in conjunction with '--subnetwork' option.
 
      --database-encryption-key=DATABASE_ENCRYPTION_KEY
         Enable Database Encryption.
@@ -426,6 +426,10 @@ FLAGS
         for more info.
 
         Enabled by default, use --no-enable-autoupgrade to disable.
+
+     --enable-cilium-clusterwide-network-policy
+        Enable Cilium Clusterwide Network Policies on the cluster. Disabled by
+        default.
 
      --enable-cloud-logging
         (DEPRECATED) Automatically send logs from the cluster to the Google
@@ -1139,15 +1143,16 @@ FLAGS
         If unspecified, the services CIDR range will be chosen with a default
         mask size.
 
-        Can not be specified unless '--enable-ip-alias' is also specified.
+        Cannot be specified unless '--enable-ip-alias' option is also
+        specified.
 
      --services-secondary-range-name=NAME
         Set the secondary range to be used for services (e.g. ClusterIPs). NAME
         must be the name of an existing secondary range in the cluster
         subnetwork.
 
-        Must be used in conjunction with '--enable-ip-alias'. Cannot be used
-        with --create-subnetwork.
+        Cannot be specified unless '--enable-ip-alias' option is also
+        specified. Cannot be used with '--create-subnetwork' option.
 
      --shielded-integrity-monitoring
         Enables monitoring and attestation of the boot integrity of the

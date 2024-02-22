@@ -12,6 +12,7 @@ SYNOPSIS
         [--dest-threat-intelligence=[DEST_THREAT_INTELLIGENCE_LISTS,...]]
         [--direction=DIRECTION] [--[no-]disabled] [--[no-]enable-logging]
         [--layer4-configs=[LAYER4_CONFIG,...]] [--new-priority=NEW_PRIORITY]
+        [--security-profile-group=SECURITY_PROFILE_GROUP]
         [--src-address-groups=[SOURCE_ADDRESS_GROUPS,...]]
         [--src-fqdns=[SOURCE_FQDNS,...]] [--src-ip-ranges=[SRC_IP_RANGE,...]]
         [--src-region-codes=[SOURCE_REGION_CODES,...]]
@@ -19,6 +20,7 @@ SYNOPSIS
         [--src-threat-intelligence=[SOURCE_THREAT_INTELLIGENCE_LISTS,...]]
         [--target-secure-tags=[TARGET_SECURE_TAGS,...]]
         [--target-service-accounts=[TARGET_SERVICE_ACCOUNTS,...]]
+        [--[no-]tls-inspect]
         [--firewall-policy-region=FIREWALL_POLICY_REGION
           | --global-firewall-policy] [GCLOUD_WIDE_FLAG ...]
 
@@ -46,7 +48,7 @@ REQUIRED FLAGS
 OPTIONAL FLAGS
      --action=ACTION
         Action to take if the request matches the match condition. ACTION must
-        be one of: allow, deny, goto_next.
+        be one of: allow, deny, goto_next, apply_security_profile_group.
 
      --description=DESCRIPTION
         An optional, textual description for the rule.
@@ -91,6 +93,10 @@ OPTIONAL FLAGS
 
      --new-priority=NEW_PRIORITY
         New priority for the rule to update. Valid in [0, 65535].
+
+     --security-profile-group=SECURITY_PROFILE_GROUP
+        A security profile group to be used with apply_security_profile_group
+        action.
 
      --src-address-groups=[SOURCE_ADDRESS_GROUPS,...]
         Source address groups to match for this rule. Can only be specified if
@@ -138,6 +144,12 @@ OPTIONAL FLAGS
 
      --target-service-accounts=[TARGET_SERVICE_ACCOUNTS,...]
         List of target service accounts for the rule.
+
+     --[no-]tls-inspect
+        Use this flag to indicate whether TLS traffic should be inspected using
+        the TLS inspection policy when the security profile group is applied.
+        Default: no TLS inspection. Use --tls-inspect to enable and
+        --no-tls-inspect to disable.
 
      At most one of these can be specified:
 

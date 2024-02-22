@@ -12,8 +12,8 @@ SYNOPSIS
         [--cluster-version=CLUSTER_VERSION]
         [--create-subnetwork=[KEY=VALUE,...]]
         [--database-encryption-key=DATABASE_ENCRYPTION_KEY]
-        [--enable-backup-restore] [--enable-fleet]
-        [--enable-google-cloud-access]
+        [--enable-backup-restore] [--enable-cilium-clusterwide-network-policy]
+        [--enable-fleet] [--enable-google-cloud-access]
         [--enable-kubernetes-unstable-apis=API,[API,...]]
         [--enable-master-global-access] [--enable-secret-manager]
         [--fleet-project=PROJECT_ID_OR_NUMBER] [--labels=[KEY=VALUE,...]]
@@ -127,8 +127,7 @@ FLAGS
         ranges will be allocated from this secondary range. NAME must be the
         name of an existing secondary range in the cluster subnetwork.
 
-        Must be used in conjunction with '--enable-ip-alias'. Cannot be used
-        with --create-subnetwork.
+        Cannot be used with '--create-subnetwork' option.
 
      --cluster-version=CLUSTER_VERSION
         The Kubernetes version to use for the master and nodes. Defaults to
@@ -173,8 +172,7 @@ FLAGS
             $ gcloud alpha container clusters create-auto \
                 --create-subnetwork name=my-subnet
 
-        Can not be specified unless '--enable-ip-alias' is also specified. Can
-        not be used in conjunction with the '--subnetwork' option.
+        Cannot be used in conjunction with '--subnetwork' option.
 
      --database-encryption-key=DATABASE_ENCRYPTION_KEY
         Enable Database Encryption.
@@ -190,6 +188,10 @@ FLAGS
         Enable the Backup for GKE add-on. This add-on is disabled by default.
         To learn more, see the Backup for GKE overview:
         https://cloud.google.com/kubernetes-engine/docs/add-on/backup-for-gke/concepts/backup-for-gke.
+
+     --enable-cilium-clusterwide-network-policy
+        Enable Cilium Clusterwide Network Policies on the cluster. Disabled by
+        default.
 
      --enable-fleet
         Set cluster project as the fleet host project. This will register the
@@ -345,15 +347,12 @@ FLAGS
         If unspecified, the services CIDR range will be chosen with a default
         mask size.
 
-        Can not be specified unless '--enable-ip-alias' is also specified.
-
      --services-secondary-range-name=NAME
         Set the secondary range to be used for services (e.g. ClusterIPs). NAME
         must be the name of an existing secondary range in the cluster
         subnetwork.
 
-        Must be used in conjunction with '--enable-ip-alias'. Cannot be used
-        with --create-subnetwork.
+        Cannot be used with '--create-subnetwork' option.
 
      --subnetwork=SUBNETWORK
         The Google Compute Engine subnetwork

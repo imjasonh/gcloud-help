@@ -4,10 +4,11 @@ NAME
 
 SYNOPSIS
     gcloud database-migration migration-jobs update
-        (MIGRATION_JOB : --region=REGION) [--no-async]
+        (MIGRATION_JOB : --region=REGION) [--no-async] [--commit-id=COMMIT_ID]
         [--destination=DESTINATION] [--display-name=DISPLAY_NAME]
         [--dump-parallel-level=DUMP_PARALLEL_LEVEL] [--dump-path=DUMP_PATH]
-        [--source=SOURCE] [--type=TYPE] [--update-labels=[KEY=VALUE,...]]
+        [--filter=FILTER] [--source=SOURCE] [--type=TYPE]
+        [--update-labels=[KEY=VALUE,...]]
         [--clear-labels | --remove-labels=[KEY,...]]
         [--peer-vpc=PEER_VPC | --static-ip
           | --vm=VM --vm-ip=VM_IP --vm-port=VM_PORT --vpc=VPC]
@@ -67,6 +68,11 @@ FLAGS
      --no-async
         Waits for the operation in progress to complete before returning.
 
+     --commit-id=COMMIT_ID
+        Commit id for the conversion workspace to use for creating the
+        migration job. If not specified, the latest commit id will be used by
+        default.
+
      Connection profile resource - ID of the destination connection profile,
      representing the destination database. This represents a Cloud resource.
      (NOTE) Some attributes are not given arguments in this group but can be
@@ -103,6 +109,12 @@ FLAGS
      --dump-path=DUMP_PATH
         Path to the dump file in Google Cloud Storage, in the format:
         gs://[BUCKET_NAME]/[OBJECT_NAME].
+
+     --filter=FILTER
+        Filter the entities based on AIP-160 (https://google.aip.dev/160)
+        standard. Example: to filter all tables whose name start with
+        "Employee" and are present under schema "Company", use filter as
+        "Company.Employee* AND type=TABLE"
 
      Connection profile resource - ID of the source connection profile,
      representing the source database. This represents a Cloud resource. (NOTE)
