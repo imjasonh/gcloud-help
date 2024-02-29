@@ -1,14 +1,15 @@
 NAME
-    gcloud alpha scc findings set-mute - update a Cloud Security Command Center
+    gcloud alpha scc findings set-mute - update a Security Command Center
         finding's mute state
 
 SYNOPSIS
-    gcloud alpha scc findings set-mute FINDING --mute=MUTE [--source=SOURCE]
+    gcloud alpha scc findings set-mute FINDING --mute=MUTE
+        [--location=LOCATION; default="global"] [--source=SOURCE]
         [--folder=FOLDER | --organization=ORGANIZATION | --project=PROJECT]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) Update a Cloud Security Command Center finding's mute state.
+    (ALPHA) Update a Security Command Center finding's mute state.
 
 EXAMPLES
     To update finding's mute state to MUTED, given finding
@@ -16,40 +17,31 @@ EXAMPLES
 
         $ gcloud alpha scc findings set-mute 789 \
             --organization=organizations/123 --source=456 --mute=MUTED
-        $ gcloud alpha scc findings set-mute 789 --organization=123 \
-            --source=456 --mute=MUTED
-        $ gcloud alpha scc findings set-mute \
-            organizations/123/sources/456/findings/789 --mute=MUTED
 
     To update finding's mute state to UNMUTED, given finding
     organizations/123/sources/456/findings/789, run:
 
         $ gcloud alpha scc findings set-mute 789 \
             --organization=organizations/123 --source=456 --mute=UNMUTED
-        $ gcloud alpha scc findings set-mute 789 --organization=123 \
-            --source=456 --mute=UNMUTED
-        $ gcloud alpha scc findings set-mute \
-            organizations/123/sources/456/findings/789 --mute=UNMUTED
 
     To update finding's mute state to MUTED, given finding
     folders/123/sources/456/findings/789, run:
 
         $ gcloud alpha scc findings set-mute 789 --folder=folders/123 \
             --source=456 --mute=MUTED
-        $ gcloud alpha scc findings set-mute 789 --folder=123 --source=456 \
-            --mute=MUTED
-        $ gcloud alpha scc findings set-mute \
-            folders/123/sources/456/findings/789 --mute=MUTED
 
     To update finding's mute state to MUTED, given finding
     projects/123/sources/456/findings/789, run:
 
         $ gcloud alpha scc findings set-mute 789 --project=projects/123 \
             --source=456 --mute=MUTED
-        $ gcloud alpha scc findings set-mute 789 --project=123 \
-            --source=456 --mute=MUTED
-        $ gcloud alpha scc findings set-mute \
-            projects/123/sources/456/findings/789 --mute=MUTED
+
+    To update finding's mute state to MUTED, given finding
+    organizations/123/sources/456/findings/789 and location=eu, run:
+
+        $ gcloud alpha scc findings set-mute 789 \
+            --organization=organizations/123 --source=456 --mute=MUTED \
+            --location=locations/eu
 
 POSITIONAL ARGUMENTS
      FINDING
@@ -60,6 +52,17 @@ REQUIRED FLAGS
         Desired mute state of the finding. MUTE must be one of: muted, unmuted.
 
 OPTIONAL FLAGS
+     --location=LOCATION; default="global"
+        When data residency controls are enabled, this attribute specifies the
+        location in which the resource is located and applicable. The location
+        attribute can be provided as part of the fully specified resource name
+        or with the --location argument on the command line. The default
+        location is global.
+
+        The default location on this command is unrelated to the default
+        location that is specified when data residency controls are enabled for
+        Security Command Center.
+
      --source=SOURCE
         ID of the source.
 
@@ -86,8 +89,9 @@ GCLOUD WIDE FLAGS
     Run $ gcloud help for details.
 
 API REFERENCE
-    This command uses the securitycenter/v1 API. The full documentation for
-    this API can be found at: https://cloud.google.com/security-command-center
+    This command uses the Security Command Center API. For more information,
+    see Security Command Center API.
+    (https://cloud.google.com/security-command-center/docs/reference/rest)
 
 NOTES
     This command is currently in alpha and might change without notice. If this

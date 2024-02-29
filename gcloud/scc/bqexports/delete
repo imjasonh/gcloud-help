@@ -1,45 +1,60 @@
 NAME
-    gcloud scc bqexports delete - delete a Cloud Security Command Center
-        BigQuery export
+    gcloud scc bqexports delete - delete a Security Command Center BigQuery
+        export
 
 SYNOPSIS
     gcloud scc bqexports delete BIG_QUERY_EXPORT
+        [--location=LOCATION; default="global"]
         [--folder=FOLDER | --organization=ORGANIZATION | --project=PROJECT]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    Delete a Cloud Security Command Center BigQuery export.
+    Delete a Security Command Center BigQuery export.
+
+    BigQuery exports that are created with Security Command Center API V2 and
+    later include a location attribute. If the location attribute is included
+    in the resource name of a BigQuery export, you must specify it when
+    referencing the export. For example, the following BigQuery export name has
+    location=eu: organizations/123/locations/eu/bigQueryExports/test-bq-export.
 
 EXAMPLES
-    To delete a BigQuery export given organization 123 with id my-bq-export,
+    To delete a BigQuery export given organization 123 with id test-bq-export,
     run:
 
-        $ gcloud scc bqexports delete my-bq-export \
-            --organization=organizations/123
-        $ gcloud scc bqexports delete my-bq-export --organization=123
-        $ gcloud scc bqexports delete \
-            organizations/123/bigQueryExports/my-bq-export
+        $ gcloud scc bqexports delete test-bq-export --organization=123
 
-    To delete a BigQuery export given folder 456 with id my-bq-export, run:
+    To delete a BigQuery export given folder 456 with id test-bq-export, run:
 
-        $ gcloud scc bqexports delete my-bq-export --folder=folders/456
-        $ gcloud scc bqexports delete my-bq-export --folder=456
-        $ gcloud scc bqexports delete \
-            folders/456/bigQueryExports/my-bq-export
+        $ gcloud scc bqexports delete test-bq-export --folder=456
 
-    To delete a BigQuery export given project 789 with id my-bq-export, run:
+    To delete a BigQuery export given project 789 with id test-bq-export, run:
 
-        $ gcloud scc bqexports delete my-bq-export --project=projects/789
-        $ gcloud scc bqexports delete my-bq-export --project=789
-        $ gcloud scc bqexports delete \
-            projects/789/bigQueryExports/my-bq-export
+        $ gcloud scc bqexports delete test-bq-export --project=789
+
+    To delete the BigQuery export test-bq-export, with location=global, from
+    organization 123, run:
+
+        $ gcloud scc bqexports delete test-bq-export --organization=123 \
+            --location=global
 
 POSITIONAL ARGUMENTS
      BIG_QUERY_EXPORT
-        ID of the BigQuery export or the full resource name of the BigQuery
-        export.
+        ID of the BigQuery export e.g. my-bq-export or the full resource name
+        of the BigQuery export e.g.
+        organizations/123/bigQueryExports/my-bq-export.
 
 FLAGS
+     --location=LOCATION; default="global"
+        When data residency controls are enabled, this attribute specifies the
+        location in which the resource is located and applicable. The location
+        attribute can be provided as part of the fully specified resource name
+        or with the --location argument on the command line. The default
+        location is global.
+
+        The default location on this command is unrelated to the default
+        location that is specified when data residency controls are enabled for
+        Security Command Center.
+
      At most one of these can be specified:
 
        --folder=FOLDER
@@ -63,5 +78,6 @@ GCLOUD WIDE FLAGS
     Run $ gcloud help for details.
 
 API REFERENCE
-    This command uses the securitycenter/v1 API. The full documentation for
-    this API can be found at: https://cloud.google.com/security-command-center
+    This command uses the Security Command Center API. For more information,
+    see Security Command Center API.
+    (https://cloud.google.com/security-command-center/docs/reference/rest)

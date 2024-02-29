@@ -1,33 +1,48 @@
 NAME
-    gcloud alpha scc notifications delete - delete a Cloud Security Command
-        Center notification config
+    gcloud alpha scc notifications delete - delete a Security Command Center
+        notification config
 
 SYNOPSIS
     gcloud alpha scc notifications delete NOTIFICATION_CONFIG_ID
+        [--location=LOCATION; default="global"]
         [--folder=FOLDER | --organization=ORGANIZATION | --project=PROJECT]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) Delete a Cloud Security Command Center notification config.
+    (ALPHA) Delete a Security Command Center notification config.
+
+    Notification configs that are created with Security Command Center API V2
+    and later include a location attribute. If the location attribute is
+    included in the resource name of a Notification configs, you must specify
+    it when referencing the Notification config. For example, the following
+    Notification configs name has location=eu:
+    organizations/123/locations/eu/notificationConfigs/test-config.
 
 EXAMPLES
-    Delete notification config 'my-config' from organization 123
+    Delete notification config 'test-config' from organization 123
 
-        $ gcloud alpha scc notifications delete my-config --organization=123
-        $ gcloud alpha scc notifications delete \
-            organizations/123/notificationConfigs/my-config
+        $ gcloud alpha scc notifications delete test-config \
+            --organization=123
 
-    Delete notification config 'my-config' from folder 456
+    Delete notification config 'test-config' from folder 456
 
-        $ gcloud alpha scc notifications delete my-config --folder=456
-        $ gcloud alpha scc notifications delete \
-            folders/456/notificationConfigs/my-config
+        $ gcloud alpha scc notifications delete test-config --folder=456
 
-    Delete notification config 'my-config' from project 789
+    Delete notification config 'test-config' from project 789
 
-        $ gcloud alpha scc notifications delete my-config --project=789
-        $ gcloud alpha scc notifications delete \
-            projects/789/notificationConfigs/my-config
+        $ gcloud alpha scc notifications delete test-config --project=789
+
+    Delete notification config 'test-config' with location global from
+    organization 123
+
+        $ gcloud alpha scc notifications delete test-config \
+            --organization=123 --location=global
+
+    Delete notification config 'test-config' with location=eu from organization
+    123
+
+        $ gcloud alpha scc notifications delete test-config \
+            --organization=123 --location=eu
 
 POSITIONAL ARGUMENTS
      NOTIFICATION_CONFIG_ID
@@ -35,6 +50,17 @@ POSITIONAL ARGUMENTS
         "organizations/123/notificationConfigs/456" or just "456".
 
 FLAGS
+     --location=LOCATION; default="global"
+        When data residency controls are enabled, this attribute specifies the
+        location in which the resource is located and applicable. The location
+        attribute can be provided as part of the fully specified resource name
+        or with the --location argument on the command line. The default
+        location is global.
+
+        The default location on this command is unrelated to the default
+        location that is specified when data residency controls are enabled for
+        Security Command Center.
+
      At most one of these can be specified:
 
        --folder=FOLDER
@@ -58,8 +84,9 @@ GCLOUD WIDE FLAGS
     Run $ gcloud help for details.
 
 API REFERENCE
-    This command uses the securitycenter/v1 API. The full documentation for
-    this API can be found at: https://cloud.google.com/security-command-center
+    This command uses the Security Command Center API. For more information,
+    see Security Command Center API.
+    (https://cloud.google.com/security-command-center/docs/reference/rest)
 
 NOTES
     This command is currently in alpha and might change without notice. If this

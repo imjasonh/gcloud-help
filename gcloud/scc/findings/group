@@ -4,7 +4,8 @@ NAME
 
 SYNOPSIS
     gcloud scc findings group [PARENT] [--compare-duration=COMPARE_DURATION]
-        [--filter=FILTER] [--group-by=GROUP_BY] [--page-size=PAGE_SIZE]
+        [--filter=FILTER] [--group-by=GROUP_BY]
+        [--location=LOCATION; default="global"] [--page-size=PAGE_SIZE]
         [--page-token=PAGE_TOKEN] [--read-time=READ_TIME]
         [--source=SOURCE; default="-"] [GCLOUD_WIDE_FLAG ...]
 
@@ -52,6 +53,12 @@ EXAMPLES
 
         $ gcloud scc findings group 123456 --source=5678 \
             --group-by="state_change" --compare-duration=86400s
+
+    Group findings under organization 123456 and location=eu across all sources
+    by their category:
+
+        $ gcloud scc findings group 123456 --group-by="category" \
+            --location=eu
 
 POSITIONAL ARGUMENTS
      Parent resource - parent organization, folder, or project in the Google
@@ -126,6 +133,17 @@ FLAGS
         ◆ state
         ◆ parent
 
+     --location=LOCATION; default="global"
+        When data residency controls are enabled, this attribute specifies the
+        location in which the resource is located and applicable. The location
+        attribute can be provided as part of the fully specified resource name
+        or with the --location argument on the command line. The default
+        location is global.
+
+        The default location on this command is unrelated to the default
+        location that is specified when data residency controls are enabled for
+        Security Command Center.
+
      --page-size=PAGE_SIZE
         Maximum number of results to return in a single response. Default is
         10, minimum is 1, maximum is 1000.
@@ -153,8 +171,9 @@ GCLOUD WIDE FLAGS
     Run $ gcloud help for details.
 
 API REFERENCE
-    This command uses the securitycenter/v1 API. The full documentation for
-    this API can be found at: https://cloud.google.com/security-command-center
+    This command uses the Security Command Center API. For more information,
+    see Security Command Center API.
+    (https://cloud.google.com/security-command-center/docs/reference/rest)
 
 NOTES
     These variants are also available:

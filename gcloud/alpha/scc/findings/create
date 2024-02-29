@@ -1,48 +1,58 @@
 NAME
-    gcloud alpha scc findings create - create a Cloud Security Command Center
-        finding
+    gcloud alpha scc findings create - create a Security Command Center finding
 
 SYNOPSIS
     gcloud alpha scc findings create
         (FINDING : --organization=ORGANIZATION --source=SOURCE)
         --category=CATEGORY --event-time=EVENT_TIME
         --resource-name=RESOURCE_NAME [--external-uri=EXTERNAL_URI]
+        [--location=LOCATION; default="global"]
         [--source-properties=[KEY=VALUE,...]] [--state=STATE]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) Create a Cloud Security Command Center finding.
+    (ALPHA) Create a Security Command Center finding.
 
 EXAMPLES
-    Create an ACTIVE myFinding with category: XSS_SCRIPTING attached to
-    example-project under organization 123456 and source 5678:
+    Create an ACTIVE finding testFinding with category: XSS_SCRIPTING attached
+    to example-project under organization 123456 and source 5678:
 
-        $ gcloud alpha scc findings create `myFinding` \
+        $ gcloud alpha scc findings create `testFinding` \
             --organization=123456 --source=5678 --state=ACTIVE \
             --category='XSS_SCRIPTING' \
             --event-time=2023-01-11T07:00:06.861Z \
             --resource-name='//cloudresourcemanager.googleapis.com/projects/\
         example-project'
 
-    Create an ACTIVE myFinding attached to example-project under project
-    example-project and source 5678:
+    Create an ACTIVE finding testFinding attached to example-project under
+    project example-project and source 5678:
 
         $ gcloud alpha scc findings create \
-            projects/example-project/sources/5678/findings/myFinding \
+            projects/example-project/sources/5678/findings/testFinding \
             --state=ACTIVE --category='XSS_SCRIPTING' \
             --event-time=2023-01-11T07:00:06.861Z \
             --resource-name='//cloudresourcemanager.googleapis.com/projects/\
         example-project'
 
-    Create an ACTIVE myFinding attached to example-project under folder 456 and
-    source 5678:
+    Create an ACTIVE finding testFinding attached to example-project under
+    folder 456 and source 5678:
 
         $ gcloud alpha scc findings create \
-            folders/456/sources/5678/findings/myFinding --state=ACTIVE \
+            folders/456/sources/5678/findings/testFinding --state=ACTIVE \
             --category='XSS_SCRIPTING' \
             --event-time=2023-01-11T07:00:06.861Z \
             --resource-name='//cloudresourcemanager.googleapis.com/projects/\
         example-project'
+
+    Create an ACTIVE finding testFinding with category: XSS_SCRIPTING attached
+    to example-project under organization 123456, source 5678 and location=eu:
+
+        $ gcloud alpha scc findings create `testFinding` \
+            --organization=123456 --source=5678 --state=ACTIVE \
+            --category='XSS_SCRIPTING' \
+            --event-time=2023-01-11T07:00:06.861Z \
+            --resource-name='//cloudresourcemanager.googleapis.com/projects/\
+        example-project' --location=eu
 
 POSITIONAL ARGUMENTS
      Finding resource - The finding to be used for the SCC (Security Command
@@ -108,6 +118,17 @@ OPTIONAL FLAGS
         finding can be found. This field is guaranteed to be either empty or a
         well formed URL.
 
+     --location=LOCATION; default="global"
+        When data residency controls are enabled, this attribute specifies the
+        location in which the resource is located and applicable. The location
+        attribute can be provided as part of the fully specified resource name
+        or with the --location argument on the command line. The default
+        location is global.
+
+        The default location on this command is unrelated to the default
+        location that is specified when data residency controls are enabled for
+        Security Command Center.
+
      --source-properties=[KEY=VALUE,...]
         Source specific properties. These properties are managed by the source
         that writes the finding. The key names in the source_properties map
@@ -128,8 +149,9 @@ GCLOUD WIDE FLAGS
     Run $ gcloud help for details.
 
 API REFERENCE
-    This command uses the securitycenter/v1 API. The full documentation for
-    this API can be found at: https://cloud.google.com/security-command-center
+    This command uses the Security Command Center API. For more information,
+    see Security Command Center API.
+    (https://cloud.google.com/security-command-center/docs/reference/rest)
 
 NOTES
     This command is currently in alpha and might change without notice. If this

@@ -1,16 +1,22 @@
 NAME
-    gcloud beta scc notifications create - create a Cloud Security Command
-        Center notification config
+    gcloud beta scc notifications create - create a Security Command Center
+        notification config
 
 SYNOPSIS
     gcloud beta scc notifications create NOTIFICATION_CONFIG_ID
         --pubsub-topic=PUBSUB_TOPIC [--description=DESCRIPTION]
-        [--filter=FILTER]
+        [--filter=FILTER] [--location=LOCATION; default="global"]
         [--folder=FOLDER | --organization=ORGANIZATION | --project=PROJECT]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (BETA) Create a Cloud Security Command Center notification config.
+    (BETA) Create a Security Command Center notification config.
+
+    Notification configs that are created with Security Command Center API V2
+    and later include a location attribute. If a location is not specified, the
+    default global location is used. For example, the following Notification
+    config name has location=global attribute:
+    organizations/123/locations/global/notificationConfigs/my-config.
 
 EXAMPLES
     Create a notification config test-config under organization 123 for
@@ -21,20 +27,12 @@ EXAMPLES
             --organization=123 \
             --pubsub-topic=projects/test-project/topics/notification-test \
             --filter="resource_name: \"a\""
-        $ gcloud beta scc notifications create \
-            organizations/123/notificationConfigs/test-config \
-            --pubsub-topic=projects/test-project/topics/notification-test \
-            --filter="resource_name: \"a\""
 
     Create a notification config test-config under folder 456 for findings for
     pubsub-topic projects/test-project/topics/notification-test with a filter
     on resource name:
 
         $ gcloud beta scc notifications create test-config --folder=456 \
-            --pubsub-topic=projects/test-project/topics/notification-test \
-            --filter="resource_name: \"a\""
-        $ gcloud beta scc notifications create \
-            folders/456/notificationConfigs/test-config \
             --pubsub-topic=projects/test-project/topics/notification-test \
             --filter="resource_name: \"a\""
 
@@ -45,10 +43,14 @@ EXAMPLES
         $ gcloud beta scc notifications create test-config --project=789 \
             --pubsub-topic=projects/test-project/topics/notification-test \
             --filter="resource_name: \"a\""
-        $ gcloud beta scc notifications create \
-            projects/789/notificationConfigs/test-config \
+
+    Create a notification config test-config under organization 123 for
+    findings for pubsub-topic projects/test-project/topics/notification-test
+    with a filter on resource name and location=eu
+
+        $ gcloud beta scc notifications create test-config --project=789 \
             --pubsub-topic=projects/test-project/topics/notification-test \
-            --filter="resource_name: \"a\""
+            --filter="resource_name: \"a\"" --location=eu
 
 POSITIONAL ARGUMENTS
      NOTIFICATION_CONFIG_ID
@@ -66,6 +68,17 @@ OPTIONAL FLAGS
 
      --filter=FILTER
         Filter to be used for notification config.
+
+     --location=LOCATION; default="global"
+        When data residency controls are enabled, this attribute specifies the
+        location in which the resource is located and applicable. The location
+        attribute can be provided as part of the fully specified resource name
+        or with the --location argument on the command line. The default
+        location is global.
+
+        The default location on this command is unrelated to the default
+        location that is specified when data residency controls are enabled for
+        Security Command Center.
 
      At most one of these can be specified:
 
@@ -90,8 +103,9 @@ GCLOUD WIDE FLAGS
     Run $ gcloud help for details.
 
 API REFERENCE
-    This command uses the securitycenter/v1 API. The full documentation for
-    this API can be found at: https://cloud.google.com/security-command-center
+    This command uses the Security Command Center API. For more information,
+    see Security Command Center API.
+    (https://cloud.google.com/security-command-center/docs/reference/rest)
 
 NOTES
     This command is currently in beta and might change without notice. These

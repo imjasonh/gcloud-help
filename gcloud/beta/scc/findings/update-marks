@@ -1,48 +1,56 @@
 NAME
-    gcloud beta scc findings update-marks - update Cloud Security Command
-        Center finding's security marks
+    gcloud beta scc findings update-marks - update Security Command Center
+        finding's security marks
 
 SYNOPSIS
     gcloud beta scc findings update-marks
         (FINDING : --organization=ORGANIZATION --source=SOURCE)
+        [--location=LOCATION; default="global"]
         [--security-marks=[KEY=VALUE,...]] [--start-time=START_TIME]
         [--update-mask=UPDATE_MASK] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (BETA) Update Cloud Security Command Center finding's security marks.
+    (BETA) Update Security Command Center finding's security marks.
 
 EXAMPLES
-    Selectively update security mark (Key1) with value (v1) on myFinding. Note
-    that other security marks on myFinding are untouched:
+    Selectively update security mark Key1 with value v1 on testFinding. Note
+    that other security marks on testFinding are untouched:
 
-        $ gcloud beta scc findings update-marks `myFinding` \
+        $ gcloud beta scc findings update-marks `testFinding` \
             --organization=123456 --source=5678 --security-marks="key1=v1" \
             --update-mask="marks.markKey1"
 
-    Update all security marks on myFinding, under project example-project and
+    Update all security marks on testFinding, under project example-project and
     source 5678:
 
         $ gcloud beta scc findings update-marks \
-            projects/example-project/sources/5678/findings/myFinding \
+            projects/example-project/sources/5678/findings/testFinding \
             --security-marks="key1=v1,key2=v2"
 
-    Update all security marks on myFinding, under folder 456 and source 5678:
+    Update all security marks on testFinding, under folder 456 and source 5678:
 
         $ gcloud beta scc findings update-marks \
-            folders/456/sources/5678/findings/myFinding \
+            folders/456/sources/5678/findings/testFinding \
             --security-marks="key1=v1,key2=v2"
 
-    Update all security marks on myFinding, under organization 123456 and
+    Update all security marks on testFinding, under organization 123456 and
     source 5678:
 
-        $ gcloud beta scc findings update-marks `myFinding` \
+        $ gcloud beta scc findings update-marks `testFinding` \
             --organization=123456 --source=5678 \
             --security-marks="key1=v1,key2=v2"
 
-    Delete all security marks on myFinding:
+    Delete all security marks on testFinding:
 
-        $ gcloud beta scc findings update-marks `myFinding` \
+        $ gcloud beta scc findings update-marks `testFinding` \
             --organization=123456 --source=5678 --security-marks=""
+
+    Update all security marks on testFinding, under project example-project,
+    source 5678 and location=eu:
+
+        $ gcloud beta scc findings update-marks \
+            projects/example-project/sources/5678/findings/testFinding \
+            --security-marks="key1=v1,key2=v2" --location=eu
 
 POSITIONAL ARGUMENTS
      Finding resource - The finding to be used for the SCC (Security Command
@@ -86,6 +94,17 @@ POSITIONAL ARGUMENTS
           ▸ provide the argument --source on the command line.
 
 FLAGS
+     --location=LOCATION; default="global"
+        When data residency controls are enabled, this attribute specifies the
+        location in which the resource is located and applicable. The location
+        attribute can be provided as part of the fully specified resource name
+        or with the --location argument on the command line. The default
+        location is global.
+
+        The default location on this command is unrelated to the default
+        location that is specified when data residency controls are enabled for
+        Security Command Center.
+
      --security-marks=[KEY=VALUE,...]
         SecurityMarks resource to be passed as the request body. It's a
         key=value pair separated by comma (,). For example:
@@ -111,8 +130,9 @@ GCLOUD WIDE FLAGS
     Run $ gcloud help for details.
 
 API REFERENCE
-    This command uses the securitycenter/v1 API. The full documentation for
-    this API can be found at: https://cloud.google.com/security-command-center
+    This command uses the Security Command Center API. For more information,
+    see Security Command Center API.
+    (https://cloud.google.com/security-command-center/docs/reference/rest)
 
 NOTES
     This command is currently in beta and might change without notice. These

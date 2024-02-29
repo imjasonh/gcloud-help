@@ -1,47 +1,53 @@
 NAME
-    gcloud beta scc findings update - update a Cloud Security Command Center
-        finding
+    gcloud beta scc findings update - update a Security Command Center finding
 
 SYNOPSIS
     gcloud beta scc findings update
         (FINDING : --organization=ORGANIZATION --source=SOURCE)
         [--event-time=EVENT_TIME] [--external-uri=EXTERNAL_URI]
+        [--location=LOCATION; default="global"]
         [--source-properties=[KEY=VALUE,...]] [--state=STATE]
         [--update-mask=UPDATE_MASK] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (BETA) Update a Cloud Security Command Center finding.
+    (BETA) Update a Security Command Center finding.
 
 EXAMPLES
-    Update myFinding's state from ACTIVE to INACTIVE:
+    Update testFinding's state from ACTIVE to INACTIVE:
 
-        $ gcloud beta scc findings update `myFinding` \
+        $ gcloud beta scc findings update `testFinding` \
             --organization=123456 --source=5678 --state=INACTIVE
 
-    Update myFinding's state from ACTIVE to INACTIVE using project name for
+    Update testFinding's state from ACTIVE to INACTIVE using project name for
     example-project:
 
         $ gcloud beta scc findings update \
-            projects/example-project/sources/5678/findings/myFinding \
+            projects/example-project/sources/5678/findings/testFinding \
             --state=INACTIVE
 
-    Update myFinding's state from ACTIVE to INACTIVE using folder name 456:
+    Update testFinding's state from ACTIVE to INACTIVE using folder name 456:
 
         $ gcloud beta scc findings update \
-            folders/456/sources/5678/findings/myFinding --state=INACTIVE
+            folders/456/sources/5678/findings/testFinding --state=INACTIVE
 
-    Override all source properties on myFinding:
+    Override all source properties on testFinding:
 
-        $ gcloud beta scc findings update `myFinding` \
+        $ gcloud beta scc findings update `testFinding` \
             --organization=123456 --source=5678 \
             --source-properties="propKey1=propVal1,propKey2=propVal2"
 
-    Selectively update a specific source property on myFinding:
+    Selectively update a specific source property on testFinding:
 
-        $ gcloud beta scc findings update `myFinding` \
+        $ gcloud beta scc findings update `testFinding` \
             --organization=123456 --source=5678 \
             --source-properties="propKey1=propVal1,propKey2=propVal2" \
             --update-mask="source_properties.propKey1"
+
+    Update finding testFinding with location=eu, state from ACTIVE to INACTIVE:
+
+        $ gcloud beta scc findings update `testFinding` \
+            --organization=123456 --source=5678 --state=INACTIVE \
+            --location=eu
 
 POSITIONAL ARGUMENTS
      Finding resource - The finding to be used for the SCC (Security Command
@@ -98,6 +104,17 @@ FLAGS
         finding can be found. This field is guaranteed to be either empty or a
         well formed URL.
 
+     --location=LOCATION; default="global"
+        When data residency controls are enabled, this attribute specifies the
+        location in which the resource is located and applicable. The location
+        attribute can be provided as part of the fully specified resource name
+        or with the --location argument on the command line. The default
+        location is global.
+
+        The default location on this command is unrelated to the default
+        location that is specified when data residency controls are enabled for
+        Security Command Center.
+
      --source-properties=[KEY=VALUE,...]
         Source specific properties. These properties are managed by the source
         that writes the finding. The key names in the source_properties map
@@ -133,8 +150,9 @@ GCLOUD WIDE FLAGS
     Run $ gcloud help for details.
 
 API REFERENCE
-    This command uses the securitycenter/v1 API. The full documentation for
-    this API can be found at: https://cloud.google.com/security-command-center
+    This command uses the Security Command Center API. For more information,
+    see Security Command Center API.
+    (https://cloud.google.com/security-command-center/docs/reference/rest)
 
 NOTES
     This command is currently in beta and might change without notice. These

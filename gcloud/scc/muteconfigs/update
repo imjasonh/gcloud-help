@@ -1,61 +1,45 @@
 NAME
-    gcloud scc muteconfigs update - update a Cloud Security Command Center mute
+    gcloud scc muteconfigs update - update a Security Command Center mute
         config
 
 SYNOPSIS
     gcloud scc muteconfigs update MUTE_CONFIG [--description=DESCRIPTION]
-        [--filter=FILTER] [--update-mask=UPDATE_MASK]
+        [--filter=FILTER] [--location=LOCATION; default="global"]
+        [--update-mask=UPDATE_MASK]
         [--folder=FOLDER | --organization=ORGANIZATION | --project=PROJECT]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    Update a Cloud Security Command Center mute config.
+    Update a Security Command Center mute config.
 
 EXAMPLES
-    Update a mute config with ID=my-test-mute-config under organization=123
-    with a filter on category that equals to XSS_SCRIPTING:
+    Update a mute config with ID=test-mute-config under organization=123 with a
+    filter on category that equals to XSS_SCRIPTING:
 
-        $ gcloud scc muteconfigs update my-test-mute-config \
-            --organization=organizations/123 \
-            --description="This is a test mute config" \
-            --filter="category=\"XSS_SCRIPTING\""
-        $ gcloud scc muteconfigs update my-test-mute-config \
+        $ gcloud scc muteconfigs update test-mute-config \
             --organization=123 --description="This is a test mute config" \
             --filter="category=\"XSS_SCRIPTING\""
-        $ gcloud scc muteconfigs update \
-            organizations/123/muteConfigs/my-test-mute-config \
-            --description="This is a test mute config" \
-            --filter="category=\"XSS_SCRIPTING\""
 
-    Update a mute config with ID=my-test-mute-config under folder=456 with a
+    Update a mute config with ID=test-mute-config under folder=456 with a
     filter on category that equals to XSS_SCRIPTING:
 
-        $ gcloud scc muteconfigs update my-test-mute-config \
-            --folder=folders/456 \
-            --description="This is a test mute config" \
-            --filter="category=\"XSS_SCRIPTING\""
-        $ gcloud scc muteconfigs update my-test-mute-config --folder=456 \
-            --description="This is a test mute config" \
-            --filter="category=\"XSS_SCRIPTING\""
-        $ gcloud scc muteconfigs update \
-            folders/456/muteConfigs/my-test-mute-config \
+        $ gcloud scc muteconfigs update test-mute-config --folder=456 \
             --description="This is a test mute config" \
             --filter="category=\"XSS_SCRIPTING\""
 
-    Update a mute config with ID=my-test-mute-config under project=789 with a
+    Update a mute config with ID=test-mute-config under project=789 with a
     filter on category that equals to XSS_SCRIPTING:
 
-        $ gcloud scc muteconfigs update my-test-mute-config \
-            --project=projects/789 \
+        $ gcloud scc muteconfigs update test-mute-config --project=789 \
             --description="This is a test mute config" \
             --filter="category=\"XSS_SCRIPTING\""
-        $ gcloud scc muteconfigs update my-test-mute-config --project=789 \
-            --description="This is a test mute config" \
-            --filter="category=\"XSS_SCRIPTING\""
-        $ gcloud scc muteconfigs update \
-            projects/789/muteConfigs/my-test-mute-config \
-            --description="This is a test mute config" \
-            --filter="category=\"XSS_SCRIPTING\""
+
+    Update a mute config with ID=test-mute-config under organization=123
+    location=eu with a filter on category that equals to XSS_SCRIPTING:
+
+        $ gcloud scc muteconfigs update test-mute-config \
+            --organization=123 --description="This is a test mute config" \
+            --filter="category=\"XSS_SCRIPTING\"" --location=eu
 
 POSITIONAL ARGUMENTS
      MUTE_CONFIG
@@ -68,6 +52,17 @@ FLAGS
      --filter=FILTER
         The filter string which will applied to findings muted by a mute
         configuration.
+
+     --location=LOCATION; default="global"
+        When data residency controls are enabled, this attribute specifies the
+        location in which the resource is located and applicable. The location
+        attribute can be provided as part of the fully specified resource name
+        or with the --location argument on the command line. The default
+        location is global.
+
+        The default location on this command is unrelated to the default
+        location that is specified when data residency controls are enabled for
+        Security Command Center.
 
      --update-mask=UPDATE_MASK
         Optional: If left unspecified (default), an update-mask is
@@ -97,8 +92,9 @@ GCLOUD WIDE FLAGS
     Run $ gcloud help for details.
 
 API REFERENCE
-    This command uses the securitycenter/v1 API. The full documentation for
-    this API can be found at: https://cloud.google.com/security-command-center
+    This command uses the Security Command Center API. For more information,
+    see Security Command Center API.
+    (https://cloud.google.com/security-command-center/docs/reference/rest)
 
 NOTES
     This variant is also available:

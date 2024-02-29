@@ -5,7 +5,8 @@ NAME
 SYNOPSIS
     gcloud scc findings bulk-mute
         (--folder=FOLDER | --organization=ORGANIZATION | --project=PROJECT)
-        [--filter=FILTER] [GCLOUD_WIDE_FLAG ...]
+        [--filter=FILTER] [--location=LOCATION; default="global"]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Bulk mute Security Command Center findings based on a filter.
@@ -16,15 +17,11 @@ EXAMPLES
 
         $ gcloud scc findings bulk-mute --organization=organizations/123 \
             --filter="category=\"XSS_SCRIPTING\""
-        $ gcloud scc findings bulk-mute --organization=123 \
-            --filter="category=\"XSS_SCRIPTING\""
 
     To bulk mute findings given folder 123 based on a filter on category that
     equals XSS_SCRIPTING, run:
 
         $ gcloud scc findings bulk-mute --folder=folders/123 \
-            --filter="category=\"XSS_SCRIPTING\""
-        $ gcloud scc findings bulk-mute --folder=123 \
             --filter="category=\"XSS_SCRIPTING\""
 
     To bulk mute findings given project 123 based on a filter on category that
@@ -32,8 +29,12 @@ EXAMPLES
 
         $ gcloud scc findings bulk-mute --project=projects/123 \
             --filter="category=\"XSS_SCRIPTING\""
-        $ gcloud scc findings bulk-mute --project=123 \
-            --filter="category=\"XSS_SCRIPTING\""
+
+    To bulk mute findings given organization 123 based on a filter on category
+    that equals XSS_SCRIPTING and location=eu run:
+
+        $ gcloud scc findings bulk-mute --organization=organizations/123 \
+            --filter="category=\"XSS_SCRIPTING\"" --location=locations/eu
 
 REQUIRED FLAGS
      Exactly one of these must be specified:
@@ -54,6 +55,17 @@ OPTIONAL FLAGS
      --filter=FILTER
         The filter string which will applied to findings being muted.
 
+     --location=LOCATION; default="global"
+        When data residency controls are enabled, this attribute specifies the
+        location in which the resource is located and applicable. The location
+        attribute can be provided as part of the fully specified resource name
+        or with the --location argument on the command line. The default
+        location is global.
+
+        The default location on this command is unrelated to the default
+        location that is specified when data residency controls are enabled for
+        Security Command Center.
+
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
     --billing-project, --configuration, --flags-file, --flatten, --format,
@@ -63,8 +75,9 @@ GCLOUD WIDE FLAGS
     Run $ gcloud help for details.
 
 API REFERENCE
-    This command uses the securitycenter/v1 API. The full documentation for
-    this API can be found at: https://cloud.google.com/security-command-center
+    This command uses the Security Command Center API. For more information,
+    see Security Command Center API.
+    (https://cloud.google.com/security-command-center/docs/reference/rest)
 
 NOTES
     This variant is also available:

@@ -68,7 +68,8 @@ SYNOPSIS
         [--security-group=SECURITY_GROUP] [--security-posture=SECURITY_POSTURE]
         [--services-ipv4-cidr=CIDR] [--services-secondary-range-name=NAME]
         [--shielded-integrity-monitoring] [--shielded-secure-boot] [--spot]
-        [--stack-type=STACK_TYPE] [--subnetwork=SUBNETWORK]
+        [--stack-type=STACK_TYPE] [--storage-pools=STORAGE_POOL,[...]]
+        [--subnetwork=SUBNETWORK]
         [--system-config-from-file=SYSTEM_CONFIG_FROM_FILE]
         [--tags=TAG,[TAG,...]] [--threads-per-core=THREADS_PER_CORE]
         [--workload-metadata=WORKLOAD_METADATA] [--workload-pool=WORKLOAD_POOL]
@@ -1175,6 +1176,13 @@ FLAGS
         IP stack type of the node VMs. STACK_TYPE must be one of: ipv4,
         ipv4-ipv6.
 
+     --storage-pools=STORAGE_POOL,[...]
+        A list of storage pools where the cluster's boot disks will be
+        provisioned.
+
+        STORAGE_POOL must be in the format
+        projects/project/zones/zone/storagePools/storagePool
+
      --subnetwork=SUBNETWORK
         The Google Compute Engine subnetwork
         (https://cloud.google.com/compute/docs/subnetworks) to which the
@@ -1421,7 +1429,7 @@ FLAGS
      At most one of these can be specified:
 
        --dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE
-          (DEPRECATED) Select Advanced Datapath Observability mode for the
+          (REMOVED) Select Advanced Datapath Observability mode for the
           cluster. Defaults to DISABLED.
 
           Advanced Datapath Observability allows for a real-time view into
@@ -1438,10 +1446,7 @@ FLAGS
               $ gcloud alpha container clusters create \
                   --dataplane-v2-observability-mode=EXTERNAL_LB
 
-          The --dataplane-v2-observability-mode flag is deprecated and will be
-          removed in an upcoming release. Please use
-          --enable-dataplane-v2-flow-observability or
-          --disable-dataplane-v2-flow-observability.
+          Flag --dataplane-v2-observability-mode has been removed.
 
           DATAPLANE_V2_OBSERVABILITY_MODE must be one of:
 

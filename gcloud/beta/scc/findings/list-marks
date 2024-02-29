@@ -4,30 +4,36 @@ NAME
 SYNOPSIS
     gcloud beta scc findings list-marks
         (FINDING : --organization=ORGANIZATION --source=SOURCE)
-        [--page-token=PAGE_TOKEN] [--read-time=READ_TIME] [--filter=EXPRESSION]
-        [--limit=LIMIT] [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]]
-        [GCLOUD_WIDE_FLAG ...]
+        [--location=LOCATION; default="global"] [--page-token=PAGE_TOKEN]
+        [--read-time=READ_TIME] [--filter=EXPRESSION] [--limit=LIMIT]
+        [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) List a finding's security marks.
 
 EXAMPLES
-    List all security marks for myFinding under organization 123456 and source
-    5678:
+    List all security marks for testFinding under organization 123456 and
+    source 5678:
 
-        $ gcloud beta scc findings list-marks `myFinding` \
+        $ gcloud beta scc findings list-marks `testFinding` \
             --organization=123456 --source=5678
 
-    List all security marks for myFinding under project example-project and
+    List all security marks for testFinding under project example-project and
     source 5678:
 
         $ gcloud beta scc findings list-marks \
-            projects/example-project/sources/5678/findings/myFinding
+            projects/example-project/sources/5678/findings/testFinding
 
-    List all security marks for myFinding under folder 456 and source 5678:
+    List all security marks for testFinding under folder 456 and source 5678:
 
         $ gcloud beta scc findings list-marks \
-            folders/456/sources/5678/findings/myFinding
+            folders/456/sources/5678/findings/testFinding
+
+    List all security marks for testFinding under organization 123456, source
+    5678 and location=eu:
+
+        $ gcloud beta scc findings list-marks `testFinding` \
+            --organization=123456 --source=5678 --location=eu
 
 POSITIONAL ARGUMENTS
      Finding resource - The finding to be used for the SCC (Security Command
@@ -71,6 +77,17 @@ POSITIONAL ARGUMENTS
           ▸ provide the argument --source on the command line.
 
 FLAGS
+     --location=LOCATION; default="global"
+        When data residency controls are enabled, this attribute specifies the
+        location in which the resource is located and applicable. The location
+        attribute can be provided as part of the fully specified resource name
+        or with the --location argument on the command line. The default
+        location is global.
+
+        The default location on this command is unrelated to the default
+        location that is specified when data residency controls are enabled for
+        Security Command Center.
+
      --page-token=PAGE_TOKEN
         Response objects will return a non-null value for page-token to
         indicate that there is at least one additional page of data. User can
@@ -117,8 +134,9 @@ GCLOUD WIDE FLAGS
     Run $ gcloud help for details.
 
 API REFERENCE
-    This command uses the securitycenter/v1 API. The full documentation for
-    this API can be found at: https://cloud.google.com/security-command-center
+    This command uses the Security Command Center API. For more information,
+    see Security Command Center API.
+    (https://cloud.google.com/security-command-center/docs/reference/rest)
 
 NOTES
     This command is currently in beta and might change without notice. These

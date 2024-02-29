@@ -4,7 +4,8 @@ NAME
 SYNOPSIS
     gcloud alpha scc findings list [PARENT]
         [--compare-duration=COMPARE_DURATION] [--field-mask=FIELD_MASK]
-        [--order-by=ORDER_BY] [--page-token=PAGE_TOKEN] [--read-time=READ_TIME]
+        [--location=LOCATION; default="global"] [--order-by=ORDER_BY]
+        [--page-token=PAGE_TOKEN] [--read-time=READ_TIME]
         [--source=SOURCE; default="-"] [--filter=EXPRESSION] [--limit=LIMIT]
         [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [GCLOUD_WIDE_FLAG ...]
 
@@ -64,6 +65,11 @@ EXAMPLES
         $ gcloud alpha scc findings list 123456 \
             --filter="state=\"ACTIVE\"" --read-time="2019-01-01T01:00:00Z"
 
+    List all findings under organization 123456 across all sources and
+    location=eu:
+
+        $ gcloud alpha scc findings list 123456 --location=eu
+
 POSITIONAL ARGUMENTS
      Parent resource - parent organization, folder, or project in the Google
      Cloud resource hierarchy to be used for the gcloud scc command. Specify
@@ -117,6 +123,17 @@ FLAGS
         attributes. Notice the difference between hyphens (-) used with flags
         v/s camel case used in field masks. An empty or missing field mask will
         list all fields.
+
+     --location=LOCATION; default="global"
+        When data residency controls are enabled, this attribute specifies the
+        location in which the resource is located and applicable. The location
+        attribute can be provided as part of the fully specified resource name
+        or with the --location argument on the command line. The default
+        location is global.
+
+        The default location on this command is unrelated to the default
+        location that is specified when data residency controls are enabled for
+        Security Command Center.
 
      --order-by=ORDER_BY
         Expression that defines what fields and order to use for sorting.
@@ -177,8 +194,9 @@ GCLOUD WIDE FLAGS
     Run $ gcloud help for details.
 
 API REFERENCE
-    This command uses the securitycenter/v1 API. The full documentation for
-    this API can be found at: https://cloud.google.com/security-command-center
+    This command uses the Security Command Center API. For more information,
+    see Security Command Center API.
+    (https://cloud.google.com/security-command-center/docs/reference/rest)
 
 NOTES
     This command is currently in alpha and might change without notice. If this
