@@ -9,6 +9,9 @@ SYNOPSIS
           | --enable-high-resilience | --enable-logs-in-cloud-logging-only
           | --environment-size=ENVIRONMENT_SIZE | --node-count=NODE_COUNT
           | --web-server-machine-type=WEB_SERVER_MACHINE_TYPE
+          | --maintenance-window-end=MAINTENANCE_WINDOW_END
+          --maintenance-window-recurrence=MAINTENANCE_WINDOW_RECURRENCE
+          --maintenance-window-start=MAINTENANCE_WINDOW_START
           | --disable-cloud-data-lineage-integration
           | --enable-cloud-data-lineage-integration
           | --disable-master-authorized-networks
@@ -19,9 +22,6 @@ SYNOPSIS
           --snapshot-creation-schedule=SNAPSHOT_CREATION_SCHEDULE
           --snapshot-location=SNAPSHOT_LOCATION
           --snapshot-schedule-timezone=SNAPSHOT_SCHEDULE_TIMEZONE
-          | --maintenance-window-end=MAINTENANCE_WINDOW_END
-          --maintenance-window-recurrence=MAINTENANCE_WINDOW_RECURRENCE
-          --maintenance-window-start=MAINTENANCE_WINDOW_START
           | --max-workers=MAX_WORKERS --min-workers=MIN_WORKERS
           --scheduler-count=SCHEDULER_COUNT --scheduler-cpu=SCHEDULER_CPU
           --scheduler-memory=SCHEDULER_MEMORY
@@ -126,6 +126,43 @@ REQUIRED FLAGS
           machine types is available here:
           https://cloud.google.com/composer/pricing.
 
+       Group of arguments for setting the maintenance window value during
+       update.
+
+       At most one of these can be specified:
+
+         Group of arguments for setting the maintenance window value.
+
+           --maintenance-window-end=MAINTENANCE_WINDOW_END
+              End time of the mantenance window in the form of the full date.
+              Only the time of the day is used as a reference for an ending
+              time of the window with a provided recurrence. Specified date
+              must take place after the one specified as a start date, the
+              difference between will be used as a length of a single
+              maintenance window. See $ gcloud topic datetimes for information
+              on time formats.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --maintenance-window-recurrence=MAINTENANCE_WINDOW_RECURRENCE
+              An RFC 5545 RRULE, specifying how the maintenance window will
+              recur. The minimum requirement for the length of the maintenance
+              window is 12 hours a week. Only FREQ=DAILY and FREQ=WEEKLY rules
+              are supported.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --maintenance-window-start=MAINTENANCE_WINDOW_START
+              Start time of the mantenance window in the form of the full date.
+              Only the time of the day is used as a reference for a starting
+              time of the window with a provided recurrence. See $ gcloud topic
+              datetimes for information on time formats.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
        Group of arguments for setting Cloud Data Lineage integration
        configuration in Composer 2.
 
@@ -200,37 +237,6 @@ REQUIRED FLAGS
 
               This flag argument must be specified if any of the other
               arguments in this group are specified.
-
-       Group of arguments for setting the maintenance window value.
-
-         --maintenance-window-end=MAINTENANCE_WINDOW_END
-            End time of the mantenance window in the form of the full date.
-            Only the time of the day is used as a reference for an ending time
-            of the window with a provided recurrence. Specified date must take
-            place after the one specified as a start date, the difference
-            between will be used as a length of a single maintenance window.
-            See $ gcloud topic datetimes for information on time formats.
-
-            This flag argument must be specified if any of the other arguments
-            in this group are specified.
-
-         --maintenance-window-recurrence=MAINTENANCE_WINDOW_RECURRENCE
-            An RFC 5545 RRULE, specifying how the maintenance window will
-            recur. The minimum requirement for the length of the maintenance
-            window is 12 hours a week. Only FREQ=DAILY and FREQ=WEEKLY rules
-            are supported.
-
-            This flag argument must be specified if any of the other arguments
-            in this group are specified.
-
-         --maintenance-window-start=MAINTENANCE_WINDOW_START
-            Start time of the mantenance window in the form of the full date.
-            Only the time of the day is used as a reference for a starting time
-            of the window with a provided recurrence. See $ gcloud topic
-            datetimes for information on time formats.
-
-            This flag argument must be specified if any of the other arguments
-            in this group are specified.
 
        Group of arguments for setting workloads configuration in Composer 2.X
        or greater (--scheduler-count flag is available for Composer 1.X as

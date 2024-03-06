@@ -6,7 +6,8 @@ SYNOPSIS
     gcloud alpha bigtable instances tables create (TABLE : --instance=INSTANCE)
         --column-families=[COLUMN_FAMILIES,...]
         [--change-stream-retention-period=CHANGE_STREAM_RETENTION_PERIOD]
-        [--deletion-protection] [--splits=[SPLITS,...]] [GCLOUD_WIDE_FLAG ...]
+        [--deletion-protection] [--enable-automated-backup]
+        [--splits=[SPLITS,...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Create a new Cloud Bigtable table.
@@ -59,6 +60,14 @@ EXAMPLES
             --instance=my-instance --column-families="my-family" \
             --no-deletion-protection
 
+    To create a table my-table with automated backup policy
+    (retention_period=72h, frequency=24h) enabled in instance my-instance with
+    a column family my-family, run:
+
+        $ gcloud alpha bigtable instances tables create my-table \
+            --instance=my-instance --column-families="my-family" \
+            --enable-automated-backup
+
 POSITIONAL ARGUMENTS
      Table resource - Cloud Bigtable table to create. The arguments in this
      group can be used to specify the attributes of this resource. (NOTE) Some
@@ -106,6 +115,10 @@ OPTIONAL FLAGS
 
      --deletion-protection
         Once specified, the table is deletion protected.
+
+     --enable-automated-backup
+        Once set, enables the default automated backup policy
+        (retention_period=72h, frequency=24h) for the table.
 
      --splits=[SPLITS,...]
         Row keys where the table should initially be split. For example:

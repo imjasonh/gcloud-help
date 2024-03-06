@@ -5,7 +5,9 @@ NAME
 SYNOPSIS
     gcloud beta dataflow jobs update-options JOB_ID
         [--max-num-workers=MAX_NUM_WORKERS] [--min-num-workers=MIN_NUM_WORKERS]
-        [--region=REGION_ID] [GCLOUD_WIDE_FLAG ...]
+        [--region=REGION_ID] [--unset-worker-utilization-hint]
+        [--worker-utilization-hint=WORKER_UTILIZATION_HINT]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) This command can modify properties of running Dataflow jobs.
@@ -13,8 +15,10 @@ DESCRIPTION
     supported.
 
     Adjust the autoscaling settings for Streaming Engine Dataflow jobs by
-    providing at-least one of --min-num-workers or --max-num-workers (or both).
-    Allow a few minutes for the changes to take effect.
+    providing at-least one of --min-num-workers or --max-num-workers or
+    --worker-utilization-hint (or all 3), or --unset-worker-utilization-hint
+    (which cannot be run at the same time as --worker-utilization-hint but
+    works with the others). Allow a few minutes for the changes to take effect.
 
     Note that autoscaling settings can only be modified on-the-fly for
     Streaming Engine jobs. Attempts to modify batch job or Streaming Appliance
@@ -34,6 +38,18 @@ EXAMPLES
 
         $ gcloud beta dataflow jobs update-options --max-num-workers=20
 
+    Adjust the hint of target worker utilization to 70% for horizontal
+    autoscaling:
+
+        $ gcloud beta dataflow jobs update-options \
+            --worker-utilization-hint=0.7
+
+    "Unset" worker utilization hint so that horizontal scaling will rely on its
+    default CPU utilization target:
+
+        $ gcloud beta dataflow jobs update-options \
+            --unset-worker-utilization-hint
+
 POSITIONAL ARGUMENTS
      JOB_ID
         Job ID to operate on.
@@ -49,6 +65,15 @@ FLAGS
 
      --region=REGION_ID
         Region ID of the job's regional endpoint. Defaults to 'us-central1'.
+
+     --unset-worker-utilization-hint
+        Unset --worker-utilization-hint. This causes the job autoscaling to
+        fall back to internal tunings if they exist, or otherwise use the
+        default hint value.
+
+     --worker-utilization-hint=WORKER_UTILIZATION_HINT
+        Target CPU utilization for autoscaling, ranging from 0.1 to 0.9. Only
+        supported for streaming-engine jobs with autoscaling enabled.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
