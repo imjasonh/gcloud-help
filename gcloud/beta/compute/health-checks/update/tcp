@@ -6,7 +6,8 @@ SYNOPSIS
         [--check-interval=CHECK_INTERVAL] [--description=DESCRIPTION]
         [--enable-logging] [--healthy-threshold=HEALTHY_THRESHOLD]
         [--proxy-header=PROXY_HEADER] [--request=REQUEST] [--response=RESPONSE]
-        [--timeout=TIMEOUT] [--unhealthy-threshold=UNHEALTHY_THRESHOLD]
+        [--source-regions=REGION,...,[...]] [--timeout=TIMEOUT]
+        [--unhealthy-threshold=UNHEALTHY_THRESHOLD]
         [--global | --region=REGION]
         [--port=PORT --port-name=PORT_NAME --use-serving-port]
         [GCLOUD_WIDE_FLAG ...]
@@ -69,6 +70,18 @@ FLAGS
         successful handshake, only configure --response to match an explicit
         --request. Setting this to an empty string will clear any existing
         response value.
+
+     --source-regions=REGION,...,[...]
+        Define the list of Google Cloud regions from which health checks are
+        performed. This option is supported only for global health checks that
+        will be referenced by DNS routing policies. If specified, the
+        --check-interval field should be at least 30 seconds. The
+        --proxy-header and --request fields (for TCP health checks) are not
+        supported with this option.
+
+        If --source-regions is specified for a health check, then that health
+        check cannot be used by a backend service or by a managed instance
+        group (for autohealing).
 
      --timeout=TIMEOUT
         If Google Compute Engine doesn't receive a healthy response from the

@@ -5,8 +5,8 @@ NAME
 SYNOPSIS
     gcloud artifacts repositories create (REPOSITORY : --location=LOCATION)
         --repository-format=REPOSITORY_FORMAT [--allow-snapshot-overwrites]
-        [--async] [--description=DESCRIPTION] [--immutable-tags]
-        [--kms-key=KMS_KEY] [--labels=[KEY=VALUE,...]]
+        [--async] [--description=DESCRIPTION] [--disable-remote-validation]
+        [--immutable-tags] [--kms-key=KMS_KEY] [--labels=[KEY=VALUE,...]]
         [--mode=MODE; default="NONE"] [--remote-apt-repo=REMOTE_APT_REPO]
         [--remote-apt-repo-path=REMOTE_APT_REPO_PATH]
         [--remote-docker-repo=REMOTE_DOCKER_REPO]
@@ -108,6 +108,11 @@ OPTIONAL FLAGS
      --description=DESCRIPTION
         Description for the repository.
 
+     --disable-remote-validation
+        Do not make an HTTP request to validate the remote upstream. Not
+        recommended when setting a custom remote upstream unless you are
+        absolutely sure your upstream URI and any auth is valid.
+
      --immutable-tags
         (Docker only) Prevent changes to tagged images in the repository. Tags
         cannot be deleted or moved to a different image digest, and tagged
@@ -148,15 +153,21 @@ OPTIONAL FLAGS
 
      --remote-docker-repo=REMOTE_DOCKER_REPO
         (Docker only) Repo upstream for docker remote repository.
-        REMOTE_DOCKER_REPO must be one of: [docker-hub].
+        REMOTE_DOCKER_REPO can be either:
+        ◆ one of the following enums: [docker-hub].
+        ◆ an http/https custom registry uri (ex: https://my.docker.registry)
 
      --remote-mvn-repo=REMOTE_MVN_REPO
         (Maven only) Repo upstream for maven remote repository. REMOTE_MVN_REPO
-        must be one of: [maven-central].
+        can be either:
+        ◆ one of the following enums: [maven-central].
+        ◆ an http/https custom registry uri (ex: https://my.maven.registry)
 
      --remote-npm-repo=REMOTE_NPM_REPO
-        (Npm only) Repo upstream for npm remote repository. REMOTE_NPM_REPO
-        must be one of: [npmjs].
+        (Npm only) Repo upstream for npm remote repository. REMOTE_NPM_REPO can
+        be either:
+        ◆ one of the following enums: [npmjs].
+        ◆ an http/https custom registry uri (ex: https://my.npm.registry)
 
      --remote-password-secret-version=REMOTE_PASSWORD_SECRET_VERSION
         Secret Manager secret version that contains password for the remote
@@ -164,7 +175,9 @@ OPTIONAL FLAGS
 
      --remote-python-repo=REMOTE_PYTHON_REPO
         (Python only) Repo upstream for python remote repository.
-        REMOTE_PYTHON_REPO must be one of: [pypi].
+        REMOTE_PYTHON_REPO can be either:
+        ◆ one of the following enums: [pypi].
+        ◆ an http/https custom registry uri (ex: https://my.python.registry)
 
      --remote-repo-config-desc=REMOTE_REPO_CONFIG_DESC
         The description for the remote repository config.
