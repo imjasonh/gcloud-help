@@ -4,7 +4,10 @@ NAME
 SYNOPSIS
     gcloud alpha bigtable app-profiles update
         (APP_PROFILE : --instance=INSTANCE) [--async]
-        [--description=DESCRIPTION] [--force] [--priority=PRIORITY]
+        [--description=DESCRIPTION] [--force]
+        [--data-boost
+          --data-boost-compute-billing-owner=DATA_BOOST_COMPUTE_BILLING_OWNER
+          | [--priority=PRIORITY : --standard]]
         [[--route-any : --restrict-to=[RESTRICT_TO,...]]
           | [--route-to=ROUTE_TO : --transactional-writes]]
         [GCLOUD_WIDE_FLAG ...]
@@ -34,6 +37,13 @@ EXAMPLES
 
         $ gcloud alpha bigtable app-profiles update my-app-profile-id \
             --instance=my-instance-id --priority=PRIORITY_LOW
+
+    To update an app profile to enable Data Boost which bills usage to the host
+    project, run:
+
+        $ gcloud alpha bigtable app-profiles update my-app-profile-id \
+            --instance=my-instance-id --data-boost \
+            --data-boost-compute-billing-owner=HOST_PAYS
 
 POSITIONAL ARGUMENTS
      App profile resource - The app profile to update. The arguments in this
@@ -78,16 +88,57 @@ FLAGS
      --force
         Ignore warnings and force update.
 
-     --priority=PRIORITY
-        Specify the request priority. If not specified, the app profile uses
-        PRIORITY_HIGH by default. PRIORITY must be one of:
+     At most one of these can be specified:
 
-         PRIORITY_HIGH
-            Requests are treated with high priority.
-         PRIORITY_LOW
-            Requests are treated with low priority.
-         PRIORITY_MEDIUM
-            Requests are treated with medium priority.
+       Data Boost Read-only Isolation
+
+         --data-boost
+            Use Data Boost Read-only Isolation, rather than Standard Isolation.
+            If specified, --data-boost-compute-billing-owner is required.
+            Specifying Data Boost Read-only Isolation on an app profile which
+            has Standard Isolation enabled may cause unexpected behavior for
+            running applications.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --data-boost-compute-billing-owner=DATA_BOOST_COMPUTE_BILLING_OWNER
+            Specify the Data Boost Compute Billing Owner, required if
+            --data-boost is passed. DATA_BOOST_COMPUTE_BILLING_OWNER must be
+            (only one value is supported):
+
+             HOST_PAYS
+                Compute Billing should be accounted towards the host Cloud
+                Project (containing the targeted Bigtable Instance / Table).
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+       Standard Isolation
+
+         --priority=PRIORITY
+            Specify the request priority under Standard Isolation. Passing this
+            option implies Standard Isolation, e.g. the --standard option. If
+            not specified, the app profile uses Standard Isolation with
+            PRIORITY_HIGH by default. Specifying request priority on an app
+            profile that has Data Boost Read-Only Isolation enabled will change
+            the isolation to Standard and use the specified priority, which may
+            cause unexpected behavior for running applications. PRIORITY must
+            be one of:
+
+             PRIORITY_HIGH
+                Requests are treated with high priority.
+             PRIORITY_LOW
+                Requests are treated with low priority.
+             PRIORITY_MEDIUM
+                Requests are treated with medium priority.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --standard
+            Use Standard Isolation, rather than Data Boost Read-only Isolation.
+            If specified, --priority is required.
 
      At most one of these can be specified:
 
