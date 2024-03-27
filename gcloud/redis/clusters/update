@@ -3,8 +3,13 @@ NAME
         instance
 
 SYNOPSIS
-    gcloud redis clusters update (CLUSTER : --region=REGION) [--async]
-        [--replica-count=REPLICA_COUNT] [--shard-count=SHARD_COUNT]
+    gcloud redis clusters update (CLUSTER : --region=REGION)
+        [--aof-append-fsync=AOF_APPEND_FSYNC] [--async]
+        [--persistence-mode=PERSISTENCE_MODE]
+        [--rdb-snapshot-period=RDB_SNAPSHOT_PERIOD]
+        [--rdb-snapshot-start-time=RDB_SNAPSHOT_START_TIME]
+        [--remove-redis-config=[KEY,...]] [--replica-count=REPLICA_COUNT]
+        [--shard-count=SHARD_COUNT] [--update-redis-config=KEY=VALUE]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -55,15 +60,64 @@ POSITIONAL ARGUMENTS
           ▸ set the property redis/region.
 
 FLAGS
+     --aof-append-fsync=AOF_APPEND_FSYNC
+        Fsync configuration. AOF_APPEND_FSYNC must be one of:
+
+         always
+            Redis explicitly calls fsync for every write command.
+
+         everysec
+            (default) Redis explicitly calls fsync every second.
+
+         no
+            Redis will not explicitly call fsync.
+
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
+
+     --persistence-mode=PERSISTENCE_MODE
+        Operation mode for persistence. PERSISTENCE_MODE must be one of:
+
+         aof
+            AOF-based persistence
+         disabled
+            Persistence mode is disabled
+         rdb
+            RDB-based persistence
+
+     --rdb-snapshot-period=RDB_SNAPSHOT_PERIOD
+        Attempted period between RDB snapshots. RDB_SNAPSHOT_PERIOD must be one
+        of:
+
+         12h
+            12 hours
+         1h
+            1 hour
+         24h
+            (default) 24 hours
+         6h
+            6 hours
+
+     --rdb-snapshot-start-time=RDB_SNAPSHOT_START_TIME
+        Date and time of the first snapshot in the ISO 1801 format, and
+        alignment time for future snapshots. For example, 2024-01-01T01:00:00Z.
+        If not specified, the current time will be used.
+
+     --remove-redis-config=[KEY,...]
+        A list of Redis Cluster config parameters to remove. Removing a
+        non-existent config parameter is silently ignored.
 
      --replica-count=REPLICA_COUNT
         The replica count of each shard.
 
      --shard-count=SHARD_COUNT
         The shard count of the cluster.
+
+     --update-redis-config=KEY=VALUE
+        A list of Redis Cluster config KEY=VALUE pairs to update. If a config
+        parameter is already set, its value is modified; otherwise a new Redis
+        config parameter is added.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

@@ -7,10 +7,13 @@ SYNOPSIS
         (ENVIRONMENT : --location=LOCATION)
         (--cloud-sql-machine-type=CLOUD_SQL_MACHINE_TYPE
           | --disable-high-resilience | --disable-logs-in-cloud-logging-only
-          | --enable-high-resilience | --enable-logs-in-cloud-logging-only
+          | --disable-private-environment | --enable-high-resilience
+          | --enable-logs-in-cloud-logging-only | --enable-private-environment
           | --environment-size=ENVIRONMENT_SIZE | --node-count=NODE_COUNT
+          | --support-web-server-plugins
           | --web-server-machine-type=WEB_SERVER_MACHINE_TYPE
           | --airflow-version=AIRFLOW_VERSION | --image-version=IMAGE_VERSION
+          | --clear-maintenance-window
           | --maintenance-window-end=MAINTENANCE_WINDOW_END
           --maintenance-window-recurrence=MAINTENANCE_WINDOW_RECURRENCE
           --maintenance-window-start=MAINTENANCE_WINDOW_START
@@ -19,19 +22,26 @@ SYNOPSIS
           | --disable-master-authorized-networks
           --enable-master-authorized-networks
           --master-authorized-networks=[NETWORK,...]
+          | --disable-private-builds-only | --enable-private-builds-only
           | --disable-scheduled-snapshot-creation
           | --enable-scheduled-snapshot-creation
           --snapshot-creation-schedule=SNAPSHOT_CREATION_SCHEDULE
           --snapshot-location=SNAPSHOT_LOCATION
           --snapshot-schedule-timezone=SNAPSHOT_SCHEDULE_TIMEZONE
+          | --disable-vpc-connectivity
+          | --network-attachment=NETWORK_ATTACHMENT
+          | [--network=NETWORK : --subnetwork=SUBNETWORK]
           | --max-workers=MAX_WORKERS --min-workers=MIN_WORKERS
           --scheduler-count=SCHEDULER_COUNT --scheduler-cpu=SCHEDULER_CPU
           --scheduler-memory=SCHEDULER_MEMORY
           --scheduler-storage=SCHEDULER_STORAGE --web-server-cpu=WEB_SERVER_CPU
           --web-server-memory=WEB_SERVER_MEMORY
           --web-server-storage=WEB_SERVER_STORAGE --worker-cpu=WORKER_CPU
-          --worker-memory=WORKER_MEMORY
-          --worker-storage=WORKER_STORAGE --disable-triggerer
+          --worker-memory=WORKER_MEMORY --worker-storage=WORKER_STORAGE
+          --dag-processor-count=DAG_PROCESSOR_COUNT
+          --dag-processor-cpu=DAG_PROCESSOR_CPU
+          --dag-processor-memory=DAG_PROCESSOR_MEMORY
+          --dag-processor-storage=DAG_PROCESSOR_STORAGE --disable-triggerer
           | --enable-triggerer --triggerer-count=TRIGGERER_COUNT
           --triggerer-cpu=TRIGGERER_CPU --triggerer-memory=TRIGGERER_MEMORY
           | --update-airflow-configs=[KEY=VALUE,...] --clear-airflow-configs
@@ -108,12 +118,20 @@ REQUIRED FLAGS
           Disable logs in cloud logging only, supported for Composer 2
           Environments.
 
+       --disable-private-environment
+          Enable internet connection from any Composer component, supported in
+          Composer 3 environments or greater.
+
        --enable-high-resilience
           Enable high resilience, supported for Composer 2 Environments.
 
        --enable-logs-in-cloud-logging-only
           Enable logs in cloud logging only, supported for Composer 2
           Environments.
+
+       --enable-private-environment
+          Disable internet connection from any Composer component, supported in
+          Composer 3 environments or greater.
 
        --environment-size=ENVIRONMENT_SIZE
           Size of the environment. Unspecified means that the default option
@@ -122,6 +140,10 @@ REQUIRED FLAGS
 
        --node-count=NODE_COUNT
           The new number of nodes running the environment. Must be >= 3.
+
+       --support-web-server-plugins
+          Enable the support for web server plugins, supported in Composer 3 or
+          greater.
 
        --web-server-machine-type=WEB_SERVER_MACHINE_TYPE
           machine type used by the Airflow web server. The list of available
@@ -168,6 +190,10 @@ REQUIRED FLAGS
        update.
 
        At most one of these can be specified:
+
+         --clear-maintenance-window
+            Clears the maintenance window settings. Can be specified for
+            Composer 3 or greater.
 
          Group of arguments for setting the maintenance window value.
 
@@ -233,6 +259,17 @@ REQUIRED FLAGS
             Cannot be specified unless --enable-master-authorized-networks is
             also specified.
 
+       At most one of these can be specified:
+
+         --disable-private-builds-only
+            Builds performed during operations that install Python packages
+            have an access to the internet supported in Composer 3 or greater.
+
+         --enable-private-builds-only
+            Builds performed during operations that install Python packages
+            have only private connectivity to Google services, supported in
+            Composer 3 or greater.
+
        Group of arguments used during update of scheduled snapshots settings in
        Composer 2.0.32 or greater.
 
@@ -275,6 +312,32 @@ REQUIRED FLAGS
 
               This flag argument must be specified if any of the other
               arguments in this group are specified.
+
+       At most one of these can be specified:
+
+         --disable-vpc-connectivity
+            Disable connectivity with a user's VPC network, supported in
+            Composer 3 environments or greater.
+
+         --network-attachment=NETWORK_ATTACHMENT
+            Cloud Composer Network Attachment, which provides connectivity with
+            a user's VPC network, supported in Composer 3 environments or
+            greater.
+
+         Virtual Private Cloud networking
+
+           --network=NETWORK
+              The Compute Engine Network to which the environment will be
+              connected. If a 'Custom Subnet Network' is provided, --subnetwork
+              must be specified as well.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --subnetwork=SUBNETWORK
+              The Compute Engine subnetwork
+              (https://cloud.google.com/compute/docs/subnetworks) to which the
+              environment will be connected.
 
        Group of arguments for setting workloads configuration in Composer 2.X
        or greater (--scheduler-count flag is available for Composer 1.X as
@@ -322,6 +385,27 @@ REQUIRED FLAGS
          --worker-storage=WORKER_STORAGE
             Storage allocated to Airflow worker, ex. 600MB, 3GB, 2. If units
             are not provided, defaults to GB.
+
+         Group of arguments for setting dag processor settings in Composer 3 or
+         greater.
+
+           --dag-processor-count=DAG_PROCESSOR_COUNT
+              Number of dag processors, supported in Composer 3 environments or
+              greater.
+
+           --dag-processor-cpu=DAG_PROCESSOR_CPU
+              CPU allocated to Airflow dag processor, supported in Composer 3
+              environments or greater.
+
+           --dag-processor-memory=DAG_PROCESSOR_MEMORY
+              Memory allocated to Airflow dag processor, ex. 1GB, 3GB, 2. If
+              units are not provided, defaults to GB, supported in Composer 3
+              environments or greater.
+
+           --dag-processor-storage=DAG_PROCESSOR_STORAGE
+              Storage allocated to Airflow dag processor, ex. 600MB, 3GB, 2. If
+              units are not provided, defaults to GB, supported in Composer 3
+              environments or greater.
 
          Group of arguments for setting triggerer settings in Composer 2.0.31
          or greater.

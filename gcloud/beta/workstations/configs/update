@@ -5,7 +5,7 @@ NAME
 SYNOPSIS
     gcloud beta workstations configs update
         (CONFIG : --cluster=CLUSTER --region=REGION) [--async]
-        [--boot-disk-size=BOOT_DISK_SIZE]
+        [--boost-config=[BOOST_CONFIG,...]] [--boot-disk-size=BOOT_DISK_SIZE]
         [--container-args=[CONTAINER_ARGS,...]]
         [--container-command=[CONTAINER_COMMAND,...]]
         [--container-env=[CONTAINER_ENV,...]]
@@ -91,6 +91,43 @@ FLAGS
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
+
+     --boost-config=[BOOST_CONFIG,...]
+        Boost Configuration(s) that workstations running with this
+        configuration can boost up to. This includes id (required),
+        machine-type, accelerator-type, and accelerator-count.
+
+        Example:
+
+            $ gcloud beta workstations configs update \
+                --boost-config=id=boost1,machine-type=n1-standard-4,\
+            accelerator-type=nvidia-tesla-t4,accelerator-count=1
+
+        Sets boost_config value.
+
+         accelerator-count
+            Sets accelerator-count value.
+
+         accelerator-type
+            Sets accelerator-type value.
+
+         id
+            Required, Sets id value.
+
+         machine-type
+            Sets machine-type value.
+
+        Shorthand Example:
+
+            --boost-config=accelerator-count=int,accelerator-type=string,id=string,machine-type=string
+
+        JSON Example:
+
+            --boost-config='{"accelerator-count": int, "accelerator-type": "string", "id": "string", "machine-type": "string"}'
+
+        File Example:
+
+            --boost-config=path_to_file.(yaml|json)
 
      --boot-disk-size=BOOT_DISK_SIZE
         Size of the boot disk in GB.
@@ -230,6 +267,8 @@ FLAGS
               CLion
            codeoss
               Code OSS
+           codeoss-cuda
+              Code OSS + CUDA toolkit
            goland
               GoLand
            intellij

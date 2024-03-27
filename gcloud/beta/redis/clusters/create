@@ -4,8 +4,12 @@ NAME
 
 SYNOPSIS
     gcloud beta redis clusters create (CLUSTER : --region=REGION)
-        --network=NETWORK --shard-count=SHARD_COUNT [--async]
-        [--auth-mode=AUTH_MODE] [--replica-count=REPLICA_COUNT]
+        --network=NETWORK --shard-count=SHARD_COUNT
+        [--aof-append-fsync=AOF_APPEND_FSYNC] [--async] [--auth-mode=AUTH_MODE]
+        [--persistence-mode=PERSISTENCE_MODE]
+        [--rdb-snapshot-period=RDB_SNAPSHOT_PERIOD]
+        [--rdb-snapshot-start-time=RDB_SNAPSHOT_START_TIME]
+        [--redis-config=[KEY=VALUE,...]] [--replica-count=REPLICA_COUNT]
         [--transit-encryption-mode=TRANSIT_ENCRYPTION_MODE] [--zone=ZONE]
         [--zone-distribution-mode=ZONE_DISTRIBUTION_MODE]
         [GCLOUD_WIDE_FLAG ...]
@@ -84,6 +88,18 @@ REQUIRED FLAGS
         The shard count of the cluster.
 
 OPTIONAL FLAGS
+     --aof-append-fsync=AOF_APPEND_FSYNC
+        Fsync configuration. AOF_APPEND_FSYNC must be one of:
+
+         always
+            Redis explicitly calls fsync for every write command.
+
+         everysec
+            (default) Redis explicitly calls fsync every second.
+
+         no
+            Redis will not explicitly call fsync.
+
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
@@ -97,6 +113,42 @@ OPTIONAL FLAGS
 
          iam-auth
             IAM basic authorization is enabled for the cluster.
+
+     --persistence-mode=PERSISTENCE_MODE
+        Operation mode for persistence. PERSISTENCE_MODE must be one of:
+
+         aof
+            AOF-based persistence
+         disabled
+            Persistence mode is disabled
+         rdb
+            RDB-based persistence
+
+     --rdb-snapshot-period=RDB_SNAPSHOT_PERIOD
+        Attempted period between RDB snapshots. RDB_SNAPSHOT_PERIOD must be one
+        of:
+
+         12h
+            12 hours
+         1h
+            1 hour
+         24h
+            (default) 24 hours
+         6h
+            6 hours
+
+     --rdb-snapshot-start-time=RDB_SNAPSHOT_START_TIME
+        Date and time of the first snapshot in the ISO 1801 format, and
+        alignment time for future snapshots. For example, 2024-01-01T01:00:00Z.
+        If not specified, the current time will be used.
+
+     --redis-config=[KEY=VALUE,...]
+        A list of Redis config KEY=VALUE pairs to set on the Redis Cluster
+        according to http://redis.io/topics/config. Currently the supported
+        Redis configs are:
+
+            maxmemory-clients, maxmemory, maxmemory-policy, notify-keyspace-events,
+            slowlog-log-slower-than, maxclients.
 
      --replica-count=REPLICA_COUNT
         The replica count of each shard.
