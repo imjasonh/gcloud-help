@@ -15,6 +15,7 @@ SYNOPSIS
         [--boot-disk-size=BOOT_DISK_SIZE] [--boot-disk-type=BOOT_DISK_TYPE]
         [--can-ip-forward] [--count=COUNT] [--create-disk=[PROPERTY=VALUE,...]]
         [--description=DESCRIPTION]
+        [--discard-local-ssds-at-termination-timestamp=DISCARD_LOCAL_SSDS_AT_TERMINATION_TIMESTAMP]
         [--disk=[boot=BOOT],
           [device-name=DEVICE-NAME],[name=NAME],[scope=SCOPE]]
         [--enable-display-device] [--[no-]enable-nested-virtualization]
@@ -364,6 +365,21 @@ OPTIONAL FLAGS
 
      --description=DESCRIPTION
         Specifies a textual description of the instances.
+
+     --discard-local-ssds-at-termination-timestamp=DISCARD_LOCAL_SSDS_AT_TERMINATION_TIMESTAMP
+        Required and only allowed for VMs that have one or more local SSDs, use
+        --termination-action=STOP (default), and use either --max-run-duration
+        or --termination-time. This flag indicates whether you want Compute
+        Engine to discard (true) or preserve (false) local SSD data when the
+        VM's terminationTimestamp is reached.
+
+        If set to false, Compute Engine will preserve local SSD data by
+        including the --discard-local-ssd=false flag in the automatic
+        termination command. The --discard-local-ssd=false flag preserves local
+        SSD data by migrating it to persistent storage until you rerun the VM.
+        Importantly, preserving local SSD data incurs costs and is subject to
+        restrictions. For more information, see
+        https://cloud.google.com/compute/docs/disks/local-ssd#stop_instance.
 
      --disk=[boot=BOOT],[device-name=DEVICE-NAME],[name=NAME],[scope=SCOPE]
         Attaches persistent disks to the instances. The disks specified must

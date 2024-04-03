@@ -13,6 +13,8 @@ SYNOPSIS
         [--key-exchange-key-file=[KEK_VALUE,...]] [--labels=[KEY=VALUE,...]]
         [--licenses=[LICENSES,...]] [--platform-key-file=PLATFORM_KEY_FILE]
         [--no-require-csek-key-create]
+        [--rollout-override=[default_rollout_time=DEFAULT_ROLLOUT_TIME],
+          [location_rollout_policies=LOCATION_ROLLOUT_POLICIES]]
         [--signature-database-file=[DB_VALUE,...]]
         [--source-disk-project=SOURCE_DISK_PROJECT]
         [--source-disk-zone=SOURCE_DISK_ZONE]
@@ -188,6 +190,26 @@ OPTIONAL FLAGS
         https://cloud.google.com/compute/docs/disks/customer-supplied-encryption
         for more details. Enabled by default, use --no-require-csek-key-create
         to disable.
+
+     --rollout-override=[default_rollout_time=DEFAULT_ROLLOUT_TIME],[location_rollout_policies=LOCATION_ROLLOUT_POLICIES]
+        A rollout policy for the image. A rollout policy is used to restrict
+        the zones where this image is accessible when using a zonal image
+        family reference. When specified, the rollout policy overrides per-zone
+        references to the image through the associated image family. When the
+        rollout policy does not include the user specified zone, or if the zone
+        is rolled out, this image is accessible.
+
+            default_rollout_time
+              This is an optional RFC3339 timestamp on or after which
+              the update is considered rolled out to any zone that is not
+              explicitly stated.
+
+            location_rollout_policies
+              Location based rollout policies to apply to the resource.
+              Currently only zone names are supported as the key and must be
+              represented as valid URLs, like: zones/us-central1-a.
+              The value expects an RFC3339 timestamp on or after which the update
+              is considered rolled out to the specified location.
 
      --signature-database-file=[DB_VALUE,...]
         Comma-separated list of file paths that point to valid X.509

@@ -10,6 +10,8 @@ SYNOPSIS
         [--maintenance-policy=MAINTENANCE_POLICY] [--min-node-cpu=MIN_NODE_CPU]
         [--[no-]preemptible] [--provisioning-model=PROVISIONING_MODEL]
         [--[no-]restart-on-failure] [--zone=ZONE]
+        [--clear-discard-local-ssds-at-termination-timestamp
+          | --discard-local-ssds-at-termination-timestamp=DISCARD_LOCAL_SSDS_AT_TERMINATION_TIMESTAMP]
         [--clear-instance-termination-action
           | --instance-termination-action=INSTANCE_TERMINATION_ACTION]
         [--clear-max-run-duration | --max-run-duration=MAX_RUN_DURATION]
@@ -118,6 +120,29 @@ FLAGS
 
         Alternatively, the zone can be stored in the environment variable
         CLOUDSDK_COMPUTE_ZONE.
+
+     Discard Local SSDs At Termination Timestamp
+
+     At most one of these can be specified:
+
+       --clear-discard-local-ssds-at-termination-timestamp
+          Removes the discard-local-ssds-at-termination-timestamp field from
+          the scheduling options.
+
+       --discard-local-ssds-at-termination-timestamp=DISCARD_LOCAL_SSDS_AT_TERMINATION_TIMESTAMP
+          Required and only allowed for VMs that have one or more local SSDs,
+          use --termination-action=STOP (default), and use either
+          --max-run-duration or --termination-time. This flag indicates whether
+          you want Compute Engine to discard (true) or preserve (false) local
+          SSD data when the VM's terminationTimestamp is reached.
+
+          If set to false, Compute Engine will preserve local SSD data by
+          including the --discard-local-ssd=false flag in the automatic
+          termination command. The --discard-local-ssd=false flag preserves
+          local SSD data by migrating it to persistent storage until you rerun
+          the VM. Importantly, preserving local SSD data incurs costs and is
+          subject to restrictions. For more information, see
+          https://cloud.google.com/compute/docs/disks/local-ssd#stop_instance.
 
      Instance Termination Action
 

@@ -78,7 +78,9 @@ SYNOPSIS
           --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
           | --enable-binauthz]
         [--cluster-dns=CLUSTER_DNS --cluster-dns-domain=CLUSTER_DNS_DOMAIN
-          --cluster-dns-scope=CLUSTER_DNS_SCOPE]
+          --cluster-dns-scope=CLUSTER_DNS_SCOPE
+          --additive-vpc-scope-dns-domain=ADDITIVE_VPC_SCOPE_DNS_DOMAIN
+          | --disable-additive-vpc-scope]
         [--dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE
           | --disable-dataplane-v2-flow-observability
           | --enable-dataplane-v2-flow-observability]
@@ -1093,13 +1095,16 @@ FLAGS
         Sets the mode of the Kubernetes security posture API's off-cluster
         features.
 
+        To enable advanced mode explicitly set the flag to
+        --security-posture=enterprise.
+
         To enable in standard mode explicitly set the flag to
         --security-posture=standard
 
         To disable in an existing cluster, explicitly set the flag to
         --security-posture=disabled.
 
-        SECURITY_POSTURE must be one of: disabled, standard.
+        SECURITY_POSTURE must be one of: disabled, standard, enterprise.
 
      --services-ipv4-cidr=CIDR
         Set the IP range for the services IPs.
@@ -1392,6 +1397,17 @@ FLAGS
               Configures the Cloud DNS zone to be private to the cluster.
            vpc
               Configures the Cloud DNS zone to be private to the VPC Network.
+
+       ClusterDNS_AdditiveVPCScope_EnabledDisable
+
+       At most one of these can be specified:
+
+         --additive-vpc-scope-dns-domain=ADDITIVE_VPC_SCOPE_DNS_DOMAIN
+            The domain used in Additive VPC scope. Only works with Cluster
+            Scope.
+
+         --disable-additive-vpc-scope
+            Disables Additive VPC Scope.
 
      At most one of these can be specified:
 
