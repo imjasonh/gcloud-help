@@ -4,7 +4,7 @@ NAME
 
 SYNOPSIS
     gcloud alpha metastore services create (SERVICE : --location=LOCATION)
-        [--async] [--data-catalog-sync]
+        [--async] [--autoscaling-enabled] [--data-catalog-sync]
         [--database-type=DATABASE_TYPE; default="mysql"]
         [--encryption-kms-key=ENCRYPTION_KMS_KEY]
         [--endpoint-protocol=ENDPOINT_PROTOCOL; default="thrift"]
@@ -18,7 +18,8 @@ SYNOPSIS
         [--hive-metastore-configs=[KEY=VALUE,...]
           | --hive-metastore-configs-from-file=HIVE_METASTORE_CONFIGS_FROM_FILE]
         [--instance-size=INSTANCE_SIZE | --scaling-factor=SCALING_FACTOR
-          | --tier=TIER]
+          | --tier=TIER | --max-scaling-factor=MAX_SCALING_FACTOR
+          --min-scaling-factor=MIN_SCALING_FACTOR]
         [--kerberos-principal=KERBEROS_PRINCIPAL
           --keytab=KEYTAB --krb5-config=KRB5_CONFIG]
         [--maintenance-window-day=MAINTENANCE_WINDOW_DAY
@@ -86,6 +87,16 @@ FLAGS
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
+
+     --autoscaling-enabled
+        A boolean flag to determine whether Dataproc Metastore autoscaling
+        should be enabled, false if unspecified.
+
+        The default minimum and maximum scaling factors are 0.1 and 6.0,
+        respectively.
+
+        The minimum and maximum scaling factors can be specified using
+        --min-scaling-factor and --max-scaling-factor.
 
      --data-catalog-sync
         A boolean flag to determine whether Dataproc Metastore metadata sync to
@@ -269,10 +280,8 @@ FLAGS
               Small instance size, maps to a scaling factor of 0.5.
 
        --scaling-factor=SCALING_FACTOR
-          The scaling factor of the service. This should be a float in the
-          range [0.1,6.0]. If the value is less than 1.0, then it should be a
-          multiple of 0.1. If the value is greater than 1.0, then it should be
-          a whole number. Float values should be formatted as x.y.
+          The scaling factor of the service. Can be one of [0.1, 0.2, 0.3, 0.4,
+          0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0].
 
        --tier=TIER
           The tier of the service. TIER must be one of:
@@ -285,6 +294,18 @@ FLAGS
               The enterprise tier provides multi-zone high availability, and
               sufficient scalability for enterprise-level Dataproc Metastore
               workloads.
+
+       The autoscaling configuration of the Dataproc Metastore instance.
+
+         --max-scaling-factor=MAX_SCALING_FACTOR
+            The maximum scaling factor allowed by the autoscaler. Can be one of
+            [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 2.0, 3.0, 4.0,
+            5.0, 6.0]. The default value is 6.0.
+
+         --min-scaling-factor=MIN_SCALING_FACTOR
+            The minimum scaling factor allowed by the autoscaler. Can be one of
+            [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 2.0, 3.0, 4.0,
+            5.0, 6.0]. The default value is 0.1.
 
      Information used to configure the Hive metastore service as a service
      principal in a Kerberos realm.

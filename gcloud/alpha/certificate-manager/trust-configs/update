@@ -3,11 +3,15 @@ NAME
 
 SYNOPSIS
     gcloud alpha certificate-manager trust-configs update
-        (TRUST_CONFIG : --location=LOCATION) [--async]
-        [--description=DESCRIPTION]
+        (TRUST_CONFIG : --location=LOCATION)
+        [--add-allowlisted-certificates=[ADD_ALLOWLISTED_CERTIFICATES,...]]
+        [--async] [--description=DESCRIPTION]
         [--trust-store=[intermediate-cas=INTERMEDIATE-CAS],
           [trust-anchors=TRUST-ANCHORS]] [--update-labels=[KEY=VALUE,...]]
-        [--clear-labels | --remove-labels=[KEY,...]] [GCLOUD_WIDE_FLAG ...]
+        [--clear-allowlisted-certificates
+          | --remove-allowlisted-certificates=[REMOVE_ALLOWLISTED_CERTIFICATES,
+          ...]] [--clear-labels | --remove-labels=[KEY,...]]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Update a TrustConfig.
@@ -56,6 +60,17 @@ POSITIONAL ARGUMENTS
           ▸ default value of location is [global].
 
 FLAGS
+     --add-allowlisted-certificates=[ADD_ALLOWLISTED_CERTIFICATES,...]
+        Add allowlisted PEM-encoded certificates. Certificates should be
+        provided in files. For multiple file names, separate them by a comma
+        (','). One file can contain multiple certificates.
+
+        Examples:
+
+            Single file: --add-allowlisted-certificates=ac.pem
+
+            Multiple files: --add-allowlisted-certificates=ac1.pem,ac2.pem
+
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
@@ -86,6 +101,22 @@ FLAGS
         (-), underscores (_), lowercase characters, and numbers. Values must
         contain only hyphens (-), underscores (_), lowercase characters, and
         numbers.
+
+     At most one of these can be specified:
+
+       --clear-allowlisted-certificates
+          Clear all allowlisted certificates.
+
+       --remove-allowlisted-certificates=[REMOVE_ALLOWLISTED_CERTIFICATES,...]
+          Remove allowlisted PEM-encoded certificates. Certificates should be
+          provided in files. For multiple file names, separate them by a comma
+          (','). One file can contain multiple certificates.
+
+          Examples:
+
+              Single file: --remove-allowlisted-certificates=ac.pem
+
+              Multiple files: --remove-allowlisted-certificates=ac1.pem,ac2.pem
 
      At most one of these can be specified:
 

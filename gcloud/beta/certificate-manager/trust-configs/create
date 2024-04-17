@@ -4,8 +4,9 @@ NAME
 SYNOPSIS
     gcloud beta certificate-manager trust-configs create
         (TRUST_CONFIG : --location=LOCATION)
-        --trust-store=[intermediate-cas=INTERMEDIATE-CAS],
-          [trust-anchors=TRUST-ANCHORS] [--async] [--description=DESCRIPTION]
+        (--allowlisted-certificates=[ALLOWLISTED_CERTIFICATES,...]
+          --trust-store=[intermediate-cas=INTERMEDIATE-CAS],
+          [trust-anchors=TRUST-ANCHORS]) [--async] [--description=DESCRIPTION]
         [--labels=[KEY=VALUE,...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -54,20 +55,33 @@ POSITIONAL ARGUMENTS
           ▸ default value of location is [global].
 
 REQUIRED FLAGS
-     --trust-store=[intermediate-cas=INTERMEDIATE-CAS],[trust-anchors=TRUST-ANCHORS]
-        Trust Store with the given trust anchor and intermediate CA PEM-encoded
-        certificates. Certificates should be provided in files. For multiple
-        file names, separate them by a semicolon (';') and quote them ('"').
-        One file can contain multiple certificates. Intermediate CAs are
-        optional.
+     At least one of these must be specified:
 
-        Examples:
+       --allowlisted-certificates=[ALLOWLISTED_CERTIFICATES,...]
+          Allowlisted PEM-encoded certificates. Certificates should be provided
+          in files. For multiple file names, separate them by a comma (',').
+          One file can contain multiple certificates.
 
-            Single files: --trust-store trust-anchors=ta.pem,intermediate-cas=ica.pem
+          Examples:
 
-            No intermediate CAs: --trust-store trust-anchors=ta.pem
+              Single file: --allowlisted-certificates=ac.pem
 
-            Multiple files: --trust-store trust-anchors="ta1.pem;ta2.pem",intermediate-cas="ica1.pem;ica2.pem"
+              Multiple files: --allowlisted-certificates=ac1.pem,ac2.pem
+
+       --trust-store=[intermediate-cas=INTERMEDIATE-CAS],[trust-anchors=TRUST-ANCHORS]
+          Trust Store with the given trust anchor and intermediate CA
+          PEM-encoded certificates. Certificates should be provided in files.
+          For multiple file names, separate them by a semicolon (';') and quote
+          them ('"'). One file can contain multiple certificates. Intermediate
+          CAs are optional.
+
+          Examples:
+
+              Single files: --trust-store trust-anchors=ta.pem,intermediate-cas=ica.pem
+
+              No intermediate CAs: --trust-store trust-anchors=ta.pem
+
+              Multiple files: --trust-store trust-anchors="ta1.pem;ta2.pem",intermediate-cas="ica1.pem;ica2.pem"
 
 OPTIONAL FLAGS
      --async
