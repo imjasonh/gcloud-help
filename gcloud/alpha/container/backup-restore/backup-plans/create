@@ -10,9 +10,12 @@ SYNOPSIS
         [--deactivated] [--description=DESCRIPTION] [--labels=[KEY=VALUE,...]]
         [--backup-delete-lock-days=BACKUP_DELETE_LOCK_DAYS
           --backup-retain-days=BACKUP_RETAIN_DAYS --locked]
-        [--cron-schedule=CRON_SCHEDULE : --paused]
         [--encryption-key=ENCRYPTION_KEY
-          --include-secrets --include-volume-data] [GCLOUD_WIDE_FLAG ...]
+          --include-secrets --include-volume-data]
+        [--paused --cron-schedule=CRON_SCHEDULE
+          [--target-rpo-minutes=TARGET_RPO_MINUTES
+          : --exclusion-windows-file=EXCLUSION_WINDOWS_FILE]]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Create a Backup for GKE backup plan.
@@ -130,18 +133,6 @@ OPTIONAL FLAGS
         If set, subsequent updates are not allowed to the backup plan's
         retention policy and this value cannot be changed.
 
-     --cron-schedule=CRON_SCHEDULE
-        Schedule on which backups will be automatically created.
-
-        Use standard cron (http://en.wikipedia.org/wiki/Cron#Overview) syntax.
-        For example, 10 3 * * * will automatically create a backup at 0310
-        every day. All times are interpreted as UTC. The minimum interval
-        between scheduled backups is 10 minutes.
-
-     --paused
-        If set, automatic backup creation is suppressed. When unset, automatic
-        backup creation resumes with the next scheduled create event.
-
      --encryption-key=ENCRYPTION_KEY
         Encryption key used for encrypting the backup.
 
@@ -157,6 +148,27 @@ OPTIONAL FLAGS
         If true, snapshots are created for PD volumes corresponding to
         PersistentVolumeClaims that fall within the scope. If unset, the
         default is false.
+
+     --paused
+        If set, automatic backup creation is suppressed. When unset, automatic
+        backup creation resumes with the next scheduled create event.
+
+     --cron-schedule=CRON_SCHEDULE
+        Schedule on which backups will be automatically created.
+
+        Use standard cron (http://en.wikipedia.org/wiki/Cron#Overview) syntax.
+        For example, 10 3 * * * will automatically create a backup at 0310
+        every day. All times are interpreted as UTC. The minimum interval
+        between scheduled backups is 10 minutes.
+
+     --target-rpo-minutes=TARGET_RPO_MINUTES
+        Schedule backups based on target RPO minutes instead of fixed cron
+        schedules. Cannot be used with --cron-schedule.
+
+     --exclusion-windows-file=EXCLUSION_WINDOWS_FILE
+        If provided, defines an array of exclusion windows for RPO based
+        schedules from the given config file in yaml. Only used together with
+        --target-rpo-minutes for creation and rpo-based plans during update.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

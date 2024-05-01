@@ -4,7 +4,8 @@ NAME
 
 SYNOPSIS
     gcloud beta container node-pools update NAME
-        (--enable-confidential-nodes | --enable-gvnic
+        (--containerd-config-from-file=CONTAINERD_CONFIG_FROM_FILE
+          | --enable-confidential-nodes | --enable-gvnic
           | --enable-image-streaming | --enable-private-nodes
           | --enable-queued-provisioning | --labels=[KEY=VALUE,...]
           | --logging-variant=LOGGING_VARIANT
@@ -48,6 +49,17 @@ POSITIONAL ARGUMENTS
 
 REQUIRED FLAGS
      Exactly one of these must be specified:
+
+       --containerd-config-from-file=CONTAINERD_CONFIG_FROM_FILE
+          Path of the YAML file that contains containerd configuration entries
+          like configuring access to private image registries.
+
+          For detailed information on the configuration usage, please refer to
+          https://cloud.google.com/kubernetes-engine/docs/how-to/customize-containerd-configuration.
+
+          Note: Updating the containerd configuration of an existing cluster or
+          node pool requires recreation of the existing nodes, which might
+          cause disruptions in running workloads.
 
        --enable-confidential-nodes
           Recreate all the nodes in the node pool to be confidential VM
@@ -192,9 +204,9 @@ REQUIRED FLAGS
                 sysctl:
                   net.core.somaxconn: '2048'
                   net.ipv4.tcp_rmem: '4096 87380 6291456'
-              hugepageConfig:
-                hugepage_size2m: '1024'
-                hugepage_size1g: '2'
+                hugepageConfig:
+                  hugepage_size2m: '1024'
+                  hugepage_size1g: '2'
 
           List of supported kubelet configs in 'kubeletConfig'.
 

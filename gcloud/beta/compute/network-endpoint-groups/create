@@ -6,8 +6,8 @@ SYNOPSIS
     gcloud beta compute network-endpoint-groups create NAME
         [--default-port=DEFAULT_PORT] [--network=NETWORK]
         [--network-endpoint-type=NETWORK_ENDPOINT_TYPE;
-          default="gce-vm-ip-port"] [--psc-target-service=PSC_TARGET_SERVICE]
-        [--subnet=SUBNET]
+          default="gce-vm-ip-port"] [--producer-port=PRODUCER_PORT]
+        [--psc-target-service=PSC_TARGET_SERVICE] [--subnet=SUBNET]
         [--cloud-function-name=CLOUD_FUNCTION_NAME
           --cloud-function-url-mask=CLOUD_FUNCTION_URL_MASK
           | --cloud-run-service=CLOUD_RUN_SERVICE
@@ -40,11 +40,11 @@ FLAGS
         network endpoint.
 
         If this flag isn't specified for a NEG with endpoint type
-        gce-vm-ip-port or non-gcp-private-ip-port, then every network endpoint
-        in the network endpoint group must have a port specified. For a global
-        NEG with endpoint type internet-ip-port and internet-fqdn-port if the
-        default port is not specified, the well-known port for your backend
-        protocol is used (80 for HTTP, 443 for HTTPS).
+        gce-vm-ip-port, gce-vm-ip-portmap or non-gcp-private-ip-port, then
+        every network endpoint in the network endpoint group must have a port
+        specified. For a global NEG with endpoint type internet-ip-port and
+        internet-fqdn-port if the default port is not specified, the well-known
+        port for your backend protocol is used (80 for HTTP, 443 for HTTPS).
 
         This flag is not supported for NEGs with endpoint type serverless.
 
@@ -115,6 +115,17 @@ FLAGS
             NETWORK_ENDPOINT_TYPE must be one of: gce-vm-ip-port,
             internet-ip-port, internet-fqdn-port, non-gcp-private-ip-port,
             serverless, gce-vm-ip, private-service-connect.
+
+     --producer-port=PRODUCER_PORT
+        The psc producer port to use when consumer PSC NEG connects to a
+        producer.
+
+        If this flag isn't specified for a PSC NEG with endpoint type
+        private-service-connect, then PSC NEG will be connected to a first port
+        in the available pcs producer port range.
+
+        This flag is not supported for NEGs with endpoint type other than
+        private-service-connect.
 
      --psc-target-service=PSC_TARGET_SERVICE
         PSC target service name to add to the private service connect network

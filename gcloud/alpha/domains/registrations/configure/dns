@@ -18,10 +18,6 @@ DESCRIPTION
     servers and DNSSEC options for the given domain. However, advanced options
     like glue records are available.
 
-    When using Cloud DNS Zone or Google Domains name servers, DNSSEC will be
-    enabled by default where possible. You can disable it using the
-    --disable-dnssec flag.
-
 EXAMPLES
     To start an interactive flow to configure DNS settings for example.com,
     run:
@@ -33,7 +29,14 @@ EXAMPLES
         $ gcloud alpha domains registrations configure dns example.com \
             --cloud-dns-zone=example-zone
 
-    If the managed-zone is signed, DNSSEC will be enabled for the domain.
+    DNSSEC will not be enabled as it may not be safe to enable it (e.g. when
+    the Cloud DNS managed-zone was signed less than 24h ago).
+
+    To use a signed Cloud DNS managed-zone example-zone for example.com and
+    enable DNSSEC, run:
+
+        $ gcloud alpha domains registrations configure dns example.com \
+            --cloud-dns-zone=example-zone --no-disable-dnssec
 
     To change DNS settings for example.com according to information from a YAML
     file dns_settings.yaml, run:
@@ -90,8 +93,6 @@ COMMONLY USED FLAGS
             for the domain. If it's in the same project, you can use short
             name. If not, use the full resource name, e.g.:
             --cloud-dns-zone=projects/example-project/managedZones/example-zone.
-            If the zone is signed, DNSSEC will be enabled by default unless you
-            pass --disable-dnssec.
 
          --dns-settings-from-file=DNS_SETTINGS_FILE_NAME
             A YAML file containing the required DNS settings. If specified, its
@@ -129,9 +130,7 @@ COMMONLY USED FLAGS
             List of DNS name servers for the domain.
 
          --use-google-domains-dns
-            (DEPRECATED) Use free name servers provided by Google Domains. If
-            the zone is signed, DNSSEC will be enabled by default unless you
-            pass --disable-dnssec.
+            (DEPRECATED) Use free name servers provided by Google Domains.
 
             The --use-google-domains-dns option is deprecated; See
             https://cloud.google.com/domains/docs/deprecations/feature-deprecations.
@@ -146,8 +145,12 @@ OTHER FLAGS
         to a Cloud DNS Zone or Google Domains nameservers.
 
      --unsafe-dns-update
-        Use this flag to allow DNS changes that may make your domain stop
-        serving.
+        (DEPRECATED) Use this flag to allow DNS changes that may make your
+        domain stop serving.
+
+        The --unsafe-dns-update option is deprecated. To complete an unsafe DNS
+        operation first disable DNSSEC, then change name servers, then
+        (optionally) enable DNSSEC.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

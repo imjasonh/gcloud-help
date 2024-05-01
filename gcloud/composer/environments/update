@@ -7,7 +7,8 @@ SYNOPSIS
         (--cloud-sql-machine-type=CLOUD_SQL_MACHINE_TYPE
           | --disable-high-resilience | --disable-logs-in-cloud-logging-only
           | --enable-high-resilience | --enable-logs-in-cloud-logging-only
-          | --environment-size=ENVIRONMENT_SIZE | --node-count=NODE_COUNT
+          | --environment-size=ENVIRONMENT_SIZE | --image-version=IMAGE_VERSION
+          | --node-count=NODE_COUNT
           | --web-server-machine-type=WEB_SERVER_MACHINE_TYPE
           | --clear-maintenance-window
           | --maintenance-window-end=MAINTENANCE_WINDOW_END
@@ -118,6 +119,28 @@ REQUIRED FLAGS
           Size of the environment. Unspecified means that the default option
           will be chosen. ENVIRONMENT_SIZE must be one of: large, medium,
           small, unspecified.
+
+       Group of arguments for performing in-place environment upgrades.
+
+         --image-version=IMAGE_VERSION
+            Upgrade the environment to a later version in-place.
+
+            The image version encapsulates the versions of both Cloud Composer
+            and Apache Airflow. Must be of the form
+            composer-A[.B.C[-D.E]]-airflow-X[.Y[.Z]], where [] denotes optional
+            fragments.
+
+            Examples: composer-2-airflow-2, composer-2-airflow-2.2,
+            composer-2.1.2-airflow-2.3.4.
+
+            The Cloud Composer portion of the image version is a semantic
+            version or an alias in the form of major version number or latest,
+            resolved to the current Cloud Composer version. The Apache Airflow
+            portion of the image version is a semantic version or an alias in
+            the form of major or major.minor version numbers, resolved to the
+            latest matching Apache Airflow version supported in the given Cloud
+            Composer version. The resolved versions are stored in the upgraded
+            environment.
 
        --node-count=NODE_COUNT
           The new number of nodes running the environment. Must be >= 3.

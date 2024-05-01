@@ -4,40 +4,40 @@ NAME
 
 SYNOPSIS
     gcloud alpha compute instances patch-partner-metadata INSTANCE_NAME
-        [--partner-metadata=[KEY=VALUE,...]]
+        [--partner-metadata=[NAMESPACE/KEY=VALUE,...]]
         [--partner-metadata-from-file=LOCAL_FILE_PATH] [--zone=ZONE]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) gcloud alpha compute instances patch-partner-metadata can be used
-    to add or patch partner metadata of a virtual machine instance. Every
-    instance has access to a metadata server that can be used to query partner
-    metadata that has been set through this tool. For information on metadata,
-    see
+    to patch partner metadata of a virtual machine instance. Every instance has
+    access to a metadata server that can be used to query partner metadata that
+    has been set through this tool. For information on metadata, see About VM
+    metadata (https://cloud.google.com/compute/docs/metadata/overview).
 
-    Only Namespaces keys that are provided are mutated. Existing Namespaces
+    Only namespaces keys that are provided are mutated. Existing Namespaces
     entries will remain unaffected.
 
     In order to retrieve partner metadata, run:
 
         $ gcloud compute instances describe example-instance --zone
-        us-central1-a --format="value(partnerMetadata)"
+        us-central1-a --view=FULL --format="value(partnerMetadata)"
 
     where example-instance is the name of the virtual machine instance you're
     querying partner metadata from.
 
 EXAMPLES
-    To add partner metadata under namespace gcar.googleapis.com/engine to
+    To add partner metadata under namespace test.compute.googleapis.com to
     instance TEST_INSTANCE run:
 
         $ gcloud alpha compute instances patch-partner-metadata \
             TEST_INSTANCE \
-            --partner-metadata=gcar.googleapis.com/engine="{ "engine": { \
-        "type": V8 } }"
+            --partner-metadata=test.compute.googleapis.com/entries/\
+        engine="{ "engine": { "type": V8 } }"
 
     To add partner metadata from a file:
 
-        $ gcloud alpha compute instances add-partner-metadata \
+        $ gcloud alpha compute instances patch-partner-metadata \
             TEST_INSTANCE --partner-metadata-from-file=examples/engine.json
 
 POSITIONAL ARGUMENTS
@@ -47,13 +47,12 @@ POSITIONAL ARGUMENTS
         at: https://cloud.google.com/compute/docs/reference/rest/v1/instances
 
 FLAGS
-     --partner-metadata=[KEY=VALUE,...]
-        Partner Metadata assigned to the instance. A map from a
-        subdomain(namespace) to entries map.
+     --partner-metadata=[NAMESPACE/KEY=VALUE,...]
+        Partner metadata specifying namespace and its entries. The entries can
+        be key-value pairs or in json format.
 
      --partner-metadata-from-file=LOCAL_FILE_PATH
-        path to json local file which including the definintion of partner
-        metadata.
+        Path to a local json file containing partner metadata.
 
      --zone=ZONE
         Zone of the instance to set partner metadata on. If not specified, you
@@ -91,5 +90,7 @@ NOTES
     This command is currently in alpha and might change without notice. If this
     command fails with API permission errors despite specifying the correct
     project, you might be trying to access an API with an invitation-only early
-    access allowlist.
+    access allowlist. This variant is also available:
+
+        $ gcloud beta compute instances patch-partner-metadata
 

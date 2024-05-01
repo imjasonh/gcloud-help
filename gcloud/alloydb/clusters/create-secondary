@@ -6,6 +6,11 @@ SYNOPSIS
     gcloud alloydb clusters create-secondary CLUSTER
         --primary-cluster=PRIMARY_CLUSTER --region=REGION
         [--allocated-ip-range-name=ALLOCATED_IP_RANGE_NAME] [--async]
+        [--automated-backup-days-of-week=[DAYS_OF_WEEK,...]
+          --automated-backup-start-times=[START_TIMES,...]
+          --automated-backup-window=TIMEOUT_PERIOD --enable-automated-backup
+          [--automated-backup-encryption-key=AUTOMATED_BACKUP_ENCRYPTION_KEY
+          : --automated-backup-encryption-key-keyring=AUTOMATED_BACKUP_ENCRYPTION_KEY_KEYRING --automated-backup-encryption-key-location=AUTOMATED_BACKUP_ENCRYPTION_KEY_LOCATION --automated-backup-encryption-key-project=AUTOMATED_BACKUP_ENCRYPTION_KEY_PROJECT] --automated-backup-retention-count=RETENTION_COUNT | --automated-backup-retention-period=RETENTION_PERIOD]
         [--continuous-backup-recovery-window-days=RECOVERY_PERIOD
           --enable-continuous-backup
           [--continuous-backup-encryption-key=CONTINUOUS_BACKUP_ENCRYPTION_KEY
@@ -49,6 +54,88 @@ OPTIONAL FLAGS
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
+
+     Automated backup policy. If unspecified, automated backups are copied from
+     the associated primary cluster.
+
+       --automated-backup-days-of-week=[DAYS_OF_WEEK,...]
+          Comma-separated list of days of the week to perform a backup. At
+          least one day of the week must be provided. (e.g.,
+          --automated-backup-days-of-week=MONDAY,WEDNESDAY,SUNDAY).
+          DAYS_OF_WEEK must be one of: MONDAY, TUESDAY, WEDNESDAY, THURSDAY,
+          FRIDAY, SATURDAY, SUNDAY.
+
+       --automated-backup-start-times=[START_TIMES,...]
+          Comma-separated list of times during the day to start a backup. At
+          least one start time must be provided. The start times are assumed to
+          be in UTC and required to be an exact hour in the format HH:00.
+          (e.g., --automated-backup-start-times=01:00,13:00)
+
+       --automated-backup-window=TIMEOUT_PERIOD
+          The length of the time window beginning at start time during which a
+          backup can be taken. If a backup does not succeed within this time
+          window, it will be canceled and considered failed. The backup window
+          must be at least 5 minutes long. There is no upper bound on the
+          window. If not set, it will default to 1 hour.
+
+       --enable-automated-backup
+          Enables Automated Backups on the cluster.
+
+       Key resource - The Cloud KMS (Key Management Service) cryptokey that
+       will be used to protect the automated backups. The 'AlloyDB Service
+       Agent' service account must hold permission 'Cloud KMS CryptoKey
+       Encrypter/Decrypter'. The arguments in this group can be used to specify
+       the attributes of this resource.
+
+         --automated-backup-encryption-key=AUTOMATED_BACKUP_ENCRYPTION_KEY
+            ID of the key or fully qualified identifier for the key.
+
+            To set the kms-key attribute:
+            ▫ provide the argument --automated-backup-encryption-key on the
+              command line.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --automated-backup-encryption-key-keyring=AUTOMATED_BACKUP_ENCRYPTION_KEY_KEYRING
+            The KMS keyring of the key.
+
+            To set the kms-keyring attribute:
+            ▫ provide the argument --automated-backup-encryption-key on the
+              command line with a fully specified name;
+            ▫ provide the argument --automated-backup-encryption-key-keyring
+              on the command line.
+
+         --automated-backup-encryption-key-location=AUTOMATED_BACKUP_ENCRYPTION_KEY_LOCATION
+            The Google Cloud location for the key.
+
+            To set the kms-location attribute:
+            ▫ provide the argument --automated-backup-encryption-key on the
+              command line with a fully specified name;
+            ▫ provide the argument --automated-backup-encryption-key-location
+              on the command line.
+
+         --automated-backup-encryption-key-project=AUTOMATED_BACKUP_ENCRYPTION_KEY_PROJECT
+            The Google Cloud project for the key.
+
+            To set the kms-project attribute:
+            ▫ provide the argument --automated-backup-encryption-key on the
+              command line with a fully specified name;
+            ▫ provide the argument --automated-backup-encryption-key-project
+              on the command line;
+            ▫ set the property core/project.
+
+       Retention policy. If no retention policy is provided, all automated
+       backups will be retained.
+
+       At most one of these can be specified:
+
+         --automated-backup-retention-count=RETENTION_COUNT
+            Number of most recent successful backups retained.
+
+         --automated-backup-retention-period=RETENTION_PERIOD
+            Retention period of the backup relative to creation time. See $
+            gcloud topic datetimes for information on duration formats.
 
      Continuous Backup configuration. If unspecified, continuous backups are
      copied from the associated primary cluster.

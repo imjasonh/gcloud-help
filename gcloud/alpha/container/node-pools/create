@@ -15,15 +15,16 @@ SYNOPSIS
           pod-ipv4-range=SECONDARY_RANGE_NAME,
           [max-pods-per-node=NUM_PODS],...]] [--async]
         [--boot-disk-kms-key=BOOT_DISK_KMS_KEY] [--cluster=CLUSTER]
+        [--containerd-config-from-file=CONTAINERD_CONFIG_FROM_FILE]
         [--disable-pod-cidr-overprovision] [--disk-size=DISK_SIZE]
         [--disk-type=DISK_TYPE] [--enable-autoprovisioning]
         [--enable-autorepair] [--no-enable-autoupgrade]
         [--enable-blue-green-upgrade] [--enable-confidential-nodes]
         [--enable-confidential-storage] [--enable-gvnic]
-        [--enable-image-streaming] [--enable-private-nodes]
-        [--enable-queued-provisioning] [--enable-surge-upgrade]
-        [--image-type=IMAGE_TYPE] [--labels=[KEY=VALUE,...]]
-        [--linux-sysctls=KEY=VALUE,[KEY=VALUE,...]]
+        [--enable-image-streaming] [--enable-nested-virtualization]
+        [--enable-private-nodes] [--enable-queued-provisioning]
+        [--enable-surge-upgrade] [--image-type=IMAGE_TYPE]
+        [--labels=[KEY=VALUE,...]] [--linux-sysctls=KEY=VALUE,[KEY=VALUE,...]]
         [--logging-variant=LOGGING_VARIANT]
         [--machine-type=MACHINE_TYPE, -m MACHINE_TYPE]
         [--max-pods-per-node=MAX_PODS_PER_NODE]
@@ -40,8 +41,9 @@ SYNOPSIS
         [--num-nodes=NUM_NODES; default=3]
         [--placement-policy=PLACEMENT_POLICY] [--placement-type=PLACEMENT_TYPE]
         [--preemptible] [--resource-manager-tags=[KEY=VALUE,...]]
-        [--sandbox=[type=TYPE]] [--shielded-integrity-monitoring]
-        [--shielded-secure-boot]
+        [--sandbox=[type=TYPE]]
+        [--secondary-boot-disk=[disk-image=DISK_IMAGE,[mode=MODE],...]]
+        [--shielded-integrity-monitoring] [--shielded-secure-boot]
         [--sole-tenant-node-affinity-file=SOLE_TENANT_NODE_AFFINITY_FILE]
         [--spot]
         [--standard-rollout-policy=[batch-node-count=BATCH_NODE_COUNT,
@@ -112,10 +114,10 @@ FLAGS
             (Optional) The NVIDIA driver version to install. GPU_DRIVER_VERSION
             must be one of:
 
-                `default`: Install the default driver version.
+                `default`: Install the default driver version for this GKE version.
 
-                `latest`: Install the latest available driver version. Available only for
-                nodes that use Container-Optimized OS.
+                `latest`: Install the latest driver version available for this GKE version.
+                Can only be used for nodes that use Container-Optimized OS.
 
                 `disabled`: Skip automatic driver installation. You must manually install a
                 driver after you create the cluster. If you omit the flag `gpu-driver-version`,
@@ -186,6 +188,17 @@ FLAGS
         The cluster to add the node pool to. Overrides the default
         container/cluster property value for this command invocation.
 
+     --containerd-config-from-file=CONTAINERD_CONFIG_FROM_FILE
+        Path of the YAML file that contains containerd configuration entries
+        like configuring access to private image registries.
+
+        For detailed information on the configuration usage, please refer to
+        https://cloud.google.com/kubernetes-engine/docs/how-to/customize-containerd-configuration.
+
+        Note: Updating the containerd configuration of an existing cluster or
+        node pool requires recreation of the existing nodes, which might cause
+        disruptions in running workloads.
+
      --disable-pod-cidr-overprovision
         Disables pod cidr overprovision on nodes. Pod cidr overprovisioning is
         enabled by default.
@@ -249,6 +262,11 @@ FLAGS
 
      --enable-image-streaming
         Specifies whether to enable image streaming on node pool.
+
+     --enable-nested-virtualization
+        Enables the use of nested virtualization on the node pool. Defaults to
+        false. Can only be enabled on UBUNTU_CONTAINERD base image or
+        COS_CONTAINERD base image with version 1.28.4-gke.1083000 and above.
 
      --enable-private-nodes
         Enables provisioning nodes with private IP addresses only.
@@ -580,6 +598,17 @@ FLAGS
 
         The only supported type is 'gvisor'.
 
+     --secondary-boot-disk=[disk-image=DISK_IMAGE,[mode=MODE],...]
+        Attaches secondary boot disks to all nodes.
+
+         disk-image
+            (Required) The full resource path to the source disk image to
+            create the secondary boot disks from.
+
+         mode
+            (Optional) The configuration mode for the secondary boot disks. The
+            default value is "CONTAINER_IMAGE_CACHE".
+
      --shielded-integrity-monitoring
         Enables monitoring and attestation of the boot integrity of the
         instance. The attestation is performed against the integrity policy
@@ -654,9 +683,9 @@ FLAGS
               sysctl:
                 net.core.somaxconn: '2048'
                 net.ipv4.tcp_rmem: '4096 87380 6291456'
-            hugepageConfig:
-              hugepage_size2m: '1024'
-              hugepage_size1g: '2'
+              hugepageConfig:
+                hugepage_size2m: '1024'
+                hugepage_size1g: '2'
 
         List of supported kubelet configs in 'kubeletConfig'.
 

@@ -48,7 +48,7 @@ SYNOPSIS
         [--network-performance-configs=[PROPERTY=VALUE,...]]
         [--network-tier=NETWORK_TIER] [--node-project=NODE_PROJECT]
         [--numa-node-count=NUMA_NODE_COUNT]
-        [--partner-metadata=[KEY=VALUE,...]]
+        [--partner-metadata=[NAMESPACE/KEY=VALUE,...]]
         [--partner-metadata-from-file=LOCAL_FILE_PATH]
         [--performance-monitoring-unit=PERFORMANCE_MONITORING_UNIT]
         [--post-key-revocation-action-type=POLICY] [--preemptible]
@@ -447,18 +447,17 @@ FLAGS
         Specifies a textual description of the instances.
 
      --discard-local-ssds-at-termination-timestamp=DISCARD_LOCAL_SSDS_AT_TERMINATION_TIMESTAMP
-        Required and only allowed for VMs that have one or more local SSDs, use
-        --termination-action=STOP (default), and use either --max-run-duration
-        or --termination-time. This flag indicates whether you want Compute
-        Engine to discard (true) or preserve (false) local SSD data when the
-        VM's terminationTimestamp is reached.
+        Required to be set to true and only allowed for VMs that have one or
+        more local SSDs, use --instance-termination-action=STOP, and use either
+        --max-run-duration or --termination-time.
 
-        If set to false, Compute Engine will preserve local SSD data by
-        including the --discard-local-ssd=false flag in the automatic
-        termination command. The --discard-local-ssd=false flag preserves local
-        SSD data by migrating it to persistent storage until you rerun the VM.
-        Importantly, preserving local SSD data incurs costs and is subject to
-        restrictions. For more information, see
+        This flag indicates the value that you want Compute Engine to use for
+        the --discard-local-ssd flag in the automatic gcloud compute instances
+        stop command. This flag only supports the true value, which discards
+        local SSD data when automatically stopping this VM during its
+        terminationTimestamp.
+
+        For more information about the --discard-local-ssd flag, see
         https://cloud.google.com/compute/docs/disks/local-ssd#stop_instance.
 
      --disk=[auto-delete=AUTO-DELETE],[boot=BOOT],[device-name=DEVICE-NAME],[force-attach=FORCE-ATTACH],[mode=MODE],[name=NAME],[scope=SCOPE]
@@ -558,15 +557,16 @@ FLAGS
 
      --instance-termination-action=INSTANCE_TERMINATION_ACTION
         Specifies the termination action that will be taken upon VM preemption
-        (--provisioning-model=SPOT or --preemptible) or automatic instance
-        termination (--max-run-duration or --termination-time).
+        (--provisioning-model=SPOT) or automatic instance termination
+        (--max-run-duration or --termination-time).
+
         INSTANCE_TERMINATION_ACTION must be one of:
 
          DELETE
             Permanently delete the VM.
          STOP
-            Default. Stop the VM without preserving memory. The VM can be
-            restarted later.
+            Default only for Spot VMs. Stop the VM without preserving memory.
+            The VM can be restarted later.
 
      --internal-ipv6-address=INTERNAL_IPV6_ADDRESS
         Assigns the given internal IPv6 address or range to the instance that
@@ -688,7 +688,7 @@ FLAGS
 
      --max-run-duration=MAX_RUN_DURATION
         Limits how long this VM instance can run, specified as a duration
-        relative to the VM instance's most-recent start time. Format the
+        relative to the last time when the VM began running. Format the
         duration, MAX_RUN_DURATION, as the number of days, hours, minutes, and
         seconds followed by d, h, m, and s respectively. For example, specify
         30m for a duration of 30 minutes or specify 1d2h3m4s for a duration of
@@ -698,13 +698,15 @@ FLAGS
         If neither --max-run-duration nor --termination-time is specified
         (default), the VM instance runs until prompted by a user action or
         system event. If either is specified, the VM instance is scheduled to
-        be automatically terminated using the action specified by
-        --instance-termination-action. For --max-run-duration, the VM instance
-        is automatically terminated when the VM's current runtime reaches
-        MAX_RUN_DURATION. Note: Anytime the VM instance is stopped or
-        suspended, --max-run-duration and (unless the VM uses
-        --provisioning-model=SPOT) --instance-termination-action are
-        automatically removed from the VM.
+        be automatically terminated at the VM's termination timestamp
+        (terminationTimestamp) using the action specified by
+        --instance-termination-action.
+
+        Note: The terminationTimestamp is removed whenever the VM is stopped or
+        suspended and redefined whenever the VM is rerun. For
+        --max-run-duration specifically, the terminationTimestamp is the sum of
+        MAX_RUN_DURATION and the time when the VM last entered the RUNNING
+        state, which changes whenever the VM is rerun.
 
      --metadata=KEY=VALUE,[KEY=VALUE,...]
         Metadata to be made available to the guest operating system running on
@@ -792,13 +794,12 @@ FLAGS
         1, 2, 4 or 8. Setting NUMA node count to 0 means using the default
         setting.
 
-     --partner-metadata=[KEY=VALUE,...]
-        Partner Metadata assigned to the instance. A map from a
-        subdomain(namespace) to entries map.
+     --partner-metadata=[NAMESPACE/KEY=VALUE,...]
+        Partner metadata specifying namespace and its entries. The entries can
+        be key-value pairs or in json format.
 
      --partner-metadata-from-file=LOCAL_FILE_PATH
-        path to json local file which including the definintion of partner
-        metadata.
+        Path to a local json file containing partner metadata.
 
      --performance-monitoring-unit=PERFORMANCE_MONITORING_UNIT
         The set of performance measurement counters to enable for the instance.
@@ -967,12 +968,15 @@ FLAGS
         If neither --termination-time nor --max-run-duration is specified
         (default), the VM instance runs until prompted by a user action or
         system event. If either is specified, the VM instance is scheduled to
-        be automatically terminated using the action specified by
-        --instance-termination-action. For --termination-time, the VM instance
-        is automatically terminated at the specified timestamp. Note: Anytime
-        the VM instance is stopped or suspended, --termination-time and (unless
-        the VM uses --provisioning-model=SPOT) --instance-termination-action
-        are automatically removed from the VM.
+        be automatically terminated at the VM's termination timestamp
+        (terminationTimestamp) using the action specified by
+        --instance-termination-action.
+
+        Note: The terminationTimestamp is removed whenever the VM is stopped or
+        suspended and redefined whenever the VM is rerun. For
+        --termination-time specifically, the terminationTimestamp remains the
+        same whenever the VM is rerun, but any requests to rerun the VM fail if
+        the specified timestamp is in the past.
 
      --threads-per-core=THREADS_PER_CORE
         The number of visible threads per physical core. To disable

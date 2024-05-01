@@ -1,0 +1,94 @@
+NAME
+    gcloud beta compute instances add-partner-metadata - add or update partner
+        metadata
+
+SYNOPSIS
+    gcloud beta compute instances add-partner-metadata INSTANCE_NAME
+        [--partner-metadata=[NAMESPACE/KEY=VALUE,...]]
+        [--partner-metadata-from-file=LOCAL_FILE_PATH] [--zone=ZONE]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) gcloud beta compute instances add-partner-metadata can be used to
+    add or update or patch partner metadata of a virtual machine instance.
+    Every instance has access to a metadata server that can be used to query
+    partner metadata that has been set through this tool. For information on
+    metadata, see About VM metadata
+    (https://cloud.google.com/compute/docs/metadata/overview).
+
+    Only namespaces keys that are provided are mutated. Existing Namespaces
+    entries will remain unaffected.
+
+    In order to retrieve partner metadata, run:
+
+        $ gcloud compute instances describe example-instance --zone
+        us-central1-a --view=FULL --format="value(partnerMetadata)"
+
+    where example-instance is the name of the virtual machine instance you're
+    querying partner metadata from.
+
+EXAMPLES
+    To add partner metadata under namespace test.compute.googleapis.com to
+    instance TEST_INSTANCE run:
+
+        $ gcloud beta compute instances add-partner-metadata TEST_INSTANCE \
+            --partner-metadata=test.compute.googleapis.com/entries="{ \
+        "engine": { "type": V8 } }"
+
+    To add partner metadata from a file:
+
+        $ gcloud beta compute instances add-partner-metadata TEST_INSTANCE \
+            --partner-metadata-from-file=examples/engine.json
+
+POSITIONAL ARGUMENTS
+     INSTANCE_NAME
+        Name of the instance to set partner metadata on. For details on valid
+        instance names, refer to the criteria documented under the field 'name'
+        at: https://cloud.google.com/compute/docs/reference/rest/v1/instances
+
+FLAGS
+     --partner-metadata=[NAMESPACE/KEY=VALUE,...]
+        Partner metadata specifying namespace and its entries. The entries can
+        be key-value pairs or in json format.
+
+     --partner-metadata-from-file=LOCAL_FILE_PATH
+        Path to a local json file containing partner metadata.
+
+     --zone=ZONE
+        Zone of the instance to set partner metadata on. If not specified, you
+        might be prompted to select a zone (interactive mode only). gcloud
+        attempts to identify the appropriate zone by searching for resources in
+        your currently active project. If the zone cannot be determined, gcloud
+        prompts you for a selection with all available Google Cloud Platform
+        zones.
+
+        To avoid prompting when this flag is omitted, the user can set the
+        compute/zone property:
+
+            $ gcloud config set compute/zone ZONE
+
+        A list of zones can be fetched by running:
+
+            $ gcloud compute zones list
+
+        To unset the property, run:
+
+            $ gcloud config unset compute/zone
+
+        Alternatively, the zone can be stored in the environment variable
+        CLOUDSDK_COMPUTE_ZONE.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud alpha compute instances add-partner-metadata
+

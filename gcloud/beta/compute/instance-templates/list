@@ -4,13 +4,18 @@ NAME
 
 SYNOPSIS
     gcloud beta compute instance-templates list [NAME ...]
-        [--regexp=REGEXP, -r REGEXP] [--global | --regions=[REGION,...]]
-        [--filter=EXPRESSION] [--limit=LIMIT] [--page-size=PAGE_SIZE]
-        [--sort-by=[FIELD,...]] [--uri] [GCLOUD_WIDE_FLAG ...]
+        [--regexp=REGEXP, -r REGEXP] [--view=VIEW]
+        [--global | --regions=[REGION,...]] [--filter=EXPRESSION]
+        [--limit=LIMIT] [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [--uri]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) gcloud beta compute instance-templates list displays all Google
     Compute Engine instance templates in a project.
+
+    By default, global instance templates and instance templates from all
+    regions are listed. The results can be narrowed down by providing the
+    --global or --regions flag.
 
 EXAMPLES
     To list all instance templates in a project in table form, run:
@@ -20,6 +25,16 @@ EXAMPLES
     To list the URIs of all instance templates in a project, run:
 
         $ gcloud beta compute instance-templates list --uri
+
+    To list all global instance templates in a project, run:
+
+        $ gcloud beta compute instance-templates list --global
+
+    To list all instance templates in the us-central1 and europe-west1 regions,
+    given they are regional resources, run:
+
+        $ gcloud beta compute instance-templates list \
+            --filter="region:( europe-west1 us-central1 )"
 
 POSITIONAL ARGUMENTS
      [NAME ...]
@@ -36,6 +51,17 @@ FLAGS
         filtered out.
 
         Flag --regexp is deprecated. Use --filter="name~'REGEXP'" instead.
+
+     --view=VIEW
+        Specifies the information that the output should contain. VIEW must be
+        one of:
+
+         BASIC
+            Default output view. Output contains all configuration details of
+            the instance template, except partner metadata.
+         FULL
+            Output contains all configuration details of the instance template,
+            including partner metadata.
 
      At most one of these can be specified:
 

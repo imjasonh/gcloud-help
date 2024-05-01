@@ -16,7 +16,10 @@ SYNOPSIS
         [--clear-env-vars | --env-vars-file=FILE_PATH
           | --set-env-vars=[KEY=VALUE,...]
           | --remove-env-vars=[KEY,...] --update-env-vars=[KEY=VALUE,...]]
-        [--image=IMAGE | --source=SOURCE] [GCLOUD_WIDE_FLAG ...]
+        [--clear-network
+          | --network=NETWORK --subnet=SUBNET --clear-network-tags
+          | --network-tags=[TAG,...]] [--image=IMAGE | --source=SOURCE]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Creates or updates a Cloud Run job.
@@ -203,6 +206,37 @@ FLAGS
 
          --update-env-vars=[KEY=VALUE,...]
             List of key-value pairs to set as environment variables.
+
+     At most one of these can be specified:
+
+       --clear-network
+          Disconnect this Cloud Run job from the VPC network it is connected
+          to.
+
+       Direct VPC egress setting flags group.
+
+         --network=NETWORK
+            The VPC network that the Cloud Run job will be able to send traffic
+            to. If --subnet is also specified, subnet must be a subnetwork of
+            the network specified by this --network flag. To clear existing VPC
+            network settings, use --clear-network.
+
+         --subnet=SUBNET
+            The VPC subnetwork that the Cloud Run job will get IPs from. The
+            subnetwork must be /26 or larger. If --network is also specified,
+            subnet must be a subnetwork of the network specified by the
+            --network flag. If --network is not specified, network will be
+            looked up from this subnetwork. To clear existing VPC network
+            settings, use --clear-network.
+
+         At most one of these can be specified:
+
+           --clear-network-tags
+              Clears all existing Compute Engine tags from the Cloud Run job.
+
+           --network-tags=[TAG,...]
+              Applies the given Compute Engine tags (comma separated) to the
+              Cloud Run job. To clear existing tags, use --clear-network-tags.
 
      At most one of these can be specified:
 

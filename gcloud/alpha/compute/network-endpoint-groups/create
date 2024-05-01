@@ -7,8 +7,8 @@ SYNOPSIS
         [--client-port-mapping-mode=CLIENT_PORT_MAPPING_MODE]
         [--default-port=DEFAULT_PORT] [--network=NETWORK]
         [--network-endpoint-type=NETWORK_ENDPOINT_TYPE;
-          default="gce-vm-ip-port"] [--psc-target-service=PSC_TARGET_SERVICE]
-        [--subnet=SUBNET]
+          default="gce-vm-ip-port"] [--producer-port=PRODUCER_PORT]
+        [--psc-target-service=PSC_TARGET_SERVICE] [--subnet=SUBNET]
         [--cloud-function-name=CLOUD_FUNCTION_NAME
           --cloud-function-url-mask=CLOUD_FUNCTION_URL_MASK
           | --cloud-run-service=CLOUD_RUN_SERVICE
@@ -52,11 +52,11 @@ FLAGS
         network endpoint.
 
         If this flag isn't specified for a NEG with endpoint type
-        gce-vm-ip-port or non-gcp-private-ip-port, then every network endpoint
-        in the network endpoint group must have a port specified. For a global
-        NEG with endpoint type internet-ip-port and internet-fqdn-port if the
-        default port is not specified, the well-known port for your backend
-        protocol is used (80 for HTTP, 443 for HTTPS).
+        gce-vm-ip-port, gce-vm-ip-portmap or non-gcp-private-ip-port, then
+        every network endpoint in the network endpoint group must have a port
+        specified. For a global NEG with endpoint type internet-ip-port and
+        internet-fqdn-port if the default port is not specified, the well-known
+        port for your backend protocol is used (80 for HTTP, 443 for HTTPS).
 
         This flag is not supported for NEGs with endpoint type serverless.
 
@@ -69,7 +69,7 @@ FLAGS
 
         This is only supported for NEGs with endpoint type gce-vm-ip-port,
         non-gcp-private-ip-port, gce-vm-ip, private-service-connect,
-        internet-ip-port, or internet-fqdn-port.
+        internet-ip-port, internet-fqdn-port, or gce-vm-ip-portmap.
 
         For Private Service Connect NEGs, you can optionally specify --network
         and --subnet if --psc-target-service points to a published service. If
@@ -124,9 +124,26 @@ FLAGS
             optional. If unspecified, the primary NIC address is used. A port
             must not be specified.
 
+         gce-vm-ip-portmap
+            Endpoint IP address must belong to a VM in Compute Engine (either
+            the primary IP or as part of an aliased IP range). The
+            --default-port must be specified or every network endpoint in the
+            network endpoint group must have a port and client-port specified.
+
             NETWORK_ENDPOINT_TYPE must be one of: gce-vm-ip-port,
             internet-ip-port, internet-fqdn-port, non-gcp-private-ip-port,
-            serverless, gce-vm-ip, private-service-connect.
+            serverless, gce-vm-ip, private-service-connect, gce-vm-ip-portmap.
+
+     --producer-port=PRODUCER_PORT
+        The psc producer port to use when consumer PSC NEG connects to a
+        producer.
+
+        If this flag isn't specified for a PSC NEG with endpoint type
+        private-service-connect, then PSC NEG will be connected to a first port
+        in the available pcs producer port range.
+
+        This flag is not supported for NEGs with endpoint type other than
+        private-service-connect.
 
      --psc-target-service=PSC_TARGET_SERVICE
         PSC target service name to add to the private service connect network
@@ -139,9 +156,9 @@ FLAGS
         region where the network endpoint group is created.
 
         This is only supported for NEGs with endpoint type gce-vm-ip-port,
-        gce-vm-ip, or private-service-connect. For Private Service Connect
-        NEGs, you can optionally specify --network and --subnet if
-        --psc-target-service points to a published service. If
+        gce-vm-ip, private-service-connect, or gce-vm-ip-portmap. For Private
+        Service Connect NEGs, you can optionally specify --network and --subnet
+        if --psc-target-service points to a published service. If
         --psc-target-service points to the regional service endpoint of a
         Google API, do not specify --network or --subnet.
 
