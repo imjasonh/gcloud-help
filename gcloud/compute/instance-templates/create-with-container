@@ -27,8 +27,8 @@ SYNOPSIS
           [boot=BOOT],[device-name=DEVICE-NAME],[mode=MODE],[name=NAME]]
         [--external-ipv6-address=EXTERNAL_IPV6_ADDRESS]
         [--external-ipv6-prefix-length=EXTERNAL_IPV6_PREFIX_LENGTH]
-        [--labels=[KEY=VALUE,...]] [--machine-type=MACHINE_TYPE]
-        [--maintenance-policy=MAINTENANCE_POLICY]
+        [--ipv6-network-tier=IPV6_NETWORK_TIER] [--labels=[KEY=VALUE,...]]
+        [--machine-type=MACHINE_TYPE] [--maintenance-policy=MAINTENANCE_POLICY]
         [--metadata=KEY=VALUE,[KEY=VALUE,...]]
         [--metadata-from-file=KEY=LOCAL_FILE_PATH,[...]]
         [--min-cpu-platform=PLATFORM] [--network=NETWORK]
@@ -37,8 +37,9 @@ SYNOPSIS
         [--private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE]
         [--private-network-ip=PRIVATE_NETWORK_IP] [--region=REGION]
         [--no-restart-on-failure] [--shielded-integrity-monitoring]
-        [--shielded-secure-boot] [--shielded-vtpm] [--subnet=SUBNET]
-        [--tags=TAG,[TAG,...]] [--address=ADDRESS | --no-address]
+        [--shielded-secure-boot] [--shielded-vtpm] [--stack-type=STACK_TYPE]
+        [--subnet=SUBNET] [--tags=TAG,[TAG,...]]
+        [--address=ADDRESS | --no-address]
         [--custom-cpu=CUSTOM_CPU --custom-memory=CUSTOM_MEMORY
           : --custom-extensions --custom-vm-type=CUSTOM_VM_TYPE]
         [--image-project=IMAGE_PROJECT --image=IMAGE
@@ -394,6 +395,14 @@ FLAGS
         be used together with --external-ipv6-address. Only the /96 IP address
         range is supported, and the default value is 96.
 
+     --ipv6-network-tier=IPV6_NETWORK_TIER
+        Specifies the IPv6 network tier that will be used to configure the
+        instance network interface IPv6 access config. IPV6_NETWORK_TIER must
+        be (only one value is supported):
+
+         PREMIUM
+            High quality, Google-grade network tier.
+
      --labels=[KEY=VALUE,...]
         List of label KEY=VALUE pairs to add.
 
@@ -607,6 +616,15 @@ FLAGS
         On Shielded VM instances, vTPM is enabled by default. For information
         about how to modify Shielded VM options, see
         https://cloud.google.com/compute/docs/instances/modifying-shielded-vm.
+
+     --stack-type=STACK_TYPE
+        Specifies whether IPv6 is enabled on the default network interface. If
+        not specified, IPV4_ONLY will be used. STACK_TYPE must be one of:
+
+         IPV4_IPV6
+            The network interface can have both IPv4 and IPv6 addresses
+         IPV4_ONLY
+            The network interface will be assigned IPv4 addresses
 
      --subnet=SUBNET
         Specifies the subnet that the VM instances are a part of. If --network

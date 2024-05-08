@@ -31,7 +31,7 @@ SYNOPSIS
         [--external-ipv6-prefix-length=EXTERNAL_IPV6_PREFIX_LENGTH]
         [--host-error-timeout-seconds=HOST_ERROR_TIMEOUT_SECONDS]
         [--instance-termination-action=INSTANCE_TERMINATION_ACTION]
-        [--labels=[KEY=VALUE,...]]
+        [--ipv6-network-tier=IPV6_NETWORK_TIER] [--labels=[KEY=VALUE,...]]
         [--local-ssd=[device-name=DEVICE-NAME],[interface=INTERFACE]]
         [--local-ssd-recovery-timeout=LOCAL_SSD_RECOVERY_TIMEOUT]
         [--machine-type=MACHINE_TYPE] [--maintenance-policy=MAINTENANCE_POLICY]
@@ -46,7 +46,7 @@ SYNOPSIS
         [--provisioning-model=PROVISIONING_MODEL] [--no-restart-on-failure]
         [--shielded-integrity-monitoring] [--shielded-secure-boot]
         [--shielded-vtpm] [--source-instance-template=SOURCE_INSTANCE_TEMPLATE]
-        [--subnet=SUBNET] [--tags=TAG,[TAG,...]]
+        [--stack-type=STACK_TYPE] [--subnet=SUBNET] [--tags=TAG,[TAG,...]]
         [--threads-per-core=THREADS_PER_CORE]
         [--visible-core-count=VISIBLE_CORE_COUNT] [--zone=ZONE]
         [--address=ADDRESS | --no-address]
@@ -456,6 +456,14 @@ FLAGS
             Default only for Spot VMs. Stop the VM without preserving memory.
             The VM can be restarted later.
 
+     --ipv6-network-tier=IPV6_NETWORK_TIER
+        Specifies the IPv6 network tier that will be used to configure the
+        instance network interface IPv6 access config. IPV6_NETWORK_TIER must
+        be (only one value is supported):
+
+         PREMIUM
+            High quality, Google-grade network tier.
+
      --labels=[KEY=VALUE,...]
         List of label KEY=VALUE pairs to add.
 
@@ -705,6 +713,15 @@ FLAGS
 
         Users can also override machine type and labels. Values of other flags
         will be ignored and --source-instance-template will be used instead.
+
+     --stack-type=STACK_TYPE
+        Specifies whether IPv6 is enabled on the default network interface. If
+        not specified, IPV4_ONLY will be used. STACK_TYPE must be one of:
+
+         IPV4_IPV6
+            The network interface can have both IPv4 and IPv6 addresses
+         IPV4_ONLY
+            The network interface will be assigned IPv4 addresses
 
      --subnet=SUBNET
         Specifies the subnet that the VM instances are a part of. If --network

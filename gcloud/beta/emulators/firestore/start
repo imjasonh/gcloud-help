@@ -3,7 +3,8 @@ NAME
 
 SYNOPSIS
     gcloud beta emulators firestore start [--database-mode=DATABASE_MODE]
-        [--host-port=HOST_PORT] [--rules=RULES] [GCLOUD_WIDE_FLAG ...]
+        [--export-on-exit=EXPORT_ON_EXIT] [--host-port=HOST_PORT]
+        [--import-data=IMPORT_DATA] [--rules=RULES] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) This command starts a local Firestore emulator.
@@ -26,6 +27,15 @@ EXAMPLES
         $ gcloud beta emulators firestore start \
             --database-mode=datastore-mode
 
+    To import data at the start of the Firestore emulator, run:
+
+        $ gcloud beta emulators firestore start --import-data=<path/to/file>
+
+    To export emulator data upon emulator shutdown, run:
+
+        $ gcloud beta emulators firestore start \
+            --export-on-exit=<path/to/directory>
+
 FLAGS
      --database-mode=DATABASE_MODE
         The database mode to start the Firestore Emulator in. The valid options
@@ -33,6 +43,10 @@ FLAGS
 
             `firestore-native` (default): start the emulator in Firestore Native
             `datastore-mode`: start the emulator in Datastore Mode
+
+     --export-on-exit=EXPORT_ON_EXIT
+        Directory path in which emulator data will be saved upon shutdown.
+        Example:/home/user/myexports/2024-03-26/
 
      --host-port=HOST_PORT
         The host:port to which the emulator should be bound. Can take the form
@@ -45,6 +59,10 @@ FLAGS
             [2001:db8:0:0:0:ff00:42:8329]:8080
 
         The default value is localhost:8080.
+
+     --import-data=IMPORT_DATA
+        File path to the data to be loaded into the emulator upon start up.
+        Example:/home/user/myexports/sampleExport/sampleExport.overall_export_metadata.
 
      --rules=RULES
         If set, all projects will use the security rules in this file. More
