@@ -3,6 +3,7 @@ NAME
 
 SYNOPSIS
     gcloud infra-manager deployments apply (DEPLOYMENT : --location=LOCATION)
+        [--annotations=[KEY=VALUE,...]]
         [--artifacts-gcs-bucket=ARTIFACTS_GCS_BUCKET] [--async]
         [--import-existing-resources] [--labels=[KEY=VALUE,...]]
         [--quota-validation=QUOTA_VALIDATION]
@@ -79,6 +80,31 @@ POSITIONAL ARGUMENTS
           ▸ set the property infra-manager/location.
 
 FLAGS
+     --annotations=[KEY=VALUE,...]
+        Annotations to apply to the deployment. Existing values are
+        overwritten. To retain the existing annotations on a deployment, do not
+        specify this flag.
+
+        Examples:
+
+        Update annotations for an existing deployment:
+
+            $ gcloud infra-manager deployments apply \
+                projects/p1/locations/us-central1/deployments/my-deployment \
+                --gcs-source="gs://my-bucket" \
+                --annotations="env=prod,team=finance"
+
+        Clear annotations for an existing deployment:
+
+            $ gcloud infra-manager deployments apply \
+                projects/p1/locations/us-central1/deployments/my-deployment \
+                --gcs-source="gs://my-bucket" --annotations=""
+
+        Add an annotation to an existing deployment:
+
+            First, fetch the current annotations using the `describe` command, then follow the
+            preceding example for updating annotations.
+
      --artifacts-gcs-bucket=ARTIFACTS_GCS_BUCKET
         user-defined location of Cloud Build logs, artifacts, and Terraform
         state files in Google Cloud Storage. Format: gs://{bucket}/{folder} A

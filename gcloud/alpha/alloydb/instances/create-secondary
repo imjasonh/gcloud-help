@@ -4,7 +4,9 @@ NAME
 
 SYNOPSIS
     gcloud alpha alloydb instances create-secondary INSTANCE --cluster=CLUSTER
-        --region=REGION [--async] [--availability-type=AVAILABILITY_TYPE]
+        --region=REGION [--assign-inbound-public-ip=ASSIGN_INBOUND_PUBLIC_IP]
+        [--async] [--availability-type=AVAILABILITY_TYPE]
+        [--[no-]require-connectors] [--ssl-mode=SSL_MODE]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -29,6 +31,16 @@ REQUIRED FLAGS
         regions at https://cloud.google.com/sql/docs/instance-locations.
 
 OPTIONAL FLAGS
+     --assign-inbound-public-ip=ASSIGN_INBOUND_PUBLIC_IP
+        Specify to enable or disable public IP on an instance. On instance
+        creation only disabling public IP is allowed. If you want to enable
+        public IP, an instance must be created with public IP disabled first,
+        then update the instance to enable public IP. ASSIGN_INBOUND_PUBLIC_IP
+        must be (only one value is supported):
+
+         NO_PUBLIC_IP
+            This disables public IP on the instance.
+
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
@@ -44,6 +56,21 @@ OPTIONAL FLAGS
             Provide zonal availability instances. Not recommended for
             production instances; instance does not automatically fail over to
             another zone.
+
+     --[no-]require-connectors
+        Enable or disable enforcing connectors only (ex: AuthProxy) connections
+        to the database. Use --require-connectors to enable and
+        --no-require-connectors to disable.
+
+     --ssl-mode=SSL_MODE
+        Specify the SSL mode to use when the instance connects to the database.
+        Default SSL mode will match what is set on the primary instance.
+        SSL_MODE must be one of:
+
+         ALLOW_UNENCRYPTED_AND_ENCRYPTED
+            SSL connections are optional. CA verification is not enforced.
+         ENCRYPTED_ONLY
+            SSL connections are required. CA verification is not enforced.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

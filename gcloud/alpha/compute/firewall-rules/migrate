@@ -4,9 +4,13 @@ NAME
 
 SYNOPSIS
     gcloud alpha compute firewall-rules migrate --source-network=SOURCE_NETWORK
-        (--bind-tags-to-instances | --export-tag-mapping
+        (--bind-tags-to-instances | --export-exclusion-patterns
+          | --export-tag-mapping
           | --target-firewall-policy=TARGET_FIREWALL_POLICY)
-        [--export-terraform-script] [--tag-mapping-file=TAG_MAPPING_FILE]
+        [--exclusion-patterns-file=EXCLUSION_PATTERNS_FILE]
+        [--export-terraform-script] [--force]
+        [--tag-mapping-file=TAG_MAPPING_FILE]
+        [--terraform-script-output-file=TERRAFORM_SCRIPT_OUTPUT_FILE]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -32,6 +36,10 @@ REQUIRED FLAGS
           If set, migration tool will bind secure tags to the instances with
           the network tags which match secure tags from the tag mapping file.
 
+       --export-exclusion-patterns
+          If set, migration tool will dump list of regexes used to filter VPC
+          Firewall out of migration.
+
        --export-tag-mapping
           If set, migration tool will inspect all VPC Firewalls attached to
           SOURCE_NETWORK, collect all source and target tags, and store them in
@@ -42,13 +50,25 @@ REQUIRED FLAGS
           result.
 
 OPTIONAL FLAGS
+     --exclusion-patterns-file=EXCLUSION_PATTERNS_FILE
+        Path to a file with exclusion patterns used for VPC Firewall filtering.
+        Each regular expression describing a single firewall naming pattern
+        must be placed in a single line. No leading or tailing whitespaces.
+
      --export-terraform-script
         If set, migration tool will output a terraform script to create a
         Firewall Policy with migrated rules.
 
+     --force
+        If set, migration will succeed even if the tool detects that original
+        rule evaluation order cannot be preserved.
+
      --tag-mapping-file=TAG_MAPPING_FILE
         Path to a JSON file with legacy tags and service accounts to secure
         tags mapping.
+
+     --terraform-script-output-file=TERRAFORM_SCRIPT_OUTPUT_FILE
+        Path to a file where to store generated Terraform script.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

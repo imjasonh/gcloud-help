@@ -1,0 +1,141 @@
+NAME
+    gcloud logging views remove-iam-policy-binding - remove IAM policy binding
+        to a log view
+
+SYNOPSIS
+    gcloud logging views remove-iam-policy-binding VIEW_ID --bucket=BUCKET
+        --location=LOCATION --member=PRINCIPAL --role=ROLE
+        [--all | --condition=[KEY=VALUE,...]
+          | --condition-from-file=CONDITION_FROM_FILE]
+        [--billing-account=BILLING_ACCOUNT_ID | --folder=FOLDER_ID
+          | --organization=ORGANIZATION_ID | --project=PROJECT_ID]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Remove IAM policy binding to a log view.
+
+EXAMPLES
+    To remove an IAM policy binding for the role 'roles/my-role' for the user
+    'my-user@gmail.com' on my-view, run:
+
+        $ gcloud logging views remove-iam-policy-binding my-view \
+            --member='user:my-user@gmail.com' --role='roles/my-role' \
+            --bucket=my-bucket --location=global
+
+    To remove a binding with a condition, run:
+
+        $ gcloud logging views remove-iam-policy-binding my-view \
+            --member='user:my-user@gmail.com' --role='roles/my-role' \
+            --bucket=my-bucket --location=global \
+            --condition=expression=[expression],title=[title],\
+        description=[description]
+
+    See https://cloud.google.com/iam/docs/managing-policies for details about
+    IAM policies and member types.
+
+POSITIONAL ARGUMENTS
+     VIEW_ID
+        ID of the view that contains the IAM policy.
+
+REQUIRED FLAGS
+     --bucket=BUCKET
+        ID of the bucket that contains the view.
+
+     --location=LOCATION
+        Location of the bucket that contains the view.
+
+     --member=PRINCIPAL
+        The principal to remove the binding for. Should be of the form
+        user|group|serviceAccount:email or domain:domain.
+
+        Examples: user:test-user@gmail.com, group:admins@example.com,
+        serviceAccount:test123@example.domain.com, or
+        domain:example.domain.com.
+
+        Deleted principals have an additional deleted: prefix and a ?uid=UID
+        suffix, where UID is a unique identifier for the principal. Example:
+        deleted:user:test-user@gmail.com?uid=123456789012345678901.
+
+        Some resources also accept the following special values:
+        ◆ allUsers - Special identifier that represents anyone who is on the
+          internet, with or without a Google account.
+        ◆ allAuthenticatedUsers - Special identifier that represents anyone
+          who is authenticated with a Google account or a service account.
+
+     --role=ROLE
+        The role to remove the principal from.
+
+OPTIONAL FLAGS
+     At most one of these can be specified:
+
+       --all
+          Remove all bindings with this role and principal, irrespective of any
+          conditions.
+
+       --condition=[KEY=VALUE,...]
+          The condition of the binding that you want to remove. When the
+          condition is explicitly specified as None (--condition=None), a
+          binding without a condition is removed. Otherwise, only a binding
+          with a condition that exactly matches the specified condition
+          (including the optional description) is removed. For more on
+          conditions, refer to the conditions overview guide:
+          https://cloud.google.com/iam/docs/conditions-overview
+
+          When using the --condition flag, include the following key-value
+          pairs:
+
+           expression
+              (Required) Condition expression that evaluates to True or False.
+              This uses a subset of Common Expression Language syntax.
+
+              If the condition expression includes a comma, use a different
+              delimiter to separate the key-value pairs. Specify the delimiter
+              before listing the key-value pairs. For example, to specify a
+              colon (:) as the delimiter, do the following:
+              --condition=^:^title=TITLE:expression=EXPRESSION. For more
+              information, see
+              https://cloud.google.com/sdk/gcloud/reference/topic/escaping.
+
+           title
+              (Required) A short string describing the purpose of the
+              expression.
+
+           description
+              (Optional) Additional description for the expression.
+
+       --condition-from-file=CONDITION_FROM_FILE
+          Path to a local JSON or YAML file that defines the condition. To see
+          available fields, see the help for --condition.
+
+     At most one of these can be specified:
+
+       --billing-account=BILLING_ACCOUNT_ID
+          Billing account of the view that contains the IAM policy.
+
+       --folder=FOLDER_ID
+          Folder of the view that contains the IAM policy.
+
+       --organization=ORGANIZATION_ID
+          Organization of the view that contains the IAM policy.
+
+       --project=PROJECT_ID
+          Project of the view that contains the IAM policy.
+
+          The Google Cloud project ID to use for this invocation. If omitted,
+          then the current project is assumed; the current project can be
+          listed using gcloud config list --format='text(core.project)' and can
+          be set using gcloud config set project PROJECTID.
+
+          --project and its fallback core/project property play two roles in
+          the invocation. It specifies the project of the resource to operate
+          on. It also specifies the project for API enablement check, quota,
+          and billing. To specify a different project for quota and billing,
+          use --billing-project or billing/quota_project property.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.

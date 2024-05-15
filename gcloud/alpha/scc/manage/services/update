@@ -1,0 +1,91 @@
+NAME
+    gcloud alpha scc manage services update - update a Security Command Center
+        service
+
+SYNOPSIS
+    gcloud alpha scc manage services update SERVICE_NAME
+        (--enablement-state=ENABLEMENT_STATE
+          --module-config-file=MODULE_CONFIG_FILE)
+        (--folder=FOLDER_ID | --organization=ORGANIZATION_ID | --parent=PARENT
+          | --project=PROJECT_ID_OR_NUMBER) [--validate-only]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Update the enablement state of the Security Center service and its
+    corresponding modules for the specified folder, project or organization.
+
+EXAMPLES
+    To update a Security Center Service with name sha for organization 123,
+    run:
+
+        $ gcloud alpha scc manage services update sha \
+          --organization=organizations/123 --enablement-state="ENABLED"
+
+    To update a Security Center Service with name sha and its modules for
+    organization 123, run:
+
+        $ gcloud alpha scc manage services update sha \
+          --organization=organizations/123 --enablement-state="ENABLED" \
+          --module-config-file=module_config.yaml
+
+    To validate an update of Security Center Service with name sha and its
+    modules for organization 123, run:
+
+        $ gcloud alpha scc manage services update sha \
+          --organization=organizations/123 --enablement-state="ENABLED" \
+          --module-config-file=module_config.yaml --validate-only
+
+POSITIONAL ARGUMENTS
+     SERVICE_NAME
+        The service name, provided either in lowercase hyphenated form (e.g.
+        security-health-analytics), or in abbreviated form (e.g. sha)
+
+REQUIRED FLAGS
+     At least one of these must be specified:
+
+       --enablement-state=ENABLEMENT_STATE
+          Sets the enablement state of the Security Center service. Valid
+          options are ENABLED, DISABLED, OR INHERITED. The INHERITED state is
+          only valid when setting the enablement state at the project or folder
+          level.
+
+       --module-config-file=MODULE_CONFIG_FILE
+          Path to a JSON or YAML file that contains the module config to set
+          for the given module and service.
+
+     Exactly one of these must be specified:
+
+       --folder=FOLDER_ID
+          Folder associated with the custom module.
+
+       --organization=ORGANIZATION_ID
+          Organization associated with the custom module.
+
+       --parent=PARENT
+          Parent associated with the custom module. Can be one of
+          organizations/<id>, projects/<id or name>, folders/<id>
+
+       --project=PROJECT_ID_OR_NUMBER
+          Project associated with the custom module.
+
+OPTIONAL FLAGS
+     --validate-only
+        If present, the request is validated (including IAM checks) but no
+        action is taken.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. This variant is also available:
+
+        $ gcloud scc manage services update
+

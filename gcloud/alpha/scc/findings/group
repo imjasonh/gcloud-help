@@ -41,20 +41,6 @@ EXAMPLES
         $ gcloud alpha scc findings group 123456 --source=5678 \
             --group-by="category" --filter="state=\"ACTIVE\""
 
-    Group ACTIVE findings under organization 123456 and source 5678, on
-    2019-01-01T01:00:00 GMT, by their category:
-
-        $ gcloud alpha scc findings group 123456 --source=5678 \
-            --group-by="category" \
-            --filter="state=\"ACTIVE\"" --read-time="2019-01-01T01:00:00Z"
-
-    Group findings under organization 123456 and source 5678 into following 3
-    state_changes (ADDED/CHANGED/UNCHANGED) based on the activity during past
-    24 hours:
-
-        $ gcloud alpha scc findings group 123456 --source=5678 \
-            --group-by="state_change" --compare-duration=86400s
-
     Group findings under organization 123456 and location=eu across all sources
     by their category:
 
@@ -77,16 +63,17 @@ POSITIONAL ARGUMENTS
 
 FLAGS
      --compare-duration=COMPARE_DURATION
-        When compare_duration is set, the result's "state_change" attribute is
-        updated to indicate whether the finding had its state changed, the
-        finding's state remained unchanged, or if the finding was added during
-        the compare_duration period of time that precedes the read_time. This
-        is the time between (read_time - compare_duration) and read_time. The
-        state_change value is derived based on the presence and state of the
-        finding at the two points in time. Intermediate state changes between
-        the two times don't affect the result. For example, the results aren't
-        affected if the finding is made inactive and then active again.
-        Possible "state_change" values when compare_duration is specified:
+        (DEPRECATED) When compare_duration is set, the result's "state_change"
+        attribute is updated to indicate whether the finding had its state
+        changed, the finding's state remained unchanged, or if the finding was
+        added during the compare_duration period of time that precedes the
+        read_time. This is the time between (read_time - compare_duration) and
+        read_time. The state_change value is derived based on the presence and
+        state of the finding at the two points in time. Intermediate state
+        changes between the two times don't affect the result. For example, the
+        results aren't affected if the finding is made inactive and then active
+        again. Possible "state_change" values when compare_duration is
+        specified:
 
         ◆ 'CHANGED': indicates that the finding was present at the start of
           compare_duration, but changed its state at read_time.
@@ -100,11 +87,16 @@ FLAGS
         ◆ 'REMOVED': indicates that the finding was present at the start of
           compare_duration, but was not present at read_time.
 
-        If compare_duration is not specified, then the only possible
-        state_change is 'UNUSED', which will be the state_change set for all
-        findings present at read_time. If this field is set then 'state_change'
-        must be a specified field in 'group_by'. See $ gcloud topic datetimes
-        for information on supported duration formats.
+            If compare_duration is not specified, then the only possible
+            state_change is 'UNUSED', which will be the state_change set for all
+            findings present at read_time. If this field is set then 'state_change'
+            must be a specified field in 'group_by'. See $ gcloud topic datetimes
+            for information on supported duration formats.
+
+        The --compare-duration option is deprecated. For more information, [see
+        the deprecation notice]
+        (https://cloud.google.com/security-command-center/docs/release-notes#April_15_2024)
+        on the SCC release notes page.
 
      --filter=FILTER
         Expression that defines the filter to apply across findings. The
@@ -156,9 +148,14 @@ FLAGS
         explicitly or let gcloud fetch one-page-at-a-time.
 
      --read-time=READ_TIME
-        Time used as a reference point when filtering. Absence of this field
-        will default to the API's version of NOW. See $ gcloud topic datetimes
-        for information on supported time formats.
+        (DEPRECATED) Time used as a reference point when filtering. Absence of
+        this field will default to the API's version of NOW. See $ gcloud topic
+        datetimes for information on supported time formats.
+
+        The --read-time option is deprecated. For more information, [see the
+        deprecation notice]
+        (https://cloud.google.com/security-command-center/docs/release-notes#April_15_2024)
+        on the SCC release notes page.
 
      --source=SOURCE; default="-"
         Source id. Defaults to all sources.
