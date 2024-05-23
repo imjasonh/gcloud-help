@@ -9,6 +9,7 @@ SYNOPSIS
           gpu-sharing-strategy=GPU_SHARING_STRATEGY,
           max-shared-clients-per-gpu=MAX_SHARED_CLIENTS_PER_GPU],...]]
         [--additional-zones=ZONE,[ZONE,...]] [--addons=[ADDON,...]] [--async]
+        [--autoprovisioning-enable-insecure-kubelet-readonly-port]
         [--autoprovisioning-network-tags=TAGS,[TAGS,...]]
         [--autoprovisioning-resource-manager-tags=[KEY=VALUE,...]]
         [--autoscaling-profile=AUTOSCALING_PROFILE]
@@ -29,6 +30,7 @@ SYNOPSIS
         [--enable-dataplane-v2] [--enable-fleet] [--enable-fqdn-network-policy]
         [--enable-google-cloud-access] [--enable-gvnic]
         [--enable-identity-service] [--enable-image-streaming]
+        [--enable-insecure-kubelet-readonly-port]
         [--enable-intra-node-visibility] [--enable-ip-alias]
         [--enable-kubernetes-alpha]
         [--enable-kubernetes-unstable-apis=API,[API,...]]
@@ -214,6 +216,16 @@ FLAGS
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
+
+     --autoprovisioning-enable-insecure-kubelet-readonly-port
+        Enables the Kubelet's insecure read only port for Autoprovisioned Node
+        Pools.
+
+        If not set, the value from nodePoolDefaults.nodeConfigDefaults will be
+        used.
+
+        To disable the readonly port
+        --no-autoprovisioning-enable-insecure-kubelet-readonly-port.
 
      --autoprovisioning-network-tags=TAGS,[TAGS,...]
         Applies the given Compute Engine tags (comma separated) on all nodes in
@@ -515,6 +527,12 @@ FLAGS
      --enable-image-streaming
         Specifies whether to enable image streaming on cluster.
 
+     --enable-insecure-kubelet-readonly-port
+        Enables the Kubelet's insecure read only port.
+
+        To disable the readonly port on a cluster or node-pool set the flag to
+        --no-enable-insecure-kubelet-readonly-port.
+
      --enable-intra-node-visibility
         Enable Intra-node visibility for this cluster.
 
@@ -716,7 +734,7 @@ FLAGS
         The maximum number of nodes to allocate per default initial node pool.
         Kubernetes Engine will automatically create enough nodes pools such
         that each node pool contains less than --max-nodes-per-pool nodes.
-        Defaults to 1000 nodes, but can be set as low as 100 nodes per pool on
+        Defaults to 2000 nodes, but can be set as low as 100 nodes per pool on
         initial create.
 
      --max-pods-per-node=MAX_PODS_PER_NODE
@@ -1773,13 +1791,13 @@ FLAGS
 
        --location=LOCATION
           Compute zone or region (e.g. us-central1-a or us-central1) for the
-          cluster.
+          cluster. Prefer using this flag over the --region or --zone flags.
 
        --region=REGION
-          Compute region (e.g. us-central1) for the cluster.
+          Compute region (e.g. us-central1) for a regional cluster.
 
        --zone=ZONE, -z ZONE
-          Compute zone (e.g. us-central1-a) for the cluster. Overrides the
+          Compute zone (e.g. us-central1-a) for a zonal cluster. Overrides the
           default compute/zone property value for this command invocation.
 
      One of either maintenance-window or the group of maintenance-window flags

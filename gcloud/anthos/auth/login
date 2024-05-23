@@ -2,9 +2,10 @@ NAME
     gcloud anthos auth login - authenticate clusters using the Anthos client
 
 SYNOPSIS
-    gcloud anthos auth login [--cluster=CLUSTER] [--dry-run]
+    gcloud anthos auth login [--no-browser] [--cluster=CLUSTER] [--dry-run]
         [--kubeconfig=KUBECONFIG] [--login-config=LOGIN_CONFIG]
-        [--login-config-cert=LOGIN_CONFIG_CERT] [--server=SERVER]
+        [--login-config-cert=LOGIN_CONFIG_CERT]
+        [--remote-bootstrap=REMOTE_BOOTSTRAP] [--server=SERVER]
         [--set-preferred-auth] [--user=USER] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -37,7 +38,17 @@ EXAMPLES
         $ gcloud anthos auth login --cluster=testcluster \
           --server=<server-url> --kubeconfig=my.kubeconfig
 
+    To add credentials to custom kubeconfig file with server side login using a
+    remote-device for login:
+
+        $ gcloud anthos auth login --cluster=testcluster \
+          --server=<server-url> --kubeconfig=my.kubeconfig --no-browser
+
 FLAGS
+     --no-browser
+        Option to indicate login completion on a second device with
+        browser.Used with server option.
+
      --cluster=CLUSTER
         Cluster to authenticate against. If no cluster is specified, the
         command will print a list of available options.
@@ -56,6 +67,10 @@ FLAGS
      --login-config-cert=LOGIN_CONFIG_CERT
         Specifies the CA certificate file to be added to trusted pool for
         making HTTPS connections to a --login-config URL.
+
+     --remote-bootstrap=REMOTE_BOOTSTRAP
+        Option to complete login that was started using no-browser optionon a
+        remote device that does not have a browser.
 
      --server=SERVER
         Specifies the URL of API server of the cluster to authenticate against.

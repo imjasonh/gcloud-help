@@ -1,6 +1,6 @@
 NAME
     gcloud alpha network-connectivity policy-based-routes create - create a new
-        policy based route
+        policy-based route
 
 SYNOPSIS
     gcloud alpha network-connectivity policy-based-routes create
@@ -8,7 +8,7 @@ SYNOPSIS
         [--description=DESCRIPTION] [--destination-range=DESTINATION_RANGE]
         [--ip-protocol=IP_PROTOCOL] [--labels=[KEY=VALUE,...]]
         [--priority=PRIORITY]
-        [--protocol-version=PROTOCOL_VERSION; default="IPv4"]
+        [--protocol-version=PROTOCOL_VERSION; default="IPV4"]
         [--source-range=SOURCE_RANGE]
         [--interconnect-attachment-region=INTERCONNECT_ATTACHMENT_REGION
           | --tags=[TAGS,...]]
@@ -17,18 +17,18 @@ SYNOPSIS
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) Create a new policy based route with the given name.
+    (ALPHA) Create a new policy-based route with the given name.
 
 EXAMPLES
-    To create a policy based route with the name my-pbr to route all l4 traffic
-    in default network to a ilb with vip 10.0.0.1, run:
+    To create a policy-based route with the name my-pbr to route all traffic in
+    default network to an internal load balancer with IP 10.0.0.1, run:
 
         $ gcloud alpha network-connectivity policy-based-routes create \
             my-pbr --network="projects/my-project/global/networks/default" \
             --next-hop-ilb-ip=10.0.0.1
 
 POSITIONAL ARGUMENTS
-     Policy based route resource - Name of the policy based route to be
+     Policy based route resource - Name of the policy-based route to be
      created. This represents a Cloud resource. (NOTE) Some attributes are not
      given arguments in this group but can be set in other ways.
 
@@ -62,11 +62,11 @@ OPTIONAL FLAGS
         create the resource.
 
      --destination-range=DESTINATION_RANGE
-        Destination IP range of outgoing packets that this policy based route
+        Destination IP range of outgoing packets that this policy-based route
         applies to.
 
      --ip-protocol=IP_PROTOCOL
-        IP protocol that this policy based route applies to. Valid values are
+        IP protocol that this policy-based route applies to. Valid values are
         TCP, UDP, and ALL. Default is ALL.
 
      --labels=[KEY=VALUE,...]
@@ -78,38 +78,38 @@ OPTIONAL FLAGS
         numbers.
 
      --priority=PRIORITY
-        Priority of this policy based route. Priority is used to break ties in
-        cases where there are more than one matching policy based routes found.
-        In cases where multiple policy based routes are matched, the one with
+        Priority of this policy-based route. Priority is used to break ties in
+        cases where there are more than one matching policy-based routes found.
+        In cases where multiple policy-based routes are matched, the one with
         the lowest-numbered priority value wins. The default value is 1000. The
         priority value must be from 1 to 65535, inclusive. Note the priority of
-        policy based route is always higher than other types of route (e.g.
+        policy-based route is always higher than other types of route (e.g.
         static routes/advanced routes)
 
-     --protocol-version=PROTOCOL_VERSION; default="IPv4"
-        Internet protocol versions this policy based route applies to. For this
-        version, only IPV4 is supported. PROTOCOL_VERSION must be one of: ipv4,
-        protocol-version-unspecified.
+     --protocol-version=PROTOCOL_VERSION; default="IPV4"
+        Internet protocol versions that this policy-based route applies to.
+        Valid values are IPV4, and IPV6. Default is IPV4'. PROTOCOL_VERSION
+        must be one of: *ipv4*, *ipv6*, *protocol-version-unspecified*.
 
      --source-range=SOURCE_RANGE
-        Source IP range of outgoing packets that this policy based route
+        Source IP range of outgoing packets that this policy-based route
         applies to.
 
      At most one of these can be specified:
 
        --interconnect-attachment-region=INTERCONNECT_ATTACHMENT_REGION
-          Cloud region to install this policy based route on interconnect
+          Cloud region to install this policy-based route on interconnect
           attachment. Use all to install it on all interconnect attachments.
           Note if both --tags and --interconnect-attachment-region are not set,
-          then the policy based route will be installed in all network
+          then the policy-based route will be installed in all network
           endpoints, including VMs, VPNs, and Interconnect attachements, in the
           network.
 
        --tags=[TAGS,...]
-          List of VM instance tags to which this route applies to. VM instances
-          that have ANY of tags specified here will install this route. Note if
+          List of VM instance tags that this route applies to. VM instances
+          that have ANY of tags specified here installs this route. Note if
           both --tags and --interconnect-attachment-region are not set, then
-          the policy based route will be installed in all endpoints, including
+          the policy-based route will be installed in all endpoints, including
           VMs, VPNs, and Interconnect attachements, in the network.
 
      At most one of these can be specified:
@@ -119,9 +119,9 @@ OPTIONAL FLAGS
           handle packets.
 
        --next-hop-other-routes=NEXT_HOP_OTHER_ROUTES
-          Next hop should be other routes that handle packets. This will
-          effectively exclude matching packets being applied on other PBRs with
-          a lower priority. NEXT_HOP_OTHER_ROUTES must be one of:
+          Next hop should be other routes that handle packets. This effectively
+          excludes matching packets being applied on other policy-based routes
+          with a lower priority. NEXT_HOP_OTHER_ROUTES must be one of:
           default-routing, other-routes-unspecified.
 
 GCLOUD WIDE FLAGS
@@ -133,15 +133,17 @@ GCLOUD WIDE FLAGS
     Run $ gcloud help for details.
 
 API REFERENCE
-    This command uses the networkconnectivity/v1 API. The full documentation
-    for this API can be found at:
+    This command uses the networkconnectivity/v1beta API. The full
+    documentation for this API can be found at:
     https://cloud.google.com/network-connectivity/docs/reference/networkconnectivity/rest
 
 NOTES
     This command is currently in alpha and might change without notice. If this
     command fails with API permission errors despite specifying the correct
     project, you might be trying to access an API with an invitation-only early
-    access allowlist. This variant is also available:
+    access allowlist. These variants are also available:
 
         $ gcloud network-connectivity policy-based-routes create
+
+        $ gcloud beta network-connectivity policy-based-routes create
 

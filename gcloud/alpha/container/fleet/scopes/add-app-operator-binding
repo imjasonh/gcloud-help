@@ -1,0 +1,127 @@
+NAME
+    gcloud alpha container fleet scopes add-app-operator-binding - add
+        project-level and fleet scope-level IAM bindings and create a fleet
+        scope RBAC role binding for an app operator principal
+
+SYNOPSIS
+    gcloud alpha container fleet scopes add-app-operator-binding SCOPE
+        --role=ROLE (--group=GROUP | --user=USER) [--labels=[KEY=VALUE,...]]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) One binding consists of an app operator principal (user/group) and
+    a role (view/edit/admin).
+
+    This command sets up the different permissions required for an app
+    operator, including usage of fleet scopes, connect gateway, logging, and
+    metrics. The authoritative list for adding the permissions is the existing
+    RBAC role bindings under the specified scope.
+
+    This command can fail for the following reasons:
+      ▪ The scope specified does not exist.
+      ▪ The user does not have access to the specified scope.
+      ▪ The principal specified already has another binding for the scope.
+
+EXAMPLES
+    The following command:
+
+        $ gcloud alpha container fleet scopes add-app-operator-binding \
+            SCOPE --role=view --group=people@google.com --project=PROJECT_ID
+
+      ▪ adds IAM policy binding: roles/gkehub.scopeViewer on SCOPE
+      ▪ adds IAM policy binding: roles/gkehub.scopeViewerProjectLevel on
+        PROJECT_ID
+      ▪ adds IAM policy binding: roles/logging.viewAccessor on PROJECT_ID
+        with condition where bucket corresponds to SCOPE
+      ▪ creates fleet scope RBAC role binding: role view with a random ID for
+        group people@google.com.
+
+    ---
+
+    The following command:
+
+        $ gcloud alpha container fleet scopes add-app-operator-binding \
+            SCOPE --role=edit --user=person@google.com --project=PROJECT_ID
+
+      ▪ adds IAM policy binding: roles/gkehub.scopeEditor on SCOPE
+      ▪ adds IAM policy binding: roles/gkehub.scopeEditorProjectLevel on
+        PROJECT_ID
+      ▪ adds IAM policy binding: roles/logging.viewAccessor on PROJECT_ID
+        with condition where bucket corresponds to SCOPE
+      ▪ creates fleet scope RBAC role binding: role edit with a random ID for
+        user person@google.com.
+
+    ---
+
+    The following command:
+
+        $ gcloud alpha container fleet scopes add-app-operator-binding \
+            SCOPE --role=admin --user=person@google.com --project=PROJECT_ID
+
+      ▪ adds IAM policy binding: roles/gkehub.scopeAdmin on SCOPE
+      ▪ adds IAM policy binding: roles/gkehub.scopeEditorProjectLevel on
+        PROJECT_ID
+      ▪ adds IAM policy binding: roles/logging.viewAccessor on PROJECT_ID
+        with condition where bucket corresponds to SCOPE
+      ▪ creates fleet scope RBAC role binding: role admin with a random ID
+        for user person@google.com.
+
+POSITIONAL ARGUMENTS
+     Scope resource - The group of arguments defining the Fleet Scope. This
+     represents a Cloud resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument SCOPE on the command line with a fully specified
+        name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument SCOPE on the command line with a fully specified
+        name;
+      ◆ global is the only supported location.
+
+     This must be specified.
+
+       SCOPE
+          ID of the scope or fully qualified identifier for the scope.
+
+          To set the scope attribute:
+          ▸ provide the argument SCOPE on the command line.
+
+REQUIRED FLAGS
+     --role=ROLE
+        Role to assign. ROLE must be one of: admin, edit, view.
+
+     Exactly one of these must be specified:
+
+       --group=GROUP
+          Group for the role binding.
+
+       --user=USER
+          User for the role binding.
+
+OPTIONAL FLAGS
+     --labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

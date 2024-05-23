@@ -6,9 +6,9 @@ SYNOPSIS
     gcloud alpha container node-pools update NAME
         (--containerd-config-from-file=CONTAINERD_CONFIG_FROM_FILE
           | --enable-confidential-nodes | --enable-gvnic
-          | --enable-image-streaming | --enable-private-nodes
-          | --enable-queued-provisioning | --labels=[KEY=VALUE,...]
-          | --logging-variant=LOGGING_VARIANT
+          | --enable-image-streaming | --enable-insecure-kubelet-readonly-port
+          | --enable-private-nodes | --enable-queued-provisioning
+          | --labels=[KEY=VALUE,...] | --logging-variant=LOGGING_VARIANT
           | --network-performance-configs=[PROPERTY=VALUE,...]
           | --node-labels=[NODE_LABEL,...] | --node-locations=ZONE,[ZONE,...]
           | --node-taints=[NODE_TAINT,...]
@@ -71,6 +71,12 @@ REQUIRED FLAGS
 
        --enable-image-streaming
           Specifies whether to enable image streaming on node pool.
+
+       --enable-insecure-kubelet-readonly-port
+          Enables the Kubelet's insecure read only port.
+
+          To disable the readonly port on a cluster or node-pool set the flag
+          to --no-enable-insecure-kubelet-readonly-port.
 
        --enable-private-nodes
           Enables provisioning nodes with private IP addresses only.
@@ -497,13 +503,13 @@ OPTIONAL FLAGS
 
        --location=LOCATION
           Compute zone or region (e.g. us-central1-a or us-central1) for the
-          cluster.
+          cluster. Prefer using this flag over the --region or --zone flags.
 
        --region=REGION
-          Compute region (e.g. us-central1) for the cluster.
+          Compute region (e.g. us-central1) for a regional cluster.
 
        --zone=ZONE, -z ZONE
-          Compute zone (e.g. us-central1-a) for the cluster. Overrides the
+          Compute zone (e.g. us-central1-a) for a zonal cluster. Overrides the
           default compute/zone property value for this command invocation.
 
 GCLOUD WIDE FLAGS
