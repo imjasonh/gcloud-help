@@ -1,0 +1,63 @@
+NAME
+    gcloud firestore databases restore - restores a Cloud Firestore database
+        from a backup
+
+SYNOPSIS
+    gcloud firestore databases restore
+        --destination-database=DESTINATION_DATABASE
+        --source-backup=SOURCE_BACKUP [GCLOUD_WIDE_FLAG ...]
+
+EXAMPLES
+    To restore a database from a backup.
+
+        $ gcloud firestore databases restore \
+          --source-backup=projects/PROJECT_ID/locations/LOCATION_ID/\
+        backups/BACKUP_ID --destination-database=DATABASE_ID
+
+    To restore a database from a database snapshot.
+
+        $ gcloud firestore databases restore --source-database=SOURCE_DB \
+          --snapshot-time=2023-05-26T10:20:00.00Z \
+          --destination-database=DATABASE_ID
+
+REQUIRED FLAGS
+     --destination-database=DESTINATION_DATABASE
+        Destination database to restore to. Destination database will be
+        created in the same location as the source backup.
+
+        This value should be 4-63 characters. Valid characters are
+        /[a-z][0-9]-/ with first character a letter and the last a letter or a
+        number. Must not be UUID-like
+        /[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/.
+
+        Using "(default)" database ID is also allowed.
+
+        For example, to restore to database testdb:
+
+            $ gcloud firestore databases restore --destination-database=testdb
+
+     --source-backup=SOURCE_BACKUP
+        The source backup to restore from.
+
+        For example, to restore from backup
+        cf9f748a-7980-4703-b1a1-d1ffff591db0 in us-east1:
+
+            $ gcloud firestore databases restore \
+                --source-backup=projects/PROJECT_ID/locations/us-east1/backups/\
+            cf9f748a-7980-4703-b1a1-d1ffff591db0
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha firestore databases restore
+
+        $ gcloud beta firestore databases restore
+

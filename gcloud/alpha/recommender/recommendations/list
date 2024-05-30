@@ -1,23 +1,25 @@
 NAME
-    gcloud alpha recommender recommendations list - list operations for a
-        recommendation
+    gcloud alpha recommender recommendations list - list recommendations for
+        Google Cloud resources
 
 SYNOPSIS
     gcloud alpha recommender recommendations list
         (--billing-account=BILLING_ACCOUNT | --folder=FOLDER_ID
           | --organization=ORGANIZATION_ID | --project=PROJECT_ID)
-        [--location=LOCATION] [--recommender=RECOMMENDER] [--filter=EXPRESSION]
-        [--limit=LIMIT] [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [--uri]
+        [--location=LOCATION] [--recommender=RECOMMENDER]
+        [--recursive=BOOLEAN_VALUE] [--filter=EXPRESSION] [--limit=LIMIT]
+        [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [--uri]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) This command lists all recommendations for a given Google Cloud
-    entity ID, location, and recommender. If recommender or location is not
-    specified, recommendations for all supported recommenders and locations are
-    listed. Supported recommenders can be found here:
-    https://cloud.google.com/recommender/docs/recommenders. The following
-    Google Cloud entity types are supported: project, billing_account, folder
-    and organization.
+    (ALPHA) This command lists all recommendations for the specified Google
+    Cloud resource, location, and recommender. If a recommender or location is
+    not specified, recommendations for all supported recommenders or locations,
+    respectively, are listed. If the --recursive flag is set, recommendations
+    for child resources and projects are also listed. Supported recommenders
+    can be found here: https://cloud.google.com/recommender/docs/recommenders.
+    The following Google Cloud resources are supported: project,
+    billing_account, folder and organization.
 
 EXAMPLES
     Lists recommendations for a Cloud project.        $ gcloud alpha recommender recommendations list \
@@ -55,6 +57,19 @@ FLAGS
         specified, recommendations for all supported recommenders are listed.
         Supported recommenders can be found here:
         https://cloud.google.com/recommender/docs/recommenders
+
+     --recursive=BOOLEAN_VALUE
+        By default, --recursive is set to false and can be ommitted. If
+        --recursive=true is used, in addition to listing the recommendations
+        for the specified organization, billing account, or folder, recursively
+        list all of the recommendations for that resource's child resources,
+        including their descendents (for example, a folder's sub-folders), and
+        for that resource's child projects. For example, when using the
+        --recursive flag and specifying an organization, the response lists all
+        of the recommendations associated with that organization, all of the
+        recommendations associated with that organization's folders and
+        sub-folders, and all of the recommendations associated with that
+        organization's child projects.
 
 LIST COMMAND FLAGS
      --filter=EXPRESSION
