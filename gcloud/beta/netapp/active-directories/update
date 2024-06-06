@@ -6,7 +6,7 @@ SYNOPSIS
     gcloud beta netapp active-directories update
         (ACTIVE_DIRECTORY : --location=LOCATION) --dns=DNS --domain=DOMAIN
         --net-bios-prefix=NET_BIOS_PREFIX --password=PASSWORD
-        --username=USERNAME [--async]
+        --username=USERNAME [--administrators=[ADMINISTRATOR,...]] [--async]
         [--backup-operators=[BACKUP_OPERATOR,...]] [--description=DESCRIPTION]
         [--enable-aes=ENABLE_AES] [--enable-ldap-signing=ENABLE_LDAP_SIGNING]
         [--encrypt-dc-connections=ENCRYPT_DC_CONNECTIONS]
@@ -28,9 +28,11 @@ EXAMPLES
           --location=us-central1 --domain=new-domain.com --dns=1.1.1.1 \
           --site=new_site --net-bios-prefix=new_prefix \
           --organizational-unit=ou2 --enable-aes=true --username=user2 \
-          --password="secure2" --backup-operators=backup_op3 \
-          --security-operators=secure_op3 --enable-ldap-signing=true \
-          --encrypt-dc-connections=yes --kdc-hostname=kdc-host1
+          --password="secure2" --backup-operators=backup_op1,backup_op2 \
+          --security-operators=secure_op1,secure_op2 \
+          --administrators=admin_op1,admin_op2 \
+          --enable-ldap-signing=true --encrypt-dc-connections=yes \
+          --kdc-hostname=kdc-host1
 
 POSITIONAL ARGUMENTS
      Active directory resource - The Active Directory to update. The arguments
@@ -83,6 +85,9 @@ REQUIRED FLAGS
         Username of the Active Directory domain administrator.
 
 OPTIONAL FLAGS
+     --administrators=[ADMINISTRATOR,...]
+        Members of the Active Directory built-in Administrators group.
+
      --async
         Return immediately, without waiting for the operation in progress to
         complete.

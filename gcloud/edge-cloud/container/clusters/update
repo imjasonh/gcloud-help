@@ -6,9 +6,7 @@ SYNOPSIS
     gcloud edge-cloud container clusters update (CLUSTER : --location=LOCATION)
         [--async] [--release-channel=RELEASE_CHANNEL]
         [--clear-maintenance-window
-          | --maintenance-window-end=MAINTENANCE_WINDOW_END
-          --maintenance-window-recurrence=MAINTENANCE_WINDOW_RECURRENCE
-          --maintenance-window-start=MAINTENANCE_WINDOW_START]
+          | --remove-maintenance-exclusion-window=REMOVE_MAINTENANCE_EXCLUSION_WINDOW | --add-maintenance-exclusion-end=ADD_MAINTENANCE_EXCLUSION_END --add-maintenance-exclusion-name=ADD_MAINTENANCE_EXCLUSION_NAME --add-maintenance-exclusion-start=ADD_MAINTENANCE_EXCLUSION_START | --maintenance-window-end=MAINTENANCE_WINDOW_END --maintenance-window-recurrence=MAINTENANCE_WINDOW_RECURRENCE --maintenance-window-start=MAINTENANCE_WINDOW_START]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -73,6 +71,28 @@ FLAGS
           If set, removes the maintenance window setting from the cluster. If
           any exclusion windows exist, they must be removed beforehand as a
           maintenance policy cannot exist without a maintenance window.
+
+       --remove-maintenance-exclusion-window=REMOVE_MAINTENANCE_EXCLUSION_WINDOW
+          Name of the maintenance exclusion to remove.
+
+       Add a maintenance exclusion window (all flags must be specified to add a
+       valid maintenance exclusion window). There can be a maximum of 3
+       exclusion windows set at a given time. A maintenance exclusion window
+       cannot be added in the absence of a maintenance window.
+
+         --add-maintenance-exclusion-end=ADD_MAINTENANCE_EXCLUSION_END
+            End time of the maintenance exclusion window in the RFC 3339
+            (https://www.ietf.org/rfc/rfc3339.txt) format. E.g.
+            "2021-01-01T00:00:00Z" or "2021-01-01T00:00:00-05:00".
+
+         --add-maintenance-exclusion-name=ADD_MAINTENANCE_EXCLUSION_NAME
+            Unique name (per cluster) of the maintenance exclusion window that
+            can be used to remove it.
+
+         --add-maintenance-exclusion-start=ADD_MAINTENANCE_EXCLUSION_START
+            Start time of the maintenance exclusion window (can occur in the
+            past) in the RFC 3339 (https://www.ietf.org/rfc/rfc3339.txt)
+            format. E.g. "2021-01-01T00:00:00Z" or "2021-01-01T00:00:00-05:00".
 
        Updates cluster maintenance window setting (more than one flags can be
        specified from this group)

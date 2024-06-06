@@ -4,9 +4,14 @@ NAME
 
 SYNOPSIS
     gcloud alpha compute forwarding-rules update NAME [--allow-global-access]
-        [--allow-psc-global-access] [--network-tier=NETWORK_TIER]
+        [--allow-psc-global-access]
+        [--external-managed-backend-bucket-migration-testing-percentage=EXTERNAL_MANAGED_BACKEND_BUCKET_MIGRATION_TESTING_PERCENTAGE]
+        [--load-balancing-scheme=LOAD_BALANCING_SCHEME]
+        [--network-tier=NETWORK_TIER]
         [--source-ip-ranges=SOURCE_IP_RANGE,[...]]
         [--update-labels=[KEY=VALUE,...]]
+        [--clear-external-managed-backend-bucket-migration-state
+          | --external-managed-backend-bucket-migration-state=EXTERNAL_MANAGED_BACKEND_BUCKET_MIGRATION_STATE]
         [--clear-labels | --remove-labels=[KEY,...]]
         [--global | --region=REGION] [GCLOUD_WIDE_FLAG ...]
 
@@ -53,6 +58,19 @@ FLAGS
         Connect forwarding rule. This can only be specified if the forwarding
         rule's target is a service attachment (--target-service-attachment).
 
+     --external-managed-backend-bucket-migration-testing-percentage=EXTERNAL_MANAGED_BACKEND_BUCKET_MIGRATION_TESTING_PERCENTAGE
+        Determines the fraction of requests that should be processed by the
+        Global external Application Load Balancer.
+
+        The value of this field must be in the range [0, 100].
+
+     --load-balancing-scheme=LOAD_BALANCING_SCHEME
+        Only for the Global external ALB migration.
+
+        The value of this field must be EXTERNAL or EXTERNAL_MANAGED.
+
+        LOAD_BALANCING_SCHEME must be one of: EXTERNAL, EXTERNAL_MANAGED.
+
      --network-tier=NETWORK_TIER
         Update the network tier of a forwarding rule. It does not allow to
         change from PREMIUM to STANDARD and visa versa.
@@ -70,6 +88,26 @@ FLAGS
         (-), underscores (_), lowercase characters, and numbers. Values must
         contain only hyphens (-), underscores (_), lowercase characters, and
         numbers.
+
+     At most one of these can be specified:
+
+       --clear-external-managed-backend-bucket-migration-state
+          Clears current state of external managed migration.
+
+       --external-managed-backend-bucket-migration-state=EXTERNAL_MANAGED_BACKEND_BUCKET_MIGRATION_STATE
+          Specifies the canary migration state. Possible values are PREPARE,
+          TEST_BY_PERCENTAGE, and TEST_ALL_TRAFFIC.
+
+          To begin the migration from EXTERNAL to EXTERNAL_MANAGED, the state
+          must be changed to PREPARE. The state must be changed to
+          TEST_ALL_TRAFFIC before the loadBalancingScheme can be changed to
+          EXTERNAL_MANAGED. Optionally, the TEST_BY_PERCENTAGE state can be
+          used to migrate traffic to backend buckets attached to this
+          forwarding rule by percentage using
+          externalManagedBackendBucketMigrationTestingPercentage.
+
+          EXTERNAL_MANAGED_BACKEND_BUCKET_MIGRATION_STATE must be one of:
+          PREPARE, TEST_BY_PERCENTAGE, TEST_ALL_TRAFFIC.
 
      At most one of these can be specified:
 
