@@ -8,7 +8,8 @@ SYNOPSIS
         [--backfill-none
           | --backfill-all --mysql-excluded-objects=MYSQL_EXCLUDED_OBJECTS
           | --oracle-excluded-objects=ORACLE_EXCLUDED_OBJECTS
-          | --postgresql-excluded-objects=POSTGRESQL_EXCLUDED_OBJECTS]
+          | --postgresql-excluded-objects=POSTGRESQL_EXCLUDED_OBJECTS
+          | --sqlserver-excluded-objects=SQLSERVER_EXCLUDED_OBJECTS]
         [--clear-labels | --remove-labels=[KEY,...]]
         [--destination-name=DESTINATION_NAME
           --bigquery-destination-config=BIGQUERY_DESTINATION_CONFIG
@@ -16,7 +17,8 @@ SYNOPSIS
         [--force | --validate-only]
         [--source-name=SOURCE_NAME --mysql-source-config=MYSQL_SOURCE_CONFIG
           | --oracle-source-config=ORACLE_SOURCE_CONFIG
-          | --postgresql-source-config=POSTGRESQL_SOURCE_CONFIG]
+          | --postgresql-source-config=POSTGRESQL_SOURCE_CONFIG
+          | --sqlserver-source-config=SQLSERVER_SOURCE_CONFIG]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -178,6 +180,31 @@ FLAGS
                             {
                               "table": "SAMPLE_TABLE",
                               "postgresqlColumns": [
+                                {
+                                  "column": "COL",
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+
+         --sqlserver-excluded-objects=SQLSERVER_EXCLUDED_OBJECTS
+            Path to a YAML (or JSON) file containing the SQL Server data
+            sources to avoid backfilling.
+
+            The JSON file is formatted as follows, with camelCase field naming:
+
+                  {
+                      "schemas": [
+                        {
+                          "schema": "SAMPLE",
+                          "tables": [
+                            {
+                              "table": "SAMPLE_TABLE",
+                              "columns": [
                                 {
                                   "column": "COL",
                                 }
@@ -377,6 +404,36 @@ FLAGS
                   },
                   "replicationSlot": "SAMPLE_REPLICATION_SLOT",
                   "publication": "SAMPLE_PUBLICATION"
+                }
+
+       --sqlserver-source-config=SQLSERVER_SOURCE_CONFIG
+          Path to a YAML (or JSON) file containing the configuration for
+          PostgreSQL Source Config.
+
+          The JSON file is formatted as follows, with camelCase field naming:
+
+                {
+                  "includeObjects": {},
+                  "excludeObjects": {
+                    "schemas": [
+                      {
+                        "schema": "SAMPLE",
+                        "tables": [
+                          {
+                            "table": "SAMPLE_TABLE",
+                            "columns": [
+                              {
+                                "column": "COL",
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "maxConcurrentCdcTasks": 2,
+                  "maxConcurrentBackfillTasks": 10,
+                  "transactionLogs": {}  # Or changeTables
                 }
 
 GCLOUD WIDE FLAGS

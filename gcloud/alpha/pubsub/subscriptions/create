@@ -13,9 +13,10 @@ SYNOPSIS
         [--push-auth-token-audience=OPTIONAL_AUDIENCE_OVERRIDE]
         [--push-endpoint=PUSH_ENDPOINT] [--retain-acked-messages]
         [[--bigquery-table=BIGQUERY_TABLE
-          : --drop-unknown-fields --write-metadata --use-table-schema
+          : --bigquery-service-account-email=BIGQUERY_SERVICE_ACCOUNT_EMAIL
+          --drop-unknown-fields --write-metadata --use-table-schema
           | --use-topic-schema] | [--cloud-storage-bucket=CLOUD_STORAGE_BUCKET
-          : --cloud-storage-file-datetime-format=CLOUD_STORAGE_FILE_DATETIME_FORMAT --cloud-storage-file-prefix=CLOUD_STORAGE_FILE_PREFIX --cloud-storage-file-suffix=CLOUD_STORAGE_FILE_SUFFIX --cloud-storage-max-bytes=CLOUD_STORAGE_MAX_BYTES --cloud-storage-max-duration=CLOUD_STORAGE_MAX_DURATION --cloud-storage-output-format=OUTPUT_FORMAT; default="text" --cloud-storage-write-metadata]]
+          : --cloud-storage-file-datetime-format=CLOUD_STORAGE_FILE_DATETIME_FORMAT --cloud-storage-file-prefix=CLOUD_STORAGE_FILE_PREFIX --cloud-storage-file-suffix=CLOUD_STORAGE_FILE_SUFFIX --cloud-storage-max-bytes=CLOUD_STORAGE_MAX_BYTES --cloud-storage-max-duration=CLOUD_STORAGE_MAX_DURATION --cloud-storage-output-format=OUTPUT_FORMAT; default="text" --cloud-storage-service-account-email=CLOUD_STORAGE_SERVICE_ACCOUNT_EMAIL --cloud-storage-write-metadata]]
         [--max-delivery-attempts=MAX_DELIVERY_ATTEMPTS
           [--dead-letter-topic=DEAD_LETTER_TOPIC
           : --dead-letter-topic-project=DEAD_LETTER_TOPIC_PROJECT]]
@@ -160,6 +161,11 @@ OPTIONAL FLAGS
             This flag argument must be specified if any of the other arguments
             in this group are specified.
 
+         --bigquery-service-account-email=BIGQUERY_SERVICE_ACCOUNT_EMAIL
+            The service account email to use when writing to BigQuery. If
+            unspecified, uses the Pub/Sub service agent
+            (https://cloud.google.com/iam/docs/service-account-types#service-agents).
+
          --drop-unknown-fields
             If either --use-topic-schema or --use-table-schema is set, whether
             or not to ignore fields in the message that do not appear in the
@@ -230,6 +236,11 @@ OPTIONAL FLAGS
             (messages will be written as raw text, separated by a newline) or
             avro (messages will be written as an Avro binary). OUTPUT_FORMAT
             must be one of: text, avro.
+
+         --cloud-storage-service-account-email=CLOUD_STORAGE_SERVICE_ACCOUNT_EMAIL
+            The service account email to use when writing to Cloud Storage. If
+            unspecified, uses the Pub/Sub service agent
+            (https://cloud.google.com/iam/docs/service-account-types#service-agents).
 
          --cloud-storage-write-metadata
             Whether or not to write the subscription name, message_id,

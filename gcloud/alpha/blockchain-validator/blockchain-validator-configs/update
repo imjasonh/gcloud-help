@@ -1,0 +1,195 @@
+NAME
+    gcloud alpha blockchain-validator blockchain-validator-configs update -
+        update the configuration of a single blockchain validator
+
+SYNOPSIS
+    gcloud alpha blockchain-validator blockchain-validator-configs update
+        (BLOCKCHAIN_VALIDATOR_CONFIG : --location=LOCATION) [--async]
+        [--blockchain-node-id=BLOCKCHAIN_NODE_ID]
+        [--ethereum-protocol-details-graffiti=ETHEREUM_PROTOCOL_DETAILS_GRAFFITI]
+        [--validation-work-enabled]
+        [--labels=[LABELS,...]
+          | --update-labels=[UPDATE_LABELS,...] --clear-labels
+          | --remove-labels=[__REMOVE_LABELS,...]]
+        [--remote-web3-signer-timeout-duration=REMOTE_WEB3_SIGNER_TIMEOUT_DURATION --remote-web3-signer-web3signer-uri=REMOTE_WEB3_SIGNER_WEB3SIGNER_URI]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Update the configuration of a single blockchain validator.
+
+EXAMPLES
+    To enable validation work on a previously disabled blockchain validator
+    my-validator in the project my-project and location us-central1 run:
+
+    $ gcloud alpha blockchain-validator blockchain-validator-configs \        update my-validator --location=us-central1 \
+        --project=my-project --validation-work-enabled=true
+
+POSITIONAL ARGUMENTS
+     BlockchainValidatorConfig resource - Blockchain Validator Config Name The
+     name of the Blockchain Validator Config. The fully specified name must
+     have the format
+     projects/{project}/locations/{location}/blockchainValidatorConfigs/{validator}.
+     The arguments in this group can be used to specify the attributes of this
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument blockchain_validator_config on the command line
+        with a fully specified name;
+      ◆ set the property core/project;
+      ◆ provide the argument --project on the command line.
+
+     This must be specified.
+
+       BLOCKCHAIN_VALIDATOR_CONFIG
+          ID of the blockchainValidatorConfig or fully qualified identifier for
+          the blockchainValidatorConfig.
+
+          To set the blockchain_validator_config attribute:
+          ▸ provide the argument blockchain_validator_config on the command
+            line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          The location id of the blockchainValidatorConfig resource.
+
+          To set the location attribute:
+          ▸ provide the argument blockchain_validator_config on the command
+            line with a fully specified name;
+          ▸ provide the argument --location on the command line.
+
+FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     Arguments for the blockchain node.
+
+       --blockchain-node-id=BLOCKCHAIN_NODE_ID
+          The fully qualified name of the blockchain node which carries out
+          work on behalf of the validator. If not set, the validator must
+          either be operated outside of Blockchain Validator Manager, or it
+          will be offline (no attestations or blocks will be produced). If this
+          node is offline or deleted, the validator will be offline.
+
+     Arguments for the blockchain type details.
+
+       Blockchain validator configuration unique to Ethereum blockchains.
+
+         Arguments for the graffiti.
+
+           --ethereum-protocol-details-graffiti=ETHEREUM_PROTOCOL_DETAILS_GRAFFITI
+              Graffiti is a custom string published in blocks proposed by the
+              validator. This can only be written, as the current value cannot
+              be read back from the validator client API. See
+              https://lighthouse-book.sigmaprime.io/graffiti.html for an
+              example of how this is used. If not set, the validator client's
+              default is used. If no blockchain node is specified, this has no
+              effect as no validator client is run.
+
+     --validation-work-enabled
+        True if the blockchain node requests and signs attestations and blocks
+        on behalf of this validator, false if not. This does NOT define whether
+        the blockchain expects work to occur, only whether the blockchain node
+        specified above is carrying out validation tasks. This should be
+        enabled under normal conditions, but may be useful when migrating
+        validators to/from Blockchain Node Engine, where the validator may be
+        paused during the migration.
+
+     Update labels.
+
+     At most one of these can be specified:
+
+       --labels=[LABELS,...]
+          Set labels to new value. Labels as key value pairs
+
+           KEY
+              Keys must start with a lowercase character and contain only
+              hyphens (-), underscores (_), lowercase characters, and numbers.
+
+           VALUE
+              Values must contain only hyphens (-), underscores (_), lowercase
+              characters, and numbers.
+
+          Shorthand Example:
+
+              --labels=string=string
+
+          JSON Example:
+
+              --labels='{"string": "string"}'
+
+          File Example:
+
+              --labels=path_to_file.(yaml|json)
+
+       --update-labels=[UPDATE_LABELS,...]
+          Update labels value or add key value pair. Labels as key value pairs
+
+           KEY
+              Keys must start with a lowercase character and contain only
+              hyphens (-), underscores (_), lowercase characters, and numbers.
+
+           VALUE
+              Values must contain only hyphens (-), underscores (_), lowercase
+              characters, and numbers.
+
+          Shorthand Example:
+
+              --update-labels=string=string
+
+          JSON Example:
+
+              --update-labels='{"string": "string"}'
+
+          File Example:
+
+              --update-labels=path_to_file.(yaml|json)
+
+       At most one of these can be specified:
+
+         --clear-labels
+            Clear labels value and set to empty map.
+
+         --remove-labels=[__REMOVE_LABELS,...]
+            Remove existing value from map labels.
+
+     Arguments for the key source config.
+
+       Configuration to use an external key signing service, such as the
+       service endpoint. The external key signer is expected to be managed
+       entirely by the customer. For reference see
+       https://docs.web3signer.consensys.net/ for details on Web3Signer and
+       https://docs.web3signer.consensys.net/reference/api/json-rpc for the API
+       exposed by the external service.
+
+         Arguments for the timeout duration.
+
+           --remote-web3-signer-timeout-duration=REMOTE_WEB3_SIGNER_TIMEOUT_DURATION
+              Timeout for requests to the Web3Signer service.
+
+         --remote-web3-signer-web3signer-uri=REMOTE_WEB3_SIGNER_WEB3SIGNER_URI
+            URI of the Web3Signer service the validator client connects to, to
+            request signing of attestations, blocks, etc.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the blockchainvalidatormanager/v1 API. The full
+    documentation for this API can be found at:
+    https://cloud.google.com/blockchain-node-engine/docs/create-node-ethereum#validator_configuration
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+
