@@ -5,9 +5,9 @@ NAME
 SYNOPSIS
     gcloud alloydb instances create-secondary INSTANCE --cluster=CLUSTER
         --region=REGION [--assign-inbound-public-ip=ASSIGN_INBOUND_PUBLIC_IP]
-        [--async] [--availability-type=AVAILABILITY_TYPE]
-        [--[no-]require-connectors] [--ssl-mode=SSL_MODE]
-        [GCLOUD_WIDE_FLAG ...]
+        [--async] [--authorized-external-networks=[AUTHORIZED_NETWORK,...]]
+        [--availability-type=AVAILABILITY_TYPE] [--[no-]require-connectors]
+        [--ssl-mode=SSL_MODE] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Creates a new AlloyDB SECONDARY instance within a given cluster.
@@ -32,18 +32,24 @@ REQUIRED FLAGS
 
 OPTIONAL FLAGS
      --assign-inbound-public-ip=ASSIGN_INBOUND_PUBLIC_IP
-        Specify to enable or disable public IP on an instance. On instance
-        creation only disabling public IP is allowed. If you want to enable
-        public IP, an instance must be created with public IP disabled first,
-        then update the instance to enable public IP. ASSIGN_INBOUND_PUBLIC_IP
-        must be (only one value is supported):
-
-         NO_PUBLIC_IP
-            This disables public IP on the instance.
+        Specify to enable or disable public IP on an instance.
+        ASSIGN_INBOUND_PUBLIC_IP must be one of:
+        ◆ NO_PUBLIC_IP
+          ▸ This disables public IP on the instance. Updating an instance to
+            disable public IP will clear the list of authorized networks.
+        ◆ ASSIGN_IPV4
+          ▸ Assign an inbound public IPv4 address for the instance. Public IP
+            is enabled.
 
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
+
+     --authorized-external-networks=[AUTHORIZED_NETWORK,...]
+        Comma-separated list of authorized external networks to set on the
+        instance. Authorized networks should use CIDR notation (e.g.
+        1.2.3.4/30). This flag is only allowed to be set for instances with
+        public IP enabled.
 
      --availability-type=AVAILABILITY_TYPE
         Specifies level of availability. AVAILABILITY_TYPE must be one of:

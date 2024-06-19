@@ -33,6 +33,18 @@ EXAMPLES
             --peered-network-ip-range=192.168.0.0/28 \
             --worker-machine-type=e2-standard-2 --worker-disk-size=64GB
 
+    To create a private pool in project p1 in region us-central1 where workers
+    are of machine type e2-standard-2 and are peered to the network attachment
+    projects/p1/regions/us-central1/networkAttachments/na. The workers don't
+    have public IP address and all the traffic is routed to the network
+    attachment.
+
+        $ gcloud alpha builds worker-pools create pwp1 --project=p1 \
+            --region=us-central1 \
+            --network-attachment=projects/p1/regions/us-central1/\
+        networkAttachments/na --route-all-traffic \
+            --disable-public-ip-address --worker-machine-type=e2-standard-2
+
 POSITIONAL ARGUMENTS
      WORKER_POOL
         Unique identifier for the worker pool to create. This value should be

@@ -34,7 +34,7 @@ SYNOPSIS
           | --notification-config=[pubsub=ENABLED|DISABLED,
           pubsub-topic=TOPIC,...]
           | --private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE
-          | --release-channel=CHANNEL | --remove-labels=[KEY,...]
+          | --release-channel=[CHANNEL] | --remove-labels=[KEY,...]
           | --remove-workload-policies=REMOVE_WORKLOAD_POLICIES
           | --security-group=SECURITY_GROUP
           | --security-posture=SECURITY_POSTURE | --set-password
@@ -544,7 +544,7 @@ REQUIRED FLAGS
           PRIVATE_IPV6_GOOGLE_ACCESS_TYPE must be one of: bidirectional,
           disabled, outbound-only.
 
-       --release-channel=CHANNEL
+       --release-channel=[CHANNEL]
           Subscribe or unsubscribe this cluster to a release channel.
 
           When a cluster is subscribed to a release channel, Google maintains
@@ -555,10 +555,8 @@ REQUIRED FLAGS
 
           CHANNEL must be one of:
 
-           None
-              Use 'None' to opt-out of any release channel.
+          rapid
 
-           rapid
               'rapid' channel is offered on an early access basis for customers
               who want to test new releases.
 
@@ -566,13 +564,22 @@ REQUIRED FLAGS
               to unresolved issues with no known workaround and are not subject
               to any SLAs.
 
-           regular
+          regular
+
               Clusters subscribed to 'regular' receive versions that are
               considered GA quality. 'regular' is intended for production users
               who want to take advantage of new features.
-           stable
-              Clusters subscribed to 'stable' receive versions that are known
-              to be stable and reliable in production.
+
+          stable
+
+              Clusters subscribed to 'stable' receive versions that are known to
+              be stable and reliable in production.
+
+          None
+
+              Use 'None' to opt-out of any release channel.
+
+          CHANNEL must be one of: rapid, regular, stable, None.
 
        --remove-labels=[KEY,...]
           Labels to remove from the Google Cloud resources in use by the
@@ -616,6 +623,9 @@ REQUIRED FLAGS
 
           To disable in an existing cluster, explicitly set the flag to
           --security-posture=disabled.
+
+          For more information on enablement, see
+          https://cloud.google.com/kubernetes-engine/docs/concepts/about-security-posture-dashboard#feature-enablement.
 
           SECURITY_POSTURE must be one of: disabled, standard, enterprise.
 
@@ -703,6 +713,9 @@ REQUIRED FLAGS
 
           To disable in an existing cluster, explicitly set the flag to
           --workload-vulnerability-scanning=disabled.
+
+          For more information on enablement, see
+          https://cloud.google.com/kubernetes-engine/docs/concepts/about-security-posture-dashboard#feature-enablement.
 
           WORKLOAD_VULNERABILITY_SCANNING must be one of: disabled, standard,
           enterprise.

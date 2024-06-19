@@ -3,7 +3,8 @@ NAME
 
 SYNOPSIS
     gcloud iap web set-iam-policy POLICY_FILE
-        [--resource-type=RESOURCE_TYPE : --service=SERVICE --version=VERSION]
+        [--resource-type=RESOURCE_TYPE
+          : --region=REGION --service=SERVICE --version=VERSION]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -58,6 +59,13 @@ EXAMPLES
         $ gcloud iap web set-iam-policy POLICY_FILE \
             --resource-type=backend-services --service=SERVICE_ID
 
+    To set the IAM policy for the web accesses to the IAP protected resources
+    within a regional backend service, run:
+
+        $ gcloud iap web set-iam-policy POLICY_FILE \
+            --resource-type=backend-services --service=SERVICE_ID \
+            --region=REGION
+
 POSITIONAL ARGUMENTS
      POLICY_FILE
         JSON or YAML file containing the IAM policy.
@@ -66,6 +74,11 @@ FLAGS
      --resource-type=RESOURCE_TYPE
         Resource type of the IAP resource. RESOURCE_TYPE must be one of:
         app-engine, backend-services.
+
+     --region=REGION
+        Region name. Should only be specified with
+        --resource-type=backend-services if it is a regional scoped. Not
+        applicable for global scoped backend services.
 
      --service=SERVICE
         Service name.

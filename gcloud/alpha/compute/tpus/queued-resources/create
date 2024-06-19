@@ -10,19 +10,21 @@ SYNOPSIS
           | [--node-count=NODE_COUNT : --node-prefix=NODE_PREFIX]) [--async]
         [--autocheckpoint-enabled] [--best-effort]
         [--boot-disk=[KEY=VALUE,...]] [--data-disk=[mode=MODE],[source=SOURCE]]
-        [--description=DESCRIPTION] [--guaranteed] [--internal-ips]
-        [--labels=[KEY=VALUE,...]] [--metadata=[KEY=VALUE,...]]
-        [--metadata-from-file=[KEY=VALUE,...]]
-        [--network=NETWORK; default="default"] [--range=RANGE]
-        [--reservation-host-folder=RESERVATION_HOST_FOLDER]
+        [--description=DESCRIPTION] [--guaranteed] [--labels=[KEY=VALUE,...]]
+        [--metadata=[KEY=VALUE,...]] [--metadata-from-file=[KEY=VALUE,...]]
+        [--range=RANGE] [--reservation-host-folder=RESERVATION_HOST_FOLDER]
         [--reservation-host-organization=RESERVATION_HOST_ORGANIZATION]
         [--reservation-host-project=RESERVATION_HOST_PROJECT] [--reserved]
         [--scopes=[SCOPES,...]] [--service-account=SERVICE_ACCOUNT]
-        [--shielded-secure-boot] [--spot] [--subnetwork=SUBNETWORK]
-        [--tags=[TAGS,...]] [--valid-after-duration=VALID_AFTER_DURATION]
+        [--shielded-secure-boot] [--spot] [--tags=[TAGS,...]]
+        [--valid-after-duration=VALID_AFTER_DURATION]
         [--valid-after-time=VALID_AFTER_TIME]
         [--valid-until-duration=VALID_UNTIL_DURATION]
-        [--valid-until-time=VALID_UNTIL_TIME] [GCLOUD_WIDE_FLAG ...]
+        [--valid-until-time=VALID_UNTIL_TIME]
+        [--network-config=[external-ips=EXTERNAL-IPS],
+          [network=NETWORK],[subnetwork=SUBNETWORK] | --internal-ips
+          --network=NETWORK; default="default" --subnetwork=SUBNETWORK]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Create a new Queued Resource with the specified attributes.
@@ -196,11 +198,6 @@ OPTIONAL FLAGS
         If provided, the Node requested here will only be scheduled at the
         'guaranteed' tier.
 
-     --internal-ips
-        Indicates that the IP addresses for the node should be internal. The
-        default is that external IP addresses will be associated with the TPU
-        workers.
-
      --labels=[KEY=VALUE,...]
         Resource labels to represent user-provided metadata. See
         https://cloud.google.com/compute/docs/labeling-resources for details.
@@ -212,9 +209,6 @@ OPTIONAL FLAGS
      --metadata-from-file=[KEY=VALUE,...]
         Same as --metadata except the value for the entry will be read from a
         local file. Example: --metadata-from-file='key1=value1.txt'
-
-     --network=NETWORK; default="default"
-        Network that this TPU will be a part of.
 
      --range=RANGE
         CIDR range for the TPU.
@@ -260,9 +254,6 @@ OPTIONAL FLAGS
      --spot
         If provided, the Node requested here will be created as Spot VMs.
 
-     --subnetwork=SUBNETWORK
-        Subnetwork that this TPU will be a part of.
-
      --tags=[TAGS,...]
         Tags to apply to the TPU Node. Tags are used to identify valid sources
         or targets for network firewalls. See
@@ -286,6 +277,41 @@ OPTIONAL FLAGS
      --valid-until-time=VALID_UNTIL_TIME
         An absolute time after which resources must not be created. See $
         gcloud topic datetimes for information on duration formats.
+
+     At most one of these can be specified:
+
+       --network-config=[external-ips=EXTERNAL-IPS],[network=NETWORK],[subnetwork=SUBNETWORK]
+          Specify a full network_config for the TPU. network or subnetwork must
+          be specified.
+
+          This flag may be repeated to provide multiple networks. For example:
+
+              $ gcloud alpha compute tpus queued-resources create \
+                --network-config network=example_network,internal-ips=true
+
+          The following keys are allowed:
+
+           network
+              Specify the network to be used by this TPU.
+
+           subnetwork
+              Specify the network to be used by this TPU. If not specified,
+              this defaults to the subnetwork by the same name as the network.
+
+           external-ips
+              Indicate that the IP addresses for the node should be exteranl.
+              The default will be only internal IP addresses.
+
+       --internal-ips
+          Indicates that the IP addresses for the node should be internal. The
+          default is that external IP addresses will be associated with the TPU
+          workers.
+
+       --network=NETWORK; default="default"
+          Network that this TPU will be a part of.
+
+       --subnetwork=SUBNETWORK
+          Subnetwork that this TPU will be a part of.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

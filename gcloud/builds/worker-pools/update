@@ -4,10 +4,9 @@ NAME
 
 SYNOPSIS
     gcloud builds worker-pools update WORKER_POOL --region=REGION
-        (--config-from-file=CONFIG_FROM_FILE
-          | --worker-disk-size=WORKER_DISK_SIZE
-          --worker-machine-type=WORKER_MACHINE_TYPE --public-egress
-          | --no-public-egress) [GCLOUD_WIDE_FLAG ...]
+        (--config-from-file=CONFIG_FROM_FILE | --[no-]public-egress
+          --worker-disk-size=WORKER_DISK_SIZE
+          --worker-machine-type=WORKER_MACHINE_TYPE) [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Update a worker pool used by Cloud Build.
@@ -39,6 +38,16 @@ REQUIRED FLAGS
 
        Command-line flags to configure the private pool:
 
+         --[no-]public-egress
+            If set to true, workers in the worker pool are created with an
+            external IP address.
+
+            If set to false, workers in the worker pool are created without an
+            external IP address. If the worker pool is within a VPC Service
+            Control perimeter, use this flag.
+
+            Use --public-egress to enable and --no-public-egress to disable.
+
          Configuration to be used for creating workers in the worker pool:
 
            --worker-disk-size=WORKER_DISK_SIZE
@@ -50,21 +59,6 @@ REQUIRED FLAGS
               Compute Engine machine type for a worker pool.
 
               If unspecified, Cloud Build uses a standard machine type.
-
-         Network configuration for Service Networking:
-
-           At most one of these can be specified:
-
-             --public-egress
-                If set, workers in the worker pool are created with an external
-                IP address.
-
-             --no-public-egress
-                If set, workers in the worker pool are created without an
-                external IP address.
-
-                If the worker pool is within a VPC Service Control perimeter,
-                use this flag.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
