@@ -3,7 +3,9 @@ NAME
 
 SYNOPSIS
     gcloud beta kms keys create (KEY : --keyring=KEYRING --location=LOCATION)
-        --purpose=PURPOSE [--crypto-key-backend=CRYPTO_KEY_BACKEND]
+        --purpose=PURPOSE
+        [--allowed-access-reasons=[ALLOWED_ACCESS_REASONS,...]]
+        [--crypto-key-backend=CRYPTO_KEY_BACKEND]
         [--default-algorithm=DEFAULT_ALGORITHM]
         [--destroy-scheduled-duration=DESTROY_SCHEDULED_DURATION]
         [--import-only] [--labels=[KEY=VALUE,...]]
@@ -52,6 +54,12 @@ DESCRIPTION
 
     The flag --crypto-key-backend defines the resource name for the backend
     where the key resides. Required for external-vpc keys.
+
+    The optional flag --allowed-access-reasons defines the Key Access
+    Justifications Policy for the key, and is specified as a comma separated
+    list of zero or more justification codes defined in
+    https://cloud.google.com/assured-workloads/key-access-justifications/docs/justification-codes.
+    The key must be enrolled in Key Access Justifications to use this flag.
 
 EXAMPLES
     The following command creates a key named frodo with protection level
@@ -113,6 +121,16 @@ EXAMPLES
             --crypto-key-backend="projects/$(gcloud config get project)/
             locations/us-central1/ekmConnections/eagles"
 
+    The following command creates a key named arwen with protection level
+    software within the keyring fellowship and location us-east1 with a Key
+    Access Justifications policy that allows access reasons
+    customer-initiated-access and google-initiated-system-operation:
+
+        $ gcloud beta kms keys create arwen --location=us-east1 \
+            --keyring=fellowship --purpose=encryption \
+            --allowed-access-reasons=customer-initiated-access,\
+        google-initiated-system-operation
+
 POSITIONAL ARGUMENTS
      Key resource - The KMS key resource. The arguments in this group can be
      used to specify the attributes of this resource. (NOTE) Some attributes
@@ -157,6 +175,21 @@ REQUIRED FLAGS
         raw-encryption.
 
 OPTIONAL FLAGS
+     --allowed-access-reasons=[ALLOWED_ACCESS_REASONS,...]
+        The list of allowed Key Access Justifications access reasons on the
+        key. The key must be enrolled in Key Access Justifications to configure
+        this field. By default, this field is absent, and all justification
+        codes are allowed. For more information about justification codes, see
+        https://cloud.google.com/assured-workloads/key-access-justifications/docs/justification-codes.
+        ALLOWED_ACCESS_REASONS must be one of:
+        customer-authorized-workflow-servicing, customer-initiated-access,
+        customer-initiated-support, google-initiated-review,
+        google-initiated-service, google-initiated-system-operation,
+        google-response-to-production-alert,
+        modified-customer-initiated-access,
+        modified-google-initiated-system-operation, reason-not-expected,
+        reason-unspecified, third-party-data-request.
+
      --crypto-key-backend=CRYPTO_KEY_BACKEND
         The resource name of the backend environment where the key material for
         all CryptoKeyVersions associated with this CryptoKey reside and where

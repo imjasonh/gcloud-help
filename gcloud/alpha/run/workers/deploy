@@ -6,8 +6,8 @@ SYNOPSIS
         [--breakglass=JUSTIFICATION] [--description=DESCRIPTION]
         [--max-instances=MAX_INSTANCES] [--max-surge=MAX_SURGE]
         [--min-instances=MIN_INSTANCES] [--no-promote] [--region=REGION]
-        [--revision-suffix=REVISION_SUFFIX] [--service-account=SERVICE_ACCOUNT]
-        [--vpc-egress=VPC_EGRESS]
+        [--revision-suffix=REVISION_SUFFIX] [--scaling-mode=SCALING_MODE]
+        [--service-account=SERVICE_ACCOUNT] [--vpc-egress=VPC_EGRESS]
         [--add-cloudsql-instances=[CLOUDSQL-INSTANCES,...]
           | --clear-cloudsql-instances
           | --remove-cloudsql-instances=[CLOUDSQL-INSTANCES,...]
@@ -122,6 +122,15 @@ FLAGS
         [--revision-suffix=v1] for a service named 'helloworld', would lead to
         a revision named 'helloworld-v1'.
 
+     --scaling-mode=SCALING_MODE
+        The scaling mode to use for this resource. SCALING_MODE must be one of:
+
+         automatic
+            The number of instances is scaled automatically based on the usage
+            metrics.
+         manual
+            The number of instances is fixed to a provided config value.
+
      --service-account=SERVICE_ACCOUNT
         Service account associated with the revision of the service. The
         service account represents the identity of the running revision, and
@@ -186,13 +195,16 @@ FLAGS
         volume type is mounted using Cloud Storage FUSE. See
         https://cloud.google.com/storage/docs/gcs-fuse for the details and
         limitations of this filesystem. Additional keys:
-        ◆ bucket: (required) the name of the bucket to use as the source of
-          this volume
         ◆ readonly: (optional) A boolean. If true, this volume will be
           read-only from all mounts.
         ◆ mount-options: (optional) A list of flags to pass to GCSFuse. Flags
           should be specified without leading dashes and separated by
           semicolons.
+        ◆ bucket: (optional) the name of the bucket to use as the source of
+          this volume.
+        ◆ dynamic-mounting: (optional) A boolean. If true, the volume will be
+          mounted dynamically. Note: You will either need to specify a bucket
+          or set dynamic-mounting to true, but not both.
 
         in-memory: An ephemeral volume that stores data in the instance's
         memory. With this type of volume, data is not shared between instances
