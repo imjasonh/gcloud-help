@@ -14,6 +14,7 @@ SYNOPSIS
         [--boot-disk-size=BOOT_DISK_SIZE] [--boot-disk-type=BOOT_DISK_TYPE]
         [--can-ip-forward] [--count=COUNT] [--create-disk=[PROPERTY=VALUE,...]]
         [--description=DESCRIPTION]
+        [--discard-local-ssds-at-termination-timestamp=DISCARD_LOCAL_SSDS_AT_TERMINATION_TIMESTAMP]
         [--disk=[boot=BOOT],
           [device-name=DEVICE-NAME],[name=NAME],[scope=SCOPE]]
         [--[no-]enable-nested-virtualization] [--[no-]enable-uefi-networking]
@@ -25,6 +26,7 @@ SYNOPSIS
         [--local-ssd-recovery-timeout=LOCAL_SSD_RECOVERY_TIMEOUT]
         [--location-policy=[ZONE=POLICY,...]] [--machine-type=MACHINE_TYPE]
         [--max-count-per-zone=[ZONE=MAX_COUNT_PER_ZONE,...]]
+        [--max-run-duration=MAX_RUN_DURATION]
         [--metadata=KEY=VALUE,[KEY=VALUE,...]]
         [--metadata-from-file=KEY=LOCAL_FILE_PATH,[...]]
         [--min-count=MIN_COUNT] [--min-cpu-platform=PLATFORM]
@@ -41,6 +43,7 @@ SYNOPSIS
         [--shielded-vtpm] [--source-instance-template=SOURCE_INSTANCE_TEMPLATE]
         [--stack-type=STACK_TYPE] [--subnet=SUBNET] [--tags=TAG,[TAG,...]]
         [--target-distribution-shape=SHAPE]
+        [--termination-time=TERMINATION_TIME]
         [--threads-per-core=THREADS_PER_CORE]
         [--visible-core-count=VISIBLE_CORE_COUNT]
         [--boot-disk-kms-key=BOOT_DISK_KMS_KEY
@@ -373,6 +376,20 @@ OPTIONAL FLAGS
      --description=DESCRIPTION
         Specifies a textual description of the instances.
 
+     --discard-local-ssds-at-termination-timestamp=DISCARD_LOCAL_SSDS_AT_TERMINATION_TIMESTAMP
+        Required to be set to true and only allowed for VMs that have one or
+        more local SSDs, use --instance-termination-action=STOP, and use either
+        --max-run-duration or --termination-time.
+
+        This flag indicates the value that you want Compute Engine to use for
+        the --discard-local-ssd flag in the automatic gcloud compute instances
+        stop command. This flag only supports the true value, which discards
+        local SSD data when automatically stopping this VM during its
+        terminationTimestamp.
+
+        For more information about the --discard-local-ssd flag, see
+        https://cloud.google.com/compute/docs/disks/local-ssd#stop_instance.
+
      --disk=[boot=BOOT],[device-name=DEVICE-NAME],[name=NAME],[scope=SCOPE]
         Attaches persistent disks to the instances. The disks specified must
         already exist.
@@ -486,6 +503,28 @@ OPTIONAL FLAGS
             gcloud compute instances bulk create --name-pattern=example-###
               --count=5 --region=us-east1
               --max-count-per-zone=us-east1-b=2,us-east-1-c=1
+
+     --max-run-duration=MAX_RUN_DURATION
+        Limits how long this VM instance can run, specified as a duration
+        relative to the last time when the VM began running. Format the
+        duration, MAX_RUN_DURATION, as the number of days, hours, minutes, and
+        seconds followed by d, h, m, and s respectively. For example, specify
+        30m for a duration of 30 minutes or specify 1d2h3m4s for a duration of
+        1 day, 2 hours, 3 minutes, and 4 seconds. Alternatively, to specify a
+        timestamp, use --termination-time instead.
+
+        If neither --max-run-duration nor --termination-time is specified
+        (default), the VM instance runs until prompted by a user action or
+        system event. If either is specified, the VM instance is scheduled to
+        be automatically terminated at the VM's termination timestamp
+        (terminationTimestamp) using the action specified by
+        --instance-termination-action.
+
+        Note: The terminationTimestamp is removed whenever the VM is stopped or
+        suspended and redefined whenever the VM is rerun. For
+        --max-run-duration specifically, the terminationTimestamp is the sum of
+        MAX_RUN_DURATION and the time when the VM last entered the RUNNING
+        state, which changes whenever the VM is rerun.
 
      --metadata=KEY=VALUE,[KEY=VALUE,...]
         Metadata to be made available to the guest operating system running on
@@ -742,6 +781,25 @@ OPTIONAL FLAGS
             while distributing VMs as evenly as possible across selected zones
             to minimize the impact of zonal failures. Recommended for highly
             available serving or batch workloads.
+
+     --termination-time=TERMINATION_TIME
+        Limits how long this VM instance can run, specified as a time. Format
+        the time, TERMINATION_TIME, as a RFC 3339 timestamp. For more
+        information, see https://tools.ietf.org/html/rfc3339. Alternatively, to
+        specify a duration, use --max-run-duration instead.
+
+        If neither --termination-time nor --max-run-duration is specified
+        (default), the VM instance runs until prompted by a user action or
+        system event. If either is specified, the VM instance is scheduled to
+        be automatically terminated at the VM's termination timestamp
+        (terminationTimestamp) using the action specified by
+        --instance-termination-action.
+
+        Note: The terminationTimestamp is removed whenever the VM is stopped or
+        suspended and redefined whenever the VM is rerun. For
+        --termination-time specifically, the terminationTimestamp remains the
+        same whenever the VM is rerun, but any requests to rerun the VM fail if
+        the specified timestamp is in the past.
 
      --threads-per-core=THREADS_PER_CORE
         The number of visible threads per physical core. To disable

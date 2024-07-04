@@ -1,0 +1,68 @@
+NAME
+    gcloud compute instances ops-agents policies delete - delete a Google Cloud
+        Observability agents policy for the Ops Agent
+
+SYNOPSIS
+    gcloud compute instances ops-agents policies delete POLICY_ID --zone=ZONE
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    gcloud compute instances ops-agents policies delete deletes a policy that
+    facilitates agent management across Compute Engine instances based on user
+    specified instance filters.
+
+    The command returns a response indicating whether the deletion succeeded.
+    After a policy is deleted, it takes 10-15 minutes to be wiped from the
+    applicable instances. Deleting a policy does not delete any existing agents
+    managed by that policy, but the agents become unmanaged by any policies. To
+    remove the agents from the instances, first update the policy to set the
+    agent packageState to removed, wait for the policy to take effect, then
+    delete the policy.
+
+    The command returns the content of the deleted policy. For instance:
+
+        agentsRule:
+          packageState: installed
+          version: latest
+        instanceFilter:
+          inclusionLabels:
+          - labels:
+              env: prod
+
+    If no policies are found, or the policy is not an agents policy, then the
+    command returns a NOT_FOUND error.
+
+EXAMPLES
+    To delete an agents policy named ops-agents-test-policy in the current
+    project, run:
+
+        $ gcloud compute instances ops-agents policies delete \
+            ops-agents-test-policy --zone=ZONE
+
+POSITIONAL ARGUMENTS
+     POLICY_ID
+        ID of the policy.
+
+        This ID must contain only lowercase letters, numbers, and hyphens, end
+        with a number or a letter, be between 1-63 characters, and be unique
+        within the project.
+
+REQUIRED FLAGS
+     --zone=ZONE
+        Zone of the agents policy you want to delete.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha compute instances ops-agents policies delete
+
+        $ gcloud beta compute instances ops-agents policies delete
+

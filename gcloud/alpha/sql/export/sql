@@ -3,9 +3,9 @@ NAME
         SQL file
 
 SYNOPSIS
-    gcloud alpha sql export sql INSTANCE URI [--async]
+    gcloud alpha sql export sql INSTANCE URI [--async] [--clean]
         [--database=DATABASE,[DATABASE,...], -d DATABASE,[DATABASE,...]]
-        [--offload] [--parallel]
+        [--if-exists] [--offload] [--parallel]
         [--table=TABLE,[TABLE,...], -t TABLE,[TABLE,...]] [--threads=THREADS]
         [GCLOUD_WIDE_FLAG ...]
 
@@ -33,10 +33,20 @@ FLAGS
         Return immediately, without waiting for the operation in progress to
         complete.
 
+     --clean
+        Include SQL statements (DROP <object>) required to drop database
+        objects prior to import; corresponds to the clean flag for pg_dump.
+        Only applies to PostgreSQL non-parallel exports.
+
      --database=DATABASE,[DATABASE,...], -d DATABASE,[DATABASE,...]
         Database(s) from which the export is made. Information on requirements
         can be found here:
         https://cloud.google.com/sql/docs/mysql/admin-api/v1beta4/instances/export#exportContext.databases
+
+     --if-exists
+        Include an SQL statement (IF EXISTS) with each drop statement produced
+        by the clean flag; corresponds to the if-exists flag for pg_dump. Only
+        applies to PostgreSQL non-parallel exports.
 
      --offload
         Offload an export to a temporary instance. Doing so reduces strain on

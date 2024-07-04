@@ -5,23 +5,24 @@ NAME
 SYNOPSIS
     gcloud alpha edge-cloud networking subnets create
         (SUBNET : --location=LOCATION --zone=ZONE) --network=NETWORK [--async]
-        [--description=DESCRIPTION] [--ipv4-range=[IPV4_RANGE,...]]
-        [--ipv6-range=[IPV6_RANGE,...]] [--labels=[KEY=VALUE,...]]
-        [--vlan-id=VLAN_ID] [GCLOUD_WIDE_FLAG ...]
+        [--bonding-type=BONDING_TYPE] [--description=DESCRIPTION]
+        [--ipv4-range=[IPV4_RANGE,...]] [--ipv6-range=[IPV6_RANGE,...]]
+        [--labels=[KEY=VALUE,...]] [--vlan-id=VLAN_ID] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Create a new Distributed Cloud Edge Network subnet.
 
 EXAMPLES
-    To create a Distributed Cloud Edge Network subnet called 'my-subnet' with
-    vlan id and owned ip ranges specified in the edge zone
+    To create a Distributed Cloud Edge Network subnet called my-subnet with
+    VLAN ID and owned ip ranges specified in the edge zone
     'us-central1-edge-den1', run:
 
         $ gcloud alpha edge-cloud networking subnets create my-subnet \
             --network=my-network --location=us-central1 \
             --zone=us-central1-edge-den1 \
             --ipv4-range=192.168.1.1/24,172.10.10.1/24 \
-            --ipv6-range=2001:db8::1/64,4001:230::1/64 --vlan-id=100
+            --ipv6-range=2001:db8::1/64,4001:230::1/64 --vlan-id=100 \
+            --bonding-type=bonded
 
 POSITIONAL ARGUMENTS
      Subnet resource - Distributed Cloud Edge Network subnet to create. The
@@ -71,6 +72,12 @@ OPTIONAL FLAGS
         Return immediately, without waiting for the operation in progress to
         complete.
 
+     --bonding-type=BONDING_TYPE
+        Whether or not the VLAN being created will be present on bonded or
+        non-bonded port types. If not specified, the VLAN will be created on
+        both port types by default. BONDING_TYPE must be one of: bonded,
+        bonding-type-unspecified, non-bonded.
+
      --description=DESCRIPTION
         An optional, textual description for the subnet.
 
@@ -91,7 +98,7 @@ OPTIONAL FLAGS
         numbers.
 
      --vlan-id=VLAN_ID
-        The ID of the vlan to tag the subnetwork. If not specified we assign
+        The ID of the VLAN to tag the subnetwork. If not specified we assign
         one automatically.
 
 GCLOUD WIDE FLAGS

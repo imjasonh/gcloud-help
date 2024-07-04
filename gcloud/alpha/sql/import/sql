@@ -3,9 +3,9 @@ NAME
         SQL dump file
 
 SYNOPSIS
-    gcloud alpha sql import sql INSTANCE URI [--async]
-        [--database=DATABASE, -d DATABASE] [--parallel] [--threads=THREADS]
-        [--user=USER] [GCLOUD_WIDE_FLAG ...]
+    gcloud alpha sql import sql INSTANCE URI [--async] [--clean]
+        [--database=DATABASE, -d DATABASE] [--if-exists] [--parallel]
+        [--threads=THREADS] [--user=USER] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) gcloud alpha sql import sql imports data into a Cloud SQL instance
@@ -40,11 +40,21 @@ FLAGS
         Return immediately, without waiting for the operation in progress to
         complete.
 
+     --clean
+        Option to clean (DROP) database objects before recreating them.
+        corresponds to the clean flag for pg_restore. Only applies if
+        --parallel is set. PostgreSQL only.
+
      --database=DATABASE, -d DATABASE
         Database to which the import is made. The database needs to be created
         before importing. If not set, it is assumed that the database is
         specified in the file to be imported. If your SQL dump file includes a
         database statement, it will override the database set in this flag.
+
+     --if-exists
+        Include an SQL statement (IF EXISTS) with each DROP statement produced
+        by --clean; corresponds to the if-exists flag for pg_restore. Only
+        applies if --parallel is set. PostgreSQL only.
 
      --parallel
         Perform a parallel import. This flag is only applicable to MySQL and
