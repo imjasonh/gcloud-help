@@ -10,6 +10,11 @@ SYNOPSIS
         [--auto-deploy-expiration-sec=AUTO_DEPLOY_EXPIRATION_SEC]
         [--auto-deploy-impacted-baseline-threshold=AUTO_DEPLOY_IMPACTED_BASELINE_THRESHOLD]
         [--auto-deploy-load-threshold=AUTO_DEPLOY_LOAD_THRESHOLD]
+        [--detection-absolute-qps=DETECTION_ABSOLUTE_QPS]
+        [--detection-load-threshold=DETECTION_LOAD_THRESHOLD]
+        [--detection-relative-to-baseline-qps=DETECTION_RELATIVE_TO_BASELINE_QPS]
+        [--traffic-granularity-configs=[type=TYPE[,value=VALUE][,
+          enableEachUniqueValue=ENABLE_EACH_UNIQUE_VALUE];...;...]]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -17,7 +22,7 @@ DESCRIPTION
     is used to add layer7 ddos defense threshold configs to security policies.
 
 EXAMPLES
-    To add a layer7 ddos defense threshold config, run the following command:
+    To add a layer7 ddos defense threshold config run the following command:
 
         $ gcloud compute security-policies \
             add-layer7-ddos-defense-threshold-config NAME \
@@ -25,7 +30,11 @@ EXAMPLES
             --auto-deploy-load-threshold=0.7 \
             --auto-deploy-confidence-threshold=0.8 \
             --auto-deploy-impacted-baseline-threshold=0.1 \
-            --auto-deploy-expiration-sec=4800
+            --auto-deploy-expiration-sec=4800 \
+            --detection-load-threshold=0.4 --detection-absolute-qps=1000 \
+            --detection-relative-to-baseline-qps=2.0 \
+            --traffic-granularity-configs=type=HTTP_HEADER_HOST,\
+        value=www.my-test-host.com;type=HTTP_PATH,enableEachUniqueValue=true
 
 POSITIONAL ARGUMENTS
      NAME
@@ -49,6 +58,21 @@ OPTIONAL FLAGS
 
      --auto-deploy-load-threshold=AUTO_DEPLOY_LOAD_THRESHOLD
         The threshold on backend's load, over which auto-deploy takes action.
+
+     --detection-absolute-qps=DETECTION_ABSOLUTE_QPS
+        The absolute QPS of the incoming traffic, over which adaptive
+        protection detects an attack.
+
+     --detection-load-threshold=DETECTION_LOAD_THRESHOLD
+        The threshold on backend's load, over which adaptive protection detects
+        an attack.
+
+     --detection-relative-to-baseline-qps=DETECTION_RELATIVE_TO_BASELINE_QPS
+        The QPS of the incoming traffic relative to the average baseline QPS,
+        over which adaptive protection detects an attack.
+
+     --traffic-granularity-configs=[type=TYPE[,value=VALUE][,enableEachUniqueValue=ENABLE_EACH_UNIQUE_VALUE];...;...]
+        Specify up to 2 configs matching a specifc type/value of traffic.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

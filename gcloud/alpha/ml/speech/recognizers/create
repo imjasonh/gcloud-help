@@ -5,18 +5,15 @@ NAME
 SYNOPSIS
     gcloud alpha ml speech recognizers create
         (RECOGNIZER : --location=LOCATION) --language-codes=[LANGUAGE_CODE,...]
-        --model=MODEL [--async] [--audio-channel-count=AUDIO_CHANNEL_COUNT]
-        [--display-name=DISPLAY_NAME]
-        [--enable-automatic-punctuation=ENABLE_AUTOMATIC_PUNCTUATION]
-        [--enable-spoken-emojis=ENABLE_SPOKEN_EMOJIS]
-        [--enable-spoken-punctuation=ENABLE_SPOKEN_PUNCTUATION]
-        [--enable-word-confidence=ENABLE_WORD_CONFIDENCE]
-        [--enable-word-time-offsets=ENABLE_WORD_TIME_OFFSETS]
-        [--encoding=ENCODING] [--max-alternatives=MAX_ALTERNATIVES]
-        [--max-speaker-count=MAX_SPEAKER_COUNT]
-        [--min-speaker-count=MIN_SPEAKER_COUNT]
-        [--profanity-filter=PROFANITY_FILTER] [--sample-rate=SAMPLE_RATE]
-        [--separate-channel-recognition] [GCLOUD_WIDE_FLAG ...]
+        --model=MODEL [--async] [--display-name=DISPLAY_NAME]
+        [--audio-channel-count=AUDIO_CHANNEL_COUNT
+          --encoding=ENCODING --sample-rate=SAMPLE_RATE]
+        [--enable-automatic-punctuation --enable-spoken-emojis
+          --enable-spoken-punctuation --enable-word-confidence
+          --enable-word-time-offsets --max-alternatives=MAX_ALTERNATIVES
+          --profanity-filter --separate-channel-recognition
+          --max-speaker-count=MAX_SPEAKER_COUNT
+          --min-speaker-count=MIN_SPEAKER_COUNT] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Create a speech-to-text recognizer.
@@ -59,62 +56,83 @@ REQUIRED FLAGS
         using more than one language code.
 
      --model=MODEL
-        latest_long or latest_short
+        Which model to use for recognition requests. Select the model best
+        suited to your domain to get best results. Guidance for choosing which
+        model to use can be found in the Transcription Models Documentation
+        (https://cloud.google.com/speech-to-text/v2/docs/transcription-model)
+        and the models supported in each region can be found in the Table Of
+        Supported Models
+        (https://cloud.google.com/speech-to-text/v2/docs/speech-to-text-supported-languages).
 
 OPTIONAL FLAGS
      --async
         Return immediately, without waiting for the operation in progress to
         complete. The default is False.
 
-     --audio-channel-count=AUDIO_CHANNEL_COUNT
-        Number of channels present in the audio data sent for recognition.
-        Supported for LINEAR16, MULAW, ALAW.
-
      --display-name=DISPLAY_NAME
         Name of this recognizer as it appears in UIs.
 
-     --enable-automatic-punctuation=ENABLE_AUTOMATIC_PUNCTUATION
-        If true, adds punctuation to recognition result hypotheses.
+     Encoding format
 
-     --enable-spoken-emojis=ENABLE_SPOKEN_EMOJIS
-        If true, adds spoken emoji formatting.
+       --audio-channel-count=AUDIO_CHANNEL_COUNT
+          Number of channels present in the audio data sent for recognition.
+          Required if --encoding flag is specified and is not AUTO.
 
-     --enable-spoken-punctuation=ENABLE_SPOKEN_PUNCTUATION
-        If true, replaces spoken punctuation with the corresponding symbols in
-        the request.
+       --encoding=ENCODING
+          Encoding format of the provided audio. For headerless formats, must
+          be set to LINEAR16, MULAW, or ALAW. For other formats, set to AUTO.
+          Overrides the recognizer configuration if present, else uses
+          recognizer encoding.
 
-     --enable-word-confidence=ENABLE_WORD_CONFIDENCE
-        If true, the top result includes a list of words and the confidence for
-        those words.
+       --sample-rate=SAMPLE_RATE
+          Sample rate in Hertz of the audio data sent for recognition. Required
+          if --encoding flag is specified and is not AUTO.
 
-     --enable-word-time-offsets=ENABLE_WORD_TIME_OFFSETS
-        If true, the top result includes a list of words and their timestamps.
+     ASR Features
 
-     --encoding=ENCODING
-        Encoding format of the provided audio. For headerless formats, must be
-        set to LINEAR16, MULAW, or ALAW. For other formats, set to AUTO.
+       --enable-automatic-punctuation
+          If true, adds punctuation to recognition result hypotheses.
 
-     --max-alternatives=MAX_ALTERNATIVES
-        Maximum number of recognition hypotheses to be returned. Valid values
-        are 1-30.
+       --enable-spoken-emojis
+          If true, adds spoken emoji formatting.
 
-     --max-speaker-count=MAX_SPEAKER_COUNT
-        Maximum number of speakers in the conversation.
+       --enable-spoken-punctuation
+          If true, replaces spoken punctuation with the corresponding symbols
+          in the request.
 
-     --min-speaker-count=MIN_SPEAKER_COUNT
-        Minimum number of speakers in the conversation.
+       --enable-word-confidence
+          If true, the top result includes a list of words and the confidence
+          for those words.
 
-     --profanity-filter=PROFANITY_FILTER
-        If true, the server will censor profanities.
+       --enable-word-time-offsets
+          If true, the top result includes a list of words and their
+          timestamps.
 
-     --sample-rate=SAMPLE_RATE
-        Sample rate in Hertz of the audio data sent for recognition. Required
-        if using explicit decoding.
+       --max-alternatives=MAX_ALTERNATIVES
+          Maximum number of recognition hypotheses to be returned. Valid values
+          are 1-30.
 
-     --separate-channel-recognition
-        Mode for recognizing multi-channel audio using Separate Channel
-        Recognition. When set to true, the service will recognize each channel
-        independently.
+       --profanity-filter
+          If true, the server will censor profanities.
+
+       --separate-channel-recognition
+          Mode for recognizing multi-channel audio using Separate Channel
+          Recognition. When set to true, the service will recognize each
+          channel independently.
+
+       Speaker Diarization
+
+         --max-speaker-count=MAX_SPEAKER_COUNT
+            Maximum number of speakers in the conversation.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --min-speaker-count=MIN_SPEAKER_COUNT
+            Minimum number of speakers in the conversation.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

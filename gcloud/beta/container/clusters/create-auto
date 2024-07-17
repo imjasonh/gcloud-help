@@ -17,14 +17,15 @@ SYNOPSIS
         [--enable-backup-restore] [--enable-cilium-clusterwide-network-policy]
         [--enable-fleet] [--enable-google-cloud-access]
         [--enable-kubernetes-unstable-apis=API,[API,...]]
-        [--enable-master-global-access] [--enable-secret-manager]
-        [--fleet-project=PROJECT_ID_OR_NUMBER] [--labels=[KEY=VALUE,...]]
-        [--logging=[COMPONENT,...]] [--monitoring=[COMPONENT,...]]
-        [--network=NETWORK] [--private-endpoint-subnetwork=NAME]
-        [--release-channel=[CHANNEL]] [--security-group=SECURITY_GROUP]
-        [--security-posture=SECURITY_POSTURE] [--services-ipv4-cidr=CIDR]
-        [--services-secondary-range-name=NAME] [--subnetwork=SUBNETWORK]
-        [--workload-policies=WORKLOAD_POLICIES]
+        [--enable-master-global-access] [--enable-ray-cluster-logging]
+        [--enable-ray-cluster-monitoring] [--enable-ray-operator]
+        [--enable-secret-manager] [--fleet-project=PROJECT_ID_OR_NUMBER]
+        [--labels=[KEY=VALUE,...]] [--logging=[COMPONENT,...]]
+        [--monitoring=[COMPONENT,...]] [--network=NETWORK]
+        [--private-endpoint-subnetwork=NAME] [--release-channel=[CHANNEL]]
+        [--security-group=SECURITY_GROUP] [--security-posture=SECURITY_POSTURE]
+        [--services-ipv4-cidr=CIDR] [--services-secondary-range-name=NAME]
+        [--subnetwork=SUBNETWORK] [--workload-policies=WORKLOAD_POLICIES]
         [--workload-vulnerability-scanning=WORKLOAD_VULNERABILITY_SCANNING]
         [--additive-vpc-scope-dns-domain=ADDITIVE_VPC_SCOPE_DNS_DOMAIN
           | --disable-additive-vpc-scope]
@@ -243,6 +244,15 @@ FLAGS
         endpoint from any Google Cloud region or on-premises environment
         regardless of the private cluster's region.
 
+     --enable-ray-cluster-logging
+        Enable automatic log processing sidecar for Ray clusters.
+
+     --enable-ray-cluster-monitoring
+        Enable automatic metrics collection for Ray clusters.
+
+     --enable-ray-operator
+        Enable the Ray Operator GKE add-on. This add-on is disabled by default.
+
      --enable-secret-manager
         Enables the Secret Manager CSI driver provider component. See
         https://secrets-store-csi-driver.sigs.k8s.io/introduction
@@ -291,7 +301,7 @@ FLAGS
         Set the components that have monitoring enabled. Valid component values
         are: SYSTEM, WORKLOAD (Deprecated), NONE, API_SERVER,
         CONTROLLER_MANAGER, SCHEDULER, DAEMONSET, DEPLOYMENT, HPA, POD,
-        STATEFULSET, STORAGE
+        STATEFULSET, STORAGE, CADVISOR, KUBELET, DCGM
 
         For more information, see
         https://cloud.google.com/stackdriver/docs/solutions/gke/installing#available-metrics
@@ -299,7 +309,7 @@ FLAGS
         Examples:
 
             $ gcloud beta container clusters create-auto \
-                --monitoring=SYSTEM,API_SERVER,POD
+                --monitoring=SYSTEM,API_SERVER,POD,DCGM
             $ gcloud beta container clusters create-auto --monitoring=SYSTEM
 
      --network=NETWORK

@@ -8,6 +8,9 @@ SYNOPSIS
         [--enable_stackdriver_logging] [--enable_stackdriver_monitoring]
         [--labels=[KEY=VALUE,...]] [--options=[KEY=VALUE,...]]
         [--patch_revision=PATCH_REVISION] [--version=VERSION] [--zone=ZONE]
+        [--maintenance-window-end=MAINTENANCE_WINDOW_END
+          --maintenance-window-recurrence=MAINTENANCE_WINDOW_RECURRENCE
+          --maintenance-window-start=MAINTENANCE_WINDOW_START]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -98,6 +101,32 @@ FLAGS
      --zone=ZONE
         Compute Engine zone in which the instance will be created. Only needed
         for DEVELOPER edition. For example: --zone=us-central1-a.
+
+     Group of arguments for setting the maintenance window value.
+
+       --maintenance-window-end=MAINTENANCE_WINDOW_END
+          The end time of the maintenance window. Only the time of the day is
+          used as a reference for an ending time of the window with a provided
+          recurrence. This will be used in conjunction with start time, and the
+          difference will determine the length of a single maintenance window.
+          This flag must be specified if any of the other arguments in this
+          group are specified. For example:
+          --maintenance_window_end=2024-01-02T01:00:00Z. See $ gcloud topic
+          datetimes for information on time formats.
+
+       --maintenance-window-recurrence=MAINTENANCE_WINDOW_RECURRENCE
+          An RFC 5545 RRULE, specifying how the maintenance window will recur.
+          Only FREQ=WEEKLY format is supported. This flag must be specified if
+          any of the other arguments in this group are specified. For example:
+          --maintenance_window_recurrence="FREQ=WEEKLY;BYDAY=FR,SA,SU".
+
+       --maintenance-window-start=MAINTENANCE_WINDOW_START
+          The start time of the maintenance window. Only the time of the day is
+          used as a reference for a starting time of the window with a provided
+          recurrence. This flag must be specified if any of the other arguments
+          in this group are specified. For example:
+          --maintenance_window_start=2024-01-01T01:00:00Z. See $ gcloud topic
+          datetimes for information on time formats.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

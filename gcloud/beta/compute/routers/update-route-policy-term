@@ -1,0 +1,80 @@
+NAME
+    gcloud beta compute routers update-route-policy-term - updates a term of an
+        existing route policy of a Comute Engine router
+
+SYNOPSIS
+    gcloud beta compute routers update-route-policy-term NAME
+        --actions=[ACTION;...] --match=MATCH --policy-name=POLICY_NAME
+        --priority=PRIORITY [--region=REGION] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Updates a term of an existing route policy of a Comute Engine
+    router.
+
+    gcloud beta compute routers update-route-policy-term updates a term of a
+    route policy.
+
+    For an example, refer to the EXAMPLES section below.
+
+EXAMPLES
+    To update a term of a route policy, run:
+
+        $ gcloud beta compute routers update-route-policy-term \
+            example-router --region=router-region \
+            --policy-name=example-policy-name --priority=128 \
+            --match="destination == '192.168.0.0/24'" \
+            --actions="med.set(12345);asPath.prependSequence([1, 2])"
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the router to update.
+
+REQUIRED FLAGS
+     --actions=[ACTION;...]
+        Semicolon separated CEL expressions for the actions to take when the
+        rule matches.
+
+     --match=MATCH
+        CEL expression for matching a route.
+
+     --policy-name=POLICY_NAME
+        Name of the route policy to which the term should be updated.
+
+     --priority=PRIORITY
+        Order of the term within the policy.
+
+OPTIONAL FLAGS
+     --region=REGION
+        Region of the router to update. If not specified, you might be prompted
+        to select a region (interactive mode only).
+
+        To avoid prompting when this flag is omitted, you can set the
+        compute/region property:
+
+            $ gcloud config set compute/region REGION
+
+        A list of regions can be fetched by running:
+
+            $ gcloud compute regions list
+
+        To unset the property, run:
+
+            $ gcloud config unset compute/region
+
+        Alternatively, the region can be stored in the environment variable
+        CLOUDSDK_COMPUTE_REGION.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud alpha compute routers update-route-policy-term
+
