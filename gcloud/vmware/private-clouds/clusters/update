@@ -6,8 +6,21 @@ SYNOPSIS
     gcloud vmware private-clouds clusters update
         (CLUSTER : --location=LOCATION --private-cloud=PRIVATE_CLOUD) [--async]
         [--node-type-config=[[count=COUNT],[type=TYPE],...]]
-        [--remove-nodes-config=TYPE]
+        [--remove-autoscaling-policy=NAME] [--remove-nodes-config=TYPE]
         [--update-nodes-config=[count=COUNT],[type=TYPE]]
+        [--autoscaling-settings-from-file=AUTOSCALING_SETTINGS_FROM_FILE
+          | --autoscaling-cool-down-period=AUTOSCALING_COOL_DOWN_PERIOD
+          --autoscaling-max-cluster-node-count=AUTOSCALING_MAX_CLUSTER_NODE_COUNT --autoscaling-min-cluster-node-count=AUTOSCALING_MIN_CLUSTER_NODE_COUNT --update-autoscaling-policy=[consumed-memory-thresholds-scale-in=CONSUMED-MEMORY-THRESHOLDS-SCALE-IN],
+          [consumed-memory-thresholds-scale-out=CONSUMED-MEMORY-THRESHOLDS-SCALE-OUT],
+          [cpu-thresholds-scale-in=CPU-THRESHOLDS-SCALE-IN],
+          [cpu-thresholds-scale-out=CPU-THRESHOLDS-SCALE-OUT],
+          [granted-memory-thresholds-scale-in=GRANTED-MEMORY-THRESHOLDS-SCALE-IN],
+          [granted-memory-thresholds-scale-out=GRANTED-MEMORY-THRESHOLDS-SCALE-OUT],
+          [max-node-count=MAX-NODE-COUNT],[min-node-count=MIN-NODE-COUNT],
+          [name=NAME],[node-type-id=NODE-TYPE-ID],
+          [scale-out-size=SCALE-OUT-SIZE],
+          [storage-thresholds-scale-in=STORAGE-THRESHOLDS-SCALE-IN],
+          [storage-thresholds-scale-out=STORAGE-THRESHOLDS-SCALE-OUT]]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -31,6 +44,18 @@ EXAMPLES
             --update-nodes-config=type=standard-72,count=3
 
         In the second example, the project and location are taken from gcloud properties core/project and compute/zone.
+
+    To enable autoscale in a cluster called my-cluster in private cloud
+    my-private-cloud and zone us-west2-a, run:
+
+        $ gcloud vmware private-clouds clusters update my-cluster \
+            --location=us-west2-a --project=my-project \
+            --private-cloud=my-private-cloud \
+            --autoscaling-min-cluster-node-count=3 \
+            --autoscaling-max-cluster-node-count=5 \
+            --update-autoscaling-policy=name=custom-policy,\
+        node-type-id=standard-72,scale-out-size=1,\
+        storage-thresholds-scale-in=10,storage-thresholds-scale-out=80
 
 POSITIONAL ARGUMENTS
      Cluster resource - cluster. The arguments in this group can be used to
@@ -90,6 +115,9 @@ FLAGS
         The --node-type-config option is deprecated; please use
         --update-nodes-config and --remove-nodes-config instead.
 
+     --remove-autoscaling-policy=NAME
+        Names of autoscaling policies that should be removed from the cluster
+
      --remove-nodes-config=TYPE
         Type of node that should be removed from the cluster
 
@@ -100,6 +128,25 @@ FLAGS
         type (required): canonical identifier of the node type.
 
         count (required): number of nodes of this type in the cluster.
+
+     At most one of these can be specified:
+
+       --autoscaling-settings-from-file=AUTOSCALING_SETTINGS_FROM_FILE
+          A YAML file containing the autoscaling settings to be applied to the
+          cluster
+
+       --autoscaling-cool-down-period=AUTOSCALING_COOL_DOWN_PERIOD
+          Cool down period (in minutes) between consecutive cluster
+          expansions/contractions
+
+       --autoscaling-max-cluster-node-count=AUTOSCALING_MAX_CLUSTER_NODE_COUNT
+          Maximum number of nodes in the cluster
+
+       --autoscaling-min-cluster-node-count=AUTOSCALING_MIN_CLUSTER_NODE_COUNT
+          Minimum number of nodes in the cluster
+
+       --update-autoscaling-policy=[consumed-memory-thresholds-scale-in=CONSUMED-MEMORY-THRESHOLDS-SCALE-IN],[consumed-memory-thresholds-scale-out=CONSUMED-MEMORY-THRESHOLDS-SCALE-OUT],[cpu-thresholds-scale-in=CPU-THRESHOLDS-SCALE-IN],[cpu-thresholds-scale-out=CPU-THRESHOLDS-SCALE-OUT],[granted-memory-thresholds-scale-in=GRANTED-MEMORY-THRESHOLDS-SCALE-IN],[granted-memory-thresholds-scale-out=GRANTED-MEMORY-THRESHOLDS-SCALE-OUT],[max-node-count=MAX-NODE-COUNT],[min-node-count=MIN-NODE-COUNT],[name=NAME],[node-type-id=NODE-TYPE-ID],[scale-out-size=SCALE-OUT-SIZE],[storage-thresholds-scale-in=STORAGE-THRESHOLDS-SCALE-IN],[storage-thresholds-scale-out=STORAGE-THRESHOLDS-SCALE-OUT]
+          Autoscaling policy to be applied to the cluster
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

@@ -4,7 +4,7 @@ NAME
 
 SYNOPSIS
     gcloud alpha access-context-manager cloud-bindings create
-        --group-key=GROUP_KEY [--dry-run-level=[DRY_RUN_LEVEL,...]]
+        [--dry-run-level=[DRY_RUN_LEVEL,...]] [--group-key=GROUP_KEY]
         [--level=[LEVEL,...]] [--organization=ORGANIZATION]
         [--restricted-client-application-client-ids=[RESTRICTED_CLIENT_APPLICATION_CLIENT_IDS,
           ...]]
@@ -13,11 +13,19 @@ SYNOPSIS
 
 DESCRIPTION
     (ALPHA) Create a new access binding. The access level will be bound with
-    the group and the restricted client application. The access level is
-    enforced at the organization level for all context-aware access group
-    members, as specified in the binding. If a restricted client application is
-    specified, then the enforcement applies only to the specified application,
-    and not to the entire organization.
+
+      ▪ a group and the restricted client application
+      ▪ a specific service account or all service accounts in a specified
+        project.
+
+    If a group key is specified, the access level is enforced at the
+    organization level for all context-aware access group members, as specified
+    in the binding. If a restricted client application is also specified, then
+    the enforcement applies only to the specified application, and not to the
+    entire organization. If a service account is specified, then the
+    enforcement applies only to the specified service account. If a service
+    account project is specified, then the enforcement applies to all the
+    service accounts belongs to the specified project.
 
 EXAMPLES
     To create a new cloud access binding at the organization level, run:
@@ -58,12 +66,22 @@ EXAMPLES
             --restricted-client-application-client-ids='123456789.apps.googl\
         eusercontent.com'
 
-REQUIRED FLAGS
-     --group-key=GROUP_KEY
-        Google Group id whose members are subject to the restrictions of this
-        binding.
+    To create a new cloud access binding for a particular service account, run:
 
-OPTIONAL FLAGS
+        $ gcloud alpha access-context-manager cloud-bindings create \
+            --service-account=service-account@project.iam.gserviceaccount.co\
+        m --level=accessPolicies/123/accessLevels/abc \
+            --organization='1234567890'
+
+    To create a new cloud access binding for all service accounts in a
+    particular project, run:
+
+        $ gcloud alpha access-context-manager cloud-bindings create \
+            --service-account-project-number='987654321' \
+            --level=accessPolicies/123/accessLevels/abc \
+            --organization='1234567890' \
+
+FLAGS
      --dry-run-level=[DRY_RUN_LEVEL,...]
         The dry run access level that binds to the given group and restricted
         client applications. The dry run access level is evaluated but isn't
@@ -73,6 +91,10 @@ OPTIONAL FLAGS
         restricted-client-application-client-ids or
         restricted-client-application-names are provided, then the access level
         is applied to the entire organization.
+
+     --group-key=GROUP_KEY
+        Google Group id whose members are subject to the restrictions of this
+        binding.
 
      --level=[LEVEL,...]
         The access level that binds to the given group and restricted client

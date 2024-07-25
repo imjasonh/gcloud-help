@@ -51,7 +51,8 @@ SYNOPSIS
           | --additional-pod-ipv4-ranges=NAME,[NAME,...]
           --remove-additional-pod-ipv4-ranges=NAME,[NAME,...]
           | --additional-zones=[ZONE,...] | --node-locations=ZONE,[ZONE,...]
-          | --binauthz-policy-bindings=[name=BINAUTHZ_POLICY]
+          | --binauthz-policy-bindings=[name=BINAUTHZ_POLICY,
+          enforcement-mode=ENFORCEMENT_MODE,...]
           --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
           | --enable-binauthz | --clear-maintenance-window
           | --remove-maintenance-exclusion=NAME
@@ -612,6 +613,11 @@ REQUIRED FLAGS
               considered GA quality. 'regular' is intended for production users
               who want to take advantage of new features.
 
+          extended
+
+              Clusters subscribed to 'extended' can remain on a minor version for 24 months
+              from when the minor version is made available in the Regular channel.
+
           stable
 
               Clusters subscribed to 'stable' receive versions that are known to
@@ -621,7 +627,7 @@ REQUIRED FLAGS
 
               Use 'None' to opt-out of any release channel.
 
-          CHANNEL must be one of: rapid, regular, stable, None.
+          CHANNEL must be one of: rapid, regular, extended, stable, None.
 
        --remove-labels=[KEY,...]
           Labels to remove from the Google Cloud resources in use by the
@@ -842,10 +848,19 @@ REQUIRED FLAGS
 
        Flags for Binary Authorization:
 
-         --binauthz-policy-bindings=[name=BINAUTHZ_POLICY]
-            The relative resource name of the Binary Authorization policy to
-            audit and/or enforce. GKE policies have the following format:
-            projects/{project_number}/platforms/gke/policies/{policy_id}.
+         --binauthz-policy-bindings=[name=BINAUTHZ_POLICY,enforcement-mode=ENFORCEMENT_MODE,...]
+            Binds a Binary Authorization policy to the cluster.
+
+             name
+                (Required) The relative resource name of the Binary
+                Authorization policy to audit and/or enforce. GKE policies have
+                the following format:
+                projects/{project_number}/platforms/gke/policies/{policy_id}.
+
+             enforcement-mode
+                (Optional) The mode of enforcement for the policy. Must be one
+                of: audit, audit-and-enforce, audit-and-dryrun. Defaults to
+                audit, if unset.
 
          At most one of these can be specified:
 

@@ -79,7 +79,8 @@ SYNOPSIS
         [--workload-metadata=WORKLOAD_METADATA] [--workload-pool=WORKLOAD_POOL]
         [--workload-vulnerability-scanning=WORKLOAD_VULNERABILITY_SCANNING]
         [--additional-zones=ZONE,[ZONE,...] | --node-locations=ZONE,[ZONE,...]]
-        [--binauthz-policy-bindings=[name=BINAUTHZ_POLICY]
+        [--binauthz-policy-bindings=[name=BINAUTHZ_POLICY,
+          enforcement-mode=ENFORCEMENT_MODE,...]
           --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
           | --enable-binauthz]
         [--cluster-dns=CLUSTER_DNS --cluster-dns-domain=CLUSTER_DNS_DOMAIN
@@ -830,7 +831,7 @@ FLAGS
         The maximum number of nodes to allocate per default initial node pool.
         Kubernetes Engine will automatically create enough nodes pools such
         that each node pool contains less than --max-nodes-per-pool nodes.
-        Defaults to 2000 nodes, but can be set as low as 100 nodes per pool on
+        Defaults to 1000 nodes, but can be set as low as 100 nodes per pool on
         initial create.
 
      --max-pods-per-node=MAX_PODS_PER_NODE
@@ -970,7 +971,8 @@ FLAGS
 
         New nodes, including ones created by resize or recreate, will have
         these labels on the Kubernetes API node object and can be used in
-        nodeSelectors. See http://kubernetes.io/docs/user-guide/node-selection/
+        nodeSelectors. See
+        https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
         for examples.
 
         Note that Kubernetes labels, intended to associate cluster components
@@ -1134,6 +1136,11 @@ FLAGS
             considered GA quality. 'regular' is intended for production users
             who want to take advantage of new features.
 
+        extended
+
+            Clusters subscribed to 'extended' can remain on a minor version for 24 months
+            from when the minor version is made available in the Regular channel.
+
         stable
 
             Clusters subscribed to 'stable' receive versions that are known to
@@ -1143,7 +1150,7 @@ FLAGS
 
             Use 'None' to opt-out of any release channel.
 
-        CHANNEL must be one of: rapid, regular, stable, None.
+        CHANNEL must be one of: rapid, regular, extended, stable, None.
 
      --resource-manager-tags=[KEY=VALUE,...]
         Applies the specified comma-separated resource manager tags that has
@@ -1443,10 +1450,19 @@ FLAGS
 
      Flags for Binary Authorization:
 
-       --binauthz-policy-bindings=[name=BINAUTHZ_POLICY]
-          The relative resource name of the Binary Authorization policy to
-          audit and/or enforce. GKE policies have the following format:
-          projects/{project_number}/platforms/gke/policies/{policy_id}.
+       --binauthz-policy-bindings=[name=BINAUTHZ_POLICY,enforcement-mode=ENFORCEMENT_MODE,...]
+          Binds a Binary Authorization policy to the cluster.
+
+           name
+              (Required) The relative resource name of the Binary Authorization
+              policy to audit and/or enforce. GKE policies have the following
+              format:
+              projects/{project_number}/platforms/gke/policies/{policy_id}.
+
+           enforcement-mode
+              (Optional) The mode of enforcement for the policy. Must be one
+              of: audit, audit-and-enforce, audit-and-dryrun. Defaults to
+              audit, if unset.
 
        At most one of these can be specified:
 

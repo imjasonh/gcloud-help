@@ -4,10 +4,12 @@ NAME
 
 SYNOPSIS
     gcloud alpha alloydb instances create-secondary INSTANCE --cluster=CLUSTER
-        --region=REGION [--assign-inbound-public-ip=ASSIGN_INBOUND_PUBLIC_IP]
-        [--async] [--authorized-external-networks=[AUTHORIZED_NETWORK,...]]
-        [--availability-type=AVAILABILITY_TYPE] [--[no-]require-connectors]
-        [--ssl-mode=SSL_MODE] [GCLOUD_WIDE_FLAG ...]
+        --region=REGION [--allowed-psc-projects=[ALLOWED_PSC_PROJECTS,...]]
+        [--assign-inbound-public-ip=ASSIGN_INBOUND_PUBLIC_IP] [--async]
+        [--authorized-external-networks=[AUTHORIZED_NETWORK,...]]
+        [--availability-type=AVAILABILITY_TYPE] [--[no-]outbound-public-ip]
+        [--[no-]require-connectors] [--ssl-mode=SSL_MODE]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Creates a new AlloyDB SECONDARY instance within a given cluster.
@@ -31,6 +33,12 @@ REQUIRED FLAGS
         regions at https://cloud.google.com/sql/docs/instance-locations.
 
 OPTIONAL FLAGS
+     --allowed-psc-projects=[ALLOWED_PSC_PROJECTS,...]
+        Comma-separated list of allowed consumer projects to create endpoints
+        for Private Service Connect (PSC) connectivity for the instance. Only
+        instances in PSC-enabled clusters are allowed to set this field.(e.g.,
+        --allowed-psc-projects=project1,12345678,project2)
+
      --assign-inbound-public-ip=ASSIGN_INBOUND_PUBLIC_IP
         Specify to enable or disable public IP on an instance.
         ASSIGN_INBOUND_PUBLIC_IP must be one of:
@@ -62,6 +70,10 @@ OPTIONAL FLAGS
             Provide zonal availability instances. Not recommended for
             production instances; instance does not automatically fail over to
             another zone.
+
+     --[no-]outbound-public-ip
+        Add outbound Public IP connectivity to an AlloyDB instance. Use
+        --outbound-public-ip to enable and --no-outbound-public-ip to disable.
 
      --[no-]require-connectors
         Enable or disable enforcing connectors only (ex: AuthProxy) connections

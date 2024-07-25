@@ -3,8 +3,11 @@ NAME
         Cloud Build
 
 SYNOPSIS
-    gcloud beta builds worker-pools create WORKER_POOL [--region=REGION]
-        [--config-from-file=CONFIG_FROM_FILE | --peered-network=PEERED_NETWORK
+    gcloud beta builds worker-pools create WORKER_POOL
+        [--generation=GENERATION; default=1] [--region=REGION]
+        [--config-from-file=CONFIG_FROM_FILE | --disable-public-ip-address
+          --network-attachment=NETWORK_ATTACHMENT --route-all-traffic
+          | --peered-network=PEERED_NETWORK
           --peered-network-ip-range=PEERED_NETWORK_IP_RANGE --no-public-egress
           --worker-disk-size=WORKER_DISK_SIZE
           --worker-machine-type=WORKER_MACHINE_TYPE] [GCLOUD_WIDE_FLAG ...]
@@ -34,6 +37,9 @@ POSITIONAL ARGUMENTS
         1-63 characters, and valid characters are [a-z][0-9]-
 
 FLAGS
+     --generation=GENERATION; default=1
+        Generation of the worker pool.
+
      --region=REGION
         Cloud region where the worker pool is created. See
         https://cloud.google.com/build/docs/locations for available locations.
@@ -42,40 +48,73 @@ FLAGS
 
        --config-from-file=CONFIG_FROM_FILE
           File that contains the configuration for the worker pool to be
-          created. See
-          https://cloud.google.com/build/docs/private-pools/worker-pool-config-file-schema
-          for options.
+          created.
+
+          Private pool options:
+
+              https://cloud.google.com/build/docs/private-pools/worker-pool-config-file-schema
 
        Command-line flags to configure the private pool:
 
-         Network configuration for Service Networking:
+         At most one of these can be specified:
 
-           --peered-network=PEERED_NETWORK
-              Existing network to which workers are peered. The network is
-              specified in resource URL format
-              projects/{network_project}/global/networks/{network_name}.
+           Network configuration for Private Service Connect interface:
 
-              If not specified, the workers are not peered to any network.
+             --disable-public-ip-address
+                If set, workers in the worker pool are created without an
+                external IP address.
 
-           --peered-network-ip-range=PEERED_NETWORK_IP_RANGE
-              An IP range for your peered network. Specify the IP range using
-              Classless Inter-Domain Routing (CIDR) notation with a slash and
-              the subnet prefix size, such as /29.
+                If the worker pool is within a VPC Service Control perimeter,
+                use this flag.
 
-              Your subnet prefix size must be between 1 and 29. Optional: you
-              can specify an IP address before the subnet prefix value - for
-              example 192.168.0.0/24.
+             --network-attachment=NETWORK_ATTACHMENT
+                The network attachment that the worker network interface is
+                peered to. The network attachment is specified in resource URL
+                format
+                projects/{project}/regions/{region}/networkAttachments/{name}.
+                The region of network attachment must be the same as the worker
+                pool. See
+                https://cloud.google.com/vpc/docs/about-network-attachments for
+                details.
 
-              If no IP address is specified, your VPC automatically determines
-              the starting IP for the range. If no IP range is specified, Cloud
-              Build uses /24 as the default network IP range.
+             --route-all-traffic
+                Route all traffic through PSC interface. Enable this if you
+                want full control of traffic in the private pool. Configure
+                Cloud NAT for the subnet of network attachment if you need to
+                access public Internet.
 
-           --no-public-egress
-              If set, workers in the worker pool are created without an
-              external IP address.
+                If unset, Only route private IPs, e.g. 10.0.0.0/8,
+                172.16.0.0/12, and 192.168.0.0/16 through PSC interface.
 
-              If the worker pool is within a VPC Service Control perimeter, use
-              this flag.
+           Network configuration for Service Networking:
+
+             --peered-network=PEERED_NETWORK
+                Existing network to which workers are peered. The network is
+                specified in resource URL format
+                projects/{network_project}/global/networks/{network_name}.
+
+                If not specified, the workers are not peered to any network.
+
+             --peered-network-ip-range=PEERED_NETWORK_IP_RANGE
+                An IP range for your peered network. Specify the IP range using
+                Classless Inter-Domain Routing (CIDR) notation with a slash and
+                the subnet prefix size, such as /29.
+
+                Your subnet prefix size must be between 1 and 29. Optional: you
+                can specify an IP address before the subnet prefix value - for
+                example 192.168.0.0/24.
+
+                If no IP address is specified, your VPC automatically
+                determines the starting IP for the range. If no IP range is
+                specified, Cloud Build uses /24 as the default network IP
+                range.
+
+             --no-public-egress
+                If set, workers in the worker pool are created without an
+                external IP address.
+
+                If the worker pool is within a VPC Service Control perimeter,
+                use this flag.
 
          Configuration to be used for creating workers in the worker pool:
 
