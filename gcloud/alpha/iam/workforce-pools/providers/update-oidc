@@ -8,7 +8,7 @@ SYNOPSIS
         [--async] [--attribute-condition=ATTRIBUTE_CONDITION]
         [--attribute-mapping=[KEY=VALUE,...]] [--client-id=CLIENT_ID]
         [--description=DESCRIPTION] [--disabled] [--display-name=DISPLAY_NAME]
-        [--issuer-uri=ISSUER_URI] [--jwk-json-path=JWK_JSON_PATH]
+        [--issuer-uri=ISSUER_URI] [--jwk-json-path=PATH_TO_FILE]
         [--web-sso-additional-scopes=[WEB_SSO_ADDITIONAL_SCOPES,...]]
         [--web-sso-assertion-claims-behavior=WEB_SSO_ASSERTION_CLAIMS_BEHAVIOR]
         [--web-sso-response-type=WEB_SSO_RESPONSE_TYPE]
@@ -199,7 +199,7 @@ FLAGS
      --issuer-uri=ISSUER_URI
         The OIDC issuer URI. Must be a valid URI using the 'https' scheme.
 
-     --jwk-json-path=JWK_JSON_PATH
+     --jwk-json-path=PATH_TO_FILE
         Optional file containing JSON Web Key (JWK) public keys. The file
         format must follow JWK specifications
         (https://www.rfc-editor.org/rfc/rfc7517#section-4). Example file
@@ -218,96 +218,81 @@ FLAGS
                  }
               ]
             }
+            ```. Use a full or relative path to a local file containing the value of jwk_json_path.
 
-     --web-sso-additional-scopes=[WEB_SSO_ADDITIONAL_SCOPES,...]
-        Additional scopes to request for the OIDC authentication on top of
-        scopes requested by default. By default, the openid, profile and email
-        scopes that are supported by the identity provider are requested.
+            *--web-sso-additional-scopes*=[_WEB_SSO_ADDITIONAL_SCOPES_,...]::
 
-        Each additional scope may be at most 256 characters. A maximum of 10
-        additional scopes may be configured.
+            Additional scopes to request for the OIDC authentication on
+            top of scopes requested by default. By default, the `openid`, `profile`
+            and `email` scopes that are supported by the identity provider are
+            requested.
 
-     --web-sso-assertion-claims-behavior=WEB_SSO_ASSERTION_CLAIMS_BEHAVIOR
-        The behavior for how OIDC Claims are included in the assertion object
-        used for attribute mapping and attribute condition. Use
-        merge-user-info-over-id-token-claims to merge the UserInfo Endpoint
-        Claims with ID Token Claims, preferring UserInfo Claim Values for the
-        same Claim Name. Currently this option is only available for
-        Authorization Code flow. Use only-id-token-claims to include only ID
-        token claims. WEB_SSO_ASSERTION_CLAIMS_BEHAVIOR must be one of:
-        assertion-claims-behavior-unspecified,
-        merge-user-info-over-id-token-claims, only-id-token-claims.
+            Each additional scope may be at most 256
+            characters. A maximum of 10 additional scopes may be configured.
 
-     --web-sso-response-type=WEB_SSO_RESPONSE_TYPE
-        Response Type to request for in the OIDC Authorization Request for web
-        sign-in. Use code to select the authorization code flow
-        (https://openid.net/specs/openid-connect-core-1_0.html#CodeFlowAuth)
-        Use id-token to select the implicit flow
-        (https://openid.net/specs/openid-connect-core-1_0.html#ImplicitFlowAuth).
-        WEB_SSO_RESPONSE_TYPE must be one of: code, id-token,
-        response-type-unspecified.
+            *--web-sso-assertion-claims-behavior*=_WEB_SSO_ASSERTION_CLAIMS_BEHAVIOR_::
 
-     At most one of these can be specified:
+            The behavior for how OIDC Claims are included in the `assertion` object used for attribute mapping and attribute condition.
+            Use `merge-user-info-over-id-token-claims` to merge the UserInfo Endpoint Claims with ID Token
+            Claims, preferring UserInfo Claim Values for the same Claim Name. Currently this option is only
+            available for Authorization Code flow.
+            Use `only-id-token-claims` to include only ID token claims. _WEB_SSO_ASSERTION_CLAIMS_BEHAVIOR_ must be one of: *assertion-claims-behavior-unspecified*, *merge-user-info-over-id-token-claims*, *only-id-token-claims*.
 
-       --clear-client-secret
-          Clear the OIDC client secret.
+            *--web-sso-response-type*=_WEB_SSO_RESPONSE_TYPE_::
 
-       --client-secret-value=CLIENT_SECRET_VALUE
-          The OIDC client secret. Required to enable Authorization Code flow
-          for web sign-in.
+            Response Type to request for in the OIDC Authorization Request for web sign-in.
+            Use `code` to select the authorization code flow (https://openid.net/specs/openid-connect-core-1_0.html#CodeFlowAuth)
+            Use `id-token` to select the implicit flow (https://openid.net/specs/openid-connect-core-1_0.html#ImplicitFlowAuth). _WEB_SSO_RESPONSE_TYPE_ must be one of: *code*, *id-token*, *response-type-unspecified*.
 
-     At most one of these can be specified:
+            :: At most one of these can be specified:
 
-       --clear-extra-attributes-config
-          Clear the extra attributes configuration.
+            *--clear-client-secret*:::
 
-       --extra-attributes-client-id=EXTRA_ATTRIBUTES_CLIENT_ID
-          The OAuth 2.0 client ID for retrieving extra attributes from the
-          identity provider. Required to get the Access Token using client
-          credentials grant flow.
+            Clear the OIDC client secret.
 
-       --extra-attributes-client-secret-value=EXTRA_ATTRIBUTES_CLIENT_SECRET_VALUE
-          The OAuth 2.0 client secret for retrieving extra attributes from the
-          identity provider. Required to get the Access Token using client
-          credentials grant flow.
+            *--client-secret-value*=_CLIENT_SECRET_VALUE_:::
 
-       --extra-attributes-filter=EXTRA_ATTRIBUTES_FILTER
-          The filter used to request specific records from IdP. In case of
-          attributes type as AZURE_AD_GROUPS_MAIL, it represents the filter
-          used to request specific groups for users from IdP. By default all
-          the groups associated with the user are fetched. The groups that are
-          used should be mail enabled and security enabled. See
-          https://learn.microsoft.com/en-us/graph/search-query-parameter for
-          more details.
+            The OIDC client secret. Required to enable Authorization Code flow for web sign-in.
 
-       --extra-attributes-issuer-uri=EXTRA_ATTRIBUTES_ISSUER_URI
-          OIDC identity provider's issuer URI. Must be a valid URI using the
-          'https' scheme. Required to get the OIDC discovery document.
+            :: At most one of these can be specified:
 
-       --extra-attributes-type=EXTRA_ATTRIBUTES_TYPE
-          Represents the identity provider and type of claims that should be
-          fetched. EXTRA_ATTRIBUTES_TYPE must be (only one value is supported):
-          azure-ad-groups-mail.
+            *--clear-extra-attributes-config*:::
+
+            Clear the extra attributes configuration.
+
+            *--extra-attributes-client-id*=_EXTRA_ATTRIBUTES_CLIENT_ID_:::
+
+            The OAuth 2.0 client ID for retrieving extra attributes from the identity provider. Required to get the Access Token using client credentials grant flow.
+
+            *--extra-attributes-client-secret-value*=_EXTRA_ATTRIBUTES_CLIENT_SECRET_VALUE_:::
+
+            The OAuth 2.0 client secret for retrieving extra attributes from the identity provider. Required to get the Access Token using client credentials grant flow.
+
+            *--extra-attributes-filter*=_EXTRA_ATTRIBUTES_FILTER_:::
+
+            The filter used to request specific records from IdP. In case of attributes type as AZURE_AD_GROUPS_MAIL, it represents the filter used to request specific groups for users from IdP. By default all the groups associated with the user are fetched. The groups that are used should be mail enabled and security enabled. See https://learn.microsoft.com/en-us/graph/search-query-parameter for more details.
+
+            *--extra-attributes-issuer-uri*=_EXTRA_ATTRIBUTES_ISSUER_URI_:::
+
+            OIDC identity provider's issuer URI. Must be a valid URI using the 'https' scheme. Required to get the OIDC discovery document.
+
+            *--extra-attributes-type*=_EXTRA_ATTRIBUTES_TYPE_:::
+
+            Represents the identity provider and type of claims that should be fetched. _EXTRA_ATTRIBUTES_TYPE_ must be (only one value is supported): *azure-ad-groups-mail*.
 
 GCLOUD WIDE FLAGS
-    These flags are available to all commands: --access-token-file, --account,
-    --billing-project, --configuration, --flags-file, --flatten, --format,
-    --help, --impersonate-service-account, --log-http, --project, --quiet,
-    --trace-token, --user-output-enabled, --verbosity.
+        These flags are available to all commands: --access-token-file, --account, --billing-project, --configuration, --flags-file, --flatten, --format, --help, --impersonate-service-account, --log-http, --project, --quiet, --trace-token, --user-output-enabled, --verbosity.
 
-    Run $ gcloud help for details.
+        Run *$ gcloud help* for details.
 
 API REFERENCE
-    This command uses the iam/v1 API. The full documentation for this API can
-    be found at: https://cloud.google.com/iam/
+        This command uses the *iam/v1* API. The full documentation for this API can be found at: https://cloud.google.com/iam/
 
 NOTES
-    This command is currently in alpha and might change without notice. If this
-    command fails with API permission errors despite specifying the correct
-    project, you might be trying to access an API with an invitation-only early
-    access allowlist. These variants are also available:
+        This command is currently in alpha and might change without notice. If this command fails with API permission errors despite specifying the correct project, you might be trying to access an API with an invitation-only early access allowlist.
+        These variants are also available:
 
-        $ gcloud iam workforce-pools providers update-oidc
+          $ gcloud iam workforce-pools providers update-oidc
 
-        $ gcloud beta iam workforce-pools providers update-oidc
+          $ gcloud beta iam workforce-pools providers update-oidc
 

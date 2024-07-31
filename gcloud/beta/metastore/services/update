@@ -14,11 +14,15 @@ SYNOPSIS
           --keytab=KEYTAB --krb5-config=KRB5_CONFIG]
         [--maintenance-window-day=MAINTENANCE_WINDOW_DAY
           --maintenance-window-hour=MAINTENANCE_WINDOW_HOUR]
-        [--scheduled-backup-configs-from-file=SCHEDULED_BACKUP_CONFIGS_FROM_FILE | --enable-scheduled-backup --scheduled-backup-cron=SCHEDULED_BACKUP_CRON --scheduled-backup-location=SCHEDULED_BACKUP_LOCATION]
+        [--scheduled-backup-configs-from-file=PATH_TO_FILE
+          | --enable-scheduled-backup
+          --scheduled-backup-cron=SCHEDULED_BACKUP_CRON
+          --scheduled-backup-location=SCHEDULED_BACKUP_LOCATION]
         [--update-auxiliary-versions-from-file=UPDATE_AUXILIARY_VERSIONS_FROM_FILE | --add-auxiliary-versions=[ADD_AUXILIARY_VERSIONS,
           ...] --clear-auxiliary-versions]
-        [--update-hive-metastore-configs-from-file=UPDATE_HIVE_METASTORE_CONFIGS_FROM_FILE | --update-hive-metastore-configs=[KEY=VALUE,
-          ...] --clear-hive-metastore-configs
+        [--update-hive-metastore-configs-from-file=PATH_TO_FILE
+          | --update-hive-metastore-configs=[KEY=VALUE,...]
+          --clear-hive-metastore-configs
           | --remove-hive-metastore-configs=[REMOVE_HIVE_METASTORE_CONFIGS,
           ...]] [GCLOUD_WIDE_FLAG ...]
 
@@ -47,8 +51,8 @@ POSITIONAL ARGUMENTS
      To set the project attribute:
       ◆ provide the argument service on the command line with a fully
         specified name;
-      ◆ set the property core/project;
-      ◆ provide the argument --project on the command line.
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
 
      This must be specified.
 
@@ -232,7 +236,7 @@ FLAGS
 
      At most one of these can be specified:
 
-       --scheduled-backup-configs-from-file=SCHEDULED_BACKUP_CONFIGS_FROM_FILE
+       --scheduled-backup-configs-from-file=PATH_TO_FILE
           Path to a JSON file containing a mapping of scheduled backup
           configurations key-value pairs to apply to the scheduled backup.
 
@@ -245,6 +249,9 @@ FLAGS
                     "backup_location": "gs://example-bucket",
                     "time_zone": "UTC"
                   }
+
+          Use a full or relative path to a local file containing the value of
+          scheduled_backup_configs.
 
        Scheduled backup configurations to enable a scheduled backup of the
        metastore service.
@@ -309,7 +316,7 @@ FLAGS
 
      At most one of these can be specified:
 
-       --update-hive-metastore-configs-from-file=UPDATE_HIVE_METASTORE_CONFIGS_FROM_FILE
+       --update-hive-metastore-configs-from-file=PATH_TO_FILE
           Path to a XML file containing a mapping of Hive metastore
           configuration key-value pairs to apply to the Hive metastore.
 
@@ -323,6 +330,9 @@ FLAGS
                       <description></description>
                     </property>
                   </configuration>
+
+          Use a full or relative path to a local file containing the value of
+          update_hive_metastore_configs.
 
        Modify the Hive metastore configuration properties by passing key-value
        pairs in through the flags.

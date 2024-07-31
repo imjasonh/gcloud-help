@@ -15,7 +15,7 @@ SYNOPSIS
         [--consumer-subnetworks=[CONSUMER_SUBNETWORKS,...] | --network=NETWORK
           | --network-config-from-file=NETWORK_CONFIG_FROM_FILE]
         [--hive-metastore-configs=[KEY=VALUE,...]
-          | --hive-metastore-configs-from-file=HIVE_METASTORE_CONFIGS_FROM_FILE]
+          | --hive-metastore-configs-from-file=PATH_TO_FILE]
         [--instance-size=INSTANCE_SIZE | --scaling-factor=SCALING_FACTOR
           | --tier=TIER | --max-scaling-factor=MAX_SCALING_FACTOR
           --min-scaling-factor=MIN_SCALING_FACTOR]
@@ -25,7 +25,10 @@ SYNOPSIS
           --maintenance-window-hour=MAINTENANCE_WINDOW_HOUR]
         [--read-only-regions=[READ_ONLY_REGIONS,...]
           --read-write-regions=[READ_WRITE_REGIONS,...]]
-        [--scheduled-backup-configs-from-file=SCHEDULED_BACKUP_CONFIGS_FROM_FILE | --enable-scheduled-backup --scheduled-backup-cron=SCHEDULED_BACKUP_CRON --scheduled-backup-location=SCHEDULED_BACKUP_LOCATION]
+        [--scheduled-backup-configs-from-file=PATH_TO_FILE
+          | --enable-scheduled-backup
+          --scheduled-backup-cron=SCHEDULED_BACKUP_CRON
+          --scheduled-backup-location=SCHEDULED_BACKUP_LOCATION]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -59,8 +62,8 @@ POSITIONAL ARGUMENTS
      To set the project attribute:
       ◆ provide the argument service on the command line with a fully
         specified name;
-      ◆ set the property core/project;
-      ◆ provide the argument --project on the command line.
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
 
      This must be specified.
 
@@ -248,7 +251,7 @@ FLAGS
           A mapping of Hive metastore configuration key-value pairs to apply to
           the Hive metastore.
 
-       --hive-metastore-configs-from-file=HIVE_METASTORE_CONFIGS_FROM_FILE
+       --hive-metastore-configs-from-file=PATH_TO_FILE
           Path to a XML file containing a mapping of Hive metastore
           configuration key-value pairs to apply to the Hive metastore.
 
@@ -262,6 +265,9 @@ FLAGS
                       <description></description>
                     </property>
                   </configuration>
+
+          Use a full or relative path to a local file containing the value of
+          hive_metastore_configs.
 
      The instance size of the Dataproc Metastore instance.
 
@@ -374,7 +380,7 @@ FLAGS
 
      At most one of these can be specified:
 
-       --scheduled-backup-configs-from-file=SCHEDULED_BACKUP_CONFIGS_FROM_FILE
+       --scheduled-backup-configs-from-file=PATH_TO_FILE
           Path to a JSON file containing a mapping of scheduled backup
           configurations key-value pairs to apply to the scheduled backup.
 
@@ -387,6 +393,9 @@ FLAGS
                     "backup_location": "gs://example-bucket",
                     "time_zone": "UTC"
                   }
+
+          Use a full or relative path to a local file containing the value of
+          scheduled_backup_configs.
 
        Scheduled backup configurations to enable a scheduled backup of the
        metastore service.

@@ -4,7 +4,7 @@ NAME
 
 SYNOPSIS
     gcloud container node-pools update NAME
-        (--containerd-config-from-file=CONTAINERD_CONFIG_FROM_FILE
+        (--containerd-config-from-file=PATH_TO_FILE
           | --enable-confidential-nodes | --enable-gvnic
           | --enable-image-streaming | --enable-insecure-kubelet-readonly-port
           | --enable-private-nodes | --enable-queued-provisioning
@@ -13,8 +13,8 @@ SYNOPSIS
           | --node-labels=[NODE_LABEL,...] | --node-locations=ZONE,[ZONE,...]
           | --node-taints=[NODE_TAINT,...]
           | --resource-manager-tags=[KEY=VALUE,...]
-          | --system-config-from-file=SYSTEM_CONFIG_FROM_FILE
-          | --tags=[TAG,...] | --windows-os-version=WINDOWS_OS_VERSION
+          | --system-config-from-file=PATH_TO_FILE | --tags=[TAG,...]
+          | --windows-os-version=WINDOWS_OS_VERSION
           | --workload-metadata=WORKLOAD_METADATA | --disk-size=DISK_SIZE
           --disk-type=DISK_TYPE --machine-type=MACHINE_TYPE
           | --enable-autoprovisioning --enable-autoscaling
@@ -51,7 +51,7 @@ POSITIONAL ARGUMENTS
 REQUIRED FLAGS
      Exactly one of these must be specified:
 
-       --containerd-config-from-file=CONTAINERD_CONFIG_FROM_FILE
+       --containerd-config-from-file=PATH_TO_FILE
           Path of the YAML file that contains containerd configuration entries
           like configuring access to private image registries.
 
@@ -61,6 +61,9 @@ REQUIRED FLAGS
           Note: Updating the containerd configuration of an existing cluster or
           node pool requires recreation of the existing nodes, which might
           cause disruptions in running workloads.
+
+          Use a full or relative path to a local file containing the value of
+          containerd_config.
 
        --enable-confidential-nodes
           Recreate all the nodes in the node pool to be confidential VM
@@ -200,7 +203,7 @@ REQUIRED FLAGS
           policy rules. For instructions, see
           https://cloud.google.com/firewall/docs/use-tags-for-firewalls.
 
-       --system-config-from-file=SYSTEM_CONFIG_FROM_FILE
+       --system-config-from-file=PATH_TO_FILE
           Path of the YAML/JSON file that contains the node configuration,
           including Linux kernel parameters (sysctls) and kubelet configs.
 
@@ -264,6 +267,9 @@ REQUIRED FLAGS
           Note, updating the system configuration of an existing node pool
           requires recreation of the nodes which which might cause a
           disruption.
+
+          Use a full or relative path to a local file containing the value of
+          system_config.
 
        --tags=[TAG,...]
           Replaces all the user specified Compute Engine tags on all nodes in

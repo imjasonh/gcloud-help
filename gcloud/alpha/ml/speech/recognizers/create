@@ -26,8 +26,8 @@ POSITIONAL ARGUMENTS
      To set the project attribute:
       ◆ provide the argument recognizer on the command line with a fully
         specified name;
-      ◆ set the property core/project;
-      ◆ provide the argument --project on the command line.
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
 
      This must be specified.
 
@@ -76,7 +76,8 @@ OPTIONAL FLAGS
 
        --audio-channel-count=AUDIO_CHANNEL_COUNT
           Number of channels present in the audio data sent for recognition.
-          Required if --encoding flag is specified and is not AUTO.
+          Required if --encoding flag is specified and is not AUTO. Must be set
+          to a value between 1 and 8.
 
        --encoding=ENCODING
           Encoding format of the provided audio. For headerless formats, must
@@ -86,50 +87,54 @@ OPTIONAL FLAGS
 
        --sample-rate=SAMPLE_RATE
           Sample rate in Hertz of the audio data sent for recognition. Required
-          if --encoding flag is specified and is not AUTO.
+          if --encoding flag is specified and is not AUTO. Must be set to a
+          value between 8000 and 48000.
 
      ASR Features
 
        --enable-automatic-punctuation
-          If true, adds punctuation to recognition result hypotheses.
+          If set, adds punctuation to recognition result hypotheses.
 
        --enable-spoken-emojis
-          If true, adds spoken emoji formatting.
+          If set, adds spoken emoji formatting.
 
        --enable-spoken-punctuation
-          If true, replaces spoken punctuation with the corresponding symbols
-          in the request.
+          If set, replaces spoken punctuation with the corresponding symbols in
+          the request.
 
        --enable-word-confidence
-          If true, the top result includes a list of words and the confidence
+          If set, the top result includes a list of words and the confidence
           for those words.
 
        --enable-word-time-offsets
-          If true, the top result includes a list of words and their
-          timestamps.
+          If set, the top result includes a list of words and their timestamps.
 
        --max-alternatives=MAX_ALTERNATIVES
-          Maximum number of recognition hypotheses to be returned. Valid values
-          are 1-30.
+          Maximum number of recognition hypotheses to be returned. Must be set
+          to a value between 1 and 30.
 
        --profanity-filter
-          If true, the server will censor profanities.
+          If set, the server will censor profanities.
 
        --separate-channel-recognition
           Mode for recognizing multi-channel audio using Separate Channel
-          Recognition. When set to true, the service will recognize each
-          channel independently.
+          Recognition. When set, the service will recognize each channel
+          independently.
 
        Speaker Diarization
 
          --max-speaker-count=MAX_SPEAKER_COUNT
-            Maximum number of speakers in the conversation.
+            Maximum number of speakers in the conversation. Must be greater
+            than or equal to --min-speaker-count. Must be set to a value
+            between 1 and 6.
 
             This flag argument must be specified if any of the other arguments
             in this group are specified.
 
          --min-speaker-count=MIN_SPEAKER_COUNT
-            Minimum number of speakers in the conversation.
+            Minimum number of speakers in the conversation. Must be less than
+            or equal to --max-speaker-count. Must be set to a value between 1
+            and 6.
 
             This flag argument must be specified if any of the other arguments
             in this group are specified.

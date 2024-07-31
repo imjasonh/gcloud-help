@@ -15,7 +15,7 @@ SYNOPSIS
           pod-ipv4-range=SECONDARY_RANGE_NAME,
           [max-pods-per-node=NUM_PODS],...]] [--async]
         [--boot-disk-kms-key=BOOT_DISK_KMS_KEY] [--cluster=CLUSTER]
-        [--containerd-config-from-file=CONTAINERD_CONFIG_FROM_FILE]
+        [--containerd-config-from-file=PATH_TO_FILE]
         [--disable-pod-cidr-overprovision] [--disk-size=DISK_SIZE]
         [--disk-type=DISK_TYPE] [--enable-autoprovisioning]
         [--enable-autorepair] [--no-enable-autoupgrade]
@@ -50,9 +50,9 @@ SYNOPSIS
           batch-percent=BATCH_NODE_PERCENTAGE,
           batch-soak-duration=BATCH_SOAK_DURATION,...]]
         [--storage-pools=STORAGE_POOL,[...]]
-        [--system-config-from-file=SYSTEM_CONFIG_FROM_FILE]
-        [--tags=TAG,[TAG,...]] [--threads-per-core=THREADS_PER_CORE]
-        [--tpu-topology=TPU_TOPOLOGY] [--windows-os-version=WINDOWS_OS_VERSION]
+        [--system-config-from-file=PATH_TO_FILE] [--tags=TAG,[TAG,...]]
+        [--threads-per-core=THREADS_PER_CORE] [--tpu-topology=TPU_TOPOLOGY]
+        [--windows-os-version=WINDOWS_OS_VERSION]
         [--workload-metadata=WORKLOAD_METADATA]
         [--create-pod-ipv4-range=[KEY=VALUE,...] | --pod-ipv4-range=NAME]
         [--enable-autoscaling --location-policy=LOCATION_POLICY
@@ -186,7 +186,7 @@ FLAGS
         The cluster to add the node pool to. Overrides the default
         container/cluster property value for this command invocation.
 
-     --containerd-config-from-file=CONTAINERD_CONFIG_FROM_FILE
+     --containerd-config-from-file=PATH_TO_FILE
         Path of the YAML file that contains containerd configuration entries
         like configuring access to private image registries.
 
@@ -196,6 +196,9 @@ FLAGS
         Note: Updating the containerd configuration of an existing cluster or
         node pool requires recreation of the existing nodes, which might cause
         disruptions in running workloads.
+
+        Use a full or relative path to a local file containing the value of
+        containerd_config.
 
      --disable-pod-cidr-overprovision
         Disables pod cidr overprovision on nodes. Pod cidr overprovisioning is
@@ -661,7 +664,7 @@ FLAGS
         STORAGE_POOL must be in the format
         projects/project/zones/zone/storagePools/storagePool
 
-     --system-config-from-file=SYSTEM_CONFIG_FROM_FILE
+     --system-config-from-file=PATH_TO_FILE
         Path of the YAML/JSON file that contains the node configuration,
         including Linux kernel parameters (sysctls) and kubelet configs.
 
@@ -721,6 +724,9 @@ FLAGS
 
         Note, updating the system configuration of an existing node pool
         requires recreation of the nodes which which might cause a disruption.
+
+        Use a full or relative path to a local file containing the value of
+        system_config.
 
      --tags=TAG,[TAG,...]
         Applies the given Compute Engine tags (comma separated) on all nodes in

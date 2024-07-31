@@ -18,7 +18,7 @@ SYNOPSIS
         [--cluster-ipv4-cidr=CLUSTER_IPV4_CIDR]
         [--cluster-secondary-range-name=NAME]
         [--cluster-version=CLUSTER_VERSION]
-        [--containerd-config-from-file=CONTAINERD_CONFIG_FROM_FILE]
+        [--containerd-config-from-file=PATH_TO_FILE]
         [--create-subnetwork=[KEY=VALUE,...]]
         [--database-encryption-key=DATABASE_ENCRYPTION_KEY]
         [--default-max-pods-per-node=DEFAULT_MAX_PODS_PER_NODE]
@@ -69,8 +69,8 @@ SYNOPSIS
         [--services-ipv4-cidr=CIDR] [--services-secondary-range-name=NAME]
         [--shielded-integrity-monitoring] [--shielded-secure-boot] [--spot]
         [--stack-type=STACK_TYPE] [--subnetwork=SUBNETWORK]
-        [--system-config-from-file=SYSTEM_CONFIG_FROM_FILE]
-        [--tags=TAG,[TAG,...]] [--threads-per-core=THREADS_PER_CORE]
+        [--system-config-from-file=PATH_TO_FILE] [--tags=TAG,[TAG,...]]
+        [--threads-per-core=THREADS_PER_CORE]
         [--workload-metadata=WORKLOAD_METADATA] [--workload-pool=WORKLOAD_POOL]
         [--workload-vulnerability-scanning=WORKLOAD_VULNERABILITY_SCANNING]
         [--binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
@@ -82,7 +82,7 @@ SYNOPSIS
           | --enable-dataplane-v2-flow-observability]
         [--disable-dataplane-v2-metrics | --enable-dataplane-v2-metrics]
         [[--enable-autoprovisioning
-          : --autoprovisioning-config-file=AUTOPROVISIONING_CONFIG_FILE
+          : --autoprovisioning-config-file=PATH_TO_FILE
           | [--max-cpu=MAX_CPU --max-memory=MAX_MEMORY
           : --autoprovisioning-image-type=AUTOPROVISIONING_IMAGE_TYPE
           --autoprovisioning-locations=ZONE,[ZONE,...]
@@ -328,7 +328,7 @@ FLAGS
 
             $ gcloud container get-server-config
 
-     --containerd-config-from-file=CONTAINERD_CONFIG_FROM_FILE
+     --containerd-config-from-file=PATH_TO_FILE
         Path of the YAML file that contains containerd configuration entries
         like configuring access to private image registries.
 
@@ -338,6 +338,9 @@ FLAGS
         Note: Updating the containerd configuration of an existing cluster or
         node pool requires recreation of the existing nodes, which might cause
         disruptions in running workloads.
+
+        Use a full or relative path to a local file containing the value of
+        containerd_config.
 
      --create-subnetwork=[KEY=VALUE,...]
         Create a new subnetwork for the cluster. The name and range of the
@@ -1166,7 +1169,7 @@ FLAGS
 
         Cannot be used with the "--create-subnetwork" option.
 
-     --system-config-from-file=SYSTEM_CONFIG_FROM_FILE
+     --system-config-from-file=PATH_TO_FILE
         Path of the YAML/JSON file that contains the node configuration,
         including Linux kernel parameters (sysctls) and kubelet configs.
 
@@ -1226,6 +1229,9 @@ FLAGS
 
         Note, updating the system configuration of an existing node pool
         requires recreation of the nodes which which might cause a disruption.
+
+        Use a full or relative path to a local file containing the value of
+        system_config.
 
      --tags=TAG,[TAG,...]
         Applies the given Compute Engine tags (comma separated) on all nodes in
@@ -1397,7 +1403,7 @@ FLAGS
 
        At most one of these can be specified:
 
-         --autoprovisioning-config-file=AUTOPROVISIONING_CONFIG_FILE
+         --autoprovisioning-config-file=PATH_TO_FILE
             Path of the JSON/YAML file which contains information about the
             cluster's node autoprovisioning configuration. Currently it
             contains a list of resource limits, identity defaults for
@@ -1466,6 +1472,9 @@ FLAGS
             Customer Managed Encryption Keys (CMEK) used by new
             auto-provisioned node pools can be specified in the
             'bootDiskKmsKey' field.
+
+            Use a full or relative path to a local file containing the value of
+            autoprovisioning_config_file.
 
          Flags to configure autoprovisioned nodes
 
