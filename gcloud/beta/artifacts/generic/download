@@ -4,8 +4,9 @@ NAME
 
 SYNOPSIS
     gcloud beta artifacts generic download --destination=DESTINATION
-        --package=ARTIFACT --version=VERSION [--name=NAME]
-        [--location=LOCATION --repository=REPOSITORY] [GCLOUD_WIDE_FLAG ...]
+        --package=ARTIFACT --version=VERSION [--chunk-size=CHUNK_SIZE]
+        [--name=NAME] [--location=LOCATION --repository=REPOSITORY]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) Download a generic artifact from a generic artifact repository.
@@ -18,6 +19,14 @@ EXAMPLES
           --project=myproject --repository=myrepo --package=mypackage \
           --version=v0.1.0 --destination=/path/to/destination/ \
           --name=myfile.txt
+
+    To download version v0.1.0 of myfile.txt in 8000 byte chunks located in a
+    repository in "us-central1" to /path/to/destination/:
+
+        $ gcloud beta artifacts generic download --location=us-central1 \
+          --project=myproject --repository=myrepo --package=mypackage \
+          --version=v0.1.0 --destination=/path/to/destination/ \
+          --name=myfile.txt --chunk-size=8000
 
     To download all files of version v0.1.0 and package mypackage located in a
     repository in "us-central1" to /path/to/destination/ while maintaining the
@@ -38,6 +47,10 @@ REQUIRED FLAGS
         The version of the artifact to download.
 
 OPTIONAL FLAGS
+     --chunk-size=CHUNK_SIZE
+        If specified, the chunk size (bytes) to use for downloading the
+        package.
+
      --name=NAME
         If specified, the file name within the artifact to download.
 

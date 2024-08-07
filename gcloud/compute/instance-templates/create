@@ -6,14 +6,15 @@ SYNOPSIS
     gcloud compute instance-templates create NAME
         [--accelerator=[count=COUNT],[type=TYPE]] [--no-boot-disk-auto-delete]
         [--boot-disk-device-name=BOOT_DISK_DEVICE_NAME]
+        [--boot-disk-interface=BOOT_DISK_INTERFACE]
         [--boot-disk-provisioned-iops=BOOT_DISK_PROVISIONED_IOPS]
         [--boot-disk-provisioned-throughput=BOOT_DISK_PROVISIONED_THROUGHPUT]
         [--boot-disk-size=BOOT_DISK_SIZE] [--boot-disk-type=BOOT_DISK_TYPE]
         [--can-ip-forward] [--configure-disk=[PROPERTY=VALUE,...]]
         [--create-disk=[PROPERTY=VALUE,...]] [--description=DESCRIPTION]
         [--discard-local-ssds-at-termination-timestamp=DISCARD_LOCAL_SSDS_AT_TERMINATION_TIMESTAMP]
-        [--disk=[auto-delete=AUTO-DELETE],
-          [boot=BOOT],[device-name=DEVICE-NAME],[mode=MODE],[name=NAME]]
+        [--disk=[auto-delete=AUTO-DELETE],[boot=BOOT],[device-name=DEVICE-NAME],
+          [interface=INTERFACE],[mode=MODE],[name=NAME]]
         [--[no-]enable-nested-virtualization] [--[no-]enable-uefi-networking]
         [--external-ipv6-address=EXTERNAL_IPV6_ADDRESS]
         [--external-ipv6-prefix-length=EXTERNAL_IPV6_PREFIX_LENGTH]
@@ -108,6 +109,12 @@ FLAGS
         The name the guest operating system will see for the boot disk. This
         option can only be specified if a new boot disk is being created (as
         opposed to mounting an existing persistent disk).
+
+     --boot-disk-interface=BOOT_DISK_INTERFACE
+        Indicates the interface to use for the boot disk. The value must be one
+        of the following:
+        ◆ SCSI
+        ◆ NVME
 
      --boot-disk-provisioned-iops=BOOT_DISK_PROVISIONED_IOPS
         Indicates how many IOPS to provision for the disk. This sets the number
@@ -257,6 +264,12 @@ FLAGS
             The name of the storage pool in which the new disk is created. The
             new disk and the storage pool must be in the same location.
 
+         interface
+            The interface to use with the disk. The value must be one of the
+            following:
+            ▸ SCSI
+            ▸ NVME
+
          boot
             If yes, indicates that this is a boot disk. The instance will use
             the first partition of the disk for its root file system. The
@@ -336,15 +349,15 @@ FLAGS
         For more information about the --discard-local-ssd flag, see
         https://cloud.google.com/compute/docs/disks/local-ssd#stop_instance.
 
-     --disk=[auto-delete=AUTO-DELETE],[boot=BOOT],[device-name=DEVICE-NAME],[mode=MODE],[name=NAME]
-        Attaches an existing persistent disk to the instances.
+     --disk=[auto-delete=AUTO-DELETE],[boot=BOOT],[device-name=DEVICE-NAME],[interface=INTERFACE],[mode=MODE],[name=NAME]
+        Attaches an existing disk to the instances.
 
          name
             The disk to attach to the instances. If you create more than one
             instance, you can only attach a disk in read-only mode. By default,
-            you attach a zonal persistent disk located in the same zone of the
-            instance. If you want to attach a regional persistent disk, you
-            must specify the disk using its URI; for example,
+            you attach a zonal disk located in the same zone of the instance.
+            If you want to attach a regional disk, you must specify the disk
+            using its URI; for example,
             projects/myproject/regions/us-central1/disks/my-regional-disk.
 
          mode
@@ -367,7 +380,13 @@ FLAGS
             If set to yes, the persistent disk is automatically deleted when
             the instance is deleted. However, if you detach the disk from the
             instance, deleting the instance doesn't delete the disk. The
-            default value for this is yes.
+            default value is yes.
+
+         interface
+            The interface to use for the disk. The value must be one of the
+            following:
+            ▸ SCSI
+            ▸ NVME
 
      --[no-]enable-nested-virtualization
         If set to true, enables nested virtualization for the instance. Use

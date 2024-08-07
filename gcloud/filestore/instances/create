@@ -9,7 +9,9 @@ SYNOPSIS
         --network=[connect-mode=CONNECT-MODE],
           [name=NAME],[reserved-ip-range=RESERVED-IP-RANGE] [--async]
         [--description=DESCRIPTION] [--labels=[KEY=VALUE,...]]
-        [--location=LOCATION] [--region=REGION]
+        [--location=LOCATION]
+        [--performance=[iops-by-capacity],[max-read-iops=MAX-READ-IOPS],
+          [max-read-iops-per-gb=MAX-READ-IOPS-PER-GB]] [--region=REGION]
         [--source-instance=SOURCE_INSTANCE] [--tier=TIER; default="BASIC_HDD"]
         [--kms-key=KMS_KEY : --kms-keyring=KMS_KEYRING
           --kms-location=KMS_LOCATION --kms-project=KMS_PROJECT]
@@ -26,9 +28,10 @@ EXAMPLES
           --tier=TIER --file-share=name=VOLUME_NAME,capacity=CAPACITY \
           --network=name=NETWORK_NAME,\
         reserved-ip-range=RESERVED_IP_RANGE,connect-mode=CONNECT_MODE \
-            --zone=ZONE --kms-key=KMS-KEY --kms-keyring=KMS_KEYRING \
-            --kms-location=KMS_LOCATION --kms-project=KMS_PROJECT \
-            --flags-file=FLAGS_FILE --source-instance=SOURCE_INSTANCE
+            --zone=ZONE --performance=PERFORMANCE --kms-key=KMS-KEY \
+            --kms-keyring=KMS_KEYRING --kms-location=KMS_LOCATION \
+            --kms-project=KMS_PROJECT --flags-file=FLAGS_FILE \
+            --source-instance=SOURCE_INSTANCE
 
         Example json configuration file:
     { "--file-share": {        "capacity": "61440",
@@ -205,6 +208,58 @@ OPTIONAL FLAGS
 
      --location=LOCATION
         Location of the Cloud Filestore instance/operation.
+
+     --performance=[iops-by-capacity],[max-read-iops=MAX-READ-IOPS],[max-read-iops-per-gb=MAX-READ-IOPS-PER-GB]
+        Performance configuration for the instance. This flag is used to
+        configure the read IOPS provisioned for the instance. The instance's
+        write IOPS and read/write throughputs will be derived from the
+        configured read IOPS. For more information about the derived
+        performance limits see
+        https://cloud.google.com/filestore/docs/performance. Must be one of:
+
+            iops-by-capacity
+              Default configuration. Automatically provisions the instance IOPS
+              based on its capacity. If the user changes the instance capacity,
+              IOPS will be automatically adjusted accordingly. The available IOPS
+              for a given capacity can be found here: https://cloud.google.com/filestore/docs/performance.
+
+            max-read-iops
+              The number of IOPS to provision for the instance.
+              MAX-READ-IOPS must be in multiple of 1000 and in the supported IOPS
+              range for the current capacity of the instance.
+              For more details, see: https://cloud.google.com/filestore/docs/performance.
+
+            max-read-iops-per-gb
+              Is used for setting the max IOPS of the instance by
+              specifying the IOPS per GB. When this parameter is used, the
+              max IOPS are derived from the instance capacity:
+              The instance max IOPS will be calculated by multiplying the
+              capacity of the instance (GB) by MAX-READ-IOPS-PER-GB, and rounding
+              to the nearest 1000. The max IOPS will be changed
+              dynamically based on the instance capacity.
+              MAX-READ-IOPS-PER-GB must be in the supported range of the instance.
+              For more details, see: https://cloud.google.com/filestore/docs/performance.
+
+        Examples:
+
+        Configure an instance implicitly with iops_by_capacity performance:
+
+            $ gcloud filestore instances create example-cluster
+
+        Configure an instance explicitly with iops_by_capacity performance:
+
+            $ gcloud filestore instances create example-cluster \
+                --performance=iops_by_capacity
+
+        Configure an instance with max-read-iops performance:
+
+            $ gcloud filestore instances create example-cluster \
+                --performance=max-read-iops=1000
+
+        Configure an instance with max-read-iops-per-gb performance:
+
+            $ gcloud filestore instances create example-cluster \
+                --performance=max-read-iops-per-gb=5
 
      --region=REGION
         Region of the Cloud Filestore instance.

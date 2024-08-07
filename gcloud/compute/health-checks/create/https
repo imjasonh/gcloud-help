@@ -9,7 +9,7 @@ SYNOPSIS
         [--healthy-threshold=HEALTHY_THRESHOLD; default=2] [--host=HOST]
         [--proxy-header=PROXY_HEADER; default="NONE"]
         [--request-path=REQUEST_PATH; default="/"] [--response=RESPONSE]
-        [--timeout=TIMEOUT; default="5s"]
+        [--source-regions=REGION,...,[...]] [--timeout=TIMEOUT; default="5s"]
         [--unhealthy-threshold=UNHEALTHY_THRESHOLD; default=2]
         [--global | --region=REGION]
         [--port=PORT; default=80 --port-name=PORT_NAME --use-serving-port]
@@ -68,6 +68,18 @@ FLAGS
         When empty, status code of the response determines health. When not
         empty, presence of specified string in first 1024 characters of
         response body determines health. Only ASCII characters allowed.
+
+     --source-regions=REGION,...,[...]
+        Define the list of Google Cloud regions from which health checks are
+        performed. This option is supported only for global health checks that
+        will be referenced by DNS routing policies. If specified, the
+        --check-interval field should be at least 30 seconds. The
+        --proxy-header and --request fields (for TCP health checks) are not
+        supported with this option.
+
+        If --source-regions is specified for a health check, then that health
+        check cannot be used by a backend service or by a managed instance
+        group (for autohealing).
 
      --timeout=TIMEOUT; default="5s"
         If Google Compute Engine doesn't receive a healthy response from the

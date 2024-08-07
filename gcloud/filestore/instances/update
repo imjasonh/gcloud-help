@@ -3,7 +3,9 @@ NAME
 
 SYNOPSIS
     gcloud filestore instances update (INSTANCE : --zone=ZONE) [--async]
-        [--description=DESCRIPTION] [--location=LOCATION] [--region=REGION]
+        [--description=DESCRIPTION] [--location=LOCATION]
+        [--performance=[iops-by-capacity],[max-read-iops=MAX-READ-IOPS],
+          [max-read-iops-per-gb=MAX-READ-IOPS-PER-GB]] [--region=REGION]
         [--update-labels=[KEY=VALUE,...]]
         [--clear-labels | --remove-labels=[KEY,...]]
         [[--file-share=[capacity=CAPACITY],
@@ -101,6 +103,58 @@ FLAGS
 
      --location=LOCATION
         Location of the Cloud Filestore instance/operation.
+
+     --performance=[iops-by-capacity],[max-read-iops=MAX-READ-IOPS],[max-read-iops-per-gb=MAX-READ-IOPS-PER-GB]
+        Performance configuration for the instance. This flag is used to
+        configure the read IOPS provisioned for the instance. The instance's
+        write IOPS and read/write throughputs will be derived from the
+        configured read IOPS. For more information about the derived
+        performance limits see
+        https://cloud.google.com/filestore/docs/performance. Must be one of:
+
+            iops-by-capacity
+              Default configuration. Automatically provisions the instance IOPS
+              based on its capacity. If the user changes the instance capacity,
+              IOPS will be automatically adjusted accordingly. The available IOPS
+              for a given capacity can be found here: https://cloud.google.com/filestore/docs/performance.
+
+            max-read-iops
+              The number of IOPS to provision for the instance.
+              MAX-READ-IOPS must be in multiple of 1000 and in the supported IOPS
+              range for the current capacity of the instance.
+              For more details, see: https://cloud.google.com/filestore/docs/performance.
+
+            max-read-iops-per-gb
+              Is used for setting the max IOPS of the instance by
+              specifying the IOPS per GB. When this parameter is used, the
+              max IOPS are derived from the instance capacity:
+              The instance max IOPS will be calculated by multiplying the
+              capacity of the instance (GB) by MAX-READ-IOPS-PER-GB, and rounding
+              to the nearest 1000. The max IOPS will be changed
+              dynamically based on the instance capacity.
+              MAX-READ-IOPS-PER-GB must be in the supported range of the instance.
+              For more details, see: https://cloud.google.com/filestore/docs/performance.
+
+        Examples:
+
+        Configure an instance implicitly with iops_by_capacity performance:
+
+            $ gcloud filestore instances update example-cluster
+
+        Configure an instance explicitly with iops_by_capacity performance:
+
+            $ gcloud filestore instances update example-cluster \
+                --performance=iops_by_capacity
+
+        Configure an instance with max-read-iops performance:
+
+            $ gcloud filestore instances update example-cluster \
+                --performance=max-read-iops=1000
+
+        Configure an instance with max-read-iops-per-gb performance:
+
+            $ gcloud filestore instances update example-cluster \
+                --performance=max-read-iops-per-gb=5
 
      --region=REGION
         Region of the Cloud Filestore instance.
