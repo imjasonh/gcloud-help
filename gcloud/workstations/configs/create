@@ -3,7 +3,8 @@ NAME
 
 SYNOPSIS
     gcloud workstations configs create
-        (CONFIG : --cluster=CLUSTER --region=REGION) [--async]
+        (CONFIG : --cluster=CLUSTER --region=REGION)
+        [--allowed-ports=[ALLOWED_PORTS,...]] [--async]
         [--boot-disk-size=BOOT_DISK_SIZE; default=50]
         [--container-args=[CONTAINER_ARGS,...]]
         [--container-command=[CONTAINER_COMMAND,...]]
@@ -99,6 +100,38 @@ POSITIONAL ARGUMENTS
           ▸ set the property workstations/region.
 
 FLAGS
+     --allowed-ports=[ALLOWED_PORTS,...]
+        A Single or Range of ports externally accessible in the workstation. If
+        not specified defaults to ports 22, 80 and ports 1024-65535.
+
+        To specify a single port, both first and last should be same.
+
+        Example:
+
+            $ gcloud workstations configs create \
+                --allowed-ports=first=9000,last=9090
+            $ gcloud workstations configs create --allowed-ports=first=80,last=80
+
+        Sets allowed_ports value.
+
+         first
+            Required, Sets first value.
+
+         last
+            Required, Sets last value.
+
+        Shorthand Example:
+
+            --allowed-ports=first=int,last=int
+
+        JSON Example:
+
+            --allowed-ports='{"first": int, "last": int}'
+
+        File Example:
+
+            --allowed-ports=path_to_file.(yaml|json)
+
      --async
         Return immediately, without waiting for the operation in progress to
         complete.

@@ -12,8 +12,8 @@ SYNOPSIS
         [--no-traffic]
         [--add-volume-mount=[volume=NAME,mount-path=MOUNT_PATH,...]
           --args=[ARG,...] --clear-volume-mounts --command=[COMMAND,...]
-          --cpu=CPU --depends-on=[CONTAINER,...] --image=IMAGE --memory=MEMORY
-          --port=PORT --remove-volume-mount=[MOUNT_PATH,...]
+          --cpu=CPU --depends-on=[CONTAINER,...] --gpu=GPU --image=IMAGE
+          --memory=MEMORY --port=PORT --remove-volume-mount=[MOUNT_PATH,...]
           --[no-]use-http2 --clear-env-vars | --env-vars-file=FILE_PATH
           | --set-env-vars=[KEY=VALUE,...] | --remove-env-vars=[KEY,...]
           --update-env-vars=[KEY=VALUE,...] --clear-secrets
@@ -21,7 +21,7 @@ SYNOPSIS
           | --remove-secrets=[KEY,...] --update-secrets=[KEY=VALUE,...]]
         [--breakglass=JUSTIFICATION --clear-vpc-connector --[no-]cpu-boost
           --[no-]cpu-throttling --[no-]default-url --[no-]deploy-health-check
-          --execution-environment=EXECUTION_ENVIRONMENT
+          --execution-environment=EXECUTION_ENVIRONMENT --gpu-type=GPU_TYPE
           --remove-containers=[CONTAINER,...] --revision-suffix=REVISION_SUFFIX
           --service-min-instances=SERVICE_MIN_INSTANCES --[no-]session-affinity
           --vpc-connector=VPC_CONNECTOR --vpc-egress=VPC_EGRESS
@@ -219,6 +219,10 @@ FLAGS
          --depends-on=[CONTAINER,...]
             List of container dependencies to add to the current container.
 
+         --gpu=GPU
+            Cloud Run supports values 0 or 1. 1 gpu also requires a minimum 4
+            --cpu value 1 gpu also requires a minimum 8Gi --memory value.
+
          --image=IMAGE
             Name of the container image to deploy (e.g.
             gcr.io/cloudrun/hello:latest).
@@ -341,6 +345,9 @@ FLAGS
               Run the application in a first generation execution environment.
            gen2
               Run the application in a second generation execution environment.
+
+       --gpu-type=GPU_TYPE
+          The GPU type to use.
 
        --remove-containers=[CONTAINER,...]
           List of containers to remove.
