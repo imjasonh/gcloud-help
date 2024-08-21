@@ -15,6 +15,11 @@ SYNOPSIS
         [--clear-min-ports-per-vm | --min-ports-per-vm=MIN_PORTS_PER_VM]
         [--clear-nat-external-drain-ip-pool
           | --nat-external-drain-ip-pool=NAT_EXTERNAL_DRAIN_IP_POOL,[...]]
+        [--clear-nat-subnet-ip-ranges | --nat-all-subnet-ip-ranges
+          | --nat-custom-subnet-ip-ranges=SUBNETWORK[:RANGE_NAME|:ALL],[...]
+          | --nat-primary-subnet-ip-ranges]
+        [--clear-nat64-subnet-ip-ranges | --nat64-all-v6-subnet-ip-ranges
+          | --nat64-custom-v6-subnet-ip-ranges=SUBNETWORK,[SUBNETWORK,...]]
         [--clear-tcp-established-idle-timeout
           | --tcp-established-idle-timeout=TCP_ESTABLISHED_IDLE_TIMEOUT]
         [--clear-tcp-time-wait-timeout
@@ -22,9 +27,7 @@ SYNOPSIS
         [--clear-tcp-transitory-idle-timeout
           | --tcp-transitory-idle-timeout=TCP_TRANSITORY_IDLE_TIMEOUT]
         [--clear-udp-idle-timeout | --udp-idle-timeout=UDP_IDLE_TIMEOUT]
-        [--nat-all-subnet-ip-ranges
-          | --nat-custom-subnet-ip-ranges=SUBNETWORK[:RANGE_NAME|:ALL],[...]
-          | --nat-primary-subnet-ip-ranges] [GCLOUD_WIDE_FLAG ...]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) gcloud alpha compute routers nats update is used to update a NAT in
@@ -206,6 +209,46 @@ OPTIONAL FLAGS
 
           These IPs must be valid external IPs that have been used as NAT IPs
 
+     IPv4 subnetwork range options.
+
+     At most one of these can be specified:
+
+       --clear-nat-subnet-ip-ranges
+          Clear options related to the NAT's subnet ranges.
+
+       --nat-all-subnet-ip-ranges
+          Allow all IP ranges of all subnetworks in the region, including
+          primary and secondary ranges, to use NAT.
+
+       --nat-custom-subnet-ip-ranges=SUBNETWORK[:RANGE_NAME|:ALL],[...]
+          List of subnetwork primary and secondary IP ranges to be allowed to
+          use NAT.
+
+          ▸ SUBNETWORK:ALL - specifying a subnetwork name with ALL includes
+            the primary range and all secondary ranges of the subnet.
+          ▸ SUBNETWORK - including a subnetwork name includes only the
+            primary subnet range of the subnetwork.
+          ▸ SUBNETWORK:RANGE_NAME - specifying a subnetwork and secondary
+            range name includes only that secondary range. It does not include
+            the primary range of the subnet.
+
+       --nat-primary-subnet-ip-ranges
+          Allow only primary IP ranges of all subnetworks in the region to use
+          NAT.
+
+     IPv6 subnetwork range options.
+
+     At most one of these can be specified:
+
+       --clear-nat64-subnet-ip-ranges
+          Clear options related to the NAT64's subnet ranges.
+
+       --nat64-all-v6-subnet-ip-ranges
+          Allow all ip ranges of ipv6 subnetworks in the region to use NAT.
+
+       --nat64-custom-v6-subnet-ip-ranges=SUBNETWORK,[SUBNETWORK,...]
+          List of ipv6 subnetworks to be allowed tp use NAT.
+
      At most one of these can be specified:
 
        --clear-tcp-established-idle-timeout
@@ -245,28 +288,6 @@ OPTIONAL FLAGS
           Timeout for UDP connections. See
           https://cloud.google.com/sdk/gcloud/reference/topic/datetimes for
           information on duration formats.
-
-     At most one of these can be specified:
-
-       --nat-all-subnet-ip-ranges
-          Allow all IP ranges of all subnetworks in the region, including
-          primary and secondary ranges, to use NAT.
-
-       --nat-custom-subnet-ip-ranges=SUBNETWORK[:RANGE_NAME|:ALL],[...]
-          List of subnetwork primary and secondary IP ranges to be allowed to
-          use NAT.
-
-          ▸ SUBNETWORK:ALL - specifying a subnetwork name with ALL includes
-            the primary range and all secondary ranges of the subnet.
-          ▸ SUBNETWORK - including a subnetwork name includes only the
-            primary subnet range of the subnetwork.
-          ▸ SUBNETWORK:RANGE_NAME - specifying a subnetwork and secondary
-            range name includes only that secondary range. It does not include
-            the primary range of the subnet.
-
-       --nat-primary-subnet-ip-ranges
-          Allow only primary IP ranges of all subnetworks in the region to use
-          NAT.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

@@ -1,23 +1,23 @@
 NAME
-    gcloud alpha recommender insights list - list insights for a Google Cloud
-        entity
+    gcloud alpha recommender insights list - list insights for Google Cloud
+        resources
 
 SYNOPSIS
     gcloud alpha recommender insights list
         (--billing-account=BILLING_ACCOUNT | --folder=FOLDER_ID
           | --organization=ORGANIZATION_ID | --project=PROJECT_ID)
-        [--insight-type=INSIGHT_TYPE] [--location=LOCATION]
+        [--insight-type=INSIGHT_TYPE] [--location=LOCATION] [--[no-]recursive]
         [--filter=EXPRESSION] [--limit=LIMIT] [--page-size=PAGE_SIZE]
         [--sort-by=[FIELD,...]] [--uri] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) This command lists all insights for a given Google Cloud entity,
-    location, and insight type. If insight-type or location is not specified,
-    insights for all supported insight-types and locations are listed.
-    Supported insight-types can be found here:
-    https://cloud.google.com/recommender/docs/insights/insight-types. The
-    following Google Cloud entity types are supported: project,
-    billing_account, folder, and organization.
+    (ALPHA) This command lists all insights for the specified Google Cloud
+    resource, location, and insight type. If an insight type or location is not
+    specified, insights for all supported insight types or locations,
+    respectively, are listed. If the --recursive flag is set, insights for
+    child resources and projects are also listed. Supported insight types can
+    be found here:
+    https://cloud.google.com/recommender/docs/insights/insight-types.
 
 EXAMPLES
     To list all insights for a billing account:
@@ -48,12 +48,29 @@ REQUIRED FLAGS
 
 FLAGS
      --insight-type=INSIGHT_TYPE
-        Insight type to list insights for. Supported insight-types can be found
-        here: https://cloud.google.com/recommender/docs/insights/insight-types
+        Insight type to list insights for. If no insight type is specified,
+        insights for all supported insight types are listed. Supported insight
+        types can be found here:
+        https://cloud.google.com/recommender/docs/insights/insight-types
 
      --location=LOCATION
         Location to list insights for. If no location is specified, insights
         for all supported locations are listed.
+
+     --[no-]recursive
+        In addition to listing the insights for the specified organization or
+        folder, recursively list all of the insights for the resource's child
+        resources, including their descendents (for example, a folder's
+        sub-folders), and for the resource's child projects. For example, when
+        using the --recursive flag and specifying an organization, the response
+        lists all of the insights associated with that organization, all of the
+        insights associated with that organization's folders and sub-folders,
+        and all of the insights associated with that organization's child
+        projects. The maximum number of resources (organization, folders,
+        projects, and descendant resources) that can be accessed at once with
+        the --recursive flag is 100. For a larger number of nested resources,
+        use BigQuery Export. Use --recursive to enable and --no-recursive to
+        disable.
 
 LIST COMMAND FLAGS
      --filter=EXPRESSION

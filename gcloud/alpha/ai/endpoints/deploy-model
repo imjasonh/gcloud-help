@@ -11,7 +11,10 @@ SYNOPSIS
         [--enable-container-logging] [--machine-type=MACHINE_TYPE]
         [--max-replica-count=MAX_REPLICA_COUNT]
         [--min-replica-count=MIN_REPLICA_COUNT]
-        [--service-account=SERVICE_ACCOUNT] [--tpu-topology=TPU_TOPOLOGY]
+        [--reservation-affinity=[key=KEY],
+          [reservation-affinity-type=RESERVATION-AFFINITY-TYPE],
+          [values=VALUES]] [--service-account=SERVICE_ACCOUNT] [--spot]
+        [--tpu-topology=TPU_TOPOLOGY]
         [--traffic-split=[DEPLOYED_MODEL_ID=VALUE,...]]
         [--shared-resources=SHARED_RESOURCES
           : --shared-resources-region=SHARED_RESOURCES_REGION]
@@ -130,11 +133,22 @@ OPTIONAL FLAGS
         If not specified and the uploaded models use dedicated resources, the
         default value is 1.
 
+     --reservation-affinity=[key=KEY],[reservation-affinity-type=RESERVATION-AFFINITY-TYPE],[values=VALUES]
+        A ReservationAffinity can be used to configure a Vertex AI resource
+        (e.g., a DeployedModel) to draw its Compute Engine resources from a
+        Shared Reservation, or exclusively from on-demand capacity.
+
      --service-account=SERVICE_ACCOUNT
         Service account that the deployed model's container runs as. Specify
         the email address of the service account. If this service account is
         not specified, the container runs as a service account that doesn't
         have access to the resource project.
+
+     --spot
+        If true, online prediction access logs are sent to Cloud Logging.
+
+        These logs are standard server access logs, containing information like
+        timestamp and latency for each prediction request.
 
      --tpu-topology=TPU_TOPOLOGY
         CloudTPU topology to use for this deployment. Required for multihost

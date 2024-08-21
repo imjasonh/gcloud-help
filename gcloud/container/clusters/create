@@ -38,9 +38,9 @@ SYNOPSIS
         [--enable-managed-prometheus] [--enable-master-global-access]
         [--enable-multi-networking] [--enable-nested-virtualization]
         [--enable-network-policy] [--enable-ray-cluster-logging]
-        [--enable-ray-cluster-monitoring] [--enable-service-externalips]
-        [--enable-shielded-nodes] [--enable-stackdriver-kubernetes]
-        [--enable-vertical-pod-autoscaling]
+        [--enable-ray-cluster-monitoring] [--enable-secret-manager]
+        [--enable-service-externalips] [--enable-shielded-nodes]
+        [--enable-stackdriver-kubernetes] [--enable-vertical-pod-autoscaling]
         [--fleet-project=PROJECT_ID_OR_NUMBER] [--gateway-api=GATEWAY_API]
         [--image-type=IMAGE_TYPE]
         [--in-transit-encryption=IN_TRANSIT_ENCRYPTION]
@@ -68,9 +68,9 @@ SYNOPSIS
         [--security-group=SECURITY_GROUP] [--security-posture=SECURITY_POSTURE]
         [--services-ipv4-cidr=CIDR] [--services-secondary-range-name=NAME]
         [--shielded-integrity-monitoring] [--shielded-secure-boot] [--spot]
-        [--stack-type=STACK_TYPE] [--subnetwork=SUBNETWORK]
-        [--system-config-from-file=PATH_TO_FILE] [--tags=TAG,[TAG,...]]
-        [--threads-per-core=THREADS_PER_CORE]
+        [--stack-type=STACK_TYPE] [--storage-pools=STORAGE_POOL,[...]]
+        [--subnetwork=SUBNETWORK] [--system-config-from-file=PATH_TO_FILE]
+        [--tags=TAG,[TAG,...]] [--threads-per-core=THREADS_PER_CORE]
         [--workload-metadata=WORKLOAD_METADATA] [--workload-pool=WORKLOAD_POOL]
         [--workload-vulnerability-scanning=WORKLOAD_VULNERABILITY_SCANNING]
         [--binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
@@ -145,10 +145,10 @@ FLAGS
         Attaches accelerators (e.g. GPUs) to all nodes.
 
          type
-            (Required) The specific type (e.g. nvidia-tesla-k80 for NVIDIA
-            Tesla K80) of accelerator to attach to the instances. Use gcloud
-            compute accelerator-types list to learn about all available
-            accelerator types.
+            (Required) The specific type (e.g. nvidia-tesla-t4 for NVIDIA T4)
+            of accelerator to attach to the instances. Use gcloud compute
+            accelerator-types list to learn about all available accelerator
+            types.
 
          count
             (Optional) The number of accelerators to attach to the instances.
@@ -619,6 +619,14 @@ FLAGS
 
      --enable-ray-cluster-monitoring
         Enable automatic metrics collection for Ray clusters.
+
+     --enable-secret-manager
+        Enables the Secret Manager CSI driver provider component. See
+        https://secrets-store-csi-driver.sigs.k8s.io/introduction
+        https://github.com/GoogleCloudPlatform/secrets-store-csi-driver-provider-gcp
+
+        To disable in an existing cluster, explicitly set flag to
+        --no-enable-secret-manager
 
      --enable-service-externalips
         Enables use of services with externalIPs field.
@@ -1165,6 +1173,13 @@ FLAGS
         IP stack type of the node VMs. STACK_TYPE must be one of: ipv4,
         ipv4-ipv6.
 
+     --storage-pools=STORAGE_POOL,[...]
+        A list of storage pools where the cluster's boot disks will be
+        provisioned.
+
+        STORAGE_POOL must be in the format
+        projects/project/zones/zone/storagePools/storagePool
+
      --subnetwork=SUBNETWORK
         The Google Compute Engine subnetwork
         (https://cloud.google.com/compute/docs/subnetworks) to which the
@@ -1419,11 +1434,11 @@ FLAGS
             Resource limits are specified in the field 'resourceLimits'. Each
             resource limits definition contains three fields: resourceType,
             maximum and minimum. Resource type can be "cpu", "memory" or an
-            accelerator (e.g. "nvidia-tesla-k80" for nVidia Tesla K80). Use
-            gcloud compute accelerator-types list to learn about available
-            accelerator types. Maximum is the maximum allowed amount with the
-            unit of the resource. Minimum is the minimum allowed amount with
-            the unit of the resource.
+            accelerator (e.g. "nvidia-tesla-t4" for NVIDIA T4). Use gcloud
+            compute accelerator-types list to learn about available accelerator
+            types. Maximum is the maximum allowed amount with the unit of the
+            resource. Minimum is the minimum allowed amount with the unit of
+            the resource.
 
             Identity default contains at most one of the below fields:
             serviceAccount: The Google Cloud Platform Service Account to be
@@ -1605,10 +1620,10 @@ FLAGS
                 GPUs) in cluster.
 
                  type
-                    (Required) The specific type (e.g. nvidia-tesla-k80 for
-                    nVidia Tesla K80) of accelerator for which the limit is
-                    set. Use gcloud compute accelerator-types list to learn
-                    about all available accelerator types.
+                    (Required) The specific type (e.g. nvidia-tesla-t4 for
+                    NVIDIA T4) of accelerator for which the limit is set. Use
+                    gcloud compute accelerator-types list to learn about all
+                    available accelerator types.
 
                  count
                     (Required) The maximum number of accelerators to which the
@@ -1623,10 +1638,10 @@ FLAGS
                 isn't set.
 
                  type
-                    (Required) The specific type (e.g. nvidia-tesla-k80 for
-                    nVidia Tesla K80) of accelerator for which the limit is
-                    set. Use gcloud compute accelerator-types list to learn
-                    about all available accelerator types.
+                    (Required) The specific type (e.g. nvidia-tesla-t4 for
+                    NVIDIA T4) of accelerator for which the limit is set. Use
+                    gcloud compute accelerator-types list to learn about all
+                    available accelerator types.
 
                  count
                     (Required) The minimum number of accelerators to which the
