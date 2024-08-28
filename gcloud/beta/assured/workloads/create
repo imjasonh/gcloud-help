@@ -10,6 +10,7 @@ SYNOPSIS
         [--external-identifier=EXTERNAL_IDENTIFIER] [--labels=[KEY=VALUE,...]]
         [--next-rotation-time=NEXT_ROTATION_TIME] [--partner=PARTNER]
         [--partner-permissions=[KEY=VALUE,...]]
+        [--partner-services-billing-account=PARTNER_SERVICES_BILLING_ACCOUNT]
         [--provisioned-resources-parent=PROVISIONED_RESOURCES_PARENT]
         [--resource-settings=[KEY=VALUE,...]]
         [--rotation-period=ROTATION_PERIOD] [GCLOUD_WIDE_FLAG ...]
@@ -32,6 +33,7 @@ EXAMPLES
       ▪ with the label: key = 'LabelKey2', value = 'LabelValue2'
       ▪ provisioned resources parent 'folders/789'
       ▪ with custom project id 'my-custom-id' for consumer project
+      ▪ with external identifier for the workload of 'external-id'
 
         $ gcloud beta assured workloads create --organization=123 \
             --location=us-central1 --display-name=Test-Workload \
@@ -41,7 +43,40 @@ EXAMPLES
             --rotation-period=172800s \
             --labels=LabelKey1=LabelValue1,LabelKey2=LabelValue2 \
             --provisioned-resources-parent=folders/789 \
-            --resource-settings=consumer-project-id=my-custom-id
+            --resource-settings=consumer-project-id=my-custom-id \
+            --external-identifier=external-id
+
+    The following example command creates a new Partner Assured Workloads, with
+    the following properties:
+
+      ▪ belonging to an organization with ID 123
+      ▪ located in the me-central2 region
+      ▪ display name Test-Workload
+      ▪ partner CNTXT
+      ▪ partner services billing account billingAccounts/789
+      ▪ billing account billingAccounts/456
+      ▪ data logs viewer partner permission enabled
+      ▪ first key rotation set for 10:15am on the December 30, 2020
+      ▪ key rotation interval set for every 48 hours
+      ▪ with the label: key = 'LabelKey1', value = 'LabelValue1'
+      ▪ with the label: key = 'LabelKey2', value = 'LabelValue2'
+      ▪ provisioned resources parent 'folders/789'
+      ▪ with custom project id 'my-custom-id' for consumer project
+      ▪ with external identifier for the workload of 'external-id'
+
+        $ gcloud beta assured workloads create --organization=123 \
+            --location=me-central2 --display-name=Test-Workload \
+            --compliance-regime=ASSURED_WORKLOADS_FOR_PARTNERS \
+            --partner=SOVEREIGN_CONTROLS_BY_CNTXT \
+            --partner-services-billing-account=billingAccounts/\
+        01BF3F-2C6DE5-30C607 --partner-permissions=data-logs-viewer=true \
+            --billing-account=billingAccounts/456 \
+            --next-rotation-time=2020-12-30T10:15:00.00Z \
+            --rotation-period=172800s \
+            --labels=LabelKey1=LabelValue1,LabelKey2=LabelValue2 \
+            --provisioned-resources-parent=folders/789 \
+            --resource-settings=consumer-project-id=my-custom-id \
+            --external-identifier=external-id
 
 REQUIRED FLAGS
      --billing-account=BILLING_ACCOUNT
@@ -85,11 +120,19 @@ OPTIONAL FLAGS
      --partner=PARTNER
         The partner choice when creating a workload managed by local trusted
         partners. PARTNER must be one of: LOCAL_CONTROLS_BY_S3NS,
-        SOVEREIGN_CONTROLS_BY_T_SYSTEMS.
+        SOVEREIGN_CONTROLS_BY_T_SYSTEMS, SOVEREIGN_CONTROLS_BY_CNTXT,
+        SOVEREIGN_CONTROLS_BY_CNTXT_NO_EKM.
 
      --partner-permissions=[KEY=VALUE,...]
         The partner permissions for the partner regime, for example,
         data-logs-viewer=true/false
+
+     --partner-services-billing-account=PARTNER_SERVICES_BILLING_ACCOUNT
+        Billing account necessary for purchasing services from Sovereign
+        Partners. This field is required for creating SIA/PSN/CNTXT partner
+        workloads. The caller should have 'billing.resourceAssociations.create'
+        IAM permission on this billing-account. The format of this string is
+        billingAccounts/AAAAAA-BBBBBB-CCCCCC
 
      --provisioned-resources-parent=PROVISIONED_RESOURCES_PARENT
         The parent of the provisioned projects, for example,

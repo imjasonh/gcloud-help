@@ -5,13 +5,20 @@ NAME
 SYNOPSIS
     gcloud alpha compute future-reservations update FUTURE_RESERVATION
         [--[no-]auto-delete-auto-created-reservations]
-        [--description=DESCRIPTION] [--planning-status=PLANNING_STATUS]
-        [--[no-]require-specific-reservation] [--total-count=TOTAL_COUNT]
+        [--deployment-type=DEPLOYMENT_TYPE] [--description=DESCRIPTION]
+        [--enable-opportunistic-maintenance=ENABLE_OPPORTUNISTIC_MAINTENANCE]
+        [--instance-termination-action=INSTANCE_TERMINATION_ACTION]
+        [--planning-status=PLANNING_STATUS]
+        [--[no-]require-specific-reservation]
+        [--reservation-name=RESERVATION_NAME]
+        [--scheduling-type=SCHEDULING_TYPE] [--total-count=TOTAL_COUNT]
         [--zone=ZONE]
         [--auto-created-reservations-delete-time=AUTO_CREATED_RESERVATIONS_DELETE_TIME | --auto-created-reservations-duration=AUTO_CREATED_RESERVATIONS_DURATION]
         [--clear-name-prefix | --name-prefix=NAME_PREFIX]
         [--clear-share-settings
           | --share-setting=SHARE_SETTING --share-with=PROJECT,[PROJECT,...]]
+        [--commitment-name=COMMITMENT_NAME --commitment-plan=COMMITMENT_PLAN
+          --previous-commitment-terms=PREVIOUS_COMMITMENT_TERMS]
         [--machine-type=MACHINE_TYPE
           --maintenance-interval=MAINTENANCE_INTERVAL
           --min-cpu-platform=MIN_CPU_PLATFORM
@@ -44,8 +51,24 @@ FLAGS
         Use --auto-delete-auto-created-reservations to enable and
         --no-auto-delete-auto-created-reservations to disable.
 
+     --deployment-type=DEPLOYMENT_TYPE
+        Indicates if the reservation allocation strategy is static or dynamic.
+        DENSE refers to a fixed size and topology, with deployment expressed in
+        terms of blocks. FLEXIBLE indicates a non-static distribution of
+        capacity that can change over time. Deployment is not expressed in
+        blocks. DEPLOYMENT_TYPE must be one of: DENSE, FLEXIBLE.
+
      --description=DESCRIPTION
         An optional description of the future reservation to create.
+
+     --enable-opportunistic-maintenance=ENABLE_OPPORTUNISTIC_MAINTENANCE
+        Indicates if this group of VMs have opportunistic maintenance enabled.
+        Applicable only to dense coordinated maintenance.
+
+     --instance-termination-action=INSTANCE_TERMINATION_ACTION
+        Specific termination action for running instances at the end of
+        reservation duration, it can be DELETE or STOP.
+        INSTANCE_TERMINATION_ACTION must be one of: DELETE, STOP.
 
      --planning-status=PLANNING_STATUS
         The planning status of the future reservation. The default value is
@@ -69,6 +92,18 @@ FLAGS
         Auto-created reservations delivered with this flag enabled will inherit
         the name of the future reservation. Use --require-specific-reservation
         to enable and --no-require-specific-reservation to disable.
+
+     --reservation-name=RESERVATION_NAME
+        Name of reservations where the capacity is provisioned at the time of
+        delivery of future reservations. If the reservation with the given name
+        does not exist already, it is created automatically at the time of
+        Approval with INACTIVE state till specified start-time. Either provide
+        the reservation_name or a name_prefix.
+
+     --scheduling-type=SCHEDULING_TYPE
+        Indicates the maintenance type for this group of VMs. This will be set
+        on the reservation via FR, and will be inherited for reservation
+        blocks. SCHEDULING_TYPE must be one of: GROUPED, INDEPENDENT.
 
      --total-count=TOTAL_COUNT
         The total number of instances for which capacity assurance is requested
@@ -144,6 +179,28 @@ FLAGS
             If this future reservation is shared, provide a comma-separated
             list of projects that this future reservation is shared with. The
             list must contain project IDs or project numbers.
+
+     Manage the commitment info properties
+
+       --commitment-name=COMMITMENT_NAME
+          Name of commitment covering the delivered reservation at the time of
+          delivery of future reservations. If not specified, it takes the name
+          of the future reservation.
+
+       --commitment-plan=COMMITMENT_PLAN
+          The plan for this commitment to be created, which determines duration
+          and discount rate. The currently supported plans are TWELVE_MONTH (1
+          year), and THIRTY_SIX_MONTH (3 years). COMMITMENT_PLAN must be one
+          of: TWELVE_MONTH, THIRTY_SIX_MONTH.
+
+       --previous-commitment-terms=PREVIOUS_COMMITMENT_TERMS
+          Applicable only if future reservation will deliver to an existing
+          reservation with a ramp plan. When set to EXTEND, all associated
+          parent Committed Used Discount's end-date/term will be extended to
+          the end-time of this future reservation. Default is to extend
+          previous commitment's time to the end_time of the reservation.
+          PREVIOUS_COMMITMENT_TERMS must be (only one value is supported):
+          EXTEND.
 
      Manage the specific SKU reservation properties.
 
@@ -248,7 +305,9 @@ NOTES
     This command is currently in alpha and might change without notice. If this
     command fails with API permission errors despite specifying the correct
     project, you might be trying to access an API with an invitation-only early
-    access allowlist. This variant is also available:
+    access allowlist. These variants are also available:
+
+        $ gcloud compute future-reservations update
 
         $ gcloud beta compute future-reservations update
 

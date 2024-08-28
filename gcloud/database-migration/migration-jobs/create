@@ -14,8 +14,8 @@ SYNOPSIS
           : --cmek-keyring=CMEK_KEYRING --cmek-project=CMEK_PROJECT]
         [--peer-vpc=PEER_VPC | --static-ip
           | [--vm-ip=VM_IP --vm-port=VM_PORT --vpc=VPC : --vm=VM]]
-        [--sqlserver-databases=databaseName,[...]
-          : --sqlserver-encrypted-databases=SQLSERVER_ENCRYPTED_DATABASES]
+        [--sqlserver-databases=databaseName,[...] : --sqlserver-diff-backup
+          --sqlserver-encrypted-databases=SQLSERVER_ENCRYPTED_DATABASES]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -57,16 +57,16 @@ EXAMPLES
           --region=us-central1 --type=CONTINUOUS --source=cp1 \
           --destination=cp2 --conversion-workspace=cw
 
-    To create a continuous SQL Server to SQL Server homogeneous migration job:        $ gcloud database-migration migration-jobs create my-migration-job \
+    To create a continuous SQL Server to SQL Server homogeneous migration job
+    with differential backup enabled:        $ gcloud database-migration migration-jobs create my-migration-job \
           --region=us-central1 --type=CONTINUOUS --source=cp1 \
-          --destination=cp2 --sqlserver-backup-file-pattern=pattern \
+          --destination=cp2 --sqlserver-diff-backup \
           --sqlserver-databases=db1,db2,db3
 
     To create a continuous SQL Server to SQL Server homogeneous migration job
     with encrypted databases:        $ gcloud database-migration migration-jobs create my-migration-job \
           --region=us-central1 --type=CONTINUOUS --source=cp1 \
-          --destination=cp2 --sqlserver-backup-file-pattern=pattern \
-          --sqlserver-databases=db1,db2,db3 \
+          --destination=cp2 --sqlserver-databases=db1,db2,db3 \
           --sqlserver-encrypted-databases=PATH/TO/ENCRYPTION/SETTINGS
 
 POSITIONAL ARGUMENTS
@@ -302,6 +302,12 @@ OPTIONAL FLAGS
 
           This flag argument must be specified if any of the other arguments in
           this group are specified.
+
+       --sqlserver-diff-backup
+          Enable differential backups. If not specified, differential backups
+          are disabled by default. Use --sqlserver-diff-backup to enable and
+          --no-sqlserver-diff-backup to disable. This flag is used only for
+          homogeneous SQL Server to Cloud SQL for SQL Server migrations.
 
        --sqlserver-encrypted-databases=SQLSERVER_ENCRYPTED_DATABASES
           A JSON/YAML file describing the encryption settings per database for

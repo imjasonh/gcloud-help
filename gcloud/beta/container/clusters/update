@@ -90,6 +90,8 @@ SYNOPSIS
           --enable-autoprovisioning-autoupgrade
           [--max-accelerator=[type=TYPE,count=COUNT,...]
           : --min-accelerator=[type=TYPE,count=COUNT,...]]]
+          | --enable-insecure-binding-system-authenticated
+          --enable-insecure-binding-system-unauthenticated
           | --enable-tpu --enable-tpu-service-networking | --tpu-ipv4-cidr=CIDR
           | --logging=[COMPONENT,...]
           --monitoring=[COMPONENT,...] --disable-managed-prometheus
@@ -1321,6 +1323,23 @@ REQUIRED FLAGS
                       (Required) The minimum number of accelerators to which
                       the cluster can be scaled.
 
+       --enable-insecure-binding-system-authenticated
+          Allow using system:authenticated as a subject in ClusterRoleBindings
+          and RoleBindings. Allowing bindings that reference
+          system:authenticated is a security risk and is not recommended.
+
+          To disallow binding system:authenticated in a cluster, explicitly set
+          the --no-enable-insecure-binding-system-authenticated flag instead.
+
+       --enable-insecure-binding-system-unauthenticated
+          Allow using system:unauthenticated and system:anonymous as subjects
+          in ClusterRoleBindings and RoleBindings. Allowing bindings that
+          reference system:unauthenticated and system:anonymous are a security
+          risk and is not recommended.
+
+          To disallow binding system:authenticated in a cluster, explicitly set
+          the --no-enable-insecure-binding-system-unauthenticated flag instead.
+
        Flags relating to Cloud TPUs:
 
          --enable-tpu
@@ -1492,10 +1511,14 @@ OPTIONAL FLAGS
 
        --location=LOCATION
           Compute zone or region (e.g. us-central1-a or us-central1) for the
-          cluster. Prefer using this flag over the --region or --zone flags.
+          cluster. Overrides the default compute/region or compute/zone value
+          for this command invocation. Prefer using this flag over the --region
+          or --zone flags.
 
        --region=REGION
-          Compute region (e.g. us-central1) for a regional cluster.
+          Compute region (e.g. us-central1) for a regional cluster. Overrides
+          the default compute/region property value for this command
+          invocation.
 
        --zone=ZONE, -z ZONE
           Compute zone (e.g. us-central1-a) for a zonal cluster. Overrides the

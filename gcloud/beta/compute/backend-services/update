@@ -15,6 +15,7 @@ SYNOPSIS
         [--description=DESCRIPTION] [--drop-traffic-if-unhealthy]
         [--edge-security-policy=EDGE_SECURITY_POLICY] [--[no-]enable-cdn]
         [--[no-]enable-logging] [--[no-]enable-strong-affinity]
+        [--external-managed-migration-testing-percentage=EXTERNAL_MANAGED_MIGRATION_TESTING_PERCENTAGE]
         [--failover-ratio=FAILOVER_RATIO] [--health-checks=HEALTH_CHECK,[...]]
         [--no-health-checks] [--http-health-checks=HTTP_HEALTH_CHECK,[...]]
         [--https-health-checks=HTTPS_HEALTH_CHECK,[...]]
@@ -22,6 +23,7 @@ SYNOPSIS
           oauth2-client-secret=OAUTH2-CLIENT-SECRET]]
         [--idle-timeout-sec=IDLE_TIMEOUT_SEC]
         [--ip-address-selection-policy=IP_ADDRESS_SELECTION_POLICY]
+        [--load-balancing-scheme=LOAD_BALANCING_SCHEME]
         [--locality-lb-policy=LOCALITY_LB_POLICY]
         [--logging-optional=LOGGING_OPTIONAL]
         [--logging-optional-fields=[LOGGING_OPTIONAL_FIELDS,...]]
@@ -37,6 +39,8 @@ SYNOPSIS
           | --no-bypass-cache-on-request-headers]
         [--cache-key-query-string-blacklist=[QUERY_STRING,...]
           | --cache-key-query-string-whitelist=QUERY_STRING,[...]]
+        [--clear-external-managed-migration-state
+          | --external-managed-migration-state=EXTERNAL_MANAGED_MIGRATION_STATE]
         [--client-ttl=CLIENT_TTL | --no-client-ttl]
         [--custom-request-header=CUSTOM_REQUEST_HEADER
           | --no-custom-request-headers]
@@ -203,6 +207,12 @@ FLAGS
         loadbalancingScheme EXTERNAL. Use --enable-strong-affinity to enable
         and --no-enable-strong-affinity to disable.
 
+     --external-managed-migration-testing-percentage=EXTERNAL_MANAGED_MIGRATION_TESTING_PERCENTAGE
+        Determines the fraction of requests that should be processed by the
+        Global external Application Load Balancer.
+
+        The value of this field must be in the range [0, 100].
+
      --failover-ratio=FAILOVER_RATIO
         Applicable only to backend service-based external passthrough Network
         load balancers and internal passthrough Network load balancers as part
@@ -287,6 +297,13 @@ FLAGS
 
         IP_ADDRESS_SELECTION_POLICY must be one of: IPV4_ONLY, PREFER_IPV6,
         IPV6_ONLY.
+
+     --load-balancing-scheme=LOAD_BALANCING_SCHEME
+        Only for the Global external ALB migration.
+
+        The value of this field must be EXTERNAL or EXTERNAL_MANAGED.
+
+        LOAD_BALANCING_SCHEME must be one of: EXTERNAL, EXTERNAL_MANAGED.
 
      --locality-lb-policy=LOCALITY_LB_POLICY
         The load balancing algorithm used within the scope of the locality.
@@ -572,6 +589,25 @@ FLAGS
           --cache-key-query-string-blacklist, not both. '&' and '=' will be
           percent encoded and not treated as delimiters. Can only be applied
           for global resources.
+
+     At most one of these can be specified:
+
+       --clear-external-managed-migration-state
+          Clears current state of external managed migration.
+
+       --external-managed-migration-state=EXTERNAL_MANAGED_MIGRATION_STATE
+          Specifies the canary migration state. Possible values are PREPARE,
+          TEST_BY_PERCENTAGE, and TEST_ALL_TRAFFIC.
+
+          To begin the migration from EXTERNAL to EXTERNAL_MANAGED, the state
+          must be changed to PREPARE. The state must be changed to
+          TEST_ALL_TRAFFIC before the loadBalancingScheme can be changed to
+          EXTERNAL_MANAGED. Optionally, the TEST_BY_PERCENTAGE state can be
+          used to migrate traffic by percentage using
+          externalManagedMigrationTestingPercentage.
+
+          EXTERNAL_MANAGED_MIGRATION_STATE must be one of: PREPARE,
+          TEST_BY_PERCENTAGE, TEST_ALL_TRAFFIC.
 
      At most one of these can be specified:
 

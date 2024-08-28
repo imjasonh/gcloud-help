@@ -109,6 +109,8 @@ SYNOPSIS
         [--enable-autoscaling --location-policy=LOCATION_POLICY
           --max-nodes=MAX_NODES --min-nodes=MIN_NODES
           --total-max-nodes=TOTAL_MAX_NODES --total-min-nodes=TOTAL_MIN_NODES]
+        [--enable-insecure-binding-system-authenticated
+          --enable-insecure-binding-system-unauthenticated]
         [--enable-master-authorized-networks
           --master-authorized-networks=NETWORK,[NETWORK,...]]
         [--enable-network-egress-metering
@@ -1819,6 +1821,23 @@ FLAGS
           --node-pool (or default node pool if unspecified) can scale. Ignored
           unless --enable-autoscaling is also specified.
 
+     --enable-insecure-binding-system-authenticated
+        Allow using system:authenticated as a subject in ClusterRoleBindings
+        and RoleBindings. Allowing bindings that reference system:authenticated
+        is a security risk and is not recommended.
+
+        To disallow binding system:authenticated in a cluster, explicitly set
+        the --no-enable-insecure-binding-system-authenticated flag instead.
+
+     --enable-insecure-binding-system-unauthenticated
+        Allow using system:unauthenticated and system:anonymous as subjects in
+        ClusterRoleBindings and RoleBindings. Allowing bindings that reference
+        system:unauthenticated and system:anonymous are a security risk and is
+        not recommended.
+
+        To disallow binding system:authenticated in a cluster, explicitly set
+        the --no-enable-insecure-binding-system-unauthenticated flag instead.
+
      Master Authorized Networks
 
        --enable-master-authorized-networks
@@ -2006,10 +2025,14 @@ FLAGS
 
        --location=LOCATION
           Compute zone or region (e.g. us-central1-a or us-central1) for the
-          cluster. Prefer using this flag over the --region or --zone flags.
+          cluster. Overrides the default compute/region or compute/zone value
+          for this command invocation. Prefer using this flag over the --region
+          or --zone flags.
 
        --region=REGION
-          Compute region (e.g. us-central1) for a regional cluster.
+          Compute region (e.g. us-central1) for a regional cluster. Overrides
+          the default compute/region property value for this command
+          invocation.
 
        --zone=ZONE, -z ZONE
           Compute zone (e.g. us-central1-a) for a zonal cluster. Overrides the

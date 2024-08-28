@@ -1,0 +1,287 @@
+NAME
+    gcloud alpha memorystore instances update - update the configuration of a
+        Memorystore instance
+
+SYNOPSIS
+    gcloud alpha memorystore instances update (INSTANCE : --location=LOCATION)
+        [--async] [--deletion-protection-enabled]
+        [--replica-count=REPLICA_COUNT] [--request-id=REQUEST_ID]
+        [--shard-count=SHARD_COUNT]
+        [--aof-config-append-fsync=AOF_CONFIG_APPEND_FSYNC
+          --persistence-config-mode=PERSISTENCE_CONFIG_MODE
+          --rdb-config-snapshot-period=RDB_CONFIG_SNAPSHOT_PERIOD
+          --rdb-config-snapshot-start-time=RDB_CONFIG_SNAPSHOT_START_TIME]
+        [--engine-configs=[ENGINE_CONFIGS,...]
+          | --update-engine-configs=[UPDATE_ENGINE_CONFIGS,...]
+          --clear-engine-configs
+          | --remove-engine-configs=[__REMOVE_ENGINE_CONFIGS,...]]
+        [--labels=[LABELS,...]
+          | --update-labels=[UPDATE_LABELS,...] --clear-labels
+          | --remove-labels=[__REMOVE_LABELS,...]] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Update the configuration of a Memorystore instance.
+
+EXAMPLES
+    To update Memorystore instance my-instance in project my-project and
+    location us-central1 to six shards, run:
+
+        $ gcloud alpha memorystore instances update `my-instance` \
+            --project=my-project --location=us-central1 --shard-count=6
+
+    To update Memorystore instance my-instance in project my-project and
+    location us-central1 to use a maxmemory-policy of allkeys-lru, run:
+
+        $ gcloud alpha memorystore instances update `my-instance` \
+            --project=my-project --location=us-central1 \
+            --update-engine-configs=maxmemory-policy=allkeys-lru
+
+POSITIONAL ARGUMENTS
+     Instance resource - Identifier. Unique name of the instance. Format:
+     projects/{project}/locations/{location}/instances/{instance} The arguments
+     in this group can be used to specify the attributes of this resource.
+     (NOTE) Some attributes are not given arguments in this group but can be
+     set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument instance on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       INSTANCE
+          ID of the instance or fully qualified identifier for the instance.
+
+          To set the instance attribute:
+          ▸ provide the argument instance on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          The location id of the instance resource.
+
+          To set the location attribute:
+          ▸ provide the argument instance on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line.
+
+FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     Arguments for the deletion protection enabled.
+
+       --deletion-protection-enabled
+          If set to true deletion of the instance will fail.
+
+     Arguments for the replica count.
+
+       --replica-count=REPLICA_COUNT
+          Number of replica nodes per shard. If omitted the default is 0
+          replicas.
+
+     --request-id=REQUEST_ID
+        An optional request ID to identify requests. Specify a unique request
+        ID so that if you must retry your request, the server will know to
+        ignore the request if it has already been completed. The server will
+        guarantee that for at least 60 minutes since the first request.
+
+        For example, consider a situation where you make an initial request and
+        the request times out. If you make the request again with the same
+        request ID, the server can check if original operation with the same
+        request ID was received, and if so, will ignore the second request.
+        This prevents clients from accidentally creating duplicate commitments.
+
+        The request ID must be a valid UUID with the exception that zero UUID
+        is not supported (00000000-0000-0000-0000-000000000000).
+
+     --shard-count=SHARD_COUNT
+        Number of shards for the instance.
+
+     Represents persistence configuration for a instance.
+
+       Configuration for AOF based persistence.
+
+         --aof-config-append-fsync=AOF_CONFIG_APPEND_FSYNC
+            The fsync mode. AOF_CONFIG_APPEND_FSYNC must be one of:
+
+             always
+                Fsync every time new write commands are appended to the AOF.
+                The best data loss protection at the cost of performance.
+             every-sec
+                Fsync every second. You may lose 1 second of data if there is a
+                disaster.
+             never
+                Never fsync. Normally Linux will flush data every 30 seconds
+                with this configuration, but it's up to the kernel's exact
+                tuning.
+
+       --persistence-config-mode=PERSISTENCE_CONFIG_MODE
+          Current persistence mode. PERSISTENCE_CONFIG_MODE must be one of:
+
+           aof
+              AOF based persistence is enabled.
+           disabled
+              Persistence is disabled, and any snapshot data is deleted.
+           rdb
+              RDB based persistence is enabled.
+
+       Configuration for RDB based persistence.
+
+         --rdb-config-snapshot-period=RDB_CONFIG_SNAPSHOT_PERIOD
+            Period between RDB snapshots. RDB_CONFIG_SNAPSHOT_PERIOD must be
+            one of:
+
+             one-hour
+                One hour.
+             six-hours
+                Six hours.
+             twelve-hours
+                Twelve hours.
+             twenty-four-hours
+                Twenty four hours.
+
+         --rdb-config-snapshot-start-time=RDB_CONFIG_SNAPSHOT_START_TIME
+            Time that the first snapshot was/will be attempted, and to which
+            future snapshots will be aligned. If not provided, the current time
+            will be used.
+
+     Update engine_configs.
+
+     At most one of these can be specified:
+
+       --engine-configs=[ENGINE_CONFIGS,...]
+          Set engine_configs to new value. User-provided engine configurations
+          for the instance.
+
+           KEY
+              Sets KEY value.
+
+           VALUE
+              Sets VALUE value.
+
+          Shorthand Example:
+
+              --engine-configs=string=string
+
+          JSON Example:
+
+              --engine-configs='{"string": "string"}'
+
+          File Example:
+
+              --engine-configs=path_to_file.(yaml|json)
+
+       --update-engine-configs=[UPDATE_ENGINE_CONFIGS,...]
+          Update engine_configs value or add key value pair. User-provided
+          engine configurations for the instance.
+
+           KEY
+              Sets KEY value.
+
+           VALUE
+              Sets VALUE value.
+
+          Shorthand Example:
+
+              --update-engine-configs=string=string
+
+          JSON Example:
+
+              --update-engine-configs='{"string": "string"}'
+
+          File Example:
+
+              --update-engine-configs=path_to_file.(yaml|json)
+
+       At most one of these can be specified:
+
+         --clear-engine-configs
+            Clear engine_configs value and set to empty map.
+
+         --remove-engine-configs=[__REMOVE_ENGINE_CONFIGS,...]
+            Remove existing value from map engine_configs.
+
+     Update labels.
+
+     At most one of these can be specified:
+
+       --labels=[LABELS,...]
+          Set labels to new value. Labels to represent user-provided metadata.
+
+           KEY
+              Keys must start with a lowercase character and contain only
+              hyphens (-), underscores (_), lowercase characters, and numbers.
+
+           VALUE
+              Values must contain only hyphens (-), underscores (_), lowercase
+              characters, and numbers.
+
+          Shorthand Example:
+
+              --labels=string=string
+
+          JSON Example:
+
+              --labels='{"string": "string"}'
+
+          File Example:
+
+              --labels=path_to_file.(yaml|json)
+
+       --update-labels=[UPDATE_LABELS,...]
+          Update labels value or add key value pair. Labels to represent
+          user-provided metadata.
+
+           KEY
+              Keys must start with a lowercase character and contain only
+              hyphens (-), underscores (_), lowercase characters, and numbers.
+
+           VALUE
+              Values must contain only hyphens (-), underscores (_), lowercase
+              characters, and numbers.
+
+          Shorthand Example:
+
+              --update-labels=string=string
+
+          JSON Example:
+
+              --update-labels='{"string": "string"}'
+
+          File Example:
+
+              --update-labels=path_to_file.(yaml|json)
+
+       At most one of these can be specified:
+
+         --clear-labels
+            Clear labels value and set to empty map.
+
+         --remove-labels=[__REMOVE_LABELS,...]
+            Remove existing value from map labels.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the memorystore/v1alpha API. The full documentation for
+    this API can be found at: https://cloud.google.com/memorystore/
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. This variant is also available:
+
+        $ gcloud beta memorystore instances update
+

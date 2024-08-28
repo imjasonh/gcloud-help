@@ -1,0 +1,205 @@
+NAME
+    gcloud compute future-reservations create - create a Compute Engine
+        reservation
+
+SYNOPSIS
+    gcloud compute future-reservations create FUTURE_RESERVATION
+        --[no-]auto-delete-auto-created-reservations --total-count=TOTAL_COUNT
+        (--source-instance-template=SOURCE_INSTANCE_TEMPLATE
+          | [--machine-type=MACHINE_TYPE
+          : --accelerator=[count=COUNT],[type=TYPE]
+          --local-ssd=[count=COUNT],[interface=INTERFACE],[size=SIZE]
+          --min-cpu-platform=MIN_CPU_PLATFORM])
+        (--start-time=START_TIME (--duration=DURATION | --end-time=END_TIME))
+        [--description=DESCRIPTION] [--name-prefix=NAME_PREFIX]
+        [--planning-status=PLANNING_STATUS] [--zone=ZONE]
+        [--auto-created-reservations-delete-time=AUTO_CREATED_RESERVATIONS_DELETE_TIME | --auto-created-reservations-duration=AUTO_CREATED_RESERVATIONS_DURATION]
+        [--share-setting=SHARE_SETTING --share-with=PROJECT,[PROJECT,...]]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Create a Compute Engine reservation.
+
+POSITIONAL ARGUMENTS
+     FUTURE_RESERVATION
+        Name of the future reservation to create.
+
+REQUIRED FLAGS
+     --[no-]auto-delete-auto-created-reservations
+        If specified, the auto-created reservations for a future reservation
+        are deleted at the end time (default) or at a specified delete time.
+        Use --auto-delete-auto-created-reservations to enable and
+        --no-auto-delete-auto-created-reservations to disable.
+
+     --total-count=TOTAL_COUNT
+        The total number of instances for which capacity assurance is requested
+        at a future time period.
+
+     Manage the instance properties for the auto-created reservations. You must
+     either provide a source instance template or define the instance
+     properties.
+
+     Exactly one of these must be specified:
+
+       --source-instance-template=SOURCE_INSTANCE_TEMPLATE
+          The url of the instance template that will be used to populate the
+          fields of the reservation. Instance properties can not be defined in
+          addition to source instance template.
+
+       Define individual instance properties for the specific SKU reservation.
+
+         --machine-type=MACHINE_TYPE
+            The type of machine (name only) that has a fixed number of vCPUs
+            and a fixed amount of memory. You can also specify a custom machine
+            type by using the pattern
+            custom-number_of_CPUs-amount_of_memory-for example,
+            custom-32-29440.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --accelerator=[count=COUNT],[type=TYPE]
+            Manage the configuration of the type and number of accelerator
+            cards attached.
+             count
+                The number of accelerators to attach to each instance in the
+                reservation.
+             type
+                The specific type (e.g. nvidia-tesla-k80 for nVidia Tesla K80)
+                of accelerator to attach to instances in the reservation. Use
+                gcloud compute accelerator-types list to learn about all
+                available accelerator types.
+
+         --local-ssd=[count=COUNT],[interface=INTERFACE],[size=SIZE]
+            Manage the size and the interface of local SSD to use. See
+            https://cloud.google.com/compute/docs/disks/local-ssd for more
+            information.
+             interface
+                The kind of disk interface exposed to the VM for this SSD.
+                Valid values are scsi and nvme. SCSI is the default and is
+                supported by more guest operating systems. NVME may provide
+                higher performance.
+             size
+                The size of the local SSD in base-2 GB.
+             count
+                The number of local SSD to use per VM. Default value is 1.
+
+         --min-cpu-platform=MIN_CPU_PLATFORM
+            Optional minimum CPU platform of the reservation to create.
+
+     Manage the time specific properties for requesting future capacity
+
+     This must be specified.
+
+       --start-time=START_TIME
+          Start time of the Future Reservation. The start time must be an
+          RFC3339 valid string formatted by date, time, and timezone or
+          "YYYY-MM-DDTHH:MM:SSZ"; where YYYY = year, MM = month, DD = day, HH =
+          hours, MM = minutes, SS = seconds, and Z = timezone (i.e.
+          2021-11-20T07:00:00Z).
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       Exactly one of these must be specified:
+
+         --duration=DURATION
+            Alternate way of specifying time in the number of seconds to
+            terminate capacity request relative to the start time of a request.
+
+         --end-time=END_TIME
+            End time of the Future Reservation. The end time must be an RFC3339
+            valid string formatted by date, time, and timezone or
+            "YYYY-MM-DDTHH:MM:SSZ"; where YYYY = year, MM = month, DD = day, HH
+            = hours, MM = minutes, SS = seconds, and Z = timezone (i.e.
+            2021-11-20T07:00:00Z).
+
+OPTIONAL FLAGS
+     --description=DESCRIPTION
+        An optional description of the future reservation to create.
+
+     --name-prefix=NAME_PREFIX
+        A name prefix for the auto-created reservations when capacity is
+        delivered at the start time. Each auto-created reservation name starts
+        with the name prefix.
+
+     --planning-status=PLANNING_STATUS
+        The planning status of the future reservation. The default value is
+        DRAFT. While in DRAFT, any changes to the future reservation's
+        properties will be allowed. If set to SUBMITTED, the future reservation
+        will submit and its procurementStatus will change to PENDING_APPROVAL.
+        Once the future reservation is pending approval, changes to the future
+        reservation's properties will not be allowed. PLANNING_STATUS must be
+        one of:
+
+         DRAFT
+            Default planning status value.
+         SUBMITTED
+            Planning status value to immediately submit the future reservation.
+
+     --zone=ZONE
+        Zone of the future reservation to create. If not specified and the
+        compute/zone property isn't set, you might be prompted to select a zone
+        (interactive mode only).
+
+        To avoid prompting when this flag is omitted, you can set the
+        compute/zone property:
+
+            $ gcloud config set compute/zone ZONE
+
+        A list of zones can be fetched by running:
+
+            $ gcloud compute zones list
+
+        To unset the property, run:
+
+            $ gcloud config unset compute/zone
+
+        Alternatively, the zone can be stored in the environment variable
+        CLOUDSDK_COMPUTE_ZONE.
+
+     Manage the auto-delete time properties.
+
+     At most one of these can be specified:
+
+       --auto-created-reservations-delete-time=AUTO_CREATED_RESERVATIONS_DELETE_TIME
+          Automatically deletes an auto-created reservations at a specific
+          time. The specified time must be an RFC3339 timestamp, which must be
+          formatted as "YYYY-MM-DDTHH:MM:SSZ" where YYYY = year, MM = month, DD
+          = day, HH = hours, MM = minutes, SS = seconds, and Z = time zone in
+          Coordinated Universal Time (UTC). For example, specify
+          2021-11-20T07:00:00Z.
+
+       --auto-created-reservations-duration=AUTO_CREATED_RESERVATIONS_DURATION
+          Automatically deletes an auto-created reservations after a specified
+          number of days, hours, minutes, or seconds. For example, specify 30m
+          for 30 minutes, or 1d2h3m4s for 1 day, 2 hours, 3 minutes, and 4
+          seconds. For more information, see $ gcloud topic datetimes.
+
+     Manage the properties of a shared reservation.
+
+       --share-setting=SHARE_SETTING
+          Specify if this future reservation is shared, and if so, the type of
+          sharing. If you omit this flag, this value is local by default.
+          SHARE_SETTING must be one of: local, projects.
+
+       --share-with=PROJECT,[PROJECT,...]
+          If this future reservation is shared, provide a comma-separated list
+          of projects that this future reservation is shared with. The list
+          must contain project IDs or project numbers.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha compute future-reservations create
+
+        $ gcloud beta compute future-reservations create
+

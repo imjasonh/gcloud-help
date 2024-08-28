@@ -4,9 +4,9 @@ NAME
 SYNOPSIS
     gcloud alpha looker instances create (INSTANCE : --region=REGION)
         --edition=EDITION --oauth-client-id=OAUTH_CLIENT_ID
-        --oauth-client-secret=OAUTH_CLIENT_SECRET [--async]
-        [--no-enable-public-ip] [--kms-key=KMS_KEY]
-        [--consumer-network=CONSUMER_NETWORK --enable-private-ip
+        --oauth-client-secret=OAUTH_CLIENT_SECRET [--async] [--kms-key=KMS_KEY]
+        [--no-public-ip-enabled]
+        [--consumer-network=CONSUMER_NETWORK --private-ip-enabled
           : --reserved-range=RESERVED_RANGE]
         [--deny-maintenance-period-end-date=DENY_MAINTENANCE_PERIOD_END_DATE
           --deny-maintenance-period-start-date=DENY_MAINTENANCE_PERIOD_START_DATE --deny-maintenance-period-time=DENY_MAINTENANCE_PERIOD_TIME]
@@ -71,22 +71,28 @@ REQUIRED FLAGS
      --edition=EDITION
         The edition of the Looker instance. EDITION must be one of:
 
-         advanced
-            This edition provides a full-feature edition for product
-            exploration and development. Scales as your organization and data
-            add complexity.
+         core-embed-annual
+            A Looker (Google Cloud core) product for deploying and maintaining
+            external analytics and custom applications at scale. This can be
+            purchased via an annual contract.
+
+         core-enterprise-annual
+            A Looker (Google Cloud core) product with enhanced security
+            features for a wide variety of internal BI and analytics use cases.
+            This can be purchased via an annual contract.
+
+         core-standard
+            A Looker (Google Cloud core) product for small organizations or
+            teams with fewer than 50 users. This will be billed monthly while
+            the instance is active.
+
+         core-standard-annual
+            A Looker (Google Cloud core) product for small organizations or
+            teams with fewer than 50 users. This can be purchased via an annual
+            contract.
 
          core-trial
             Trial edition of Looker.
-
-         elite
-            This edition provides a full-feature edition for product
-            exploration and development. Drive your business through
-            operational analytics.
-
-         standard
-            This edition provides a full-feature edition for product
-            exploration and development. Exceptional for all your Analytics.
 
      --oauth-client-id=OAUTH_CLIENT_ID
         The client ID from an external OAuth application.
@@ -109,10 +115,6 @@ OPTIONAL FLAGS
         Return immediately, without waiting for the operation in progress to
         complete.
 
-     --enable-public-ip
-        This specifies whether public IP is enabled on the Looker instance.
-        Enabled by default, use --no-enable-public-ip to disable.
-
      Key resource - The Cloud KMS (Key Management Service) cryptokey that will
      be used to protect the Looker instance and backups. The 'Looker Service
      Agent' service account must hold permission 'Cloud KMS CryptoKey
@@ -123,6 +125,10 @@ OPTIONAL FLAGS
           ID of the key or fully qualified identifier for the key. To set the
           kms-key attribute:
           ▸ provide the argument --kms-key on the command line.
+
+     --public-ip-enabled
+        This specifies whether public IP is enabled on the Looker instance.
+        Enabled by default, use --no-public-ip-enabled to disable.
 
      Private IP - Assigns an internal, Google-hosted VPC IP address. Private IP
      connectivity requires additional APIs and permissions. Private IP cannot
@@ -136,7 +142,7 @@ OPTIONAL FLAGS
           This flag argument must be specified if any of the other arguments in
           this group are specified.
 
-       --enable-private-ip
+       --private-ip-enabled
           This specifies whether private IP is enabled on the Looker instance.
 
           This flag argument must be specified if any of the other arguments in
@@ -206,7 +212,7 @@ GCLOUD WIDE FLAGS
     Run $ gcloud help for details.
 
 API REFERENCE
-    This command uses the looker/v1alpha1 API. The full documentation for this
+    This command uses the looker/v1alpha2 API. The full documentation for this
     API can be found at: https://cloud.google.com/looker/docs/reference/rest/
 
 NOTES
