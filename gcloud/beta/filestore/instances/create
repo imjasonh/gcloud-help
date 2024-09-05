@@ -11,8 +11,6 @@ SYNOPSIS
         [--description=DESCRIPTION] [--labels=[KEY=VALUE,...]]
         [--location=LOCATION]
         [--managed-ad=[computer=COMPUTER],[domain=DOMAIN]]
-        [--performance=[max-read-iops=MAX-READ-IOPS],
-          [max-read-iops-per-tb=MAX-READ-IOPS-PER-TB]]
         [--protocol=PROTOCOL; default="NFS_V3"] [--region=REGION]
         [--source-instance=SOURCE_INSTANCE] [--tier=TIER; default="BASIC_HDD"]
         [--kms-key=KMS_KEY : --kms-keyring=KMS_KEYRING
@@ -243,43 +241,6 @@ OPTIONAL FLAGS
             computer
                The desired active directory computer name to be created by
                the filestore instance when connecting to the domain.
-
-     --performance=[max-read-iops=MAX-READ-IOPS],[max-read-iops-per-tb=MAX-READ-IOPS-PER-TB]
-        Performance configuration for the instance. This flag is used to
-        configure the read IOPS provisioned for the instance. The instance's
-        write IOPS and read/write throughputs will be derived from the
-        configured read IOPS. For more information about the derived
-        performance limits and default performance see:
-        https://cloud.google.com/filestore/docs/performance. Must be one of:
-
-            max-read-iops
-              The number of IOPS to provision for the instance.
-              MAX-READ-IOPS must be in multiple of 1000 and in the supported IOPS
-              range for the current capacity of the instance.
-              For more details, see: https://cloud.google.com/filestore/docs/performance.
-
-            max-read-iops-per-tb
-              Is used for setting the max IOPS of the instance by
-              specifying the IOPS per TB. When this parameter is used, the
-              max IOPS are derived from the instance capacity:
-              The instance max IOPS will be calculated by multiplying the
-              capacity of the instance (TB) by MAX-READ-IOPS-PER-TB, and rounding
-              to the nearest 1000. The max IOPS will be changed
-              dynamically based on the instance capacity.
-              MAX-READ-IOPS-PER-TB must be in the supported range of the instance.
-              For more details, see: https://cloud.google.com/filestore/docs/performance.
-
-        Examples:
-
-        Configure an instance with max-read-iops performance:
-
-            $ gcloud beta filestore instances create example-cluster \
-                --performance=max-read-iops=17000
-
-        Configure an instance with max-read-iops-per-tb performance:
-
-            $ gcloud beta filestore instances create example-cluster \
-                --performance=max-read-iops-per-tb=17000
 
      --protocol=PROTOCOL; default="NFS_V3"
         The service protocol for the Cloud Filestore instance. PROTOCOL must be

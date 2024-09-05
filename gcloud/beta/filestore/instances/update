@@ -6,9 +6,6 @@ SYNOPSIS
         [--description=DESCRIPTION] [--location=LOCATION] [--region=REGION]
         [--update-labels=[KEY=VALUE,...]]
         [--clear-labels | --remove-labels=[KEY,...]]
-        [--clear-performance
-          | --performance=[max-read-iops=MAX-READ-IOPS],
-          [max-read-iops-per-tb=MAX-READ-IOPS-PER-TB]]
         [--disconnect-managed-ad
           | --managed-ad=[computer=COMPUTER],[domain=DOMAIN]]
         [[--file-share=[capacity=CAPACITY],
@@ -138,54 +135,6 @@ FLAGS
           List of label keys to remove. If a label does not exist it is
           silently ignored. If --update-labels is also specified then
           --update-labels is applied first.
-
-     At most one of these can be specified:
-
-       --clear-performance
-          Clear the performance configuration of the instance and set it to the
-          default performance mode. In the default performance mode, the
-          instance performance will be automatically adjusted based on its
-          capacity (changes in the instance's capacity will automatically
-          adjust the instance's performance accordingly). For more information
-          about the default performance mode see:
-          https://cloud.google.com/filestore/docs/performance.
-
-       --performance=[max-read-iops=MAX-READ-IOPS],[max-read-iops-per-tb=MAX-READ-IOPS-PER-TB]
-          Performance configuration for the instance. This flag is used to
-          configure the read IOPS provisioned for the instance. The instance's
-          write IOPS and read/write throughputs will be derived from the
-          configured read IOPS. For more information about the derived
-          performance limits and default performance see:
-          https://cloud.google.com/filestore/docs/performance. Must be one of:
-
-              max-read-iops
-                The number of IOPS to provision for the instance.
-                MAX-READ-IOPS must be in multiple of 1000 and in the supported IOPS
-                range for the current capacity of the instance.
-                For more details, see: https://cloud.google.com/filestore/docs/performance.
-
-              max-read-iops-per-tb
-                Is used for setting the max IOPS of the instance by
-                specifying the IOPS per TB. When this parameter is used, the
-                max IOPS are derived from the instance capacity:
-                The instance max IOPS will be calculated by multiplying the
-                capacity of the instance (TB) by MAX-READ-IOPS-PER-TB, and rounding
-                to the nearest 1000. The max IOPS will be changed
-                dynamically based on the instance capacity.
-                MAX-READ-IOPS-PER-TB must be in the supported range of the instance.
-                For more details, see: https://cloud.google.com/filestore/docs/performance.
-
-          Examples:
-
-          Configure an instance with max-read-iops performance:
-
-              $ gcloud beta filestore instances update example-cluster \
-                  --performance=max-read-iops=17000
-
-          Configure an instance with max-read-iops-per-tb performance:
-
-              $ gcloud beta filestore instances update example-cluster \
-                  --performance=max-read-iops-per-tb=17000
 
      At most one of these can be specified:
 
