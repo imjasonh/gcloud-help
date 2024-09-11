@@ -18,11 +18,63 @@ EXAMPLES
 
         $ gcloud beta artifacts packages list --limit=5
 
+    To list packages with name as my-pkg:
+
+        $ gcloud beta artifacts packages list \
+          --filter='name="projects/my-project/locations/us/repositories/my\
+        -repo/packages/my-pkg"
+
+    To list packages with a given partial name, use * to match any character in
+    name:
+
+        $ gcloud beta artifacts packages list \
+          --filter='name="projects/my-project/locations/us/repositories/my\
+        -repo/packages/*pkg"'
+
+        $ gcloud beta artifacts packages list \
+          --filter='name="projects/my-project/locations/us/repositories/my\
+        -repo/packages/my*"'
+
+    To list files that have annotations:
+
+        $ gcloud beta artifacts packages list --filter=annotations:*
+
+    To list packages with annotations pair as [annotation_key:
+    annotation_value]:
+
+        $ gcloud beta artifacts packages list \
+          --filter='annotations.annotation_key:annotation_value'
+
+    To list packages with annotations containing key as my_key:
+
+        $ gcloud beta artifacts packages list --filter='annotations.my_key'
+
+        If the key or value contains special characters, such as `my.key` or `my.value`, backtick("`") is required:
+
+        $ gcloud beta artifacts packages list --filter='annotations.`my.key`'
+
+        $ gcloud beta artifacts packages list \
+          --filter='annotations.`my.key`:`my.value`'
+
+    To list packages with given partial annotation key or value, use * to match
+    any character:
+
+        $ gcloud beta artifacts packages list \
+          --filter='annotations.my_*:`*.value`'
+
+    To list packages ordered by create_time:
+
+        $ gcloud beta artifacts packages list --sort-by=create_time
+
+    To list packages ordered by update_time reversely:
+
+        $ gcloud beta artifacts packages list --sort-by=~update_time
+
 FLAGS
-     Repository resource - The parent repository for the list of packages. The
-     arguments in this group can be used to specify the attributes of this
-     resource. (NOTE) Some attributes are not given arguments in this group but
-     can be set in other ways.
+     Repository resource - The Artifact Registry repository. If not specified,
+     the current artifacts/repository is used. The arguments in this group can
+     be used to specify the attributes of this resource. (NOTE) Some attributes
+     are not given arguments in this group but can be set in other ways.
 
      To set the project attribute:
       ◆ provide the argument --repository on the command line with a fully
@@ -32,9 +84,7 @@ FLAGS
       ◆ set the property core/project.
 
        --location=LOCATION
-          Location of the repository. Overrides the default artifacts/location
-          property value for this command invocation. To configure the default
-          location, use the command: gcloud config set artifacts/location.
+          Location of the repository.
 
           To set the location attribute:
           ▸ provide the argument --repository on the command line with a
@@ -85,10 +135,6 @@ GCLOUD WIDE FLAGS
     --trace-token, --user-output-enabled, --verbosity.
 
     Run $ gcloud help for details.
-
-API REFERENCE
-    This command uses the artifactregistry/v1 API. The full documentation for
-    this API can be found at: https://cloud.google.com/artifacts/docs/
 
 NOTES
     This command is currently in beta and might change without notice. These

@@ -5,9 +5,9 @@ NAME
 SYNOPSIS
     gcloud alpha blockchain-validator blockchain-validator-configs create
         BLOCKCHAIN_VALIDATOR_CONFIG --blockchain-type=BLOCKCHAIN_TYPE
-        --key-source=KEY_SOURCE --validation-work-enabled [--async]
+        --key-source=KEY_SOURCE --[no-]validation-work-enabled [--async]
         [--blockchain-node-id=BLOCKCHAIN_NODE_ID] [--labels=[LABELS,...]]
-        [--location=LOCATION]
+        [--location=LOCATION] [--request-id=REQUEST_ID]
         [--ethereum-protocol-details-gas-limit=ETHEREUM_PROTOCOL_DETAILS_GAS_LIMIT --ethereum-protocol-details-graffiti=ETHEREUM_PROTOCOL_DETAILS_GRAFFITI --ethereum-protocol-details-suggested-fee-recipient=ETHEREUM_PROTOCOL_DETAILS_SUGGESTED_FEE_RECIPIENT --ethereum-protocol-details-use-block-builder-proposals]
         [[--existing-seed-phrase-reference-secret=EXISTING_SEED_PHRASE_REFERENCE_SECRET : --existing-seed-phrase-reference-derivation-index=EXISTING_SEED_PHRASE_REFERENCE_DERIVATION_INDEX] | [--remote-web3-signer-voting-public-key=REMOTE_WEB3_SIGNER_VOTING_PUBLIC_KEY --remote-web3-signer-web3signer-uri=REMOTE_WEB3_SIGNER_WEB3SIGNER_URI : --remote-web3-signer-timeout-duration=REMOTE_WEB3_SIGNER_TIMEOUT_DURATION] | [--seed-phrase-reference-secret=SEED_PHRASE_REFERENCE_SECRET : --seed-phrase-reference-export]]
         [GCLOUD_WIDE_FLAG ...]
@@ -79,14 +79,15 @@ REQUIRED FLAGS
          seed-phrase-reference
             Derive voting keys from new seed material.
 
-     --validation-work-enabled
+     --[no-]validation-work-enabled
         True if the blockchain node requests and signs attestations and blocks
         on behalf of this validator, false if not. This does NOT define whether
         the blockchain expects work to occur, only whether the blockchain node
         specified above is carrying out validation tasks. This should be
         enabled under normal conditions, but may be useful when migrating
         validators to/from Blockchain Node Engine, where the validator may be
-        paused during the migration.
+        paused during the migration. Use --validation-work-enabled to enable
+        and --no-validation-work-enabled to disable.
 
 OPTIONAL FLAGS
      --async
@@ -129,6 +130,21 @@ OPTIONAL FLAGS
         For resources [blockchainValidatorConfig, secret], provides fallback
         value for resource location attribute. When the resource's full URI
         path is not provided, location will fallback to this flag value.
+
+     --request-id=REQUEST_ID
+        An optional request ID to identify requests. Specify a unique request
+        ID so that if you must retry your request, the server will know to
+        ignore the request if it has already been completed. The server will
+        guarantee that for at least 60 minutes since the first request.
+
+        For example, consider a situation where you make an initial request and
+        the request times out. If you make the request again with the same
+        request ID, the server can check if original operation with the same
+        request ID was received, and if so, will ignore the second request.
+        This prevents clients from accidentally creating duplicate commitments.
+
+        The request ID must be a valid UUID with the exception that zero UUID
+        is not supported (00000000-0000-0000-0000-000000000000).
 
      Arguments for the blockchain type details.
 

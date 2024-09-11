@@ -4,7 +4,12 @@ NAME
 
 SYNOPSIS
     gcloud container node-pools update NAME
-        (--containerd-config-from-file=PATH_TO_FILE
+        (--accelerator=[type=TYPE,[count=COUNT,
+          gpu-driver-version=GPU_DRIVER_VERSION,
+          gpu-partition-size=GPU_PARTITION_SIZE,
+          gpu-sharing-strategy=GPU_SHARING_STRATEGY,
+          max-shared-clients-per-gpu=MAX_SHARED_CLIENTS_PER_GPU],...]
+          | --containerd-config-from-file=PATH_TO_FILE
           | --enable-confidential-nodes | --enable-gvnic
           | --enable-image-streaming | --enable-insecure-kubelet-readonly-port
           | --enable-private-nodes | --enable-queued-provisioning
@@ -51,6 +56,49 @@ POSITIONAL ARGUMENTS
 
 REQUIRED FLAGS
      Exactly one of these must be specified:
+
+       --accelerator=[type=TYPE,[count=COUNT,gpu-driver-version=GPU_DRIVER_VERSION,gpu-partition-size=GPU_PARTITION_SIZE,gpu-sharing-strategy=GPU_SHARING_STRATEGY,max-shared-clients-per-gpu=MAX_SHARED_CLIENTS_PER_GPU],...]
+          Attaches accelerators (e.g. GPUs) to all nodes.
+
+           type
+              (Required) The specific type (e.g. nvidia-tesla-t4 for NVIDIA T4)
+              of accelerator to attach to the instances. Use gcloud compute
+              accelerator-types list to learn about all available accelerator
+              types.
+
+           count
+              (Optional) The number of accelerators to attach to the instances.
+              The default value is 1.
+
+           gpu-driver-version
+              (Optional) The NVIDIA driver version to install.
+              GPU_DRIVER_VERSION must be one of:
+
+                  `default`: Install the default driver version for this GKE version.
+
+                  `latest`: Install the latest driver version available for this GKE version.
+                  Can only be used for nodes that use Container-Optimized OS.
+
+                  `disabled`: Skip automatic driver installation. You must manually install a
+                  driver after you create the cluster. If you omit the flag `gpu-driver-version`,
+                  this is the default option. To learn how to manually install the GPU driver,
+                  refer to: https://cloud.google.com/kubernetes-engine/docs/how-to/gpus#installing_drivers
+
+           gpu-partition-size
+              (Optional) The GPU partition size used when running
+              multi-instance GPUs. For information about multi-instance GPUs,
+              refer to:
+              https://cloud.google.com/kubernetes-engine/docs/how-to/gpus-multi
+
+           gpu-sharing-strategy
+              (Optional) The GPU sharing strategy (e.g. time-sharing) to use.
+              For information about GPU sharing, refer to:
+              https://cloud.google.com/kubernetes-engine/docs/concepts/timesharing-gpus
+
+           max-shared-clients-per-gpu
+              (Optional) The max number of containers allowed to share each GPU
+              on the node. This field is used together with
+              gpu-sharing-strategy.
 
        --containerd-config-from-file=PATH_TO_FILE
           Path of the YAML file that contains containerd configuration entries

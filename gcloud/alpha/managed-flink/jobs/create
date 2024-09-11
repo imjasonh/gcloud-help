@@ -1,0 +1,114 @@
+NAME
+    gcloud alpha managed-flink jobs create - create a Flink job from a Java jar
+
+SYNOPSIS
+    gcloud alpha managed-flink jobs create JAR|PY|SQL --location=LOCATION
+        --staging-location=STAGING_LOCATION [--project=PROJECT_ID] [--async]
+        [--autotuning-mode=AUTOTUNING_MODE; default="elastic"] [--class=CLASS]
+        [--deployment=DEPLOYMENT_NAME] [--dry-run] [--enable-output]
+        [--jars=[JAR,...]] [--job-type=JOB_TYPE; default="auto"]
+        [--max-parallelism=MAX_PARALLELISM] [--min-parallelism=MIN_PARALLELISM]
+        [--name=NAME] [--network-config-subnetwork=SUBNETWORK]
+        [--network-config-vpc=NETWORK] [--parallelism=PARALLELISM]
+        [GCLOUD_WIDE_FLAG ...] [-- JOB_ARGS ...]
+
+DESCRIPTION
+    (ALPHA) Create a Flink job from a Java jar.
+
+EXAMPLES
+    To create a Flink job from a Java jar, run:
+
+        $ gcloud alpha managed-flink jobs create my-job.jar \
+            --project=my-project --location=us-central1
+
+POSITIONAL ARGUMENTS
+     JAR|PY|SQL
+        The file containing the Flink job to run. Can be a jar, python, or sql
+        file.
+
+     [-- JOB_ARGS ...]
+        The job arguments to pass.
+
+        The '--' argument must be specified between gcloud specific args on the
+        left and JOB_ARGS on the right.
+
+REQUIRED FLAGS
+     --location=LOCATION
+        The location to run the job in.
+
+     --staging-location=STAGING_LOCATION
+        The Google Cloud Storage staging location for the job. Must start with
+        gs://
+
+COMMONLY USED FLAGS
+     --project=PROJECT_ID
+        Project to run the job in. Overrides the default core/project property
+        value for this command invocation.
+
+OTHER FLAGS
+     --async
+        Return immediately after job submission.
+
+     --autotuning-mode=AUTOTUNING_MODE; default="elastic"
+        Selects the autotuning mode for jobs. AUTOTUNING_MODE must be one of:
+
+         elastic
+            The number of taskmanagers is scaled automatically according to
+            workload.
+         fixed
+            The number of taskmanagers is fixed.
+
+     --class=CLASS
+        The main class of the Flink job. Required if the jar file manifest does
+        not contain a main class.
+
+     --deployment=DEPLOYMENT_NAME
+        Deployment to run the job in.
+
+     --dry-run
+        Return command used to submit a job without invoking API.
+
+     --enable-output
+        Shows the output of the Flink client.
+
+     --jars=[JAR,...]
+        The extra jars to pass to the job. Can be a jar, python, or sql file.
+
+     --job-type=JOB_TYPE; default="auto"
+        The type of job to run. If "auto" will be selected based on the file
+        extension for the job argument. JOB_TYPE must be one of: auto, jar,
+        python, sql.
+
+     --max-parallelism=MAX_PARALLELISM
+        The maximum parallelism of the job when in "elastic" autotuning mode.
+
+     --min-parallelism=MIN_PARALLELISM
+        The minimum parallelism of the job when in "elastic" autotuning mode.
+        This will also be the initial parallelism of the job.
+
+     --name=NAME
+        The name of the job. The Flink job name will be used if not set.
+
+     --network-config-subnetwork=SUBNETWORK
+        The subnetwork to use for the job.
+
+     --network-config-vpc=NETWORK
+        The network to use for the job.
+
+     --parallelism=PARALLELISM
+        The parallelism of the job when in "fixed" autotuning mode.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

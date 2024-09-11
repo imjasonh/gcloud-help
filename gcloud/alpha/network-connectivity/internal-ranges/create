@@ -9,7 +9,9 @@ SYNOPSIS
           : --target-cidr-range=[TARGET_CIDR_RANGE,...]]) [--async]
         [--description=DESCRIPTION] [--labels=[KEY=VALUE,...]]
         [--overlaps=[OVERLAPS,...]] [--peering=PEERING; default="for-self"]
-        [--usage=USAGE; default="for-vpc"] [GCLOUD_WIDE_FLAG ...]
+        [--usage=USAGE; default="for-vpc"]
+        [--migration-source=MIGRATION_SOURCE
+          --migration-target=MIGRATION_TARGET] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Create a new internal range with the given name.
@@ -152,9 +154,36 @@ OPTIONAL FLAGS
             cases, like for example, usage on-prem, with dynamic route
             announcements via interconnect.
 
+         for-migration
+            Ranges created with FOR_MIGRATION are used as locks for migrating
+            subnetworks between peered VPC networks.
+
          for-vpc
             A cloud resource can use the reserved CIDR block by associating it
             with the internal range resource if usage is set to FOR_VPC.
+
+     Endpoints of a for-migration internal range. This is only applicable when
+     --usage is set to for-migration. Both MIGRATION_SOURCE and
+     MIGRATION_TARGET must either belong to the same VPC or their VPCs must be
+     peered (they may then even belong to different projects). MIGRATION_SOURCE
+     must belong to the VPC network specifed by the --network flag.
+     MIGRATION_TARGET may name a subnetwork which does not exist yet; it must
+     be a valid resource path, and parent resources (network and project) and
+     their locations must exist.
+
+       --migration-source=MIGRATION_SOURCE
+          The migration source subnetwork (of a for-migration internal range)
+          resource URI or resource ID.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --migration-target=MIGRATION_TARGET
+          The migration target subnetwork (of a for-migration internal range)
+          resource URI or resource ID.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

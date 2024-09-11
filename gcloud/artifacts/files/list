@@ -13,34 +13,86 @@ DESCRIPTION
     To specify the maximum number of files to list, use the --limit flag.
 
 EXAMPLES
-    To list files in the current project under repository my-repo in
-    us-central1:
+    To list files in the current project under repository my-repo in us:
 
-        $ gcloud artifacts files list --repository=my-repo \
-          --location=us-central1
+        $ gcloud artifacts files list --repository=my-repo --location=us
 
     The following command lists a maximum of five files:
 
-        $ gcloud artifacts files list --repository=my-repo \
-          --location=us-central1 --limit=5
+        $ gcloud artifacts files list --repository=my-repo --location=us \
+          --limit=5
 
-    To list files in the current project under repository my-repo in
-    us-central1 owned by package my-package:
+    To list files in the current project under repository my-repo in us owned
+    by package my-package:
 
-        $ gcloud artifacts files list --repository=my-repo \
-          --location=us-central1 --package=my-package
+        $ gcloud artifacts files list --repository=my-repo --location=us \
+          --package=my-package
 
-    To list files in the current project under repository my-repo in
-    us-central1 owned by package my-package and version 1.0.0:
+    To list files in the current project under repository my-repo in us owned
+    by package my-package and version 1.0.0:
 
-        $ gcloud artifacts files list --repository=my-repo \
-          --location=us-central1 --package=my-package --version=1.0.0
+        $ gcloud artifacts files list --repository=my-repo --location=us \
+          --package=my-package --version=1.0.0
 
-    To list files in the current project under repository my-repo in
-    us-central1 owned by package my-package and tag name my-tag:
+    To list files in the current project under repository my-repo in us owned
+    by package my-package and tag name my-tag:
 
-        $ gcloud artifacts files list --repository=my-repo \
-          --location=us-central1 --package=my-package --tag=my-tag
+        $ gcloud artifacts files list --repository=my-repo --location=us \
+          --package=my-package --tag=my-tag
+
+    To list files with name as my-file:
+
+        $ gcloud artifacts files list \
+          --filter='name="projects/my-project/locations/us/repositories/my\
+        -repo/files/my-file"'
+
+    To list files with a given partial name, use * to match any character in
+    name:
+
+        $ gcloud artifacts files list \
+          --filter='name="projects/my-project/locations/us/repositories/my\
+        -repo/files/*file"'
+
+        $ gcloud artifacts files list \
+          --filter='name="projects/my-project/locations/us/repositories/my\
+        -repo/files/my-*"'
+
+    To list files that have annotations:
+
+        $ gcloud artifacts files list --filter=annotations:*
+
+    To list files with annotations pair as [annotation_key: annotation_value]
+
+        $ gcloud artifacts files list \
+          --filter='annotations.annotation_key:annotation_value'
+
+    To list files with annotations containing key as my_key:
+
+        $ gcloud artifacts files list --filter='annotations.my_key'
+
+        If the key or value contains special characters, such as `my.key` and `my.value`, backtick("`") is required:
+
+        $ gcloud artifacts files list --filter='annotations.`my.key`'
+
+        $ gcloud artifacts files list \
+          --filter='annotations.`my.key`:`my.value`'
+
+    To list files with given partial annotation key or value, use * to match
+    any character:
+
+        $ gcloud artifacts files list --filter='annotations.*key:`*.value`'
+
+    To list files in the current project under repository my-repo in us,
+    ordering by create_time:
+
+        $ gcloud artifacts files list --repository=my-repo --location=us \
+          --sort-by=create_time
+
+    To list files in the current project under repository my-repo in us,
+    ordering by update_time reversely:
+
+        $ gcloud artifacts files list --repository=my-repo --location=us \
+          --sort-by=~update_time
 
 FLAGS
      --package=PACKAGE

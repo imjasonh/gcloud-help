@@ -2,10 +2,10 @@ NAME
     gcloud alpha artifacts tags list - list Artifact Registry tags
 
 SYNOPSIS
-    gcloud alpha artifacts tags list
-        (--package=PACKAGE : --location=LOCATION --repository=REPOSITORY)
-        [--filter=EXPRESSION] [--limit=LIMIT] [--page-size=PAGE_SIZE]
-        [--sort-by=[FIELD,...]] [GCLOUD_WIDE_FLAG ...]
+    gcloud alpha artifacts tags list --package=PACKAGE
+        [--location=LOCATION --repository=REPOSITORY] [--filter=EXPRESSION]
+        [--limit=LIMIT] [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) List all Artifact Registry tags in the specified package.
@@ -27,49 +27,57 @@ EXAMPLES
 
         $ gcloud alpha artifacts tags list --package=my-package --limit=5
 
+    To list tags of package my-package with name as my-tag:
+
+        $ gcloud alpha artifacts tags list --package=my-package \
+          --filter='name="projects/my-project/locations/us/repositories/my\
+        -repo/packages/my-package/tags/my-tag"'
+
+    To list tags of package my-package with a given partial name, use * to
+    match any character in name:
+
+        $ gcloud alpha artifacts tags list --package=my-package \
+          --filter='name="projects/my-project/locations/us/repositories/my\
+        -repo/packages/my-package/tags/my*"'
+
+        $ gcloud alpha artifacts tags list --package=my-package \
+          --filter='name="projects/my-project/locations/us/repositories/my\
+        -repo/packages/my-package/tags/*tag"'
+
 REQUIRED FLAGS
-     Package resource - The parent package for the list of tags. The arguments
-     in this group can be used to specify the attributes of this resource.
-     (NOTE) Some attributes are not given arguments in this group but can be
-     set in other ways.
+     --package=PACKAGE
+        List all tags in a specified artifact, such as a container image or a
+        language package.
+
+FLAGS
+     Repository resource - The Artifact Registry repository. If not specified,
+     the current artifacts/repository is used. The arguments in this group can
+     be used to specify the attributes of this resource. (NOTE) Some attributes
+     are not given arguments in this group but can be set in other ways.
 
      To set the project attribute:
-      ◆ provide the argument --package on the command line with a fully
+      ◆ provide the argument --repository on the command line with a fully
         specified name;
+      ◆ set the property artifacts/repository with a fully specified name;
       ◆ provide the argument --project on the command line;
       ◆ set the property core/project.
 
-     This must be specified.
-
-       --package=PACKAGE
-          ID of the package or fully qualified identifier for the package.
-
-          To set the package attribute:
-          ▸ provide the argument --package on the command line.
-
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
-
        --location=LOCATION
-          Location of the package. Overrides the default artifacts/location
-          property value for this command invocation. To configure the default
-          location, use the command: gcloud config set artifacts/location.
+          Location of the repository.
 
           To set the location attribute:
-          ▸ provide the argument --package on the command line with a fully
-            specified name;
+          ▸ provide the argument --repository on the command line with a
+            fully specified name;
+          ▸ set the property artifacts/repository with a fully specified
+            name;
           ▸ provide the argument --location on the command line;
           ▸ set the property artifacts/location.
 
        --repository=REPOSITORY
-          The repository associated with the package. Overrides the default
-          artifacts/repository property value for this command invocation. To
-          configure the default repository, use the command: gcloud config set
-          artifacts/repository.
+          ID of the repository or fully qualified identifier for the
+          repository.
 
           To set the repository attribute:
-          ▸ provide the argument --package on the command line with a fully
-            specified name;
           ▸ provide the argument --repository on the command line;
           ▸ set the property artifacts/repository.
 
@@ -106,10 +114,6 @@ GCLOUD WIDE FLAGS
     --trace-token, --user-output-enabled, --verbosity.
 
     Run $ gcloud help for details.
-
-API REFERENCE
-    This command uses the artifactregistry/v1 API. The full documentation for
-    this API can be found at: https://cloud.google.com/artifacts/docs/
 
 NOTES
     This command is currently in alpha and might change without notice. If this

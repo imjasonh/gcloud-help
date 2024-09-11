@@ -18,6 +18,57 @@ EXAMPLES
 
         $ gcloud alpha artifacts repositories list --limit=5
 
+        To list repositories with name as `my_repo`:
+
+        $ gcloud alpha artifacts repositories list \
+        --filter='name="projects/my-project/locations/us/repositories/my\
+        _repo"'
+
+        To list repositories with a given partial name, use `*` to match any character in name:
+
+        $ gcloud alpha artifacts repositories list \
+        --filter='name="projects/my-project/locations/us/repositories/*r\
+        epo"'
+
+        $ gcloud alpha artifacts repositories list \
+        --filter='name="projects/my-project/locations/us/repositories/my\
+        _*"'
+
+        To list files that have annotations:
+
+        $ gcloud alpha artifacts repositories list --filter=annotations:*
+
+        To list repositories with annotations pair as [annotation_key: annotation_value]
+
+        $ gcloud alpha artifacts repositories list \
+        --filter='annotations.annotation_key:annotation_value'
+
+        To list repositories with annotations containing key as `my_key`:
+
+        $ gcloud alpha artifacts repositories list \
+        --filter='annotations.my_key'
+
+        If the key or value contains special characters, such as `my.key` or `my.value`, backtick("`") is required:
+
+        $ gcloud alpha artifacts repositories list \
+        --filter='annotations.`my.key`'
+
+        $ gcloud alpha artifacts repositories list \
+        --filter='annotations.`my.key`:`my.value`'
+
+        To list repositories with given partial annotation key or value, use `*` to match any character:
+
+        $ gcloud alpha artifacts repositories list \
+        --filter='annotations.*key:`*.value`'
+
+        To list repositories ordered by create_time:
+
+        $ gcloud alpha artifacts repositories list --sort-by=create_time
+
+        To list repositories ordered by update_time reversely:
+
+        $ gcloud alpha artifacts repositories list--sort-by=~update_time
+
 FLAGS
      Location resource - The Artifact Registry repository location. You can
      also set --location=all to list repositories across all locations. If you

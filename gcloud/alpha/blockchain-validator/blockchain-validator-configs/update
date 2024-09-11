@@ -7,7 +7,7 @@ SYNOPSIS
         (BLOCKCHAIN_VALIDATOR_CONFIG : --location=LOCATION) [--async]
         [--blockchain-node-id=BLOCKCHAIN_NODE_ID]
         [--ethereum-protocol-details-graffiti=ETHEREUM_PROTOCOL_DETAILS_GRAFFITI]
-        [--validation-work-enabled]
+        [--request-id=REQUEST_ID] [--[no-]validation-work-enabled]
         [--labels=[LABELS,...]
           | --update-labels=[UPDATE_LABELS,...] --clear-labels
           | --remove-labels=[__REMOVE_LABELS,...]]
@@ -89,14 +89,30 @@ FLAGS
               default is used. If no blockchain node is specified, this has no
               effect as no validator client is run.
 
-     --validation-work-enabled
+     --request-id=REQUEST_ID
+        An optional request ID to identify requests. Specify a unique request
+        ID so that if you must retry your request, the server will know to
+        ignore the request if it has already been completed. The server will
+        guarantee that for at least 60 minutes since the first request.
+
+        For example, consider a situation where you make an initial request and
+        the request times out. If you make the request again with the same
+        request ID, the server can check if original operation with the same
+        request ID was received, and if so, will ignore the second request.
+        This prevents clients from accidentally creating duplicate commitments.
+
+        The request ID must be a valid UUID with the exception that zero UUID
+        is not supported (00000000-0000-0000-0000-000000000000).
+
+     --[no-]validation-work-enabled
         True if the blockchain node requests and signs attestations and blocks
         on behalf of this validator, false if not. This does NOT define whether
         the blockchain expects work to occur, only whether the blockchain node
         specified above is carrying out validation tasks. This should be
         enabled under normal conditions, but may be useful when migrating
         validators to/from Blockchain Node Engine, where the validator may be
-        paused during the migration.
+        paused during the migration. Use --validation-work-enabled to enable
+        and --no-validation-work-enabled to disable.
 
      Update labels.
 

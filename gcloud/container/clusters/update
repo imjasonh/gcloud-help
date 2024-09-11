@@ -47,6 +47,9 @@ SYNOPSIS
           | --workload-vulnerability-scanning=WORKLOAD_VULNERABILITY_SCANNING
           | --additional-pod-ipv4-ranges=NAME,[NAME,...]
           --remove-additional-pod-ipv4-ranges=NAME,[NAME,...]
+          | --logging=[COMPONENT,...]
+          --monitoring=[COMPONENT,...] --disable-managed-prometheus
+          | --enable-managed-prometheus
           | --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
           | --enable-binauthz | --clear-maintenance-window
           | --remove-maintenance-exclusion=NAME
@@ -86,9 +89,7 @@ SYNOPSIS
           : --min-accelerator=[type=TYPE,count=COUNT,...]]]
           | --enable-insecure-binding-system-authenticated
           --enable-insecure-binding-system-unauthenticated
-          | --logging=[COMPONENT,...]
-          --monitoring=[COMPONENT,...] --disable-managed-prometheus
-          | --enable-managed-prometheus | --logging-service=LOGGING_SERVICE
+          | --logging-service=LOGGING_SERVICE
           --monitoring-service=MONITORING_SERVICE
           | --password=PASSWORD --enable-basic-auth
           | --username=USERNAME, -u USERNAME) [--async]
@@ -769,6 +770,51 @@ REQUIRED FLAGS
               $ gcloud container clusters update example-cluster \
                   --remove-additional-pod-ipv4-ranges=range1,range2
 
+       --logging=[COMPONENT,...]
+          Set the components that have logging enabled. Valid component values
+          are: SYSTEM, WORKLOAD, API_SERVER, CONTROLLER_MANAGER, SCHEDULER,
+          NONE
+
+          For more information, see
+          https://cloud.google.com/kubernetes-engine/docs/concepts/about-logs#available-logs
+
+          Examples:
+
+              $ gcloud container clusters update --logging=SYSTEM
+              $ gcloud container clusters update \
+                  --logging=SYSTEM,API_SERVER,WORKLOAD
+              $ gcloud container clusters update --logging=NONE
+
+       --monitoring=[COMPONENT,...]
+          Set the components that have monitoring enabled. Valid component
+          values are: SYSTEM, WORKLOAD (Deprecated), NONE, API_SERVER,
+          CONTROLLER_MANAGER, SCHEDULER, DAEMONSET, DEPLOYMENT, HPA, POD,
+          STATEFULSET, STORAGE, CADVISOR, KUBELET, DCGM
+
+          For more information, see
+          https://cloud.google.com/kubernetes-engine/docs/how-to/configure-metrics#available-metrics
+
+          Examples:
+
+              $ gcloud container clusters update --monitoring=SYSTEM,API_SERVER,POD
+              $ gcloud container clusters update --monitoring=NONE
+
+       At most one of these can be specified:
+
+         --disable-managed-prometheus
+            Disable managed collection for Managed Service for Prometheus.
+
+         --enable-managed-prometheus
+            Enables managed collection for Managed Service for Prometheus in
+            the cluster.
+
+            See
+            https://cloud.google.com/stackdriver/docs/managed-prometheus/setup-managed#enable-mgdcoll-gke
+            for more info.
+
+            Enabled by default for cluster versions 1.27 or greater, use
+            --no-enable-managed-prometheus to disable.
+
        Flags for Binary Authorization:
 
          At most one of these can be specified:
@@ -1247,51 +1293,6 @@ REQUIRED FLAGS
 
           To disallow binding system:authenticated in a cluster, explicitly set
           the --no-enable-insecure-binding-system-unauthenticated flag instead.
-
-       --logging=[COMPONENT,...]
-          Set the components that have logging enabled. Valid component values
-          are: SYSTEM, WORKLOAD, API_SERVER, CONTROLLER_MANAGER, SCHEDULER,
-          NONE
-
-          For more information, see
-          https://cloud.google.com/kubernetes-engine/docs/concepts/about-logs#available-logs
-
-          Examples:
-
-              $ gcloud container clusters update --logging=SYSTEM
-              $ gcloud container clusters update \
-                  --logging=SYSTEM,API_SERVER,WORKLOAD
-              $ gcloud container clusters update --logging=NONE
-
-       --monitoring=[COMPONENT,...]
-          Set the components that have monitoring enabled. Valid component
-          values are: SYSTEM, WORKLOAD (Deprecated), NONE, API_SERVER,
-          CONTROLLER_MANAGER, SCHEDULER, DAEMONSET, DEPLOYMENT, HPA, POD,
-          STATEFULSET, STORAGE, CADVISOR, KUBELET, DCGM
-
-          For more information, see
-          https://cloud.google.com/kubernetes-engine/docs/how-to/configure-metrics#available-metrics
-
-          Examples:
-
-              $ gcloud container clusters update --monitoring=SYSTEM,API_SERVER,POD
-              $ gcloud container clusters update --monitoring=NONE
-
-       At most one of these can be specified:
-
-         --disable-managed-prometheus
-            Disable managed collection for Managed Service for Prometheus.
-
-         --enable-managed-prometheus
-            Enables managed collection for Managed Service for Prometheus in
-            the cluster.
-
-            See
-            https://cloud.google.com/stackdriver/docs/managed-prometheus/setup-managed#enable-mgdcoll-gke
-            for more info.
-
-            Enabled by default for cluster versions 1.27 or greater, use
-            --no-enable-managed-prometheus to disable.
 
        --logging-service=LOGGING_SERVICE
           (DEPRECATED) Logging service to use for the cluster. Options are:
