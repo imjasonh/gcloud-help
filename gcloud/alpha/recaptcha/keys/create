@@ -3,7 +3,7 @@ NAME
 
 SYNOPSIS
     gcloud alpha recaptcha keys create --display-name=DISPLAY_NAME
-        ([--android (--allow-all-package-names
+        (--express | [--android (--allow-all-package-names
           | --package-names=[PACKAGE_NAMES,...])
           : --support-non-google-app-store-distribution]
           | [--ios (--allow-all-bundle-ids | --bundle-ids=[BUNDLE_IDS,...])
@@ -13,7 +13,7 @@ SYNOPSIS
           --security-preference=SECURITY_PREFERENCE
           --testing-challenge=TESTING_CHALLENGE]) [--labels=[KEY=VALUE,...]]
         [--testing-score=TESTING_SCORE]
-        [--waf-feature=WAF_FEATURE : --waf-service=WAF_SERVICE]
+        [--waf-service=WAF_SERVICE : --waf-feature=WAF_FEATURE]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -31,6 +31,11 @@ REQUIRED FLAGS
         A human-readable name for the key. Typically a site or app name.
 
      Exactly one of these must be specified:
+
+       Options for the creation of a site key for Express.
+
+         --express
+            Creates a Key configured for Express assessments.
 
        Options for the creation of a site key for Android.
 
@@ -130,6 +135,11 @@ REQUIRED FLAGS
              score
                 Shows no CAPTCHA challenge on the page
 
+             score-and-challenge
+                Conditionally displays a challenge based on the score. This is
+                in private preview. If you want to onboard, contact your Google
+                Cloud sales representative.
+
          --security-preference=SECURITY_PREFERENCE
             Represents the possible challenge frequency and difficulty
             configurations for a web key. usability: show fewer and easier
@@ -181,27 +191,6 @@ OPTIONAL FLAGS
      please refer to
      https://cloud.google.com/recaptcha-enterprise/docs/integration-overview.
 
-       --waf-feature=WAF_FEATURE
-          The WAF feature to use. For more information, see
-          https://cloud.google.com/recaptcha-enterprise/docs/usecase#comparison_of_features.
-          WAF_FEATURE must be one of:
-
-           action-token
-              Use reCAPTCHA action-tokens to protect user actions.
-
-           challenge-page
-              Redirects suspicious traffic to reCAPTCHA challenge page.
-
-           express
-              Assesses requests without tokens or frontend integration.
-
-           session-token
-              Use reCAPTCHA session-tokens to protect the whole user session on
-              the site's domain.
-
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
-
        --waf-service=WAF_SERVICE
           The WAF service provider to use. WAF_SERVICE must be one of:
 
@@ -217,8 +206,27 @@ OPTIONAL FLAGS
            fastly
               Fastly
 
-           unspecified
-              No specified WAF service
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --waf-feature=WAF_FEATURE
+          The WAF feature to use. For more information, see
+          https://cloud.google.com/recaptcha-enterprise/docs/usecase#comparison_of_features.
+          WAF_FEATURE must be one of:
+
+           action-token
+              Use reCAPTCHA action-tokens to protect user actions.
+
+           challenge-page
+              Redirects suspicious traffic to reCAPTCHA challenge page.
+
+           express
+              Assesses requests without tokens or frontend integration. This
+              option is deprecated, use --express instead.
+
+           session-token
+              Use reCAPTCHA session-tokens to protect the whole user session on
+              the site's domain.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

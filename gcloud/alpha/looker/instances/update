@@ -10,6 +10,9 @@ SYNOPSIS
         [--add-developer-users=ADD_DEVELOPER_USERS
           --add-standard-users=ADD_STANDARD_USERS
           --add-viewer-users=ADD_VIEWER_USERS]
+        [--clear-psc-allowed-vpcs | --psc-allowed-vpcs=[PSC_ALLOWED_VPCS,...]
+          --clear-psc-service-attachments
+          | --psc-service-attachment=[attachment=ATTACHMENT],[domain=DOMAIN]]
         [--deny-maintenance-period-end-date=DENY_MAINTENANCE_PERIOD_END_DATE
           --deny-maintenance-period-start-date=DENY_MAINTENANCE_PERIOD_START_DATE --deny-maintenance-period-time=DENY_MAINTENANCE_PERIOD_TIME]
         [--maintenance-window-day=MAINTENANCE_WINDOW_DAY
@@ -114,6 +117,32 @@ FLAGS
 
        --add-viewer-users=ADD_VIEWER_USERS
           Number of additional Viewer Users to allocate to the Looker Instance.
+
+     Private Service Connect - Private Service Connect allows the Looker
+     Instance to be reached via a private connection from inside a VPC network,
+     and for the Looker Instance to connect to managed services via private
+     connections.
+
+       At most one of these can be specified:
+
+         --clear-psc-allowed-vpcs
+            Remove all service attachments from the PSC config of the instance.
+
+         --psc-allowed-vpcs=[PSC_ALLOWED_VPCS,...]
+            List of VPCs that are allowed ingress into the Looker instance.
+
+       At most one of these can be specified:
+
+         --clear-psc-service-attachments
+            Remove all allowed VPCs from the PSC config of the instance.
+
+         --psc-service-attachment=[attachment=ATTACHMENT],[domain=DOMAIN]
+            Service attachments representing egress connections for the Looker
+            instance. This flag can be repeated. (Example:
+            --psc-service-attachment
+            domain="mydomain.com",attachment="projects/my-project/regions/us-east1/serviceAttachments/sa"
+            --psc-service-attachments
+            domain="mydomain.com",attachment="projects/my-project/regions/us-east1/serviceAttachments/sa")
 
      Deny Maintanence Period - You must allow at least 48 hours of maintenance
      availability in a 60-day rolling window. Only contiguous availability

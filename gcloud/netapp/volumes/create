@@ -39,6 +39,7 @@ SYNOPSIS
         [--snapshot-weekly=[day=DAY],
           [hour=HOUR],[minute=MINUTE],[snapshots-to-keep=SNAPSHOTS-TO-KEEP]]
         [--source-snapshot=SOURCE_SNAPSHOT]
+        [--tiering-policy=[tier-action=ENABLED|PAUSED,...]]
         [--unix-permissions=UNIX_PERMISSIONS]
         [--source-backup=SOURCE_BACKUP : --backup_vault=BACKUP_VAULT]
         [GCLOUD_WIDE_FLAG ...]
@@ -277,6 +278,18 @@ OPTIONAL FLAGS
 
           To set the snapshot attribute:
           ▸ provide the argument --source-snapshot on the command line.
+
+     --tiering-policy=[tier-action=ENABLED|PAUSED,...]
+        Tiering Policy contains auto tiering policy on a volume.
+
+            Tiering Policy will have the following format
+            --tiering-policy=tier-action=TIER_ACTION,
+            cooling-threshold-days=COOLING_THRESHOLD_DAYS
+
+            tier-action is an enum, supported values are ENABLED or PAUSED,
+        cooling-threshold-days is an integer represents time in days to mark
+        the volume's data block as cold and make it eligible for tiering, can
+        be range from 7-183. Default is 31.
 
      --unix-permissions=UNIX_PERMISSIONS
         Unix permissions the mount point will be created with. Unix permissions
