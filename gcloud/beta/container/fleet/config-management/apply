@@ -1,20 +1,26 @@
 NAME
     gcloud beta container fleet config-management apply - update a Config
-        Management Feature Spec
+        Management feature spec
 
 SYNOPSIS
-    gcloud beta container fleet config-management apply --config=CONFIG
-        [--version=VERSION] [--membership=MEMBERSHIP : --location=LOCATION]
-        [GCLOUD_WIDE_FLAG ...]
+    gcloud beta container fleet config-management apply
+        (--origin=ORIGIN | [--config=CONFIG : --version=VERSION])
+        [--membership=MEMBERSHIP : --location=LOCATION] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (BETA) Update a user-specified config file to a ConfigManagement Custom
-    Resource. The config file should be a .yaml file, all eligible fields are
-    listed in
-    https://cloud.google.com/anthos-config-management/docs/reference/gcloud-apply-fields
+    (BETA) Update a membership configuration for the Config Management feature
+    in a fleet. This command errors if the Config Management feature is not
+    enabled on the fleet.
 
 EXAMPLES
-    To apply a YAML config file to a membership, prepare apply-spec.yaml
+    To apply the fleet-default membership configuration
+    (https://cloud.google.com/kubernetes-engine/fleet-management/docs/manage-features)
+    to MEMBERSHIP_NAME, run:
+
+        $ gcloud beta container fleet config-management apply \
+            --membership=MEMBERSHIP_NAME --origin=FLEET
+
+    To apply a membership configuration as a YAML file, prepare apply-spec.yaml
     (https://cloud.google.com/anthos-config-management/docs/reference/gcloud-apply-fields#example_gcloud_apply_spec)
     then run:
 
@@ -23,13 +29,43 @@ EXAMPLES
             --version=VERSION
 
 REQUIRED FLAGS
-     --config=CONFIG
-        The path to config-management.yaml.
+     Update the membership configuration either to the fleet-default membership
+     configuration
+     (https://cloud.google.com/kubernetes-engine/fleet-management/docs/manage-features)
+     with --origin or to a user-provided configuration with --config and
+     --version.
+
+     Exactly one of these must be specified:
+
+       --origin=ORIGIN
+          Updates the configuration of the target membership to the current
+          fleet-default membership configuration
+          (https://cloud.google.com/kubernetes-engine/fleet-management/docs/manage-features).
+          Errors if fleet-default membership configuration is not enabled; see
+          the enable command for more details. ORIGIN must be (only one value
+          is supported): FLEET.
+
+       Provide the entire membership configuration to update with --config and
+       --version.
+
+         --config=CONFIG
+            Path to YAML file that contains the configuration to update the
+            target membership to. The file accepts the following fields
+            (https://cloud.google.com/anthos-config-management/docs/reference/gcloud-apply-fields).
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --version=VERSION
+            Version of Config Management. Equivalent to the `spec.version`
+            (https://cloud.google.com/anthos-config-management/docs/reference/gcloud-apply-fields#common)
+            field in the --config file. Provides --config with a version in the
+            absence of spec.version. Cannot specify this flag without --config;
+            cannot set both this flag and spec.version. See `spec.version`
+            (https://cloud.google.com/anthos-config-management/docs/reference/gcloud-apply-fields#common)
+            for more details.
 
 OPTIONAL FLAGS
-     --version=VERSION
-        The version of ACM to install.
-
      Membership resource - The group of arguments defining a membership. The
      arguments in this group can be used to specify the attributes of this
      resource. (NOTE) Some attributes are not given arguments in this group but

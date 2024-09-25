@@ -8,9 +8,13 @@ SYNOPSIS
         [--organization=ORGANIZATION] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    Create a new cloud access binding. The access level will be bound with the
-    group. The access level will be enforced when any user in the group tries
-    to access the Google cloud console or API.
+    Create a new cloud access binding. The access level will be globally bound
+    with the group.
+
+    Allowlisted Applications can be specified to limit the scope of the cloud
+    access binding in the 'binding-file'. In such case, the access level
+    specified in the yaml file will be bound with the group and the allowlisted
+    applications.
 
 EXAMPLES
     To create a new cloud access binding, run:
@@ -18,6 +22,21 @@ EXAMPLES
         $ gcloud access-context-manager cloud-bindings create \
             --group-key=my-group-key \
             --level=accessPolicies/123/accessLevels/abc
+
+    To create a new cloud access binding for particular applications using a
+    yaml file, run:
+
+        $ gcloud access-context-manager cloud-bindings create \
+            --group-key=my-group-key --organization='1234567890' \
+            --binding-file='binding.yaml'
+
+    To create a new global cloud access binding, and for particular
+    applications using a yaml file, run:
+
+        $ gcloud access-context-manager cloud-bindings create \
+            --group-key=my-group-key \
+            --level=accessPolicies/123/accessLevels/abc \
+            --organization='1234567890' --binding-file='binding.yaml'
 
     To create a new cloud access binding for the dry run access level, run:
 

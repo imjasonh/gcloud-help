@@ -7,10 +7,7 @@ SYNOPSIS
         [--ack-deadline=ACK_DEADLINE] [--enable-exactly-once-delivery]
         [--expiration-period=EXPIRATION_PERIOD]
         [--message-retention-duration=MESSAGE_RETENTION_DURATION]
-        [--push-auth-service-account=SERVICE_ACCOUNT_EMAIL]
-        [--push-auth-token-audience=OPTIONAL_AUDIENCE_OVERRIDE]
-        [--push-endpoint=PUSH_ENDPOINT] [--retain-acked-messages]
-        [--update-labels=[KEY=VALUE,...]]
+        [--retain-acked-messages] [--update-labels=[KEY=VALUE,...]]
         [--clear-bigquery-config | [--bigquery-table=BIGQUERY_TABLE
           : --bigquery-service-account-email=BIGQUERY_SERVICE_ACCOUNT_EMAIL
           --drop-unknown-fields --write-metadata --use-table-schema
@@ -22,10 +19,13 @@ SYNOPSIS
           [--dead-letter-topic=DEAD_LETTER_TOPIC
           : --dead-letter-topic-project=DEAD_LETTER_TOPIC_PROJECT]]
         [--clear-labels | --remove-labels=[KEY,...]]
-        [--clear-push-no-wrapper-config
-          | [--push-no-wrapper : --push-no-wrapper-write-metadata]]
         [--clear-retry-policy | --max-retry-delay=MAX_RETRY_DELAY
-          --min-retry-delay=MIN_RETRY_DELAY] [GCLOUD_WIDE_FLAG ...]
+          --min-retry-delay=MIN_RETRY_DELAY]
+        [--push-auth-service-account=SERVICE_ACCOUNT_EMAIL
+          --push-auth-token-audience=OPTIONAL_AUDIENCE_OVERRIDE
+          --push-endpoint=PUSH_ENDPOINT --clear-push-no-wrapper-config
+          | [--push-no-wrapper : --push-no-wrapper-write-metadata]]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Updates an existing Cloud Pub/Sub subscription.
@@ -82,18 +82,6 @@ FLAGS
         "m", "h", and "d" for seconds, minutes, hours, and days, respectively.
         If the unit is omitted, seconds is assumed.
 
-     --push-auth-service-account=SERVICE_ACCOUNT_EMAIL
-        Service account email used as the identity for the generated Open ID
-        Connect token for authenticated push.
-
-     --push-auth-token-audience=OPTIONAL_AUDIENCE_OVERRIDE
-        Audience used in the generated Open ID Connect token for authenticated
-        push. If not specified, it will be set to the push-endpoint.
-
-     --push-endpoint=PUSH_ENDPOINT
-        A URL to use as the endpoint for this subscription. This will also
-        automatically set the subscription type to PUSH.
-
      --retain-acked-messages
         Whether or not to retain acknowledged messages. If true, messages are
         not expunged from the subscription's backlog until they fall out of the
@@ -122,6 +110,10 @@ FLAGS
          with the enclosing subscription's parent project (i.e.,
          service-{project_number}@gcp-sa-pubsub.iam.gserviceaccount.com) must
          have permission to write to this BigQuery table.
+
+         When updating BigQueryConfig flags, all BigQueryConfig flags must be
+         specified. Otherwise, any omitted BigQueryConfig flags revert to their
+         default value.
 
            --bigquery-table=BIGQUERY_TABLE
               A BigQuery table of the form
@@ -176,6 +168,10 @@ FLAGS
          service-{project_number}@gcp-sa-pubsub.iam.gserviceaccount.com) must
          have permission to write to this Cloud Storage bucket and to read this
          bucket's metadata.
+
+         When updating CloudStorageConfig flags, all CloudStorageConfig flags
+         must be specified. Otherwise, any omitted CloudStorageConfig flags
+         revert to their default value.
 
          Note that an update to the Cloud Storage config will replace it with a
          new config containing only the flags that are passed in the update
@@ -257,6 +253,10 @@ FLAGS
        have permission to Publish() to this topic and Acknowledge() messages on
        this subscription.
 
+       When updating DeadLetterPolicy flags, all DeadLetterPolicy flags must be
+       specified. Otherwise, any omitted DeadLetterPolicy flags revert to their
+       default value.
+
          --max-delivery-attempts=MAX_DELIVERY_ATTEMPTS
             Maximum number of delivery attempts for any message. The value must
             be between 5 and 100. Defaults to 5. --dead-letter-topic must also
@@ -309,34 +309,16 @@ FLAGS
 
      At most one of these can be specified:
 
-       --clear-push-no-wrapper-config
-          If set, clear the NoWrapper config from the subscription. Use
-          --no-clear-push-no-wrapper-config to disable this flag.
-
-       NoWrapper Config Options.
-
-         --push-no-wrapper
-            When set, the message data is delivered directly as the HTTP body.
-            Use --no-push-no-wrapper to disable this flag.
-
-            This flag argument must be specified if any of the other arguments
-            in this group are specified.
-
-         --push-no-wrapper-write-metadata
-            When true, writes the Pub/Sub message metadata to
-            x-goog-pubsub-<KEY>:<VAL> headers of the HTTP request. Writes the
-            Pub/Sub message attributes to <KEY>:<VAL> headers of the HTTP
-            request. Use --no-push-no-wrapper-write-metadata to disable this
-            flag.
-
-     At most one of these can be specified:
-
        --clear-retry-policy
           If set, clear the retry policy from the subscription. Use
           --no-clear-retry-policy to disable this flag.
 
        Retry Policy Options. Retry policy specifies how Cloud Pub/Sub retries
        message delivery for this subscription.
+
+       When updating RetryPolicy flags, all RetryPolicy flags must be
+       specified. Otherwise, any omitted RetryPolicy flags revert to their
+       default value.
 
          --max-retry-delay=MAX_RETRY_DELAY
             The maximum delay between consecutive deliveries of a given
@@ -351,6 +333,46 @@ FLAGS
             seconds. Valid values are strings of the form INTEGER[UNIT], where
             UNIT is one of "s", "m", "h", and "d" for seconds, minutes, hours,
             and days, respectively. If the unit is omitted, seconds is assumed.
+
+     Push Config Options. Configuration for a push delivery endpoint.
+
+     When updating PushConfig flags, all PushConfig flags must be specified.
+     Otherwise, any omitted PushConfig flags revert to their default value.
+
+       --push-auth-service-account=SERVICE_ACCOUNT_EMAIL
+          Service account email used as the identity for the generated Open ID
+          Connect token for authenticated push.
+
+       --push-auth-token-audience=OPTIONAL_AUDIENCE_OVERRIDE
+          Audience used in the generated Open ID Connect token for
+          authenticated push. If not specified, it will be set to the
+          push-endpoint.
+
+       --push-endpoint=PUSH_ENDPOINT
+          A URL to use as the endpoint for this subscription. This will also
+          automatically set the subscription type to PUSH.
+
+       At most one of these can be specified:
+
+         --clear-push-no-wrapper-config
+            If set, clear the NoWrapper config from the subscription. Use
+            --no-clear-push-no-wrapper-config to disable this flag.
+
+         NoWrapper Config Options.
+
+           --push-no-wrapper
+              When set, the message data is delivered directly as the HTTP
+              body. Use --no-push-no-wrapper to disable this flag.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --push-no-wrapper-write-metadata
+              When true, writes the Pub/Sub message metadata to
+              x-goog-pubsub-<KEY>:<VAL> headers of the HTTP request. Writes the
+              Pub/Sub message attributes to <KEY>:<VAL> headers of the HTTP
+              request. Use --no-push-no-wrapper-write-metadata to disable this
+              flag.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

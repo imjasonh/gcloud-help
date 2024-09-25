@@ -4,6 +4,7 @@ NAME
 SYNOPSIS
     gcloud alpha storage diagnose URL [--test-type=[TEST_TYPES,...]]
         [--download-type=DOWNLOAD_TYPE; default=<DownloadType.FILE: 'FILE'>]
+        [--logs-path=LOGS_PATH]
         [--upload-type=UPLOAD_TYPE; default=<UploadType.FILE: 'FILE'>]
         [--process-count=PROCESS_COUNT] [--thread-count=THREAD_COUNT]
         [--object-count=OBJECT_COUNT (--object-size=OBJECT_SIZE
@@ -42,7 +43,7 @@ EXAMPLES
     diagnostic tests:
 
         $ gcloud alpha storage diagnose gs://my-bucket \
-            --test-type=[UPLOAD_THROUGHPUT,DOWNLOAD_THROUGHPUT]
+            --test-type=UPLOAD_THROUGHPUT,DOWNLOAD_THROUGHPUT
 
     The following command runs the diagnostic tests using 10 objects of 1MiB
     size each with 10 threads and 10 processes at max:
@@ -64,17 +65,20 @@ FLAGS
      --test-type=[TEST_TYPES,...]
         Tests to run as part of this diagnosis. Following tests are supported:
 
+        DIRECT_CONNECTIVITY: Run a test upload over the Direct Connectivity
+        network path and run other diagnostics if the upload fails.
+
         DOWNLOAD_THROUGHPUT: Upload objects to the specified bucket and record
-        the number of bytes transfered per second.
+        the number of bytes transferred per second.
 
         UPLOAD_THROUGHPUT: Download objects from the specified bucket and
-        record the number of bytes transfered per second.
+        record the number of bytes transferred per second.
 
-        LATENCY: Writes the objects, retrieves its metadata, reads the objects
-        and records latency of each operation.
+        LATENCY: Write the objects, retrieve their metadata, read the objects,
+        and record latency of each operation.
 
-        TEST_TYPES must be one of: DOWNLOAD_THROUGHPUT, LATENCY,
-        UPLOAD_THROUGHPUT.
+        TEST_TYPES must be one of: DIRECT_CONNECTIVITY, DOWNLOAD_THROUGHPUT,
+        LATENCY, UPLOAD_THROUGHPUT.
 
      --download-type=DOWNLOAD_TYPE; default=<DownloadType.FILE: 'FILE'>
         Download strategy to use for the DOWNLOAD_THROUGHPUT diagnostic test.
@@ -92,6 +96,10 @@ FLAGS
         --process-count and --thread-count flags.
 
         DOWNLOAD_TYPE must be one of: FILE, SLICED, STREAMING.
+
+     --logs-path=LOGS_PATH
+        If the diagnostic supports writing logs, write the logs to this file
+        location.
 
      --upload-type=UPLOAD_TYPE; default=<UploadType.FILE: 'FILE'>
         Upload strategy to use for the UPLOAD_THROUGHPUT diagnostic test.

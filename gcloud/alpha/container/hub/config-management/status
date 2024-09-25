@@ -8,16 +8,24 @@ SYNOPSIS
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) Print the status of all clusters with Config Management enabled.
+    (ALPHA) The Synced_to_Fleet_Default status indicates whether each
+    membership's configuration has been synced with the fleet-default
+    membership configuration
+    (https://cloud.google.com/kubernetes-engine/fleet-management/docs/manage-features).
+    Synced_to_Fleet_Default displays FLEET_DEFAULT_NOT_CONFIGURED when
+    fleet-default membership configuration is not enabled.
+    Synced_to_Fleet_Default for an individual membership may be UNKNOWN if
+    configuration has yet to be applied to this membership since enabling
+    fleet-default membership configuration. See the enable and apply commands
+    for more details.
 
 EXAMPLES
-    Print the status of the Config Management Feature:
+    Print the status of the Config Management feature:
 
         $ gcloud alpha container hub config-management status
 
-        Name             Status  Last_Synced_Token   Sync_Branch  Last_Synced_Time  Hierarchy_Controller
-        managed-cluster  SYNCED  2945500b7f          acme         2020-03-23
-        11:12:31 -0700 PDT  INSTALLED
+      Name               Status  Last_Synced_Token  Sync_Branch  Last_Synced_Time               Policy_Controller  Hierarchy_Controller  Version  Upgrades  Synced_To_Fleet_Default
+        managed-cluster  SYNCED  2945500b7f         acme         2020-03-23 11:12:31 -0700 PDT  NA                 NA                    1.18.3   auto      FLEET_DEFAULT_NOT_CONFIGURED
 
     View the status for the cluster named managed-cluster-a:
 
@@ -29,13 +37,13 @@ EXAMPLES
         $ gcloud alpha container hub config-management status \
             --filter="acm_status.name ~ managed-cluster.*"
 
-    List all clusters where current status is SYNCED:
+    List all clusters where current Config Sync Status is SYNCED:
 
         $ gcloud alpha container hub config-management status \
             --filter="acm_status.config_sync:SYNCED"
 
     List all the clusters where sync_branch is v1 and current Config Sync
-    status is not SYNCED:
+    Status is not SYNCED:
 
         $ gcloud alpha container hub config-management status \
             --filter="acm_status.sync_branch:v1 AND \

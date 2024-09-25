@@ -9,9 +9,7 @@ SYNOPSIS
         [--enable-message-ordering] [--expiration-period=EXPIRATION_PERIOD]
         [--labels=[KEY=VALUE,...]] [--message-filter=MESSAGE_FILTER]
         [--message-retention-duration=MESSAGE_RETENTION_DURATION]
-        [--push-auth-service-account=SERVICE_ACCOUNT_EMAIL]
-        [--push-auth-token-audience=OPTIONAL_AUDIENCE_OVERRIDE]
-        [--push-endpoint=PUSH_ENDPOINT] [--retain-acked-messages]
+        [--retain-acked-messages]
         [[--bigquery-table=BIGQUERY_TABLE
           : --bigquery-service-account-email=BIGQUERY_SERVICE_ACCOUNT_EMAIL
           --drop-unknown-fields --write-metadata --use-table-schema
@@ -21,8 +19,10 @@ SYNOPSIS
           [--dead-letter-topic=DEAD_LETTER_TOPIC
           : --dead-letter-topic-project=DEAD_LETTER_TOPIC_PROJECT]]
         [--max-retry-delay=MAX_RETRY_DELAY --min-retry-delay=MIN_RETRY_DELAY]
-        [--push-no-wrapper : --push-no-wrapper-write-metadata]
-        [GCLOUD_WIDE_FLAG ...]
+        [--push-auth-service-account=SERVICE_ACCOUNT_EMAIL
+          --push-auth-token-audience=OPTIONAL_AUDIENCE_OVERRIDE
+          --push-endpoint=PUSH_ENDPOINT [--push-no-wrapper
+          : --push-no-wrapper-write-metadata]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Creates one or more Cloud Pub/Sub subscriptions for a given topic. The new
@@ -127,18 +127,6 @@ OPTIONAL FLAGS
         form INTEGER[UNIT], where UNIT is one of "s", "m", "h", and "d" for
         seconds, minutes, hours, and days, respectively. If the unit is
         omitted, seconds is assumed.
-
-     --push-auth-service-account=SERVICE_ACCOUNT_EMAIL
-        Service account email used as the identity for the generated Open ID
-        Connect token for authenticated push.
-
-     --push-auth-token-audience=OPTIONAL_AUDIENCE_OVERRIDE
-        Audience used in the generated Open ID Connect token for authenticated
-        push. If not specified, it will be set to the push-endpoint.
-
-     --push-endpoint=PUSH_ENDPOINT
-        A URL to use as the endpoint for this subscription. This will also
-        automatically set the subscription type to PUSH.
 
      --retain-acked-messages
         Whether or not to retain acknowledged messages. If true, messages are
@@ -318,21 +306,36 @@ OPTIONAL FLAGS
           of "s", "m", "h", and "d" for seconds, minutes, hours, and days,
           respectively. If the unit is omitted, seconds is assumed.
 
-     NoWrapper Config Options.
+     Push Config Options. Configuration for a push delivery endpoint.
 
-       --push-no-wrapper
-          When set, the message data is delivered directly as the HTTP body.
-          Use --no-push-no-wrapper to disable this flag.
+       --push-auth-service-account=SERVICE_ACCOUNT_EMAIL
+          Service account email used as the identity for the generated Open ID
+          Connect token for authenticated push.
 
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
+       --push-auth-token-audience=OPTIONAL_AUDIENCE_OVERRIDE
+          Audience used in the generated Open ID Connect token for
+          authenticated push. If not specified, it will be set to the
+          push-endpoint.
 
-       --push-no-wrapper-write-metadata
-          When true, writes the Pub/Sub message metadata to
-          x-goog-pubsub-<KEY>:<VAL> headers of the HTTP request. Writes the
-          Pub/Sub message attributes to <KEY>:<VAL> headers of the HTTP
-          request. Use --no-push-no-wrapper-write-metadata to disable this
-          flag.
+       --push-endpoint=PUSH_ENDPOINT
+          A URL to use as the endpoint for this subscription. This will also
+          automatically set the subscription type to PUSH.
+
+       NoWrapper Config Options.
+
+         --push-no-wrapper
+            When set, the message data is delivered directly as the HTTP body.
+            Use --no-push-no-wrapper to disable this flag.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --push-no-wrapper-write-metadata
+            When true, writes the Pub/Sub message metadata to
+            x-goog-pubsub-<KEY>:<VAL> headers of the HTTP request. Writes the
+            Pub/Sub message attributes to <KEY>:<VAL> headers of the HTTP
+            request. Use --no-push-no-wrapper-write-metadata to disable this
+            flag.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

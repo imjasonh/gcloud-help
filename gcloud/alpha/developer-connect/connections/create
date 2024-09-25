@@ -1,36 +1,47 @@
 NAME
-    gcloud alpha developer-connect connections create - create connections
+    gcloud alpha developer-connect connections create - create a connection
+        resource
 
 SYNOPSIS
-    gcloud alpha developer-connect connections create
-        (CONNECTION : --location=LOCATION) [--annotations=[ANNOTATIONS,...]]
-        [--async] [--disabled] [--etag=ETAG] [--labels=[LABELS,...]]
-        [--request-id=REQUEST_ID] [--secret=SECRET] [--validate-only]
+    gcloud alpha developer-connect connections create CONNECTION
+        [--annotations=[ANNOTATIONS,...]] [--async] [--disabled] [--etag=ETAG]
+        [--labels=[LABELS,...]] [--location=LOCATION] [--request-id=REQUEST_ID]
+        [--secret=SECRET] [--validate-only]
+        [(--crypto-key-config-reference=CRYPTO_KEY_CONFIG_REFERENCE
+          : --key-ring=KEY_RING)]
         [[--github-config-app=GITHUB_CONFIG_APP
-          : --github-config-app-installation-id=GITHUB_CONFIG_APP_INSTALLATION_ID --github-config-authorizer-credential-oauth-token-secret-version=GITHUB_CONFIG_AUTHORIZER_CREDENTIAL_OAUTH_TOKEN_SECRET_VERSION] | --gitlab-config-authorizer-credential-user-token-secret-version=GITLAB_CONFIG_AUTHORIZER_CREDENTIAL_USER_TOKEN_SECRET_VERSION --gitlab-config-read-authorizer-credential-user-token-secret-version=GITLAB_CONFIG_READ_AUTHORIZER_CREDENTIAL_USER_TOKEN_SECRET_VERSION --gitlab-config-webhook-secret-version=GITLAB_CONFIG_WEBHOOK_SECRET_VERSION]
+          : --github-config-app-installation-id=GITHUB_CONFIG_APP_INSTALLATION_ID --github-config-authorizer-credential-oauth-token-secret-version=GITHUB_CONFIG_AUTHORIZER_CREDENTIAL_OAUTH_TOKEN_SECRET_VERSION] | [--github-enterprise-config-host-uri=GITHUB_ENTERPRISE_CONFIG_HOST_URI : --github-enterprise-config-app-id=GITHUB_ENTERPRISE_CONFIG_APP_ID --github-enterprise-config-app-installation-id=GITHUB_ENTERPRISE_CONFIG_APP_INSTALLATION_ID --github-enterprise-config-private-key-secret-version=GITHUB_ENTERPRISE_CONFIG_PRIVATE_KEY_SECRET_VERSION --github-enterprise-config-service-directory=GITHUB_ENTERPRISE_CONFIG_SERVICE_DIRECTORY --github-enterprise-config-ssl-ca-certificate=GITHUB_ENTERPRISE_CONFIG_SSL_CA_CERTIFICATE --github-enterprise-config-webhook-secret-version=GITHUB_ENTERPRISE_CONFIG_WEBHOOK_SECRET_VERSION] | --gitlab-config-authorizer-credential-user-token-secret-version=GITLAB_CONFIG_AUTHORIZER_CREDENTIAL_USER_TOKEN_SECRET_VERSION --gitlab-config-read-authorizer-credential-user-token-secret-version=GITLAB_CONFIG_READ_AUTHORIZER_CREDENTIAL_USER_TOKEN_SECRET_VERSION --gitlab-config-webhook-secret-version=GITLAB_CONFIG_WEBHOOK_SECRET_VERSION | [--gitlab-enterprise-config-authorizer-credential-user-token-secret-version=GITLAB_ENTERPRISE_CONFIG_AUTHORIZER_CREDENTIAL_USER_TOKEN_SECRET_VERSION --gitlab-enterprise-config-host-uri=GITLAB_ENTERPRISE_CONFIG_HOST_URI --gitlab-enterprise-config-read-authorizer-credential-user-token-secret-version=GITLAB_ENTERPRISE_CONFIG_READ_AUTHORIZER_CREDENTIAL_USER_TOKEN_SECRET_VERSION --gitlab-enterprise-config-webhook-secret-version=GITLAB_ENTERPRISE_CONFIG_WEBHOOK_SECRET_VERSION : --gitlab-enterprise-config-service-directory=GITLAB_ENTERPRISE_CONFIG_SERVICE_DIRECTORY --gitlab-enterprise-config-ssl-ca-certificate=GITLAB_ENTERPRISE_CONFIG_SSL_CA_CERTIFICATE]]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) Create a connection
+    (ALPHA) Create a connection resource.
 
 EXAMPLES
-    To create the connection, run:
+    To create a GitHub connection named my-connection in us-central1 run:
 
-        $ gcloud alpha developer-connect connections create
+        $ gcloud alpha developer-connect connections create my-connection \
+            --github-config-app=developer-connect \
+            --github-config-authorizer-credential-oauth-token-secret-version\
+        =projects/my-project/secrets/my-oauth-token/versions/1 \
+            --github-config-app-installation-id=12345 --location=us-central1
 
 POSITIONAL ARGUMENTS
      Connection resource - Identifier. The resource name of the connection, in
      the format
-     projects/{project}/locations/{location}/connections/{connection_id}. The
-     arguments in this group can be used to specify the attributes of this
-     resource. (NOTE) Some attributes are not given arguments in this group but
-     can be set in other ways.
+     projects/{project}/locations/{location}/connections/{connection_id}. This
+     represents a Cloud resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways.
 
      To set the project attribute:
       ◆ provide the argument connection on the command line with a fully
         specified name;
       ◆ provide the argument --project on the command line;
       ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument connection on the command line with a fully
+        specified name;
+      ◆ provide the argument --location on the command line.
 
      This must be specified.
 
@@ -40,17 +51,6 @@ POSITIONAL ARGUMENTS
 
           To set the connection attribute:
           ▸ provide the argument connection on the command line.
-
-          This positional argument must be specified if any of the other
-          arguments in this group are specified.
-
-       --location=LOCATION
-          The location id of the connection resource.
-
-          To set the location attribute:
-          ▸ provide the argument connection on the command line with a fully
-            specified name;
-          ▸ provide the argument --location on the command line.
 
 FLAGS
      --annotations=[ANNOTATIONS,...]
@@ -111,6 +111,11 @@ FLAGS
 
             --labels=path_to_file.(yaml|json)
 
+     --location=LOCATION
+        For resources [connection, cryptoKey], provides fallback value for
+        resource location attribute. When the resource's full URI path is not
+        provided, location will fallback to this flag value.
+
      --request-id=REQUEST_ID
         An optional request ID to identify requests. Specify a unique request
         ID so that if you must retry your request, the server will know to
@@ -133,6 +138,48 @@ FLAGS
 
      --validate-only
         If set, validate the request, but do not actually post it.
+
+     The crypto key configuration. This field is used by the Customer-managed
+     encryption keys (CMEK) feature.
+
+       CryptoKey resource - The name of the key which is used to
+       encrypt/decrypt customer data. For key in Cloud KMS, the key should be
+       in the format of projects/*/locations/*/keyRings/*/cryptoKeys/*. The
+       arguments in this group can be used to specify the attributes of this
+       resource. (NOTE) Some attributes are not given arguments in this group
+       but can be set in other ways.
+
+       To set the project attribute:
+        ▸ provide the argument --crypto-key-config-reference on the command
+          line with a fully specified name;
+        ▸ provide the argument --project on the command line;
+        ▸ set the property core/project.
+
+       To set the location attribute:
+        ▸ provide the argument --crypto-key-config-reference on the command
+          line with a fully specified name;
+        ▸ provide the argument --location on the command line.
+
+       This must be specified.
+
+         --crypto-key-config-reference=CRYPTO_KEY_CONFIG_REFERENCE
+            ID of the cryptoKey or fully qualified identifier for the
+            cryptoKey.
+
+            To set the crypto-key attribute:
+            ▫ provide the argument --crypto-key-config-reference on the
+              command line.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --key-ring=KEY_RING
+            The keyRing id of the cryptoKey resource.
+
+            To set the key-ring attribute:
+            ▫ provide the argument --crypto-key-config-reference on the
+              command line with a fully specified name;
+            ▫ provide the argument --key-ring on the command line.
 
      Arguments for the connection config.
 
@@ -187,6 +234,85 @@ FLAGS
                 ▹ provide the argument
                   --github-config-authorizer-credential-oauth-token-secret-version
                   on the command line.
+
+       Configuration for connections to an instance of GitHub Enterprise.
+
+         --github-enterprise-config-host-uri=GITHUB_ENTERPRISE_CONFIG_HOST_URI
+            The URI of the GitHub Enterprise host this connection is for.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --github-enterprise-config-app-id=GITHUB_ENTERPRISE_CONFIG_APP_ID
+            ID of the GitHub App created from the manifest.
+
+         --github-enterprise-config-app-installation-id=GITHUB_ENTERPRISE_CONFIG_APP_INSTALLATION_ID
+            ID of the installation of the GitHub App.
+
+         SecretVersion resource - SecretManager resource containing the private
+         key of the GitHub App, formatted as projects/*/secrets/*/versions/*.
+         This represents a Cloud resource. (NOTE) Some attributes are not given
+         arguments in this group but can be set in other ways.
+
+         To set the project attribute:
+          ▫ provide the argument
+            --github-enterprise-config-private-key-secret-version on the
+            command line with a fully specified name;
+          ▫ provide the argument --project on the command line;
+          ▫ set the property core/project.
+
+         To set the secret attribute:
+          ▫ provide the argument
+            --github-enterprise-config-private-key-secret-version on the
+            command line with a fully specified name;
+          ▫ provide the argument --secret on the command line.
+
+           --github-enterprise-config-private-key-secret-version=GITHUB_ENTERPRISE_CONFIG_PRIVATE_KEY_SECRET_VERSION
+              ID of the secretVersion or fully qualified identifier for the
+              secretVersion.
+
+              To set the secret-version attribute:
+              ◇ provide the argument
+                --github-enterprise-config-private-key-secret-version on the
+                command line.
+
+         ServiceDirectoryConfig represents Service Directory configuration for
+         a connection.
+
+           --github-enterprise-config-service-directory=GITHUB_ENTERPRISE_CONFIG_SERVICE_DIRECTORY
+              The Service Directory service name. Format:
+              projects/{project}/locations/{location}/namespaces/{namespace}/services/{service}.
+
+         --github-enterprise-config-ssl-ca-certificate=GITHUB_ENTERPRISE_CONFIG_SSL_CA_CERTIFICATE
+            SSL certificate to use for requests to GitHub Enterprise.
+
+         SecretVersion resource - SecretManager resource containing the webhook
+         secret of the GitHub App, formatted as
+         projects/*/secrets/*/versions/*. This represents a Cloud resource.
+         (NOTE) Some attributes are not given arguments in this group but can
+         be set in other ways.
+
+         To set the project attribute:
+          ▫ provide the argument
+            --github-enterprise-config-webhook-secret-version on the command
+            line with a fully specified name;
+          ▫ provide the argument --project on the command line;
+          ▫ set the property core/project.
+
+         To set the secret attribute:
+          ▫ provide the argument
+            --github-enterprise-config-webhook-secret-version on the command
+            line with a fully specified name;
+          ▫ provide the argument --secret on the command line.
+
+           --github-enterprise-config-webhook-secret-version=GITHUB_ENTERPRISE_CONFIG_WEBHOOK_SECRET_VERSION
+              ID of the secretVersion or fully qualified identifier for the
+              secretVersion.
+
+              To set the secret-version attribute:
+              ◇ provide the argument
+                --github-enterprise-config-webhook-secret-version on the
+                command line.
 
        Configuration for connections to gitlab.com.
 
@@ -287,6 +413,122 @@ FLAGS
               ◇ provide the argument --gitlab-config-webhook-secret-version
                 on the command line.
 
+       Configuration for connections to an instance of GitLab Enterprise.
+
+         Represents a personal access token that authorized the Connection, and
+         associated metadata.
+
+         This must be specified.
+
+           SecretVersion resource - A SecretManager resource containing the
+           user token that authorizes the Developer Connect connection. Format:
+           projects/*/secrets/*/versions/*. This represents a Cloud resource.
+           (NOTE) Some attributes are not given arguments in this group but can
+           be set in other ways.
+
+           To set the project attribute:
+            ◇ provide the argument
+              --gitlab-enterprise-config-authorizer-credential-user-token-secret-version
+              on the command line with a fully specified name;
+            ◇ provide the argument --project on the command line;
+            ◇ set the property core/project.
+
+           To set the secret attribute:
+            ◇ provide the argument
+              --gitlab-enterprise-config-authorizer-credential-user-token-secret-version
+              on the command line with a fully specified name;
+            ◇ provide the argument --secret on the command line.
+
+           This must be specified.
+
+             --gitlab-enterprise-config-authorizer-credential-user-token-secret-version=GITLAB_ENTERPRISE_CONFIG_AUTHORIZER_CREDENTIAL_USER_TOKEN_SECRET_VERSION
+                ID of the secretVersion or fully qualified identifier for the
+                secretVersion.
+
+                To set the secret-version attribute:
+                ▹ provide the argument
+                  --gitlab-enterprise-config-authorizer-credential-user-token-secret-version
+                  on the command line.
+
+         --gitlab-enterprise-config-host-uri=GITLAB_ENTERPRISE_CONFIG_HOST_URI
+            The URI of the GitLab Enterprise host this connection is for.
+
+         Represents a personal access token that authorized the Connection, and
+         associated metadata.
+
+         This must be specified.
+
+           SecretVersion resource - A SecretManager resource containing the
+           user token that authorizes the Developer Connect connection. Format:
+           projects/*/secrets/*/versions/*. This represents a Cloud resource.
+           (NOTE) Some attributes are not given arguments in this group but can
+           be set in other ways.
+
+           To set the project attribute:
+            ◇ provide the argument
+              --gitlab-enterprise-config-read-authorizer-credential-user-token-secret-version
+              on the command line with a fully specified name;
+            ◇ provide the argument --project on the command line;
+            ◇ set the property core/project.
+
+           To set the secret attribute:
+            ◇ provide the argument
+              --gitlab-enterprise-config-read-authorizer-credential-user-token-secret-version
+              on the command line with a fully specified name;
+            ◇ provide the argument --secret on the command line.
+
+           This must be specified.
+
+             --gitlab-enterprise-config-read-authorizer-credential-user-token-secret-version=GITLAB_ENTERPRISE_CONFIG_READ_AUTHORIZER_CREDENTIAL_USER_TOKEN_SECRET_VERSION
+                ID of the secretVersion or fully qualified identifier for the
+                secretVersion.
+
+                To set the secret-version attribute:
+                ▹ provide the argument
+                  --gitlab-enterprise-config-read-authorizer-credential-user-token-secret-version
+                  on the command line.
+
+         SecretVersion resource - SecretManager resource containing the webhook
+         secret of a GitLab project, formatted as
+         projects/*/secrets/*/versions/*. This is used to validate webhooks.
+         This represents a Cloud resource. (NOTE) Some attributes are not given
+         arguments in this group but can be set in other ways.
+
+         To set the project attribute:
+          ▫ provide the argument
+            --gitlab-enterprise-config-webhook-secret-version on the command
+            line with a fully specified name;
+          ▫ provide the argument --project on the command line;
+          ▫ set the property core/project.
+
+         To set the secret attribute:
+          ▫ provide the argument
+            --gitlab-enterprise-config-webhook-secret-version on the command
+            line with a fully specified name;
+          ▫ provide the argument --secret on the command line.
+
+         This must be specified.
+
+           --gitlab-enterprise-config-webhook-secret-version=GITLAB_ENTERPRISE_CONFIG_WEBHOOK_SECRET_VERSION
+              ID of the secretVersion or fully qualified identifier for the
+              secretVersion.
+
+              To set the secret-version attribute:
+              ◇ provide the argument
+                --gitlab-enterprise-config-webhook-secret-version on the
+                command line.
+
+         ServiceDirectoryConfig represents Service Directory configuration for
+         a connection.
+
+           --gitlab-enterprise-config-service-directory=GITLAB_ENTERPRISE_CONFIG_SERVICE_DIRECTORY
+              The Service Directory service name. Format:
+              projects/{project}/locations/{location}/namespaces/{namespace}/services/{service}.
+
+         --gitlab-enterprise-config-ssl-ca-certificate=GITLAB_ENTERPRISE_CONFIG_SSL_CA_CERTIFICATE
+            SSL Certificate Authority certificate to use for requests to GitLab
+            Enterprise instance.
+
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
     --billing-project, --configuration, --flags-file, --flatten, --format,
@@ -304,5 +546,7 @@ NOTES
     This command is currently in alpha and might change without notice. If this
     command fails with API permission errors despite specifying the correct
     project, you might be trying to access an API with an invitation-only early
-    access allowlist.
+    access allowlist. This variant is also available:
+
+        $ gcloud beta developer-connect connections create
 

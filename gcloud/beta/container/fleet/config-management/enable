@@ -1,17 +1,42 @@
 NAME
     gcloud beta container fleet config-management enable - enable Config
-        Management Feature
+        Management feature
 
 SYNOPSIS
-    gcloud beta container fleet config-management enable [GCLOUD_WIDE_FLAG ...]
+    gcloud beta container fleet config-management enable
+        [--fleet-default-member-config=FLEET_DEFAULT_MEMBER_CONFIG]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (BETA) Enables the Config Management Feature in a fleet.
+    (BETA) Enables the Config Management feature in a fleet. Without any flags,
+    this command no-ops if the feature is already enabled. This command can
+    also enable the feature with a fleet-default membership configuration
+    (https://cloud.google.com/kubernetes-engine/fleet-management/docs/manage-features)
+    for Config Sync.
 
 EXAMPLES
-    To enable the Config Management Feature, run:
+    To enable the Config Management feature, run:
 
         $ gcloud beta container fleet config-management enable
+
+    To enable the Config Management feature with a fleet-default membership
+    configuration for Config Sync, run:
+
+        $ gcloud beta container fleet config-management enable \
+            --fleet-default-member-config=config.yaml
+
+FLAGS
+     --fleet-default-member-config=FLEET_DEFAULT_MEMBER_CONFIG
+        Path to YAML file that contains the fleet-default membership
+        configuration
+        (https://cloud.google.com/kubernetes-engine/fleet-management/docs/manage-features)
+        to enable with a new feature. This file shares the syntax of the
+        --config flag on the apply command: see recognized fields here
+        (https://cloud.google.com/kubernetes-engine/enterprise/config-sync/docs/reference/gcloud-apply-fields).
+        Errors if the Policy Controller or Hierarchy Controller field is set.
+        This flag will also enable or update the fleet-default membership
+        configuration on an existing feature. See the apply command for how to
+        sync a membership to the fleet-default membership configuration.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
