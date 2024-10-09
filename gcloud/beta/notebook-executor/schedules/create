@@ -1,0 +1,243 @@
+NAME
+    gcloud beta notebook-executor schedules create - create a notebook executor
+        schedule
+
+SYNOPSIS
+    gcloud beta notebook-executor schedules create --region=REGION
+        (--cron-schedule=CRON_SCHEDULE --display-name=DISPLAY_NAME
+          (--execution-display-name=EXECUTION_DISPLAY_NAME
+          --gcs-output-uri=GCS_OUTPUT_URI
+          --notebook-runtime-template=NOTEBOOK_RUNTIME_TEMPLATE
+          ([--dataform-repository-name=DATAFORM_REPOSITORY_NAME
+          : --commit-sha=COMMIT_SHA] | [--gcs-notebook-uri=GCS_NOTEBOOK_URI
+          : --generation=GENERATION]) (--service-account=SERVICE_ACCOUNT
+          | --user-email=USER_EMAIL)
+          : --execution-timeout=EXECUTION_TIMEOUT; default="24h")
+          : --enable-queueing --end-time=END_TIME
+          --max-concurrent-runs=MAX_CONCURRENT_RUNS;
+          default=1 --max-runs=MAX_RUNS --start-time=START_TIME)
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Create a schedule to run a Colab Enterprise notebook execution job.
+
+EXAMPLES
+    To create a schedule in region us-central1 with the following schedule
+    properties:
+      ▪ display name: my-schedule,
+      ▪ cron schedule: TZ=America/Los_Angeles * * * * *,
+      ▪ maximum concurrent runs allowed: 1,
+      ▪ start time: 2025-01-01T00:00:00-06:00,
+
+    for a notebook execution job:
+      ▪ with display name my-execution,
+      ▪ running notebook file from Cloud Storage URI
+        gs://my-bucket/my-notebook.ipynb,
+      ▪ compute configured from runtime template my-runtime-template-id,
+      ▪ running with service account
+        my-service-account@my-project.iam.gserviceaccount.com,
+      ▪ with results uploaded to Cloud Storage bucket gs://my-bucket/results
+
+    Run the following command:        $ gcloud beta notebook-executor schedules create \
+            --region=us-central1 --display-name=my-schedule \
+            --cron-schedule='TZ=America/Los_Angeles * * * * *' \
+            --max-concurrent-runs=1 --start-time=2025-01-01T00:00:00-06:00 \
+            --execution-display-name=my-execution \
+            --notebook-runtime-template=my-runtime-template-id \
+            --gcs-notebook-uri=gs://my-bucket/my-notebook.ipynb \
+            --service-account=my-service-account@my-project.iam.gserviceacco\
+        unt.com --gcs-output-uri=gs://my-bucket/results
+
+REQUIRED FLAGS
+     Region resource - Cloud region to create. This represents a Cloud
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument --region on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       --region=REGION
+          ID of the region or fully qualified identifier for the region.
+
+          To set the region attribute:
+          ▸ provide the argument --region on the command line.
+
+     Configuration of the schedule.
+
+     This must be specified.
+
+       --cron-schedule=CRON_SCHEDULE
+          Cron schedule (https://en.wikipedia.org/wiki/Cron) to launch
+          scheduled runs. To explicitly set a timezone to the cron tab, apply a
+          prefix in the cron tab: "CRON_TZ=${IANA_TIME_ZONE}" or
+          "TZ=${IANA_TIME_ZONE}". The ${IANA_TIME_ZONE} may only be a valid
+          string from IANA time zone database. For example,
+          "CRON_TZ=America/New_York 1 * * * ", or "TZ=America/New_York 1 * * *
+          ".
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --display-name=DISPLAY_NAME
+          The display name of the schedule.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --enable-queueing
+          Enables new scheduled runs to be queued when max_concurrent_runs
+          limit is reached. If set to true, new runs will be queued instead of
+          skipped.
+
+       --end-time=END_TIME
+          Timestamp after which no new runs can be scheduled. If specified, the
+          schedule will be completed when either end_time is reached or when
+          scheduled_run_count >= max_run_count. If neither end time nor
+          max_run_count is specified, new runs will keep getting scheduled
+          until this Schedule is paused or deleted. Must be in the RFC 3339
+          (https://www.ietf.org/rfc/rfc3339.txt) format. E.g.
+          "2026-01-01T00:00:00Z" or "2026-01-01T00:00:00-05:00"
+
+       --max-concurrent-runs=MAX_CONCURRENT_RUNS; default=1
+          Maximum number of runs that can be started concurrently for this
+          Schedule. This is the limit for starting the scheduled requests and
+          not the execution of the notebook execution jobs created by the
+          requests.
+
+       --max-runs=MAX_RUNS
+          The max runs for the schedule.
+
+       --start-time=START_TIME
+          The timestamp after which the first run can be scheduled. Defaults to
+          the schedule creation time. Must be in the RFC 3339
+          (https://www.ietf.org/rfc/rfc3339.txt) format. E.g.
+          "2026-01-01T00:00:00Z" or "2026-01-01T00:00:00-05:00"
+
+       Configuration of the execution job.
+
+       This must be specified.
+
+         --execution-display-name=EXECUTION_DISPLAY_NAME
+            The display name of the execution.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --gcs-output-uri=GCS_OUTPUT_URI
+            The Cloud Storage location to upload notebook execution results to.
+            Format: gs://bucket-name.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         Notebook runtime template resource - The runtime template specifying
+         the compute configuration for the notebook execution. The runtime
+         template should be in the same region as the execution. This
+         represents a Cloud resource. (NOTE) Some attributes are not given
+         arguments in this group but can be set in other ways.
+
+         To set the project attribute:
+          ▫ provide the argument --notebook-runtime-template on the command
+            line with a fully specified name;
+          ▫ provide the argument --project on the command line;
+          ▫ set the property core/project.
+
+         To set the region attribute:
+          ▫ provide the argument --notebook-runtime-template on the command
+            line with a fully specified name;
+          ▫ provide the argument --region on the command line.
+
+         This must be specified.
+
+           --notebook-runtime-template=NOTEBOOK_RUNTIME_TEMPLATE
+              ID of the notebook runtime template or fully qualified identifier
+              for the notebook runtime template.
+
+              To set the name attribute:
+              ◇ provide the argument --notebook-runtime-template on the
+                command line.
+
+         --execution-timeout=EXECUTION_TIMEOUT; default="24h"
+            The max running time of the execution job, as a duration. See '$
+            gcloud topic datetimes' for details on formatting the input
+            duration.
+
+         Source of the notebook to execute.
+
+         Exactly one of these must be specified:
+
+           The Dataform repository containing the notebook. Any notebook
+           created from the Colab UI is automatically stored in a Dataform
+           repository. The repository name can be found via the Dataform API by
+           listing repositories in the same project and region as the notebook.
+
+             Dataform repository resource - Unique name of the Dataform
+             repository to source input notebook from. This represents a Cloud
+             resource. (NOTE) Some attributes are not given arguments in this
+             group but can be set in other ways.
+
+             To set the project attribute:
+              ▹ provide the argument --dataform-repository-name on the
+                command line with a fully specified name;
+              ▹ provide the argument --project on the command line;
+              ▹ set the property core/project.
+
+             To set the region attribute:
+              ▹ provide the argument --dataform-repository-name on the
+                command line with a fully specified name;
+              ▹ provide the argument --region on the command line.
+
+             This must be specified.
+
+               --dataform-repository-name=DATAFORM_REPOSITORY_NAME
+                  ID of the dataform repository or fully qualified identifier
+                  for the dataform repository.
+
+                  To set the name attribute:
+                  ▪ provide the argument --dataform-repository-name on the
+                    command line.
+
+             --commit-sha=COMMIT_SHA
+                The commit SHA to read from the Dataform repository. If unset,
+                the file will be read from HEAD.
+
+           The Cloud Storage notebook source.
+
+             --gcs-notebook-uri=GCS_NOTEBOOK_URI
+                The Cloud Storage uri pointing to the notebook. Format:
+                gs://bucket/notebook_file.ipynb
+
+                This flag argument must be specified if any of the other
+                arguments in this group are specified.
+
+             --generation=GENERATION
+                The version of the Cloud Storage object to read. If unset, the
+                current version of the object will be used.
+
+         Identity to run the execution as.
+
+         Exactly one of these must be specified:
+
+           --service-account=SERVICE_ACCOUNT
+              The service account to run the execution as.
+
+           --user-email=USER_EMAIL
+              The user email to run the execution as. This requires the
+              provided runtime template to have end user credentials enabled.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice.
+

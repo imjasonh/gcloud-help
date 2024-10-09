@@ -16,16 +16,14 @@ SYNOPSIS
           | --[no-]enable-cilium-clusterwide-network-policy
           | --enable-cost-allocation | --enable-fleet
           | --enable-fqdn-network-policy | --enable-gke-oidc
-          | --enable-google-cloud-access | --enable-identity-service
-          | --enable-image-streaming | --enable-insecure-kubelet-readonly-port
+          | --enable-identity-service | --enable-image-streaming
+          | --enable-insecure-kubelet-readonly-port
           | --enable-intra-node-visibility
           | --enable-kubernetes-unstable-apis=API,[API,...]
           | --enable-l4-ilb-subsetting | --enable-legacy-authorization
-          | --enable-logging-monitoring-system-only
-          | --enable-master-authorized-networks | --enable-master-global-access
-          | --enable-multi-networking | --enable-network-policy
-          | --enable-pod-security-policy | --enable-private-endpoint
-          | --[no-]enable-ray-cluster-logging
+          | --enable-logging-monitoring-system-only | --enable-multi-networking
+          | --enable-network-policy | --enable-pod-security-policy
+          | --enable-private-nodes | --[no-]enable-ray-cluster-logging
           | --[no-]enable-ray-cluster-monitoring | --enable-secret-manager
           | --enable-service-externalips | --enable-shielded-nodes
           | --enable-stackdriver-kubernetes | --enable-vertical-pod-autoscaling
@@ -76,6 +74,11 @@ SYNOPSIS
           | --disable-dataplane-v2-flow-observability
           | --enable-dataplane-v2-flow-observability
           --disable-dataplane-v2-metrics | --enable-dataplane-v2-metrics
+          | --enable-authorized-networks-on-private-endpoint
+          --enable-dns-access --enable-google-cloud-access --enable-ip-access
+          --enable-master-global-access --enable-private-endpoint
+          --enable-master-authorized-networks
+          --master-authorized-networks=NETWORK,[NETWORK,...]
           | [--enable-autoprovisioning
           : --autoprovisioning-config-file=PATH_TO_FILE
           | --autoprovisioning-image-type=AUTOPROVISIONING_IMAGE_TYPE
@@ -101,9 +104,7 @@ SYNOPSIS
           | --password=PASSWORD --enable-basic-auth
           | --username=USERNAME, -u USERNAME) [--async]
         [--cloud-run-config=[load-balancer-type=EXTERNAL,...]]
-        [--istio-config=[auth=MTLS_PERMISSIVE,...]]
-        [--master-authorized-networks=NETWORK,[NETWORK,...]]
-        [--node-pool=NODE_POOL]
+        [--istio-config=[auth=MTLS_PERMISSIVE,...]] [--node-pool=NODE_POOL]
         [--location=LOCATION | --region=REGION | --zone=ZONE, -z ZONE]
         [--location-policy=LOCATION_POLICY --max-nodes=MAX_NODES
           --min-nodes=MIN_NODES
@@ -319,11 +320,6 @@ REQUIRED FLAGS
           Thus, flag --enable-gke-oidc is also deprecated. Please use
           --enable-identity-service to enable the Identity Service component
 
-       --enable-google-cloud-access
-          When you enable Google Cloud Access, any public IP addresses owned by
-          Google Cloud can reach the public control plane endpoint of your
-          cluster.
-
        --enable-identity-service
           Enable Identity Service component on the cluster.
 
@@ -380,26 +376,6 @@ REQUIRED FLAGS
           and
           https://cloud.google.com/kubernetes-engine/docs/how-to/configure-metrics.
 
-       --enable-master-authorized-networks
-          Allow only specified set of CIDR blocks (specified by the
-          --master-authorized-networks flag) to connect to Kubernetes master
-          through HTTPS. Besides these blocks, the following have access as
-          well:
-
-              1) The private network the cluster connects to if
-              `--enable-private-nodes` is specified.
-              2) Google Compute Engine Public IPs if `--enable-private-nodes` is not
-              specified.
-
-          Use --no-enable-master-authorized-networks to disable. When disabled,
-          public internet (0.0.0.0/0) is allowed to connect to Kubernetes
-          master through HTTPS.
-
-       --enable-master-global-access
-          Use with private clusters to allow access to the master's private
-          endpoint from any Google Cloud region or on-premises environment
-          regardless of the private cluster's region.
-
        --enable-multi-networking
           Enables multi-networking on the cluster. Multi-networking is disabled
           by default.
@@ -417,9 +393,20 @@ REQUIRED FLAGS
           PodSecurityPolicy API objects. For more information, see
           https://cloud.google.com/kubernetes-engine/docs/how-to/pod-security-policies.
 
-       --enable-private-endpoint
-          Enables cluster's control plane to be accessible using private IP
-          address only.
+       --enable-private-nodes
+          Standard cluster: Enable private nodes as a default behavior for all
+          newly created node pools, if --enable-private-nodes is not provided
+          at node pool creation time.
+
+              Modifications to this flag do not affect `--enable-private-nodes` state of the
+              existing node pools.
+
+          Autopilot cluster: Force new and existing workloads, without explicit
+          cloud.google.com/private-node=true node selector, to run on nodes
+          with no public IP address.
+
+              Modifications to this flag trigger a re-schedule operation on all existng
+              workloads to run on different node VMs.
 
        --[no-]enable-ray-cluster-logging
           Enable automatic log processing sidecar for Ray clusters. Use
@@ -1136,6 +1123,57 @@ REQUIRED FLAGS
          --enable-dataplane-v2-metrics
             Exposes advanced datapath flow metrics on node port.
 
+       --enable-authorized-networks-on-private-endpoint
+          Enable enforcement of --master-authorized-networks CIDR ranges for
+          traffic reaching cluster's control plane via private IP.
+
+       --enable-dns-access
+          Enable access to the cluster's control plane over DNS-based endpoint.
+
+          DNS-based control plane access is recommended.
+
+       --enable-google-cloud-access
+          When you enable Google Cloud Access, any public IP addresses owned by
+          Google Cloud can reach the public control plane endpoint of your
+          cluster.
+
+       --enable-ip-access
+          Enable access to the cluster's control plane over private IP and
+          public IP if --enable-private-endpoint is not enabled.
+
+       --enable-master-global-access
+          Use with private clusters to allow access to the master's private
+          endpoint from any Google Cloud region or on-premises environment
+          regardless of the private cluster's region.
+
+       --enable-private-endpoint
+          Enables cluster's control plane to be accessible using private IP
+          address only.
+
+       Master Authorized Networks
+
+         --enable-master-authorized-networks
+            Allow only specified set of CIDR blocks (specified by the
+            --master-authorized-networks flag) to connect to Kubernetes master
+            through HTTPS. Besides these blocks, the following have access as
+            well:
+
+                1) The private network the cluster connects to if
+                `--enable-private-nodes` is specified.
+                2) Google Compute Engine Public IPs if `--enable-private-nodes` is not
+                specified.
+
+            Use --no-enable-master-authorized-networks to disable. When
+            disabled, public internet (0.0.0.0/0) is allowed to connect to
+            Kubernetes master through HTTPS.
+
+         --master-authorized-networks=NETWORK,[NETWORK,...]
+            The list of CIDR blocks (up to 100 for private cluster, 50 for
+            public cluster) that are allowed to connect to Kubernetes master
+            through HTTPS. Specified in CIDR notation (e.g. 1.2.3.4/30). Cannot
+            be specified unless --enable-master-authorized-networks is also
+            specified.
+
        Node autoprovisioning
 
          --enable-autoprovisioning
@@ -1498,12 +1536,6 @@ OPTIONAL FLAGS
             The --istio-config flag is no longer supported. For more
             information and migration, see
             https://cloud.google.com/istio/docs/istio-on-gke/migrate-to-anthos-service-mesh.
-
-     --master-authorized-networks=NETWORK,[NETWORK,...]
-        The list of CIDR blocks (up to 100 for private cluster, 50 for public
-        cluster) that are allowed to connect to Kubernetes master through
-        HTTPS. Specified in CIDR notation (e.g. 1.2.3.4/30). Cannot be
-        specified unless --enable-master-authorized-networks is also specified.
 
      --node-pool=NODE_POOL
         Node pool to be updated.

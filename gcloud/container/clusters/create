@@ -23,16 +23,19 @@ SYNOPSIS
         [--database-encryption-key=DATABASE_ENCRYPTION_KEY]
         [--default-max-pods-per-node=DEFAULT_MAX_PODS_PER_NODE]
         [--disable-default-snat] [--disk-size=DISK_SIZE]
-        [--disk-type=DISK_TYPE] [--enable-autorepair] [--no-enable-autoupgrade]
+        [--disk-type=DISK_TYPE]
+        [--enable-authorized-networks-on-private-endpoint]
+        [--enable-autorepair] [--no-enable-autoupgrade]
         [--enable-cilium-clusterwide-network-policy] [--enable-cloud-logging]
         [--enable-cloud-monitoring] [--enable-cloud-run-alpha]
         [--enable-confidential-nodes] [--enable-confidential-storage]
-        [--enable-cost-allocation] [--enable-dataplane-v2] [--enable-fleet]
-        [--enable-fqdn-network-policy] [--enable-google-cloud-access]
-        [--enable-gvnic] [--enable-identity-service] [--enable-image-streaming]
+        [--enable-cost-allocation] [--enable-dataplane-v2]
+        [--enable-dns-access] [--enable-fleet] [--enable-fqdn-network-policy]
+        [--enable-google-cloud-access] [--enable-gvnic]
+        [--enable-identity-service] [--enable-image-streaming]
         [--enable-insecure-kubelet-readonly-port]
-        [--enable-intra-node-visibility] [--enable-ip-alias]
-        [--enable-kubernetes-alpha]
+        [--enable-intra-node-visibility] [--enable-ip-access]
+        [--enable-ip-alias] [--enable-kubernetes-alpha]
         [--enable-kubernetes-unstable-apis=API,[API,...]]
         [--enable-l4-ilb-subsetting] [--enable-legacy-authorization]
         [--enable-managed-prometheus] [--enable-master-global-access]
@@ -428,6 +431,10 @@ FLAGS
         DISK_TYPE must be one of: pd-standard, pd-ssd, pd-balanced,
         hyperdisk-balanced, hyperdisk-extreme, hyperdisk-throughput.
 
+     --enable-authorized-networks-on-private-endpoint
+        Enable enforcement of --master-authorized-networks CIDR ranges for
+        traffic reaching cluster's control plane via private IP.
+
      --enable-autorepair
         Enable node autorepair feature for a cluster's default node pool(s).
 
@@ -508,6 +515,11 @@ FLAGS
         Enables the new eBPF dataplane for GKE clusters that is required for
         network security, scalability and visibility features.
 
+     --enable-dns-access
+        Enable access to the cluster's control plane over DNS-based endpoint.
+
+        DNS-based control plane access is recommended.
+
      --enable-fleet
         Set cluster project as the fleet host project. This will register the
         cluster to the same project. To register the cluster to a fleet in a
@@ -555,6 +567,10 @@ FLAGS
 
         Enabling it on an existing cluster causes the cluster master and the
         cluster nodes to restart, which might cause a disruption.
+
+     --enable-ip-access
+        Enable access to the cluster's control plane over private IP and public
+        IP if --enable-private-endpoint is not enabled.
 
      --enable-ip-alias
         Enable use of alias IPs

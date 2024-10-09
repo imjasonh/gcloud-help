@@ -1,0 +1,122 @@
+NAME
+    gcloud beta container hub scopes remove-app-operator-binding - remove
+        project-level and fleet scope-level IAM bindings and delete a fleet
+        scope RBAC role binding for an app operator principal
+
+SYNOPSIS
+    gcloud beta container hub scopes remove-app-operator-binding SCOPE
+        (--group=GROUP | --user=USER) [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) One binding consists of an app operator principal (user/group) and a
+    role (view/edit/admin).
+
+    This command unsets the different permissions required for an app operator,
+    including usage of fleet scopes, connect gateway, logging, and metrics. The
+    authoritative list for removing the permissions is the existing RBAC role
+    bindings under the specified scope.
+
+    This command can fail for the following reasons:
+      ▪ The scope specified does not exist.
+      ▪ The user does not have access to the specified scope.
+      ▪ The principal specified does not any binding for the scope.
+      ▪ The principal specified has bindings with different roles for the
+        scope.
+
+EXAMPLES
+    The following command:
+
+        $ gcloud beta container hub scopes remove-app-operator-binding \
+            SCOPE --group=people@google.com --project=PROJECT_ID
+
+    assuming the group already has the view role:
+      ▪ removes IAM policy binding: roles/gkehub.scopeViewer from SCOPE
+      ▪ removes IAM policy binding: roles/gkehub.scopeViewerProjectLevel from
+        PROJECT_ID if the group does not have the view role for any other scope
+        under the project
+      ▪ removes IAM policy binding: roles/logging.viewAccessor from
+        PROJECT_ID condition where bucket corresponds to SCOPE
+      ▪ deletes existing fleet scope RBAC role binding: role view for group
+        people@google.com.
+
+    ---
+
+    The following command:
+
+        $ gcloud beta container hub scopes remove-app-operator-binding \
+            SCOPE --user=person@google.com --project=PROJECT_ID
+
+    assuming the user already has the edit role:
+      ▪ removes IAM policy binding: roles/gkehub.scopeEditor from SCOPE
+      ▪ removes IAM policy binding: roles/gkehub.scopeEditorProjectLevel from
+        PROJECT_ID if the user does not have the edit/admin role for any other
+        scope under the project
+      ▪ removes IAM policy binding: roles/logging.viewAccessor from
+        PROJECT_ID condition where bucket corresponds to SCOPE
+      ▪ deletes existing fleet scope RBAC role binding: role edit for user
+        person@google.com.
+
+    ---
+
+    The following command:
+
+        $ gcloud beta container hub scopes remove-app-operator-binding \
+            SCOPE --role=admin --user=person@google.com --project=PROJECT_ID
+
+    assuming the user already has the admin role:
+      ▪ removes IAM policy binding: roles/gkehub.scopeAdmin from SCOPE
+      ▪ removes IAM policy binding: roles/gkehub.scopeEditorProjectLevel from
+        PROJECT_ID if the user does not have the edit/admin role for any other
+        scope under the project
+      ▪ removes IAM policy binding: roles/logging.viewAccessor from
+        PROJECT_ID condition where bucket corresponds to SCOPE
+      ▪ deletes existing fleet scope RBAC role binding: role admin for user
+        person@google.com.
+
+POSITIONAL ARGUMENTS
+     Scope resource - The group of arguments defining the Fleet Scope. This
+     represents a Cloud resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument SCOPE on the command line with a fully specified
+        name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument SCOPE on the command line with a fully specified
+        name;
+      ◆ global is the only supported location.
+
+     This must be specified.
+
+       SCOPE
+          ID of the scope or fully qualified identifier for the scope.
+
+          To set the scope attribute:
+          ▸ provide the argument SCOPE on the command line.
+
+REQUIRED FLAGS
+     Exactly one of these must be specified:
+
+       --group=GROUP
+          Group for the role binding.
+
+       --user=USER
+          User for the role binding.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud alpha container hub scopes remove-app-operator-binding
+

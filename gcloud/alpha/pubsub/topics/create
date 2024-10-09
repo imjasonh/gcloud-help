@@ -6,10 +6,10 @@ SYNOPSIS
     gcloud alpha pubsub topics create TOPIC [TOPIC ...]
         [--labels=[KEY=VALUE,...]]
         [--message-retention-duration=MESSAGE_RETENTION_DURATION]
-        [--kinesis-ingestion-consumer-arn=KINESIS_INGESTION_CONSUMER_ARN
-          --kinesis-ingestion-role-arn=KINESIS_INGESTION_ROLE_ARN
-          --kinesis-ingestion-service-account=KINESIS_INGESTION_SERVICE_ACCOUNT
-          --kinesis-ingestion-stream-arn=KINESIS_INGESTION_STREAM_ARN]
+        [--ingestion-log-severity=INGESTION_LOG_SEVERITY
+          [--cloud-storage-ingestion-bucket=CLOUD_STORAGE_INGESTION_BUCKET
+          --cloud-storage-ingestion-input-format=INPUT_FORMAT
+          : --cloud-storage-ingestion-text-delimiter=CLOUD_STORAGE_INGESTION_TEXT_DELIMITER --cloud-storage-ingestion-minimum-object-create-time=CLOUD_STORAGE_INGESTION_MINIMUM_OBJECT_CREATE_TIME --cloud-storage-ingestion-match-glob=CLOUD_STORAGE_INGESTION_MATCH_GLOB] | --kinesis-ingestion-consumer-arn=KINESIS_INGESTION_CONSUMER_ARN --kinesis-ingestion-role-arn=KINESIS_INGESTION_ROLE_ARN --kinesis-ingestion-service-account=KINESIS_INGESTION_SERVICE_ACCOUNT --kinesis-ingestion-stream-arn=KINESIS_INGESTION_STREAM_ARN]
         [--message-encoding=ENCODING (--schema=SCHEMA
           : --schema-project=SCHEMA_PROJECT)
           : --first-revision-id=FIRST_REVISION_ID
@@ -70,35 +70,69 @@ FLAGS
         is one of "s", "m", "h", and "d" for seconds, minutes, hours, and days,
         respectively. If the unit is omitted, seconds is assumed.
 
-     The following flags are for specifying ingestion settings for an import
-     topic from Amazon Web Services (AWS) Kinesis Data Streams
+     Following flags are for specifying the data source settings for an import
+     topic
 
-       --kinesis-ingestion-consumer-arn=KINESIS_INGESTION_CONSUMER_ARN
-          The Kinesis data streams consumer Amazon Resource Name (ARN) to use
-          for ingestion.
+       --ingestion-log-severity=INGESTION_LOG_SEVERITY
+          Log severity to use for ingestion.
 
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
+       At most one of these can be specified:
 
-       --kinesis-ingestion-role-arn=KINESIS_INGESTION_ROLE_ARN
-          AWS role ARN to be used for Federated Identity authentication with
-          Kinesis.
+         Flags that specify settings for an import topic from Cloud Storage
 
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
+           --cloud-storage-ingestion-bucket=CLOUD_STORAGE_INGESTION_BUCKET
+              Cloud Storage bucket from which to ingest data.
 
-       --kinesis-ingestion-service-account=KINESIS_INGESTION_SERVICE_ACCOUNT
-          The service account to be used for Federated Identity authentication
-          with Kinesis.
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
 
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
+           --cloud-storage-ingestion-input-format=INPUT_FORMAT
+              Format of the data in the Cloud Storage bucket. INPUT_FORMAT must
+              be one of: text, avro, pubsub_avro.
 
-       --kinesis-ingestion-stream-arn=KINESIS_INGESTION_STREAM_ARN
-          The Kinesis data stream ARN from which to ingest data.
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
 
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
+           --cloud-storage-ingestion-text-delimiter=CLOUD_STORAGE_INGESTION_TEXT_DELIMITER
+              Delimiter to use with text format when partitioning the object.
+
+           --cloud-storage-ingestion-minimum-object-create-time=CLOUD_STORAGE_INGESTION_MINIMUM_OBJECT_CREATE_TIME
+              Only Cloud Storage objects with a larger or equal creation
+              timestamp will be ingested.
+
+           --cloud-storage-ingestion-match-glob=CLOUD_STORAGE_INGESTION_MATCH_GLOB
+              Glob pattern used to match Cloud Storage objects that will be
+              ingested. If unset, all objects will be ingested.
+
+         Flags that specify settings for an import topic from Amazon Web
+         Services (AWS) Kinesis Data Streams
+
+           --kinesis-ingestion-consumer-arn=KINESIS_INGESTION_CONSUMER_ARN
+              Kinesis data streams consumer Amazon Resource Name (ARN) to use
+              for ingestion.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --kinesis-ingestion-role-arn=KINESIS_INGESTION_ROLE_ARN
+              AWS role ARN to be used for Federated Identity authentication
+              with Kinesis.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --kinesis-ingestion-service-account=KINESIS_INGESTION_SERVICE_ACCOUNT
+              Service account to be used for Federated Identity authentication
+              with Kinesis.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --kinesis-ingestion-stream-arn=KINESIS_INGESTION_STREAM_ARN
+              Kinesis data stream ARN from which to ingest data.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
 
      Schema settings. The schema that messages published to this topic must
      conform to and the expected message encoding.

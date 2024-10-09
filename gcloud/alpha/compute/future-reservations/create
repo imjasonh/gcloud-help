@@ -170,18 +170,20 @@ REQUIRED FLAGS
 
 OPTIONAL FLAGS
      --deployment-type=DEPLOYMENT_TYPE
-        Indicates if the reservation allocation strategy is static or dynamic.
-        DENSE refers to a fixed size and topology, with deployment expressed in
-        terms of blocks. FLEXIBLE indicates a non-static distribution of
-        capacity that can change over time. Deployment is not expressed in
-        blocks. DEPLOYMENT_TYPE must be one of: DENSE, FLEXIBLE.
+        The deployment type for the reserved capacity. DEPLOYMENT_TYPE must be
+        one of:
+
+         DENSE
+            DENSE mode is for densely deployed reservation blocks.
+         FLEXIBLE
+            FLEXIBLE mode is for highly flexible, logical reservation blocks.
 
      --description=DESCRIPTION
         An optional description of the future reservation to create.
 
      --[no-]enable-opportunistic-maintenance
-        Indicates if this group of VMs have opportunistic maintenance enabled.
-        Applicable only to dense coordinated maintenance. Use
+        Enable or disable opportunistic maintenance. If enabled, maintenance is
+        performed on unused reservations whenever possible. Use
         --enable-opportunistic-maintenance to enable and
         --no-enable-opportunistic-maintenance to disable.
 
@@ -226,9 +228,14 @@ OPTIONAL FLAGS
         the reservation_name or a name_prefix.
 
      --scheduling-type=SCHEDULING_TYPE
-        Indicates the maintenance type for this group of VMs. This will be set
-        on the reservation via FR, and will be inherited for reservation
-        blocks. SCHEDULING_TYPE must be one of: GROUPED, INDEPENDENT.
+        Maintenance for the reserved capacity. SCHEDULING_TYPE must be one of:
+
+         GROUPED
+            In GROUPED mode, maintenance on all reserved instances
+            issynchronized.
+         INDEPENDENT
+            In INDEPENDENT mode, maintenance is not synchronized for this
+            reservation, and each instance has its own maintenance window.
 
      --zone=ZONE
         Zone of the future reservation to create. If not specified and the

@@ -5,6 +5,7 @@ NAME
 SYNOPSIS
     gcloud beta bigtable backups update
         (BACKUP : --cluster=CLUSTER --instance=INSTANCE)
+        [--hot-to-standard-time=HOT_TO_STANDARD_TIME]
         [--expiration-date=EXPIRATION_DATE
           | --retention-period=RETENTION_PERIOD] [GCLOUD_WIDE_FLAG ...]
 
@@ -18,6 +19,26 @@ EXAMPLES
         $ gcloud beta bigtable backups update BACKUP_NAME \
             --instance=INSTANCE_NAME --cluster=CLUSTER_NAME \
             --retention-period=7d
+
+    To update the hot-to-standard time of backup 'BACKUP_NAME' to
+    '2019-03-31T10:49:41Z', run:
+
+        $ gcloud beta bigtable backups update BACKUP_NAME \
+            --instance=INSTANCE_NAME --cluster=CLUSTER_NAME \
+            --hot-to-standard-time=2019-03-31T10:49:41Z
+
+    To update the hot-to-standard time of backup 'BACKUP_NAME' to 7 days from
+    now, run:
+
+        $ gcloud beta bigtable backups update BACKUP_NAME \
+            --instance=INSTANCE_NAME --cluster=CLUSTER_NAME \
+            --hot-to-standard-time=+P7d
+
+    To clear the hot-to-standard time of backup 'BACKUP_NAME', run:
+
+        $ gcloud beta bigtable backups update BACKUP_NAME \
+            --instance=INSTANCE_NAME --cluster=CLUSTER_NAME \
+            --hot-to-standard-time=''
 
 POSITIONAL ARGUMENTS
      Backup resource - Cloud Bigtable backup to update. The arguments in this
@@ -59,6 +80,12 @@ POSITIONAL ARGUMENTS
           ▸ provide the argument --instance on the command line.
 
 FLAGS
+     --hot-to-standard-time=HOT_TO_STANDARD_TIME
+        Time at which a hot backup will be converted to a standard backup; must
+        be at least 24 hours from backup creation time. Only applies for hot
+        backups. See $ gcloud topic datetimes for information on date/time
+        formats. See $ gcloud bigtable backups describe for creation time.
+
      At most one of these can be specified:
 
        --expiration-date=EXPIRATION_DATE
