@@ -4,6 +4,7 @@ NAME
 SYNOPSIS
     gcloud compute backend-services update BACKEND_SERVICE_NAME
         [--affinity-cookie-name=AFFINITY_COOKIE_NAME]
+        [--affinity-cookie-path=AFFINITY_COOKIE_PATH]
         [--affinity-cookie-ttl=AFFINITY_COOKIE_TTL] [--cache-key-include-host]
         [--cache-key-include-http-header=[HEADER_FIELD_NAME,...]]
         [--cache-key-include-named-cookie=[NAMED_COOKIE,...]]
@@ -21,6 +22,7 @@ SYNOPSIS
         [--iap=disabled|enabled,[oauth2-client-id=OAUTH2-CLIENT-ID,
           oauth2-client-secret=OAUTH2-CLIENT-SECRET]]
         [--idle-timeout-sec=IDLE_TIMEOUT_SEC]
+        [--ip-address-selection-policy=IP_ADDRESS_SELECTION_POLICY]
         [--locality-lb-policy=LOCALITY_LB_POLICY]
         [--logging-optional=LOGGING_OPTIONAL]
         [--logging-optional-fields=[LOGGING_OPTIONAL_FIELDS,...]]
@@ -60,14 +62,19 @@ POSITIONAL ARGUMENTS
 
 FLAGS
      --affinity-cookie-name=AFFINITY_COOKIE_NAME
-        If --session-affinity is set to HTTP_COOKIE, this flag sets the name of
-        the cookie.
+        If --session-affinity is set to HTTP_COOKIE or STRONG_COOKIE_AFFINITY,
+        this flag sets the name of the cookie.
+
+     --affinity-cookie-path=AFFINITY_COOKIE_PATH
+        If --session-affinity is set to HTTP_COOKIE or STRONG_COOKIE_AFFINITY,
+        this flag sets the path of the cookie.
 
      --affinity-cookie-ttl=AFFINITY_COOKIE_TTL
-        If --session-affinity is set to GENERATED_COOKIE or HTTP_COOKIE, this
-        flag sets the TTL, in seconds, of the resulting cookie. A setting of 0
-        indicates that the cookie should be a session cookie. See $ gcloud
-        topic datetimes for information on duration formats.
+        If --session-affinity is set to GENERATED_COOKIE, HTTP_COOKIE, or
+        STRONG_COOKIE_AFFINITY, this flag sets the TTL, in seconds, of the
+        resulting cookie. A setting of 0 indicates that the cookie should be a
+        session cookie. See $ gcloud topic datetimes for information on
+        duration formats.
 
      --cache-key-include-host
         Enable including host in cache key. If enabled, requests to different
@@ -258,6 +265,32 @@ FLAGS
         there is no matching traffic (in seconds). Applicable only for backend
         service-based external and internal passthrough Network Load Balancers
         as part of a connection tracking policy.
+
+     --ip-address-selection-policy=IP_ADDRESS_SELECTION_POLICY
+        Specifies a preference for traffic sent from the proxy to the backend
+        (or from the client to the backend for proxyless gRPC).
+
+        Can only be set if load balancing scheme is INTERNAL_SELF_MANAGED,
+        INTERNAL_MANAGED or EXTERNAL_MANAGED.
+
+        The possible values are:
+
+            IPV4_ONLY
+              Only send IPv4 traffic to the backends of the backend service,
+              regardless of traffic from the client to the proxy. Only IPv4
+              health checks are used to check the health of the backends.
+
+            PREFER_IPV6
+              Prioritize the connection to the endpoint's IPv6 address over its IPv4
+              address (provided there is a healthy IPv6 address).
+
+            IPV6_ONLY
+              Only send IPv6 traffic to the backends of the backend service,
+              regardless of traffic from the client to the proxy. Only IPv6
+              health checks are used to check the health of the backends.
+
+        IP_ADDRESS_SELECTION_POLICY must be one of: IPV4_ONLY, PREFER_IPV6,
+        IPV6_ONLY.
 
      --locality-lb-policy=LOCALITY_LB_POLICY
         The load balancing algorithm used within the scope of the locality.

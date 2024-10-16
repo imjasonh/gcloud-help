@@ -39,6 +39,7 @@ SYNOPSIS
         [--secondary-worker-machine-types=type=MACHINE_TYPE[,
           type=MACHINE_TYPE...][,rank=RANK]]
         [--secondary-worker-standard-capacity-base=SECONDARY_WORKER_STANDARD_CAPACITY_BASE]
+        [--secondary-worker-standard-capacity-percent-above-base=SECONDARY_WORKER_STANDARD_CAPACITY_PERCENT_ABOVE_BASE]
         [--shielded-integrity-monitoring] [--shielded-secure-boot]
         [--shielded-vtpm] [--temp-bucket=TEMP_BUCKET]
         [--worker-accelerator=[type=TYPE,[count=COUNT],...]]
@@ -364,7 +365,21 @@ FLAGS
         --secondary-worker-machine-types="type=e2-standard-8,type=t2d-standard-8,rank=0"
 
      --secondary-worker-standard-capacity-base=SECONDARY_WORKER_STANDARD_CAPACITY_BASE
-        The number of standard VMs in the Spot and Standard Mix feature.
+        This flag sets the base number of Standard VMs to use for secondary
+        workers
+        (https://cloud.google.com/dataproc/docs/concepts/compute/secondary-vms#preemptible_and_non-preemptible_secondary_workers).
+        Dataproc will create only standard VMs until it reaches this number,
+        then it will mix Spot and Standard VMs according to
+        SECONDARY_WORKER_STANDARD_CAPACITY_PERCENT_ABOVE_BASE.
+
+     --secondary-worker-standard-capacity-percent-above-base=SECONDARY_WORKER_STANDARD_CAPACITY_PERCENT_ABOVE_BASE
+        When combining Standard and Spot VMs for secondary-workers
+        (https://cloud.google.com/dataproc/docs/concepts/compute/secondary-vms#preemptible_and_non-preemptible_secondary_workers)
+        once the number of Standard VMs specified by
+        SECONDARY_WORKER_STANDARD_CAPACITY_BASE has been used, this flag
+        specifies the percentage of the total number of additional Standard VMs
+        secondary workers will use. Spot VMs will be used for the remaining
+        percentage.
 
      --shielded-integrity-monitoring
         Enables monitoring and attestation of the boot integrity of the

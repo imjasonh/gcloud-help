@@ -9,7 +9,7 @@ SYNOPSIS
         [--default-storage-class=DEFAULT_STORAGE_CLASS,
           -c DEFAULT_STORAGE_CLASS, -s DEFAULT_STORAGE_CLASS]
         [--enable-hierarchical-namespace] [--enable-per-object-retention]
-        [--location=LOCATION, -l LOCATION]
+        [--ip-filter-file=IP_FILTER_FILE] [--location=LOCATION, -l LOCATION]
         [--[no-]pap, --[no-]public-access-prevention]
         [--placement=REGION,REGION]
         [--recovery-point-objective=SETTING, --rpo=SETTING]
@@ -65,6 +65,23 @@ FLAGS
      --enable-per-object-retention
         Enables each object in the bucket to have its own retention settings,
         which prevents deletion until stored for a specific length of time.
+
+     --ip-filter-file=IP_FILTER_FILE
+        Sets the IP filter for the bucket. The IP filter is a list of ip ranges
+        that are allowed to access the bucket. For example, The following JSON
+        document shows the IP filter configuration with mode enabled and list
+        of public network sources and vpc network sources:
+
+            {
+              "mode": "Enabled",
+              "publicNetworkSource": { "allowedIpCidrRanges": ["0.0.0.0/0"] },
+              "vpcNetworkSources": [
+                  {
+                      "network": "projects/PROJECT_NAME/global/networks/NETWORK_NAME",
+                      "allowedIpCidrRanges": ["0.0.0.0/0"]
+                  },
+              ]
+            }
 
      --location=LOCATION, -l LOCATION
         Location (https://cloud.google.com/storage/docs/locations) for the

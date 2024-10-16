@@ -4,6 +4,7 @@ NAME
 SYNOPSIS
     gcloud alpha compute backend-services update BACKEND_SERVICE_NAME
         [--affinity-cookie-name=AFFINITY_COOKIE_NAME]
+        [--affinity-cookie-path=AFFINITY_COOKIE_PATH]
         [--affinity-cookie-ttl=AFFINITY_COOKIE_TTL] [--cache-key-include-host]
         [--cache-key-include-http-header=[HEADER_FIELD_NAME,...]]
         [--cache-key-include-named-cookie=[NAMED_COOKIE,...]]
@@ -39,6 +40,8 @@ SYNOPSIS
           | --no-bypass-cache-on-request-headers]
         [--cache-key-query-string-blacklist=[QUERY_STRING,...]
           | --cache-key-query-string-whitelist=QUERY_STRING,[...]]
+        [--clear-custom-metrics | --custom-metrics=[CUSTOM_METRICS,...]
+          | --custom-metrics-file=[CUSTOM_METRICS,...]]
         [--clear-external-managed-migration-state
           | --external-managed-migration-state=EXTERNAL_MANAGED_MIGRATION_STATE]
         [--client-ttl=CLIENT_TTL | --no-client-ttl]
@@ -67,14 +70,19 @@ POSITIONAL ARGUMENTS
 
 FLAGS
      --affinity-cookie-name=AFFINITY_COOKIE_NAME
-        If --session-affinity is set to HTTP_COOKIE, this flag sets the name of
-        the cookie.
+        If --session-affinity is set to HTTP_COOKIE or STRONG_COOKIE_AFFINITY,
+        this flag sets the name of the cookie.
+
+     --affinity-cookie-path=AFFINITY_COOKIE_PATH
+        If --session-affinity is set to HTTP_COOKIE or STRONG_COOKIE_AFFINITY,
+        this flag sets the path of the cookie.
 
      --affinity-cookie-ttl=AFFINITY_COOKIE_TTL
-        If --session-affinity is set to GENERATED_COOKIE or HTTP_COOKIE, this
-        flag sets the TTL, in seconds, of the resulting cookie. A setting of 0
-        indicates that the cookie should be a session cookie. See $ gcloud
-        topic datetimes for information on duration formats.
+        If --session-affinity is set to GENERATED_COOKIE, HTTP_COOKIE, or
+        STRONG_COOKIE_AFFINITY, this flag sets the TTL, in seconds, of the
+        resulting cookie. A setting of 0 indicates that the cookie should be a
+        session cookie. See $ gcloud topic datetimes for information on
+        duration formats.
 
      --cache-key-include-host
         Enable including host in cache key. If enabled, requests to different
@@ -589,6 +597,75 @@ FLAGS
           --cache-key-query-string-blacklist, not both. '&' and '=' will be
           percent encoded and not treated as delimiters. Can only be applied
           for global resources.
+
+     At most one of these can be specified:
+
+       --clear-custom-metrics
+          Clears current list of CUSTOM_METRICS.
+
+       --custom-metrics=[CUSTOM_METRICS,...]
+          List of custom metrics that are used for WEIGHTED_ROUND_ROBIN
+          BackendService locality_lb_policy.
+
+          Example:
+
+              $ gcloud alpha compute backend-services update \
+                  --custom-metrics='name=my-signal,dryRun=true'
+              $ gcloud alpha compute backend-services update \
+                  --custom-metrics='name=my-signal,dryRun=true' \
+                  --custom-metrics='name=my-signal2'
+              $ gcloud alpha compute backend-services update \
+                  --custom-metrics='[{"name" : "my-signal", "dryRun" : true},
+               {"name" : "my-signal2"}]'
+
+          Sets custom_metrics value.
+
+           dryRun
+              Sets dryRun value.
+
+           name
+              Required, Sets name value.
+
+          Shorthand Example:
+
+              --custom-metrics=dryRun=boolean,name=string --custom-metrics=dryRun=boolean,name=string
+
+          JSON Example:
+
+              --custom-metrics='[{"dryRun": boolean, "name": "string"}]'
+
+          File Example:
+
+              --custom-metrics=path_to_file.(yaml|json)
+
+       --custom-metrics-file=[CUSTOM_METRICS,...]
+          File path to json file with custom metrics that are used for
+          WEIGHTED_ROUND_ROBIN BackendService locality_lb_policy.
+
+          Example:
+
+              $ gcloud alpha compute backend-services update \
+                  --custom-metrics-file='customMetric.json'
+
+          Sets custom_metrics_file value.
+
+           dryRun
+              Sets dryRun value.
+
+           name
+              Required, Sets name value.
+
+          Shorthand Example:
+
+              --custom-metrics-file=dryRun=boolean,name=string --custom-metrics-file=dryRun=boolean,name=string
+
+          JSON Example:
+
+              --custom-metrics-file='[{"dryRun": boolean, "name": "string"}]'
+
+          File Example:
+
+              --custom-metrics-file=path_to_file.(yaml|json)
 
      At most one of these can be specified:
 

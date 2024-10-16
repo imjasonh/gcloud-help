@@ -20,6 +20,7 @@ SYNOPSIS
         [--clear-cors | --cors-file=CORS_FILE]
         [--clear-default-encryption-key
           | --default-encryption-key=DEFAULT_ENCRYPTION_KEY]
+        [--clear-ip-filter | --ip-filter-file=IP_FILTER_FILE]
         [--clear-labels | --labels-file=LABELS_FILE
           | --remove-labels=[LABEL_KEYS,...]
           --update-labels=[LABEL_KEYS_AND_VALUES,...]]
@@ -188,6 +189,28 @@ FLAGS
 
        --default-encryption-key=DEFAULT_ENCRYPTION_KEY
           Set the default KMS key for the bucket.
+
+     At most one of these can be specified:
+
+       --clear-ip-filter
+          Disables and clears IP filter configuration of the bucket.
+
+       --ip-filter-file=IP_FILTER_FILE
+          Sets the IP filter for the bucket. The IP filter is a list of ip
+          ranges that are allowed to access the bucket. For example, The
+          following JSON document shows the IP filter configuration with mode
+          enabled and list of public network sources and vpc network sources:
+
+              {
+                "mode": "Enabled",
+                "publicNetworkSource": { "allowedIpCidrRanges": ["0.0.0.0/0"] },
+                "vpcNetworkSources": [
+                    {
+                        "network": "projects/PROJECT_NAME/global/networks/NETWORK_NAME",
+                        "allowedIpCidrRanges": ["0.0.0.0/0"]
+                    },
+                ]
+              }
 
      At most one of these can be specified:
 

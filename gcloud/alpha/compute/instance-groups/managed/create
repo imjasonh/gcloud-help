@@ -22,6 +22,7 @@ SYNOPSIS
           [auto-delete=AUTO-DELETE],[interface-name=INTERFACE-NAME]]
         [--stopped-size=STOPPED_SIZE] [--suspended-size=SUSPENDED_SIZE]
         [--target-distribution-shape=SHAPE] [--target-pool=[TARGET_POOL,...]]
+        [--target-size-policy-mode=TARGET_SIZE_POLICY_MODE]
         [--zones=ZONE,[ZONE,...]]
         [--health-check=HEALTH_CHECK | --http-health-check=HTTP_HEALTH_CHECK
           | --https-health-check=HTTPS_HEALTH_CHECK]
@@ -308,6 +309,21 @@ OPTIONAL FLAGS
      --target-pool=[TARGET_POOL,...]
         Specifies any target pools you want the instances of this managed
         instance group to be part of.
+
+     --target-size-policy-mode=TARGET_SIZE_POLICY_MODE
+        Specifies mode in which operations on size are processed.
+        TARGET_SIZE_POLICY_MODE must be one of:
+
+         bulk
+            Mode in which MIG creates and starts VMs in all-or-nothing manner.
+            If any VM from the request cannot be provisioned, the whole request
+            waits for conditions that allow for provisioning whole capacity in
+            bulk.
+         individual
+            Default mode in which MIG creates and starts VMs individually
+            without cross-dependency between VMs. This means that in case of
+            something blocking part of VMs to be provisioned, the other part
+            will be created.
 
      --zones=ZONE,[ZONE,...]
         If this flag is specified a regional managed instance group will be

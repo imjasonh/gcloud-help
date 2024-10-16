@@ -10,6 +10,8 @@ SYNOPSIS
           : --reserved-range=RESERVED_RANGE]
         [--deny-maintenance-period-end-date=DENY_MAINTENANCE_PERIOD_END_DATE
           --deny-maintenance-period-start-date=DENY_MAINTENANCE_PERIOD_START_DATE --deny-maintenance-period-time=DENY_MAINTENANCE_PERIOD_TIME]
+        [--gemini-enabled
+          : --gemini-preview-tester-enabled --gemini-prompt-log-enabled]
         [--maintenance-window-day=MAINTENANCE_WINDOW_DAY
           --maintenance-window-time=MAINTENANCE_WINDOW_TIME]
         [--psc-enabled : --psc-allowed-vpcs=[PSC_ALLOWED_VPCS,...]]
@@ -25,7 +27,7 @@ DESCRIPTION
 
 EXAMPLES
     To create a basic tier instance with the name my-looker-instance in region
-    us-central-1 with an edition of "LOOKER_CORE_STANDARD", run:
+    us-central-1 with an edition of LOOKER_CORE_STANDARD, run:
 
         $ gcloud alpha looker instances create my-looker-instance \
             --region=us-central1 --edition="core-standard" \
@@ -182,16 +184,31 @@ OPTIONAL FLAGS
           This flag argument must be specified if any of the other arguments in
           this group are specified.
 
+     Gemini AI - Gemini AI is a powerful AI model that can be used to answer
+     questions, generate content, and perform a variety of other tasks.
+
+       --gemini-enabled
+          This specifies whether Gemini AI is enabled on the Looker instance.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --gemini-preview-tester-enabled
+          This specifies whether user opts in for Gemini AI public preview for
+          the Looker instance.
+
+       --gemini-prompt-log-enabled
+          This specifies whether Gemini AI prompt logging is enabled for the
+          Looker instance.
+
      Maintenance Window - Maintenance typically only takes place once every few
      months, and requires your instance to be restarted while updates are made,
      which disrupts service briefly.
 
        --maintenance-window-day=MAINTENANCE_WINDOW_DAY
-          Day of week for maintenance window, in UTC time zone. To set the
-          maintenance-window-day attribute:
-          ▸ provide the argument --maintenance-window-day on the command
-            line. MAINTENANCE_WINDOW_DAY must be one of: friday, monday,
-            saturday, sunday, thursday, tuesday, wednesday.
+          Day of week for maintenance window, in UTC time zone.
+          MAINTENANCE_WINDOW_DAY must be one of: friday, monday, saturday,
+          sunday, thursday, tuesday, wednesday.
 
           This flag argument must be specified if any of the other arguments in
           this group are specified.
@@ -199,10 +216,7 @@ OPTIONAL FLAGS
        --maintenance-window-time=MAINTENANCE_WINDOW_TIME
           Hour of day for maintenance window, in UTC time zone. A valid time of
           day must be specified in 24hr format (ex: 13:00, 17:30, 23:45).
-          Maintenance will be scheduled within 60 minutes. To set the
-          maintenance-window-time attribute:
-          ▸ provide the argument --maintenance-window-time on the command
-            line.
+          Maintenance will be scheduled within 60 minutes.
 
           This flag argument must be specified if any of the other arguments in
           this group are specified.
