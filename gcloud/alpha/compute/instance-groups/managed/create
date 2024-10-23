@@ -4,7 +4,9 @@ NAME
 
 SYNOPSIS
     gcloud alpha compute instance-groups managed create NAME --size=SIZE
-        --template=TEMPLATE [--base-instance-name=BASE_INSTANCE_NAME]
+        --template=TEMPLATE
+        [--action-on-vm-failed-health-check=ACTION_ON_FAILED_HEALTH_CHECK]
+        [--base-instance-name=BASE_INSTANCE_NAME]
         [--default-action-on-vm-failure=ACTION_ON_VM_FAILURE]
         [--description=DESCRIPTION] [--[no-]force-update-on-repair]
         [--initial-delay=INITIAL_DELAY] [--instance-redistribution-type=TYPE]
@@ -76,21 +78,36 @@ REQUIRED FLAGS
         instance template is either a global or regional resource.
 
 OPTIONAL FLAGS
+     --action-on-vm-failed-health-check=ACTION_ON_FAILED_HEALTH_CHECK
+        Specifies the action that a MIG performs on an unhealthy VM. A VM is
+        marked as unhealthy when the application running on that VM fails a
+        health check. By default, the value of the flag is set to
+        default-action. ACTION_ON_FAILED_HEALTH_CHECK must be one of:
+
+         default-action
+            (Default) MIG uses the same action configured for the
+            defaultActionOnFailure field.
+         do-nothing
+            MIG does not repair an unhealthy VM.
+         repair
+            MIG automatically repairs an unhealthy VM by recreating it.
+
      --base-instance-name=BASE_INSTANCE_NAME
         Base name to use for the Compute Engine instances that will be created
         with the managed instance group. If not provided base instance name
         will be the prefix of instance group name.
 
      --default-action-on-vm-failure=ACTION_ON_VM_FAILURE
-        Specifies the action that a MIG performs on a failed or an unhealthy
-        VM. A VM is marked as unhealthy when the application running on that VM
-        fails a health check. By default, the value of the flag is set to
-        repair. ACTION_ON_VM_FAILURE must be one of:
+        Specifies the action that a MIG performs on a failed VM. If the value
+        of the onFailedHealthCheck field is DEFAULT_ACTION, then the same
+        action also applies to the VMs on which your application fails a health
+        check. By default, the value of the flag is set to repair.
+        ACTION_ON_VM_FAILURE must be one of:
 
-         do-nothing
-            MIG does not repair a failed or an unhealthy VM.
          repair
-            MIG automatically repairs a failed or an unhealthy VM.
+            (Default) MIG automatically repairs a failed VM by recreating it.
+         do-nothing
+            MIG does not repair a failed VM.
 
      --description=DESCRIPTION
         An optional description for this group.

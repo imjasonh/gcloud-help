@@ -4,9 +4,9 @@ NAME
         resource
 
 SYNOPSIS
-    gcloud beta compute instance-groups managed resize-requests describe
-        INSTANCE_GROUP_MANAGER --resize-request=RESIZE_REQUEST_NAME
-        [--zone=ZONE] [GCLOUD_WIDE_FLAG ...]
+    gcloud beta compute instance-groups managed resize-requests describe NAME
+        --resize-request=RESIZE_REQUEST_NAME [--region=REGION | --zone=ZONE]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) gcloud beta compute instance-groups managed resize-requests describe
@@ -20,7 +20,7 @@ EXAMPLES
             describe my-mig --resize-request=resize-request-1
 
 POSITIONAL ARGUMENTS
-     INSTANCE_GROUP_MANAGER
+     NAME
         Name of the managed instance group to operate on.
 
 REQUIRED FLAGS
@@ -28,26 +28,29 @@ REQUIRED FLAGS
         The name of the resize request to describe.
 
 OPTIONAL FLAGS
-     --zone=ZONE
-        Zone of the managed instance group to operate on. If not specified and
-        the compute/zone property isn't set, you might be prompted to select a
-        zone (interactive mode only).
+     At most one of these can be specified:
 
-        To avoid prompting when this flag is omitted, you can set the
-        compute/zone property:
+       --region=REGION
+          Region of the managed instance group to operate on. If not specified,
+          you might be prompted to select a region (interactive mode only).
 
-            $ gcloud config set compute/zone ZONE
+          A list of regions can be fetched by running:
 
-        A list of zones can be fetched by running:
+              $ gcloud compute regions list
 
-            $ gcloud compute zones list
+          Overrides the default compute/region property value for this command
+          invocation.
 
-        To unset the property, run:
+       --zone=ZONE
+          Zone of the managed instance group to operate on. If not specified,
+          you might be prompted to select a zone (interactive mode only).
 
-            $ gcloud config unset compute/zone
+          A list of zones can be fetched by running:
 
-        Alternatively, the zone can be stored in the environment variable
-        CLOUDSDK_COMPUTE_ZONE.
+              $ gcloud compute zones list
+
+          Overrides the default compute/zone property value for this command
+          invocation.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

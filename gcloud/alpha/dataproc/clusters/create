@@ -46,7 +46,6 @@ SYNOPSIS
         [--worker-boot-disk-size=WORKER_BOOT_DISK_SIZE]
         [--worker-boot-disk-type=WORKER_BOOT_DISK_TYPE]
         [--worker-local-ssd-interface=WORKER_LOCAL_SSD_INTERFACE]
-        [--worker-machine-type=WORKER_MACHINE_TYPE]
         [--worker-min-cpu-platform=PLATFORM] [--zone=ZONE, -z ZONE]
         [--expiration-time=EXPIRATION_TIME | --max-age=MAX_AGE]
         [--gce-pd-kms-key=GCE_PD_KMS_KEY
@@ -68,7 +67,9 @@ SYNOPSIS
           --num-secondary-workers=NUM_SECONDARY_WORKERS
           --num-workers=NUM_WORKERS
           --secondary-worker-type=TYPE; default="preemptible"]
-        [GCLOUD_WIDE_FLAG ...]
+        [--worker-machine-type=WORKER_MACHINE_TYPE
+          | --worker-machine-types=type=MACHINE_TYPE[,
+          type=MACHINE_TYPE...][,rank=RANK]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Create a cluster.
@@ -426,9 +427,6 @@ FLAGS
 
      --worker-local-ssd-interface=WORKER_LOCAL_SSD_INTERFACE
         Interface to use to attach local SSDs to each worker in a cluster.
-
-     --worker-machine-type=WORKER_MACHINE_TYPE
-        The type of machine to use for workers. Defaults to server-specified.
 
      --worker-min-cpu-platform=PLATFORM
         When specified, the VM is scheduled on the host with a specified CPU
@@ -861,6 +859,25 @@ FLAGS
          --secondary-worker-type=TYPE; default="preemptible"
             The type of the secondary worker group. TYPE must be one of:
             preemptible, non-preemptible, spot.
+
+     At most one of these can be specified:
+
+       --worker-machine-type=WORKER_MACHINE_TYPE
+          The type of machine to use for primary workers. Defaults to
+          server-specified.
+
+       --worker-machine-types=type=MACHINE_TYPE[,type=MACHINE_TYPE...][,rank=RANK]
+          Machine types
+          (https://cloud.google.com/dataproc/docs/concepts/compute/supported-machine-types)
+          for primary worker nodes to use with optional rank. A lower rank
+          number is given higher preference. Based on availablilty, Dataproc
+          tries to create primary worker VMs using the worker machine type with
+          the lowest rank, and then tries to use machine types with higher
+          ranks as necessary. Machine types with the same rank are given the
+          same preference. Example use:
+          --worker-machine-types="type=e2-standard-8,type=n2-standard-8,rank=0".
+          For more information, see Dataproc Flexible VMs
+          (https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/flexible-vms)
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

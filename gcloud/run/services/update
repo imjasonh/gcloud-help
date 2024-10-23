@@ -4,12 +4,27 @@ NAME
 
 SYNOPSIS
     gcloud run services update [[SERVICE] --namespace=NAMESPACE] [--async]
-        [--concurrency=CONCURRENCY] [--container=CONTAINER]
-        [--ingress=INGRESS; default="all"] [--max-instances=MAX_INSTANCES]
-        [--min-instances=MIN_INSTANCES]
-        [--platform=PLATFORM; default="managed"]
-        [--service-account=SERVICE_ACCOUNT] [--tag=TAG] [--timeout=TIMEOUT]
-        [--no-traffic]
+        [--breakglass=JUSTIFICATION] [--clear-vpc-connector]
+        [--concurrency=CONCURRENCY] [--container=CONTAINER] [--[no-]cpu-boost]
+        [--[no-]cpu-throttling] [--execution-environment=EXECUTION_ENVIRONMENT]
+        [--ingress=INGRESS; default="all"] [--[no-]invoker-iam-check]
+        [--max-instances=MAX_INSTANCES] [--min-instances=MIN_INSTANCES]
+        [--region=REGION] [--remove-containers=[CONTAINER,...]]
+        [--revision-suffix=REVISION_SUFFIX] [--service-account=SERVICE_ACCOUNT]
+        [--service-min-instances=SERVICE_MIN_INSTANCES]
+        [--[no-]session-affinity] [--tag=TAG] [--timeout=TIMEOUT]
+        [--no-traffic] [--vpc-connector=VPC_CONNECTOR]
+        [--vpc-egress=VPC_EGRESS]
+        [--add-cloudsql-instances=[CLOUDSQL-INSTANCES,...]
+          | --clear-cloudsql-instances
+          | --remove-cloudsql-instances=[CLOUDSQL-INSTANCES,...]
+          | --set-cloudsql-instances=[CLOUDSQL-INSTANCES,...]]
+        [--add-custom-audiences=[CUSTOM-AUDIENCES,...]
+          | --clear-custom-audiences
+          | --remove-custom-audiences=[CUSTOM-AUDIENCES,...]
+          | --set-custom-audiences=[CUSTOM-AUDIENCES,...]]
+        [--add-volume=[KEY=VALUE,...]
+          --clear-volumes --remove-volume=[VOLUME,...]]
         [--add-volume-mount=[volume=NAME,mount-path=MOUNT_PATH,...]
           --args=[ARG,...] --clear-volume-mounts --command=[COMMAND,...]
           --cpu=CPU --depends-on=[CONTAINER,...] --image=IMAGE --memory=MEMORY
@@ -19,36 +34,21 @@ SYNOPSIS
           --update-env-vars=[KEY=VALUE,...] --clear-secrets
           | --set-secrets=[KEY=VALUE,...]
           | --remove-secrets=[KEY,...] --update-secrets=[KEY=VALUE,...]]
-        [--breakglass=JUSTIFICATION --clear-vpc-connector --[no-]cpu-boost
-          --[no-]cpu-throttling --execution-environment=EXECUTION_ENVIRONMENT
-          --[no-]invoker-iam-check --remove-containers=[CONTAINER,...]
-          --revision-suffix=REVISION_SUFFIX
-          --service-min-instances=SERVICE_MIN_INSTANCES --[no-]session-affinity
-          --vpc-connector=VPC_CONNECTOR --vpc-egress=VPC_EGRESS
-          --add-cloudsql-instances=[CLOUDSQL-INSTANCES,...]
-          | --clear-cloudsql-instances
-          | --remove-cloudsql-instances=[CLOUDSQL-INSTANCES,...]
-          | --set-cloudsql-instances=[CLOUDSQL-INSTANCES,...]
-          --add-custom-audiences=[CUSTOM-AUDIENCES,...]
-          | --clear-custom-audiences
-          | --remove-custom-audiences=[CUSTOM-AUDIENCES,...]
-          | --set-custom-audiences=[CUSTOM-AUDIENCES,...]
-          --add-volume=[KEY=VALUE,...] --clear-volumes
-          --remove-volume=[VOLUME,...] --binary-authorization=POLICY
-          | --clear-binary-authorization --clear-encryption-key-shutdown-hours
-          | --encryption-key-shutdown-hours=ENCRYPTION_KEY_SHUTDOWN_HOURS
-          --clear-key | --key=KEY --clear-network
-          | --network=NETWORK --subnet=SUBNET --clear-network-tags
-          | --network-tags=[TAG,...] --clear-post-key-revocation-action-type
-          | --post-key-revocation-action-type=POST_KEY_REVOCATION_ACTION_TYPE]
+        [--binary-authorization=POLICY | --clear-binary-authorization]
+        [--clear-config-maps | --set-config-maps=[KEY=VALUE,...]
+          | --remove-config-maps=[KEY,...]
+          --update-config-maps=[KEY=VALUE,...]]
+        [--clear-encryption-key-shutdown-hours
+          | --encryption-key-shutdown-hours=ENCRYPTION_KEY_SHUTDOWN_HOURS]
+        [--clear-key | --key=KEY]
         [--clear-labels | --remove-labels=[KEY,...] --labels=[KEY=VALUE,...]
           | --update-labels=[KEY=VALUE,...]]
-        [--connectivity=CONNECTIVITY --clear-config-maps
-          | --set-config-maps=[KEY=VALUE,...] | --remove-config-maps=[KEY,...]
-          --update-config-maps=[KEY=VALUE,...]]
-        [--region=REGION
-          | --cluster=CLUSTER --cluster-location=CLUSTER_LOCATION
-          | --context=CONTEXT --kubeconfig=KUBECONFIG] [GCLOUD_WIDE_FLAG ...]
+        [--clear-network
+          | --network=NETWORK --subnet=SUBNET --clear-network-tags
+          | --network-tags=[TAG,...]]
+        [--clear-post-key-revocation-action-type
+          | --post-key-revocation-action-type=POST_KEY_REVOCATION_ACTION_TYPE]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Update Cloud Run environment variables and other configuration settings.
@@ -91,6 +91,16 @@ FLAGS
         Return immediately, without waiting for the operation in progress to
         complete.
 
+     --breakglass=JUSTIFICATION
+        Justification to bypass Binary Authorization policy constraints and
+        allow the operation. See
+        https://cloud.google.com/binary-authorization/docs/using-breakglass for
+        more information. Next update or deploy command will automatically
+        clear existing breakglass justification.
+
+     --clear-vpc-connector
+        Remove the VPC connector for this resource.
+
      --concurrency=CONCURRENCY
         Set the maximum number of concurrent requests allowed per container
         instance. Leave concurrency unspecified or provide the special value
@@ -100,29 +110,52 @@ FLAGS
         Specifies a container by name. Flags following --container will apply
         to the specified container.
 
+     --[no-]cpu-boost
+        Whether to allocate extra CPU to containers on startup to reduce the
+        perceived latency of a cold start request. Enabled by default when
+        unspecified on new services. Use --cpu-boost to enable and
+        --no-cpu-boost to disable.
+
+     --[no-]cpu-throttling
+        Whether to throttle the CPU when the container is not actively serving
+        requests. Use --cpu-throttling to enable and --no-cpu-throttling to
+        disable.
+
+     --execution-environment=EXECUTION_ENVIRONMENT
+        Selects the execution environment where the application will run.
+        EXECUTION_ENVIRONMENT must be one of:
+
+         gen1
+            Run the application in a first generation execution environment.
+         gen2
+            Run the application in a second generation execution environment.
+
      --ingress=INGRESS; default="all"
         Set the ingress traffic sources allowed to call the service. For Cloud
-        Run (fully managed) the --[no-]allow-unauthenticated flag separately
-        controls the identities allowed to call the service. INGRESS must be
-        one of:
+        Run the --[no-]allow-unauthenticated flag separately controls the
+        identities allowed to call the service. INGRESS must be one of:
 
          all
             Inbound requests from all sources are allowed.
          internal
-            For Cloud Run (fully managed), only inbound requests from VPC
-            networks in the same project or VPC Service Controls perimeter, as
-            well as Pub/Sub subscriptions and Eventarc events in the same
-            project or VPC Service Controls perimeter are allowed. All other
-            requests are rejected. See
-            https://cloud.google.com/run/docs/securing/ingress for full details
-            on the definition of internal traffic for Cloud Run (fully
-            managed). For Cloud Run for Anthos, only inbound requests from the
-            same cluster are allowed.
+            For Cloud Run, only inbound requests from VPC networks in the same
+            project or VPC Service Controls perimeter, as well as Pub/Sub
+            subscriptions and Eventarc events in the same project or VPC
+            Service Controls perimeter are allowed. All other requests are
+            rejected. See https://cloud.google.com/run/docs/securing/ingress
+            for full details on the definition of internal traffic for Cloud
+            Run.
 
          internal-and-cloud-load-balancing
-            Only supported for Cloud Run (fully managed). Only inbound requests
-            from Google Cloud Load Balancing or a traffic source allowed by the
-            internal option are allowed.
+            Only inbound requests from Google Cloud Load Balancing or a traffic
+            source allowed by the internal option are allowed.
+
+     --[no-]invoker-iam-check
+        Optionally disable invoker IAM checks. This feature is available by
+        invitation only. More info at
+        https://cloud.google.com/run/docs/securing/managing-access#invoker_check.
+        Use --invoker-iam-check to enable and --no-invoker-iam-check to
+        disable.
 
      --max-instances=MAX_INSTANCES
         The maximum number of container instances of the Service to run. Use
@@ -132,32 +165,33 @@ FLAGS
         The minimum number of container instances for this Revision of the
         Service to run or 'default' to remove any minimum.
 
-     --platform=PLATFORM; default="managed"
-        Target platform for running commands. Alternatively, set the property
-        [run/platform]. PLATFORM must be one of:
+     --region=REGION
+        Region in which the resource can be found. Alternatively, set the
+        property [run/region].
 
-         managed
-            Fully managed version of Cloud Run. Use with the --region flag or
-            set the [run/region] property to specify a Cloud Run region.
-         gke
-            Cloud Run for Anthos on Google Cloud. Use with the --cluster and
-            --cluster-location flags or set the [run/cluster] and
-            [run/cluster_location] properties to specify a cluster in a given
-            zone.
-         kubernetes
-            Use a Knative-compatible kubernetes cluster. Use with the
-            --kubeconfig and --context flags to specify a kubeconfig file and
-            the context for connecting.
+     --remove-containers=[CONTAINER,...]
+        List of containers to remove.
+
+     --revision-suffix=REVISION_SUFFIX
+        Specify the suffix of the revision name. Revision names always start
+        with the service name automatically. For example, specifying
+        [--revision-suffix=v1] for a service named 'helloworld', would lead to
+        a revision named 'helloworld-v1'. Set empty string to clear the suffix
+        and resume server-assigned naming.
 
      --service-account=SERVICE_ACCOUNT
-        Service account associated with the revision of the service. The
-        service account represents the identity of the running revision, and
-        determines what permissions the revision has. For the managed platform,
-        this is the email address of an IAM service account. For the
-        Kubernetes-based platforms (gke, kubernetes), this is the name of a
-        Kubernetes service account in the same namespace as the service. If not
-        provided, the revision will use the default service account of the
-        project, or default Kubernetes namespace service account respectively.
+        the email address of an IAM service account associated with the
+        revision of the service. The service account represents the identity of
+        the running revision, and determines what permissions the revision has.
+
+     --service-min-instances=SERVICE_MIN_INSTANCES
+        The minimum number of container instances for this Service to run or
+        'default' to remove any minimum. These instances will be divided among
+        all Revisions receiving a percentage of traffic.
+
+     --[no-]session-affinity
+        Whether to enable session affinity for connections to the service. Use
+        --session-affinity to enable and --no-session-affinity to disable.
 
      --tag=TAG
         Traffic tag to assign to the newly created revision.
@@ -178,6 +212,99 @@ FLAGS
         traffic on future deployments. To restore sending traffic to the LATEST
         revision by default, run the gcloud run services update-traffic command
         with --to-latest.
+
+     --vpc-connector=VPC_CONNECTOR
+        Set a VPC connector for this resource.
+
+     --vpc-egress=VPC_EGRESS
+        Specify which of the outbound traffic to send through Direct VPC egress
+        or the VPC connector for this resource. This resource must have Direct
+        VPC egress enabled or a VPC connector to set this flag. VPC_EGRESS must
+        be one of:
+
+         all
+            (DEPRECATED) Sends all outbound traffic through Direct VPC egress
+            or the VPC connector. Provides the same functionality as
+            'all-traffic'. Prefer to use 'all-traffic' instead.
+         all-traffic
+            Sends all outbound traffic through Direct VPC egress or the VPC
+            connector.
+         private-ranges-only
+            Default option. Sends outbound traffic to private IP addresses (RFC
+            1918 and Private Google Access IPs) through Direct VPC egress or
+            the VPC connector.
+
+            Traffic to other Cloud Run services might require additional
+            configuration. See
+            https://cloud.google.com/run/docs/securing/private-networking#send_requests_to_other_services_and_services
+            for more information.
+
+     These flags modify the Cloud SQL instances this Service connects to. You
+     can specify a name of a Cloud SQL instance if it's in the same project and
+     region as your Cloud Run service; otherwise specify
+     <project>:<region>:<instance> for the instance.
+
+     At most one of these can be specified:
+
+       --add-cloudsql-instances=[CLOUDSQL-INSTANCES,...]
+          Append the given values to the current Cloud SQL instances.
+
+       --clear-cloudsql-instances
+          Empty the current Cloud SQL instances.
+
+       --remove-cloudsql-instances=[CLOUDSQL-INSTANCES,...]
+          Remove the given values from the current Cloud SQL instances.
+
+       --set-cloudsql-instances=[CLOUDSQL-INSTANCES,...]
+          Completely replace the current Cloud SQL instances with the given
+          values.
+
+     These flags modify the custom audiences that can be used in the audience
+     field of ID token for authenticated requests.
+
+     At most one of these can be specified:
+
+       --add-custom-audiences=[CUSTOM-AUDIENCES,...]
+          Append the given values to the current custom audiences.
+
+       --clear-custom-audiences
+          Empty the current custom audiences.
+
+       --remove-custom-audiences=[CUSTOM-AUDIENCES,...]
+          Remove the given values from the current custom audiences.
+
+       --set-custom-audiences=[CUSTOM-AUDIENCES,...]
+          Completely replace the current custom audiences with the given
+          values.
+
+     --add-volume=[KEY=VALUE,...]
+        Adds a volume to the Cloud Run resource. To add more than one volume,
+        specify this flag multiple times. Volumes must have a name and type
+        key. Only certain values are supported for type. Depending on the
+        provided type, other keys will be required. The following types are
+        supported with the specified additional keys:
+
+        cloud-storage: A volume representing a Cloud Storage bucket. This
+        volume type is mounted using Cloud Storage FUSE. See
+        https://cloud.google.com/storage/docs/gcs-fuse for the details and
+        limitations of this filesystem. Additional keys:
+        ◆ bucket: (required) the name of the bucket to use as the source of
+          this volume
+        ◆ readonly: (optional) A boolean. If true, this volume will be
+          read-only from all mounts.
+
+        nfs: Represents a volume backed by an NFS server. Additional keys:
+        ◆ location: (required) The location of the NFS Server, in the form
+          SERVER:/PATH
+        ◆ readonly: (optional) A boolean. If true, this volume will be
+          read-only from all mounts.
+
+     --clear-volumes
+        Remove all existing volumes from the Cloud Run resource, including
+        volumes mounted as secrets
+
+     --remove-volume=[VOLUME,...]
+        Removes volumes from the Cloud Run resource.
 
     Container Flags
 
@@ -208,19 +335,15 @@ FLAGS
          --cpu=CPU
             Set a CPU limit in Kubernetes cpu units.
 
-            Cloud Run (fully managed) supports values 1, 2 and 4. For Cloud Run
-            (fully managed), 4 cpus also requires a minimum 2Gi --memory value.
-            Examples 2, 2.0, 2000m
-
-            Cloud Run for Anthos and Knative-compatible Kubernetes clusters
-            support fractional values. Examples .5, 500m, 2
+            Cloud Run supports values fractional values below 1, 1, 2, 4, and
+            8. Some CPU values requires a minimum Memory --memory value.
 
          --depends-on=[CONTAINER,...]
             List of container dependencies to add to the current container.
 
          --image=IMAGE
             Name of the container image to deploy (e.g.
-            gcr.io/cloudrun/hello:latest).
+            us-docker.pkg.dev/cloudrun/container/hello:latest).
 
          --memory=MEMORY
             Set a memory limit. Ex: 1024Mi, 4Gi.
@@ -295,232 +418,62 @@ FLAGS
              --update-secrets=[KEY=VALUE,...]
                 List of key-value pairs to set as secrets.
 
-     Only applicable if connecting to Cloud Run (fully managed). Specify
-     --platform=managed to use:
+     At most one of these can be specified:
 
-       --breakglass=JUSTIFICATION
-          Justification to bypass Binary Authorization policy constraints and
-          allow the operation. See
-          https://cloud.google.com/binary-authorization/docs/using-breakglass
-          for more information. Next update or deploy command will
-          automatically clear existing breakglass justification.
+       --binary-authorization=POLICY
+          Binary Authorization policy to check against. This must be set to
+          "default".
 
-       --clear-vpc-connector
-          Remove the VPC connector for this resource.
+       --clear-binary-authorization
+          Remove any previously set Binary Authorization policy.
 
-       --[no-]cpu-boost
-          Whether to allocate extra CPU to containers on startup to reduce the
-          perceived latency of a cold start request. Enabled by default when
-          unspecified on new services. Use --cpu-boost to enable and
-          --no-cpu-boost to disable.
+     Specify config map to mount or provide as environment variables. Keys
+     starting with a forward slash '/' are mount paths. All other keys
+     correspond to environment variables. The values associated with each of
+     these should be in the form CONFIG_MAP_NAME:KEY_IN_CONFIG_MAP; you may
+     omit the key within the config map to specify a mount of all keys within
+     the config map. For example:
+     '--update-config-maps=/my/path=myconfig,ENV=otherconfig:key.json' will
+     create a volume with config map 'myconfig' and mount that volume at
+     '/my/path'. Because no config map key was specified, all keys in
+     'myconfig' will be included. An environment variable named ENV will also
+     be created whose value is the value of 'key.json' in 'otherconfig. Not
+     supported on the fully managed version of Cloud Run.
 
-       --[no-]cpu-throttling
-          Whether to throttle the CPU when the container is not actively
-          serving requests. Use --cpu-throttling to enable and
-          --no-cpu-throttling to disable.
+     At most one of these can be specified:
 
-       --execution-environment=EXECUTION_ENVIRONMENT
-          Selects the execution environment where the application will run.
-          EXECUTION_ENVIRONMENT must be one of:
+       --clear-config-maps
+          Remove all config-maps.
 
-           gen1
-              Run the application in a first generation execution environment.
-           gen2
-              Run the application in a second generation execution environment.
+       --set-config-maps=[KEY=VALUE,...]
+          List of key-value pairs to set as config-maps. All existing
+          config-maps will be removed first.
 
-       --[no-]invoker-iam-check
-          Optionally disable invoker IAM checks. This feature is available by
-          invitation only. More info at
-          https://cloud.google.com/run/docs/securing/managing-access#invoker_check.
-          Use --invoker-iam-check to enable and --no-invoker-iam-check to
-          disable.
+       Only --update-config-maps and --remove-config-maps can be used together.
+       If both are specified, --remove-config-maps will be applied first.
 
-       --remove-containers=[CONTAINER,...]
-          List of containers to remove.
+         --remove-config-maps=[KEY,...]
+            List of config-maps to be removed.
 
-       --revision-suffix=REVISION_SUFFIX
-          Specify the suffix of the revision name. Revision names always start
-          with the service name automatically. For example, specifying
-          [--revision-suffix=v1] for a service named 'helloworld', would lead
-          to a revision named 'helloworld-v1'. Set empty string to clear the
-          suffix and resume server-assigned naming.
+         --update-config-maps=[KEY=VALUE,...]
+            List of key-value pairs to set as config-maps.
 
-       --service-min-instances=SERVICE_MIN_INSTANCES
-          The minimum number of container instances for this Service to run or
-          'default' to remove any minimum. These instances will be divided
-          among all Revisions receiving a percentage of traffic.
+     At most one of these can be specified:
 
-       --[no-]session-affinity
-          Whether to enable session affinity for connections to the service.
-          Use --session-affinity to enable and --no-session-affinity to
-          disable.
+       --clear-encryption-key-shutdown-hours
+          Remove any previously set CMEK key shutdown hours setting.
 
-       --vpc-connector=VPC_CONNECTOR
-          Set a VPC connector for this resource.
+       --encryption-key-shutdown-hours=ENCRYPTION_KEY_SHUTDOWN_HOURS
+          The number of hours to wait before an automatic shutdown server after
+          CMEK key revocation is detected.
 
-       --vpc-egress=VPC_EGRESS
-          Specify which of the outbound traffic to send through Direct VPC
-          egress or the VPC connector for this resource. This resource must
-          have Direct VPC egress enabled or a VPC connector to set this flag.
-          VPC_EGRESS must be one of:
+     At most one of these can be specified:
 
-           all
-              (DEPRECATED) Sends all outbound traffic through Direct VPC egress
-              or the VPC connector. Provides the same functionality as
-              'all-traffic'. Prefer to use 'all-traffic' instead.
-           all-traffic
-              Sends all outbound traffic through Direct VPC egress or the VPC
-              connector.
-           private-ranges-only
-              Default option. Sends outbound traffic to private IP addresses
-              (RFC 1918 and Private Google Access IPs) through Direct VPC
-              egress or the VPC connector.
+       --clear-key
+          Remove any previously set CMEK key reference.
 
-              Traffic to other Cloud Run services might require additional
-              configuration. See
-              https://cloud.google.com/run/docs/securing/private-networking#send_requests_to_other_services_and_services
-              for more information.
-
-       These flags modify the Cloud SQL instances this Service connects to. You
-       can specify a name of a Cloud SQL instance if it's in the same project
-       and region as your Cloud Run service; otherwise specify
-       <project>:<region>:<instance> for the instance.
-
-       At most one of these can be specified:
-
-         --add-cloudsql-instances=[CLOUDSQL-INSTANCES,...]
-            Append the given values to the current Cloud SQL instances.
-
-         --clear-cloudsql-instances
-            Empty the current Cloud SQL instances.
-
-         --remove-cloudsql-instances=[CLOUDSQL-INSTANCES,...]
-            Remove the given values from the current Cloud SQL instances.
-
-         --set-cloudsql-instances=[CLOUDSQL-INSTANCES,...]
-            Completely replace the current Cloud SQL instances with the given
-            values.
-
-       These flags modify the custom audiences that can be used in the audience
-       field of ID token for authenticated requests.
-
-       At most one of these can be specified:
-
-         --add-custom-audiences=[CUSTOM-AUDIENCES,...]
-            Append the given values to the current custom audiences.
-
-         --clear-custom-audiences
-            Empty the current custom audiences.
-
-         --remove-custom-audiences=[CUSTOM-AUDIENCES,...]
-            Remove the given values from the current custom audiences.
-
-         --set-custom-audiences=[CUSTOM-AUDIENCES,...]
-            Completely replace the current custom audiences with the given
-            values.
-
-       --add-volume=[KEY=VALUE,...]
-          Adds a volume to the Cloud Run resource. To add more than one volume,
-          specify this flag multiple times. Volumes must have a name and type
-          key. Only certain values are supported for type. Depending on the
-          provided type, other keys will be required. The following types are
-          supported with the specified additional keys:
-
-          cloud-storage: A volume representing a Cloud Storage bucket. This
-          volume type is mounted using Cloud Storage FUSE. See
-          https://cloud.google.com/storage/docs/gcs-fuse for the details and
-          limitations of this filesystem. Additional keys:
-       ◆ bucket: (required) the name of the bucket to use as the source of
-         this volume
-       ◆ readonly: (optional) A boolean. If true, this volume will be
-         read-only from all mounts.
-
-     nfs: Represents a volume backed by an NFS server. Additional keys:
-      ◆ location: (required) The location of the NFS Server, in the form
-        SERVER:/PATH
-      ◆ readonly: (optional) A boolean. If true, this volume will be
-        read-only from all mounts.
-
-       --clear-volumes
-          Remove all existing volumes from the Cloud Run resource, including
-          volumes mounted as secrets
-
-       --remove-volume=[VOLUME,...]
-          Removes volumes from the Cloud Run resource.
-
-       At most one of these can be specified:
-
-         --binary-authorization=POLICY
-            Binary Authorization policy to check against. This must be set to
-            "default".
-
-         --clear-binary-authorization
-            Remove any previously set Binary Authorization policy.
-
-       At most one of these can be specified:
-
-         --clear-encryption-key-shutdown-hours
-            Remove any previously set CMEK key shutdown hours setting.
-
-         --encryption-key-shutdown-hours=ENCRYPTION_KEY_SHUTDOWN_HOURS
-            The number of hours to wait before an automatic shutdown server
-            after CMEK key revocation is detected.
-
-       At most one of these can be specified:
-
-         --clear-key
-            Remove any previously set CMEK key reference.
-
-         --key=KEY
-            CMEK key reference to encrypt the container with.
-
-       At most one of these can be specified:
-
-         --clear-network
-            Disconnect this Cloud Run service from the VPC network it is
-            connected to.
-
-         Direct VPC egress setting flags group.
-
-           --network=NETWORK
-              The VPC network that the Cloud Run service will be able to send
-              traffic to. If --subnet is also specified, subnet must be a
-              subnetwork of the network specified by this --network flag. To
-              clear existing VPC network settings, use --clear-network.
-
-           --subnet=SUBNET
-              The VPC subnetwork that the Cloud Run service will get IPs from.
-              The subnetwork must be /26 or larger. If --network is also
-              specified, subnet must be a subnetwork of the network specified
-              by the --network flag. If --network is not specified, network
-              will be looked up from this subnetwork. To clear existing VPC
-              network settings, use --clear-network.
-
-           At most one of these can be specified:
-
-             --clear-network-tags
-                Clears all existing Compute Engine tags from the Cloud Run
-                service.
-
-             --network-tags=[TAG,...]
-                Applies the given Compute Engine tags (comma separated) to the
-                Cloud Run service. To clear existing tags, use
-                --clear-network-tags.
-
-       At most one of these can be specified:
-
-         --clear-post-key-revocation-action-type
-            Remove any previously set post CMEK key revocation action type.
-
-         --post-key-revocation-action-type=POST_KEY_REVOCATION_ACTION_TYPE
-            Action type after CMEK key revocation.
-            POST_KEY_REVOCATION_ACTION_TYPE must be one of:
-
-             prevent-new
-                No new instances will be started after CMEK key revocation.
-             shut-down
-                No new instances will be started and the existing instances
-                will be shut down after CMEK key revocation.
+       --key=KEY
+          CMEK key reference to encrypt the container with.
 
      At most one of these can be specified:
 
@@ -553,119 +506,53 @@ FLAGS
           List of label KEY=VALUE pairs to update. If a label exists, its value
           is modified. Otherwise, a new label is created.
 
-     Only applicable if connecting to Cloud Run for Anthos deployed on Google
-     Cloud or Cloud Run for Anthos deployed on VMware. Specify --platform=gke
-     or --platform=kubernetes to use:
+     At most one of these can be specified:
 
-       --connectivity=CONNECTIVITY
-          (DEPRECATED) Defaults to 'external'. If 'external', the service can
-          be invoked through the internet, in addition to through the cluster
-          network.
+       --clear-network
+          Disconnect this Cloud Run service from the VPC network it is
+          connected to.
 
-          The --connectivity flag is deprecated but will continue to be
-          supported. Prefer to use the --ingress flag instead. CONNECTIVITY
-          must be one of:
+       Direct VPC egress setting flags group.
 
-           external
-              Visible from outside the cluster.
-           internal
-              Visible only within the cluster.
+         --network=NETWORK
+            The VPC network that the Cloud Run service will be able to send
+            traffic to. If --subnet is also specified, subnet must be a
+            subnetwork of the network specified by this --network flag. To
+            clear existing VPC network settings, use --clear-network.
 
-       Specify config map to mount or provide as environment variables. Keys
-       starting with a forward slash '/' are mount paths. All other keys
-       correspond to environment variables. The values associated with each of
-       these should be in the form CONFIG_MAP_NAME:KEY_IN_CONFIG_MAP; you may
-       omit the key within the config map to specify a mount of all keys within
-       the config map. For example:
-       '--update-config-maps=/my/path=myconfig,ENV=otherconfig:key.json' will
-       create a volume with config map 'myconfig' and mount that volume at
-       '/my/path'. Because no config map key was specified, all keys in
-       'myconfig' will be included. An environment variable named ENV will also
-       be created whose value is the value of 'key.json' in 'otherconfig. Not
-       supported on the fully managed version of Cloud Run.
+         --subnet=SUBNET
+            The VPC subnetwork that the Cloud Run service will get IPs from.
+            The subnetwork must be /26 or larger. If --network is also
+            specified, subnet must be a subnetwork of the network specified by
+            the --network flag. If --network is not specified, network will be
+            looked up from this subnetwork. To clear existing VPC network
+            settings, use --clear-network.
 
-       At most one of these can be specified:
+         At most one of these can be specified:
 
-         --clear-config-maps
-            Remove all config-maps.
+           --clear-network-tags
+              Clears all existing Compute Engine tags from the Cloud Run
+              service.
 
-         --set-config-maps=[KEY=VALUE,...]
-            List of key-value pairs to set as config-maps. All existing
-            config-maps will be removed first.
-
-         Only --update-config-maps and --remove-config-maps can be used
-         together. If both are specified, --remove-config-maps will be applied
-         first.
-
-           --remove-config-maps=[KEY,...]
-              List of config-maps to be removed.
-
-           --update-config-maps=[KEY=VALUE,...]
-              List of key-value pairs to set as config-maps.
-
-     Arguments to locate resources, depending on the platform used.
+           --network-tags=[TAG,...]
+              Applies the given Compute Engine tags (comma separated) to the
+              Cloud Run service. To clear existing tags, use
+              --clear-network-tags.
 
      At most one of these can be specified:
 
-       Only applicable if connecting to Cloud Run (fully managed). Specify
-       --platform=managed to use:
+       --clear-post-key-revocation-action-type
+          Remove any previously set post CMEK key revocation action type.
 
-         --region=REGION
-            Region in which the resource can be found. Alternatively, set the
-            property [run/region].
+       --post-key-revocation-action-type=POST_KEY_REVOCATION_ACTION_TYPE
+          Action type after CMEK key revocation.
+          POST_KEY_REVOCATION_ACTION_TYPE must be one of:
 
-       Only applicable if connecting to Cloud Run for Anthos deployed on Google
-       Cloud. Specify --platform=gke to use:
-
-         Cluster resource - Kubernetes Engine cluster to connect to. The
-         arguments in this group can be used to specify the attributes of this
-         resource. (NOTE) Some attributes are not given arguments in this group
-         but can be set in other ways.
-
-         To set the project attribute:
-         ▸ provide the argument --cluster on the command line with a fully
-           specified name;
-         ▸ set the property run/cluster with a fully specified name;
-         ▸ specify the cluster from a list of available clusters with a fully
-           specified name;
-         ▸ provide the argument --project on the command line;
-         ▸ set the property core/project.
-
-             --cluster=CLUSTER
-                ID of the cluster or fully qualified identifier for the
-                cluster.
-
-                To set the cluster attribute:
-             ▫ provide the argument --cluster on the command line;
-             ▫ set the property run/cluster;
-             ▫ specify the cluster from a list of available clusters.
-
-             --cluster-location=CLUSTER_LOCATION
-                Zone in which the cluster is located. Alternatively, set the
-                property [run/cluster_location].
-
-                To set the location attribute:
-             ▫ provide the argument --cluster on the command line with a
-               fully specified name;
-             ▫ set the property run/cluster with a fully specified name;
-             ▫ specify the cluster from a list of available clusters with a
-               fully specified name;
-             ▫ provide the argument --cluster-location on the command line;
-             ▫ set the property run/cluster_location;
-             ▫ specify the cluster location from a list of available zones.
-
-       Only applicable if connecting to Cloud Run for Anthos deployed on
-       VMware. Specify --platform=kubernetes to use:
-
-         --context=CONTEXT
-            The name of the context in your kubectl config file to use for
-            connecting.
-
-         --kubeconfig=KUBECONFIG
-            The absolute path to your kubectl config file. If not specified,
-            the colon- or semicolon-delimited list of paths specified by
-            $KUBECONFIG will be used. If $KUBECONFIG is unset, this defaults to
-            ~/.kube/config.
+           prevent-new
+              No new instances will be started after CMEK key revocation.
+           shut-down
+              No new instances will be started and the existing instances will
+              be shut down after CMEK key revocation.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
