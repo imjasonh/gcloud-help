@@ -44,6 +44,8 @@ SYNOPSIS
         [--timeout=TIMEOUT; default="30s"] [--tracking-mode=TRACKING_MODE]
         [--cache-key-query-string-blacklist=[QUERY_STRING,...]
           | --cache-key-query-string-whitelist=QUERY_STRING,[...]]
+        [--custom-metrics=[CUSTOM_METRICS,...]
+          | --custom-metrics-file=[CUSTOM_METRICS,...]]
         [--global | --region=REGION]
         [--global-health-checks | --health-checks-region=HEALTH_CHECKS_REGION]
         [GCLOUD_WIDE_FLAG ...]
@@ -754,6 +756,72 @@ FLAGS
           --cache-key-query-string-blacklist, not both. '&' and '=' will be
           percent encoded and not treated as delimiters. Can only be applied
           for global resources.
+
+     At most one of these can be specified:
+
+       --custom-metrics=[CUSTOM_METRICS,...]
+          List of custom metrics that are used for WEIGHTED_ROUND_ROBIN
+          BackendService locality_lb_policy.
+
+          Example:
+
+              $ gcloud beta compute backend-services create \
+                  --custom-metrics='name=my-signal,dryRun=true'
+              $ gcloud beta compute backend-services create \
+                  --custom-metrics='name=my-signal,dryRun=true' \
+                  --custom-metrics='name=my-signal2'
+              $ gcloud beta compute backend-services create \
+                  --custom-metrics='[{"name" : "my-signal", "dryRun" : true},
+               {"name" : "my-signal2"}]'
+
+          Sets custom_metrics value.
+
+           dryRun
+              Sets dryRun value.
+
+           name
+              Required, Sets name value.
+
+          Shorthand Example:
+
+              --custom-metrics=dryRun=boolean,name=string --custom-metrics=dryRun=boolean,name=string
+
+          JSON Example:
+
+              --custom-metrics='[{"dryRun": boolean, "name": "string"}]'
+
+          File Example:
+
+              --custom-metrics=path_to_file.(yaml|json)
+
+       --custom-metrics-file=[CUSTOM_METRICS,...]
+          File path to json file with custom metrics that are used for
+          WEIGHTED_ROUND_ROBIN BackendService locality_lb_policy.
+
+          Example:
+
+              $ gcloud beta compute backend-services create \
+                  --custom-metrics-file='customMetric.json'
+
+          Sets custom_metrics_file value.
+
+           dryRun
+              Sets dryRun value.
+
+           name
+              Required, Sets name value.
+
+          Shorthand Example:
+
+              --custom-metrics-file=dryRun=boolean,name=string --custom-metrics-file=dryRun=boolean,name=string
+
+          JSON Example:
+
+              --custom-metrics-file='[{"dryRun": boolean, "name": "string"}]'
+
+          File Example:
+
+              --custom-metrics-file=path_to_file.(yaml|json)
 
      At most one of these can be specified:
 

@@ -5,7 +5,8 @@ NAME
 SYNOPSIS
     gcloud alpha compute interconnects groups create NAME
         --intended-topology-capability=INTENDED_TOPOLOGY_CAPABILITY
-        [--description=DESCRIPTION] [GCLOUD_WIDE_FLAG ...]
+        [--description=DESCRIPTION] [--interconnects=[INTERCONNECT,...]]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) gcloud alpha compute interconnects groups create is used to create
@@ -15,12 +16,23 @@ DESCRIPTION
     For an example, refer to the EXAMPLES section below.
 
 EXAMPLES
-    To create an interconnect group capable of PRODUCTION_NON_CRITICAL, run:
+    To create an interconnect group capable of PRODUCTION_CRITICAL, run:
+
+        $ gcloud alpha compute interconnects groups create \
+            example-interconnect-group \
+            --intended-topology-capability=PRODUCTION_CRITICAL \
+            --description="Example interconnect group"
+
+    It is easy to add members to an existing interconnect group after creation
+    using the add-members command.
+
+    To create an interconnect group capable of PRODUCTION_NON_CRITICAL, with
+    two members at creation time, run:
 
         $ gcloud alpha compute interconnects groups create \
             example-interconnect-group \
             --intended-topology-capability=PRODUCTION_NON_CRITICAL \
-            --description="Example interconnect group"
+            --interconnects=interconnect-1,interconnect-2
 
 POSITIONAL ARGUMENTS
      NAME
@@ -34,6 +46,9 @@ REQUIRED FLAGS
 OPTIONAL FLAGS
      --description=DESCRIPTION
         An optional, textual description for the interconnect group.
+
+     --interconnects=[INTERCONNECT,...]
+        Member interconnects to add to the interconnect group initially.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

@@ -6,6 +6,9 @@ SYNOPSIS
         [--provisioned-iops=PROVISIONED_IOPS]
         [--provisioned-throughput=PROVISIONED_THROUGHPUT] [--size=SIZE]
         [--update-labels=[KEY=VALUE,...]]
+        [--append-licenses=[LICENSE,LICENSE...,...]
+          --remove-licenses=[LICENSE,LICENSE...,...]
+          --replace-license=OLD_LICENSE,NEW_LICENSE,...,[...]]
         [--clear-architecture | --update-architecture=UPDATE_ARCHITECTURE]
         [--clear-labels | --remove-labels=[KEY,...]]
         [--clear-user-licenses | --update-user-licenses=[LICENSE,...]]
@@ -34,6 +37,27 @@ EXAMPLES
 
         $ gcloud alpha compute disks describe example-disk \
           --format="default(labels)"
+
+    To append licenses to the disk, run:
+
+        $ gcloud alpha compute disks update example-disk \
+          --zone=us-central1-a \
+          --append-licenses=projects/license-project/global/licenses/\
+        license-1,projects/license-project/global/licenses/license-2
+
+    To remove licenses from the disk, run:
+
+        $ gcloud alpha compute disks update example-disk \
+          --zone=us-central1-a \
+          --replace-licenses=projects/license-project/global/licenses/\
+        license-1,projects/license-project/global/licenses/license-2
+
+    To replace a license on the disk, run:
+
+        $ gcloud alpha compute disks update example-disk \
+          --zone=us-central1-a \
+          --replace-license=projects/license-project/global/licenses/\
+        old-license,projects/license-project/global/licenses/new-license
 
 POSITIONAL ARGUMENTS
      DISK_NAME
@@ -70,6 +94,23 @@ FLAGS
         (-), underscores (_), lowercase characters, and numbers. Values must
         contain only hyphens (-), underscores (_), lowercase characters, and
         numbers.
+
+     --append-licenses=[LICENSE,LICENSE...,...]
+        "A list of license URIs or license codes. These licenses will be
+        appended to the existing licenses on the disk. Provided licenses can be
+        either license URIs or license codes but not a mix of both.
+
+     --remove-licenses=[LICENSE,LICENSE...,...]
+        A list of license URIs or license codes. If present in the set of
+        existing licenses, these licenses will be removed. If not present, this
+        is a no-op. Provided licenses can be either license URIs or license
+        codes but not a mix of both.
+
+     --replace-license=OLD_LICENSE,NEW_LICENSE,...,[...]
+        A list of license URIs or license codes. The first license is the
+        license to be replaced and the second license is the replacement
+        license. Provided licenses can be either license URIs or license codes
+        but not a mix of both.
 
      At most one of these can be specified:
 

@@ -6,8 +6,11 @@ SYNOPSIS
     gcloud network-connectivity service-connection-policies create
         SERVICE_CONNECTION_POLICY --network=NETWORK
         --service-class=SERVICE_CLASS
-        (--subnets=[SUBNETS,...] : --psc-connection-limit=PSC_CONNECTION_LIMIT)
-        [--async] [--description=DESCRIPTION] [--labels=[KEY=VALUE,...]]
+        (--subnets=[SUBNETS,...]
+          : --allowed-google-producers-resource-hierarchy-level=[ALLOWED_GOOGLE_PRODUCERS_RESOURCE_HIERARCHY_LEVEL,
+          ...] --producer-instance-location=PRODUCER_INSTANCE_LOCATION
+          --psc-connection-limit=PSC_CONNECTION_LIMIT) [--async]
+        [--description=DESCRIPTION] [--labels=[KEY=VALUE,...]]
         [--region=REGION] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -16,12 +19,20 @@ DESCRIPTION
 EXAMPLES
     Create a Service Connection Policy with name my-service-conn-policy for
     network projects/my-project/global/networks/net1 and service class
-    my-service-class-ad32fa4b in region us-central1.
+    my-service-class-ad32fa4b in region us-central1 using subnet
+    projects/my-project/regions/us-central1/subnetworks/subnet1 subject to
+    custom-resource-hierarchy-levels that allows connections from
+    Google-managed producer instances in projects/my-project.
 
         $ gcloud network-connectivity service-connection-policies create \
             my-service-conn-policy \
             --network="projects/my-project/global/networks/net1" \
-            --service-class=my-service-class-ad32fa4b --region=us-central1
+            --service-class=my-service-class-ad32fa4b --region=us-central1 \
+            --subnets=projects/my-project/regions/us-central1/subnetworks/\
+        subnet1 --psc-connection-limit=100 \
+            --producer-instance-location=custom-resource-hierarchy-levels \
+            --allowed-google-producers-resource-hierarchy-level=projects/\
+        my-project
 
 POSITIONAL ARGUMENTS
      Service connection policy resource - Name of the Service Connection Policy
@@ -98,6 +109,24 @@ REQUIRED FLAGS
 
             To set the subnetwork attribute:
             ▫ provide the argument --subnets on the command line.
+
+       --allowed-google-producers-resource-hierarchy-level=[ALLOWED_GOOGLE_PRODUCERS_RESOURCE_HIERARCHY_LEVEL,...]
+          List of projects, folders, or orgs where the producer instance can be
+          located in the form "projects/123456789", folders/123456789", or
+          "organizations/123456789".
+
+       --producer-instance-location=PRODUCER_INSTANCE_LOCATION
+          Option that determines where the producer instances can be located
+          for which connections can be created in the network controlled by
+          this policy. PRODUCER_INSTANCE_LOCATION must be one of:
+
+           custom-resource-hierarchy-levels
+              The producer instance must be located in one of the values
+              provided in the allowed-google-producers-resource-hierarchy-level
+              flag.
+           none
+              The producer instance must be within the same project as this
+              connection policy.
 
        --psc-connection-limit=PSC_CONNECTION_LIMIT
           Max number of PSC connections for this policy.

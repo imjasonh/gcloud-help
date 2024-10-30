@@ -1,0 +1,121 @@
+NAME
+    gcloud beta eventarc message-buses publish - publish to an Eventarc message
+        bus
+
+SYNOPSIS
+    gcloud beta eventarc message-buses publish
+        (MESSAGE_BUS : --location=LOCATION)
+        (--avro-message=AVRO_MESSAGE | --json-message=JSON_MESSAGE
+          | [--event-data=EVENT_DATA --event-id=EVENT_ID
+          --event-source=EVENT_SOURCE --event-type=EVENT_TYPE
+          : --event-attributes=[ATTRIBUTE=VALUE,...]]) [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Publish to an Eventarc message bus.
+
+EXAMPLES
+    To publish an event to the message bus my-message-bus with event id 1234,
+    event type event-provider.event.v1.eventType, event source
+    //event-provider/event/source, event data { "key": "value" } and event
+    attributes of attribute1=value, run:
+
+        $ gcloud beta eventarc message-buses publish my-message-bus \
+            --location=us-central1 --event-id=1234 \
+            --event-type=event-provider.event.v1.eventType \
+            --event-source="//event-provider/event/source" \
+            --event-data='{"key": "value"}' \
+            --event-attributes=attribute1=value
+
+    To publish an event to the message bus my-message-bus with a json message,
+    run:
+
+        $ gcloud beta eventarc message-buses publish my-message-bus \
+            --location=us-central1 \
+            --json-message='{"id": 1234, "type":
+         "event-provider.event.v1.eventType", "source":
+         "//event-provider/event/source", "specversion": "1.0", "data":
+         {"key": "value"}}'
+
+POSITIONAL ARGUMENTS
+     Message bus resource - Message bus to publish to. The arguments in this
+     group can be used to specify the attributes of this resource. (NOTE) Some
+     attributes are not given arguments in this group but can be set in other
+     ways.
+
+     To set the project attribute:
+      ◆ provide the argument message_bus on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       MESSAGE_BUS
+          ID of the message bus or fully qualified identifier for the message
+          bus.
+
+          To set the message-bus attribute:
+          ▸ provide the argument message_bus on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          The location for the Eventarc message bus, which should be one of the
+          supported regions. Alternatively, set the [eventarc/location]
+          property.
+
+          To set the location attribute:
+          ▸ provide the argument message_bus on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property eventarc/location.
+
+REQUIRED FLAGS
+     Exactly one of these must be specified:
+
+       --avro-message=AVRO_MESSAGE
+          An Avro message to publish to the message bus.
+
+       --json-message=JSON_MESSAGE
+          A JSON message to publish to the message bus.
+
+       --event-data=EVENT_DATA
+          An event data. The event data of a published event.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --event-id=EVENT_ID
+          An event id. The id of a published event.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --event-source=EVENT_SOURCE
+          An event source. The event source of a published event.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --event-type=EVENT_TYPE
+          An event type. The event type of a published event.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --event-attributes=[ATTRIBUTE=VALUE,...]
+          Event attributes. The event attributes of a published event.This flag
+          can be repeated to add more attributes.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice.
+

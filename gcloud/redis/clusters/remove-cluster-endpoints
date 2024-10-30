@@ -1,0 +1,110 @@
+NAME
+    gcloud redis clusters remove-cluster-endpoints - remove existing
+        Memorystore cluster endpoints
+
+SYNOPSIS
+    gcloud redis clusters remove-cluster-endpoints (CLUSTER : --region=REGION)
+        --cluster-endpoint=[psc-connection=PSC-CONNECTION] [--async]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    To remove one cluster endpoint from an existing Redis cluster, two PSC
+    connections MUST be removed as a pair: one to the Redis cluster's discovery
+    service attachment and the other to its additional service attachment.
+
+    Multiple cluster endpoints COULD be removed simultaneously.
+
+    This command can fail for the following reasons:
+      ▪ The cluster specified does not exist.
+      ▪ Some connections in the to be removed list do not exist.
+
+EXAMPLES
+    To remove an endpoint from redis cluster, run:
+
+        $ gcloud redis clusters remove-cluster-endpoints my-redis-cluster \
+            remove-cluster-endpoints \
+            --cluster-endpoint='["psc-connection":[{"psc-connection-id":"$PS\
+        C_CONNECTION_ID"},{$ADDITIONAL_PSC_CONNECTION}]]' \
+            --cluster_endpoint=$ADDITIONAL_CLUSTER_ENDPOINT \
+            $PSCConnectionID SHOULD be extracted from forwarding rules. \
+            E.g. 75311697652483351
+
+POSITIONAL ARGUMENTS
+     Cluster resource - Arguments and flags that specify the Memorystore Redis
+     cluster you want to update. The arguments in this group can be used to
+     specify the attributes of this resource. (NOTE) Some attributes are not
+     given arguments in this group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument cluster on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       CLUSTER
+          ID of the cluster or fully qualified identifier for the cluster.
+
+          To set the cluster attribute:
+          ▸ provide the argument cluster on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --region=REGION
+          The name of the Redis region of the cluster. Overrides the default
+          redis/region property value for this command invocation.
+
+          To set the region attribute:
+          ▸ provide the argument cluster on the command line with a fully
+            specified name;
+          ▸ provide the argument --region on the command line;
+          ▸ set the property redis/region.
+
+REQUIRED FLAGS
+     --cluster-endpoint=[psc-connection=PSC-CONNECTION]
+        Required, Resource details of a redis cluster endpoint.
+
+         psc-connection
+            Sets psc-connection value.
+
+             psc-connection-id
+                Sets psc-connection-id value.
+
+        Shorthand Example:
+
+            --cluster-endpoint='psc-connection=[{"psc-connection-id": "string"}]' --cluster-endpoint='psc-connection=[{"psc-connection-id": "string"}]'
+
+        JSON Example:
+
+            --cluster-endpoint='[{"psc-connection": [{"psc-connection-id": "string"}]}]'
+
+        File Example:
+
+            --cluster-endpoint=path_to_file.(yaml|json)
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the redis/v1 API. The full documentation for this API can
+    be found at: https://cloud.google.com/memorystore/docs/redis/
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha redis clusters remove-cluster-endpoints
+
+        $ gcloud beta redis clusters remove-cluster-endpoints
+

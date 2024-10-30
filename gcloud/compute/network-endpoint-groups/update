@@ -4,9 +4,10 @@ NAME
 
 SYNOPSIS
     gcloud compute network-endpoint-groups update NAME
-        (--add-endpoint=[fqdn=FQDN],[instance=INSTANCE],[ip=IP],[port=PORT]
+        (--add-endpoint=[fqdn=FQDN],
+          [instance=INSTANCE],[ip=IP],[ipv6=IPV6],[port=PORT]
           | --remove-endpoint=[fqdn=FQDN],
-          [instance=INSTANCE],[ip=IP],[port=PORT])
+          [instance=INSTANCE],[ip=IP],[ipv6=IPV6],[port=PORT])
         [--global | --region=REGION | --zone=ZONE] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -37,7 +38,7 @@ REQUIRED FLAGS
 
      Exactly one of these must be specified:
 
-       --add-endpoint=[fqdn=FQDN],[instance=INSTANCE],[ip=IP],[port=PORT]
+       --add-endpoint=[fqdn=FQDN],[instance=INSTANCE],[ip=IP],[ipv6=IPV6],[port=PORT]
           The network endpoint to add to the network endpoint group. Keys used
           depend on the endpoint type of the NEG.
 
@@ -57,6 +58,10 @@ REQUIRED FLAGS
               specified, then the primary IP address for the VM instance in
               the network that the network endpoint group belongs to is
               used.
+
+              *ipv6* - Optional IPv6 address of the network endpoint. The IPv6
+              address must belong to a VM in compute engine (either the internal
+              or external IPv6 address).
 
               *port* - Required endpoint port unless NEG default port is set.
 
@@ -107,7 +112,7 @@ REQUIRED FLAGS
               IP address must be the VM's network interface address. If not
               specified, the primary NIC address is used.
 
-       --remove-endpoint=[fqdn=FQDN],[instance=INSTANCE],[ip=IP],[port=PORT]
+       --remove-endpoint=[fqdn=FQDN],[instance=INSTANCE],[ip=IP],[ipv6=IPV6],[port=PORT]
           The network endpoint to detach from the network endpoint group. Keys
           used depend on the endpoint type of the NEG.
 
@@ -118,6 +123,9 @@ REQUIRED FLAGS
               instance in the NEG are detached.
 
               *ip* - Optional IPv4 address of the network endpoint to detach.
+              If specified port must be provided as well.
+
+              *ipv6* - Optional IPv6 address of the network endpoint to detach.
               If specified port must be provided as well.
 
               *port* - Optional port of the network endpoint to detach.

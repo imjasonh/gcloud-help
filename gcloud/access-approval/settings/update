@@ -6,6 +6,11 @@ SYNOPSIS
         [--active_key_version=ACTIVE_KEY_VERSION]
         [--enrolled_services=ENROLLED_SERVICES]
         [--notification_emails=NOTIFICATION_EMAILS]
+        [--notification_pubsub_topic=NOTIFICATION_PUBSUB_TOPIC]
+        [--prefer_no_broad_approval_requests=PREFER_NO_BROAD_APPROVAL_REQUESTS]
+        [--preferred_request_expiration_days=PREFERRED_REQUEST_EXPIRATION_DAYS]
+        [--request_scope_max_width_preference=REQUEST_SCOPE_MAX_WIDTH_PREFERENCE]
+        [--require_customer_visible_justification=REQUIRE_CUSTOMER_VISIBLE_JUSTIFICATION]
         [--folder=FOLDER | --organization=ORGANIZATION | --project=PROJECT]
         [GCLOUD_WIDE_FLAG ...]
 
@@ -39,6 +44,26 @@ EXAMPLES
           --active_key_version='projects/p1/locations/global/keyRings/sign\
         ing-keys/cryptoKeys/signing-key/cryptoKeyVersions/1'
 
+    Update preferred request expiration days for project p1:
+
+        $ gcloud access-approval settings update --project=p1 \
+          --preferred_request_expiration_days=5
+
+    Enable prefer no broad approval requests for project p1:
+
+        $ gcloud access-approval settings update --project=p1 \
+          --prefer_no_broad_approval_requests=true
+
+    Update notification pubsub topic for project p1:
+
+        $ gcloud access-approval settings update --project=p1 \
+          --notification_pubsub_topic='exampleTopic'
+
+    Update request scope max width preference for project p1:
+
+        $ gcloud access-approval settings update --project=p1 \
+          --request_scope_max_width_preference=PROJECT
+
 FLAGS
      --active_key_version=ACTIVE_KEY_VERSION
         The asymmetric crypto key version to use for signing approval requests.
@@ -53,6 +78,29 @@ FLAGS
         Comma-separated list of email addresses to which notifications relating
         to approval requests should be sent or '' to clear all saved
         notification emails.
+
+     --notification_pubsub_topic=NOTIFICATION_PUBSUB_TOPIC
+        The pubsub topic to publish notifications to when approval requests are
+        made.
+
+     --prefer_no_broad_approval_requests=PREFER_NO_BROAD_APPROVAL_REQUESTS
+        If set to true it will communicate the preference to Google personnel
+        to request access with as targeted a resource scope as possible.
+
+     --preferred_request_expiration_days=PREFERRED_REQUEST_EXPIRATION_DAYS
+        The default expiration time for approval requests. This value must be
+        between 1 and 30. Note that this can be overridden at time of Approval
+        Request creation and modified by the customer at approval time.
+
+     --request_scope_max_width_preference=REQUEST_SCOPE_MAX_WIDTH_PREFERENCE
+        The preference for the broadest scope of access for access requests
+        without a specific method. REQUEST_SCOPE_MAX_WIDTH_PREFERENCE must be
+        one of: ORGANIZATION, FOLDER, PROJECT.
+
+     --require_customer_visible_justification=REQUIRE_CUSTOMER_VISIBLE_JUSTIFICATION
+        The preference to configure if a customer visible justification (i.e.
+        Vector Case) is required for a Googler to create an Access Ticket to
+        send to the customer when attempting to access customer resources.
 
      At most one of these can be specified:
 

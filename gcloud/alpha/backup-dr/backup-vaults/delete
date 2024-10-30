@@ -5,7 +5,8 @@ NAME
 SYNOPSIS
     gcloud alpha backup-dr backup-vaults delete
         (BACKUP_VAULT : --location=LOCATION) [--allow-missing] [--no-async]
-        [--force-delete] [GCLOUD_WIDE_FLAG ...]
+        [--ignore-backup-plan-references] [--ignore-inactive-datasources]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Delete the specified Backup Vault.
@@ -17,10 +18,17 @@ EXAMPLES
             --location=MY_LOCATION
 
     To override restrictions against the deletion of a backup vault
-    BACKUP_VAULT in location MY_LOCATION, run:
+    BACKUP_VAULT containing inactive datasources in location MY_LOCATION, run:
 
         $ gcloud alpha backup-dr backup-vaults delete BACKUP_VAULT \
-            --location=MY_LOCATION --force-delete
+            --location=MY_LOCATION --ignore-inactive-datasources
+
+    To override restrictions against the deletion of a backup vault
+    BACKUP_VAULT containing backup plan references in location MY_LOCATION,
+    run:
+
+        $ gcloud alpha backup-dr backup-vaults delete BACKUP_VAULT \
+            --location=MY_LOCATION --ignore-backup-plan-references
 
 POSITIONAL ARGUMENTS
      Backup Vault resource - Name of the backup vault to delete. Before you
@@ -64,11 +72,15 @@ FLAGS
      --no-async
         Wait for the operation in progress to complete.
 
-     --force-delete
+     --ignore-backup-plan-references
+        If set, the following restrictions against deletion of the backup vault
+        instance can be overridden: * deletion of a backup vault instance being
+        actively referenced by a backup plan.
+
+     --ignore-inactive-datasources
         If set, the following restrictions against deletion of the backup vault
         instance can be overridden: * deletion of a backup vault instance
-        containing no backups,but still contains empty datasources. * deletion
-        of a backup vault instance being actively referenced by a backup plan.
+        containing no backups,but still contains empty datasources.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

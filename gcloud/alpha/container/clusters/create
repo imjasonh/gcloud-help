@@ -10,6 +10,7 @@ SYNOPSIS
           gpu-sharing-strategy=GPU_SHARING_STRATEGY,
           max-shared-clients-per-gpu=MAX_SHARED_CLIENTS_PER_GPU],...]]
         [--addons=[ADDON,...]] [--allow-route-overlap] [--async]
+        [--auto-monitoring-scope=AUTO_MONITORING_SCOPE]
         [--autoprovisioning-enable-insecure-kubelet-readonly-port]
         [--autoprovisioning-network-tags=TAGS,[TAGS,...]]
         [--autoprovisioning-resource-manager-tags=[KEY=VALUE,...]]
@@ -210,7 +211,8 @@ FLAGS
         ADDON must be one of: HttpLoadBalancing, HorizontalPodAutoscaling,
         KubernetesDashboard, NetworkPolicy, NodeLocalDNS, ConfigConnector,
         GcePersistentDiskCsiDriver, GcpFilestoreCsiDriver, BackupRestore,
-        GcsFuseCsiDriver, RayOperator, Istio, CloudBuild, CloudRun.
+        GcsFuseCsiDriver, ParallelstoreCsiDriver, RayOperator, Istio,
+        CloudBuild, CloudRun.
 
      --allow-route-overlap
         Allows the provided cluster CIDRs to overlap with existing routes that
@@ -227,6 +229,12 @@ FLAGS
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
+
+     --auto-monitoring-scope=AUTO_MONITORING_SCOPE
+        Enables Auto-Monitoring for a specific scope within the cluster. ALL:
+        Enables Auto-Monitoring for all supported workloads within the cluster.
+        NONE: Disables Auto-Monitoring. AUTO_MONITORING_SCOPE must be one of:
+        ALL, NONE.
 
      --autoprovisioning-enable-insecure-kubelet-readonly-port
         Enables the Kubelet's insecure read only port for Autoprovisioned Node
@@ -1328,6 +1336,11 @@ FLAGS
           net.ipv4.tcp_rmem                           Any positive integer tuple
           net.ipv4.tcp_wmem                           Any positive integer tuple
           net.ipv4.tcp_tw_reuse                       Must be {0, 1}
+          kernel.shmmni                               Must be [4096, 32768]
+          kernel.shmmax                               Must be [0,
+                                                      18446744073692774399]
+          kernel.shmall                               Must be [0,
+                                                      18446744073692774399]
 
         List of supported hugepage size in 'hugepageConfig'.
 
