@@ -1,19 +1,20 @@
 NAME
-    gcloud alpha transfer agents delete - delete a Transfer Service transfer
+    gcloud alpha transfer agents delete - delete Transfer Service transfer
         agents
 
 SYNOPSIS
-    gcloud alpha transfer agents delete [--ids=[IDS,...] | --all | --uninstall]
-        [GCLOUD_WIDE_FLAG ...]
+    gcloud alpha transfer agents delete
+        [--container-manager=CONTAINER_MANAGER; default="docker"]
+        [--ids=[IDS,...] | --all | --uninstall] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) Delete agents and remove agent resources from your machine.
+    (ALPHA) Delete Transfer Service agents from your machine.
 
 EXAMPLES
     If you plan to delete specific agents, you can list which agents are
     running on your machine by running:
 
-        $ docker container list --all \
+        $ docker (or podman) container list --all \
             --filter ancestor=gcr.io/cloud-ingest/tsop-agent
 
     Then run:
@@ -21,6 +22,10 @@ EXAMPLES
         $ gcloud alpha transfer agents delete --ids=id1,id2,...
 
 FLAGS
+     --container-manager=CONTAINER_MANAGER; default="docker"
+        The container manager to use for running agents. CONTAINER_MANAGER must
+        be one of: docker, podman.
+
      At most one of these can be specified:
 
        --ids=[IDS,...]
@@ -31,9 +36,10 @@ FLAGS
           Delete all agents running on your machine.
 
        --uninstall
-          Fully uninstall the agent Docker image in addition to deleting the
-          agents. Uninstalling the Docker image will free up space, but you'll
-          need to reinstall it to run agents on this machine in the future.
+          Fully uninstall the agent container image in addition to deleting the
+          agents. Uninstalling the container image will free up space, but
+          you'll need to reinstall it to run agents on this machine in the
+          future.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

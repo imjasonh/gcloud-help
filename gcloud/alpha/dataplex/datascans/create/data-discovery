@@ -1,0 +1,149 @@
+NAME
+    gcloud alpha dataplex datascans create data-discovery - create a Dataplex
+        data discovery scan job
+
+SYNOPSIS
+    gcloud alpha dataplex datascans create data-discovery
+        (DATASCAN : --location=LOCATION)
+        --data-source-resource=DATA_SOURCE_RESOURCE [--description=DESCRIPTION]
+        [--display-name=DISPLAY_NAME] [--labels=[KEY=VALUE,...]]
+        [--async | --validate-only]
+        [--bigquery-publishing-connection=BIGQUERY_PUBLISHING_CONNECTION
+          --bigquery-publishing-table-type=BIGQUERY_PUBLISHING_TABLE_TYPE]
+        [--on-demand=ON_DEMAND | --schedule=SCHEDULE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Allows users to auto discover BigQuery External and BigLake tables
+    from underlying Cloud Storage buckets.
+
+EXAMPLES
+    To create a data discovery scan data-discovery-datascan in project
+    test-project located in us-central1 on Cloud Storage bucket test-bucket,
+    run:
+
+        $ gcloud alpha dataplex datascans create data-discovery \
+            data-discovery-datascan --project=test-project \
+            --location=us-central1 \
+            --data-source-resource="//storage.googleapis.com/projects/test-p\
+        roject/buckets/test-bucket"
+
+POSITIONAL ARGUMENTS
+     Datascan resource - Arguments and flags that define the Dataplex datascan
+     you want to create a data discovery scan for. The arguments in this group
+     can be used to specify the attributes of this resource. (NOTE) Some
+     attributes are not given arguments in this group but can be set in other
+     ways.
+
+     To set the project attribute:
+      ◆ provide the argument datascan on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       DATASCAN
+          ID of the datascan or fully qualified identifier for the datascan.
+
+          To set the dataScans attribute:
+          ▸ provide the argument datascan on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          The location of the Dataplex resource.
+
+          To set the location attribute:
+          ▸ provide the argument datascan on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property dataplex/location.
+
+REQUIRED FLAGS
+     --data-source-resource=DATA_SOURCE_RESOURCE
+        Fully-qualified service resource name of the cloud resource bucket that
+        contains the data for the data discovery scan, of the form:
+        //storage.googleapis.com/projects/{project_id_or_number}/buckets/{bucket_id}.
+
+OPTIONAL FLAGS
+     --description=DESCRIPTION
+        Description of the data discovery scan.
+
+     --display-name=DISPLAY_NAME
+        Display name of the data discovery scan.
+
+     --labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     At most one of --async | --validate-only can be specified.
+
+     At most one of these can be specified:
+
+       --async
+          Return immediately, without waiting for the operation in progress to
+          complete.
+
+       --validate-only
+          Validate the create action, but don't actually perform it.
+
+     Data spec for the data discovery scan.
+
+       BigQuery publishing config arguments for the data discovery scan.
+
+         --bigquery-publishing-connection=BIGQUERY_PUBLISHING_CONNECTION
+            BigQuery connection to use for auto discovering cloud resource
+            bucket to BigLake tables in format
+            projects/{project_id}/locations/{location_id}/connections/{connection_id}.
+            Connection is required for BIGLAKE BigQuery publishing table type.
+
+         --bigquery-publishing-table-type=BIGQUERY_PUBLISHING_TABLE_TYPE
+            BigQuery table type to discover the cloud resource bucket. Can be
+            either EXTERNAL or BIGLAKE. If not specified, the table type will
+            be set to EXTERNAL. BIGQUERY_PUBLISHING_TABLE_TYPE must be one of:
+
+             BIGLAKE
+                GCS Cloud Storage bucket is discoverd to BigQuery BigLake
+                tables.
+             EXTERNAL
+                default value. GCS Cloud Storage bucket is discoverd to
+                BigQuery External tables.
+
+     Data discovery scan execution settings.
+
+       Data discovery scan scheduling and trigger settings.
+
+       At most one of these can be specified:
+
+         --on-demand=ON_DEMAND
+            If set, the scan runs one-time shortly after data discovery scan
+            creation.
+
+         --schedule=SCHEDULE
+            Cron schedule (https://en.wikipedia.org/wiki/Cron) for running
+            scans periodically. To explicitly set a timezone to the cron tab,
+            apply a prefix in the cron tab: "CRON_TZ=${IANA_TIME_ZONE}" or
+            "TZ=${IANA_TIME_ZONE}". The ${IANA_TIME_ZONE} may only be a valid
+            string from IANA time zone database. For example,
+            CRON_TZ=America/New_York 1 * * * * or TZ=America/New_York 1 * * *
+            *. This field is required for RECURRING scans.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

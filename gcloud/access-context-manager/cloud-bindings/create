@@ -6,16 +6,18 @@ SYNOPSIS
     gcloud access-context-manager cloud-bindings create --group-key=GROUP_KEY
         [--binding-file=YAML_FILE] [--dry-run-level=[DRY_RUN_LEVEL,...]]
         [--level=[LEVEL,...]] [--organization=ORGANIZATION]
+        [--session-length=SESSION_LENGTH]
+        [--session-reauth-method=SESSION_REAUTH_METHOD; default="login"]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    Create a new cloud access binding. The access level will be globally bound
-    with the group.
+    Create a new cloud access binding. The access level and/or session settings
+    will be globally bound with the group.
 
-    Allowlisted Applications can be specified to limit the scope of the cloud
-    access binding in the 'binding-file'. In such case, the access level
-    specified in the yaml file will be bound with the group and the allowlisted
-    applications.
+    To apply access level and/or session settings to a specific application,
+    specify the restricted application in the 'binding-file'. In such case, the
+    access level and/or session settings specified in the yaml file will be
+    bound with the group and the restricted applications.
 
 EXAMPLES
     To create a new cloud access binding, run:
@@ -46,9 +48,40 @@ EXAMPLES
             --level=accessPolicies/123/accessLevels/abc \
             --dry-run-level=accessPolicies/123/accessLevels/def
 
+    To create a new cloud access binding with global session settings, specify
+    your session length using an ISO duration string and the session-length
+    flag. For example:
+
+        $ gcloud access-context-manager cloud-bindings create \
+            --group-key=my-group-key --organization='1234567890' \
+            --session-length=2h
+
+    To set a particular session reauth method for these session settings, run:
+
+        $ gcloud access-context-manager cloud-bindings create \
+            --group-key=my-group-key --organization='1234567890' \
+            --session-length=2h --session-reauth-method=LOGIN
+
+    To create session settings for a particular application, supply a YAML file
+    and run:
+
+        $ gcloud access-context-manager cloud-bindings create \
+            --group-key=my-group-key --organization='1234567890' \
+            --binding-file='binding.yaml'
+
+    Global and per-app session settings can be set on the same group, along
+    with access levels. For example:
+
+        $ gcloud access-context-manager cloud-bindings create \
+            --group-key=my-group-key --organization='1234567890' \
+            --session-length=2h --session-reauth-method=LOGIN \
+            --level=accessPolicies/123/accessLevels/abc \
+            --dry-run-level=accessPolicies/123/accessLevels/def \
+            --binding-file='binding.yaml'
+
 REQUIRED FLAGS
      --group-key=GROUP_KEY
-        Google Group id whose members are subject to the restrictions of this
+        Google Group ID whose members are subject to the restrictions of this
         binding.
 
 OPTIONAL FLAGS
@@ -73,6 +106,44 @@ OPTIONAL FLAGS
 
      --organization=ORGANIZATION
         Parent organization for this binding.
+
+     --session-length=SESSION_LENGTH
+        The maximum lifetime of a user session provided as an ISO 8601 duration
+        string. Must be at least one hour or zero seconds, and no more than
+        twenty-four hours. Granularity is limited to seconds.
+
+        When --session-length=0 then users in the group attached to this
+        binding will have infinite session length, effectively disabling the
+        session settings.
+
+        A session begins when a user signs in successfully. If a user signs out
+        before the end of the session lifetime, a new login creates a new
+        session with a fresh lifetime. When a session expires, the user is
+        asked to re-authenticate in accordance with session-method.
+
+        Setting --session-reauth-method when --session-length is empty raises
+        an error.
+
+     --session-reauth-method=SESSION_REAUTH_METHOD; default="login"
+        Specifies the type of re-authentication challenge given to the user
+        when their session expires. Defaults to --session-reauth-method=login
+        if unspecified and --session-length is set. Cannot be used when
+        --session-length is empty or 0.
+
+        SESSION_REAUTH_METHOD must be one of:
+
+         login
+            The user must complete a regular login.
+
+         password
+            The user will only be required to enter their password.
+
+         security-key
+            The user must re-autheticate using their security key. Before
+            enabling this session reauth method, ensure a security key is
+            properly configured for the user. For help configuring your
+            security key, see
+            https://support.google.com/a/answer/2537800?hl=en#zippy=%2Cview-add-or-remove-security-keys
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

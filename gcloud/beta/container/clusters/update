@@ -4,7 +4,8 @@ NAME
 
 SYNOPSIS
     gcloud beta container clusters update NAME
-        (--autoprovisioning-enable-insecure-kubelet-readonly-port
+        (--autoprovisioning-cgroup-mode=AUTOPROVISIONING_CGROUP_MODE
+          | --autoprovisioning-enable-insecure-kubelet-readonly-port
           | --autoprovisioning-network-tags=[TAGS,...]
           | --autoprovisioning-resource-manager-tags=[KEY=VALUE,...]
           | --autoscaling-profile=AUTOSCALING_PROFILE | --clear-fleet-project
@@ -28,7 +29,8 @@ SYNOPSIS
           | --enable-service-externalips | --enable-shielded-nodes
           | --enable-stackdriver-kubernetes | --enable-vertical-pod-autoscaling
           | --fleet-project=PROJECT_ID_OR_NUMBER | --gateway-api=GATEWAY_API
-          | --generate-password | --identity-provider=IDENTITY_PROVIDER
+          | --generate-password | --hpa-profile=HPA_PROFILE
+          | --identity-provider=IDENTITY_PROVIDER
           | --in-transit-encryption=IN_TRANSIT_ENCRYPTION
           | --logging-variant=LOGGING_VARIANT | --maintenance-window=START_TIME
           | --network-performance-configs=[PROPERTY1=VALUE1,...]
@@ -128,6 +130,32 @@ POSITIONAL ARGUMENTS
 
 REQUIRED FLAGS
      Exactly one of these must be specified:
+
+       --autoprovisioning-cgroup-mode=AUTOPROVISIONING_CGROUP_MODE
+          Sets the cgroup mode for auto-provisioned nodes.
+
+          Updating this flag triggers an update using surge upgrades of all
+          existing auto-provisioned nodes to apply the new value of cgroup
+          mode.
+
+          For an Autopilot cluster, the specified cgroup mode will be set on
+          all existing and new nodes in the cluster. For a Standard cluster,
+          the specified cgroup mode will be set on all existing and new
+          auto-provisioned node pools in the cluster.
+
+          If not set, GKE uses cgroupv2 for new nodes when the cluster was
+          created running 1.26 or later, and cgroupv1 for clusters created
+          running 1.25 or earlier. To check your initial cluster version, run
+          gcloud container clusters describe [NAME]
+          --format="value(initialClusterVersion)"
+
+          For clusters created running version 1.26 or later, you can't set the
+          cgroup mode to v1.
+
+          To learn more, see:
+          https://cloud.google.com/kubernetes-engine/docs/how-to/migrate-cgroupv2.
+
+          AUTOPROVISIONING_CGROUP_MODE must be one of: default, v1, v2.
 
        --autoprovisioning-enable-insecure-kubelet-readonly-port
           Enables the Kubelet's insecure read only port for Autoprovisioned
@@ -478,6 +506,10 @@ REQUIRED FLAGS
        --generate-password
           Ask the server to generate a secure password and use that as the
           basic auth password, keeping the existing username.
+
+       --hpa-profile=HPA_PROFILE
+          Setting Horizontal Pod Autoscaler behavior, which is none by default.
+          HPA_PROFILE must be one of: none, performance.
 
        --identity-provider=IDENTITY_PROVIDER
           Enable 3P identity provider on the cluster.
