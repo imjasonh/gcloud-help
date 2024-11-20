@@ -2,14 +2,15 @@ NAME
     gcloud alpha transfer agents install - install Transfer Service agents
 
 SYNOPSIS
-    gcloud alpha transfer agents install --pool=POOL [--count=COUNT]
-        [--creds-file=CREDS_FILE] [--docker-network=DOCKER_NETWORK]
-        [--[no-]enable-multipart] [--id-prefix=ID_PREFIX]
+    gcloud alpha transfer agents install --pool=POOL
+        [--container-manager=CONTAINER_MANAGER; default="docker"]
+        [--count=COUNT] [--creds-file=CREDS_FILE] [--[no-]enable-multipart]
+        [--id-prefix=ID_PREFIX]
         [--logs-directory=LOGS_DIRECTORY; default="/tmp"]
         [--max-concurrent-small-file-uploads=MAX_CONCURRENT_SMALL_FILE_UPLOADS]
         [--memlock-limit=MEMLOCK_LIMIT; default=64000000]
-        [--mount-directories=[MOUNT-DIRECTORIES,...]] [--proxy=PROXY]
-        [--s3-compatible-mode]
+        [--mount-directories=[MOUNT-DIRECTORIES,...]] [--network=NETWORK]
+        [--proxy=PROXY] [--s3-compatible-mode]
         [--hdfs-namenode-uri=HDFS_NAMENODE_URI --hdfs-username=HDFS_USERNAME
           --hdfs-data-transfer-protection=HDFS_DATA_TRANSFER_PROTECTION]
         [--kerberos-config-file=KERBEROS_CONFIG_FILE
@@ -21,7 +22,8 @@ SYNOPSIS
 DESCRIPTION
     (ALPHA) Install Transfer Service agents to enable you to transfer data to
     or from POSIX filesystems, such as on-premises filesystems. Agents are
-    installed locally on your machine and run inside Docker containers.
+    installed locally on your machine and run inside Docker or Podman
+    containers.
 
 EXAMPLES
     To create an agent pool for your agent, see the gcloud transfer agent-pools
@@ -48,6 +50,10 @@ REQUIRED FLAGS
         agents are activated.
 
 FLAGS
+     --container-manager=CONTAINER_MANAGER; default="docker"
+        The container manager to use for running agents. CONTAINER_MANAGER must
+        be one of: docker, podman.
+
      --count=COUNT
         Specify the number of agents to install on your current machine. System
         requirements: 8 GB of memory and 4 CPUs per agent.
@@ -63,14 +69,6 @@ FLAGS
 
         Note that the credentials location will be mounted to the agent
         container.
-
-     --docker-network=DOCKER_NETWORK
-        Specify the network to connect the Docker container to. This flag maps
-        directly to the --network flag in the underlying 'docker run' command.
-
-        If binding directly to the Docker host's network is an option, then
-        setting this value to 'host' can dramatically improve transfer
-        performance.
 
      --[no-]enable-multipart
         Split up files and transfer the resulting chunks in parallel before
@@ -110,6 +108,14 @@ FLAGS
         It is strongly recommended that you use this flag. If this flag isn't
         specified, gcloud transfer will mount your entire filesystem to the
         agent container and give the agent root access.
+
+     --network=NETWORK
+        Specify the network to connect the container to. This flag maps
+        directly to the --network flag in the underlying '(docker or podman)
+        run' command.
+
+        If binding directly to the host's network is an option, then setting
+        this value to 'host' can dramatically improve transfer performance.
 
      --proxy=PROXY
         Specify the HTTP URL and port of a proxy server if you want to use a

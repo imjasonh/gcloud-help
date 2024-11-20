@@ -5,8 +5,12 @@ NAME
 SYNOPSIS
     gcloud beta compute future-reservations update FUTURE_RESERVATION
         [--[no-]auto-delete-auto-created-reservations]
-        [--description=DESCRIPTION] [--planning-status=PLANNING_STATUS]
-        [--total-count=TOTAL_COUNT] [--zone=ZONE]
+        [--deployment-type=DEPLOYMENT_TYPE] [--description=DESCRIPTION]
+        [--planning-status=PLANNING_STATUS]
+        [--[no-]require-specific-reservation]
+        [--reservation-name=RESERVATION_NAME]
+        [--scheduling-type=SCHEDULING_TYPE] [--total-count=TOTAL_COUNT]
+        [--zone=ZONE]
         [--auto-created-reservations-delete-time=AUTO_CREATED_RESERVATIONS_DELETE_TIME | --auto-created-reservations-duration=AUTO_CREATED_RESERVATIONS_DURATION]
         [--clear-name-prefix | --name-prefix=NAME_PREFIX]
         [--clear-share-settings
@@ -41,6 +45,15 @@ FLAGS
         Use --auto-delete-auto-created-reservations to enable and
         --no-auto-delete-auto-created-reservations to disable.
 
+     --deployment-type=DEPLOYMENT_TYPE
+        The deployment type for the reserved capacity. DEPLOYMENT_TYPE must be
+        one of:
+
+         DENSE
+            DENSE mode is for densely deployed reservation blocks.
+         FLEXIBLE
+            FLEXIBLE mode is for highly flexible, logical reservation blocks.
+
      --description=DESCRIPTION
         An optional description of the future reservation to create.
 
@@ -57,6 +70,32 @@ FLAGS
             Default planning status value.
          SUBMITTED
             Planning status value to immediately submit the future reservation.
+
+     --[no-]require-specific-reservation
+        Indicate whether the auto-created reservations can be consumed by VMs
+        with "any reservation" defined. If enabled, then only VMs that target
+        the auto-created reservation by name using
+        --reservation-affinity=specific can consume from this reservation.
+        Auto-created reservations delivered with this flag enabled will inherit
+        the name of the future reservation. Use --require-specific-reservation
+        to enable and --no-require-specific-reservation to disable.
+
+     --reservation-name=RESERVATION_NAME
+        Name of reservations where the capacity is provisioned at the time of
+        delivery of future reservations. If the reservation with the given name
+        does not exist already, it is created automatically at the time of
+        Approval with INACTIVE state till specified start-time. Either provide
+        the reservation_name or a name_prefix.
+
+     --scheduling-type=SCHEDULING_TYPE
+        Maintenance for the reserved capacity. SCHEDULING_TYPE must be one of:
+
+         GROUPED
+            In GROUPED mode, maintenance on all reserved instances
+            issynchronized.
+         INDEPENDENT
+            In INDEPENDENT mode, maintenance is not synchronized for this
+            reservation, and each instance has its own maintenance window.
 
      --total-count=TOTAL_COUNT
         The total number of instances for which capacity assurance is requested
