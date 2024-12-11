@@ -3,18 +3,17 @@ NAME
 
 SYNOPSIS
     gcloud beta run deploy [[SERVICE] --namespace=NAMESPACE]
-        [--[no-]allow-unauthenticated] [--async] [--breakglass=JUSTIFICATION]
-        [--clear-vpc-connector] [--concurrency=CONCURRENCY]
-        [--container=CONTAINER] [--[no-]cpu-boost] [--[no-]cpu-throttling]
-        [--[no-]default-url] [--[no-]deploy-health-check]
-        [--description=DESCRIPTION]
+        [--[no-]allow-unauthenticated] [--[no-]allow-unencrypted-build]
+        [--async] [--breakglass=JUSTIFICATION] [--clear-vpc-connector]
+        [--concurrency=CONCURRENCY] [--container=CONTAINER] [--[no-]cpu-boost]
+        [--[no-]cpu-throttling] [--[no-]default-url]
+        [--[no-]deploy-health-check] [--description=DESCRIPTION]
         [--execution-environment=EXECUTION_ENVIRONMENT] [--gpu-type=GPU_TYPE]
         [--ingress=INGRESS; default="all"] [--[no-]invoker-iam-check]
-        [--max-instances=MAX_INSTANCES] [--mesh=MESH]
+        [--max-instances=MAX_INSTANCES] [--mesh=MESH] [--min=MIN]
         [--min-instances=MIN_INSTANCES] [--region=REGION]
         [--remove-containers=[CONTAINER,...]]
         [--revision-suffix=REVISION_SUFFIX] [--service-account=SERVICE_ACCOUNT]
-        [--service-min-instances=SERVICE_MIN_INSTANCES]
         [--[no-]session-affinity] [--tag=TAG] [--timeout=TIMEOUT]
         [--no-traffic] [--vpc-connector=VPC_CONNECTOR]
         [--vpc-egress=VPC_EGRESS]
@@ -116,6 +115,12 @@ FLAGS
         may take a few moments to take effect. Use --allow-unauthenticated to
         enable and --no-allow-unauthenticated to disable.
 
+     --[no-]allow-unencrypted-build
+        Whether to allow customer-managed encryption key (CMEK) deployments
+        without encrypting the build process. This means that only the deployed
+        container will be encrypted. Use --allow-unencrypted-build to enable
+        and --no-allow-unencrypted-build to disable.
+
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
@@ -214,6 +219,11 @@ FLAGS
         resource name must be in the format of
         projects/PROJECT/locations/global/meshes/MESH_NAME.
 
+     --min=MIN
+        The minimum number of container instances for this Service to run or
+        'default' to remove any minimum. These instances will be divided among
+        all Revisions receiving a percentage of traffic.
+
      --min-instances=MIN_INSTANCES
         The minimum number of container instances for this Revision of the
         Service to run or 'default' to remove any minimum.
@@ -236,11 +246,6 @@ FLAGS
         the email address of an IAM service account associated with the
         revision of the service. The service account represents the identity of
         the running revision, and determines what permissions the revision has.
-
-     --service-min-instances=SERVICE_MIN_INSTANCES
-        The minimum number of container instances for this Service to run or
-        'default' to remove any minimum. These instances will be divided among
-        all Revisions receiving a percentage of traffic.
 
      --[no-]session-affinity
         Whether to enable session affinity for connections to the service. Use

@@ -18,7 +18,9 @@ SYNOPSIS
           [output_payload_format_protobuf_schema_definition=OUTPUT_PAYLOAD_FORMAT_PROTOBUF_SCHEMA_DEFINITION]|[...]]
         [--logging-config=LOGGING_CONFIG]
         [--mediations=[transformation_template=TRANSFORMATION_TEMPLATE|...]]
+        [--update-labels=[KEY=VALUE,...]]
         [--clear-crypto-key | --crypto-key=CRYPTO_KEY]
+        [--clear-labels | --remove-labels=[KEY,...]]
         [--input-payload-format-avro-schema-definition=INPUT_PAYLOAD_FORMAT_AVRO_SCHEMA_DEFINITION | --input-payload-format-json=INPUT_PAYLOAD_FORMAT_JSON | --input-payload-format-protobuf-schema-definition=INPUT_PAYLOAD_FORMAT_PROTOBUF_SCHEMA_DEFINITION]
         [--max-retry-attempts=MAX_RETRY_ATTEMPTS
           --max-retry-delay=MAX_RETRY_DELAY --min-retry-delay=MIN_RETRY_DELAY]
@@ -79,288 +81,311 @@ FLAGS
      --destinations=[http_endpoint_uri=URI],[http_endpoint_message_binding_template=HTTP_ENDPOINT_MESSAGE_BINDING_TEMPLATE],[workflow=WORKFLOW],[message_bus=MESSAGE_BUS],[pubsub_topic=PUBSUB_TOPIC],[project=PROJECT],[location=LOCATION],[network_attachment=NETWORK_ATTACHMENT],[google_oidc_authentication_service_account=GOOGLE_OIDC_AUTHENTICATION_SERVICE_ACCOUNT],[google_oidc_authentication_audience=GOOGLE_OIDC_AUTHENTICATION_AUDIENCE],[oauth_token_authentication_service_account=OAUTH_TOKEN_AUTHENTICATION_SERVICE_ACCOUNT],[oauth_token_authentication_scope=OAUTH_TOKEN_AUTHENTICATION_SCOPE],[output_payload_format_json=OUTPUT_PAYLOAD_FORMAT_JSON],[output_payload_format_avro_schema_definition=OUTPUT_PAYLOAD_FORMAT_AVRO_SCHEMA_DEFINITION],[output_payload_format_protobuf_schema_definition=OUTPUT_PAYLOAD_FORMAT_PROTOBUF_SCHEMA_DEFINITION]|[...]
         The pipeline's destinations. This flag can be repeated to add more
         destinations to the list. Currently, only one destination is supported
-        per pipeline.
+        per pipeline. A destination is specified in a dict format. For more
+        information, see Create an enrollment to receive events
+        (https://cloud.google.com/eventarc/advanced/docs/receive-events/create-enrollment).
 
-        A destination is specified in a dict format. The valid choices of keys
-        are
-        ◆ http_endpoint_uri
-        ◆ http_endpoint_message_binding_template
-        ◆ workflow
-        ◆ message_bus
-        ◆ pubsub_topic
-        ◆ project
-        ◆ location
-        ◆ network_attachment
-        ◆ google_oidc_authentication_service_account
-        ◆ google_oidc_authentication_audience
-        ◆ oauth_token_authentication_service_account
-        ◆ oauth_token_authentication_scope
-        ◆ output_payload_format_json
-        ◆ output_payload_format_avro_schema_definition
-        ◆ output_payload_format_protobuf_schema_definition
+        Note: Exactly one of the http_endpoint_uri, workflow, message_bus, or
+        pubsub_topic keys must be set.
 
-        The detailed explanations for each key are as follows:
+        Valid keys are:
 
-        1.http_endpoint_uri: the URI of the HTTP endpoint.
+         http_endpoint_uri
+            The URI of the HTTP endpoint. The value must be a RFC2396 URI
+            string. Only HTTPS protocol is supported. The host can be either a
+            static IP addressable from the VPC specified by the network config,
+            or an internal DNS hostname of the service resolvable via Cloud
+            DNS. For example:
 
-            The value must be a RFC2396 URI string. Only HTTPS protocol is supported.
-            The host can be either a static IP addressable from the VPC specified by the network config, or an internal DNS hostname of the service resolvable via Cloud DNS.
+                $ gcloud eventarc pipelines create example-pipeline \
+                  --destinations=http_endpoint_uri='https://example.com',\
+                network_attachment=example-network-attachment
 
-            Examples:
+         http_endpoint_message_binding_template
+            The CEL expression used to construct a new HTTP request to be sent
+            to the final destination. It can be optionally specified alongside
+            with http_endpoint_uri. It represents a configuration used to bind
+            a message to the final HTTP request that will be sent to the
+            destination. If a binding is not specified, by default the message
+            is treated as a CloudEvent and is mapped to the HTTP request
+            according to the CloudEvent HTTP Protocol Binding Binary Content
+            Mode. The pipeline converts the data field of the message to the
+            format provided in output_payload_format and maps it to the body
+            field of the result. It also sets the corresponding Content-Type
+            header to the output_payload_format type. If the
+            output_payload_format is unspecified, then the pipeline will treat
+            the data field of the message as opaque binary data and attach it
+            to the request body as bytes. In this case, the Content-Type header
+            will be set to the value of the datacontenttype attribute set on
+            the incoming CloudEvent message if present, or the
+            application/octet-stream MIME type otherwise. The pipeline expects
+            that the content of the message will adhere to the standard
+            CloudEvent format. If not then the outgoing message request may
+            fail with a persistent error.
 
-            $ gcloud eventarc pipelines create example-pipeline \
-              --destinations=http_endpoint_uri='https://example.com',\
-            network_attachment=example-network-attachment
+            Note: When http_endpoint_uri is not set,
+            http_endpoint_message_binding_template can't be set.
 
-        2.http_endpoint_message_binding_template: the CEL expression used to
-        construct a new HTTP request to be sent to the final destination.
+            The result of the CEL expression must be a map of key-value pairs
+            such that:
 
-            It can be optionally specified alongside with `http_endpoint_uri`.
-            It represents a configuration used to bind a message to the final HTTP request that will be sent to the destination.
-            If a binding is not specified, by default the message is treated as a CloudEvent and is mapped to the HTTP request according to the CloudEvent HTTP Protocol Binding Binary Content Mode.
-            The Pipeline converts the data field of the message to the format provided in `output_payload_format` and maps it to the body field of the result.
-            It also sets the corresponding Content-Type header to the `output_payload_format` type.
-            If the `output_payload_format` is unspecified, then the Pipeline will treat the data field of the message as opaque binary data and attach it to the request body as bytes.
-            In this case, the Content-Type header will be set to the value of the datacontenttype attribute set on the incoming CloudEvent message if present, or the `application/octet-stream` MIME type otherwise.
-            The Pipeline expects that the content of the message will adhere to the standard CloudEvent format. If not then the outgoing message request may fail with a persistent error.
+            1. If a map named headers exists on the result of the expression,
+            then its key-value pairs are directly mapped to the HTTP request
+            headers. The headers values are constructed from the corresponding
+            value type's canonical representation. If the headers field does
+            not exist, then the resulting HTTP request will not contain
+            headers.
 
-            The result of the CEL expression must be a map of key-value pairs such that:
-              1. If a map named `headers` exists on the result of the expression, then its key-value pairs are directly mapped to the HTTP request headers.
-                The headers values are constructed from the corresponding value type's canonical representation.
-                If the `headers` field does not exist, then the resulting HTTP request will not contain headers.
-              2. If a field named `body` exists on the result of the expression, then its value is directly mapped to the body of the request.
-                If the value of the `body` field is of type bytes or string, then it is used as the HTTP request body as-is withouth any conversion.
-                If the `body` field is of any other type, then it is converted to a JSON string.
-                If the `body` field does not exist, then the resulting HTTP request will not contain a body.
-              3. Any other fields in the resulting expression will be ignored.
+            2. If a field named body exists on the result of the expression,
+            then its value is directly mapped to the body of the request. If
+            the value of the body field is of type bytes or string, then it is
+            used as the HTTP request body as-is withouth any conversion. If the
+            body field is of any other type, then it is converted to a JSON
+            string. If the body field does not exist, then the resulting HTTP
+            request will not contain a body.
 
-            The CEL expression may access the incoming CloudEvent message in its definition, as follows:
-              1. The `data` field of the incoming CloudEvent message can be accessed using the `message.data` value.
-              2. Each attribute of the incoming CloudEvent message can be accessed using the `message.<key>` value, where <key> is the name of the attribute.
+            3. Any other fields in the resulting expression will be ignored.
 
-            Headers added to the request by previous filters in the chain can be accessed in the CEL expression using the `headers` variable.
-            The `headers` variable defines a map of key-value pairs corresponding to the HTTP headers added by previous mediation steps and not the headers present on the original incoming request.
-            For example, the following CEL expression can be used to construct a headers-only HTTP request by adding an additional header to the headers added by previous mediations in the Pipeline:
+            The CEL expression may access the incoming CloudEvent message in
+            its definition, as follows:
 
-            {"headers": headers.merge({"new-header-key": "new-header-value"})}
+            1. The data field of the incoming CloudEvent message can be
+            accessed using the message.data value.
 
-            Additionally, the following CEL extension functions can be used in this CEL expression:
-              1. toBase64Url:
-                  map.toBase64Url() -> string
-                  Converts a CelValue to a base64url encoded string.
-              2. toJsonString:
-                  map.toJsonString() -> string
-                  Converts a CelValue to a JSON string.
-              3. merge:
-                  map1.merge(map2) -> map3
-                  Merges the passed CEL map with the existing CEL map the function is applied to.
-                  If the same key exists in both maps, or if the key's value is type map, then both maps are merged; Otherwise, the value from the passed map is used.
-              4. toMap:
-                  list(map).toMap() -> map
-                  Converts a CEL list of CEL maps to a single CEL map.
-              5. toDestinationPayloadFormat:
-                  message.data.toDestinationPayloadFormat() -> string or bytes
-                  Converts the message data to the destination payload format specified in `output_payload_format`.
-                  This function is meant to be applied to the message.data field.
-                  If the destination payload format is not set, the function will return the message data unchanged.
-              6. toCloudEventJsonWithPayloadFormat:
-                  message.toCloudEventJsonWithPayloadFormat() -> map
-                  Converts a message to the corresponding structure of JSON format for CloudEvents.
-                  This function applies toDestinationPayloadFormat() to the message data.
-                  It also sets the corresponding datacontenttype of the CloudEvent, as indicated by the `output_payload_format` field.
-                  If `output_payload_format` is not set, it will use the existing datacontenttype on the CloudEvent if present; Otherwise, it leaves the datacontenttype unset.
-                  This function expects that the content of the message will adhere to the standard CloudEvent format. If it doesn't then this function will fail.
-                  The result is a CEL map that corresponds to the JSON representation of the CloudEvent. To convert that data to a JSON string it can be chained with the toJsonString() function.
+            2. Each attribute of the incoming CloudEvent message can be
+            accessed using the message.<key> value, where <key> is the name of
+            the attribute.
 
-            Note that `http_endpoint_message_binding_template` cannot be set when `http_endpoint_uri` is not set.
+            Headers added to the request by previous filters in the chain can
+            be accessed in the CEL expression using the headers variable. The
+            headers variable defines a map of key-value pairs corresponding to
+            the HTTP headers added by previous mediation steps and not the
+            headers present on the original incoming request. For example, the
+            following CEL expression can be used to construct a headers-only
+            HTTP request by adding an additional header to the headers added by
+            previous mediations in the pipeline:
 
-            Examples:
+                {"headers": headers.merge({"new-header-key": "new-header-value"})}
 
-            $ gcloud eventarc pipelines create example-pipeline \
-            --destinations=http_endpoint_uri='https://example.com',\
-            http_endpoint_message_binding_template='{"headers":
-             {"new-header-key":
-             "new-header-value"}}',network_attachment=example-network-attachment
+            Additionally, the following CEL extension functions can be used in
+            this CEL expression:
 
-        3.workflow: the destination Workflow ID.
+            ▸ toBase64Url: map.toBase64Url() -> string
+              ▫ Converts a CelValue to a base64url encoded string.
 
-            Examples:
+            ▸ toJsonString: map.toJsonString() -> string
+              ▫ Converts a CelValue to a JSON string.
 
-            $ gcloud eventarc pipelines create example-pipeline \
-              --destinations=workflow=my-workflow,\
-            network_attachment=example-network-attachment
+            ▸ merge: map1.merge(map2) -> map3
+              ▫ Merges the passed CEL map with the existing CEL map the
+                function is applied to. If the same key exists in both maps, or
+                if the key's value is type map, then both maps are merged;
+                Otherwise, the value from the passed map is used.
 
-        4.message_bus: the destination Message Bus ID.
+            ▸ toMap: list(map).toMap() -> map
+              ▫ Converts a CEL list of CEL maps to a single CEL map.
 
-            Examples:
+            ▸ toDestinationPayloadFormat:
+              message.data.toDestinationPayloadFormat() -> string or bytes
+              ▫ Converts the message data to the destination payload format
+                specified in output_payload_format. This function is meant to
+                be applied to the message.data field. If the destination
+                payload format is not set, the function will return the message
+                data unchanged.
 
-            $ gcloud eventarc pipelines create example-pipeline \
-              --destinations=message_bus=my-message-bus,\
-            network_attachment=example-network-attachment
+            ▸ toCloudEventJsonWithPayloadFormat:
+              message.toCloudEventJsonWithPayloadFormat() -> map
+              ▫ Converts a message to the corresponding structure of JSON
+                format for CloudEvents. This function applies
+                toDestinationPayloadFormat() to the message data. It also sets
+                the corresponding datacontenttype of the CloudEvent, as
+                indicated by the output_payload_format field. If
+                output_payload_format is not set, it will use the existing
+                datacontenttype on the CloudEvent if present; Otherwise, it
+                leaves the datacontenttype unset. This function expects that
+                the content of the message will adhere to the standard
+                CloudEvent format. If it doesn't then this function will fail.
+                The result is a CEL map that corresponds to the JSON
+                representation of the CloudEvent. To convert that data to a
+                JSON string it can be chained with the toJsonString() function.
 
-        5.pubsub_topic: the destination Pub/Sub topic ID.
+              For example:
 
-            Examples:
+                $ gcloud eventarc pipelines create example-pipeline \
+                --destinations=http_endpoint_uri='https://example.com',\
+                http_endpoint_message_binding_template='{"headers":
+                 {"new-header-key":
+                 "new-header-value"}}',network_attachment=example-network-attachment
 
-            $ gcloud eventarc pipelines create example-pipeline \
-              --destinations=pubsub_topic=my-topic,\
-            network_attachment=example-network-attachment
+         workflow
+            The destination Workflow ID. For example:
 
-        NOTE: Exactly one of the http_endpoint_uri, workflow, message_bus, or
-        pubsub_topic key must be set.
+                $ gcloud eventarc pipelines create example-pipeline \
+                  --destinations=workflow=my-workflow,\
+                network_attachment=example-network-attachment
 
-        6.project: the project ID of the destination resource. If project is
-        not set, then the project ID of the Pipeline will be used. NOTE:
-        project cannot be set when http_endpoint_uri is set.
+         message_bus
+            The destination Message Bus ID. For example:
 
-            Examples:
+                $ gcloud eventarc pipelines create example-pipeline \
+                  --destinations=message_bus=my-message-bus,\
+                network_attachment=example-network-attachment
 
-            $ gcloud eventarc pipelines create example-pipeline \
-              --destinations=project=example-project,workflow=my-workflow,\
-            network_attachment=example-network-attachment
+         pubsub_topic
+            The destination Pub/Sub topic ID. For example:
 
-        7.location: the location of the destination resource. If location is
-        not set, then the location of the Pipeline will be used. NOTE: location
-        cannot be set when http_endpoint_uri is set.
+                $ gcloud eventarc pipelines create example-pipeline \
+                  --destinations=pubsub_topic=my-topic,\
+                network_attachment=example-network-attachment
 
-            Examples:
+         project
+            The project ID of the destination resource. If project is not set,
+            then the project ID of the pipeline is used. For example:
 
-            $ gcloud eventarc pipelines create example-pipeline \
-              --destinations=location=us-east1,workflow=my-workflow,\
-            network_attachment=example-network-attachment
+                $ gcloud eventarc pipelines create example-pipeline \
+                  --destinations=project=example-project,workflow=my-workflow,\
+                network_attachment=example-network-attachment
 
-        8.network_attachment: the ID of the Network Attachment that allows
-        access to the consumer VPC.
+            Note: When http_endpoint_uri is set, project can't be set.
 
-            Examples:
+         location
+            The location of the destination resource. If location is not set,
+            then the location of the pipeline is used. For example:
 
-            $ gcloud eventarc pipelines create example-pipeline \
-              --destinations=network_attachment=my-network-attachment,\
-            http_endpoint_uri='https://example.com'
+                $ gcloud eventarc pipelines create example-pipeline \
+                  --destinations=location=us-east1,workflow=my-workflow,\
+                network_attachment=example-network-attachment
 
-        NOTE: network_attachment must be specified for a Pipeline.
+            Note: When http_endpoint_uri is set, location can't be set.
 
-        9.google_oidc_authentication_service_account: the service account email
-        used to generate the OIDC token. The token can be used to invoke Cloud
-        Run and Cloud Function destinations or HTTP endpoints that support
-        Google OIDC. Note that the principal who calls this API must have
-        iam.serviceAccounts.actAs permission in the service account. See
-        https://cloud.google.com/iam/docs/understanding-service-accounts?hl=en#sa_common
-        for more information.
+         network_attachment
+            The ID of the network attachment that allows access to the consumer
+            VPC. For example:
 
-            Examples:
+                $ gcloud eventarc pipelines create example-pipeline \
+                  --destinations=network_attachment=my-network-attachment,\
+                http_endpoint_uri='https://example.com'
 
-            $ gcloud eventarc pipelines create example-pipeline \
-              --destinations=http_endpoint_uri='https://example.com',\
-            network_attachment=example-network-attachment,\
-            google_oidc_authentication_service_account=example-service-account@e\
-            xample-project.gserviceaccount.iam.com
+            Note: A network attachment must be specified for a pipeline.
 
-        10.google_oidc_authentication_audience: the audience claim which
-        identifies the recipient that the JWT is intended for. If unspecified,
-        the destination URI will be used. NOTE:
-        google_oidc_authentication_audience can only be set if
-        google_oidc_authentication_service_account is set.
+         google_oidc_authentication_service_account
+            The service account email used to generate the OIDC token. The
+            token can be used to invoke Cloud Run and Cloud Run functions
+            destinations or HTTP endpoints that support Google OIDC. Note that
+            the principal who calls this API must have
+            iam.serviceAccounts.actAs permission on the service account. For
+            more information, see Service accounts overview
+            (https://cloud.google.com/iam/docs/understanding-service-accounts).
+            For example:
 
-            Examples:
+                $ gcloud eventarc pipelines create example-pipeline \
+                  --destinations=http_endpoint_uri='https://example.com',\
+                network_attachment=example-network-attachment,\
+                google_oidc_authentication_service_account=example-service-account@e\
+                xample-project.gserviceaccount.iam.com
 
-            $ gcloud eventarc pipelines create example-pipeline \
-              --destinations=http_endpoint_uri='https://example.com',\
-            network_attachment=example-network-attachment,\
-            google_oidc_authentication_service_account=example-service-account@e\
-            xample-project.gserviceaccount.iam.com,\
-            google_oidc_authentication_audience='https://example.com'
+         google_oidc_authentication_audience
+            The audience claim which identifies the recipient that the JWT is
+            intended for. If unspecified, the destination URI will be used. For
+            example:
 
-        11.oauth_token_authentication_service_account: the service account
-        email used to generate the OAuth token. OAuth authorization should
-        generally only be used when calling Google APIs hosted on
-        *.googleapis.com. Note that the principal who calls this API must have
-        iam.serviceAccounts.actAs permission in the service account. See
-        https://cloud.google.com/iam/docs/understanding-service-accounts?hl=en#sa_common
-        for more information.
+                $ gcloud eventarc pipelines create example-pipeline \
+                  --destinations=http_endpoint_uri='https://example.com',\
+                network_attachment=example-network-attachment,\
+                google_oidc_authentication_service_account=example-service-account@e\
+                xample-project.gserviceaccount.iam.com,\
+                google_oidc_authentication_audience='https://example.com'
 
-            Examples:
+            Note: google_oidc_authentication_audience can only be set if
+            google_oidc_authentication_service_account is set.
 
-            $ gcloud eventarc pipelines create example-pipeline \
-              --destinations=http_endpoint_uri='https://example.com',\
-            network_attachment=example-network-attachment,\
-            oauth_token_authentication_service_account=example-service-account@e\
-            xample-project.gserviceaccount.iam.com
+         oauth_token_authentication_service_account
+            The service account email used to generate the OAuth token. OAuth
+            authorization should generally only be used when calling Google
+            APIs hosted on *.googleapis.com. Note that the principal who calls
+            this API must have iam.serviceAccounts.actAs permission in the
+            service account. For more information, see Service accounts
+            overview
+            (https://cloud.google.com/iam/docs/understanding-service-accounts).
+            For example:
 
-        12.oauth_token_authentication_scope: the scope used to generate the
-        OAuth token. If unspecified,
-        "https://www.googleapis.com/auth/cloud-platform" will be used. NOTE:
-        oauth_token_authentication_scope can only be set if
-        oauth_token_authentication_service_account is set.
+                $ gcloud eventarc pipelines create example-pipeline \
+                  --destinations=http_endpoint_uri='https://example.com',\
+                network_attachment=example-network-attachment,\
+                oauth_token_authentication_service_account=example-service-account@e\
+                xample-project.gserviceaccount.iam.com
 
-            Examples:
+         oauth_token_authentication_scope
+            The scope used to generate the OAuth token. If unspecified,
+            "https://www.googleapis.com/auth/cloud-platform" will be used. For
+            example:
 
-            $ gcloud eventarc pipelines create example-pipeline \
-              --destinations=http_endpoint_uri='https://example.com',\
-            network_attachment=example-network-attachment,\
-            oauth_token_authentication_service_account=example-service-account@e\
-            xample-project.gserviceaccount.iam.com,\
-            oauth_token_authentication_scope=https://www.googleapis.com/auth/\
-            cloud-platform
+                $ gcloud eventarc pipelines create example-pipeline \
+                  --destinations=http_endpoint_uri='https://example.com',\
+                network_attachment=example-network-attachment,\
+                oauth_token_authentication_service_account=example-service-account@e\
+                xample-project.gserviceaccount.iam.com,\
+                oauth_token_authentication_scope=https://www.googleapis.com/auth/\
+                cloud-platform
 
-        NOTE: At most one of google_oidc_authentication_service_account or
-        oauth_token_authentication_service_account can be set.
+            Note: At most one of google_oidc_authentication_service_account or
+            oauth_token_authentication_service_account can be set; and
+            oauth_token_authentication_scope can only be set if
+            oauth_token_authentication_service_account is set.
 
-        13.output_payload_format_json: indicates that the output payload format
-        is JSON. NOTE: JSON schema is not supported currently. Any value
-        specified by this key will be ignored.
+         output_payload_format_json
+            Indicates that the output payload format is JSON. For example:
 
-            Examples:
+                $ gcloud eventarc pipelines create example-pipeline \
+                  --destinations=http_endpoint_uri='https://example.com',\
+                network_attachment=example-network-attachment,\
+                output_payload_format_json= --input-payload-format-json=
 
-            $ gcloud eventarc pipelines create example-pipeline \
-              --destinations=http_endpoint_uri='https://example.com',\
-            network_attachment=example-network-attachment,\
-            output_payload_format_json= --input-payload-format-json=
+            Note: JSON schemas are not supported. Any value specified by this
+            key is ignored.
 
-        14.output_payload_format_avro_schema_definition: the schema definition
-        of the Avro output payload format.
+         output_payload_format_avro_schema_definition
+            The schema definition of the Avro output payload format. For
+            example:
 
-            Examples:
+                $ gcloud eventarc pipelines create example-pipeline \
+                  --destinations=http_endpoint_uri='https://example.com',\
+                network_attachment=example-network-attachment,\
+                output_payload_format_avro_schema_definition='{"type": "record",
+                 "name": "my_record", "fields": [{"name": "field1", "type":
+                 "string"}]}' \
+                    --input-payload-format-avro-schema-definition='{"type":
+                 "record", "name": "my_record", "fields": [{"name": "field1",
+                 "type": "string"}]}'
 
-            $ gcloud eventarc pipelines create example-pipeline \
-              --destinations=http_endpoint_uri='https://example.com',\
-            network_attachment=example-network-attachment,\
-            output_payload_format_avro_schema_definition='{"type": "record",
-             "name": "my_record", "fields": [{"name": "field1", "type":
-             "string"}]}' \
-                --input-payload-format-avro-schema-definition='{"type":
-             "record", "name": "my_record", "fields": [{"name": "field1",
-             "type": "string"}]}'
+         output_payload_format_protobuf_schema_definition
+            The schema definition of the Protobuf output payload format. For
+            example:
 
-        15.output_payload_format_protobuf_schema_definition: the schema
-        definition of the Protobuf output payload format.
+                $ gcloud eventarc pipelines create example-pipeline \
+                  --destinations=http_endpoint_uri='https://example.com',\
+                network_attachment=example-network-attachment,\
+                output_payload_format_protobuf_schema_definition='syntax =
+                 "proto3"; message Location { string home_address = 1; }' \
+                    --input-payload-format-protobuf-schema-definition='syntax =
+                 "proto3"; message Location { string home_address = 1; }'
 
-            Examples:
-
-            $ gcloud eventarc pipelines create example-pipeline \
-              --destinations=http_endpoint_uri='https://example.com',\
-            network_attachment=example-network-attachment,\
-            output_payload_format_protobuf_schema_definition='syntax =
-             "proto3"; message Location { string home_address = 1; }' \
-                --input-payload-format-protobuf-schema-definition='syntax =
-             "proto3"; message Location { string home_address = 1; }'
-
-        NOTE: If none of the input_payload_format_json,
-        input_payload_format_avro_schema_definition, or
-        input_payload_format_protobuf_schema_definition is set, then the
-        message data will be treated as an opaque binary and no output format
-        can be set on the Pipeline through the output_payload_format_json,
-        output_payload_format_avro_schema_definition, or
-        output_payload_format_protobuf_schema_definition field. Any Mediations
-        on the Pipeline that involve access to the data field will fail as
-        persistent errors.
+            Note: If none of the input_payload_format_json,
+            input_payload_format_avro_schema_definition, or
+            input_payload_format_protobuf_schema_definition is set, then the
+            message data is treated as an opaque binary and no output format
+            can be set on the pipeline through the output_payload_format_json,
+            output_payload_format_avro_schema_definition, or
+            output_payload_format_protobuf_schema_definition field. Any
+            mediations on the pipeline that involve access to the data field
+            will fail as persistent errors.
 
      --logging-config=LOGGING_CONFIG
         The logging config of the pipeline. LOGGING_CONFIG must be one of:
         NONE, DEBUG, INFO, NOTICE, WARNING, ERROR, CRITICAL, ALERT, EMERGENCY.
 
      --mediations=[transformation_template=TRANSFORMATION_TEMPLATE|...]
-        The different ways to modify the Pipeline. Currently, only one
+        The different ways to modify the pipeline. Currently, only one
         mediation is supported per pipeline.
 
         A mediation is specified in a dict format. Currently, the only valid
@@ -379,6 +404,15 @@ FLAGS
                 --mediations=transformation_template='message.removeFields(["dat\
             a.credit_card_number","data.ssn"])'
 
+     --update-labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to update. If a label exists, its value
+        is modified. Otherwise, a new label is created.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
      At most one of these can be specified:
 
        --clear-crypto-key
@@ -389,6 +423,26 @@ FLAGS
           Fully qualified name of the crypto key to use for customer-managed
           encryption. If this is unspecified, Google-managed keys will be used
           for encryption.
+
+     At most one of these can be specified:
+
+       --clear-labels
+          Remove all labels. If --update-labels is also specified then
+          --clear-labels is applied first.
+
+          For example, to remove all labels:
+
+              $ gcloud beta eventarc pipelines update --clear-labels
+
+          To remove all existing labels and create two new labels, foo and baz:
+
+              $ gcloud beta eventarc pipelines update --clear-labels \
+                --update-labels foo=bar,baz=qux
+
+       --remove-labels=[KEY,...]
+          List of label keys to remove. If a label does not exist it is
+          silently ignored. If --update-labels is also specified then
+          --update-labels is applied first.
 
      At most one of these can be specified:
 
@@ -407,7 +461,7 @@ FLAGS
           set, then any messages not matching this format will be treated as
           persistent errors.
 
-    The retry policy configuration for the Pipeline. The pipeline exponentially
+    The retry policy configuration for the pipeline. The pipeline exponentially
     backs off if the destination is non-responsive or returns a retryable error
     code. The backoff starts with a 1 second delay and doubles the delay after
     each failed attempt. The delay is capped at 60 seconds. If the

@@ -5,7 +5,7 @@ NAME
 SYNOPSIS
     gcloud alpha bigtable app-profiles create
         (APP_PROFILE : --instance=INSTANCE)
-        ([--route-any : --restrict-to=[RESTRICT_TO,...]]
+        ([--route-any : --restrict-to=[RESTRICT_TO,...] --row-affinity]
           | [--route-to=ROUTE_TO : --transactional-writes])
         [--description=DESCRIPTION] [--force]
         [--data-boost
@@ -45,6 +45,11 @@ EXAMPLES
         $ gcloud alpha bigtable app-profiles create my-app-profile-id \
             --instance=my-instance-id --data-boost \
             --data-boost-compute-billing-owner=HOST_PAYS
+
+    To create an app profile with row-affinity routing enabled, run:
+
+        $ gcloud alpha bigtable app-profiles create my-app-profile-id \
+            --instance=my-instance-id --route-any --row-affinity
 
 POSITIONAL ARGUMENTS
      App profile resource - The app profile to create. The arguments in this
@@ -92,6 +97,9 @@ REQUIRED FLAGS
          --restrict-to=[RESTRICT_TO,...]
             Cluster IDs to route to using the Multi Cluster Routing Policy. If
             unset, all clusters in the instance are eligible.
+
+         --row-affinity
+            Use row-affinity routing for this app profile.
 
        Single Cluster Routing Policy
 

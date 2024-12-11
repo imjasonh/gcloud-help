@@ -7,13 +7,15 @@ SYNOPSIS
         [--airflow-configs=[KEY=VALUE,...]] [--async]
         [--cloud-sql-machine-type=CLOUD_SQL_MACHINE_TYPE]
         [--cloud-sql-preferred-zone=CLOUD_SQL_PREFERRED_ZONE]
+        [--composer-internal-ipv4-cidr-block=COMPOSER_INTERNAL_IPV4_CIDR_BLOCK]
         [--disable-logs-in-cloud-logging-only] [--disk-size=DISK_SIZE]
         [--enable-high-resilience] [--enable-logs-in-cloud-logging-only]
         [--env-variables=[NAME=VALUE,...]]
         [--environment-size=ENVIRONMENT_SIZE] [--labels=[KEY=VALUE,...]]
-        [--machine-type=MACHINE_TYPE] [--node-count=NODE_COUNT]
-        [--oauth-scopes=[SCOPE,...]] [--python-version=PYTHON_VERSION]
-        [--service-account=SERVICE_ACCOUNT] [--storage-bucket=STORAGE_BUCKET]
+        [--machine-type=MACHINE_TYPE] [--network-attachment=NETWORK_ATTACHMENT]
+        [--node-count=NODE_COUNT] [--oauth-scopes=[SCOPE,...]]
+        [--python-version=PYTHON_VERSION] [--service-account=SERVICE_ACCOUNT]
+        [--storage-bucket=STORAGE_BUCKET] [--support-web-server-plugins]
         [--tags=[TAG,...]] [--web-server-machine-type=WEB_SERVER_MACHINE_TYPE]
         [--zone=ZONE]
         [--airflow-version=AIRFLOW_VERSION | --image-version=IMAGE_VERSION]
@@ -29,8 +31,13 @@ SYNOPSIS
           --enable-ip-alias --enable-ip-masq-agent
           --services-ipv4-cidr=SERVICES_IPV4_CIDR
           --services-secondary-range-name=SERVICES_SECONDARY_RANGE_NAME]
+        [--dag-processor-count=DAG_PROCESSOR_COUNT
+          --dag-processor-cpu=DAG_PROCESSOR_CPU
+          --dag-processor-memory=DAG_PROCESSOR_MEMORY
+          --dag-processor-storage=DAG_PROCESSOR_STORAGE]
         [--disable-cloud-data-lineage-integration
           | --enable-cloud-data-lineage-integration]
+        [--disable-private-builds-only | --enable-private-builds-only]
         [--enable-master-authorized-networks
           --master-authorized-networks=[NETWORK,...]]
         [--enable-scheduled-snapshot-creation
@@ -126,6 +133,11 @@ FLAGS
      --cloud-sql-preferred-zone=CLOUD_SQL_PREFERRED_ZONE
         Select cloud sql preferred zone, supported for Composer 2 Environments.
 
+     --composer-internal-ipv4-cidr-block=COMPOSER_INTERNAL_IPV4_CIDR_BLOCK
+        The IP range in CIDR notation to use internally by Cloud Composer. This
+        should have a netmask length of 20. Can be specified for Composer 3 or
+        greater.
+
      --disable-logs-in-cloud-logging-only
         Disable logs in cloud logging only, supported for Composer 2
         Environments.
@@ -169,6 +181,10 @@ FLAGS
         (https://cloud.google.com/compute/docs/machine-types) to use for nodes.
         For example --machine-type=n1-standard-1.
 
+     --network-attachment=NETWORK_ATTACHMENT
+        Cloud Composer Network Attachment, which provides connectivity with a
+        user's VPC network, supported in Composer 3 environments or greater.
+
      --node-count=NODE_COUNT
         The number of nodes to create to run the environment.
 
@@ -195,6 +211,10 @@ FLAGS
      --storage-bucket=STORAGE_BUCKET
         Name of an exisiting Cloud Storage bucket to be used by the
         environment. Supported only for Composer 2.4.X and above.
+
+     --support-web-server-plugins
+        Enable the support for web server plugins, supported in Composer 3 or
+        greater.
 
      --tags=[TAG,...]
         The set of instance tags applied to all node VMs. Tags are used to
@@ -297,6 +317,9 @@ FLAGS
 
           If not specified, cluster nodes will be assigned public IP addresses.
 
+          When used with Composer 3, disable internet connection from any
+          Composer component.
+
           When used with Composer 1.x, cannot be specified unless
           --enable-ip-alias is also specified.
 
@@ -376,6 +399,27 @@ FLAGS
           When used with Composer 1.x, cannot be specified unless
           --enable-ip-alias is also specified.
 
+     Group of arguments for setting dag processor settings in Composer 3 or
+     greater.
+
+       --dag-processor-count=DAG_PROCESSOR_COUNT
+          Number of dag processors, supported in Composer 3 environments or
+          greater.
+
+       --dag-processor-cpu=DAG_PROCESSOR_CPU
+          CPU allocated to Airflow dag processor, supported in Composer 3
+          environments or greater.
+
+       --dag-processor-memory=DAG_PROCESSOR_MEMORY
+          Memory allocated to Airflow dag processor, ex. 1GB, 3GB, 2. If units
+          are not provided, defaults to GB, supported in Composer 3
+          environments or greater.
+
+       --dag-processor-storage=DAG_PROCESSOR_STORAGE
+          Storage allocated to Airflow dag processor, ex. 600MB, 3GB, 2. If
+          units are not provided, defaults to GB, supported in Composer 3
+          environments or greater.
+
      At most one of these can be specified:
 
        --disable-cloud-data-lineage-integration
@@ -385,6 +429,17 @@ FLAGS
        --enable-cloud-data-lineage-integration
           Enable Cloud Data Lineage integration, supported for Composer 2
           Environments.
+
+     At most one of these can be specified:
+
+       --disable-private-builds-only
+          Builds performed during operations that install Python packages have
+          an access to the internet, supported in Composer 3 or greater.
+
+       --enable-private-builds-only
+          Builds performed during operations that install Python packages have
+          only private connectivity to Google services, supported in Composer 3
+          or greater.
 
      Master Authorized Networks configuration
 
@@ -582,7 +637,7 @@ FLAGS
           this group are specified.
 
        --subnetwork=SUBNETWORK
-          The Compute Engine subnetwork
+          The Compute Engine Subnetwork
           (https://cloud.google.com/compute/docs/subnetworks) to which the
           environment will be connected.
 

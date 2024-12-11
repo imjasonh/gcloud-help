@@ -77,10 +77,17 @@ SYNOPSIS
         [--tier=TIER] [--workload-metadata=WORKLOAD_METADATA]
         [--workload-pool=WORKLOAD_POOL]
         [--workload-vulnerability-scanning=WORKLOAD_VULNERABILITY_SCANNING]
+        [--aggregation-ca=CA_POOL_PATH --cluster-ca=CA_POOL_PATH
+          --control-plane-disk-encryption-key=KEY --etcd-api-ca=CA_POOL_PATH
+          --etcd-peer-ca=CA_POOL_PATH --gkeops-etcd-backup-encryption-key=KEY
+          --service-account-signing-keys=KEY_VERSION,[KEY_VERSION,...]
+          --service-account-verification-keys=KEY_VERSION,[KEY_VERSION,...]]
         [--binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
           | --enable-binauthz]
         [--cluster-dns=CLUSTER_DNS --cluster-dns-domain=CLUSTER_DNS_DOMAIN
-          --cluster-dns-scope=CLUSTER_DNS_SCOPE]
+          --cluster-dns-scope=CLUSTER_DNS_SCOPE
+          --additive-vpc-scope-dns-domain=ADDITIVE_VPC_SCOPE_DNS_DOMAIN
+          | --disable-additive-vpc-scope]
         [--dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE
           | --disable-dataplane-v2-flow-observability
           | --enable-dataplane-v2-flow-observability]
@@ -1349,6 +1356,40 @@ FLAGS
         WORKLOAD_VULNERABILITY_SCANNING must be one of: disabled, standard,
         enterprise.
 
+     Control Plane Keys
+
+       --aggregation-ca=CA_POOL_PATH
+          The Certificate Authority Service caPool that will back the
+          aggregation CA
+
+       --cluster-ca=CA_POOL_PATH
+          The Certificate Authority Service caPool that will back the cluster
+          CA
+
+       --control-plane-disk-encryption-key=KEY
+          The Cloud KMS symmetric encryption cryptoKey that will be used to
+          encrypt the control plane disks
+
+       --etcd-api-ca=CA_POOL_PATH
+          The Certificate Authority Service caPool that will back the etcd API
+          CA
+
+       --etcd-peer-ca=CA_POOL_PATH
+          The Certificate Authority Service caPool that will back the etcd peer
+          CA
+
+       --gkeops-etcd-backup-encryption-key=KEY
+          The Cloud KMS symmetric encryption cryptoKey that will be used to
+          encrypt the disaster recovery etcd backups for the cluster
+
+       --service-account-signing-keys=KEY_VERSION,[KEY_VERSION,...]
+          A Cloud KMS asymmetric signing cryptoKeyVersion that will be used to
+          sign service account tokens
+
+       --service-account-verification-keys=KEY_VERSION,[KEY_VERSION,...]
+          A Cloud KMS asymmetric signing cryptoKeyVersion that will be used to
+          verify service account tokens. Maybe specified multiple times.
+
      Flags for Binary Authorization:
 
        At most one of these can be specified:
@@ -1392,6 +1433,15 @@ FLAGS
               Configures the Cloud DNS zone to be private to the cluster.
            vpc
               Configures the Cloud DNS zone to be private to the VPC Network.
+
+       At most one of these can be specified:
+
+         --additive-vpc-scope-dns-domain=ADDITIVE_VPC_SCOPE_DNS_DOMAIN
+            The domain used in Additive VPC scope. Only works with Cluster
+            Scope.
+
+         --disable-additive-vpc-scope
+            Disables Additive VPC Scope.
 
      At most one of these can be specified:
 

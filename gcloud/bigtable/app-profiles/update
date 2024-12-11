@@ -4,7 +4,7 @@ NAME
 SYNOPSIS
     gcloud bigtable app-profiles update (APP_PROFILE : --instance=INSTANCE)
         [--async] [--description=DESCRIPTION] [--force] [--priority=PRIORITY]
-        [[--route-any : --restrict-to=[RESTRICT_TO,...]]
+        [[--route-any : --restrict-to=[RESTRICT_TO,...] --row-affinity]
           | [--route-to=ROUTE_TO : --transactional-writes]]
         [GCLOUD_WIDE_FLAG ...]
 
@@ -33,6 +33,11 @@ EXAMPLES
 
         $ gcloud bigtable app-profiles update my-app-profile-id \
             --instance=my-instance-id --priority=PRIORITY_LOW
+
+    To update an app profile to enable row-affinity routing, run:
+
+        $ gcloud bigtable app-profiles update my-app-profile-id \
+            --instance=my-instance-id --route-any --row-affinity
 
 POSITIONAL ARGUMENTS
      App profile resource - The app profile to update. The arguments in this
@@ -101,6 +106,9 @@ FLAGS
          --restrict-to=[RESTRICT_TO,...]
             Cluster IDs to route to using the Multi Cluster Routing Policy. If
             unset, all clusters in the instance are eligible.
+
+         --row-affinity
+            Use row-affinity routing for this app profile.
 
        Single Cluster Routing Policy
 
