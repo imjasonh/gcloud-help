@@ -6,8 +6,9 @@ SYNOPSIS
     gcloud alpha bigtable instances tables create (TABLE : --instance=INSTANCE)
         --column-families=[COLUMN_FAMILIES,...]
         [--change-stream-retention-period=CHANGE_STREAM_RETENTION_PERIOD]
-        [--deletion-protection] [--enable-automated-backup]
-        [--splits=[SPLITS,...]] [GCLOUD_WIDE_FLAG ...]
+        [--deletion-protection] [--splits=[SPLITS,...]]
+        [--automated-backup-retention-period=AUTOMATED_BACKUP_RETENTION_PERIOD
+          | --enable-automated-backup] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Create a new Cloud Bigtable table.
@@ -60,13 +61,21 @@ EXAMPLES
             --instance=my-instance --column-families="my-family" \
             --no-deletion-protection
 
-    To create a table my-table with automated backup policy
-    (retention_period=72h, frequency=24h) enabled in instance my-instance with
-    a column family my-family, run:
+    To create a table my-table with the default automated backup policy
+    (retention_period=7d, frequency=1d) enabled in instance my-instance with a
+    column family my-family, run:
 
         $ gcloud alpha bigtable instances tables create my-table \
             --instance=my-instance --column-families="my-family" \
             --enable-automated-backup
+
+    To create a table my-table with a custom automated backup policy configured
+    to retain backups for 30 days in instance my-instance with a column family
+    my-family, run:
+
+        $ gcloud alpha bigtable instances tables create my-table \
+            --instance=my-instance --column-families="my-family" \
+            --automated-backup-retention_period=30d
 
 POSITIONAL ARGUMENTS
      Table resource - Cloud Bigtable table to create. The arguments in this
@@ -116,13 +125,20 @@ OPTIONAL FLAGS
      --deletion-protection
         Once specified, the table is deletion protected.
 
-     --enable-automated-backup
-        Once set, enables the default automated backup policy
-        (retention_period=72h, frequency=24h) for the table.
-
      --splits=[SPLITS,...]
         Row keys where the table should initially be split. For example:
         car,key
+
+     At most one of these can be specified:
+
+       --automated-backup-retention-period=AUTOMATED_BACKUP_RETENTION_PERIOD
+          The retention period of automated backup in the format of 30d for 30
+          days. Min retention period is 3d and max is 90d. Setting this flag
+          will enable automated backup for the table.
+
+       --enable-automated-backup
+          Once set, enables the default automated backup policy
+          (retention_period=7d, frequency=1d) for the table.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
