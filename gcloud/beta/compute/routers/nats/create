@@ -3,10 +3,7 @@ NAME
         router
 
 SYNOPSIS
-    gcloud beta compute routers nats create NAME --router=ROUTER
-        (--nat-all-subnet-ip-ranges
-          | --nat-custom-subnet-ip-ranges=SUBNETWORK[:RANGE_NAME|:ALL],[...]
-          | --nat-primary-subnet-ip-ranges) [--async]
+    gcloud beta compute routers nats create NAME --router=ROUTER [--async]
         [--auto-network-tier=AUTO_NETWORK_TIER]
         [--[no-]enable-dynamic-port-allocation]
         [--enable-endpoint-independent-mapping] [--enable-logging]
@@ -20,6 +17,11 @@ SYNOPSIS
         [--type=TYPE] [--udp-idle-timeout=UDP_IDLE_TIMEOUT]
         [--auto-allocate-nat-external-ips
           | --nat-external-ip-pool=IP_ADDRESS,[IP_ADDRESS,...]]
+        [--nat-all-subnet-ip-ranges
+          | --nat-custom-subnet-ip-ranges=SUBNETWORK[:RANGE_NAME|:ALL],[...]
+          | --nat-primary-subnet-ip-ranges]
+        [--nat64-all-v6-subnet-ip-ranges
+          | --nat64-custom-v6-subnet-ip-ranges=SUBNETWORK,[SUBNETWORK,...]]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -56,28 +58,6 @@ POSITIONAL ARGUMENTS
 REQUIRED FLAGS
      --router=ROUTER
         The Router to use for NAT.
-
-     Exactly one of these must be specified:
-
-       --nat-all-subnet-ip-ranges
-          Allow all IP ranges of all subnetworks in the region, including
-          primary and secondary ranges, to use NAT.
-
-       --nat-custom-subnet-ip-ranges=SUBNETWORK[:RANGE_NAME|:ALL],[...]
-          List of subnetwork primary and secondary IP ranges to be allowed to
-          use NAT.
-
-          ▸ SUBNETWORK:ALL - specifying a subnetwork name with ALL includes
-            the primary range and all secondary ranges of the subnet.
-          ▸ SUBNETWORK - including a subnetwork name includes only the
-            primary subnet range of the subnetwork.
-          ▸ SUBNETWORK:RANGE_NAME - specifying a subnetwork and secondary
-            range name includes only that secondary range. It does not include
-            the primary range of the subnet.
-
-       --nat-primary-subnet-ip-ranges
-          Allow only primary IP ranges of all subnetworks in the region to use
-          NAT.
 
 OPTIONAL FLAGS
      --async
@@ -240,6 +220,42 @@ OPTIONAL FLAGS
 
        --nat-external-ip-pool=IP_ADDRESS,[IP_ADDRESS,...]
           External IP Addresses to use for Cloud NAT
+
+     IPv4 subnetwork range options. If they are not specified, one of IPv6
+     subnetwork range option has to be provided.
+
+     At most one of these can be specified:
+
+       --nat-all-subnet-ip-ranges
+          Allow all IP ranges of all subnetworks in the region, including
+          primary and secondary ranges, to use NAT.
+
+       --nat-custom-subnet-ip-ranges=SUBNETWORK[:RANGE_NAME|:ALL],[...]
+          List of subnetwork primary and secondary IP ranges to be allowed to
+          use NAT.
+
+          ▸ SUBNETWORK:ALL - specifying a subnetwork name with ALL includes
+            the primary range and all secondary ranges of the subnet.
+          ▸ SUBNETWORK - including a subnetwork name includes only the
+            primary subnet range of the subnetwork.
+          ▸ SUBNETWORK:RANGE_NAME - specifying a subnetwork and secondary
+            range name includes only that secondary range. It does not include
+            the primary range of the subnet.
+
+       --nat-primary-subnet-ip-ranges
+          Allow only primary IP ranges of all subnetworks in the region to use
+          NAT.
+
+     IPv6 subnetwork range options. If they are not specified, one of IPv4
+     subnetwork range option has to be provided.
+
+     At most one of these can be specified:
+
+       --nat64-all-v6-subnet-ip-ranges
+          Allow all ip ranges of ipv6 subnetworks in the region to use NAT.
+
+       --nat64-custom-v6-subnet-ip-ranges=SUBNETWORK,[SUBNETWORK,...]
+          List of ipv6 subnetworks to be allowed tp use NAT.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

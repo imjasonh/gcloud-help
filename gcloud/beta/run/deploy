@@ -46,7 +46,7 @@ SYNOPSIS
           --update-env-vars=[KEY=VALUE,...] --clear-secrets
           | --set-secrets=[KEY=VALUE,...] | --remove-secrets=[KEY,...]
           --update-secrets=[KEY=VALUE,...] --command=[COMMAND,...]
-          | --function=FUNCTION --image=IMAGE | --source=SOURCE]
+          | --function=FUNCTION --image=IMAGE --source=SOURCE]
         [--binary-authorization=POLICY | --clear-binary-authorization]
         [--clear-config-maps | --set-config-maps=[KEY=VALUE,...]
           | --remove-config-maps=[KEY,...]
@@ -617,27 +617,28 @@ FLAGS
               Specifies that the deployed object is a function. If a value is
               provided, that value is used as the entrypoint.
 
-         At most one of these can be specified:
+         --image=IMAGE
+            Name of the container image to deploy (e.g.
+            us-docker.pkg.dev/cloudrun/container/hello:latest). When used with
+            --source, the image must be the URI of an Artifact Registry Docker
+            repository in the Docker format
+            ($REGION-docker.pkg.dev/$PROJECT/$REPOSITORY").
 
-           --image=IMAGE
-              Name of the container image to deploy (e.g.
-              us-docker.pkg.dev/cloudrun/container/hello:latest).
-
-           --source=SOURCE
-              The location of the source to build. If a Dockerfile is present
-              in the source code directory, it will be built using that
-              Dockerfile, otherwise it will use Google Cloud buildpacks. See
-              https://cloud.google.com/run/docs/deploying-source-code for more
-              details. The location can be a directory on a local disk or a
-              gzipped archive file (.tar.gz) in Google Cloud Storage. If the
-              source is a local directory, this command skips the files
-              specified in the --ignore-file. If --ignore-file is not
-              specified, use .gcloudignore file. If a .gcloudignore file is
-              absent and a .gitignore file is present in the local source
-              directory, gcloud will use a generated Git-compatible
-              .gcloudignore file that respects your .gitignored files. The
-              global .gitignore is not respected. For more information on
-              .gcloudignore, see gcloud topic gcloudignore.
+         --source=SOURCE
+            The location of the source to build. If a Dockerfile is present in
+            the source code directory, it will be built using that Dockerfile,
+            otherwise it will use Google Cloud buildpacks. See
+            https://cloud.google.com/run/docs/deploying-source-code for more
+            details. The location can be a directory on a local disk or a
+            gzipped archive file (.tar.gz) in Google Cloud Storage. If the
+            source is a local directory, this command skips the files specified
+            in the --ignore-file. If --ignore-file is not specified, use
+            .gcloudignore file. If a .gcloudignore file is absent and a
+            .gitignore file is present in the local source directory, gcloud
+            will use a generated Git-compatible .gcloudignore file that
+            respects your .gitignored files. The global .gitignore is not
+            respected. For more information on .gcloudignore, see gcloud topic
+            gcloudignore.
 
      At most one of these can be specified:
 
