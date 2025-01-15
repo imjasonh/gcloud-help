@@ -3,8 +3,7 @@ NAME
         operation job
 
 SYNOPSIS
-    gcloud alpha storage batch-operations jobs create
-        (BATCH_JOB : --location=LOCATION)
+    gcloud alpha storage batch-operations jobs create BATCH_JOB
         (--manifest-location=MANIFEST_LOCATION
           | --prefix-list-file=PREFIX_LIST_FILE)
         (--put-kms-key=PUT_KMS_KEY | --put-metadata=KEY=VALUE,[KEY=VALUE,...]
@@ -19,35 +18,37 @@ DESCRIPTION
     manner.
 
 EXAMPLES
-    To create a batch job with the name my-job in location us-central1 to
-    perform object deletion where the manifest file gs://my-bucket/manifest.csv
-    specifies the objects to be transformed:
+    To create a batch job with the name my-job to perform object deletion where
+    the manifest file gs://my-bucket/manifest.csv specifies the objects to be
+    transformed:
 
         $ gcloud alpha storage batch-operations jobs create my-job \
-          --location=us-central1 \
           --manifest-location=gs://my-bucket/manifest.csv --delete-object
 
-    To create a batch job with the name my-job in location us-central1 to
-    update object metadata Content-Disposition to inline and Content-Language
-    to en where the prefix list file my-path/my-prefix-list.json specifies the
-    objects to be transformed:
+    To create a batch job with the name my-job to update object metadata
+    Content-Disposition to inline and Content-Language to en where the prefix
+    list file my-path/my-prefix-list.json specifies the objects to be
+    transformed:
 
         $ gcloud alpha storage batch-operations jobs create my-job \
-          --location=us-central1 \
           --prefix-list-file=my-path/my-prefix-list.json \
           --put-metadata=Content-Disposition=inline,Content-Language=en
 
 POSITIONAL ARGUMENTS
-     Batch job resource - The batch job to create. The arguments in this group
-     can be used to specify the attributes of this resource. (NOTE) Some
-     attributes are not given arguments in this group but can be set in other
-     ways.
+     Batch job resource - The batch job to create. This represents a Cloud
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways.
 
      To set the project attribute:
       ◆ provide the argument batch_job on the command line with a fully
         specified name;
       ◆ provide the argument --project on the command line;
       ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument batch_job on the command line with a fully
+        specified name;
+      ◆ The default is global.
 
      This must be specified.
 
@@ -56,17 +57,6 @@ POSITIONAL ARGUMENTS
 
           To set the batch-job attribute:
           ▸ provide the argument batch_job on the command line.
-
-          This positional argument must be specified if any of the other
-          arguments in this group are specified.
-
-       --location=LOCATION
-          Batch-operations supported Google Cloud location for the batch-job.
-
-          To set the location attribute:
-          ▸ provide the argument batch_job on the command line with a fully
-            specified name;
-          ▸ provide the argument --location on the command line.
 
 REQUIRED FLAGS
      Source specifying objects to perform batch operations on. Must be one of

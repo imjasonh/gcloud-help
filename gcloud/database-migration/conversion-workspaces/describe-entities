@@ -5,8 +5,9 @@ NAME
 SYNOPSIS
     gcloud database-migration conversion-workspaces describe-entities
         (CONVERSION_WORKSPACE : --region=REGION) --tree-type=TREE_TYPE
-        [--commit-id=COMMIT_ID] [--filter=FILTER] [--uncommitted]
-        [GCLOUD_WIDE_FLAG ...]
+        [--commit-id=COMMIT_ID] [--uncommitted] [--filter=EXPRESSION]
+        [--limit=LIMIT] [--page-size=PAGE_SIZE; default=100]
+        [--sort-by=[FIELD,...]] [--uri] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Describe database entities in a Database Migration conversion workspace.
@@ -56,21 +57,46 @@ REQUIRED FLAGS
         Tree type for database entities. TREE_TYPE must be one of: SOURCE,
         DRAFT.
 
-OPTIONAL FLAGS
+FLAGS
      --commit-id=COMMIT_ID
         Request a specific commit id. If not specified, the entities from the
         latest commit are returned.
-
-     --filter=FILTER
-        Filter the entities based on AIP-160 (https://google.aip.dev/160)
-        standard. Example: to filter all tables whose name start with
-        "Employee" and are present under schema "Company", use filter as
-        "Company.Employee* AND type=TABLE"
 
      --uncommitted
         Whether to retrieve the latest committed version of the entities or the
         latest version. This field is ignored if a specific commit_id is
         specified.
+
+LIST COMMAND FLAGS
+     --filter=EXPRESSION
+        Apply a Boolean filter EXPRESSION to each resource item to be listed.
+        If the expression evaluates True, then that item is listed. For more
+        details and examples of filter expressions, run $ gcloud topic filters.
+        This flag interacts with other flags that are applied in this order:
+        --flatten, --sort-by, --filter, --limit.
+
+     --limit=LIMIT
+        Maximum number of resources to list. The default is unlimited. This
+        flag interacts with other flags that are applied in this order:
+        --flatten, --sort-by, --filter, --limit.
+
+     --page-size=PAGE_SIZE; default=100
+        Some services group resource list output into pages. This flag
+        specifies the maximum number of resources per page. The default is 100.
+        Paging may be applied before or after --filter and --limit depending on
+        the service.
+
+     --sort-by=[FIELD,...]
+        Comma-separated list of resource field key names to sort by. The
+        default order is ascending. Prefix a field with ``~'' for descending
+        order on that field. This flag interacts with other flags that are
+        applied in this order: --flatten, --sort-by, --filter, --limit.
+
+     --uri
+        Print a list of resource URIs instead of the default output, and change
+        the command output to a list of URIs. If this flag is used with
+        --format, the formatting is applied on this URI list. To display URIs
+        alongside other keys instead, use the uri() transform.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
