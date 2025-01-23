@@ -7,7 +7,15 @@ SYNOPSIS
         [--description=DESCRIPTION] [--edition=EDITION]
         [--expire-behavior=EXPIRE_BEHAVIOR] [--instance-type=INSTANCE_TYPE]
         [--nodes=NODES | --processing-units=PROCESSING_UNITS
-          | --autoscaling-high-priority-cpu-target=AUTOSCALING_HIGH_PRIORITY_CPU_TARGET --autoscaling-storage-target=AUTOSCALING_STORAGE_TARGET --autoscaling-max-nodes=AUTOSCALING_MAX_NODES --autoscaling-min-nodes=AUTOSCALING_MIN_NODES | --autoscaling-max-processing-units=AUTOSCALING_MAX_PROCESSING_UNITS --autoscaling-min-processing-units=AUTOSCALING_MIN_PROCESSING_UNITS]
+          | --autoscaling-high-priority-cpu-target=AUTOSCALING_HIGH_PRIORITY_CPU_TARGET --autoscaling-storage-target=AUTOSCALING_STORAGE_TARGET --asymmetric-autoscaling-option=[high_priority_cpu_target=HIGH_PRIORITY_CPU_TARGET],
+          [location=LOCATION],[max_nodes=MAX_NODES],
+          [max_processing_units=MAX_PROCESSING_UNITS],
+          [min_nodes=MIN_NODES],[min_processing_units=MIN_PROCESSING_UNITS]
+          | --clear-asymmetric-autoscaling-option=LOCATION,[LOCATION,...]
+          --autoscaling-max-nodes=AUTOSCALING_MAX_NODES
+          --autoscaling-min-nodes=AUTOSCALING_MIN_NODES
+          | --autoscaling-max-processing-units=AUTOSCALING_MAX_PROCESSING_UNITS
+          --autoscaling-min-processing-units=AUTOSCALING_MIN_PROCESSING_UNITS]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -52,13 +60,15 @@ FLAGS
         Description of the instance.
 
      --edition=EDITION
-        Cloud Spanner edition. You can upgrade your Standard edition instance
-        to the ENTERPRISE edition or ENTERPRISE_PLUS edition. You can also
-        upgrade your Enterprise edition instance to the ENTERPRISE_PLUS
-        edition. Self-service downgrade isn't available. To downgrade the
-        edition of your instance, file a support ticket. For more information,
-        see the Spanner editions overview
-        (https://cloud.google.com/spanner/docs/editions-overview)
+        Spanner edition. You can upgrade your Standard edition instance to the
+        ENTERPRISE edition or ENTERPRISE_PLUS edition. You can also upgrade
+        your Enterprise edition instance to the ENTERPRISE_PLUS edition. You
+        can downgrade your ENTERPRISE_PLUS edition instance to the ENTERPRISE
+        or STANDARD edition. You can also downgrade your ENTERPRISE edition
+        instance to the STANDARD edition. You must stop using the higher-tier
+        edition features in order to downgrade. Otherwise, downgrade fails. For
+        more information, see Spanner editions overview
+        (https://cloud.google.com/spanner/docs/editions-overview).
 
      --expire-behavior=EXPIRE_BEHAVIOR
         The expire behavior of a free trial instance. EXPIRE_BEHAVIOR must be
@@ -100,6 +110,15 @@ FLAGS
          --autoscaling-storage-target=AUTOSCALING_STORAGE_TARGET
             Specifies the target percentage of storage the autoscaled instance
             can utilize.
+
+         At most one of these can be specified:
+
+           --asymmetric-autoscaling-option=[high_priority_cpu_target=HIGH_PRIORITY_CPU_TARGET],[location=LOCATION],[max_nodes=MAX_NODES],[max_processing_units=MAX_PROCESSING_UNITS],[min_nodes=MIN_NODES],[min_processing_units=MIN_PROCESSING_UNITS]
+              Specify the asymmetric autoscaling option for the instance.
+
+           --clear-asymmetric-autoscaling-option=LOCATION,[LOCATION,...]
+              Specify a comma separated list of locations from which to remove
+              asymmetric autoscaling options
 
          Autoscaling limits can be defined in either nodes or processing units.
 

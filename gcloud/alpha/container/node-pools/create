@@ -30,6 +30,7 @@ SYNOPSIS
         [--logging-variant=LOGGING_VARIANT]
         [--machine-type=MACHINE_TYPE, -m MACHINE_TYPE]
         [--max-pods-per-node=MAX_PODS_PER_NODE]
+        [--max-run-duration=MAX_RUN_DURATION]
         [--max-surge-upgrade=MAX_SURGE_UPGRADE; default=1]
         [--max-unavailable-upgrade=MAX_UNAVAILABLE_UPGRADE]
         [--metadata=KEY=VALUE,[KEY=VALUE,...]]
@@ -377,6 +378,13 @@ FLAGS
 
         Must be used in conjunction with '--enable-ip-alias'.
 
+     --max-run-duration=MAX_RUN_DURATION
+        Limit the runtime of each node in the node pool to the specified
+        duration.
+
+            $ gcloud alpha container node-pools create node-pool-1 \
+                --cluster=example-cluster --max-run-duration=3600s
+
      --max-surge-upgrade=MAX_SURGE_UPGRADE; default=1
         Number of extra (surge) nodes to be created on each upgrade of the node
         pool.
@@ -715,6 +723,28 @@ FLAGS
           podPidsLimit                         integer (The value must be
                                                greater than or equal to 1024 and
                                                less than 4194304.)
+          containerLogMaxSize                  positive number plus unit suffix
+                                               (e.g., '100Mi', '0.2Gi'. The
+                                               value must be between 10Mi and
+                                               500Mi.)
+          containerLogMaxFiles                 integer (The value must be
+                                               between [2, 10].)
+          imageGcLowThresholdPercent           integer (The value must be
+                                               between [10, 85], and lower than
+                                               imageGcHighThresholdPercent.)
+          imageGcHighThresholdPercent          integer (The value must be
+                                               between [10, 85], and greater
+                                               than imageGcLowThresholdPercent.)
+          imageMinimumGcAge                    interval (e.g., '100s', '1m'. The
+                                               value must be less than '2m'.)
+          imageMaximumGcAge                    interval (e.g., '100s', '1m'. The
+                                               value must be greater than
+                                               imageMinimumGcAge.)
+          allowedUnsafeSysctls                 list of sysctls (Allowlisted
+                                               groups: 'kernel.shm*',
+                                               'kernel.msg*', 'kernel.sem',
+                                               'fs.mqueue.*', and 'net.*', and
+                                               sysctls under the groups.)
 
         List of supported sysctls in 'linuxConfig'.
 
