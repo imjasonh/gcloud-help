@@ -3,9 +3,9 @@ NAME
         operation job
 
 SYNOPSIS
-    gcloud alpha storage batch-operations jobs create BATCH_JOB
-        (--manifest-location=MANIFEST_LOCATION
-          | --prefix-list-file=PREFIX_LIST_FILE)
+    gcloud alpha storage batch-operations jobs create BATCH_JOB --bucket=BUCKET
+        (--included-object-prefixes=[PREFIXES,...]
+          | --manifest-location=MANIFEST_LOCATION)
         (--put-kms-key=PUT_KMS_KEY | --put-metadata=KEY=VALUE,[KEY=VALUE,...]
           | [--delete-object : --enable-permanent-object-deletion]
           | --[no-]put-object-event-based-hold
@@ -26,12 +26,11 @@ EXAMPLES
           --manifest-location=gs://my-bucket/manifest.csv --delete-object
 
     To create a batch job with the name my-job to update object metadata
-    Content-Disposition to inline and Content-Language to en where the prefix
-    list file my-path/my-prefix-list.json specifies the objects to be
-    transformed:
+    Content-Disposition to inline and Content-Language to en where you want to
+    match objects with the prefix prefix1 or prefix2:
 
         $ gcloud alpha storage batch-operations jobs create my-job \
-          --prefix-list-file=my-path/my-prefix-list.json \
+          --included-object-prefixes=prefix1,prefix2 \
           --put-metadata=Content-Disposition=inline,Content-Language=en
 
 POSITIONAL ARGUMENTS
@@ -59,11 +58,18 @@ POSITIONAL ARGUMENTS
           ▸ provide the argument batch_job on the command line.
 
 REQUIRED FLAGS
+     --bucket=BUCKET
+        Bucket containing the objects that the batch job will operate on.
+
      Source specifying objects to perform batch operations on. Must be one of
      --manifest-location=``MANIFEST_LOCATION or
-     --prefix-list-file=``PREFIX_LIST_FILE
+     --included-object-prefixes=``COMMA_SEPARATED_PREFIXES
 
      Exactly one of these must be specified:
+
+       --included-object-prefixes=[PREFIXES,...]
+          A comma-separated list of object prefixes to describe the objects
+          being transformed. An empty string means all objects in the bucket.
 
        --manifest-location=MANIFEST_LOCATION
           An absolute path to the manifest source file in a Google Cloud
@@ -72,13 +78,6 @@ REQUIRED FLAGS
           optionally be specified. When generation is not specified, the live
           object is acted upon. Format:
           --manifest-location=gs://bucket_name/path/manifest_name.csv
-
-       --prefix-list-file=PREFIX_LIST_FILE
-          A path to a local JSON or YAML file containing a list of prefixes.
-          prefix is specified in the format of {"bucket": BUCKET_NAME,
-          "objectPrefix": OBJECT_PREFIX} where bucket is the name of the bucket
-          on which batch operation is being performed and objectPrefix is the
-          prefix of objects in the bucket that will be acted upon.
 
      Transformation to be performed on the objects.
 

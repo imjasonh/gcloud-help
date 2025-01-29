@@ -9,9 +9,10 @@ SYNOPSIS
         --network=[connect-mode=CONNECT-MODE],
           [name=NAME],[reserved-ip-range=RESERVED-IP-RANGE] [--async]
         [--description=DESCRIPTION] [--labels=[KEY=VALUE,...]]
-        [--location=LOCATION] [--region=REGION]
-        [--source-instance=SOURCE_INSTANCE] [--tags=[KEY=VALUE,...]]
-        [--tier=TIER; default="BASIC_HDD"]
+        [--location=LOCATION]
+        [--performance=[max-iops=MAX-IOPS],[max-iops-per-tb=MAX-IOPS-PER-TB]]
+        [--region=REGION] [--source-instance=SOURCE_INSTANCE]
+        [--tags=[KEY=VALUE,...]] [--tier=TIER; default="BASIC_HDD"]
         [--deletion-protection
           : --deletion-protection-reason=DELETION_PROTECTION_REASON]
         [--kms-key=KMS_KEY : --kms-keyring=KMS_KEYRING
@@ -188,8 +189,7 @@ REQUIRED FLAGS
             network.
          connect-mode
             Network connection mode used by instances. CONNECT_MODE must be one
-            of: DIRECT_PEERING, PRIVATE_SERVICE_ACCESS or
-            PRIVATE_SERVICE_CONNECT.
+            of: DIRECT_PEERING or PRIVATE_SERVICE_ACCESS.
 
 OPTIONAL FLAGS
      --async
@@ -209,6 +209,43 @@ OPTIONAL FLAGS
 
      --location=LOCATION
         Location of the Cloud Filestore instance/operation.
+
+     --performance=[max-iops=MAX-IOPS],[max-iops-per-tb=MAX-IOPS-PER-TB]
+        Performance configuration for the instance. This flag is used to
+        configure the read IOPS provisioned for the instance. The instance's
+        write IOPS and read/write throughputs will be derived from the
+        configured read IOPS. For more information about the derived
+        performance limits and default performance see:
+        https://cloud.google.com/filestore/docs/performance. Must be one of:
+
+            max-iops
+              The number of IOPS to provision for the instance.
+              MAX-IOPS must be in multiple of 1000 and in the supported IOPS
+              range for the current capacity of the instance.
+              For more details, see: https://cloud.google.com/filestore/docs/performance.
+
+            max-iops-per-tb
+              Is used for setting the max IOPS of the instance by
+              specifying the IOPS per TB. When this parameter is used, the
+              max IOPS are derived from the instance capacity:
+              The instance max IOPS will be calculated by multiplying the
+              capacity of the instance (TB) by MAX-IOPS-PER-TB, and rounding
+              to the nearest 1000. The max IOPS will be changed
+              dynamically based on the instance capacity.
+              MAX-IOPS-PER-TB must be in the supported range of the instance.
+              For more details, see: https://cloud.google.com/filestore/docs/performance.
+
+        Examples:
+
+        Configure an instance with max-iops performance:
+
+            $ gcloud filestore instances create example-cluster \
+                --performance=max-iops=17000
+
+        Configure an instance with max-iops-per-tb performance:
+
+            $ gcloud filestore instances create example-cluster \
+                --performance=max-iops-per-tb=17000
 
      --region=REGION
         Region of the Cloud Filestore instance.
