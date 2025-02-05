@@ -4,21 +4,23 @@ NAME
 
 SYNOPSIS
     gcloud alpha compute future-reservations create FUTURE_RESERVATION
-        --[no-]auto-delete-auto-created-reservations --total-count=TOTAL_COUNT
+        --[no-]auto-delete-auto-created-reservations
         (--source-instance-template=SOURCE_INSTANCE_TEMPLATE
           | [--machine-type=MACHINE_TYPE
           : --accelerator=[count=COUNT],[type=TYPE]
           --local-ssd=[count=COUNT],[interface=INTERFACE],[size=SIZE]
           --maintenance-freeze-duration=MAINTENANCE_FREEZE_DURATION
           --maintenance-interval=MAINTENANCE_INTERVAL
-          --min-cpu-platform=MIN_CPU_PLATFORM])
+          --min-cpu-platform=MIN_CPU_PLATFORM] | [--tpu-version=TPU_VERSION
+          : --tpu-count=TPU_COUNT --workload-type=WORKLOAD_TYPE])
         (--start-time=START_TIME (--duration=DURATION | --end-time=END_TIME))
         [--deployment-type=DEPLOYMENT_TYPE] [--description=DESCRIPTION]
         [--name-prefix=NAME_PREFIX] [--planning-status=PLANNING_STATUS]
         [--[no-]require-specific-reservation]
         [--reservation-mode=RESERVATION_MODE]
         [--reservation-name=RESERVATION_NAME]
-        [--scheduling-type=SCHEDULING_TYPE] [--zone=ZONE]
+        [--scheduling-type=SCHEDULING_TYPE] [--total-count=TOTAL_COUNT]
+        [--zone=ZONE]
         [--auto-created-reservations-delete-time=AUTO_CREATED_RESERVATIONS_DELETE_TIME | --auto-created-reservations-duration=AUTO_CREATED_RESERVATIONS_DURATION]
         [--commitment-name=COMMITMENT_NAME --commitment-plan=COMMITMENT_PLAN
           --previous-commitment-terms=PREVIOUS_COMMITMENT_TERMS]
@@ -61,13 +63,10 @@ REQUIRED FLAGS
         Use --auto-delete-auto-created-reservations to enable and
         --no-auto-delete-auto-created-reservations to disable.
 
-     --total-count=TOTAL_COUNT
-        The total number of instances for which capacity assurance is requested
-        at a future time period.
-
-     Manage the instance properties for the auto-created reservations. You must
-     either provide a source instance template or define the instance
-     properties.
+     To create a future reservation request, specify the properties of the
+     resources that you want to reserve and when you want to start using them.
+     After the request is approved, Compute Engine automatically creates
+     reservations for your requested resources at your specified start time.
 
      Exactly one of these must be specified:
 
@@ -139,6 +138,35 @@ REQUIRED FLAGS
 
          --min-cpu-platform=MIN_CPU_PLATFORM
             Optional minimum CPU platform of the reservation to create.
+
+       You must define the version and number of TPUs to reserve.
+
+         --tpu-version=TPU_VERSION
+            The version of Cloud TPU to reserve. TPU_VERSION must be one of:
+
+             V5E
+                Cloud TPU v5e Lite
+             V5P
+                Cloud TPU v5p
+             V6E
+                Cloud TPU v6e
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --tpu-count=TPU_COUNT
+            The number of TPUs to reserve.
+
+         --workload-type=WORKLOAD_TYPE
+            The workload type of the TPU reservation. WORKLOAD_TYPE must be one
+            of:
+
+             BATCH
+                Reserved resources will be optimized for BATCH workloads, such
+                as ML training.
+             SERVING
+                Reserved resources will be optimized for SERVING workloads,
+                such as ML inference
 
      Manage the time specific properties for requesting future capacity
 
@@ -237,6 +265,10 @@ OPTIONAL FLAGS
          INDEPENDENT
             In INDEPENDENT mode, maintenance is not synchronized for this
             reservation, and each instance has its own maintenance window.
+
+     --total-count=TOTAL_COUNT
+        The total number of instances for which capacity assurance is requested
+        at a future time period.
 
      --zone=ZONE
         Zone of the future reservation to create. If not specified and the

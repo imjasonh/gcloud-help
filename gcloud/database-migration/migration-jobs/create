@@ -7,9 +7,10 @@ SYNOPSIS
         (MIGRATION_JOB : --region=REGION) --destination=DESTINATION
         --source=SOURCE --type=TYPE [--no-async] [--commit-id=COMMIT_ID]
         [--conversion-workspace=CONVERSION_WORKSPACE]
-        [--databases-filter=databaseName,[...]] [--display-name=DISPLAY_NAME]
+        [--display-name=DISPLAY_NAME]
         [--dump-parallel-level=DUMP_PARALLEL_LEVEL] [--dump-path=DUMP_PATH]
         [--dump-type=DUMP_TYPE] [--filter=FILTER] [--labels=[KEY=VALUE,...]]
+        [--all-databases | --databases-filter=databaseName,[...]]
         [--cmek-key=CMEK_KEY
           : --cmek-keyring=CMEK_KEYRING --cmek-project=CMEK_PROJECT]
         [--peer-vpc=PEER_VPC | --static-ip
@@ -187,14 +188,6 @@ OPTIONAL FLAGS
           To set the conversion_workspace attribute:
           ▸ provide the argument --conversion-workspace on the command line.
 
-     The migration job objects config.
-
-       --databases-filter=databaseName,[...]
-          A list of databases to be migrated to the destination instance.
-          Provide databases as a comma separated list. This flag is used only
-          for Postgres to AlloyDB and SQL Server to Cloud SQL SQL Server
-          migrations.
-
      --display-name=DISPLAY_NAME
         A user-friendly name for the migration job. The display name can
         include letters, numbers, spaces, and hyphens, and must start with a
@@ -226,6 +219,21 @@ OPTIONAL FLAGS
         (-), underscores (_), lowercase characters, and numbers. Values must
         contain only hyphens (-), underscores (_), lowercase characters, and
         numbers.
+
+     The migration job objects config.
+
+       The migration job objects config for databases.
+
+       At most one of these can be specified:
+
+         --all-databases
+            Migrate all databases for the migration job. This flag is used only
+            for Postgres to AlloyDB migrations.
+
+         --databases-filter=databaseName,[...]
+            A list of databases to be migrated to the destination instance.
+            Provide databases as a comma separated list. This flag is used only
+            for Postgres to AlloyDB migrations.
 
      Cmek key resource - Name of the CMEK (customer-managed encryption key)
      used for the migration job The arguments in this group can be used to

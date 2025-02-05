@@ -4,7 +4,6 @@ NAME
 SYNOPSIS
     gcloud beta dataproc clusters create (CLUSTER : --region=REGION) [--async]
         [--autoscaling-policy=AUTOSCALING_POLICY] [--bucket=BUCKET]
-        [--dataproc-metastore=DATAPROC_METASTORE]
         [--driver-pool-accelerator=[type=TYPE,[count=COUNT],...]]
         [--driver-pool-boot-disk-size=DRIVER_POOL_BOOT_DISK_SIZE]
         [--driver-pool-boot-disk-type=DRIVER_POOL_BOOT_DISK_TYPE]
@@ -51,6 +50,8 @@ SYNOPSIS
         [--worker-boot-disk-type=WORKER_BOOT_DISK_TYPE]
         [--worker-local-ssd-interface=WORKER_LOCAL_SSD_INTERFACE]
         [--worker-min-cpu-platform=PLATFORM] [--zone=ZONE, -z ZONE]
+        [--dataproc-metastore=DATAPROC_METASTORE | --bigquery-metastore
+          --bigquery-metastore-database-location=BIGQUERY_METASTORE_DATABASE_LOCATION --bigquery-metastore-project-id=BIGQUERY_METASTORE_PROJECT_ID]
         [--expiration-time=EXPIRATION_TIME | --max-age=MAX_AGE]
         [--gce-pd-kms-key=GCE_PD_KMS_KEY
           : --gce-pd-kms-key-keyring=GCE_PD_KMS_KEY_KEYRING
@@ -135,11 +136,6 @@ FLAGS
         The Google Cloud Storage bucket to use by default to stage job
         dependencies, miscellaneous config files, and job driver console output
         when using this cluster.
-
-     --dataproc-metastore=DATAPROC_METASTORE
-        Specify the name of a Dataproc Metastore service to be used as an
-        external metastore in the format:
-        "projects/{project-id}/locations/{region}/services/{service-name}".
 
      --driver-pool-accelerator=[type=TYPE,[count=COUNT],...]
         Attaches accelerators, such as GPUs, to the driver-pool instance(s).
@@ -481,6 +477,26 @@ FLAGS
         --region is set to a value other than global, the server will pick a
         zone in the region. Overrides the default compute/zone property value
         for this command invocation.
+
+     At most one of these can be specified:
+
+       --dataproc-metastore=DATAPROC_METASTORE
+          Specify the name of a Dataproc Metastore service to be used as an
+          external metastore in the format:
+          "projects/{project-id}/locations/{region}/services/{service-name}".
+
+       BQMS flags
+
+         --bigquery-metastore
+            Indicates that BigQuery metastore is to be used.
+
+         --bigquery-metastore-database-location=BIGQUERY_METASTORE_DATABASE_LOCATION
+            Location of the BigQuery metastore database to be used as an
+            external metastore.
+
+         --bigquery-metastore-project-id=BIGQUERY_METASTORE_PROJECT_ID
+            The project ID of the BigQuery metastore database to be used as an
+            external metastore.
 
      At most one of these can be specified:
 

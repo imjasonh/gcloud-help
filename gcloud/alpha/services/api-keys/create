@@ -4,6 +4,7 @@ NAME
 SYNOPSIS
     gcloud alpha services api-keys create [--annotations=[KEY=VALUE,...]]
         [--async] [--display-name=DISPLAY_NAME] [--key-id=KEY_ID]
+        [--service-account=SERVICE_ACCOUNT]
         [--api-target=service=SERVICE,[...]
           --allowed-application=[sha1_fingerprint=SHA1_FINGERPRINT,
           package_name=PACKAGE_NAME,...]
@@ -15,7 +16,7 @@ DESCRIPTION
     (ALPHA) Create an API key.
 
 EXAMPLES
-    To create a key with display name and allowed ips specified:
+    To create a key with display name and allowed IPs specified:
 
         $ gcloud alpha services api-keys create --display-name="test name" \
             --allowed-ips=2620:15c:2c4:203:2776:1f90:6b3b:217,104.133.8.78
@@ -24,7 +25,7 @@ EXAMPLES
 
         $ gcloud alpha services api-keys create --annotations=foo=bar,abc=def
 
-    To create a key with user-specified key id:
+    To create a key with user-specified key ID:
 
         $ gcloud alpha services api-keys create --key-id="my-key-id"
 
@@ -34,29 +35,34 @@ EXAMPLES
             --allowed-referrers="https://www.example.com/*,http://sub.exampl\
         e.com/*"
 
-    To create a key with allowed ios app bundle ids:
+    To create a key with allowed IOS app bundle IDs:
 
         $ gcloud alpha services api-keys create --allowed-bundle-ids=my.app
 
-    To create a key with allowed android application:
+    To create a key with allowed Android application:
 
         $ gcloud alpha services api-keys create \
             --allowed-application=sha1_fingerprint=foo1,\
         package_name=bar.foo \
             --allowed-application=sha1_fingerprint=foo2,package_name=foo.bar
 
-    To create a key with allowed api targets (service name only):
+    To create a key with allowed API targets (service name only):
 
         $ gcloud alpha services api-keys create \
             --api-target=service=bar.service.com \
             --api-target=service=foo.service.com
 
-    To create a keys with allowed api targets (service and methods are
+    To create a key with service account:
+
+        $ gcloud alpha services api-keys create \
+            --service-account=my-service-account
+
+    To create a key with allowed API targets (service and methods are
     specified):
 
         $ gcloud alpha services api-keys create --flags-file=my-flags.yaml
 
-    The content of 'my-flags.yaml' is as following:
+    The content of 'my-flags.yaml' is as follows:
 
         - --api-target:
             service: "foo.service.com"
@@ -80,6 +86,10 @@ FLAGS
 
      --key-id=KEY_ID
         User-specified ID of the key to create.
+
+     --service-account=SERVICE_ACCOUNT
+        The email of the service account the key is bound to. If this field is
+        specified, the key is a service account bound key and auth enabled.
 
      --api-target=service=SERVICE,[...]
         Repeatable. Specify service and optionally one or multiple specific

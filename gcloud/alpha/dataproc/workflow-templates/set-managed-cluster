@@ -6,7 +6,7 @@ SYNOPSIS
     gcloud alpha dataproc workflow-templates set-managed-cluster
         (TEMPLATE : --region=REGION) [--autoscaling-policy=AUTOSCALING_POLICY]
         [--bucket=BUCKET] [--cluster-name=CLUSTER_NAME]
-        [--dataproc-metastore=DATAPROC_METASTORE] [--enable-component-gateway]
+        [--enable-component-gateway]
         [--initialization-action-timeout=TIMEOUT; default="10m"]
         [--initialization-actions=CLOUD_STORAGE_URI,[...]]
         [--labels=[KEY=VALUE,...]]
@@ -44,6 +44,8 @@ SYNOPSIS
         [--worker-boot-disk-type=WORKER_BOOT_DISK_TYPE]
         [--worker-local-ssd-interface=WORKER_LOCAL_SSD_INTERFACE]
         [--worker-min-cpu-platform=PLATFORM] [--zone=ZONE, -z ZONE]
+        [--dataproc-metastore=DATAPROC_METASTORE | --bigquery-metastore
+          --bigquery-metastore-database-location=BIGQUERY_METASTORE_DATABASE_LOCATION --bigquery-metastore-project-id=BIGQUERY_METASTORE_PROJECT_ID]
         [--image=IMAGE | --image-version=VERSION]
         [--kerberos-config-file=KERBEROS_CONFIG_FILE | --enable-kerberos
           --kerberos-root-principal-password-uri=KERBEROS_ROOT_PRINCIPAL_PASSWORD_URI [--kerberos-kms-key=KERBEROS_KMS_KEY : --kerberos-kms-key-keyring=KERBEROS_KMS_KEY_KEYRING --kerberos-kms-key-location=KERBEROS_KMS_KEY_LOCATION --kerberos-kms-key-project=KERBEROS_KMS_KEY_PROJECT]]
@@ -124,11 +126,6 @@ FLAGS
      --cluster-name=CLUSTER_NAME
         The name of the managed dataproc cluster. If unspecified, the workflow
         template ID will be used.
-
-     --dataproc-metastore=DATAPROC_METASTORE
-        Specify the name of a Dataproc Metastore service to be used as an
-        external metastore in the format:
-        "projects/{project-id}/locations/{region}/services/{service-name}".
 
      --enable-component-gateway
         Enable access to the web UIs of selected components on the cluster
@@ -413,6 +410,26 @@ FLAGS
         --region is set to a value other than global, the server will pick a
         zone in the region. Overrides the default compute/zone property value
         for this command invocation.
+
+     At most one of these can be specified:
+
+       --dataproc-metastore=DATAPROC_METASTORE
+          Specify the name of a Dataproc Metastore service to be used as an
+          external metastore in the format:
+          "projects/{project-id}/locations/{region}/services/{service-name}".
+
+       BQMS flags
+
+         --bigquery-metastore
+            Indicates that BigQuery metastore is to be used.
+
+         --bigquery-metastore-database-location=BIGQUERY_METASTORE_DATABASE_LOCATION
+            Location of the BigQuery metastore database to be used as an
+            external metastore.
+
+         --bigquery-metastore-project-id=BIGQUERY_METASTORE_PROJECT_ID
+            The project ID of the BigQuery metastore database to be used as an
+            external metastore.
 
      At most one of these can be specified:
 

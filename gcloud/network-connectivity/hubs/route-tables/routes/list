@@ -3,8 +3,8 @@ NAME
 
 SYNOPSIS
     gcloud network-connectivity hubs route-tables routes list
-        (--route_table=ROUTE_TABLE : --hub=HUB)
-        [--effective-location=EFFECTIVE_LOCATION] [--filter=EXPRESSION]
+        [--effective-location=EFFECTIVE_LOCATION]
+        [--hub=HUB --route_table=ROUTE_TABLE] [--filter=EXPRESSION]
         [--limit=LIMIT] [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]]
         [GCLOUD_WIDE_FLAG ...]
 
@@ -29,7 +29,12 @@ EXAMPLES
             --hub=my-hub --route_table=my-route-table \
             --effective-location=location
 
-REQUIRED FLAGS
+FLAGS
+     --effective-location=EFFECTIVE_LOCATION
+        The effective location/region to limit the list of routes. The
+        effective location must be a valid region name. To list valid region
+        names, use 'gcloud compute regions list'.
+
      Route table resource - Parent route table of the routes to display. The
      arguments in this group can be used to specify the attributes of this
      resource. (NOTE) Some attributes are not given arguments in this group but
@@ -38,20 +43,10 @@ REQUIRED FLAGS
      To set the project attribute:
       ◆ provide the argument --route_table on the command line with a fully
         specified name;
+      ◆ if route table is empty, will use wildcard '-' to list all route
+        tables with a fully specified name;
       ◆ provide the argument --project on the command line;
       ◆ set the property core/project.
-
-     This must be specified.
-
-       --route_table=ROUTE_TABLE
-          ID of the route table or fully qualified identifier for the route
-          table.
-
-          To set the route_table attribute:
-          ▸ provide the argument --route_table on the command line.
-
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
 
        --hub=HUB
           Id of the hub.
@@ -59,13 +54,19 @@ REQUIRED FLAGS
           To set the hub attribute:
           ▸ provide the argument --route_table on the command line with a
             fully specified name;
-          ▸ provide the argument --hub on the command line.
+          ▸ if route table is empty, will use wildcard '-' to list all route
+            tables with a fully specified name;
+          ▸ provide the argument --hub on the command line;
+          ▸ if hub is empty, will use the wildcard '-' to indicate all hubs.
 
-FLAGS
-     --effective-location=EFFECTIVE_LOCATION
-        The effective location/region to limit the list of routes. The
-        effective location must be a valid region name. To list valid region
-        names, use 'gcloud compute regions list'.
+       --route_table=ROUTE_TABLE
+          ID of the route table or fully qualified identifier for the route
+          table.
+
+          To set the route_table attribute:
+          ▸ provide the argument --route_table on the command line;
+          ▸ if route table is empty, will use wildcard '-' to list all route
+            tables .
 
 LIST COMMAND FLAGS
      --filter=EXPRESSION
