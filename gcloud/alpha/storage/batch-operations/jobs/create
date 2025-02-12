@@ -6,7 +6,8 @@ SYNOPSIS
     gcloud alpha storage batch-operations jobs create BATCH_JOB --bucket=BUCKET
         (--included-object-prefixes=[PREFIXES,...]
           | --manifest-location=MANIFEST_LOCATION)
-        (--put-kms-key=PUT_KMS_KEY | --put-metadata=KEY=VALUE,[KEY=VALUE,...]
+        (--put-metadata=KEY=VALUE,[KEY=VALUE,...]
+          | --rewrite-object=KEY=VALUE,[KEY=VALUE,...]
           | [--delete-object : --enable-permanent-object-deletion]
           | --[no-]put-object-event-based-hold
           --[no-]put-object-temporary-hold) [--description=DESCRIPTION]
@@ -83,12 +84,6 @@ REQUIRED FLAGS
 
      Exactly one of these must be specified:
 
-       --put-kms-key=PUT_KMS_KEY
-          Sets the resource name of the Cloud KMS key that will be used to
-          encrypt the object. The Cloud KMS key must be located in same
-          location as the object. Format:
-          --put-kms-key=projects/PROJECT_ID/locations/LOCATION/keyRings/KEY_RING/cryptoKeys/CRYPTO_KEY
-
        --put-metadata=KEY=VALUE,[KEY=VALUE,...]
           Sets object metadata. To set how content should be displayed, specify
           the the key-value pair Content-Disposition={VALUE}. To set how
@@ -105,6 +100,13 @@ REQUIRED FLAGS
           predefined keys are case-insensitive. Multiple key-value pairs can be
           specified by separating them with commas. For example,
           --put-metadata=Content-Disposition=inline,Content-Encoding=gzip
+
+       --rewrite-object=KEY=VALUE,[KEY=VALUE,...]
+          Rewrites object and the specified metadata. Currently only supports
+          rewriting kms-key. A metadata field MUST be specified. For example,
+          --rewrite-object=kms-key=projects/PROJECT_ID/locations/LOCATION/keyRings/KEY_RING/cryptoKeys/CRYPTO_KEY
+          will rewrite the Cloud KMS key that will be used to encrypt the
+          object.
 
        Describes options to delete objects.
 

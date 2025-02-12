@@ -3,7 +3,8 @@ NAME
 
 SYNOPSIS
     gcloud monitoring snoozes create [--snooze-from-file=PATH_TO_FILE]
-        [--criteria-policies=CRITERIA_POLICIES,[...]
+        [--criteria-filter=CRITERIA_FILTER
+          --criteria-policies=CRITERIA_POLICIES,[...]
           --display-name=DISPLAY_NAME
           --end-time=END_TIME --start-time=START_TIME] [GCLOUD_WIDE_FLAG ...]
 
@@ -21,7 +22,7 @@ EXAMPLES
     To create a snooze with command-line options, run:
 
         $ gcloud monitoring snoozes create \
-            --criteria-policies=LIST_OF_POLICIES \
+            --criteria-policies=LIST_OF_POLICIES --criteria-filter=FILTER \
             --display-name=DISPLAY_NAME --start-time=START_TIME \
             --end-time=END_TIME
 
@@ -34,6 +35,7 @@ EXAMPLES
         criteria:
           policies:
           - projects/MY-PROJECT/alertPolicies/MY-POLICY
+          filter: 'resource.labels.zone="us-central1-a" AND resource.labels.instance_id="1234567890"'
         interval:
           startTime: '2024-03-01T08:00:00Z'
           endTime: '2024-03-08T04:59:59.500Z'
@@ -47,8 +49,20 @@ FLAGS
      Snooze Settings. If any of these are specified, they will overwrite fields
      in the --snooze-from-file flags if specified.
 
+       --criteria-filter=CRITERIA_FILTER
+          The filter that the Snooze applies to, which is a string to match on
+          Alert fields when silencing the alerts. It follows the standard
+          https://google.aip.dev/160 syntax. Filters can be defined for snoozes
+          that apply to one alerting policy. Filters must be a string formatted
+          as one or more resource labels with specific label values. If
+          multiple resource labels are used, then they must be connected with
+          an AND operator. For example:
+          resource.labels.instance_id="1234567890" AND
+          resource.labels.zone="us-central1-a"
+
        --criteria-policies=CRITERIA_POLICIES,[...]
-          The policies that the Snooze applies to.
+          The policies that the Snooze applies to. Exactly 1 alert policy is
+          required if criteria-filter is specified at the same time.
 
        --display-name=DISPLAY_NAME
           The display name for the Snooze.

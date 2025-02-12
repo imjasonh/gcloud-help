@@ -17,8 +17,7 @@ SYNOPSIS
         [--idle-timeout=IDLE_TIMEOUT] [--labels=[LABELS,...]]
         [--machine-type=MACHINE_TYPE]
         [--max-usable-workstations-count=MAX_USABLE_WORKSTATIONS_COUNT]
-        [--network-tags=[NETWORK_TAGS,...]]
-        [--pd-source-snapshot=PD_SOURCE_SNAPSHOT] [--pool-size=POOL_SIZE]
+        [--network-tags=[NETWORK_TAGS,...]] [--pool-size=POOL_SIZE]
         [--running-timeout=RUNNING_TIMEOUT] [--service-account=SERVICE_ACCOUNT]
         [--service-account-scopes=[SERVICE_ACCOUNT_SCOPES,...]]
         [--shielded-integrity-monitoring] [--shielded-secure-boot]
@@ -29,6 +28,8 @@ SYNOPSIS
           | --container-predefined-image=CONTAINER_PREDEFINED_IMAGE]
         [--disable-ssh-to-vm | --enable-ssh-to-vm]
         [--disable-tcp-connections | --enable-tcp-connections]
+        [--pd-source-snapshot=PD_SOURCE_SNAPSHOT | --pd-disk-size=PD_DISK_SIZE
+          --pd-disk-type=PD_DISK_TYPE; default="pd-standard"]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -215,9 +216,6 @@ FLAGS
 
             $ gcloud workstations configs update --network-tags=tag_1,tag_2
 
-     --pd-source-snapshot=PD_SOURCE_SNAPSHOT
-        Name of the snapshot to use as the source for the home disk.
-
      --pool-size=POOL_SIZE
         Number of instances to pool for faster Workstation startup.
 
@@ -322,6 +320,23 @@ FLAGS
 
        --enable-tcp-connections
           If set, workstations allow plain TCP connections.
+
+     At most one of these can be specified:
+
+       --pd-source-snapshot=PD_SOURCE_SNAPSHOT
+          Name of the snapshot to use as the source for the persistent
+          directory.
+
+       --pd-source-snapshot cannot be specified when --pd-disk-size or
+       --pd-disk-type is specified.
+
+         --pd-disk-size=PD_DISK_SIZE
+            Size of the persistent directory in GB. PD_DISK_SIZE must be one
+            of: 10, 50, 100, 200, 500, 1000.
+
+         --pd-disk-type=PD_DISK_TYPE; default="pd-standard"
+            Type of the persistent directory. PD_DISK_TYPE must be one of:
+            pd-standard, pd-balanced, pd-ssd.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
