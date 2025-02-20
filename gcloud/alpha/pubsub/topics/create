@@ -7,9 +7,11 @@ SYNOPSIS
         [--labels=[KEY=VALUE,...]]
         [--message-retention-duration=MESSAGE_RETENTION_DURATION]
         [--ingestion-log-severity=INGESTION_LOG_SEVERITY
-          [--cloud-storage-ingestion-bucket=CLOUD_STORAGE_INGESTION_BUCKET
-          --cloud-storage-ingestion-input-format=INPUT_FORMAT
-          : --cloud-storage-ingestion-text-delimiter=CLOUD_STORAGE_INGESTION_TEXT_DELIMITER --cloud-storage-ingestion-minimum-object-create-time=CLOUD_STORAGE_INGESTION_MINIMUM_OBJECT_CREATE_TIME --cloud-storage-ingestion-match-glob=CLOUD_STORAGE_INGESTION_MATCH_GLOB] | --kinesis-ingestion-consumer-arn=KINESIS_INGESTION_CONSUMER_ARN --kinesis-ingestion-role-arn=KINESIS_INGESTION_ROLE_ARN --kinesis-ingestion-service-account=KINESIS_INGESTION_SERVICE_ACCOUNT --kinesis-ingestion-stream-arn=KINESIS_INGESTION_STREAM_ARN]
+          --aws-msk-ingestion-aws-role-arn=AWS_MSK_INGESTION_AWS_ROLE_ARN
+          --aws-msk-ingestion-cluster-arn=AWS_MSK_INGESTION_CLUSTER_ARN
+          --aws-msk-ingestion-service-account=AWS_MSK_INGESTION_SERVICE_ACCOUNT
+          --aws-msk-ingestion-topic=AWS_MSK_INGESTION_TOPIC
+          | --azure-event-hubs-ingestion-client-id=AZURE_EVENT_HUBS_INGESTION_CLIENT_ID --azure-event-hubs-ingestion-event-hub=AZURE_EVENT_HUBS_INGESTION_EVENT_HUB --azure-event-hubs-ingestion-namespace=AZURE_EVENT_HUBS_INGESTION_NAMESPACE --azure-event-hubs-ingestion-resource-group=AZURE_EVENT_HUBS_INGESTION_RESOURCE_GROUP --azure-event-hubs-ingestion-service-account=AZURE_EVENT_HUBS_INGESTION_SERVICE_ACCOUNT --azure-event-hubs-ingestion-subscription-id=AZURE_EVENT_HUBS_INGESTION_SUBSCRIPTION_ID --azure-event-hubs-ingestion-tenant-id=AZURE_EVENT_HUBS_INGESTION_TENANT_ID | [--cloud-storage-ingestion-bucket=CLOUD_STORAGE_INGESTION_BUCKET --cloud-storage-ingestion-input-format=INPUT_FORMAT : --cloud-storage-ingestion-text-delimiter=CLOUD_STORAGE_INGESTION_TEXT_DELIMITER --cloud-storage-ingestion-minimum-object-create-time=CLOUD_STORAGE_INGESTION_MINIMUM_OBJECT_CREATE_TIME --cloud-storage-ingestion-match-glob=CLOUD_STORAGE_INGESTION_MATCH_GLOB] | --confluent-cloud-ingestion-bootstrap-server=CONFLUENT_CLOUD_INGESTION_BOOTSTRAP_SERVER --confluent-cloud-ingestion-cluster-id=CONFLUENT_CLOUD_INGESTION_CLUSTER_ID --confluent-cloud-ingestion-identity-pool-id=CONFLUENT_CLOUD_INGESTION_IDENTITY_POOL_ID --confluent-cloud-ingestion-service-account=CONFLUENT_CLOUD_INGESTION_SERVICE_ACCOUNT --confluent-cloud-ingestion-topic=CONFLUENT_CLOUD_INGESTION_TOPIC | --kinesis-ingestion-consumer-arn=KINESIS_INGESTION_CONSUMER_ARN --kinesis-ingestion-role-arn=KINESIS_INGESTION_ROLE_ARN --kinesis-ingestion-service-account=KINESIS_INGESTION_SERVICE_ACCOUNT --kinesis-ingestion-stream-arn=KINESIS_INGESTION_STREAM_ARN]
         [--message-encoding=ENCODING (--schema=SCHEMA
           : --schema-project=SCHEMA_PROJECT)
           : --first-revision-id=FIRST_REVISION_ID
@@ -78,6 +80,81 @@ FLAGS
 
        At most one of these can be specified:
 
+         Flags that specify settings for an import topic from Amazon Web
+         Services (AWS) Managed Streaming for Apache Kafka (MSK)
+
+           --aws-msk-ingestion-aws-role-arn=AWS_MSK_INGESTION_AWS_ROLE_ARN
+              AWS role ARN to be used for Federated Identity authentication
+              with MSK.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --aws-msk-ingestion-cluster-arn=AWS_MSK_INGESTION_CLUSTER_ARN
+              ARN that uniquely identifies the MSK cluster.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --aws-msk-ingestion-service-account=AWS_MSK_INGESTION_SERVICE_ACCOUNT
+              Google Cloud service account to be used for Federated Identity
+              authentication with MSK.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --aws-msk-ingestion-topic=AWS_MSK_INGESTION_TOPIC
+              Name of the MSK topic that Pub/Sub will import from.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+         Flags that specify settings for an import topic from Azure Event Hubs
+
+           --azure-event-hubs-ingestion-client-id=AZURE_EVENT_HUBS_INGESTION_CLIENT_ID
+              Azure Event Hubs client ID to use for ingestion.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --azure-event-hubs-ingestion-event-hub=AZURE_EVENT_HUBS_INGESTION_EVENT_HUB
+              Azure event hub from which to ingest data.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --azure-event-hubs-ingestion-namespace=AZURE_EVENT_HUBS_INGESTION_NAMESPACE
+              Azure Event Hubs namespace from which to ingest data.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --azure-event-hubs-ingestion-resource-group=AZURE_EVENT_HUBS_INGESTION_RESOURCE_GROUP
+              Azure Event Hubs resource group from within an Azure
+              subscription.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --azure-event-hubs-ingestion-service-account=AZURE_EVENT_HUBS_INGESTION_SERVICE_ACCOUNT
+              Google Cloud service account to be used for Federated Identity
+              authentication with Azure Event Hubs.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --azure-event-hubs-ingestion-subscription-id=AZURE_EVENT_HUBS_INGESTION_SUBSCRIPTION_ID
+              Azure Event Hubs subscription ID to use for ingestion.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --azure-event-hubs-ingestion-tenant-id=AZURE_EVENT_HUBS_INGESTION_TENANT_ID
+              Azure Event Hubs tenant ID to use for ingestion.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
          Flags that specify settings for an import topic from Cloud Storage
 
            --cloud-storage-ingestion-bucket=CLOUD_STORAGE_INGESTION_BUCKET
@@ -104,6 +181,40 @@ FLAGS
               Glob pattern used to match Cloud Storage objects that will be
               ingested. If unset, all objects will be ingested.
 
+         Flags that specify settings for an import topic from Confluent Cloud
+
+           --confluent-cloud-ingestion-bootstrap-server=CONFLUENT_CLOUD_INGESTION_BOOTSTRAP_SERVER
+              Confluent Cloud bootstrap server. The format is url:port.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --confluent-cloud-ingestion-cluster-id=CONFLUENT_CLOUD_INGESTION_CLUSTER_ID
+              Confluent Cloud cluster ID.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --confluent-cloud-ingestion-identity-pool-id=CONFLUENT_CLOUD_INGESTION_IDENTITY_POOL_ID
+              Identity pool ID to be used for Federated Identity authentication
+              with Confluent Cloud.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --confluent-cloud-ingestion-service-account=CONFLUENT_CLOUD_INGESTION_SERVICE_ACCOUNT
+              Google Cloud service account to be used for Federated Identity
+              authentication with Confluent Cloud.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --confluent-cloud-ingestion-topic=CONFLUENT_CLOUD_INGESTION_TOPIC
+              Name of the Confluent Cloud topic that Pub/Sub will import from.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
          Flags that specify settings for an import topic from Amazon Web
          Services (AWS) Kinesis Data Streams
 
@@ -122,8 +233,8 @@ FLAGS
               arguments in this group are specified.
 
            --kinesis-ingestion-service-account=KINESIS_INGESTION_SERVICE_ACCOUNT
-              Service account to be used for Federated Identity authentication
-              with Kinesis.
+              Google Cloud service account to be used for Federated Identity
+              authentication with Kinesis.
 
               This flag argument must be specified if any of the other
               arguments in this group are specified.

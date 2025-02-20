@@ -38,10 +38,9 @@ SYNOPSIS
         [--node-locations=ZONE,[ZONE,...]]
         [--node-pool-soak-duration=NODE_POOL_SOAK_DURATION]
         [--node-taints=[NODE_TAINT,...]] [--node-version=NODE_VERSION]
-        [--num-nodes=NUM_NODES; default=3]
-        [--placement-policy=PLACEMENT_POLICY] [--placement-type=PLACEMENT_TYPE]
-        [--preemptible] [--resource-manager-tags=[KEY=VALUE,...]]
-        [--sandbox=[type=TYPE]]
+        [--num-nodes=NUM_NODES] [--placement-policy=PLACEMENT_POLICY]
+        [--placement-type=PLACEMENT_TYPE] [--preemptible]
+        [--resource-manager-tags=[KEY=VALUE,...]] [--sandbox=[type=TYPE]]
         [--secondary-boot-disk=[disk-image=DISK_IMAGE,[mode=MODE],...]]
         [--shielded-integrity-monitoring] [--shielded-secure-boot]
         [--sole-tenant-node-affinity-file=SOLE_TENANT_NODE_AFFINITY_FILE]
@@ -528,8 +527,13 @@ FLAGS
 
             $ gcloud container get-server-config
 
-     --num-nodes=NUM_NODES; default=3
+     --num-nodes=NUM_NODES
         The number of nodes in the node pool in each of the cluster's zones.
+        Defaults to 3.
+
+        Exception: when --tpu-topology is specified for multi-host TPU machine
+        types the number of nodes will be defaulted to (product of topology)/(#
+        of chips per VM).
 
      --placement-policy=PLACEMENT_POLICY
         Indicates the desired resource policy to use.

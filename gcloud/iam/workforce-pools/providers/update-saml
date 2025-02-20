@@ -8,7 +8,11 @@ SYNOPSIS
         [--async] [--attribute-condition=ATTRIBUTE_CONDITION]
         [--attribute-mapping=[KEY=VALUE,...]] [--description=DESCRIPTION]
         [--disabled] [--display-name=DISPLAY_NAME]
-        [--idp-metadata-path=PATH_TO_FILE] [GCLOUD_WIDE_FLAG ...]
+        [--idp-metadata-path=PATH_TO_FILE]
+        [--clear-extra-attributes-config
+          | --extra-attributes-client-id=EXTRA_ATTRIBUTES_CLIENT_ID
+          --extra-attributes-client-secret-value=EXTRA_ATTRIBUTES_CLIENT_SECRET_VALUE --extra-attributes-filter=EXTRA_ATTRIBUTES_FILTER --extra-attributes-issuer-uri=EXTRA_ATTRIBUTES_ISSUER_URI --extra-attributes-type=EXTRA_ATTRIBUTES_TYPE]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Update a new SAML workforce pool provider.
@@ -186,6 +190,43 @@ FLAGS
         (https://www.oasis-open.org/committees/download.php/35391/sstc-saml-metadata-errata-2.0-wd-04-diff.pdf).
         Use a full or relative path to a local file containing the value of
         idp_metadata_path.
+
+     At most one of these can be specified:
+
+       --clear-extra-attributes-config
+          Clear the extra attributes configuration
+
+       --extra-attributes-client-id=EXTRA_ATTRIBUTES_CLIENT_ID
+          The OAuth 2.0 client ID for retrieving extra attributes from the
+          identity provider. Required to get the Access Token using client
+          credentials grant flow.
+
+       --extra-attributes-client-secret-value=EXTRA_ATTRIBUTES_CLIENT_SECRET_VALUE
+          The OAuth 2.0 client secret for retrieving extra attributes from the
+          identity provider. Required to get the Access Token using client
+          credentials grant flow.
+
+       --extra-attributes-filter=EXTRA_ATTRIBUTES_FILTER
+          The filter used to request specific records from IdP. When used with
+          the attributes type azure-ad-groups-mail or azure-ad-groups-id, the
+          filter requests specific groups associated with a user from the IdP.
+          By default all of the groups associated with the user are fetched.
+          When used with the attributes type azure-ad-groups-mail, the groups
+          that are used should be security and mail enabled. When used with the
+          attributes type azure-ad-groups-id, the groups that are used should
+          be security enabled. See
+          https://learn.microsoft.com/en-us/graph/search-query-parameter for
+          more details.
+
+       --extra-attributes-issuer-uri=EXTRA_ATTRIBUTES_ISSUER_URI
+          OIDC identity provider's issuer URI. Must be a valid URI using the
+          'https' scheme. Required to get the OIDC discovery document.
+
+       --extra-attributes-type=EXTRA_ATTRIBUTES_TYPE
+          Represents the identity provider and type of claims that should be
+          fetched. EXTRA_ATTRIBUTES_TYPE must be one of:
+          attributes-type-unspecified, azure-ad-groups-id,
+          azure-ad-groups-mail.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

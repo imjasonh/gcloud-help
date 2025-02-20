@@ -4,13 +4,17 @@ NAME
 
 SYNOPSIS
     gcloud beta memorystore instances update (INSTANCE : --location=LOCATION)
-        [--async] [--[no-]deletion-protection-enabled]
+        [--async] [--[no-]deletion-protection-enabled] [--mode=MODE]
         [--replica-count=REPLICA_COUNT] [--request-id=REQUEST_ID]
         [--shard-count=SHARD_COUNT]
         [--aof-config-append-fsync=AOF_CONFIG_APPEND_FSYNC
+          --clear-persistence-config
           --persistence-config-mode=PERSISTENCE_CONFIG_MODE
           --rdb-config-snapshot-period=RDB_CONFIG_SNAPSHOT_PERIOD
           --rdb-config-snapshot-start-time=RDB_CONFIG_SNAPSHOT_START_TIME]
+        [--endpoints=[connections=CONNECTIONS]
+          | --add-endpoints=[connections=CONNECTIONS] --clear-endpoints
+          | --remove-endpoints=[connections=CONNECTIONS]]
         [--engine-configs=[ENGINE_CONFIGS,...]
           | --update-engine-configs=[UPDATE_ENGINE_CONFIGS,...]
           --clear-engine-configs
@@ -80,6 +84,16 @@ FLAGS
           --deletion-protection-enabled to enable and
           --no-deletion-protection-enabled to disable.
 
+     --mode=MODE
+        The mode config for the instance. MODE must be one of:
+
+         cluster
+            Instance is in cluster mode.
+         cluster-disabled
+            Cluster mode is disabled for the instance.
+         standalone
+            Deprecated: Use CLUSTER_DISABLED instead.
+
      Arguments for the replica count.
 
        --replica-count=REPLICA_COUNT
@@ -122,6 +136,9 @@ FLAGS
                 with this configuration, but it's up to the kernel's exact
                 tuning.
 
+       --clear-persistence-config
+          Set instance.persistenceConfig back to default value.
+
        --persistence-config-mode=PERSISTENCE_CONFIG_MODE
           Current persistence mode. PERSISTENCE_CONFIG_MODE must be one of:
 
@@ -151,6 +168,151 @@ FLAGS
             Time that the first snapshot was/will be attempted, and to which
             future snapshots will be aligned. If not provided, the current time
             will be used.
+
+     Update endpoints.
+
+     At most one of these can be specified:
+
+       --endpoints=[connections=CONNECTIONS]
+          Set endpoints to new value. Endpoints for the instance.
+
+           connections
+              A group of PSC connections. They are created in the same VPC
+              network, one for each service attachment in the cluster.
+
+               pscConnection
+                  Detailed information of a PSC connection that is created by
+                  the user.
+
+                   forwardingRule
+                      The URI of the consumer side forwarding rule. Format:
+                      projects/{project}/regions/{region}/forwardingRules/{forwarding_rule}.
+
+                   ipAddress
+                      The IP allocated on the consumer network for the PSC
+                      forwarding rule.
+
+                   network
+                      The consumer network where the IP address resides, in the
+                      form of
+                      projects/{project_id}/global/networks/{network_id}.
+
+                   pscConnectionId
+                      The PSC connection id of the forwarding rule connected to
+                      the service attachment.
+
+                   serviceAttachment
+                      The service attachment which is the target of the PSC
+                      connection, in the form of
+                      projects/{project-id}/regions/{region}/serviceAttachments/{service-attachment-id}.
+
+          Shorthand Example:
+
+              --endpoints=connections=[{pscConnection={forwardingRule=string,ipAddress=string,network=string,pscConnectionId=string,serviceAttachment=string}}] --endpoints=connections=[{pscConnection={forwardingRule=string,ipAddress=string,network=string,pscConnectionId=string,serviceAttachment=string}}]
+
+          JSON Example:
+
+              --endpoints='[{"connections": [{"pscConnection": {"forwardingRule": "string", "ipAddress": "string", "network": "string", "pscConnectionId": "string", "serviceAttachment": "string"}}]}]'
+
+          File Example:
+
+              --endpoints=path_to_file.(yaml|json)
+
+       --add-endpoints=[connections=CONNECTIONS]
+          Add new value to endpoints list. Endpoints for the instance.
+
+           connections
+              A group of PSC connections. They are created in the same VPC
+              network, one for each service attachment in the cluster.
+
+               pscConnection
+                  Detailed information of a PSC connection that is created by
+                  the user.
+
+                   forwardingRule
+                      The URI of the consumer side forwarding rule. Format:
+                      projects/{project}/regions/{region}/forwardingRules/{forwarding_rule}.
+
+                   ipAddress
+                      The IP allocated on the consumer network for the PSC
+                      forwarding rule.
+
+                   network
+                      The consumer network where the IP address resides, in the
+                      form of
+                      projects/{project_id}/global/networks/{network_id}.
+
+                   pscConnectionId
+                      The PSC connection id of the forwarding rule connected to
+                      the service attachment.
+
+                   serviceAttachment
+                      The service attachment which is the target of the PSC
+                      connection, in the form of
+                      projects/{project-id}/regions/{region}/serviceAttachments/{service-attachment-id}.
+
+          Shorthand Example:
+
+              --add-endpoints=connections=[{pscConnection={forwardingRule=string,ipAddress=string,network=string,pscConnectionId=string,serviceAttachment=string}}] --add-endpoints=connections=[{pscConnection={forwardingRule=string,ipAddress=string,network=string,pscConnectionId=string,serviceAttachment=string}}]
+
+          JSON Example:
+
+              --add-endpoints='[{"connections": [{"pscConnection": {"forwardingRule": "string", "ipAddress": "string", "network": "string", "pscConnectionId": "string", "serviceAttachment": "string"}}]}]'
+
+          File Example:
+
+              --add-endpoints=path_to_file.(yaml|json)
+
+       At most one of these can be specified:
+
+         --clear-endpoints
+            Clear endpoints value and set to empty list.
+
+         --remove-endpoints=[connections=CONNECTIONS]
+            Remove existing value from endpoints list. Endpoints for the
+            instance.
+
+             connections
+                A group of PSC connections. They are created in the same VPC
+                network, one for each service attachment in the cluster.
+
+                 pscConnection
+                    Detailed information of a PSC connection that is created by
+                    the user.
+
+                     forwardingRule
+                        The URI of the consumer side forwarding rule. Format:
+                        projects/{project}/regions/{region}/forwardingRules/{forwarding_rule}.
+
+                     ipAddress
+                        The IP allocated on the consumer network for the PSC
+                        forwarding rule.
+
+                     network
+                        The consumer network where the IP address resides, in
+                        the form of
+                        projects/{project_id}/global/networks/{network_id}.
+
+                     pscConnectionId
+                        The PSC connection id of the forwarding rule connected
+                        to the service attachment.
+
+                     serviceAttachment
+                        The service attachment which is the target of the PSC
+                        connection, in the form of
+                        projects/{project-id}/regions/{region}/serviceAttachments/{service-attachment-id}.
+
+            Shorthand Example:
+
+                --remove-endpoints=connections=[{pscConnection={forwardingRule=string,ipAddress=string,network=string,pscConnectionId=string,serviceAttachment=string}}] --remove-endpoints=connections=[{pscConnection={forwardingRule=string,ipAddress=string,network=string,pscConnectionId=string,serviceAttachment=string}}]
+
+            JSON Example:
+
+                --remove-endpoints='[{"connections": [{"pscConnection": {"forwardingRule": "string", "ipAddress": "string", "network": "string", "pscConnectionId": "string", "serviceAttachment": "string"}}]}]'
+
+            File Example:
+
+                --remove-endpoints=path_to_file.(yaml|json)
 
      Update engine_configs.
 

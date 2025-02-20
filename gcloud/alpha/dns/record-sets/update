@@ -6,14 +6,16 @@ SYNOPSIS
     gcloud alpha dns record-sets update DNS_NAME --type=TYPE --zone=ZONE, -z
         ZONE
         (--rrdatas=[RRDATA,...] | [--routing_policy_type=ROUTING_POLICY_TYPE
-          (--routing_policy_data=ROUTING_POLICY_DATA
-          | [--routing-policy-backup-data=ROUTING_POLICY_BACKUP_DATA
-          --routing-policy-backup-data-type=ROUTING_POLICY_BACKUP_DATA_TYPE
+          (--routing-policy-item=[ROUTING_POLICY_ITEM,...]
+          | --routing_policy_data=ROUTING_POLICY_DATA
+          | [--routing-policy-backup-data-type=ROUTING_POLICY_BACKUP_DATA_TYPE
           --routing-policy-primary-data=ROUTING_POLICY_PRIMARY_DATA
+          (--routing-policy-backup-data=ROUTING_POLICY_BACKUP_DATA
+          | --routing-policy-backup-item=[ROUTING_POLICY_BACKUP_ITEM,...])
           : --backup-data-trickle-ratio=BACKUP_DATA_TRICKLE_RATIO])
-          : --enable-geo-fencing
-          --enable-health-checking --health-check=HEALTH_CHECK])
-        [--location=LOCATION] [--ttl=TTL] [GCLOUD_WIDE_FLAG ...]
+          : --enable-geo-fencing --enable-health-checking
+          | --health-check=HEALTH_CHECK]) [--location=LOCATION] [--ttl=TTL]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) This command updates a record-set contained within the specified
@@ -55,8 +57,9 @@ REQUIRED FLAGS
           RDATA; the format of this information varies depending on the type
           and class of the resource record.
 
-       Routing policy arguments. If you specify one of --routing-policy-data or
-       --routing-policy-type, you must specify both.
+       Routing policy arguments. --routing-policy-type should be specified
+       exactly when one of --routing-policy-data, --routing-policy-item, or
+       --routing-policy-primary-data is set.
 
          --routing_policy_type=ROUTING_POLICY_TYPE
             Indicates what type of routing policy is being specified. As of
@@ -73,22 +76,45 @@ REQUIRED FLAGS
          --enable-geo-fencing
             Specifies whether to enable fencing for geo queries.
 
-         --enable-health-checking
-            Required if specifying forwarding rule names for rrdata.
-
-         --health-check=HEALTH_CHECK
-            Specifies the health check to be used for public IP health
-            checking. Either the health check name or full resource path should
-            be provided.
-
-         Routing policy data arguments. Combines routing-policy-data,
-         routing-policy-primary-data, routing-policy-backup-data.
+         Routing policy data arguments. Allows setting one of
+         [routing-policy-data, routing-policy-item,
+         [routing-policy-primary-data, [routing-policy-backup-data,
+         routing-policy-backup-item]]]
 
          Exactly one of these must be specified:
 
+           --routing-policy-item=[ROUTING_POLICY_ITEM,...]
+              Specify this argument multiple times for a weighted round robin
+              (WRR) or geolocation routing policy. Use this repeated argument
+              for only one routing policy type (WRR or geolocation), not both.
+              Similarly, use it only for health checking either internal load
+              balancers or external IP addresses, not both.
+
+              (e.g.
+              --routing-policy-item=weight=1,rrdatas=1.2.3.4;2.3.4.5,external_endpoints=3.4.5.6;4.5.6.7
+              --routing-policy-item=weight=1,rrdatas=10.0.0.1;10.0.0.2,external_endpoints=10.0.0.4)
+
+               weight
+                  The weight of the item. This is specified only for WRR
+                  routing policy items.
+
+               location
+                  The location corresponding to the item. This is specified
+                  only for GEO routing policy items.
+
+               rrdatas
+                  The list of rrdatas, split by ";".
+
+               external_endpoints
+                  The list of health checked ips, split by ";".
+
+               internal_load_balancers
+                  The list of health checked internal load balancers, split by
+                  ";".
+
            --routing_policy_data=ROUTING_POLICY_DATA
-              The routing policy data supports one of two formats below,
-              depending on the choice of routing-policy-type.
+              (DEPRECATED) The routing policy data supports one of two formats
+              below, depending on the choice of routing-policy-type.
 
               For --routing-policy-type = "WRR" this flag indicates the
               weighted round robin policy data. The field accepts a
@@ -107,16 +133,10 @@ REQUIRED FLAGS
               "FORWARDING_RULE_NAME@global", or the full resource path of the
               forwarding rule.
 
+              The --routing_policy_data flag is deprecated. Use
+              --routing-policy-item instead.
+
            Configuration for primary backup routing policy
-
-             --routing-policy-backup-data=ROUTING_POLICY_BACKUP_DATA
-                The backup configuration for a primary backup routing policy.
-                This configuration has the same format as the
-                routing-policy-data argument because it is just another
-                geo-locations policy.
-
-                This flag argument must be specified if any of the other
-                arguments in this group are specified.
 
              --routing-policy-backup-data-type=ROUTING_POLICY_BACKUP_DATA_TYPE
                 For FAILOVER routing policies, the type of routing policy the
@@ -139,6 +159,55 @@ REQUIRED FLAGS
              --backup-data-trickle-ratio=BACKUP_DATA_TRICKLE_RATIO
                 Specifies the percentage of traffic to send to the backup
                 targets even when the primary targets are healthy.
+
+             Routing policy backup data arguments for the primary backup
+             routing policy. Specify either --routing-policy-backup-data or
+             --routing-policy-backup-item, but not both.
+
+             Exactly one of these must be specified:
+
+               --routing-policy-backup-data=ROUTING_POLICY_BACKUP_DATA
+                  (DEPRECATED) Specify the backup configuration for a primary
+                  backup routing policy. This backup configuration uses the
+                  same format as the routing-policy-data argument because it
+                  functions as another geolocation routing policy.
+
+                  The --routing-policy-backup-data flag is deprecated. Use
+                  --routing-policy-backup-item instead.
+
+               --routing-policy-backup-item=[ROUTING_POLICY_BACKUP_ITEM,...]
+                  Specify this argument multiple times to define multiple items
+                  for a primary backup routing policy.
+
+                  (e.g.
+                  --routing-policy-backup-item=location=us-east1-a,rrdatas=1.2.3.4;2.3.4.5,external_endpoints=3.4.5.6;4.5.6.7
+                  --routing-policy-backup-item=location=us-east1-b,rrdatas=10.0.0.1;10.0.0.2,external_endpoints=10.0.0.4)
+
+                   location
+                      The location corresponding to the item.
+
+                   rrdatas
+                      The list of rrdatas, split by ";".
+
+                   external_endpoints
+                      The list of health checked ips, split by ";".
+
+                   internal_load_balancers
+                      The list of health checked internal load balancers, split
+                      by ";".
+
+         Health checking arguments. You can specify one of --health-check or
+         --enable-health-checking, but not both.
+
+         At most one of these can be specified:
+
+           --enable-health-checking
+              Required if specifying forwarding rule names for rrdata.
+
+           --health-check=HEALTH_CHECK
+              Specifies the health check to be used for public IP health
+              checking. Either the health check name or full resource path
+              should be provided.
 
 OPTIONAL FLAGS
      --location=LOCATION
