@@ -3,8 +3,8 @@ NAME
 
 SYNOPSIS
     gcloud alpha run jobs update [JOB] [--breakglass=JUSTIFICATION]
-        [--clear-vpc-connector] [--container=CONTAINER] [--key=KEY]
-        [--max-retries=MAX_RETRIES] [--parallelism=PARALLELISM]
+        [--clear-vpc-connector] [--container=CONTAINER] [--gpu-type=GPU_TYPE]
+        [--key=KEY] [--max-retries=MAX_RETRIES] [--parallelism=PARALLELISM]
         [--region=REGION] [--remove-containers=[CONTAINER,...]]
         [--service-account=SERVICE_ACCOUNT] [--task-timeout=TASK_TIMEOUT]
         [--tasks=TASKS; default=1] [--vpc-connector=VPC_CONNECTOR]
@@ -17,7 +17,8 @@ SYNOPSIS
           --clear-volumes --remove-volume=[VOLUME,...]]
         [--add-volume-mount=[volume=NAME,mount-path=MOUNT_PATH,...]
           --args=[ARG,...] --clear-volume-mounts --command=[COMMAND,...]
-          --cpu=CPU --depends-on=[CONTAINER,...] --image=IMAGE --memory=MEMORY
+          --cpu=CPU --depends-on=[CONTAINER,...] --gpu=GPU --image=IMAGE
+          --memory=MEMORY
           --remove-volume-mount=[MOUNT_PATH,...] --clear-env-vars
           | --env-vars-file=FILE_PATH | --set-env-vars=[KEY=VALUE,...]
           | --remove-env-vars=[KEY,...]
@@ -75,6 +76,9 @@ FLAGS
      --container=CONTAINER
         Specifies a container by name. Flags following --container will apply
         to the specified container.
+
+     --gpu-type=GPU_TYPE
+        The GPU type to use.
 
      --key=KEY
         CMEK key reference to encrypt the container with.
@@ -247,6 +251,10 @@ FLAGS
 
          --depends-on=[CONTAINER,...]
             List of container dependencies to add to the current container.
+
+         --gpu=GPU
+            Cloud Run supports values 0 or 1. 1 gpu also requires a minimum 4
+            --cpu value and a minimum 8Gi --memory value.
 
          --image=IMAGE
             Name of the container image to deploy (e.g.

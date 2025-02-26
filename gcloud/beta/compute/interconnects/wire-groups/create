@@ -1,0 +1,85 @@
+NAME
+    gcloud beta compute interconnects wire-groups create - create a Compute
+        Engine wire group
+
+SYNOPSIS
+    gcloud beta compute interconnects wire-groups create NAME
+        --bandwidth-unmetered=BANDWIDTH_UNMETERED
+        --cross-site-network=CROSS_SITE_NETWORK --type=TYPE [--admin-enabled]
+        [--description=DESCRIPTION] [--fault-response=FAULT_RESPONSE]
+        [--validate-only] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) gcloud beta compute interconnects wire-groups create is used to
+    create wire groups. A wire group represents a group of redundant wires
+    between interconnects in two different metros. Each WireGroup belongs to a
+    CrossSiteNetwork.
+
+    For an example, refer to the EXAMPLES section below.
+
+EXAMPLES
+    To create a wire group, run:
+
+        $ gcloud beta compute interconnects wire-groups create \
+            example-wire-group --project my-project \
+            --cross-site-network example-cross-site-network \
+            --type REDUNDANT --bandwidth-unmetered 1
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the wire group to create.
+
+REQUIRED FLAGS
+     --bandwidth-unmetered=BANDWIDTH_UNMETERED
+        The amount of unmetered bandwidth to assign to the wire group.
+
+     --cross-site-network=CROSS_SITE_NETWORK
+        Name of the crossSiteNetwork to operate on.
+
+     --type=TYPE
+        The type for the wire group. TYPE must be one of:
+
+         BOX_AND_CROSS
+            Box and cross type wire groups must have two VLAN tags. The first
+            is for the same-zone pseudowire, and the second is for the
+            cross-zone pseudowire.
+         REDUNDANT
+            Redundant type wire groups must have only one VLAN tag.
+         WIRE
+            Single wire type wire groups must have only one VLAN tag.
+
+OPTIONAL FLAGS
+     --admin-enabled
+        Administrative status of the wire group. If not provided on creation,
+        defaults to enabled. When this is enabled, the wire group is
+        operational and will carry traffic. Use --no-admin-enabled to disable
+        it.
+
+     --description=DESCRIPTION
+        An optional, textual description for the wire group.
+
+     --fault-response=FAULT_RESPONSE
+        The fault response for the wire group. FAULT_RESPONSE must be one of:
+
+         DISABLE_PORT
+            Disable port
+         NONE
+            None
+
+     --validate-only
+        Validate the new configuration, but don't update it.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud alpha compute interconnects wire-groups create
+

@@ -11,7 +11,8 @@ SYNOPSIS
           | [--delete-object : --enable-permanent-object-deletion]
           | --[no-]put-object-event-based-hold
           --[no-]put-object-temporary-hold) [--description=DESCRIPTION]
-        [GCLOUD_WIDE_FLAG ...]
+        [--log-actions=[LOG_ACTIONS,...]
+          --log-action-states=[LOG_ACTION_STATES,...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Create a batch operation job, allowing you to perform operations
@@ -19,20 +20,31 @@ DESCRIPTION
     manner.
 
 EXAMPLES
-    To create a batch job with the name my-job to perform object deletion where
-    the manifest file gs://my-bucket/manifest.csv specifies the objects to be
-    transformed:
+    To create a batch job with the name my-job to perform object deletion on
+    bucket my-bucket and the manifest file gs://my-bucket/manifest.csv
+    specifies the objects to be transformed:
 
         $ gcloud alpha storage batch-operations jobs create my-job \
+          --bucket=my-bucket \
           --manifest-location=gs://my-bucket/manifest.csv --delete-object
 
     To create a batch job with the name my-job to update object metadata
-    Content-Disposition to inline and Content-Language to en where you want to
-    match objects with the prefix prefix1 or prefix2:
+    Content-Disposition to inline and Content-Language to en on bucket
+    my-bucket where you want to match objects with the prefix prefix1 or
+    prefix2:
 
         $ gcloud alpha storage batch-operations jobs create my-job \
-          --included-object-prefixes=prefix1,prefix2 \
+          --bucket=my-bucket --included-object-prefixes=prefix1,prefix2 \
           --put-metadata=Content-Disposition=inline,Content-Language=en
+
+    To create a batch job with the name my-job to put object event based hold
+    on objects in bucket my-bucket with logging config enabled for
+    corresponding transform action and succeeded and failed action states:
+
+        $ gcloud alpha storage batch-operations jobs create my-job \
+          --bucket=my-bucket --put-object-event-based-hold \
+          --put-metadata=Content-Disposition=inline,Content-Language=en \
+          --log-actions=transform --log-action-states=succeeded,failed
 
 POSITIONAL ARGUMENTS
      Batch job resource - The batch job to create. This represents a Cloud
@@ -137,9 +149,28 @@ REQUIRED FLAGS
             --put-object-temporary-hold to enable and
             --no-put-object-temporary-hold to disable.
 
-OPTIONAL FLAGS
+FLAGS
      --description=DESCRIPTION
         Description for the batch job.
+
+LOGGING_CONFIG FLAGS
+     LOGGING CONFIG
+
+     Configure which transfer actions and action states are reported when logs
+     are generated for this job. Logs can be viewed by running the following
+     command: gcloud logging read
+     "resource.type=storagebatchoperations.googleapis.com/Job"
+
+       --log-actions=[LOG_ACTIONS,...]
+          Define the batch job actions to report in logs. (e.g.,
+          --log-actions=transform). LOG_ACTIONS must be (only one value is
+          supported): transform.
+
+       --log-action-states=[LOG_ACTION_STATES,...]
+          The states in which the actions specified in --log-actions are
+          logged. Separate multiple states with a comma, omitting the space
+          after the comma (e.g., --log-action-states=succeeded,failed).
+          LOG_ACTION_STATES must be one of: failed, succeeded.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

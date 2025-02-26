@@ -5,13 +5,12 @@ NAME
 SYNOPSIS
     gcloud alpha compute interconnects wire-groups create NAME
         --bandwidth-unmetered=BANDWIDTH_UNMETERED
-        --cross-site-network=CROSS_SITE_NETWORK --type=TYPE
-        [--admin-enabled=ADMIN_ENABLED]
+        --cross-site-network=CROSS_SITE_NETWORK --type=TYPE [--admin-enabled]
         [--bandwidth-allocation=BANDWIDTH_ALLOCATION]
         [--bandwidth-metered=BANDWIDTH_METERED] [--description=DESCRIPTION]
         [--fault-response=FAULT_RESPONSE]
-        [--network-service-class=NETWORK_SERVICE_CLASS]
-        [--validate-only=VALIDATE_ONLY] [GCLOUD_WIDE_FLAG ...]
+        [--network-service-class=NETWORK_SERVICE_CLASS] [--validate-only]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) gcloud alpha compute interconnects wire-groups create is used to
@@ -26,9 +25,8 @@ EXAMPLES
 
         $ gcloud alpha compute interconnects wire-groups create \
             example-wire-group --project my-project \
-            --cross-site-network example-cross-site-network --type WIRE \
-            --bandwidth-unmetered 10g --network-service-class BRONZE \
-            --bandwidth-allocation ALLOCATE_PER_WIRE
+            --cross-site-network example-cross-site-network \
+            --type REDUNDANT --bandwidth-unmetered 1
 
 POSITIONAL ARGUMENTS
      NAME
@@ -45,24 +43,36 @@ REQUIRED FLAGS
         The type for the wire group. TYPE must be one of:
 
          BOX_AND_CROSS
-            Box and cross
+            Box and cross type wire groups must have two VLAN tags. The first
+            is for the same-zone pseudowire, and the second is for the
+            cross-zone pseudowire.
          REDUNDANT
-            Redundant
+            Redundant type wire groups must have only one VLAN tag.
          WIRE
-            Wire
+            Single wire type wire groups must have only one VLAN tag.
 
 OPTIONAL FLAGS
-     --admin-enabled=ADMIN_ENABLED
-        Set admin-enabled on the wire group.
+     --admin-enabled
+        Administrative status of the wire group. If not provided on creation,
+        defaults to enabled. When this is enabled, the wire group is
+        operational and will carry traffic. Use --no-admin-enabled to disable
+        it.
 
      --bandwidth-allocation=BANDWIDTH_ALLOCATION
         The bandwidth allocation for the wire group. BANDWIDTH_ALLOCATION must
         be one of:
 
          ALLOCATE_PER_WIRE
-            Allocate per wire.
+            Configures a separate unmetered bandwidth allocation (and
+            associated charges) for each wire in the group.
          SHARED_WITH_WIRE_GROUP
-            Shared with wire group.
+            Configures one unmetered bandwidth allocation for the wire group.
+            The unmetered bandwidth is divided equally across each wire in the
+            group, but dynamic throttling reallocates unused unmetered
+            bandwidth from unused or underused wires to other wires in the
+            group. For example, with a four-wire box-and-cross group, when one
+            Interconnect connection is down, the unmetered bandwidth of the two
+            down wires is reallocated to the remaining up wires.
 
      --bandwidth-metered=BANDWIDTH_METERED
         The amount of metered bandwidth to assign to the wire group.
@@ -83,12 +93,12 @@ OPTIONAL FLAGS
         must be one of:
 
          BRONZE
-            Bronze.
+            The lowest service class.
          GOLD
-            Gold.
+            The highest service class.
 
-     --validate-only=VALIDATE_ONLY
-        Only validates the configuration, but does not create it.
+     --validate-only
+        Validate the new configuration, but don't update it.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
@@ -102,5 +112,7 @@ NOTES
     This command is currently in alpha and might change without notice. If this
     command fails with API permission errors despite specifying the correct
     project, you might be trying to access an API with an invitation-only early
-    access allowlist.
+    access allowlist. This variant is also available:
+
+        $ gcloud beta compute interconnects wire-groups create
 

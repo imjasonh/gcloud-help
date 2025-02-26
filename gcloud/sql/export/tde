@@ -1,0 +1,91 @@
+NAME
+    gcloud sql export tde - export a TDE certificate from a Cloud SQL for SQL
+        Server instance
+
+SYNOPSIS
+    gcloud sql export tde INSTANCE
+        (--cert-path=CERT_PATH --certificate=CERTIFICATE
+          --pvk-path=PVK_PATH (--prompt-for-pvk-password
+          | --pvk-password=PVK_PASSWORD)) [--async] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Exports a TDE certificate from a Cloud SQL instance to a Google Cloud
+    Storage bucket. This is only supported for SQL Server.
+
+EXAMPLES
+    To export a TDE certificate with the name foo and private key password
+    my-pvk-password in the Cloud SQL instance my-instance to certificate path
+    my-bucket/my-cert.cert and private key path my-bucket/my-key.pvk, run:
+
+        $ gcloud sql export tde my-instance --certificate=foo \
+            --cert-path=gs://my-bucket/my-cert.cert \
+            --pvk-path=gs://my-bucket/my-key.pvk \
+            --pvk-password=my-pvk-password
+
+    To export a TDE certificate with the name foo and private key password
+    my-pvk-password in the Cloud SQL instance my-instance and prompting for the
+    private key password, run:
+
+        $ gcloud sql export tde my-instance --certificate=foo \
+            --cert-path=gs://my-bucket/my-cert.cert \
+            --pvk-path=gs://my-bucket/my-key.pvk --prompt-for-pvk-password
+
+POSITIONAL ARGUMENTS
+     INSTANCE
+        Cloud SQL instance ID.
+
+REQUIRED FLAGS
+     Encryption info to support importing a TDE certificate file
+
+     This must be specified.
+
+       --cert-path=CERT_PATH
+          Path to the encryption certificate file in Google Cloud Storage. The
+          URI is in the form gs://bucketName/fileName.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --certificate=CERTIFICATE
+          Name of the encryption certificate.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --pvk-path=PVK_PATH
+          Path to the encryption private key file in Google Cloud Storage. The
+          URI is in the form gs://bucketName/fileName.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       Exactly one of these must be specified:
+
+         --prompt-for-pvk-password
+            Prompt for the private key password associated with the certificate
+            file with character echo disabled. The password is all typed
+            characters up to but not including the RETURN or ENTER key.
+
+         --pvk-password=PVK_PASSWORD
+            The private key password associated with the certificate file.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha sql export tde
+
+        $ gcloud beta sql export tde
+
