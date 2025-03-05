@@ -24,12 +24,11 @@ SYNOPSIS
           : [--postgresql-ca-certificate=POSTGRESQL_CA_CERTIFICATE
           : --postgresql-client-certificate=POSTGRESQL_CLIENT_CERTIFICATE
           --postgresql-client-key=POSTGRESQL_CLIENT_KEY]]
-          | --sqlserver-database=SQLSERVER_DATABASE
-          --sqlserver-hostname=SQLSERVER_HOSTNAME
-          --sqlserver-port=SQLSERVER_PORT
-          --sqlserver-username=SQLSERVER_USERNAME
-          (--sqlserver-password=SQLSERVER_PASSWORD
-          | --sqlserver-prompt-for-password)]
+          | --salesforce-domain=SALESFORCE_DOMAIN
+          (--salesforce-oauth2-client-id=SALESFORCE_OAUTH2_CLIENT_ID
+          (--salesforce-oauth2-client-secret=SALESFORCE_OAUTH2_CLIENT_SECRET
+          | --salesforce-prompt-for-oauth2-client-secret
+          | --salesforce-secret-manager-stored-oauth2-client-secret=SALESFORCE_SECRET_MANAGER_STORED_OAUTH2_CLIENT_SECRET) | --salesforce-username=SALESFORCE_USERNAME (--salesforce-password=SALESFORCE_PASSWORD | --salesforce-prompt-for-password | --salesforce-secret-manager-stored-password=SALESFORCE_SECRET_MANAGER_STORED_PASSWORD) (--salesforce-prompt-for-security-token | --salesforce-secret-manager-stored-security-token=SALESFORCE_SECRET_MANAGER_STORED_SECURITY_TOKEN | --salesforce-security-token=SALESFORCE_SECURITY_TOKEN)) | --sqlserver-database=SQLSERVER_DATABASE --sqlserver-hostname=SQLSERVER_HOSTNAME --sqlserver-port=SQLSERVER_PORT --sqlserver-username=SQLSERVER_USERNAME (--sqlserver-password=SQLSERVER_PASSWORD | --sqlserver-prompt-for-password)]
         [--private-connection=PRIVATE_CONNECTION | --static-ip-connectivity
           | [--forward-ssh-hostname=FORWARD_SSH_HOSTNAME
           --forward-ssh-username=FORWARD_SSH_USERNAME
@@ -67,6 +66,37 @@ EXAMPLES
           --postgresql-username=fakeuser --display-name=my-profile \
           --postgresql-hostname=35.188.150.50 --postgresql-port=5432 \
           --postgresql-database=db --static-ip-connectivity
+
+    To create a connection profile for SQL Server:
+
+        $ gcloud datastream connection-profiles create CONNECTION_PROFILE \
+          --location=us-central1 --type=sqlserver \
+          --sqlserver-password=fakepassword \
+          --sqlserver-username=fakeuser --display-name=my-profile \
+          --sqlserver-hostname=35.188.150.50 --sqlserver-port=1433 \
+          --sqlserver-database=db --static-ip-connectivity
+
+    To create a connection profile for Salesforce using Username, Password and
+    Security Token:
+
+        $ gcloud datastream connection-profiles create CONNECTION_PROFILE \
+          --location=us-central1 --type=salesforce \
+          --salesforce-password=fakepassword \
+          --salesforce-username=fakeuser \
+          --salesforce-security-token=fakesecuritytoken \
+          --display-name=my-profile --salesforce-hostname=35.188.150.50 \
+          --salesforce-port=1433 --salesforce-database=db \
+          --static-ip-connectivity
+
+    To create a connection profile for Salesforce using OAuth:
+
+        $ gcloud datastream connection-profiles create CONNECTION_PROFILE \
+          --location=us-central1 --type=salesforce \
+          --salesforce-client-secret=fakesecret \
+          --salesforce-client-id=fake-client-id \
+          --display-name=my-profile \
+          --salesforce-domain=fakecompany.my.salesforce.com \
+          --static-ip-connectivity
 
     To create a connection profile for Google Cloud Storage:
 
@@ -282,6 +312,67 @@ OPTIONAL FLAGS
 
           This flag argument must be specified if any of the other arguments in
           this group are specified.
+
+       --salesforce-domain=SALESFORCE_DOMAIN
+          Domain of the Salesforce organization. For example,
+          'myorg.my.salesforce.com'
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       Exactly one of these must be specified:
+
+         --salesforce-oauth2-client-id=SALESFORCE_OAUTH2_CLIENT_ID
+            OAuth 2.0 Client ID used to connect to Salesforce.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         Exactly one of these must be specified:
+
+           --salesforce-oauth2-client-secret=SALESFORCE_OAUTH2_CLIENT_SECRET
+              OAuth 2.0 Client secret used to connect to Salesforce.
+
+           --salesforce-prompt-for-oauth2-client-secret
+              Prompt for the OAuth 2.0 Client secret used to connect to
+              Salesforce.
+
+           --salesforce-secret-manager-stored-oauth2-client-secret=SALESFORCE_SECRET_MANAGER_STORED_OAUTH2_CLIENT_SECRET
+              Path to secret manager, storing the OAuth 2.0 Client secret used
+              to connect to Salesforce.
+
+         --salesforce-username=SALESFORCE_USERNAME
+            Username Datastream will use to connect to the database.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         Exactly one of these must be specified:
+
+           --salesforce-password=SALESFORCE_PASSWORD
+              Password for the user that Datastream will be using to connect to
+              Salesforce. This field is not returned on request, and the value
+              is encrypted when stored in Datastream.
+
+           --salesforce-prompt-for-password
+              Prompt for the password used to connect to Salesforce.
+
+           --salesforce-secret-manager-stored-password=SALESFORCE_SECRET_MANAGER_STORED_PASSWORD
+              Path to secret manager, storing the password used to connect to
+              Salesforce.
+
+         Exactly one of these must be specified:
+
+           --salesforce-prompt-for-security-token
+              Prompt for the security token used to connect to Salesforce.
+
+           --salesforce-secret-manager-stored-security-token=SALESFORCE_SECRET_MANAGER_STORED_SECURITY_TOKEN
+              Path to secret manager, storing the security token used to
+              connect to Salesforce.
+
+           --salesforce-security-token=SALESFORCE_SECURITY_TOKEN
+              Security token for the user that Datastream will be using to
+              connect to Salesforce.
 
        --sqlserver-database=SQLSERVER_DATABASE
           Database service for the SQL Server connection.

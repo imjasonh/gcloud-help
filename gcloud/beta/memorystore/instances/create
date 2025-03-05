@@ -3,14 +3,15 @@ NAME
 
 SYNOPSIS
     gcloud beta memorystore instances create (INSTANCE : --location=LOCATION)
-        [--async] [--authorization-mode=AUTHORIZATION_MODE]
+        [--async] [--async-instance-endpoints-deletion-enabled]
+        [--authorization-mode=AUTHORIZATION_MODE]
         [--deletion-protection-enabled] [--endpoints=[connections=CONNECTIONS]]
         [--engine-configs=[ENGINE_CONFIGS,...]]
         [--engine-version=ENGINE_VERSION] [--labels=[LABELS,...]] [--mode=MODE]
-        [--node-type=NODE_TYPE]
-        [--psc-auto-connections=[network=NETWORK],[projectId=PROJECTID]]
-        [--replica-count=REPLICA_COUNT] [--request-id=REQUEST_ID]
-        [--shard-count=SHARD_COUNT]
+        [--node-type=NODE_TYPE] [--ondemand-maintenance]
+        [--psc-auto-connections=[network=NETWORK],
+          [port=PORT],[projectId=PROJECTID]] [--replica-count=REPLICA_COUNT]
+        [--request-id=REQUEST_ID] [--shard-count=SHARD_COUNT]
         [--transit-encryption-mode=TRANSIT_ENCRYPTION_MODE]
         [--aof-config-append-fsync=AOF_CONFIG_APPEND_FSYNC
           --persistence-config-mode=PERSISTENCE_CONFIG_MODE
@@ -83,6 +84,14 @@ FLAGS
         Return immediately, without waiting for the operation in progress to
         complete.
 
+     Arguments for the async instance endpoints deletion enabled.
+
+       --async-instance-endpoints-deletion-enabled
+          If true, instance endpoints that are created and registered by
+          customers can be deleted asynchronously. That is, such an instance
+          endpoint can be de-registered before the forwarding rules in the
+          instance endpoint are deleted.
+
      --authorization-mode=AUTHORIZATION_MODE
         Authorization mode of the instance. AUTHORIZATION_MODE must be one of:
 
@@ -111,6 +120,10 @@ FLAGS
                     The network where the PSC endpoints are created, in the
                     form of projects/{project_id}/global/networks/{network_id}.
 
+                 port
+                    port will only be set for Primary/Reader or Discovery
+                    endpoint.
+
                  projectId
                     The consumer project_id where PSC connections are
                     established. This should be the same project_id that the
@@ -118,11 +131,11 @@ FLAGS
 
         Shorthand Example:
 
-            --endpoints=connections=[{pscAutoConnection={network=string,projectId=string}}] --endpoints=connections=[{pscAutoConnection={network=string,projectId=string}}]
+            --endpoints=connections=[{pscAutoConnection={network=string,port=int,projectId=string}}] --endpoints=connections=[{pscAutoConnection={network=string,port=int,projectId=string}}]
 
         JSON Example:
 
-            --endpoints='[{"connections": [{"pscAutoConnection": {"network": "string", "projectId": "string"}}]}]'
+            --endpoints='[{"connections": [{"pscAutoConnection": {"network": "string", "port": int, "projectId": "string"}}]}]'
 
         File Example:
 
@@ -198,12 +211,20 @@ FLAGS
          standard-small
             Standard small.
 
-     --psc-auto-connections=[network=NETWORK],[projectId=PROJECTID]
+     Arguments for the ondemand maintenance.
+
+       --ondemand-maintenance
+          Ondemand maintenance for the instance.
+
+     --psc-auto-connections=[network=NETWORK],[port=PORT],[projectId=PROJECTID]
         User inputs and resource details of the auto-created PSC connections.
 
          network
             The network where the PSC endpoints are created, in the form of
             projects/{project_id}/global/networks/{network_id}.
+
+         port
+            port will only be set for Primary/Reader or Discovery endpoint.
 
          projectId
             The consumer project_id where PSC connections are established. This
@@ -212,11 +233,11 @@ FLAGS
 
         Shorthand Example:
 
-            --psc-auto-connections=network=string,projectId=string --psc-auto-connections=network=string,projectId=string
+            --psc-auto-connections=network=string,port=int,projectId=string --psc-auto-connections=network=string,port=int,projectId=string
 
         JSON Example:
 
-            --psc-auto-connections='[{"network": "string", "projectId": "string"}]'
+            --psc-auto-connections='[{"network": "string", "port": int, "projectId": "string"}]'
 
         File Example:
 

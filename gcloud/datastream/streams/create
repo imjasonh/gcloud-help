@@ -8,6 +8,7 @@ SYNOPSIS
           | --backfill-all --mysql-excluded-objects=MYSQL_EXCLUDED_OBJECTS
           | --oracle-excluded-objects=ORACLE_EXCLUDED_OBJECTS
           | --postgresql-excluded-objects=POSTGRESQL_EXCLUDED_OBJECTS
+          | --salesforce-excluded-objects=SALESFORCE_EXCLUDED_OBJECTS
           | --sqlserver-excluded-objects=SQLSERVER_EXCLUDED_OBJECTS)
         (--destination=DESTINATION
           (--bigquery-destination-config=BIGQUERY_DESTINATION_CONFIG
@@ -15,6 +16,7 @@ SYNOPSIS
         (--source=SOURCE (--mysql-source-config=MYSQL_SOURCE_CONFIG
           | --oracle-source-config=ORACLE_SOURCE_CONFIG
           | --postgresql-source-config=POSTGRESQL_SOURCE_CONFIG
+          | --salesforce-source-config=SALESFORCE_SOURCE_CONFIG
           | --sqlserver-source-config=SQLSERVER_SOURCE_CONFIG))
         [--labels=[KEY=VALUE,...]] [--force | --validate-only]
         [GCLOUD_WIDE_FLAG ...]
@@ -117,22 +119,21 @@ REQUIRED FLAGS
             The JSON file is formatted as follows, with camelCase field naming:
 
                   {
-                      "mysqlDatabases": [
+                    "mysqlDatabases": [
+                      {
+                        "database":"sample_database",
+                        "mysqlTables": [
                           {
-                            "database":"sample_database",
-                            "mysqlTables": [
+                            "table": "sample_table",
+                            "mysqlColumns": [
                               {
-                                "table": "sample_table",
-                                "mysqlColumns": [
-                                  {
-                                    "column": "sample_column",
-                                  }
-                                 ]
+                                "column": "sample_column",
                               }
-                            ]
+                              ]
                           }
                         ]
                       }
+                    ]
                   }
 
          --oracle-excluded-objects=ORACLE_EXCLUDED_OBJECTS
@@ -142,22 +143,21 @@ REQUIRED FLAGS
             The JSON file is formatted as follows, with camelCase field naming:
 
                   {
-                      "oracleSchemas": [
-                        {
-                          "schema": "SAMPLE",
-                          "oracleTables": [
-                            {
-                              "table": "SAMPLE_TABLE",
-                              "oracleColumns": [
-                                {
-                                  "column": "COL",
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    }
+                    "oracleSchemas": [
+                      {
+                        "schema": "SAMPLE",
+                        "oracleTables": [
+                          {
+                            "table": "SAMPLE_TABLE",
+                            "oracleColumns": [
+                              {
+                                "column": "COL",
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
                   }
 
          --postgresql-excluded-objects=POSTGRESQL_EXCLUDED_OBJECTS
@@ -167,22 +167,38 @@ REQUIRED FLAGS
             The JSON file is formatted as follows, with camelCase field naming:
 
                   {
-                      "postgresqlSchemas": [
-                        {
-                          "schema": "SAMPLE",
-                          "postgresqlTables": [
-                            {
-                              "table": "SAMPLE_TABLE",
-                              "postgresqlColumns": [
-                                {
-                                  "column": "COL",
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    }
+                    "postgresqlSchemas": [
+                      {
+                        "schema": "SAMPLE",
+                        "postgresqlTables": [
+                          {
+                            "table": "SAMPLE_TABLE",
+                            "postgresqlColumns": [
+                              {
+                                "column": "COL",
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+
+         --salesforce-excluded-objects=SALESFORCE_EXCLUDED_OBJECTS
+            Path to a YAML (or JSON) file containing the Salesforce data
+            sources to avoid backfilling.
+
+            The JSON file is formatted as follows, with camelCase field naming:
+
+                  {
+                    "objects": [
+                      {
+                        "objectName": "SAMPLE",
+                      },
+                      {
+                        "objectName": "SAMPLE2",
+                      }
+                    ]
                   }
 
          --sqlserver-excluded-objects=SQLSERVER_EXCLUDED_OBJECTS
@@ -192,22 +208,21 @@ REQUIRED FLAGS
             The JSON file is formatted as follows, with camelCase field naming:
 
                   {
-                      "schemas": [
-                        {
-                          "schema": "SAMPLE",
-                          "tables": [
-                            {
-                              "table": "SAMPLE_TABLE",
-                              "columns": [
-                                {
-                                  "column": "COL",
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    }
+                    "schemas": [
+                      {
+                        "schema": "SAMPLE",
+                        "tables": [
+                          {
+                            "table": "SAMPLE_TABLE",
+                            "columns": [
+                              {
+                                "column": "COL",
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
                   }
 
      This must be specified.
@@ -403,6 +418,29 @@ REQUIRED FLAGS
                     },
                     "replicationSlot": "SAMPLE_REPLICATION_SLOT",
                     "publication": "SAMPLE_PUBLICATION"
+                  }
+
+         --salesforce-source-config=SALESFORCE_SOURCE_CONFIG
+            Path to a YAML (or JSON) file containing the configuration for
+            Salesforce Source Config.
+
+            The JSON file is formatted as follows, with camelCase field naming:
+
+                  {
+                    "pollingInterval": "3000s",
+                    "includeObjects": {},
+                    "excludeObjects": {
+                      "objects": [
+                        {
+                          "objectName": "SAMPLE",
+                          "fields": [
+                            {
+                              "fieldName": "SAMPLE_FIELD",
+                            }
+                          ]
+                        }
+                      ]
+                    }
                   }
 
          --sqlserver-source-config=SQLSERVER_SOURCE_CONFIG

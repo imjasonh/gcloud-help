@@ -5,7 +5,7 @@ SYNOPSIS
     gcloud beta metastore services create (SERVICE : --location=LOCATION)
         [--async] [--autoscaling-enabled] [--data-catalog-sync]
         [--database-type=DATABASE_TYPE; default="mysql"]
-        [--deletion-protection] [--encryption-kms-key=ENCRYPTION_KMS_KEY]
+        [--deletion-protection]
         [--endpoint-protocol=ENDPOINT_PROTOCOL; default="thrift"]
         [--hive-metastore-version=HIVE_METASTORE_VERSION]
         [--labels=[KEY=VALUE,...]] [--port=PORT; default=9083]
@@ -14,6 +14,8 @@ SYNOPSIS
           | --auxiliary-versions-from-file=AUXILIARY_VERSIONS_FROM_FILE]
         [--consumer-subnetworks=[CONSUMER_SUBNETWORKS,...] | --network=NETWORK
           | --network-config-from-file=NETWORK_CONFIG_FROM_FILE]
+        [--encryption-kms-key=ENCRYPTION_KMS_KEY
+          | --encryption-kms-keys=[ENCRYPTION_KMS_KEYS,...]]
         [--hive-metastore-configs=[KEY=VALUE,...]
           | --hive-metastore-configs-from-file=PATH_TO_FILE]
         [--instance-size=INSTANCE_SIZE | --scaling-factor=SCALING_FACTOR
@@ -123,13 +125,6 @@ FLAGS
         Flag that enables delete protection on Dataproc Metastore instance to
         prevent accidental deletions of the instance. Use --deletion-protection
         to enable.
-
-     --encryption-kms-key=ENCRYPTION_KMS_KEY
-        The name of the Cloud KMS key to use for customer data encryption.
-        Cannot be changed once the service is created. Mutually exclusive with
-        flag --data-catalog-sync. This can be provided as a fully-qualified
-        URL, or a relative name in the form
-        projects/{project_id}/locations/{location}/keyRings/{key_ring_id}/cryptoKeys/{crypto_key_id}.
 
      --endpoint-protocol=ENDPOINT_PROTOCOL; default="thrift"
         The protocol to use for the metastore service endpoint. If unspecified,
@@ -241,6 +236,25 @@ FLAGS
           ▸ subnetwork:
             projects/{project_id}/regions/{region_id}/subnetworks/{subnetwork_id}
             ...
+
+     Encryption configuration for the metastore service.
+
+     At most one of these can be specified:
+
+       --encryption-kms-key=ENCRYPTION_KMS_KEY
+          The name of the Cloud KMS key to use for customer data encryption.
+          Cannot be changed once the service is created. Mutually exclusive
+          with flag --data-catalog-sync. This can be provided as a
+          fully-qualified URL, or a relative name in the form
+          projects/{project_id}/locations/{location}/keyRings/{key_ring_id}/cryptoKeys/{crypto_key_id}.
+
+       --encryption-kms-keys=[ENCRYPTION_KMS_KEYS,...]
+          Comma-separated list of the Cloud KMS keys to use for customer data
+          encryption. Cannot be changed once the service is created. Mutually
+          exclusive with flag --data-catalog-sync and --encryption-kms-key.
+          Each key can be provided as a fully-qualified URL, or a relative name
+          in the form
+          projects/{project_id}/locations/{location}/keyRings/{key_ring_id}/cryptoKeys/{crypto_key_id}.
 
      Configuration properties specific to running Hive metastore software as
      the metastore service.
