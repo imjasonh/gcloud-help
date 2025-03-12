@@ -43,6 +43,8 @@ SYNOPSIS
         [--subsetting-policy=SUBSETTING_POLICY; default="NONE"]
         [--subsetting-subset-size=SUBSETTING_SUBSET_SIZE]
         [--timeout=TIMEOUT; default="30s"] [--tracking-mode=TRACKING_MODE]
+        [--zonal-affinity-spillover=ZONAL_AFFINITY_SPILLOVER]
+        [--zonal-affinity-spillover-ratio=ZONAL_AFFINITY_SPILLOVER_RATIO]
         [--cache-key-query-string-blacklist=[QUERY_STRING,...]
           | --cache-key-query-string-whitelist=QUERY_STRING,[...]]
         [--custom-metrics=[CUSTOM_METRICS,...]
@@ -742,6 +744,44 @@ FLAGS
         Balancers
         (https://cloud.google.com/load-balancing/docs/network/networklb-backend-service#tracking-mode).
         TRACKING_MODE must be one of: PER_CONNECTION, PER_SESSION.
+
+     --zonal-affinity-spillover=ZONAL_AFFINITY_SPILLOVER
+        Specifies whether zonal affinity is enabled or not.
+
+        Can only be set if load balancing scheme is INTERNAL,
+
+        The possible values are:
+
+            ZONAL_AFFINITY_DISABLED
+              Zonal Affinity is disabled. The load balancer distributes new
+              connections to all healthy backend endpoints across all zones.
+
+            ZONAL_AFFINITY_STAY_WITHIN_ZONE
+              Zonal Affinity is enabled. The load balancer distributes new
+              connections to all healthy backend endpoints in the local zone only.
+              If there are no healthy backend endpoints in the local zone, the load
+              balancer distributes new connections to all backend endpoints in the
+              local zone.
+
+            ZONAL_AFFINITY_SPILL_CROSS_ZONE
+              Zonal Affinity is enabled. The load balancer distributes new
+              connections to all healthy backend endpoints in the local zone only.
+              If there aren't enough healthy backend endpoints in the local zone,
+              the load balancer distributes new connections to all healthy backend
+              endpoints across all zones.
+
+        ZONAL_AFFINITY_SPILLOVER must be one of: ZONAL_AFFINITY_DISABLED,
+        ZONAL_AFFINITY_STAY_WITHIN_ZONE, ZONAL_AFFINITY_SPILL_CROSS_ZONE.
+
+     --zonal-affinity-spillover-ratio=ZONAL_AFFINITY_SPILLOVER_RATIO
+        The value of the field must be in [0, 1]. When the ratio of the count
+        of healthy backend endpoints in a zone to the count of backend
+        endpoints in that same zone is equal to or above this threshold, the
+        load balancer distributes new connections to all healthy endpoints in
+        the local zone only. When the ratio of the count of healthy backend
+        endpoints in a zone to the count of backend endpoints in that same zone
+        is below this threshold, the load balancer distributes all new
+        connections to all healthy endpoints across all zones.
 
      At most one of these can be specified:
 

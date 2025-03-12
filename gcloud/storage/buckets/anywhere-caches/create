@@ -1,0 +1,64 @@
+NAME
+    gcloud storage buckets anywhere-caches create - create Anywhere Cache
+        instances for a bucket
+
+SYNOPSIS
+    gcloud storage buckets anywhere-caches create URL ZONE [ZONE ...]
+        [--admission-policy=ADMISSION_POLICY] [--ttl=TTL]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Create Anywhere Cache instances. Only one cache instance per zone can be
+    created for each bucket.
+
+EXAMPLES
+    The following command creates an anywhere cache instance for bucket in
+    asia-south2-b zone:
+
+        $ gcloud storage buckets anywhere-caches create gs://my-bucket \
+            asia-south2-b
+
+    The following command creates anywhere cache instances for bucket in
+    asia-south2-b, and asia-east1-a zone:
+
+        $ gcloud storage buckets anywhere-caches create gs://my-bucket \
+            asia-south2-b asia-east1-a
+
+    The following command creates an anywhere cache instance for bucket in
+    asia-south2-b zone, with ttl for cache entry as 6 hours, and admission
+    policy as ADMIT_ON_SECOND_MISS:
+
+        $ gcloud storage buckets anywhere-caches create gs://my-bucket \
+            asia-south2-b --ttl=6h --admission-policy='ADMIT_ON_SECOND_MISS'
+
+POSITIONAL ARGUMENTS
+     URL
+        Specifies the URL of the bucket where the Anywhere Cache should be
+        created.
+
+     ZONE [ZONE ...]
+        Specifies the name of the zonal locations where the Anywhere Cache
+        should be created.
+
+FLAGS
+     --admission-policy=ADMISSION_POLICY
+        The cache admission policy decides for each cache miss, whether to
+        insert the missed block or not. ADMISSION_POLICY must be one of:
+        ADMIT_ON_FIRST_MISS, ADMIT_ON_SECOND_MISS.
+
+     --ttl=TTL
+        Cache entry time-to-live. Default to 24h if not provided.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This variant is also available:
+
+        $ gcloud alpha storage buckets anywhere-caches create
+

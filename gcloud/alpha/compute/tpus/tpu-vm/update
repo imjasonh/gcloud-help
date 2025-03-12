@@ -5,12 +5,13 @@ SYNOPSIS
     gcloud alpha compute tpus tpu-vm update (TPU : --zone=ZONE)
         [--add-tags=[TAGS,...]] [--async] [--description=DESCRIPTION]
         [--internal-ips] [--update-labels=[KEY=VALUE,...]]
-        [--attach-disk=[SOURCE=DATA_DISK,...] | --detach-disk=DATA_DISK]
         [--clear-labels | --remove-labels=[KEY,...]]
         [--clear-tags | --remove-tags=[TAG,...]]
         [--metadata-from-file=[KEY=VALUE,...]
           | --update-metadata=[KEY=VALUE,...] --clear-metadata
-          | --remove-metadata=[KEY,...]] [GCLOUD_WIDE_FLAG ...]
+          | --remove-metadata=[KEY,...]]
+        [--worker=[WORKER,...] --attach-disk=[SOURCE=DATA_DISK,...]
+          | --detach-disk=DATA_DISK] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Update a Cloud TPU VM node.
@@ -102,45 +103,6 @@ FLAGS
 
      At most one of these can be specified:
 
-       --attach-disk=[SOURCE=DATA_DISK,...]
-          Attach a data disk to the TPU VM. For example,
-
-              $ gcloud alpha compute tpus tpu-vm update example-tpu \
-                  --attach-disk \
-                  source=projects/my-project/zones/us-central1-c/disks/my-disk,\
-              mode=read-only --zone=us-central1-c
-
-          attaches the disk named
-          'projects/my-project/zones/us-central1-c/disks/my-disk' to a TPU VM
-          named 'example-tpu' in read-only mode in zone us-central1-c.
-
-          The following keys are allowed:
-
-           source
-              Specify the full path to an existing disk. Required. The disk
-              must be in the same zone.
-
-           mode
-              Specify the mode in which to attach this disk. Valid options are
-              'read-write', 'read-only'. If not specified, the default is
-              'read-write'.
-
-       --detach-disk=DATA_DISK
-          Detach a data disk from the TPU VM. For example,
-
-          This flag must be repeated to provide multiple data disks. For
-          example:
-
-              $ gcloud alpha compute tpus tpu-vm update example-tpu \
-                  --detach-disk=projects/my-project/zones/us-central1-c/disks/\
-              my-disk --zone=us-central1-c
-
-          detaches the disk named
-          'projects/my-project/zones/us-central1-c/disks/my-disk' from a TPU VM
-          named 'example-tpu' in zone us-central1-c.
-
-     At most one of these can be specified:
-
        --clear-labels
           Remove all labels. If --update-labels is also specified then
           --clear-labels is applied first.
@@ -211,6 +173,79 @@ FLAGS
             List of comma-separated metadata keys to remove. If a key does not
             exist it is silently ignored. If --update-metadata is also
             specified then --update-metadata is applied first.
+
+     --worker=[WORKER,...]
+        List of worker IDs to apply attach/detach disk to. If not specified,
+        the update is applied to all workers. Only numeric values are allowed.
+        The only exception is 'all'.
+
+        --attach-disk and --worker can be used to specify which workers to
+        attach the disk to. For example:
+
+            $ gcloud alpha compute tpus tpu-vm update example-tpu \
+                --attach-disk \
+                source=projects/my-project/zones/us-central1-c/disks/my-disk,\
+            mode=read-only --zone=us-central1-c
+                  --worker=0,1
+
+        attaches the disk named
+        'projects/my-project/zones/us-central1-c/disks/my-disk' to worker 0 and
+        1 of a TPU VM named 'example-tpu' in read-only mode in zone
+        us-central1-c. if --worker is not specified or --worker=all is
+        specified, the disk is attached to all workers.
+
+        --detach-disk and --worker can be used to specify which workers to
+        detach the disk from. For example:
+
+            $ gcloud alpha compute tpus tpu-vm update example-tpu \
+                --detach-disk=projects/my-project/zones/us-central1-c/disks/\
+            my-disk --zone=us-central1-c
+                  --worker=0,1
+
+        detaches the disk named
+        'projects/my-project/zones/us-central1-c/disks/my-disk' from worker 0
+        and 1 of a TPU VM named 'example-tpu' in zone us-central1-c. if
+        --worker is not specified or --worker=all is specified, the disk is
+        attached to all workers.
+
+     At most one of these can be specified:
+
+       --attach-disk=[SOURCE=DATA_DISK,...]
+          Attach a data disk to the TPU VM. For example,
+
+              $ gcloud alpha compute tpus tpu-vm update example-tpu \
+                  --attach-disk \
+                  source=projects/my-project/zones/us-central1-c/disks/my-disk,\
+              mode=read-only --zone=us-central1-c
+
+          attaches the disk named
+          'projects/my-project/zones/us-central1-c/disks/my-disk' to a TPU VM
+          named 'example-tpu' in read-only mode in zone us-central1-c.
+
+          The following keys are allowed:
+
+           source
+              Specify the full path to an existing disk. Required. The disk
+              must be in the same zone.
+
+           mode
+              Specify the mode in which to attach this disk. Valid options are
+              'read-write', 'read-only'. If not specified, the default is
+              'read-write'.
+
+       --detach-disk=DATA_DISK
+          Detach a data disk from the TPU VM. For example,
+
+          This flag must be repeated to provide multiple data disks. For
+          example:
+
+              $ gcloud alpha compute tpus tpu-vm update example-tpu \
+                  --detach-disk=projects/my-project/zones/us-central1-c/disks/\
+              my-disk --zone=us-central1-c
+
+          detaches the disk named
+          'projects/my-project/zones/us-central1-c/disks/my-disk' from a TPU VM
+          named 'example-tpu' in zone us-central1-c.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
