@@ -4,7 +4,8 @@ NAME
 
 SYNOPSIS
     gcloud alpha compute instance-groups managed resize-requests create NAME
-        --resize-by=RESIZE_BY --resize-request=RESIZE_REQUEST_NAME
+        --resize-request=RESIZE_REQUEST_NAME
+        (--instances=INSTANCE,[INSTANCE,...] | --resize-by=RESIZE_BY)
         [--requested-run-duration=REQUESTED_RUN_DURATION]
         [--region=REGION | --zone=ZONE] [GCLOUD_WIDE_FLAG ...]
 
@@ -24,11 +25,19 @@ POSITIONAL ARGUMENTS
         Name of the managed instance group to operate on.
 
 REQUIRED FLAGS
-     --resize-by=RESIZE_BY
-        The number of VMs to resize managed instance group by.
-
      --resize-request=RESIZE_REQUEST_NAME
         The name of the resize request to create.
+
+     Exactly one of these must be specified:
+
+       --instances=INSTANCE,[INSTANCE,...]
+          The names of instances to be created by this resize request. The
+          number of names specified determines the number of instances to
+          create. The group's target size will be increased by this number.
+
+       --resize-by=RESIZE_BY
+          The number of instances to be created by this resize request. The
+          group's target size will be increased by this number.
 
 OPTIONAL FLAGS
      --requested-run-duration=REQUESTED_RUN_DURATION

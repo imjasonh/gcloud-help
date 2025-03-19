@@ -27,17 +27,16 @@ SYNOPSIS
           --clear-volumes --remove-volume=[VOLUME,...]]
         [--add-volume-mount=[volume=NAME,mount-path=MOUNT_PATH,...]
           --args=[ARG,...] --clear-volume-mounts --command=[COMMAND,...]
-          --cpu=CPU --depends-on=[CONTAINER,...] --image=IMAGE --memory=MEMORY
-          --port=PORT --remove-volume-mount=[MOUNT_PATH,...]
-          --[no-]use-http2 --clear-env-vars | --env-vars-file=FILE_PATH
-          | --set-env-vars=[KEY=VALUE,...] | --remove-env-vars=[KEY,...]
+          --cpu=CPU --depends-on=[CONTAINER,...] --image=IMAGE
+          --liveness-probe=[KEY=VALUE,...] --memory=MEMORY --port=PORT
+          --remove-volume-mount=[MOUNT_PATH,...]
+          --startup-probe=[KEY=VALUE,...] --[no-]use-http2 --clear-env-vars
+          | --env-vars-file=FILE_PATH | --set-env-vars=[KEY=VALUE,...]
+          | --remove-env-vars=[KEY,...]
           --update-env-vars=[KEY=VALUE,...] --clear-secrets
           | --set-secrets=[KEY=VALUE,...]
           | --remove-secrets=[KEY,...] --update-secrets=[KEY=VALUE,...]]
         [--binary-authorization=POLICY | --clear-binary-authorization]
-        [--clear-config-maps | --set-config-maps=[KEY=VALUE,...]
-          | --remove-config-maps=[KEY,...]
-          --update-config-maps=[KEY=VALUE,...]]
         [--clear-encryption-key-shutdown-hours
           | --encryption-key-shutdown-hours=ENCRYPTION_KEY_SHUTDOWN_HOURS]
         [--clear-key | --key=KEY]
@@ -363,6 +362,30 @@ FLAGS
             Name of the container image to deploy (e.g.
             us-docker.pkg.dev/cloudrun/container/hello:latest).
 
+         --liveness-probe=[KEY=VALUE,...]
+            Comma separated settings for liveness probe in the form KEY=VALUE.
+            Each key stands for a field of the probe described in
+            https://cloud.google.com/run/docs/reference/rest/v1/Container#Probe.
+            Currently supported keys are:
+
+                + initialDelaySeconds: integer
+                + timeoutSeconds: integer
+                + periodSeconds: integer
+                + failureThreshold: integer
+                + httpGet.port: integer
+                + httpGet.path: string
+                + grpc.port: integer
+                + grpc.service: string
+
+            For example, to set a probe with 10s timeout and HTTP probe
+            requests sent to 8080 port of the container:
+
+                $ --liveness-probe=timeoutSeconds=10,httpGet.port=8080
+
+            To remove existing probe:
+
+                $ --liveness-probe=""
+
          --memory=MEMORY
             Set a memory limit. Ex: 1024Mi, 4Gi.
 
@@ -377,6 +400,31 @@ FLAGS
          --remove-volume-mount=[MOUNT_PATH,...]
             Removes the volume mounted at the specified path from the current
             container.
+
+         --startup-probe=[KEY=VALUE,...]
+            Comma separated settings for startup probe in the form KEY=VALUE.
+            Each key stands for a field of the probe described in
+            https://cloud.google.com/run/docs/reference/rest/v1/Container#Probe.
+            Currently supported keys are:
+
+                + initialDelaySeconds: integer
+                + timeoutSeconds: integer
+                + periodSeconds: integer
+                + failureThreshold: integer
+                + httpGet.port: integer
+                + httpGet.path: string
+                + grpc.port: integer
+                + grpc.service: string
+                + tcpSocket.port: integer
+
+            For example, to set a probe with 10s timeout and HTTP probe
+            requests sent to 8080 port of the container:
+
+                $ --startup-probe=timeoutSeconds=10,httpGet.port=8080
+
+            To remove existing probe:
+
+                $ --startup-probe=""
 
          --[no-]use-http2
             Whether to use HTTP/2 for connections to the service. Use
@@ -444,37 +492,6 @@ FLAGS
 
        --clear-binary-authorization
           Remove any previously set Binary Authorization policy.
-
-     Specify config map to mount or provide as environment variables. Keys
-     starting with a forward slash '/' are mount paths. All other keys
-     correspond to environment variables. The values associated with each of
-     these should be in the form CONFIG_MAP_NAME:KEY_IN_CONFIG_MAP; you may
-     omit the key within the config map to specify a mount of all keys within
-     the config map. For example:
-     '--update-config-maps=/my/path=myconfig,ENV=otherconfig:key.json' will
-     create a volume with config map 'myconfig' and mount that volume at
-     '/my/path'. Because no config map key was specified, all keys in
-     'myconfig' will be included. An environment variable named ENV will also
-     be created whose value is the value of 'key.json' in 'otherconfig. Not
-     supported on the fully managed version of Cloud Run.
-
-     At most one of these can be specified:
-
-       --clear-config-maps
-          Remove all config-maps.
-
-       --set-config-maps=[KEY=VALUE,...]
-          List of key-value pairs to set as config-maps. All existing
-          config-maps will be removed first.
-
-       Only --update-config-maps and --remove-config-maps can be used together.
-       If both are specified, --remove-config-maps will be applied first.
-
-         --remove-config-maps=[KEY,...]
-            List of config-maps to be removed.
-
-         --update-config-maps=[KEY=VALUE,...]
-            List of key-value pairs to set as config-maps.
 
      At most one of these can be specified:
 

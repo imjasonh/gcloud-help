@@ -3,17 +3,25 @@ NAME
         Memorystore instance
 
 SYNOPSIS
-    gcloud beta memorystore instances update (INSTANCE : --location=LOCATION)
-        [--async] [--[no-]async-instance-endpoints-deletion-enabled]
+    gcloud beta memorystore instances update INSTANCE [--async]
+        [--[no-]async-instance-endpoints-deletion-enabled]
         [--[no-]deletion-protection-enabled] [--engine-version=ENGINE_VERSION]
-        [--mode=MODE] [--node-type=NODE_TYPE] [--[no-]ondemand-maintenance]
-        [--replica-count=REPLICA_COUNT] [--request-id=REQUEST_ID]
-        [--shard-count=SHARD_COUNT]
+        [--location=LOCATION] [--mode=MODE] [--node-type=NODE_TYPE]
+        [--[no-]ondemand-maintenance] [--replica-count=REPLICA_COUNT]
+        [--request-id=REQUEST_ID] [--shard-count=SHARD_COUNT]
         [--aof-config-append-fsync=AOF_CONFIG_APPEND_FSYNC
           --clear-persistence-config
           --persistence-config-mode=PERSISTENCE_CONFIG_MODE
           --rdb-config-snapshot-period=RDB_CONFIG_SNAPSHOT_PERIOD
           --rdb-config-snapshot-start-time=RDB_CONFIG_SNAPSHOT_START_TIME]
+        [--clear-cross-instance-replication-config
+          --cross-instance-replication-config-role=CROSS_INSTANCE_REPLICATION_CONFIG_ROLE --clear-primary-instance | --primary-instance=PRIMARY_INSTANCE --cross-instance-replication-config-secondary-instances=[instance=INSTANCE] | --add-cross-instance-replication-config-secondary-instances=[instance=INSTANCE] --clear-cross-instance-replication-config-secondary-instances | --remove-cross-instance-replication-config-secondary-instances=[instance=INSTANCE]]
+        [--clear-maintenance-policy
+          --maintenance-policy-weekly-window=[day=DAY],[startTime=STARTTIME]
+          | --add-maintenance-policy-weekly-window=[day=DAY],
+          [startTime=STARTTIME] --clear-maintenance-policy-weekly-window
+          | --remove-maintenance-policy-weekly-window=[day=DAY],
+          [startTime=STARTTIME]]
         [--endpoints=[connections=CONNECTIONS]
           | --add-endpoints=[connections=CONNECTIONS] --clear-endpoints
           | --remove-endpoints=[connections=CONNECTIONS]]
@@ -44,16 +52,20 @@ EXAMPLES
 
 POSITIONAL ARGUMENTS
      Instance resource - Identifier. Unique name of the instance. Format:
-     projects/{project}/locations/{location}/instances/{instance} The arguments
-     in this group can be used to specify the attributes of this resource.
-     (NOTE) Some attributes are not given arguments in this group but can be
-     set in other ways.
+     projects/{project}/locations/{location}/instances/{instance} This
+     represents a Cloud resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways.
 
      To set the project attribute:
       ◆ provide the argument instance on the command line with a fully
         specified name;
       ◆ provide the argument --project on the command line;
       ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument instance on the command line with a fully
+        specified name;
+      ◆ provide the argument --location on the command line.
 
      This must be specified.
 
@@ -62,17 +74,6 @@ POSITIONAL ARGUMENTS
 
           To set the instance attribute:
           ▸ provide the argument instance on the command line.
-
-          This positional argument must be specified if any of the other
-          arguments in this group are specified.
-
-       --location=LOCATION
-          The location id of the instance resource.
-
-          To set the location attribute:
-          ▸ provide the argument instance on the command line with a fully
-            specified name;
-          ▸ provide the argument --location on the command line.
 
 FLAGS
      --async
@@ -98,6 +99,11 @@ FLAGS
 
      --engine-version=ENGINE_VERSION
         Engine version of the instance.
+
+     --location=LOCATION
+        For resources [instance], provides fallback value for resource location
+        attribute. When the resource's full URI path is not provided, location
+        will fallback to this flag value.
 
      --mode=MODE
         The mode config for the instance. MODE must be one of:
@@ -202,6 +208,289 @@ FLAGS
             Time that the first snapshot was/will be attempted, and to which
             future snapshots will be aligned. If not provided, the current time
             will be used.
+
+     Cross instance replication config.
+
+       --clear-cross-instance-replication-config
+          Set instance.crossInstanceReplicationConfig back to default value.
+
+       --cross-instance-replication-config-role=CROSS_INSTANCE_REPLICATION_CONFIG_ROLE
+          The role of the instance in cross instance replication.
+          CROSS_INSTANCE_REPLICATION_CONFIG_ROLE must be one of:
+
+           none
+              This instance does not participate in cross instance replication.
+              It is an independent instance and does not replicate to or from
+              any other instances.
+           primary
+              A instance that allows both reads and writes. Any data written to
+              this instance is also replicated to the attached secondary
+              instances.
+           secondary
+              A instance that allows only reads and replicates data from a
+              primary instance.
+
+       Details of the remote instance associated with this instance in a cross
+       instance replication setup.
+
+         Update primary_instance.
+
+         At most one of these can be specified:
+
+           --clear-primary-instance
+              Clear primary_instance value and set to null.
+
+           Instance resource - Set primary_instance to new value.
+
+           The full resource path of the remote instance in the format:
+           projects/<project>/locations/<region>/instances/<instance-id> This
+           represents a Cloud resource. (NOTE) Some attributes are not given
+           arguments in this group but can be set in other ways.
+
+           To set the project attribute:
+            ◇ provide the argument --primary-instance on the command line
+              with a fully specified name;
+            ◇ provide the argument --project on the command line;
+            ◇ set the property core/project.
+
+           To set the location attribute:
+            ◇ provide the argument --primary-instance on the command line
+              with a fully specified name;
+            ◇ provide the argument --location on the command line.
+
+             --primary-instance=PRIMARY_INSTANCE
+                ID of the instance or fully qualified identifier for the
+                instance.
+
+                To set the instance attribute:
+                ▹ provide the argument --primary-instance on the command
+                  line.
+
+       Update cross_instance_replication_config_secondary_instances.
+
+       At most one of these can be specified:
+
+         --cross-instance-replication-config-secondary-instances=[instance=INSTANCE]
+            Set cross_instance_replication_config_secondary_instances to new
+            value. List of secondary instances that are replicating from this
+            primary instance.
+
+            This field is only set for a primary instance.
+
+             instance
+                The full resource path of the remote instance in the format:
+                projects/<project>/locations/<region>/instances/<instance-id>.
+
+            Shorthand Example:
+
+                --cross-instance-replication-config-secondary-instances=instance=string --cross-instance-replication-config-secondary-instances=instance=string
+
+            JSON Example:
+
+                --cross-instance-replication-config-secondary-instances='[{"instance": "string"}]'
+
+            File Example:
+
+                --cross-instance-replication-config-secondary-instances=path_to_file.(yaml|json)
+
+         --add-cross-instance-replication-config-secondary-instances=[instance=INSTANCE]
+            Add new value to
+            cross_instance_replication_config_secondary_instances list. List of
+            secondary instances that are replicating from this primary
+            instance.
+
+            This field is only set for a primary instance.
+
+             instance
+                The full resource path of the remote instance in the format:
+                projects/<project>/locations/<region>/instances/<instance-id>.
+
+            Shorthand Example:
+
+                --add-cross-instance-replication-config-secondary-instances=instance=string --add-cross-instance-replication-config-secondary-instances=instance=string
+
+            JSON Example:
+
+                --add-cross-instance-replication-config-secondary-instances='[{"instance": "string"}]'
+
+            File Example:
+
+                --add-cross-instance-replication-config-secondary-instances=path_to_file.(yaml|json)
+
+         At most one of these can be specified:
+
+           --clear-cross-instance-replication-config-secondary-instances
+              Clear cross_instance_replication_config_secondary_instances value
+              and set to empty list.
+
+           --remove-cross-instance-replication-config-secondary-instances=[instance=INSTANCE]
+              Remove existing value from
+              cross_instance_replication_config_secondary_instances list. List
+              of secondary instances that are replicating from this primary
+              instance.
+
+              This field is only set for a primary instance.
+
+               instance
+                  The full resource path of the remote instance in the format:
+                  projects/<project>/locations/<region>/instances/<instance-id>.
+
+              Shorthand Example:
+
+                  --remove-cross-instance-replication-config-secondary-instances=instance=string --remove-cross-instance-replication-config-secondary-instances=instance=string
+
+              JSON Example:
+
+                  --remove-cross-instance-replication-config-secondary-instances='[{"instance": "string"}]'
+
+              File Example:
+
+                  --remove-cross-instance-replication-config-secondary-instances=path_to_file.(yaml|json)
+
+     Maintenance policy per instance.
+
+       --clear-maintenance-policy
+          Set instance.maintenancePolicy back to default value.
+
+       Update maintenance_policy_weekly_window.
+
+       At most one of these can be specified:
+
+         --maintenance-policy-weekly-window=[day=DAY],[startTime=STARTTIME]
+            Set maintenance_policy_weekly_window to new value. Maintenance
+            window that is applied to resources covered by this policy. Minimum
+            1. For the current version, the maximum number of weekly_window is
+            expected to be one.
+
+             day
+                Allows to define schedule that runs specified day of the week.
+
+             startTime
+                Start time of the window in UTC.
+
+                 hours
+                    Hours of a day in 24 hour format. Must be greater than or
+                    equal to 0 and typically must be less than or equal to 23.
+                    An API may choose to allow the value "24:00:00" for
+                    scenarios like business closing time.
+
+                 minutes
+                    Minutes of an hour. Must be greater than or equal to 0 and
+                    less than or equal to 59.
+
+                 nanos
+                    Fractions of seconds, in nanoseconds. Must be greater than
+                    or equal to 0 and less than or equal to 999,999,999.
+
+                 seconds
+                    Seconds of a minute. Must be greater than or equal to 0 and
+                    typically must be less than or equal to 59. An API may
+                    allow the value 60 if it allows leap-seconds.
+
+            Shorthand Example:
+
+                --maintenance-policy-weekly-window=day=string,startTime={hours=int,minutes=int,nanos=int,seconds=int} --maintenance-policy-weekly-window=day=string,startTime={hours=int,minutes=int,nanos=int,seconds=int}
+
+            JSON Example:
+
+                --maintenance-policy-weekly-window='[{"day": "string", "startTime": {"hours": int, "minutes": int, "nanos": int, "seconds": int}}]'
+
+            File Example:
+
+                --maintenance-policy-weekly-window=path_to_file.(yaml|json)
+
+         --add-maintenance-policy-weekly-window=[day=DAY],[startTime=STARTTIME]
+            Add new value to maintenance_policy_weekly_window list. Maintenance
+            window that is applied to resources covered by this policy. Minimum
+            1. For the current version, the maximum number of weekly_window is
+            expected to be one.
+
+             day
+                Allows to define schedule that runs specified day of the week.
+
+             startTime
+                Start time of the window in UTC.
+
+                 hours
+                    Hours of a day in 24 hour format. Must be greater than or
+                    equal to 0 and typically must be less than or equal to 23.
+                    An API may choose to allow the value "24:00:00" for
+                    scenarios like business closing time.
+
+                 minutes
+                    Minutes of an hour. Must be greater than or equal to 0 and
+                    less than or equal to 59.
+
+                 nanos
+                    Fractions of seconds, in nanoseconds. Must be greater than
+                    or equal to 0 and less than or equal to 999,999,999.
+
+                 seconds
+                    Seconds of a minute. Must be greater than or equal to 0 and
+                    typically must be less than or equal to 59. An API may
+                    allow the value 60 if it allows leap-seconds.
+
+            Shorthand Example:
+
+                --add-maintenance-policy-weekly-window=day=string,startTime={hours=int,minutes=int,nanos=int,seconds=int} --add-maintenance-policy-weekly-window=day=string,startTime={hours=int,minutes=int,nanos=int,seconds=int}
+
+            JSON Example:
+
+                --add-maintenance-policy-weekly-window='[{"day": "string", "startTime": {"hours": int, "minutes": int, "nanos": int, "seconds": int}}]'
+
+            File Example:
+
+                --add-maintenance-policy-weekly-window=path_to_file.(yaml|json)
+
+         At most one of these can be specified:
+
+           --clear-maintenance-policy-weekly-window
+              Clear maintenance_policy_weekly_window value and set to empty
+              list.
+
+           --remove-maintenance-policy-weekly-window=[day=DAY],[startTime=STARTTIME]
+              Remove existing value from maintenance_policy_weekly_window list.
+              Maintenance window that is applied to resources covered by this
+              policy. Minimum 1. For the current version, the maximum number of
+              weekly_window is expected to be one.
+
+               day
+                  Allows to define schedule that runs specified day of the
+                  week.
+
+               startTime
+                  Start time of the window in UTC.
+
+                   hours
+                      Hours of a day in 24 hour format. Must be greater than or
+                      equal to 0 and typically must be less than or equal to
+                      23. An API may choose to allow the value "24:00:00" for
+                      scenarios like business closing time.
+
+                   minutes
+                      Minutes of an hour. Must be greater than or equal to 0
+                      and less than or equal to 59.
+
+                   nanos
+                      Fractions of seconds, in nanoseconds. Must be greater
+                      than or equal to 0 and less than or equal to 999,999,999.
+
+                   seconds
+                      Seconds of a minute. Must be greater than or equal to 0
+                      and typically must be less than or equal to 59. An API
+                      may allow the value 60 if it allows leap-seconds.
+
+              Shorthand Example:
+
+                  --remove-maintenance-policy-weekly-window=day=string,startTime={hours=int,minutes=int,nanos=int,seconds=int} --remove-maintenance-policy-weekly-window=day=string,startTime={hours=int,minutes=int,nanos=int,seconds=int}
+
+              JSON Example:
+
+                  --remove-maintenance-policy-weekly-window='[{"day": "string", "startTime": {"hours": int, "minutes": int, "nanos": int, "seconds": int}}]'
+
+              File Example:
+
+                  --remove-maintenance-policy-weekly-window=path_to_file.(yaml|json)
 
      Update endpoints.
 

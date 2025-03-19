@@ -14,7 +14,7 @@ SYNOPSIS
         [--insights-config-query-string-length=INSIGHTS_CONFIG_QUERY_STRING_LENGTH]
         [--[no-]insights-config-record-application-tags]
         [--[no-]insights-config-record-client-address]
-        [--[no-]outbound-public-ip]
+        [--machine-type=MACHINE_TYPE] [--[no-]outbound-public-ip]
         [--psc-network-attachment-uri=PSC_NETWORK_ATTACHMENT_URI]
         [--read-pool-node-count=READ_POOL_NODE_COUNT]
         [--[no-]require-connectors] [--ssl-mode=SSL_MODE]
@@ -88,9 +88,15 @@ OPTIONAL FLAGS
 
      --cpu-count=CPU_COUNT
         Whole number value indicating how many vCPUs the machine should
-        contain. Each vCPU count corresponds to a N2 high-mem machine:
-        (https://cloud.google.com/compute/docs/general-purpose-machines#n2_machines).
-        CPU_COUNT must be one of: 1, 2, 4, 8, 16, 32, 64, 96, 128.
+        contain. If the instance does not have a machine-type, the vCPU count
+        will be used to determine the machine type where each vCPU corresponds
+        to an N2 high-mem machine:
+        (https://cloud.google.com/compute/docs/general-purpose-machines#n2_machine_types).
+        where CPU_COUNT can be one of: 2, 4, 8, 16, 32, 64, 96, 128. If the
+        instance has a machine-type, cpu-count must have the same value as the
+        vCPU count in the machine-type. Eg: if machine-type is
+        c4a-highmem-4-lssd, cpu-count must be 4. CPU_COUNT must be one of: 1,
+        2, 4, 8, 16, 32, 48, 64, 72, 96, 128.
 
      --database-flags=FLAG=VALUE,[FLAG=VALUE,...]
         Comma-separated list of database flags to set on the instance. Use an
@@ -120,6 +126,14 @@ OPTIONAL FLAGS
 
         Use --insights-config-record-client-address to enable and
         --no-insights-config-record-client-address to disable.
+
+     --machine-type=MACHINE_TYPE
+        Specifies machine type for the instance. MACHINE_TYPE must be one of:
+        n2-highmem-2, n2-highmem-4, n2-highmem-8, n2-highmem-16, n2-highmem-32,
+        n2-highmem-64, n2-highmem-96, n2-highmem-128, c4a-highmem-1,
+        c4a-highmem-4-lssd, c4a-highmem-8-lssd, c4a-highmem-16-lssd,
+        c4a-highmem-32-lssd, c4a-highmem-48-lssd, c4a-highmem-64-lssd,
+        c4a-highmem-72-lssd.
 
      --[no-]outbound-public-ip
         Add outbound Public IP connectivity to an AlloyDB instance. Use

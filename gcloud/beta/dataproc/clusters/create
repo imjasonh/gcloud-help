@@ -4,6 +4,7 @@ NAME
 SYNOPSIS
     gcloud beta dataproc clusters create (CLUSTER : --region=REGION) [--async]
         [--autoscaling-policy=AUTOSCALING_POLICY] [--bucket=BUCKET]
+        [--cluster-type=TYPE]
         [--driver-pool-accelerator=[type=TYPE,[count=COUNT],...]]
         [--driver-pool-boot-disk-size=DRIVER_POOL_BOOT_DISK_SIZE]
         [--driver-pool-boot-disk-type=DRIVER_POOL_BOOT_DISK_TYPE]
@@ -22,7 +23,7 @@ SYNOPSIS
         [--master-boot-disk-type=MASTER_BOOT_DISK_TYPE]
         [--master-local-ssd-interface=MASTER_LOCAL_SSD_INTERFACE]
         [--master-machine-type=MASTER_MACHINE_TYPE]
-        [--master-min-cpu-platform=PLATFORM] [--max-idle=MAX_IDLE]
+        [--master-min-cpu-platform=PLATFORM]
         [--min-secondary-worker-fraction=MIN_SECONDARY_WORKER_FRACTION]
         [--node-group=NODE_GROUP]
         [--num-driver-pool-local-ssds=NUM_DRIVER_POOL_LOCAL_SSDS]
@@ -42,7 +43,8 @@ SYNOPSIS
         [--secondary-worker-standard-capacity-base=SECONDARY_WORKER_STANDARD_CAPACITY_BASE]
         [--secondary-worker-standard-capacity-percent-above-base=SECONDARY_WORKER_STANDARD_CAPACITY_PERCENT_ABOVE_BASE]
         [--shielded-integrity-monitoring] [--shielded-secure-boot]
-        [--shielded-vtpm] [--temp-bucket=TEMP_BUCKET]
+        [--shielded-vtpm] [--stop-max-idle=STOP_MAX_IDLE]
+        [--temp-bucket=TEMP_BUCKET]
         [--worker-accelerator=[type=TYPE,[count=COUNT],...]]
         [--worker-boot-disk-provisioned-iops=WORKER_BOOT_DISK_PROVISIONED_IOPS]
         [--worker-boot-disk-provisioned-throughput=WORKER_BOOT_DISK_PROVISIONED_THROUGHPUT]
@@ -52,7 +54,10 @@ SYNOPSIS
         [--worker-min-cpu-platform=PLATFORM] [--zone=ZONE, -z ZONE]
         [--dataproc-metastore=DATAPROC_METASTORE | --bigquery-metastore
           --bigquery-metastore-database-location=BIGQUERY_METASTORE_DATABASE_LOCATION --bigquery-metastore-project-id=BIGQUERY_METASTORE_PROJECT_ID]
-        [--expiration-time=EXPIRATION_TIME | --max-age=MAX_AGE]
+        [--delete-expiration-time=DELETE_EXPIRATION_TIME
+          | --delete-max-age=DELETE_MAX_AGE | --expiration-time=EXPIRATION_TIME
+          | --max-age=MAX_AGE]
+        [--delete-max-idle=DELETE_MAX_IDLE | --max-idle=MAX_IDLE]
         [--gce-pd-kms-key=GCE_PD_KMS_KEY
           : --gce-pd-kms-key-keyring=GCE_PD_KMS_KEY_KEYRING
           --gce-pd-kms-key-location=GCE_PD_KMS_KEY_LOCATION
@@ -73,6 +78,8 @@ SYNOPSIS
           --num-secondary-workers=NUM_SECONDARY_WORKERS
           --num-workers=NUM_WORKERS
           --secondary-worker-type=TYPE; default="preemptible"]
+        [--stop-expiration-time=STOP_EXPIRATION_TIME
+          | --stop-max-age=STOP_MAX_AGE]
         [--worker-machine-type=WORKER_MACHINE_TYPE
           | --worker-machine-types=type=MACHINE_TYPE[,
           type=MACHINE_TYPE...][,rank=RANK]] [GCLOUD_WIDE_FLAG ...]
@@ -137,6 +144,10 @@ FLAGS
         The Google Cloud Storage bucket to use by default to stage job
         dependencies, miscellaneous config files, and job driver console output
         when using this cluster.
+
+     --cluster-type=TYPE
+        The type of cluster. TYPE must be one of: standard, single-node,
+        zero-scale.
 
      --driver-pool-accelerator=[type=TYPE,[count=COUNT],...]
         Attaches accelerators, such as GPUs, to the driver-pool instance(s).
@@ -264,11 +275,6 @@ FLAGS
         support CPU platform selection provide an availableCpuPlatforms field,
         which contains the list of available CPU platforms in the zone (see
         Availability of CPU platforms for more information).
-
-     --max-idle=MAX_IDLE
-        The duration before cluster is auto-deleted after last job completes,
-        such as "2h" or "1d". See $ gcloud topic datetimes for information on
-        duration formats.
 
      --min-secondary-worker-fraction=MIN_SECONDARY_WORKER_FRACTION
         Minimum fraction of secondary worker nodes required to create the
@@ -415,6 +421,11 @@ FLAGS
         security operations, such as remote attestation, encryption, and
         sealing of keys.
 
+     --stop-max-idle=STOP_MAX_IDLE
+        The duration after the last job completes to auto-stop the cluster,
+        such as "2h" or "1d". See $ gcloud topic datetimes for information on
+        duration formats.
+
      --temp-bucket=TEMP_BUCKET
         The Google Cloud Storage bucket to use by default to store ephemeral
         cluster and jobs data, such as Spark and MapReduce history files.
@@ -501,15 +512,37 @@ FLAGS
 
      At most one of these can be specified:
 
+       --delete-expiration-time=DELETE_EXPIRATION_TIME
+          The time when the cluster will be auto-deleted, such as
+          "2017-08-29T18:52:51.142Z." See $ gcloud topic datetimes for
+          information on time formats.
+
+       --delete-max-age=DELETE_MAX_AGE
+          The lifespan of the cluster, with auto-deletion upon completion, such
+          as "2h" or "1d". See $ gcloud topic datetimes for information on
+          duration formats.
+
        --expiration-time=EXPIRATION_TIME
-          The time when cluster will be auto-deleted, such as
+          The time when the cluster will be auto-deleted, such as
           "2017-08-29T18:52:51.142Z." See $ gcloud topic datetimes for
           information on time formats.
 
        --max-age=MAX_AGE
-          The lifespan of the cluster before it is auto-deleted, such as "2h"
-          or "1d". See $ gcloud topic datetimes for information on duration
-          formats.
+          The lifespan of the cluster, with auto-deletion upon completion, such
+          as "2h" or "1d". See $ gcloud topic datetimes for information on
+          duration formats.
+
+     At most one of these can be specified:
+
+       --delete-max-idle=DELETE_MAX_IDLE
+          The duration after the last job completes to auto-delete the cluster,
+          such as "2h" or "1d". See $ gcloud topic datetimes for information on
+          duration formats.
+
+       --max-idle=MAX_IDLE
+          The duration after the last job completes to autto-delete the
+          cluster, such as "2h" or "1d". See $ gcloud topic datetimes for
+          information on duration formats.
 
      Key resource - The Cloud KMS (Key Management Service) cryptokey that will
      be used to protect the cluster. The 'Compute Engine Service Agent' service
@@ -916,6 +949,18 @@ FLAGS
          --secondary-worker-type=TYPE; default="preemptible"
             The type of the secondary worker group. TYPE must be one of:
             preemptible, non-preemptible, spot.
+
+     At most one of these can be specified:
+
+       --stop-expiration-time=STOP_EXPIRATION_TIME
+          The time when the cluster will be auto-stopped, such as
+          "2017-08-29T18:52:51.142Z." See $ gcloud topic datetimes for
+          information on time formats.
+
+       --stop-max-age=STOP_MAX_AGE
+          The lifespan of the cluster, with auto-stop upon completion, such as
+          "2h" or "1d". See $ gcloud topic datetimes for information on
+          duration formats.
 
      At most one of these can be specified:
 

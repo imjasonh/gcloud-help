@@ -13,15 +13,18 @@ SYNOPSIS
         [--availability-type=AVAILABILITY_TYPE] [--no-backup]
         [--backup-location=BACKUP_LOCATION]
         [--backup-start-time=BACKUP_START_TIME] [--cascadable-replica]
-        [--collation=COLLATION] [--connector-enforcement=CONNECTOR_ENFORCEMENT]
-        [--cpu=CPU] [--custom-subject-alternative-names=DNS,[DNS,[DNS]]]
+        [--collation=COLLATION]
+        [--connection-pool-flags=FLAG=VALUE,[FLAG=VALUE,...]]
+        [--connector-enforcement=CONNECTOR_ENFORCEMENT] [--cpu=CPU]
+        [--custom-subject-alternative-names=DNS,[DNS,[DNS]]]
         [--database-flags=FLAG=VALUE,[FLAG=VALUE,...]]
         [--database-version=DATABASE_VERSION; default="MYSQL_8_0"]
         [--[no-]deletion-protection]
         [--deny-maintenance-period-end-date=DENY_MAINTENANCE_PERIOD_END_DATE]
         [--deny-maintenance-period-start-date=DENY_MAINTENANCE_PERIOD_START_DATE]
         [--deny-maintenance-period-time=DENY_MAINTENANCE_PERIOD_TIME]
-        [--edition=EDITION] [--enable-bin-log] [--[no-]enable-data-cache]
+        [--edition=EDITION] [--enable-bin-log]
+        [--[no-]enable-connection-pooling] [--[no-]enable-data-cache]
         [--[no-]enable-dataplex-integration]
         [--[no-]enable-google-ml-integration] [--enable-google-private-path]
         [--enable-password-policy] [--enable-point-in-time-recovery]
@@ -46,12 +49,15 @@ SYNOPSIS
         [--[no-]recreate-replicas-on-primary-crash]
         [--replica-type=REPLICA_TYPE] [--replication=REPLICATION]
         [--replication-lag-max-seconds-for-recreate=REPLICATION_LAG_MAX_SECONDS_FOR_RECREATE]
-        [--require-ssl] [--retained-backups-count=RETAINED_BACKUPS_COUNT]
+        [--require-ssl] [--[no-]retain-backups-on-delete]
+        [--retained-backups-count=RETAINED_BACKUPS_COUNT]
         [--retained-transaction-log-days=RETAINED_TRANSACTION_LOG_DAYS]
         [--root-password=ROOT_PASSWORD] [--server-ca-mode=SERVER_CA_MODE]
         [--server-ca-pool=SERVER_CA_POOL] [--ssl-mode=SSL_MODE]
         [--[no-]storage-auto-increase]
         [--storage-auto-increase-limit=STORAGE_AUTO_INCREASE_LIMIT]
+        [--storage-provisioned-iops=STORAGE_PROVISIONED_IOPS]
+        [--storage-provisioned-throughput=STORAGE_PROVISIONED_THROUGHPUT]
         [--storage-size=STORAGE_SIZE] [--storage-type=STORAGE_TYPE]
         [--tags=TAG=VALUE,[TAG=VALUE,...]]
         [--threads-per-core=THREADS_PER_CORE] [--tier=TIER, -t TIER]
@@ -77,28 +83,28 @@ DESCRIPTION
     (BETA) Creates a new Cloud SQL instance.
 
 EXAMPLES
-    To create a MySQL 5.7 instance with ID prod-instance that has 2 CPUs, 4 GB
+    To create a MySQL 8.0 instance with ID prod-instance that has 2 CPUs, 4 GB
     of RAM, and is in the region us-central1 (a zone will be auto-assigned),
     where the 'root' user has its password set to password123, run:
 
         $ gcloud beta sql instances create prod-instance \
-            --database-version=MYSQL_5_7 --cpu=2 --memory=4GB \
+            --database-version=MYSQL_8_0 --cpu=2 --memory=4GB \
             --region=us-central1 --root-password=password123
 
-    To create a Postgres 9.6 instance with ID prod-instance that has 2 CPUs, 8
+    To create a Postgres 15 instance with ID prod-instance that has 2 CPUs, 8
     GiB of RAM, and is in the zone us-central1-a, where the 'postgres' user has
     its password set to password123, run:
 
         $ gcloud beta sql instances create prod-instance \
-            --database-version=POSTGRES_9_6 --cpu=2 --memory=8GiB \
+            --database-version=POSTGRES_15 --cpu=2 --memory=8GiB \
             --zone=us-central1-a --root-password=password123
 
-    To create a SQL Server 2017 Express instance with ID prod-instance that has
+    To create a SQL Server 2022 Express instance with ID prod-instance that has
     2 CPUs, 3840MiB of RAM, and is in the zone us-central1-a, where the
     'sqlserver' user has its password set to password123, run:
 
         $ gcloud beta sql instances create prod-instance \
-            --database-version=SQLSERVER_2017_EXPRESS --cpu=2 \
+            --database-version=SQLSERVER_2022_EXPRESS --cpu=2 \
             --memory=3840MiB --zone=us-central1-a \
             --root-password=password123
 
@@ -185,6 +191,12 @@ FLAGS
         Cloud SQL server-level collation setting, which specifies the set of
         rules for comparing characters in a character set.
 
+     --connection-pool-flags=FLAG=VALUE,[FLAG=VALUE,...]
+        Comma-separated list of connection pool flags to set on the instance
+        connection pool. Use an equals sign to separate flag name and value.
+        View the Instance Resource API for allowed flags. (e.g.,
+        --connection-pool-flags max_pool_size=1000,max_client_connections=2000)
+
      --connector-enforcement=CONNECTOR_ENFORCEMENT
         Cloud SQL Connector enforcement mode. It determines how Cloud SQL
         Connectors are used in the connection. See the list of modes here
@@ -249,6 +261,11 @@ FLAGS
         Allows for data recovery from a specific point in time, down to a
         fraction of a second. Must have automatic backups enabled to use. Make
         sure storage can support at least 7 days of logs.
+
+     --[no-]enable-connection-pooling
+        Enable connection pooling for the instance. Use
+        --enable-connection-pooling to enable and
+        --no-enable-connection-pooling to disable.
 
      --[no-]enable-data-cache
         Enable use of data cache for accelerated read performance. This flag is
@@ -449,6 +466,11 @@ FLAGS
      --require-ssl
         Specified if users connecting over IP must use SSL.
 
+     --[no-]retain-backups-on-delete
+        Retain automated/ondemand backups of the instance after the instance is
+        deleted. Use --retain-backups-on-delete to enable and
+        --no-retain-backups-on-delete to disable.
+
      --retained-backups-count=RETAINED_BACKUPS_COUNT
         How many backups to keep. The valid range is between 1 and 365. Default
         value is 7 for Enterprise edition instances. For Enterprise_Plus,
@@ -506,6 +528,14 @@ FLAGS
         Allows you to set a maximum storage capacity, in GB. Automatic
         increases to your capacity will stop once this limit has been reached.
         Default capacity is unlimited.
+
+     --storage-provisioned-iops=STORAGE_PROVISIONED_IOPS
+        Indicates how many IOPS to provision for the data disk. This sets the
+        number of I/O operations per second that the disk can handle.
+
+     --storage-provisioned-throughput=STORAGE_PROVISIONED_THROUGHPUT
+        Indicates how much throughput to provision for the data disk. This sets
+        the throughput in MB per second that the disk can handle.
 
      --storage-size=STORAGE_SIZE
         Amount of storage allocated to the instance. Must be an integer number

@@ -49,9 +49,6 @@ SYNOPSIS
           --update-secrets=[KEY=VALUE,...] --command=[COMMAND,...]
           | --function=FUNCTION --image=IMAGE --source=SOURCE]
         [--binary-authorization=POLICY | --clear-binary-authorization]
-        [--clear-config-maps | --set-config-maps=[KEY=VALUE,...]
-          | --remove-config-maps=[KEY,...]
-          --update-config-maps=[KEY=VALUE,...]]
         [--clear-encryption-key-shutdown-hours
           | --encryption-key-shutdown-hours=ENCRYPTION_KEY_SHUTDOWN_HOURS]
         [--clear-key | --key=KEY]
@@ -695,37 +692,6 @@ FLAGS
 
        --clear-binary-authorization
           Remove any previously set Binary Authorization policy.
-
-     Specify config map to mount or provide as environment variables. Keys
-     starting with a forward slash '/' are mount paths. All other keys
-     correspond to environment variables. The values associated with each of
-     these should be in the form CONFIG_MAP_NAME:KEY_IN_CONFIG_MAP; you may
-     omit the key within the config map to specify a mount of all keys within
-     the config map. For example:
-     '--update-config-maps=/my/path=myconfig,ENV=otherconfig:key.json' will
-     create a volume with config map 'myconfig' and mount that volume at
-     '/my/path'. Because no config map key was specified, all keys in
-     'myconfig' will be included. An environment variable named ENV will also
-     be created whose value is the value of 'key.json' in 'otherconfig. Not
-     supported on the fully managed version of Cloud Run.
-
-     At most one of these can be specified:
-
-       --clear-config-maps
-          Remove all config-maps.
-
-       --set-config-maps=[KEY=VALUE,...]
-          List of key-value pairs to set as config-maps. All existing
-          config-maps will be removed first.
-
-       Only --update-config-maps and --remove-config-maps can be used together.
-       If both are specified, --remove-config-maps will be applied first.
-
-         --remove-config-maps=[KEY,...]
-            List of config-maps to be removed.
-
-         --update-config-maps=[KEY=VALUE,...]
-            List of key-value pairs to set as config-maps.
 
      At most one of these can be specified:
 

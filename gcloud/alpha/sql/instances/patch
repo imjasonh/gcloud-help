@@ -17,7 +17,8 @@ SYNOPSIS
         [--deny-maintenance-period-end-date=DENY_MAINTENANCE_PERIOD_END_DATE]
         [--deny-maintenance-period-start-date=DENY_MAINTENANCE_PERIOD_START_DATE]
         [--deny-maintenance-period-time=DENY_MAINTENANCE_PERIOD_TIME] [--diff]
-        [--edition=EDITION] [--[no-]enable-bin-log] [--[no-]enable-data-cache]
+        [--edition=EDITION] [--[no-]enable-bin-log]
+        [--[no-]enable-connection-pooling] [--[no-]enable-data-cache]
         [--[no-]enable-database-replication]
         [--[no-]enable-dataplex-integration]
         [--[no-]enable-google-ml-integration]
@@ -46,9 +47,12 @@ SYNOPSIS
         [--[no-]recreate-replicas-on-primary-crash]
         [--remove-deny-maintenance-period] [--replication=REPLICATION]
         [--replication-lag-max-seconds-for-recreate=REPLICATION_LAG_MAX_SECONDS_FOR_RECREATE]
-        [--[no-]require-ssl] [--simulate-maintenance-event]
-        [--ssl-mode=SSL_MODE] [--[no-]storage-auto-increase]
+        [--[no-]require-ssl] [--[no-]retain-backups-on-delete]
+        [--simulate-maintenance-event] [--ssl-mode=SSL_MODE]
+        [--[no-]storage-auto-increase]
         [--storage-auto-increase-limit=STORAGE_AUTO_INCREASE_LIMIT]
+        [--storage-provisioned-iops=STORAGE_PROVISIONED_IOPS]
+        [--storage-provisioned-throughput=STORAGE_PROVISIONED_THROUGHPUT]
         [--storage-size=STORAGE_SIZE]
         [--switch-transaction-logs-to-cloud-storage]
         [--threads-per-core=THREADS_PER_CORE] [--tier=TIER, -t TIER]
@@ -59,6 +63,8 @@ SYNOPSIS
         [--authorized-gae-apps=APP,[APP,...] | --clear-gae-apps]
         [--authorized-networks=NETWORK,[NETWORK,...]
           | --clear-authorized-networks]
+        [--clear-connection-pool-flags
+          | --connection-pool-flags=FLAG=VALUE,[FLAG=VALUE,...]]
         [--clear-custom-subject-alternative-names
           | --custom-subject-alternative-names=DNS,[DNS,[DNS]]]
         [--clear-database-flags | --database-flags=FLAG=VALUE,[FLAG=VALUE,...]]
@@ -190,6 +196,11 @@ FLAGS
         fraction of a second. Must have automatic backups enabled to use. Make
         sure storage can support at least 7 days of logs. Use --enable-bin-log
         to enable and --no-enable-bin-log to disable.
+
+     --[no-]enable-connection-pooling
+        Enable connection pooling for the instance. Use
+        --enable-connection-pooling to enable and
+        --no-enable-connection-pooling to disable.
 
      --[no-]enable-data-cache
         Enable use of data cache for accelerated read performance. This flag is
@@ -386,6 +397,11 @@ FLAGS
         mysqld should default to 'REQUIRE X509' for users connecting over IP.
         Use --require-ssl to enable and --no-require-ssl to disable.
 
+     --[no-]retain-backups-on-delete
+        Retain automated/ondemand backups of the instance after the instance is
+        deleted. Use --retain-backups-on-delete to enable and
+        --no-retain-backups-on-delete to disable.
+
      --simulate-maintenance-event
         Simulate a maintenance event without changing the version. Only
         applicable to instances that support near-zero downtime planned
@@ -417,6 +433,14 @@ FLAGS
         Allows you to set a maximum storage capacity, in GB. Automatic
         increases to your capacity will stop once this limit has been reached.
         Default capacity is unlimited.
+
+     --storage-provisioned-iops=STORAGE_PROVISIONED_IOPS
+        Indicates how many IOPS to provision for the data disk. This sets the
+        number of I/O operations per second that the disk can handle.
+
+     --storage-provisioned-throughput=STORAGE_PROVISIONED_THROUGHPUT
+        Indicates how much throughput to provision for the data disk. This sets
+        the throughput in MB per second that the disk can handle.
 
      --storage-size=STORAGE_SIZE
         Amount of storage allocated to the instance. Must be an integer number
@@ -495,6 +519,18 @@ FLAGS
        --clear-authorized-networks
           Clear the list of external networks that are allowed to connect to
           the instance.
+
+     At most one of these can be specified:
+
+       --clear-connection-pool-flags
+          This will clear the connection pool flags set on the instance.
+
+       --connection-pool-flags=FLAG=VALUE,[FLAG=VALUE,...]
+          Comma-separated list of connection pool flags to set on the instance
+          connection pool. Use an equals sign to separate flag name and value.
+          View the Instance Resource API for allowed flags. (e.g.,
+          --connection-pool-flags
+          max_pool_size=1000,max_client_connections=2000)
 
      At most one of these can be specified:
 

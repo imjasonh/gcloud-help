@@ -1,0 +1,81 @@
+NAME
+    gcloud beta compute instances report-host-as-faulty - report a host as
+        faulty to start the repair process
+
+SYNOPSIS
+    gcloud beta compute instances report-host-as-faulty INSTANCE_NAME
+        --disruption-schedule=DISRUPTION_SCHEDULE
+        --fault-reasons=[behavior=BEHAVIOR],[description=DESCRIPTION]
+        [--zone=ZONE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) gcloud beta compute instances report-host-as-faulty is used to
+    report a host as faulty to start the repair process.
+
+EXAMPLES
+    To report a host as faulty for an instance named test-instance, run:
+
+        $ gcloud beta compute instances report-host-as-faulty \
+            test-instance \
+            --fault-reasons=behavior=SILENT_DATA_CORRUPTION,\
+        description="affecting our ML job" --disruption-schedule=IMMEDIATE
+
+POSITIONAL ARGUMENTS
+     INSTANCE_NAME
+        Name of the instance to operate on. For details on valid instance
+        names, refer to the criteria documented under the field 'name' at:
+        https://cloud.google.com/compute/docs/reference/rest/v1/instances
+
+REQUIRED FLAGS
+     --disruption-schedule=DISRUPTION_SCHEDULE
+        Specifies the timing for initiating the fault reporting process. The
+        default value is ['IMMEDIATE'] which initiates the process right away.
+        DISRUPTION_SCHEDULE must be (only one value is supported): IMMEDIATE.
+
+     --fault-reasons=[behavior=BEHAVIOR],[description=DESCRIPTION]
+        Specified and can include one or more of the following types:
+        ['BEHAVIOR_UNSPECIFIED', 'PERFORMANCE', 'SILENT_DATA_CORRUPTION',
+        'UNRECOVERABLE_GPU_ERROR']. This helps categorize the nature of the
+        fault being reported.
+
+OPTIONAL FLAGS
+     --zone=ZONE
+        Zone of the instance to operate on. If not specified, you might be
+        prompted to select a zone (interactive mode only). gcloud attempts to
+        identify the appropriate zone by searching for resources in your
+        currently active project. If the zone cannot be determined, gcloud
+        prompts you for a selection with all available Google Cloud Platform
+        zones.
+
+        To avoid prompting when this flag is omitted, the user can set the
+        compute/zone property:
+
+            $ gcloud config set compute/zone ZONE
+
+        A list of zones can be fetched by running:
+
+            $ gcloud compute zones list
+
+        To unset the property, run:
+
+            $ gcloud config unset compute/zone
+
+        Alternatively, the zone can be stored in the environment variable
+        CLOUDSDK_COMPUTE_ZONE.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud compute instances report-host-as-faulty
+
+        $ gcloud alpha compute instances report-host-as-faulty
+

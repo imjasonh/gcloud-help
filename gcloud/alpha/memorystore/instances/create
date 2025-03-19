@@ -2,13 +2,15 @@ NAME
     gcloud alpha memorystore instances create - create a Memorystore instance
 
 SYNOPSIS
-    gcloud alpha memorystore instances create (INSTANCE : --location=LOCATION)
-        [--async] [--async-instance-endpoints-deletion-enabled]
+    gcloud alpha memorystore instances create INSTANCE [--async]
+        [--async-instance-endpoints-deletion-enabled]
         [--authorization-mode=AUTHORIZATION_MODE]
         [--deletion-protection-enabled] [--endpoints=[connections=CONNECTIONS]]
         [--engine-configs=[ENGINE_CONFIGS,...]]
-        [--engine-version=ENGINE_VERSION] [--labels=[LABELS,...]] [--mode=MODE]
-        [--node-type=NODE_TYPE] [--ondemand-maintenance]
+        [--engine-version=ENGINE_VERSION] [--labels=[LABELS,...]]
+        [--location=LOCATION]
+        [--maintenance-policy-weekly-window=[day=DAY],[startTime=STARTTIME]]
+        [--mode=MODE] [--node-type=NODE_TYPE] [--ondemand-maintenance]
         [--psc-auto-connections=[network=NETWORK],
           [port=PORT],[projectId=PROJECTID]] [--replica-count=REPLICA_COUNT]
         [--request-id=REQUEST_ID] [--shard-count=SHARD_COUNT]
@@ -17,6 +19,7 @@ SYNOPSIS
           --persistence-config-mode=PERSISTENCE_CONFIG_MODE
           --rdb-config-snapshot-period=RDB_CONFIG_SNAPSHOT_PERIOD
           --rdb-config-snapshot-start-time=RDB_CONFIG_SNAPSHOT_START_TIME]
+        [--cross-instance-replication-config-role=CROSS_INSTANCE_REPLICATION_CONFIG_ROLE : --cross-instance-replication-config-secondary-instances=[instance=INSTANCE] --primary-instance=PRIMARY_INSTANCE]
         [--zone-distribution-config=ZONE_DISTRIBUTION_CONFIG
           --zone-distribution-config-mode=ZONE_DISTRIBUTION_CONFIG_MODE]
         [GCLOUD_WIDE_FLAG ...]
@@ -49,16 +52,20 @@ EXAMPLES
 
 POSITIONAL ARGUMENTS
      Instance resource - Identifier. Unique name of the instance. Format:
-     projects/{project}/locations/{location}/instances/{instance} The arguments
-     in this group can be used to specify the attributes of this resource.
-     (NOTE) Some attributes are not given arguments in this group but can be
-     set in other ways.
+     projects/{project}/locations/{location}/instances/{instance} This
+     represents a Cloud resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways.
 
      To set the project attribute:
       ◆ provide the argument instance on the command line with a fully
         specified name;
       ◆ provide the argument --project on the command line;
       ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument instance on the command line with a fully
+        specified name;
+      ◆ provide the argument --location on the command line.
 
      This must be specified.
 
@@ -67,17 +74,6 @@ POSITIONAL ARGUMENTS
 
           To set the instance attribute:
           ▸ provide the argument instance on the command line.
-
-          This positional argument must be specified if any of the other
-          arguments in this group are specified.
-
-       --location=LOCATION
-          The location id of the instance resource.
-
-          To set the location attribute:
-          ▸ provide the argument instance on the command line with a fully
-            specified name;
-          ▸ provide the argument --location on the command line.
 
 FLAGS
      --async
@@ -187,6 +183,55 @@ FLAGS
         File Example:
 
             --labels=path_to_file.(yaml|json)
+
+     --location=LOCATION
+        For resources [instance], provides fallback value for resource location
+        attribute. When the resource's full URI path is not provided, location
+        will fallback to this flag value.
+
+     Maintenance policy per instance.
+
+       --maintenance-policy-weekly-window=[day=DAY],[startTime=STARTTIME]
+          Maintenance window that is applied to resources covered by this
+          policy. Minimum 1. For the current version, the maximum number of
+          weekly_window is expected to be one.
+
+           day
+              Allows to define schedule that runs specified day of the week.
+
+           startTime
+              Start time of the window in UTC.
+
+               hours
+                  Hours of a day in 24 hour format. Must be greater than or
+                  equal to 0 and typically must be less than or equal to 23. An
+                  API may choose to allow the value "24:00:00" for scenarios
+                  like business closing time.
+
+               minutes
+                  Minutes of an hour. Must be greater than or equal to 0 and
+                  less than or equal to 59.
+
+               nanos
+                  Fractions of seconds, in nanoseconds. Must be greater than or
+                  equal to 0 and less than or equal to 999,999,999.
+
+               seconds
+                  Seconds of a minute. Must be greater than or equal to 0 and
+                  typically must be less than or equal to 59. An API may allow
+                  the value 60 if it allows leap-seconds.
+
+          Shorthand Example:
+
+              --maintenance-policy-weekly-window=day=string,startTime={hours=int,minutes=int,nanos=int,seconds=int} --maintenance-policy-weekly-window=day=string,startTime={hours=int,minutes=int,nanos=int,seconds=int}
+
+          JSON Example:
+
+              --maintenance-policy-weekly-window='[{"day": "string", "startTime": {"hours": int, "minutes": int, "nanos": int, "seconds": int}}]'
+
+          File Example:
+
+              --maintenance-policy-weekly-window=path_to_file.(yaml|json)
 
      --mode=MODE
         The mode config for the instance. MODE must be one of:
@@ -323,6 +368,76 @@ FLAGS
             Time that the first snapshot was/will be attempted, and to which
             future snapshots will be aligned. If not provided, the current time
             will be used.
+
+     Cross instance replication config.
+
+       --cross-instance-replication-config-role=CROSS_INSTANCE_REPLICATION_CONFIG_ROLE
+          The role of the instance in cross instance replication.
+          CROSS_INSTANCE_REPLICATION_CONFIG_ROLE must be one of:
+
+           none
+              This instance does not participate in cross instance replication.
+              It is an independent instance and does not replicate to or from
+              any other instances.
+           primary
+              A instance that allows both reads and writes. Any data written to
+              this instance is also replicated to the attached secondary
+              instances.
+           secondary
+              A instance that allows only reads and replicates data from a
+              primary instance.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --cross-instance-replication-config-secondary-instances=[instance=INSTANCE]
+          List of secondary instances that are replicating from this primary
+          instance.
+
+          This field is only set for a primary instance.
+
+           instance
+              The full resource path of the remote instance in the format:
+              projects/<project>/locations/<region>/instances/<instance-id>.
+
+          Shorthand Example:
+
+              --cross-instance-replication-config-secondary-instances=instance=string --cross-instance-replication-config-secondary-instances=instance=string
+
+          JSON Example:
+
+              --cross-instance-replication-config-secondary-instances='[{"instance": "string"}]'
+
+          File Example:
+
+              --cross-instance-replication-config-secondary-instances=path_to_file.(yaml|json)
+
+       Details of the remote instance associated with this instance in a cross
+       instance replication setup.
+
+         Instance resource - The full resource path of the remote instance in
+         the format:
+         projects/<project>/locations/<region>/instances/<instance-id> This
+         represents a Cloud resource. (NOTE) Some attributes are not given
+         arguments in this group but can be set in other ways.
+
+         To set the project attribute:
+          ▫ provide the argument --primary-instance on the command line with
+            a fully specified name;
+          ▫ provide the argument --project on the command line;
+          ▫ set the property core/project.
+
+         To set the location attribute:
+          ▫ provide the argument --primary-instance on the command line with
+            a fully specified name;
+          ▫ provide the argument --location on the command line.
+
+           --primary-instance=PRIMARY_INSTANCE
+              ID of the instance or fully qualified identifier for the
+              instance.
+
+              To set the instance attribute:
+              ◇ provide the argument --primary-instance on the command line.
 
      Zone distribution configuration for allocation of instance resources.
 

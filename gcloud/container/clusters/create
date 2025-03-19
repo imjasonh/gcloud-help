@@ -9,6 +9,7 @@ SYNOPSIS
           gpu-sharing-strategy=GPU_SHARING_STRATEGY,
           max-shared-clients-per-gpu=MAX_SHARED_CLIENTS_PER_GPU],...]]
         [--additional-zones=ZONE,[ZONE,...]] [--addons=[ADDON,...]] [--async]
+        [--auto-monitoring-scope=AUTO_MONITORING_SCOPE]
         [--autoprovisioning-enable-insecure-kubelet-readonly-port]
         [--autoprovisioning-network-tags=TAGS,[TAGS,...]]
         [--autoprovisioning-resource-manager-tags=[KEY=VALUE,...]]
@@ -230,6 +231,12 @@ FLAGS
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
+
+     --auto-monitoring-scope=AUTO_MONITORING_SCOPE
+        Enables Auto-Monitoring for a specific scope within the cluster. ALL:
+        Enables Auto-Monitoring for all supported workloads within the cluster.
+        NONE: Disables Auto-Monitoring. AUTO_MONITORING_SCOPE must be one of:
+        ALL, NONE.
 
      --autoprovisioning-enable-insecure-kubelet-readonly-port
         Enables the Kubelet's insecure read only port for Autoprovisioned Node
@@ -1242,6 +1249,11 @@ FLAGS
 
             kubeletConfig:
               cpuManagerPolicy: static
+              memoryManager:
+                policy: Static
+              topologyManager:
+                policy: BestEffort
+                scope: pod
             linuxConfig:
               sysctl:
                 net.core.somaxconn: '2048'
@@ -1258,6 +1270,9 @@ FLAGS
           cpuCFSQuota                          true or false (enabled by
                                                default)
           cpuCFSQuotaPeriod                    interval (e.g., '100ms')
+          memoryManager                        specify memory manager policy
+          topologyManager                      specify topology manager policy
+                                               and scope
           podPidsLimit                         integer (The value must be
                                                greater than or equal to 1024 and
                                                less than 4194304.)
@@ -1284,6 +1299,17 @@ FLAGS
                                                'fs.mqueue.*', and 'net.*', and
                                                sysctls under the groups.)
 
+          KEY                                         VALUE
+          policy                                      either 'Static' or 'None'
+
+          KEY                                         VALUE
+          policy                                      either 'none' or
+                                                      'best-effort' or
+                                                      'single-numa-node' or
+                                                      'restricted'
+          scope                                       either 'pod' or
+                                                      'container'
+
         List of supported sysctls in 'linuxConfig'.
 
           KEY                                                 VALUE
@@ -1307,7 +1333,7 @@ FLAGS
                                                               integer tuple
           net.ipv4.tcp_wmem                                   Any positive
                                                               integer tuple
-          net.ipv4.tcp_tw_reuse                               Must be {0, 1}
+          net.ipv4.tcp_tw_reuse                               Must be {0, 1, 2}
           net.netfilter.nf_conntrack_max                      Must be between
                                                               [65536, 4194304]
           net.netfilter.nf_conntrack_buckets                  Must be between

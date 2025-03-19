@@ -16,6 +16,7 @@ SYNOPSIS
           [max-pods-per-node=NUM_PODS],...]] [--async]
         [--boot-disk-kms-key=BOOT_DISK_KMS_KEY] [--cluster=CLUSTER]
         [--containerd-config-from-file=PATH_TO_FILE]
+        [--data-cache-count=DATA_CACHE_COUNT]
         [--disable-pod-cidr-overprovision] [--disk-size=DISK_SIZE]
         [--disk-type=DISK_TYPE] [--enable-autoprovisioning]
         [--enable-autorepair] [--no-enable-autoupgrade]
@@ -200,6 +201,10 @@ FLAGS
 
         Use a full or relative path to a local file containing the value of
         containerd_config.
+
+     --data-cache-count=DATA_CACHE_COUNT
+        Specifies the number of local SSDs to be utilized for GKE Data Cache in
+        the node pool.
 
      --disable-pod-cidr-overprovision
         Disables pod cidr overprovision on nodes. Pod cidr overprovisioning is
@@ -690,6 +695,11 @@ FLAGS
 
             kubeletConfig:
               cpuManagerPolicy: static
+              memoryManager:
+                policy: Static
+              topologyManager:
+                policy: BestEffort
+                scope: pod
             linuxConfig:
               sysctl:
                 net.core.somaxconn: '2048'
@@ -706,6 +716,9 @@ FLAGS
           cpuCFSQuota                          true or false (enabled by
                                                default)
           cpuCFSQuotaPeriod                    interval (e.g., '100ms')
+          memoryManager                        specify memory manager policy
+          topologyManager                      specify topology manager policy
+                                               and scope
           podPidsLimit                         integer (The value must be
                                                greater than or equal to 1024 and
                                                less than 4194304.)
@@ -732,6 +745,17 @@ FLAGS
                                                'fs.mqueue.*', and 'net.*', and
                                                sysctls under the groups.)
 
+          KEY                                         VALUE
+          policy                                      either 'Static' or 'None'
+
+          KEY                                         VALUE
+          policy                                      either 'none' or
+                                                      'best-effort' or
+                                                      'single-numa-node' or
+                                                      'restricted'
+          scope                                       either 'pod' or
+                                                      'container'
+
         List of supported sysctls in 'linuxConfig'.
 
           KEY                                                 VALUE
@@ -755,7 +779,7 @@ FLAGS
                                                               integer tuple
           net.ipv4.tcp_wmem                                   Any positive
                                                               integer tuple
-          net.ipv4.tcp_tw_reuse                               Must be {0, 1}
+          net.ipv4.tcp_tw_reuse                               Must be {0, 1, 2}
           net.netfilter.nf_conntrack_max                      Must be between
                                                               [65536, 4194304]
           net.netfilter.nf_conntrack_buckets                  Must be between
