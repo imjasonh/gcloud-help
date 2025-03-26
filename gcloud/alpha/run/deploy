@@ -9,11 +9,11 @@ SYNOPSIS
         [--[no-]cpu-throttling] [--[no-]default-url] [--delegate-builds]
         [--[no-]deploy-health-check] [--description=DESCRIPTION]
         [--execution-environment=EXECUTION_ENVIRONMENT] [--gpu-type=GPU_TYPE]
-        [--ingress=INGRESS; default="all"] [--[no-]invoker-iam-check]
-        [--max=MAX] [--max-instances=MAX_INSTANCES] [--max-surge=MAX_SURGE]
-        [--max-unavailable=MAX_UNAVAILABLE] [--mesh=MESH] [--min=MIN]
-        [--min-instances=MIN_INSTANCES] [--region=REGION]
-        [--remove-containers=[CONTAINER,...]]
+        [--[no-]gpu-zonal-redundancy] [--ingress=INGRESS; default="all"]
+        [--[no-]invoker-iam-check] [--max=MAX] [--max-instances=MAX_INSTANCES]
+        [--max-surge=MAX_SURGE] [--max-unavailable=MAX_UNAVAILABLE]
+        [--mesh=MESH] [--min=MIN] [--min-instances=MIN_INSTANCES]
+        [--region=REGION] [--remove-containers=[CONTAINER,...]]
         [--revision-suffix=REVISION_SUFFIX] [--scaling=SCALING]
         [--service-account=SERVICE_ACCOUNT] [--[no-]session-affinity]
         [--tag=TAG] [--timeout=TIMEOUT] [--no-traffic]
@@ -187,6 +187,10 @@ FLAGS
 
      --gpu-type=GPU_TYPE
         The GPU type to use.
+
+     --[no-]gpu-zonal-redundancy
+        Set GPU zonal redundancy. Use --gpu-zonal-redundancy to enable and
+        --no-gpu-zonal-redundancy to disable.
 
      --ingress=INGRESS; default="all"
         Set the ingress traffic sources allowed to call the service. For Cloud
@@ -389,6 +393,11 @@ FLAGS
         ◆ dynamic-mounting: (optional) A boolean. If true, the volume will be
           mounted dynamically. Note: You will either need to specify a bucket
           or set dynamic-mounting to true, but not both.
+
+        cloudsql: Represents a Cloud SQL instance as a volume. Additional keys:
+        ◆ instances: (required) The name of the Cloud SQL instances to mount.
+          Must be in the form project_id:region:instance_id and separated by
+          semicolons.
 
         in-memory: An ephemeral volume that stores data in the instance's
         memory. With this type of volume, data is not shared between instances

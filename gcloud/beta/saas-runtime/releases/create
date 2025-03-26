@@ -1,0 +1,157 @@
+NAME
+    gcloud beta saas-runtime releases create - create a Release
+
+SYNOPSIS
+    gcloud beta saas-runtime releases create RELEASE
+        --blueprint-package=BLUEPRINT_PACKAGE --unit-kind=UNIT_KIND
+        [--input-variable-defaults=[type=TYPE],
+          [value=VALUE],[variable=VARIABLE]] [--labels=[LABELS,...]]
+        [--location=LOCATION]
+        [--upgradeable-from-releases=[UPGRADEABLE_FROM_RELEASES,...]]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Create a Release
+
+EXAMPLES
+    To create the Release, run:
+
+        $ gcloud beta saas-runtime releases create
+
+POSITIONAL ARGUMENTS
+     Release resource - Identifier. The resource name (full URI of the
+     resource) following the standard naming scheme:
+
+         "projects/{project}/locations/{location}/releases/{release}" This represents a Cloud resource. (NOTE) Some attributes are not given arguments in this group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument release on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument release on the command line with a fully
+        specified name;
+      ◆ provide the argument --location on the command line.
+
+     This must be specified.
+
+       RELEASE
+          ID of the release or fully qualified identifier for the release.
+
+          To set the release attribute:
+          ▸ provide the argument release on the command line.
+
+REQUIRED FLAGS
+     Blueprints are OCI Images that contain all of the artifacts needed to
+     provision a unit. Metadata such as, type of the engine used to actuate the
+     blueprint (e.g. terraform, helm etc) and version will come from the image
+     manifest. If the hostname is omitted, it will be assumed to be the
+     regional path to Artifact Registry (eg. us-east1-docker.pkg.dev).
+
+     This must be specified.
+
+       --blueprint-package=BLUEPRINT_PACKAGE
+          URI to a blueprint used by the Unit.
+
+     UnitKind resource - Reference to the UnitKind this Release corresponds to
+     (required and immutable once created). This represents a Cloud resource.
+     (NOTE) Some attributes are not given arguments in this group but can be
+     set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument --unit-kind on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument --unit-kind on the command line with a fully
+        specified name;
+      ◆ provide the argument --location on the command line.
+
+     This must be specified.
+
+       --unit-kind=UNIT_KIND
+          ID of the unitKind or fully qualified identifier for the unitKind.
+
+          To set the unit-kind attribute:
+          ▸ provide the argument --unit-kind on the command line.
+
+OPTIONAL FLAGS
+     --input-variable-defaults=[type=TYPE],[value=VALUE],[variable=VARIABLE]
+        Mapping of input variables to default values. Maximum 100.
+
+         type
+            Name of a supported variable type. Supported types are string, int,
+            bool.
+
+         value
+            String encoded value for the variable.
+
+         variable
+            Name of the variable from actuation configs.
+
+        Shorthand Example:
+
+            --input-variable-defaults=type=string,value=string,variable=string --input-variable-defaults=type=string,value=string,variable=string
+
+        JSON Example:
+
+            --input-variable-defaults='[{"type": "string", "value": "string", "variable": "string"}]'
+
+        File Example:
+
+            --input-variable-defaults=path_to_file.(yaml|json)
+
+     --labels=[LABELS,...]
+        The labels on the resource, which can be used for categorization.
+        similar to Kubernetes resource labels.
+
+         KEY
+            Keys must start with a lowercase character and contain only hyphens
+            (-), underscores (_), lowercase characters, and numbers.
+
+         VALUE
+            Values must contain only hyphens (-), underscores (_), lowercase
+            characters, and numbers.
+
+        Shorthand Example:
+
+            --labels=string=string
+
+        JSON Example:
+
+            --labels='{"string": "string"}'
+
+        File Example:
+
+            --labels=path_to_file.(yaml|json)
+
+     --location=LOCATION
+        For resources [release, unitKind], provides fallback value for resource
+        location attribute. When the resource's full URI path is not provided,
+        location will fallback to this flag value.
+
+     --upgradeable-from-releases=[UPGRADEABLE_FROM_RELEASES,...]
+        A list of releases from which a unit can be upgraded to this one
+        (optional). If left empty no constraints will be applied. When
+        provided, unit upgrade requests to this release will check and enforce
+        this constraint.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the saasservicemgmt/v1beta1 API. The full documentation
+    for this API can be found at: https://cloud.google.com/
+
+NOTES
+    This command is currently in beta and might change without notice.
+

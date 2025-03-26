@@ -1,0 +1,298 @@
+NAME
+    gcloud beta saas-runtime unit-operations create - create a Unit Operation
+
+SYNOPSIS
+    gcloud beta saas-runtime unit-operations create UNIT_OPERATION --unit=UNIT
+        [--cancel] [--labels=[LABELS,...]] [--location=LOCATION]
+        [--parent-unit-operation=PARENT_UNIT_OPERATION] [--rollout=ROLLOUT]
+        [--schedule-start-time=SCHEDULE_START_TIME]
+        [--deprovision | --provision
+          --provision-input-variables=[type=TYPE],
+          [value=VALUE],[variable=VARIABLE]
+          --provision-release=PROVISION_RELEASE | --upgrade
+          --upgrade-input-variables=[type=TYPE],
+          [value=VALUE],[variable=VARIABLE] --upgrade-release=UPGRADE_RELEASE]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Create a Unit Operation
+
+EXAMPLES
+    To create the Unit Operation, run:
+
+        $ gcloud beta saas-runtime unit-operations create
+
+POSITIONAL ARGUMENTS
+     UnitOperation resource - Identifier. The resource name (full URI of the
+     resource) following the standard naming scheme:
+
+         "projects/{project}/locations/{location}/unitOperations/{unitOperation}" This represents a Cloud resource. (NOTE) Some attributes are not given arguments in this group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument unit_operation on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument unit_operation on the command line with a fully
+        specified name;
+      ◆ provide the argument --location on the command line.
+
+     This must be specified.
+
+       UNIT_OPERATION
+          ID of the unitOperation or fully qualified identifier for the
+          unitOperation.
+
+          To set the unit_operation attribute:
+          ▸ provide the argument unit_operation on the command line.
+
+REQUIRED FLAGS
+     Unit resource - The Unit a given Unit Operation will act upon. This
+     represents a Cloud resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument --unit on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument --unit on the command line with a fully
+        specified name;
+      ◆ provide the argument --location on the command line.
+
+     This must be specified.
+
+       --unit=UNIT
+          ID of the unit or fully qualified identifier for the unit.
+
+          To set the unit attribute:
+          ▸ provide the argument --unit on the command line.
+
+OPTIONAL FLAGS
+     --cancel
+        When true, attempt to cancel the operation. Cancellation may fail if
+        the operation is already executing. (Optional)
+
+     --labels=[LABELS,...]
+        The labels on the resource, which can be used for categorization.
+        similar to Kubernetes resource labels.
+
+         KEY
+            Keys must start with a lowercase character and contain only hyphens
+            (-), underscores (_), lowercase characters, and numbers.
+
+         VALUE
+            Values must contain only hyphens (-), underscores (_), lowercase
+            characters, and numbers.
+
+        Shorthand Example:
+
+            --labels=string=string
+
+        JSON Example:
+
+            --labels='{"string": "string"}'
+
+        File Example:
+
+            --labels=path_to_file.(yaml|json)
+
+     --location=LOCATION
+        For resources [unitOperation, parentUnitOperation, release, rolloutId,
+        unit], provides fallback value for resource location attribute. When
+        the resource's full URI path is not provided, location will fallback to
+        this flag value.
+
+     ParentUnitOperation resource - Reference to parent resource: Unit
+     Operation. If an operation needs to create other operations as part of its
+     workflow, each of the child operations should have this field set to the
+     parent. This can be used for tracing. (Optional) This represents a Cloud
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument --parent-unit-operation on the command line with
+        a fully specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument --parent-unit-operation on the command line with
+        a fully specified name;
+      ◆ provide the argument --location on the command line.
+
+       --parent-unit-operation=PARENT_UNIT_OPERATION
+          ID of the parentUnitOperation or fully qualified identifier for the
+          parentUnitOperation.
+
+          To set the unit-operation attribute:
+          ▸ provide the argument --parent-unit-operation on the command line.
+
+     RolloutId resource - Specifies which rollout created this Unit Operation.
+     This cannot be modified and is used for filtering purposes only. If a
+     dependent unit and unit operation are created as part of another unit
+     operation, they will use the same rolloutId. This represents a Cloud
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument --rollout on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument --rollout on the command line with a fully
+        specified name;
+      ◆ provide the argument --location on the command line.
+
+       --rollout=ROLLOUT
+          ID of the rolloutId or fully qualified identifier for the rolloutId.
+
+          To set the rollout attribute:
+          ▸ provide the argument --rollout on the command line.
+
+     A time specification to schedule the maintenance.
+
+       --schedule-start-time=SCHEDULE_START_TIME
+          Start of operation. If not set, will be set to the start of the next
+          window. (optional)
+
+     Arguments for the unit operation type.
+
+     At most one of these can be specified:
+
+       Deprovision is the unit operation that deprovision the underlying
+       resources represented by a Unit. Can only execute if the Unit is
+       currently provisioned.
+
+         --deprovision
+            This flag can be used to specify an empty deprovision operation.
+
+       Provision is the unit operation that provision the underlying resources
+       represented by a Unit. Can only execute if the Unit is not currently
+       provisioned.
+
+         --provision
+            This flag can be used to specify an empty provision operation.
+
+         --provision-input-variables=[type=TYPE],[value=VALUE],[variable=VARIABLE]
+            Set of input variables. Maximum 100. (optional).
+
+             type
+                Name of a supported variable type. Supported types are string,
+                int, bool.
+
+             value
+                String encoded value for the variable.
+
+             variable
+                Name of the variable from actuation configs.
+
+            Shorthand Example:
+
+                --provision-input-variables=type=string,value=string,variable=string --provision-input-variables=type=string,value=string,variable=string
+
+            JSON Example:
+
+                --provision-input-variables='[{"type": "string", "value": "string", "variable": "string"}]'
+
+            File Example:
+
+                --provision-input-variables=path_to_file.(yaml|json)
+
+         Release resource - Reference to the Release object to use for the
+         Unit. (optional). This represents a Cloud resource. (NOTE) Some
+         attributes are not given arguments in this group but can be set in
+         other ways.
+
+         To set the project attribute:
+          ▫ provide the argument --provision-release on the command line with
+            a fully specified name;
+          ▫ provide the argument --project on the command line;
+          ▫ set the property core/project.
+
+         To set the location attribute:
+          ▫ provide the argument --provision-release on the command line with
+            a fully specified name;
+          ▫ provide the argument --location on the command line.
+
+           --provision-release=PROVISION_RELEASE
+              ID of the release or fully qualified identifier for the release.
+
+              To set the release attribute:
+              ◇ provide the argument --provision-release on the command line.
+
+       Upgrade is the unit operation that upgrades a provisioned unit, which
+       may also include the underlying resources represented by a Unit. Can
+       only execute if the Unit is currently provisioned.
+
+         --upgrade
+            This flag can be used to specify an empty upgrade operation.
+
+         --upgrade-input-variables=[type=TYPE],[value=VALUE],[variable=VARIABLE]
+            Set of input variables. Maximum 100. (optional).
+
+             type
+                Name of a supported variable type. Supported types are string,
+                int, bool.
+
+             value
+                String encoded value for the variable.
+
+             variable
+                Name of the variable from actuation configs.
+
+            Shorthand Example:
+
+                --upgrade-input-variables=type=string,value=string,variable=string --upgrade-input-variables=type=string,value=string,variable=string
+
+            JSON Example:
+
+                --upgrade-input-variables='[{"type": "string", "value": "string", "variable": "string"}]'
+
+            File Example:
+
+                --upgrade-input-variables=path_to_file.(yaml|json)
+
+         Release resource - Reference to the Release object to use for the
+         Unit. (optional). This represents a Cloud resource. (NOTE) Some
+         attributes are not given arguments in this group but can be set in
+         other ways.
+
+         To set the project attribute:
+          ▫ provide the argument --upgrade-release on the command line with a
+            fully specified name;
+          ▫ provide the argument --project on the command line;
+          ▫ set the property core/project.
+
+         To set the location attribute:
+          ▫ provide the argument --upgrade-release on the command line with a
+            fully specified name;
+          ▫ provide the argument --location on the command line.
+
+           --upgrade-release=UPGRADE_RELEASE
+              ID of the release or fully qualified identifier for the release.
+
+              To set the release attribute:
+              ◇ provide the argument --upgrade-release on the command line.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the saasservicemgmt/v1beta1 API. The full documentation
+    for this API can be found at: https://cloud.google.com/
+
+NOTES
+    This command is currently in beta and might change without notice.
+

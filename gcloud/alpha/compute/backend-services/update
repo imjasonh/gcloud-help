@@ -61,7 +61,9 @@ SYNOPSIS
         [--serve-while-stale=SERVE_WHILE_STALE | --no-serve-while-stale]
         [--service-bindings=SERVICE_BINDING,[...] | --no-service-bindings]
         [--service-lb-policy=SERVICE_LOAD_BALANCING_POLICY
-          | --no-service-lb-policy] [GCLOUD_WIDE_FLAG ...]
+          | --no-service-lb-policy]
+        [--tls-settings=[authenticationConfig=AUTHENTICATIONCONFIG],[sni=SNI]
+          | --no-tls-settings] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) gcloud alpha compute backend-services update is used to update
@@ -649,7 +651,7 @@ FLAGS
 
        --custom-metrics=[CUSTOM_METRICS,...]
           List of custom metrics that are used for WEIGHTED_ROUND_ROBIN
-          BackendService locality_lb_policy.
+          locality load balancing policy.
 
           Example:
 
@@ -684,7 +686,7 @@ FLAGS
 
        --custom-metrics-file=[CUSTOM_METRICS,...]
           File path to json file with custom metrics that are used for
-          WEIGHTED_ROUND_ROBIN BackendService locality_lb_policy.
+          WEIGHTED_ROUND_ROBIN locality load balancing policy.
 
           Example:
 
@@ -997,6 +999,19 @@ FLAGS
        --no-service-lb-policy
           No service load balancing policies should be attached to the backend
           service.
+
+     At most one of these can be specified:
+
+       --tls-settings=[authenticationConfig=AUTHENTICATIONCONFIG],[sni=SNI]
+          Configuration for Backend Authenticated TLS and mTLS. May only be
+          specified when the backend protocol is SSL, HTTPS or HTTP2.
+
+          Example: $ gcloud alpha compute backend-services update \
+          --tls-settings='sni=example.com,authenticationConfig=${AUTH_CONF\
+          IG_NAME}'
+
+       --no-tls-settings
+          Clears currently set backend service TLS settings.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

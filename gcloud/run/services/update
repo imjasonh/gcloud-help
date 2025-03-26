@@ -7,8 +7,8 @@ SYNOPSIS
         [--breakglass=JUSTIFICATION] [--clear-vpc-connector]
         [--concurrency=CONCURRENCY] [--container=CONTAINER] [--[no-]cpu-boost]
         [--[no-]cpu-throttling] [--execution-environment=EXECUTION_ENVIRONMENT]
-        [--ingress=INGRESS; default="all"] [--[no-]invoker-iam-check]
-        [--max-instances=MAX_INSTANCES] [--min=MIN]
+        [--gpu-type=GPU_TYPE] [--ingress=INGRESS; default="all"]
+        [--[no-]invoker-iam-check] [--max-instances=MAX_INSTANCES] [--min=MIN]
         [--min-instances=MIN_INSTANCES] [--region=REGION]
         [--remove-containers=[CONTAINER,...]]
         [--revision-suffix=REVISION_SUFFIX] [--service-account=SERVICE_ACCOUNT]
@@ -27,7 +27,7 @@ SYNOPSIS
           --clear-volumes --remove-volume=[VOLUME,...]]
         [--add-volume-mount=[volume=NAME,mount-path=MOUNT_PATH,...]
           --args=[ARG,...] --clear-volume-mounts --command=[COMMAND,...]
-          --cpu=CPU --depends-on=[CONTAINER,...] --image=IMAGE
+          --cpu=CPU --depends-on=[CONTAINER,...] --gpu=GPU --image=IMAGE
           --liveness-probe=[KEY=VALUE,...] --memory=MEMORY --port=PORT
           --remove-volume-mount=[MOUNT_PATH,...]
           --startup-probe=[KEY=VALUE,...] --[no-]use-http2 --clear-env-vars
@@ -131,6 +131,9 @@ FLAGS
             Run the application in a first generation execution environment.
          gen2
             Run the application in a second generation execution environment.
+
+     --gpu-type=GPU_TYPE
+        The GPU type to use.
 
      --ingress=INGRESS; default="all"
         Set the ingress traffic sources allowed to call the service. For Cloud
@@ -357,6 +360,10 @@ FLAGS
 
          --depends-on=[CONTAINER,...]
             List of container dependencies to add to the current container.
+
+         --gpu=GPU
+            Cloud Run supports values 0 or 1. 1 gpu also requires a minimum 4
+            --cpu value and a minimum 8Gi --memory value.
 
          --image=IMAGE
             Name of the container image to deploy (e.g.

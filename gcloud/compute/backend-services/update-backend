@@ -12,6 +12,8 @@ SYNOPSIS
         [--balancing-mode=BALANCING_MODE] [--capacity-scaler=CAPACITY_SCALER]
         [--description=DESCRIPTION] [--failover]
         [--max-utilization=MAX_UTILIZATION] [--preference=PREFERENCE]
+        [--clear-custom-metrics | --custom-metrics=[CUSTOM_METRICS,...]
+          | --custom-metrics-file=[CUSTOM_METRICS,...]]
         [--global | --region=REGION]
         [--max-connections=MAX_CONNECTIONS
           | --max-connections-per-endpoint=MAX_CONNECTIONS_PER_ENDPOINT
@@ -215,6 +217,83 @@ OPTIONAL FLAGS
          PREFERRED
             Backends with this preference setting are used up to their capacity
             limits first, while optimizing overall network latency.
+
+     At most one of these can be specified:
+
+       --clear-custom-metrics
+          Clears current list of CUSTOM_METRICS.
+
+       --custom-metrics=[CUSTOM_METRICS,...]
+          List of custom metrics that are used for CUSTOM_METRICS balancing
+          mode and WEIGHTED_ROUND_ROBIN locality load balancing policy.
+
+          Example:
+
+              $ gcloud compute backend-services update-backend \
+                  --custom-metrics='name=my-signal,maxUtilization=0.8,dryRun=true'
+              $ gcloud compute backend-services update-backend \
+                  --custom-metrics='name=my-signal,maxUtilization=0.8,dryRun=true'\
+               --custom-metrics='name=my-signal2,maxUtilization=0.2'
+              $ gcloud compute backend-services update-backend \
+                  --custom-metrics='[{"name" : "my-signal", "maxUtilization" :
+               0.8, "dryRun" : true}, {"name" : "my-signal2", "maxUtilization" :
+               0.1}]'
+
+          Sets custom_metrics value.
+
+           dryRun
+              Sets dryRun value.
+
+           maxUtilization
+              Sets maxUtilization value.
+
+           name
+              Required, Sets name value.
+
+          Shorthand Example:
+
+              --custom-metrics=dryRun=boolean,maxUtilization=float,name=string --custom-metrics=dryRun=boolean,maxUtilization=float,name=string
+
+          JSON Example:
+
+              --custom-metrics='[{"dryRun": boolean, "maxUtilization": float, "name": "string"}]'
+
+          File Example:
+
+              --custom-metrics=path_to_file.(yaml|json)
+
+       --custom-metrics-file=[CUSTOM_METRICS,...]
+          File path to json file with custom metrics that are used for
+          CUSTOM_METRICS balancing mode and WEIGHTED_ROUND_ROBIN locality load
+          balancing policy.
+
+          Example:
+
+              $ gcloud compute backend-services update-backend \
+                  --custom-metrics-file='customMetric.json'
+
+          Sets custom_metrics_file value.
+
+           dryRun
+              Sets dryRun value.
+
+           maxUtilization
+              Sets maxUtilization value.
+
+           name
+              Required, Sets name value.
+
+          Shorthand Example:
+
+              --custom-metrics-file=dryRun=boolean,maxUtilization=float,name=string --custom-metrics-file=dryRun=boolean,maxUtilization=float,name=string
+
+          JSON Example:
+
+              --custom-metrics-file='[{"dryRun": boolean, "maxUtilization": float, "name": "string"}]'
+
+          File Example:
+
+              --custom-metrics-file=path_to_file.(yaml|json)
 
      At most one of these can be specified:
 

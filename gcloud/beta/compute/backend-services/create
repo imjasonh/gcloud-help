@@ -42,7 +42,9 @@ SYNOPSIS
         [--signed-url-cache-max-age=SIGNED_URL_CACHE_MAX_AGE]
         [--subsetting-policy=SUBSETTING_POLICY; default="NONE"]
         [--subsetting-subset-size=SUBSETTING_SUBSET_SIZE]
-        [--timeout=TIMEOUT; default="30s"] [--tracking-mode=TRACKING_MODE]
+        [--timeout=TIMEOUT; default="30s"]
+        [--tls-settings=[authenticationConfig=AUTHENTICATIONCONFIG],[sni=SNI]]
+        [--tracking-mode=TRACKING_MODE]
         [--cache-key-query-string-blacklist=[QUERY_STRING,...]
           | --cache-key-query-string-whitelist=QUERY_STRING,[...]]
         [--custom-metrics=[CUSTOM_METRICS,...]
@@ -731,6 +733,14 @@ FLAGS
 
         The full range of timeout values allowed is 1 - 2,147,483,647 seconds.
 
+     --tls-settings=[authenticationConfig=AUTHENTICATIONCONFIG],[sni=SNI]
+        Configuration for Backend Authenticated TLS and mTLS. May only be
+        specified when the backend protocol is SSL, HTTPS or HTTP2.
+
+        Example: $ gcloud beta compute backend-services create \
+        --tls-settings='sni=example.com,authenticationConfig=${AUTH_CONF\
+        IG_NAME}'
+
      --tracking-mode=TRACKING_MODE
         Specifies the connection key used for connection tracking. The default
         value is PER_CONNECTION. Applicable only for backend service-based
@@ -765,7 +775,7 @@ FLAGS
 
        --custom-metrics=[CUSTOM_METRICS,...]
           List of custom metrics that are used for WEIGHTED_ROUND_ROBIN
-          BackendService locality_lb_policy.
+          locality load balancing policy.
 
           Example:
 
@@ -800,7 +810,7 @@ FLAGS
 
        --custom-metrics-file=[CUSTOM_METRICS,...]
           File path to json file with custom metrics that are used for
-          WEIGHTED_ROUND_ROBIN BackendService locality_lb_policy.
+          WEIGHTED_ROUND_ROBIN locality load balancing policy.
 
           Example:
 

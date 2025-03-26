@@ -1,0 +1,151 @@
+NAME
+    gcloud beta saas-runtime rollout-kinds create - create a Rollout Kind
+
+SYNOPSIS
+    gcloud beta saas-runtime rollout-kinds create ROLLOUT_KIND
+        --unit-kind=UNIT_KIND [--labels=[LABELS,...]] [--location=LOCATION]
+        [--rollout-orchestration-strategy=ROLLOUT_ORCHESTRATION_STRATEGY]
+        [--unit-filter=UNIT_FILTER]
+        [--update-unit-kind-strategy=UPDATE_UNIT_KIND_STRATEGY]
+        [--error-budget-allowed-count=ERROR_BUDGET_ALLOWED_COUNT
+          --error-budget-allowed-percentage=ERROR_BUDGET_ALLOWED_PERCENTAGE]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Create a Rollout Kind
+
+EXAMPLES
+    To create the Rollout Kind, run:
+
+        $ gcloud beta saas-runtime rollout-kinds create
+
+POSITIONAL ARGUMENTS
+     RolloutKindId resource - Identifier. The resource name (full URI of the
+     resource) following the standard naming scheme:
+
+         "projects/{project}/locations/{location}/rolloutKinds/{rollout_kind_id}" This represents a Cloud resource. (NOTE) Some attributes are not given arguments in this group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument rollout_kind on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument rollout_kind on the command line with a fully
+        specified name;
+      ◆ provide the argument --location on the command line.
+
+     This must be specified.
+
+       ROLLOUT_KIND
+          ID of the rolloutKindId or fully qualified identifier for the
+          rolloutKindId.
+
+          To set the rollout_kind attribute:
+          ▸ provide the argument rollout_kind on the command line.
+
+REQUIRED FLAGS
+     UnitKind resource - UnitKind that this rollout kind corresponds to.
+     Rollouts stemming from this rollout kind will target the units of this
+     unit kind. In other words, this defines the population of target units to
+     be upgraded by rollouts. This represents a Cloud resource. (NOTE) Some
+     attributes are not given arguments in this group but can be set in other
+     ways.
+
+     To set the project attribute:
+      ◆ provide the argument --unit-kind on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument --unit-kind on the command line with a fully
+        specified name;
+      ◆ provide the argument --location on the command line.
+
+     This must be specified.
+
+       --unit-kind=UNIT_KIND
+          ID of the unitKind or fully qualified identifier for the unitKind.
+
+          To set the unit_kind attribute:
+          ▸ provide the argument --unit-kind on the command line.
+
+OPTIONAL FLAGS
+     --labels=[LABELS,...]
+        The labels on the resource, which can be used for categorization.
+        similar to Kubernetes resource labels.
+
+         KEY
+            Keys must start with a lowercase character and contain only hyphens
+            (-), underscores (_), lowercase characters, and numbers.
+
+         VALUE
+            Values must contain only hyphens (-), underscores (_), lowercase
+            characters, and numbers.
+
+        Shorthand Example:
+
+            --labels=string=string
+
+        JSON Example:
+
+            --labels='{"string": "string"}'
+
+        File Example:
+
+            --labels=path_to_file.(yaml|json)
+
+     --location=LOCATION
+        For resources [rolloutKindId, unitKind], provides fallback value for
+        resource location attribute. When the resource's full URI path is not
+        provided, location will fallback to this flag value.
+
+     --rollout-orchestration-strategy=ROLLOUT_ORCHESTRATION_STRATEGY
+        The strategy to use for executing rollouts.
+
+     --unit-filter=UNIT_FILTER
+        AIP/160 formatted filter string against Unit. The filter will be
+        applied to determine the eligible unit population. This filter can only
+        reduce, but not expand the scope of the rollout.
+
+     --update-unit-kind-strategy=UPDATE_UNIT_KIND_STRATEGY
+        The config for updating the unit kind. By default, the unit kind will
+        be updated on the rollout start. UPDATE_UNIT_KIND_STRATEGY must be one
+        of:
+
+         never
+            Never update the unit kind.
+         on-start
+            Update the unit kind strategy on the rollout start.
+
+     Arguments for the error budget.
+
+       The configuration for error budget. If the number of failed units
+       exceeds max(allowed_count, allowed_ratio * total_units), the rollout
+       will be paused.
+
+         --error-budget-allowed-count=ERROR_BUDGET_ALLOWED_COUNT
+            The maximum number of failed units allowed in a location without
+            pausing the rollout.
+
+         --error-budget-allowed-percentage=ERROR_BUDGET_ALLOWED_PERCENTAGE
+            The maximum percentage of units allowed to fail (0, 100] within a
+            location without pausing the rollout.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the saasservicemgmt/v1beta1 API. The full documentation
+    for this API can be found at: https://cloud.google.com/
+
+NOTES
+    This command is currently in beta and might change without notice.
+

@@ -6,22 +6,25 @@ SYNOPSIS
     gcloud alpha storage intelligence-configs update
         (--organization=ORGANIZATION | --project=PROJECT
           | --sub-folder=SUB_FOLDER)
-        (--inherit-from-parent
-          | --exclude-bucket-id-regexes=[EXCLUDE_BUCKET_ID_REGEXES,...]
+        (--inherit-from-parent | --trial-edition
+          --exclude-bucket-id-regexes=[EXCLUDE_BUCKET_ID_REGEXES,...]
           | --include-bucket-id-regexes=[INCLUDE_BUCKET_ID_REGEXES,...]
           --exclude-locations=[EXCLUDE_LOCATIONS,...]
           | --include-locations=[INCLUDE_LOCATIONS,...]) [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Update storage intelligence configuration for the organization,
-    sub-folder or project.
+    sub-folder or project. The command sets STANDARD edition by default if no
+    other edition flags like ``--trial-edition`` or ``--inherit-from-parent``
+    are specified.
 
 EXAMPLES
     To limit buckets in the storage intelligence configuration, Use the
     following command with --include-bucket-id-regexes flag. to specify list of
     bucket ids and bucket id regexes.,
 
-        $gcloud alpha storage intelligence-configs update --organization=my-org --include-bucket-id-regexes=my-bucket-.*
+        $ gcloud alpha storage intelligence-configs update \
+            --organization=my-org --include-bucket-id-regexes=my-bucket-.*
 
     To apply location based filters in the storage intelligence configuration,
     Use --include-locations or --exclude-locations flags to specify allowed
@@ -29,18 +32,21 @@ EXAMPLES
     updates storage intelligence configuration of sub-folder 123456 with the
     specified list of excluded locations.,
 
-        $gcloud alpha storage intelligence-configs update --sub-folder=123456 --exclude-locations=us-east1,us-west1
+        $ gcloud alpha storage intelligence-configs update \
+            --sub-folder=123456 --exclude-locations=us-east1,us-west1
 
     The following command updates storage intelligence for the given project by
     inheriting existing storage intelligence configuration from the
     hierarchical parent resource.,
 
-        $gcloud alpha storage intelligence-configs update --project=my-project --inherit-from-parent
+        $ gcloud alpha storage intelligence-configs update \
+            --project=my-project --inherit-from-parent
 
     To clear included locations from the project storage intelligence, Use the
     following command.,
 
-        $gcloud alpha storage intelligence-configs update --project=my-project --include-locations=
+        $ gcloud alpha storage intelligence-configs update \
+            --project=my-project --include-locations=
 
 REQUIRED FLAGS
      Exactly one of these must be specified:
@@ -58,6 +64,9 @@ REQUIRED FLAGS
 
        --inherit-from-parent
           Specifies storage intelligence config to be inherited from parent.
+
+       --trial-edition
+          Enables Storage Intelligence for TRIAL edition.
 
        At most one of these can be specified:
 

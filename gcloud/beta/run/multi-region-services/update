@@ -11,10 +11,10 @@ SYNOPSIS
         [--[no-]cpu-throttling] [--[no-]default-url]
         [--[no-]deploy-health-check]
         [--execution-environment=EXECUTION_ENVIRONMENT] [--gpu-type=GPU_TYPE]
-        [--ingress=INGRESS; default="all"] [--[no-]invoker-iam-check]
-        [--max-instances=MAX_INSTANCES] [--mesh=MESH] [--min=MIN]
-        [--min-instances=MIN_INSTANCES] [--region=REGION]
-        [--remove-containers=[CONTAINER,...]]
+        [--[no-]gpu-zonal-redundancy] [--ingress=INGRESS; default="all"]
+        [--[no-]invoker-iam-check] [--max-instances=MAX_INSTANCES]
+        [--mesh=MESH] [--min=MIN] [--min-instances=MIN_INSTANCES]
+        [--region=REGION] [--remove-containers=[CONTAINER,...]]
         [--revision-suffix=REVISION_SUFFIX] [--scaling=SCALING]
         [--service-account=SERVICE_ACCOUNT] [--[no-]session-affinity]
         [--tag=TAG] [--timeout=TIMEOUT] [--no-traffic]
@@ -31,7 +31,7 @@ SYNOPSIS
           --clear-volumes --remove-volume=[VOLUME,...]]
         [--add-volume-mount=[volume=NAME,mount-path=MOUNT_PATH,...]
           --args=[ARG,...] --clear-volume-mounts --command=[COMMAND,...]
-          --cpu=CPU --depends-on=[CONTAINER,...] --image=IMAGE
+          --cpu=CPU --depends-on=[CONTAINER,...] --gpu=GPU --image=IMAGE
           --liveness-probe=[KEY=VALUE,...] --memory=MEMORY --port=PORT
           --remove-volume-mount=[MOUNT_PATH,...]
           --startup-probe=[KEY=VALUE,...] --[no-]use-http2 --clear-env-vars
@@ -152,6 +152,10 @@ FLAGS
 
      --gpu-type=GPU_TYPE
         The GPU type to use.
+
+     --[no-]gpu-zonal-redundancy
+        Set GPU zonal redundancy. Use --gpu-zonal-redundancy to enable and
+        --no-gpu-zonal-redundancy to disable.
 
      --ingress=INGRESS; default="all"
         Set the ingress traffic sources allowed to call the service. For Cloud
@@ -364,6 +368,10 @@ FLAGS
 
          --depends-on=[CONTAINER,...]
             List of container dependencies to add to the current container.
+
+         --gpu=GPU
+            Cloud Run supports values 0 or 1. 1 gpu also requires a minimum 4
+            --cpu value and a minimum 8Gi --memory value.
 
          --image=IMAGE
             Name of the container image to deploy (e.g.

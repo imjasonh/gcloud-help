@@ -7,7 +7,7 @@ SYNOPSIS
         [--async] [--breakglass=JUSTIFICATION] [--clear-vpc-connector]
         [--concurrency=CONCURRENCY] [--container=CONTAINER] [--[no-]cpu-boost]
         [--[no-]cpu-throttling] [--description=DESCRIPTION]
-        [--execution-environment=EXECUTION_ENVIRONMENT]
+        [--execution-environment=EXECUTION_ENVIRONMENT] [--gpu-type=GPU_TYPE]
         [--ingress=INGRESS; default="all"] [--[no-]invoker-iam-check]
         [--max-instances=MAX_INSTANCES] [--min=MIN]
         [--min-instances=MIN_INSTANCES] [--region=REGION]
@@ -28,7 +28,7 @@ SYNOPSIS
           --clear-volumes --remove-volume=[VOLUME,...]]
         [--add-volume-mount=[volume=NAME,mount-path=MOUNT_PATH,...]
           --args=[ARG,...] --[no-]automatic-updates --clear-volume-mounts
-          --cpu=CPU --depends-on=[CONTAINER,...]
+          --cpu=CPU --depends-on=[CONTAINER,...] --gpu=GPU
           --liveness-probe=[KEY=VALUE,...] --memory=MEMORY --port=PORT
           --remove-volume-mount=[MOUNT_PATH,...]
           --startup-probe=[KEY=VALUE,...]
@@ -165,6 +165,9 @@ FLAGS
             Run the application in a first generation execution environment.
          gen2
             Run the application in a second generation execution environment.
+
+     --gpu-type=GPU_TYPE
+        The GPU type to use.
 
      --ingress=INGRESS; default="all"
         Set the ingress traffic sources allowed to call the service. For Cloud
@@ -392,6 +395,10 @@ FLAGS
 
          --depends-on=[CONTAINER,...]
             List of container dependencies to add to the current container.
+
+         --gpu=GPU
+            Cloud Run supports values 0 or 1. 1 gpu also requires a minimum 4
+            --cpu value and a minimum 8Gi --memory value.
 
          --liveness-probe=[KEY=VALUE,...]
             Comma separated settings for liveness probe in the form KEY=VALUE.
