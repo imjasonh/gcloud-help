@@ -2,9 +2,9 @@ NAME
     gcloud run jobs execute - execute a job
 
 SYNOPSIS
-    gcloud run jobs execute [JOB] [--args=[ARG,...]] [--region=REGION]
+    gcloud run jobs execute [JOB] [--container=CONTAINER] [--region=REGION]
         [--task-timeout=TASK_TIMEOUT] [--tasks=TASKS]
-        [--update-env-vars=[KEY=VALUE,...]] [--async | --wait]
+        [--args=[ARG,...] --update-env-vars=[KEY=VALUE,...]] [--async | --wait]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -36,10 +36,12 @@ POSITIONAL ARGUMENTS
           ▸ specify the job name from an interactive prompt.
 
 FLAGS
-     --args=[ARG,...]
-        Comma-separated arguments passed to the command run by the container
-        image. If provided, an execution will be created with the input values.
-        Otherwise, the existing arguments of the job are used.
+     --container=CONTAINER
+        Specifies a container by name. Flags following --container will apply
+        to the specified container.
+
+        Flags that are not container-specific must be specified before
+        --container.
 
      --region=REGION
         Region in which the resource can be found. Alternatively, set the
@@ -60,12 +62,23 @@ FLAGS
         considered done. If provided, an execution will be created with this
         value. Otherwise the existing task count of the job is used.
 
-     --update-env-vars=[KEY=VALUE,...]
-        List of key-value pairs to set as environment variables overrides for
-        an execution of a job. If provided, an execution will be created with
-        the merge result of the input values and the existing environment
-        variables. New value overrides existing value if they have the same
-        key. If not provided, existing environment variables are used.
+    Container Flags
+
+        If the --container is specified the following arguments may only be specified after a --container flag.
+
+         --args=[ARG,...]
+            Comma-separated arguments passed to the command run by the
+            container image. If provided, an execution will be created with the
+            input values. Otherwise, the existing arguments of the job are
+            used.
+
+         --update-env-vars=[KEY=VALUE,...]
+            List of key-value pairs to set as environment variables overrides
+            for an execution of a job. If provided, an execution will be
+            created with the merge result of the input values and the existing
+            environment variables. New value overrides existing value if they
+            have the same key. If not provided, existing environment variables
+            are used.
 
      At most one of these can be specified:
 

@@ -1,0 +1,52 @@
+NAME
+    gcloud alpha scc remediation-intents auto-remediate - command for
+        semi-automatic remediation of SCC findings
+
+SYNOPSIS
+    gcloud alpha scc remediation-intents auto-remediate
+        --git-config-path=GIT_SETTINGS --org-id=ORG_ID
+        [--root-dir-path=ROOT_DIR_PATH; default="."] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Orchestrates the semi-automatic remediation process for SCC
+    findings by calling the Remediation Intent APIs.
+
+EXAMPLES
+    Sample usage: Remediate a SCC finding for the organization 1234567890, in
+    the terraform repository located at ./terraform-repo. $ {command} scc
+    remediation-intents auto-remediate \        --org-id=1234567890 --root-dir-path=./terraform-repo \
+        --git-config-path=./git-config.yaml
+
+REQUIRED FLAGS
+     --git-config-path=GIT_SETTINGS
+        Path to the git config file in YAML format to raise the PR. Format:
+        /path/to/file.yaml. Sample Config file:
+
+            remote: origin
+            main-branch-name: master
+            branch-prefix: iac-remediation-
+            reviewers: reviewer1,reviewer2
+
+     --org-id=ORG_ID
+        The Google Cloud organization ID
+
+OPTIONAL FLAGS
+     --root-dir-path=ROOT_DIR_PATH; default="."
+        The relative path to the root directory for the terraform repository.
+        If not specified, the default value is assumed to be the current
+        directory. The default is *..
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

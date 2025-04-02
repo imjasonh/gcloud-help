@@ -19,7 +19,12 @@ SYNOPSIS
           --persistence-config-mode=PERSISTENCE_CONFIG_MODE
           --rdb-config-snapshot-period=RDB_CONFIG_SNAPSHOT_PERIOD
           --rdb-config-snapshot-start-time=RDB_CONFIG_SNAPSHOT_START_TIME]
+        [--automated-backup-config-mode=AUTOMATED_BACKUP_CONFIG_MODE
+          --automated-backup-config-retention=AUTOMATED_BACKUP_CONFIG_RETENTION
+          (--fixed-frequency-schedule-start-time-hours=FIXED_FREQUENCY_SCHEDULE_START_TIME_HOURS --fixed-frequency-schedule-start-time-minutes=FIXED_FREQUENCY_SCHEDULE_START_TIME_MINUTES --fixed-frequency-schedule-start-time-nanos=FIXED_FREQUENCY_SCHEDULE_START_TIME_NANOS --fixed-frequency-schedule-start-time-seconds=FIXED_FREQUENCY_SCHEDULE_START_TIME_SECONDS)]
         [--cross-instance-replication-config-role=CROSS_INSTANCE_REPLICATION_CONFIG_ROLE : --cross-instance-replication-config-secondary-instances=[instance=INSTANCE] --primary-instance=PRIMARY_INSTANCE]
+        [--gcs-source-uris=[GCS_SOURCE_URIS,...]
+          | --managed-backup-source=MANAGED_BACKUP_SOURCE]
         [--zone-distribution-config=ZONE_DISTRIBUTION_CONFIG
           --zone-distribution-config-mode=ZONE_DISTRIBUTION_CONFIG_MODE]
         [GCLOUD_WIDE_FLAG ...]
@@ -262,7 +267,8 @@ FLAGS
           Ondemand maintenance for the instance.
 
      --psc-auto-connections=[network=NETWORK],[port=PORT],[projectId=PROJECTID]
-        User inputs and resource details of the auto-created PSC connections.
+        Deprecated: Use the endpoints.connections.psc_auto_connection value
+        instead.
 
          network
             The network where the PSC endpoints are created, in the form of
@@ -369,6 +375,53 @@ FLAGS
             future snapshots will be aligned. If not provided, the current time
             will be used.
 
+     The automated backup config for an instance.
+
+       --automated-backup-config-mode=AUTOMATED_BACKUP_CONFIG_MODE
+          The automated backup mode. If the mode is disabled, the other fields
+          will be ignored. AUTOMATED_BACKUP_CONFIG_MODE must be one of:
+
+           disabled
+              Automated backup config disabled.
+           enabled
+              Automated backup config enabled.
+
+       --automated-backup-config-retention=AUTOMATED_BACKUP_CONFIG_RETENTION
+          How long to keep automated backups before the backups are deleted.
+          The value should be between 1 day and 365 days. If not specified, the
+          default value is 35 days.
+
+       Arguments for the schedule.
+
+         This schedule allows the backup to be triggered at a fixed frequency
+         (currently only daily is supported).
+
+           Represents a time of day. The date and time zone are either not
+           significant or are specified elsewhere. An API may choose to allow
+           leap seconds. Related types are [google.type.Date][google.type.Date]
+           and google.protobuf.Timestamp.
+
+           At least one of these must be specified:
+
+             --fixed-frequency-schedule-start-time-hours=FIXED_FREQUENCY_SCHEDULE_START_TIME_HOURS
+                Hours of a day in 24 hour format. Must be greater than or equal
+                to 0 and typically must be less than or equal to 23. An API may
+                choose to allow the value "24:00:00" for scenarios like
+                business closing time.
+
+             --fixed-frequency-schedule-start-time-minutes=FIXED_FREQUENCY_SCHEDULE_START_TIME_MINUTES
+                Minutes of an hour. Must be greater than or equal to 0 and less
+                than or equal to 59.
+
+             --fixed-frequency-schedule-start-time-nanos=FIXED_FREQUENCY_SCHEDULE_START_TIME_NANOS
+                Fractions of seconds, in nanoseconds. Must be greater than or
+                equal to 0 and less than or equal to 999,999,999.
+
+             --fixed-frequency-schedule-start-time-seconds=FIXED_FREQUENCY_SCHEDULE_START_TIME_SECONDS
+                Seconds of a minute. Must be greater than or equal to 0 and
+                typically must be less than or equal to 59. An API may allow
+                the value 60 if it allows leap-seconds.
+
      Cross instance replication config.
 
        --cross-instance-replication-config-role=CROSS_INSTANCE_REPLICATION_CONFIG_ROLE
@@ -438,6 +491,27 @@ FLAGS
 
               To set the instance attribute:
               ◇ provide the argument --primary-instance on the command line.
+
+     Arguments for the import sources.
+
+     At most one of these can be specified:
+
+       Backups that stored in Cloud Storage buckets. The Cloud Storage buckets
+       need to be the same region as the instances.
+
+         --gcs-source-uris=[GCS_SOURCE_URIS,...]
+            Example: gs://bucket1/object1, gs://bucket2/folder2/object2
+
+       Backups that generated and managed by memorystore.
+
+         --managed-backup-source=MANAGED_BACKUP_SOURCE
+            Example:
+            //memorystore.googleapis.com/projects/{project}/locations/{location}/backupCollections/{collection}/backups/{backup}
+            A shorter version (without the prefix) of the backup name is also
+            supported, like
+            projects/{project}/locations/{location}/backupCollections/{collection}/backups/{backup_id}
+            In this case, it assumes the backup is under
+            memorystore.googleapis.com.
 
      Zone distribution configuration for allocation of instance resources.
 

@@ -9,11 +9,11 @@ SYNOPSIS
         [--[no-]cpu-throttling] [--[no-]default-url] [--delegate-builds]
         [--[no-]deploy-health-check] [--description=DESCRIPTION]
         [--execution-environment=EXECUTION_ENVIRONMENT] [--gpu-type=GPU_TYPE]
-        [--[no-]gpu-zonal-redundancy] [--ingress=INGRESS; default="all"]
-        [--[no-]invoker-iam-check] [--max=MAX] [--max-instances=MAX_INSTANCES]
-        [--max-surge=MAX_SURGE] [--max-unavailable=MAX_UNAVAILABLE]
-        [--mesh=MESH] [--min=MIN] [--min-instances=MIN_INSTANCES]
-        [--region=REGION] [--remove-containers=[CONTAINER,...]]
+        [--[no-]gpu-zonal-redundancy] [--[no-]iap]
+        [--ingress=INGRESS; default="all"] [--[no-]invoker-iam-check]
+        [--max=MAX] [--max-instances=MAX_INSTANCES] [--mesh=MESH] [--min=MIN]
+        [--min-instances=MIN_INSTANCES] [--region=REGION]
+        [--remove-containers=[CONTAINER,...]]
         [--revision-suffix=REVISION_SUFFIX] [--scaling=SCALING]
         [--service-account=SERVICE_ACCOUNT] [--[no-]session-affinity]
         [--tag=TAG] [--timeout=TIMEOUT] [--no-traffic]
@@ -192,6 +192,10 @@ FLAGS
         Set GPU zonal redundancy. Use --gpu-zonal-redundancy to enable and
         --no-gpu-zonal-redundancy to disable.
 
+     --[no-]iap
+        Whether to enable IAP for the Service. Use --iap to enable and --no-iap
+        to disable.
+
      --ingress=INGRESS; default="all"
         Set the ingress traffic sources allowed to call the service. For Cloud
         Run the --[no-]allow-unauthenticated flag separately controls the
@@ -230,16 +234,6 @@ FLAGS
         The maximum number of container instances for this Revision to run or
         'default' to remove. This setting is immutably set on each new Revision
         and modifying its value will deploy another Revision.
-
-     --max-surge=MAX_SURGE
-        A maximum percentage of instances that will be moved in each step of
-        traffic split changes. Use "default" to unset the limit and use the
-        platform default.
-
-     --max-unavailable=MAX_UNAVAILABLE
-        A maximum percentage of instances that may be unavailable during
-        traffic split changes. Use "default" to unset the limit and use the
-        platform default.
 
      --mesh=MESH
         Enables Cloud Service Mesh using the specified mesh resource name. Mesh

@@ -14,6 +14,10 @@ SYNOPSIS
           --persistence-config-mode=PERSISTENCE_CONFIG_MODE
           --rdb-config-snapshot-period=RDB_CONFIG_SNAPSHOT_PERIOD
           --rdb-config-snapshot-start-time=RDB_CONFIG_SNAPSHOT_START_TIME]
+        [--automated-backup-config-mode=AUTOMATED_BACKUP_CONFIG_MODE
+          --automated-backup-config-retention=AUTOMATED_BACKUP_CONFIG_RETENTION
+          --clear-automated-backup-config
+          --fixed-frequency-schedule-start-time-hours=FIXED_FREQUENCY_SCHEDULE_START_TIME_HOURS --fixed-frequency-schedule-start-time-minutes=FIXED_FREQUENCY_SCHEDULE_START_TIME_MINUTES --fixed-frequency-schedule-start-time-nanos=FIXED_FREQUENCY_SCHEDULE_START_TIME_NANOS --fixed-frequency-schedule-start-time-seconds=FIXED_FREQUENCY_SCHEDULE_START_TIME_SECONDS]
         [--clear-cross-instance-replication-config
           --cross-instance-replication-config-role=CROSS_INSTANCE_REPLICATION_CONFIG_ROLE --clear-primary-instance | --primary-instance=PRIMARY_INSTANCE --cross-instance-replication-config-secondary-instances=[instance=INSTANCE] | --add-cross-instance-replication-config-secondary-instances=[instance=INSTANCE] --clear-cross-instance-replication-config-secondary-instances | --remove-cross-instance-replication-config-secondary-instances=[instance=INSTANCE]]
         [--clear-maintenance-policy
@@ -208,6 +212,54 @@ FLAGS
             Time that the first snapshot was/will be attempted, and to which
             future snapshots will be aligned. If not provided, the current time
             will be used.
+
+     The automated backup config for an instance.
+
+       --automated-backup-config-mode=AUTOMATED_BACKUP_CONFIG_MODE
+          The automated backup mode. If the mode is disabled, the other fields
+          will be ignored. AUTOMATED_BACKUP_CONFIG_MODE must be one of:
+
+           disabled
+              Automated backup config disabled.
+           enabled
+              Automated backup config enabled.
+
+       --automated-backup-config-retention=AUTOMATED_BACKUP_CONFIG_RETENTION
+          How long to keep automated backups before the backups are deleted.
+          The value should be between 1 day and 365 days. If not specified, the
+          default value is 35 days.
+
+       --clear-automated-backup-config
+          Set instance.automatedBackupConfig back to default value.
+
+       Arguments for the schedule.
+
+         This schedule allows the backup to be triggered at a fixed frequency
+         (currently only daily is supported).
+
+           Represents a time of day. The date and time zone are either not
+           significant or are specified elsewhere. An API may choose to allow
+           leap seconds. Related types are [google.type.Date][google.type.Date]
+           and google.protobuf.Timestamp.
+
+             --fixed-frequency-schedule-start-time-hours=FIXED_FREQUENCY_SCHEDULE_START_TIME_HOURS
+                Hours of a day in 24 hour format. Must be greater than or equal
+                to 0 and typically must be less than or equal to 23. An API may
+                choose to allow the value "24:00:00" for scenarios like
+                business closing time.
+
+             --fixed-frequency-schedule-start-time-minutes=FIXED_FREQUENCY_SCHEDULE_START_TIME_MINUTES
+                Minutes of an hour. Must be greater than or equal to 0 and less
+                than or equal to 59.
+
+             --fixed-frequency-schedule-start-time-nanos=FIXED_FREQUENCY_SCHEDULE_START_TIME_NANOS
+                Fractions of seconds, in nanoseconds. Must be greater than or
+                equal to 0 and less than or equal to 999,999,999.
+
+             --fixed-frequency-schedule-start-time-seconds=FIXED_FREQUENCY_SCHEDULE_START_TIME_SECONDS
+                Seconds of a minute. Must be greater than or equal to 0 and
+                typically must be less than or equal to 59. An API may allow
+                the value 60 if it allows leap-seconds.
 
      Cross instance replication config.
 
@@ -520,6 +572,10 @@ FLAGS
                       form of
                       projects/{project_id}/global/networks/{network_id}.
 
+                   port
+                      port will only be set for Primary/Reader or Discovery
+                      endpoint.
+
                    pscConnectionId
                       The PSC connection id of the forwarding rule connected to
                       the service attachment.
@@ -531,11 +587,11 @@ FLAGS
 
           Shorthand Example:
 
-              --endpoints=connections=[{pscConnection={forwardingRule=string,ipAddress=string,network=string,pscConnectionId=string,serviceAttachment=string}}] --endpoints=connections=[{pscConnection={forwardingRule=string,ipAddress=string,network=string,pscConnectionId=string,serviceAttachment=string}}]
+              --endpoints=connections=[{pscConnection={forwardingRule=string,ipAddress=string,network=string,port=int,pscConnectionId=string,serviceAttachment=string}}] --endpoints=connections=[{pscConnection={forwardingRule=string,ipAddress=string,network=string,port=int,pscConnectionId=string,serviceAttachment=string}}]
 
           JSON Example:
 
-              --endpoints='[{"connections": [{"pscConnection": {"forwardingRule": "string", "ipAddress": "string", "network": "string", "pscConnectionId": "string", "serviceAttachment": "string"}}]}]'
+              --endpoints='[{"connections": [{"pscConnection": {"forwardingRule": "string", "ipAddress": "string", "network": "string", "port": int, "pscConnectionId": "string", "serviceAttachment": "string"}}]}]'
 
           File Example:
 
@@ -565,6 +621,10 @@ FLAGS
                       form of
                       projects/{project_id}/global/networks/{network_id}.
 
+                   port
+                      port will only be set for Primary/Reader or Discovery
+                      endpoint.
+
                    pscConnectionId
                       The PSC connection id of the forwarding rule connected to
                       the service attachment.
@@ -576,11 +636,11 @@ FLAGS
 
           Shorthand Example:
 
-              --add-endpoints=connections=[{pscConnection={forwardingRule=string,ipAddress=string,network=string,pscConnectionId=string,serviceAttachment=string}}] --add-endpoints=connections=[{pscConnection={forwardingRule=string,ipAddress=string,network=string,pscConnectionId=string,serviceAttachment=string}}]
+              --add-endpoints=connections=[{pscConnection={forwardingRule=string,ipAddress=string,network=string,port=int,pscConnectionId=string,serviceAttachment=string}}] --add-endpoints=connections=[{pscConnection={forwardingRule=string,ipAddress=string,network=string,port=int,pscConnectionId=string,serviceAttachment=string}}]
 
           JSON Example:
 
-              --add-endpoints='[{"connections": [{"pscConnection": {"forwardingRule": "string", "ipAddress": "string", "network": "string", "pscConnectionId": "string", "serviceAttachment": "string"}}]}]'
+              --add-endpoints='[{"connections": [{"pscConnection": {"forwardingRule": "string", "ipAddress": "string", "network": "string", "port": int, "pscConnectionId": "string", "serviceAttachment": "string"}}]}]'
 
           File Example:
 
@@ -616,6 +676,10 @@ FLAGS
                         the form of
                         projects/{project_id}/global/networks/{network_id}.
 
+                     port
+                        port will only be set for Primary/Reader or Discovery
+                        endpoint.
+
                      pscConnectionId
                         The PSC connection id of the forwarding rule connected
                         to the service attachment.
@@ -627,11 +691,11 @@ FLAGS
 
             Shorthand Example:
 
-                --remove-endpoints=connections=[{pscConnection={forwardingRule=string,ipAddress=string,network=string,pscConnectionId=string,serviceAttachment=string}}] --remove-endpoints=connections=[{pscConnection={forwardingRule=string,ipAddress=string,network=string,pscConnectionId=string,serviceAttachment=string}}]
+                --remove-endpoints=connections=[{pscConnection={forwardingRule=string,ipAddress=string,network=string,port=int,pscConnectionId=string,serviceAttachment=string}}] --remove-endpoints=connections=[{pscConnection={forwardingRule=string,ipAddress=string,network=string,port=int,pscConnectionId=string,serviceAttachment=string}}]
 
             JSON Example:
 
-                --remove-endpoints='[{"connections": [{"pscConnection": {"forwardingRule": "string", "ipAddress": "string", "network": "string", "pscConnectionId": "string", "serviceAttachment": "string"}}]}]'
+                --remove-endpoints='[{"connections": [{"pscConnection": {"forwardingRule": "string", "ipAddress": "string", "network": "string", "port": int, "pscConnectionId": "string", "serviceAttachment": "string"}}]}]'
 
             File Example:
 
