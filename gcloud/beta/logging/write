@@ -3,6 +3,8 @@ NAME
 
 SYNOPSIS
     gcloud beta logging write LOG_NAME MESSAGE
+        [--monitored-resource-labels=[KEY=VALUE, ...,...]]
+        [--monitored-resource-type=MONITORED_RESOURCE_TYPE; default="global"]
         [--payload-type=PAYLOAD_TYPE; default="text"]
         [--severity=SEVERITY; default="DEFAULT"]
         [--billing-account=BILLING_ACCOUNT_ID | --folder=FOLDER_ID
@@ -11,10 +13,8 @@ SYNOPSIS
 
 DESCRIPTION
     (BETA) Write a log entry. If the destination log does not exist, it will be
-    created. All log entries written with this command are considered to be
-    from the "custom.googleapis.com" v1 service or the "global" v2 resource
-    type. The log entries will be listed in the Logs Explorer under that
-    service or resource type.
+    created. By default, all log entries written with this command are written
+    with the "global" resource type.
 
     gcloud beta logging write should be used for simple testing purposes. Check
     Cloud Logging agent for a proper way to send log entries:
@@ -35,6 +35,12 @@ EXAMPLES
         $ gcloud beta logging write LOG_NAME '{"key": "value"}' \
             --payload-type=json
 
+    To create a log entry with a custom resource type, run:
+
+        $ gcloud beta logging write LOG_NAME "A simple entry" \
+            --monitored-resource-type=gce_instance \
+            --monitored-resource-labels=zone=us-centra1-a,instance_id=1234
+
 POSITIONAL ARGUMENTS
      LOG_NAME
         Name of the log where the log entry will be written.
@@ -44,6 +50,12 @@ POSITIONAL ARGUMENTS
         --payload-type=json.
 
 FLAGS
+     --monitored-resource-labels=[KEY=VALUE, ...,...]
+        Monitored Resource labels to add to the payload
+
+     --monitored-resource-type=MONITORED_RESOURCE_TYPE; default="global"
+        Monitored Resource type to add to the payload
+
      --payload-type=PAYLOAD_TYPE; default="text"
         Type of the log entry payload. PAYLOAD_TYPE must be one of: text, json.
 

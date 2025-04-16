@@ -46,9 +46,9 @@ SYNOPSIS
         [--enable-master-global-access] [--enable-multi-networking]
         [--enable-nested-virtualization] [--enable-network-policy]
         [--enable-pod-security-policy] [--enable-ray-cluster-logging]
-        [--enable-ray-cluster-monitoring] [--enable-secret-manager]
-        [--enable-service-externalips] [--enable-shielded-nodes]
-        [--enable-stackdriver-kubernetes] [--enable-vertical-pod-autoscaling]
+        [--enable-ray-cluster-monitoring] [--enable-service-externalips]
+        [--enable-shielded-nodes] [--enable-stackdriver-kubernetes]
+        [--enable-vertical-pod-autoscaling]
         [--fleet-project=PROJECT_ID_OR_NUMBER] [--gateway-api=GATEWAY_API]
         [--hpa-profile=HPA_PROFILE] [--identity-provider=IDENTITY_PROVIDER]
         [--image-type=IMAGE_TYPE]
@@ -131,6 +131,8 @@ SYNOPSIS
           --resource-usage-bigquery-dataset=RESOURCE_USAGE_BIGQUERY_DATASET]
         [--enable-private-endpoint --enable-private-nodes
           --master-ipv4-cidr=MASTER_IPV4_CIDR --private-cluster]
+        [--enable-secret-manager --enable-secret-manager-rotation
+          --secret-manager-rotation-interval=SECRET_MANAGER_ROTATION_INTERVAL]
         [--enable-tpu --enable-tpu-service-networking | --tpu-ipv4-cidr=CIDR]
         [--ephemeral-storage[=[local-ssd-count=LOCAL-SSD-COUNT]]
           | --ephemeral-storage-local-ssd[=[count=COUNT]]
@@ -712,16 +714,6 @@ FLAGS
 
      --enable-ray-cluster-monitoring
         Enable automatic metrics collection for Ray clusters.
-
-     Flags for Secret Manager configuration:
-
-       --enable-secret-manager
-          Enables the Secret Manager CSI driver provider component. See
-          https://secrets-store-csi-driver.sigs.k8s.io/introduction
-          https://github.com/GoogleCloudPlatform/secrets-store-csi-driver-provider-gcp
-
-          To disable in an existing cluster, explicitly set flag to
-          --no-enable-secret-manager
 
      --enable-service-externalips
         Enables use of services with externalIPs field.
@@ -2099,6 +2091,27 @@ FLAGS
 
           The --private-cluster flag is deprecated and will be removed in a
           future release. Use --enable-private-nodes instead.
+
+     Flags for Secret Manager configuration:
+
+       --enable-secret-manager
+          Enables the Secret Manager CSI driver provider component. See
+          https://secrets-store-csi-driver.sigs.k8s.io/introduction
+          https://github.com/GoogleCloudPlatform/secrets-store-csi-driver-provider-gcp
+
+          To disable in an existing cluster, explicitly set flag to
+          --no-enable-secret-manager
+
+       --enable-secret-manager-rotation
+          Enables the rotation of secrets in the Secret Manager CSI driver
+          provider component.
+
+          To disable in an existing cluster, explicitly set flag to
+          --no-enable-secret-manager-rotation
+
+       --secret-manager-rotation-interval=SECRET_MANAGER_ROTATION_INTERVAL
+          Set the rotation period for secrets in the Secret Manager CSI driver
+          provider component.
 
      Flags relating to Cloud TPUs:
 

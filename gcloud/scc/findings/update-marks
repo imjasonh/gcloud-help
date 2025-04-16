@@ -3,11 +3,12 @@ NAME
         security marks
 
 SYNOPSIS
-    gcloud scc findings update-marks
-        (FINDING : --organization=ORGANIZATION --source=SOURCE)
+    gcloud scc findings update-marks FINDING
         [--location=LOCATION; default="global"]
-        [--security-marks=[KEY=VALUE,...]] [--start-time=START_TIME]
-        [--update-mask=UPDATE_MASK] [GCLOUD_WIDE_FLAG ...]
+        [--security-marks=[KEY=VALUE,...]] [--source=SOURCE; default="-"]
+        [--start-time=START_TIME] [--update-mask=UPDATE_MASK]
+        [--folder=FOLDER | --organization=ORGANIZATION | --project=PROJECT]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Update Security Command Center finding's security marks.
@@ -53,45 +54,8 @@ EXAMPLES
             --security-marks="key1=v1,key2=v2" --location=eu
 
 POSITIONAL ARGUMENTS
-     Finding resource - The finding to be used for the SCC (Security Command
-     Center) command. The arguments in this group can be used to specify the
-     attributes of this resource.
-
-     This must be specified.
-
-       FINDING
-          ID of the finding or fully qualified identifier for the finding.
-
-          To set the finding attribute:
-          ▸ provide the argument finding on the command line.
-
-          This positional argument must be specified if any of the other
-          arguments in this group are specified.
-
-       --organization=ORGANIZATION
-          (Optional) If the full resource name isn't provided e.g.
-          organizations/123, then provide the organization id which is the
-          suffix of the organization. Example: organizations/123, the id is
-          123.
-
-          To set the organization attribute:
-          ▸ provide the argument finding on the command line with a fully
-            specified name;
-          ▸ provide the argument --organization on the command line;
-          ▸ Set the organization property in configuration using gcloud
-            config set scc/organization if it is not specified in command
-            line..
-
-       --source=SOURCE
-          (Optional) If the full resource name isn't provided e.g.
-          organizations/123/sources/456, then provide the source id which is
-          the suffix of the source. Example: organizations/123/sources/456, the
-          id is 456.
-
-          To set the source attribute:
-          ▸ provide the argument finding on the command line with a fully
-            specified name;
-          ▸ provide the argument --source on the command line.
+     FINDING
+        ID of the finding or fully qualified identifier for the finding.
 
 FLAGS
      --location=LOCATION; default="global"
@@ -110,6 +74,9 @@ FLAGS
         key=value pair separated by comma (,). For example:
         --security-marks="key1=val1,key2=val2".
 
+     --source=SOURCE; default="-"
+        Source id. Defaults to all sources.
+
      --start-time=START_TIME
         Time at which the updated SecurityMarks take effect. See $ gcloud topic
         datetimes for information on supported time formats.
@@ -120,6 +87,17 @@ FLAGS
         --update-mask="marks.key1,marks.key2". If you want to override all the
         marks for the given finding either skip the update-mask flag or provide
         an empty value (--update-mask '') for it.
+
+     At most one of these can be specified:
+
+       --folder=FOLDER
+          The folder ID (e.g., 456) that contains the finding.
+
+       --organization=ORGANIZATION
+          The organization ID (e.g., 123) that contains the finding.
+
+       --project=PROJECT
+          The project ID (e.g., example-project) that contains the finding.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

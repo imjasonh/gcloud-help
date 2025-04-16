@@ -4,11 +4,14 @@ NAME
 
 SYNOPSIS
     gcloud alpha bigtable instances tables update (TABLE : --instance=INSTANCE)
-        [--async] [--deletion-protection]
+        [--async] [--deletion-protection] [--row-key-schema-pre-encoded-bytes]
         [--automated-backup-retention-period=AUTOMATED_BACKUP_RETENTION_PERIOD
           | --disable-automated-backup | --enable-automated-backup]
         [--change-stream-retention-period=CHANGE_STREAM_RETENTION_PERIOD
-          | --clear-change-stream-retention-period] [GCLOUD_WIDE_FLAG ...]
+          | --clear-change-stream-retention-period]
+        [--clear-row-key-schema
+          | --row-key-schema-definition-file=ROW_KEY_SCHEMA_DEFINITION_FILE]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Update an existing new Cloud Bigtable table with the specified
@@ -92,6 +95,16 @@ FLAGS
      --deletion-protection
         Once specified, the table is deletion protected.
 
+     --row-key-schema-pre-encoded-bytes
+        By default, Base64 encoding is applied to all binary fields in the
+        YAML/JSON file (for example, encoding.delimitedBytes.delimiter).
+
+        Use this to indicate that all binary fields are already encoded in the
+        YAML/JSON file and should not be encoded again.
+
+        This field is only used when row-key-schema-definition-file is set. It
+        is ignored if clear-row-key-schema is set.
+
      At most one of these can be specified:
 
        --automated-backup-retention-period=AUTOMATED_BACKUP_RETENTION_PERIOD
@@ -119,6 +132,35 @@ FLAGS
        --clear-change-stream-retention-period
           This disables the change stream and eventually removes the change
           stream data.
+
+     Whether to update or clear the row key schema in the updated table. Only
+     one of these flags can be set.
+
+     At most one of these can be specified:
+
+       --clear-row-key-schema
+          Whether to clear the row key schema in the updated table.
+
+       --row-key-schema-definition-file=ROW_KEY_SCHEMA_DEFINITION_FILE
+          The row key schema for the table. The schema is defined in a YAML or
+          JSON file, equivalent to the StructType protobuf message.
+
+          Example YAML:
+
+              encoding:
+                delimitedBytes:
+                  delimiter: '#'
+              fields:
+              - fieldName: field1
+                type:
+                  bytesType:
+                    encoding:
+                      raw: {}
+              - fieldName: field2
+                type:
+                  bytesType:
+                    encoding:
+                      raw: {}
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

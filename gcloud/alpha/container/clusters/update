@@ -27,9 +27,9 @@ SYNOPSIS
           | --enable-logging-monitoring-system-only | --enable-multi-networking
           | --enable-network-policy | --enable-pod-security-policy
           | --enable-private-nodes | --[no-]enable-ray-cluster-logging
-          | --[no-]enable-ray-cluster-monitoring | --enable-secret-manager
-          | --enable-service-externalips | --enable-shielded-nodes
-          | --enable-stackdriver-kubernetes | --enable-vertical-pod-autoscaling
+          | --[no-]enable-ray-cluster-monitoring | --enable-service-externalips
+          | --enable-shielded-nodes | --enable-stackdriver-kubernetes
+          | --enable-vertical-pod-autoscaling
           | --fleet-project=PROJECT_ID_OR_NUMBER | --gateway-api=GATEWAY_API
           | --generate-password | --hpa-profile=HPA_PROFILE
           | --identity-provider=IDENTITY_PROVIDER
@@ -108,6 +108,8 @@ SYNOPSIS
           : --min-accelerator=[type=TYPE,count=COUNT,...]]]
           | --enable-insecure-binding-system-authenticated
           --enable-insecure-binding-system-unauthenticated
+          | --enable-secret-manager --enable-secret-manager-rotation
+          --secret-manager-rotation-interval=SECRET_MANAGER_ROTATION_INTERVAL
           | --enable-tpu --enable-tpu-service-networking | --tpu-ipv4-cidr=CIDR
           | --logging-service=LOGGING_SERVICE
           --monitoring-service=MONITORING_SERVICE
@@ -460,16 +462,6 @@ REQUIRED FLAGS
           Enable automatic metrics collection for Ray clusters. Use
           --enable-ray-cluster-monitoring to enable and
           --no-enable-ray-cluster-monitoring to disable.
-
-       Flags for Secret Manager configuration:
-
-         --enable-secret-manager
-            Enables the Secret Manager CSI driver provider component. See
-            https://secrets-store-csi-driver.sigs.k8s.io/introduction
-            https://github.com/GoogleCloudPlatform/secrets-store-csi-driver-provider-gcp
-
-            To disable in an existing cluster, explicitly set flag to
-            --no-enable-secret-manager
 
        --enable-service-externalips
           Enables use of services with externalIPs field.
@@ -1520,6 +1512,27 @@ REQUIRED FLAGS
 
           To disallow binding system:authenticated in a cluster, explicitly set
           the --no-enable-insecure-binding-system-unauthenticated flag instead.
+
+       Flags for Secret Manager configuration:
+
+         --enable-secret-manager
+            Enables the Secret Manager CSI driver provider component. See
+            https://secrets-store-csi-driver.sigs.k8s.io/introduction
+            https://github.com/GoogleCloudPlatform/secrets-store-csi-driver-provider-gcp
+
+            To disable in an existing cluster, explicitly set flag to
+            --no-enable-secret-manager
+
+         --enable-secret-manager-rotation
+            Enables the rotation of secrets in the Secret Manager CSI driver
+            provider component.
+
+            To disable in an existing cluster, explicitly set flag to
+            --no-enable-secret-manager-rotation
+
+         --secret-manager-rotation-interval=SECRET_MANAGER_ROTATION_INTERVAL
+            Set the rotation period for secrets in the Secret Manager CSI
+            driver provider component.
 
        Flags relating to Cloud TPUs:
 

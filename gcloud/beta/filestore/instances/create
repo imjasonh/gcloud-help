@@ -11,7 +11,6 @@ SYNOPSIS
           [reserved-ip-range=RESERVED-IP-RANGE] [--async]
         [--description=DESCRIPTION] [--labels=[KEY=VALUE,...]]
         [--location=LOCATION]
-        [--managed-ad=[computer=COMPUTER],[domain=DOMAIN]]
         [--performance=[max-iops=MAX-IOPS],[max-iops-per-tb=MAX-IOPS-PER-TB]]
         [--protocol=PROTOCOL; default="NFS_V3"] [--region=REGION]
         [--source-instance=SOURCE_INSTANCE] [--tags=[KEY=VALUE,...]]
@@ -20,6 +19,9 @@ SYNOPSIS
           : --deletion-protection-reason=DELETION_PROTECTION_REASON]
         [--kms-key=KMS_KEY : --kms-keyring=KMS_KEYRING
           --kms-location=KMS_LOCATION --kms-project=KMS_PROJECT]
+        [--ldap=[^:^domain=DOMAIN:servers=SERVER1,
+          SERVER2:users_ou=USERSOU:groups_ou=GROUPSOU,...]
+          | --managed-ad=[computer=COMPUTER],[domain=DOMAIN]]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -39,6 +41,8 @@ EXAMPLES
             --kms-key=KMS-KEY --kms-keyring=KMS_KEYRING \
             --kms-location=KMS_LOCATION --kms-project=KMS_PROJECT \
             --managed-ad=domain=DOMAIN,computer=COMPUTER \
+            --ldap=^:^domain=DOMAIN:servers=SERVER1,\
+        SERVER2:users_ou=USERSOU:groups_ou=GROUPSOU \
             --flags-file=FLAGS_FILE --source-instance=SOURCE_INSTANCE
 
         Example json configuration file:
@@ -241,19 +245,6 @@ OPTIONAL FLAGS
      --location=LOCATION
         Location of the Cloud Filestore instance/operation.
 
-     --managed-ad=[computer=COMPUTER],[domain=DOMAIN]
-        Managed Active Directory configuration for an instance. Specifies both
-        the domain name and a computer name (unique to the domain) to be
-        created by the filestore instance.
-
-            domain
-               The desired domain full uri. i.e:
-               projects/PROJECT/locations/global/domains/DOMAIN
-
-            computer
-               The desired active directory computer name to be created by
-               the filestore instance when connecting to the domain.
-
      --performance=[max-iops=MAX-IOPS],[max-iops-per-tb=MAX-IOPS-PER-TB]
         Performance configuration for the instance. This flag is used to
         configure the read IOPS provisioned for the instance. The instance's
@@ -393,6 +384,45 @@ OPTIONAL FLAGS
             specified name;
           ▸ provide the argument --kms-project on the command line;
           ▸ set the property core/project.
+
+     Directory services configuration for an instance.
+
+     At most one of these can be specified:
+
+       --ldap=[^:^domain=DOMAIN:servers=SERVER1,SERVER2:users_ou=USERSOU:groups_ou=GROUPSOU,...]
+          LDAP configuration for an instance. Specifies the domain name,
+          servers, users_ou, and groups_ou to be created by the filestore
+          instance. users_ou and groups_ou are optional.
+
+              domain
+                 The desired domain name. i.e.:
+                 'my-domain.com'
+
+              Servers
+                The desired LDAP servers. i.e.:
+                'ldap.example.com', 'ldap2.example.com'
+
+              Usersou
+                The desired usersou.
+
+              Groups_ou
+                The desired groups_ou.
+
+              Use the following format to specify the LDAP configuration:
+                --ldap=^:^domain=my-domain.com:servers=ldap.example.com,ldap2.example.com:users_ou=users:groups_ou=groups
+
+       --managed-ad=[computer=COMPUTER],[domain=DOMAIN]
+          Managed Active Directory configuration for an instance. Specifies
+          both the domain name and a computer name (unique to the domain) to be
+          created by the filestore instance.
+
+              domain
+                 The desired domain full uri. i.e.:
+                 projects/PROJECT/locations/global/domains/DOMAIN
+
+              computer
+                 The desired active directory computer name to be created by
+                 the filestore instance when connecting to the domain.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

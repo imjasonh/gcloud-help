@@ -8,6 +8,7 @@ SYNOPSIS
           [field-path=FIELD-PATH],[order=ORDER],[vector-config=VECTOR-CONFIG]
         (--collection-group=COLLECTION_GROUP : --database=DATABASE)
         [--api-scope=API_SCOPE; default="any-api"] [--async]
+        [--density=DENSITY] [--multikey]
         [--query-scope=QUERY_SCOPE; default="collection"]
         [GCLOUD_WIDE_FLAG ...]
 
@@ -103,11 +104,24 @@ REQUIRED FLAGS
 OPTIONAL FLAGS
      --api-scope=API_SCOPE; default="any-api"
         Api scope the index applies to. API_SCOPE must be one of: any-api,
-        datastore-mode-api.
+        datastore-mode-api, mongodb-compatible-api.
 
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
+
+     --density=DENSITY
+        Density of the index. DENSITY must be one of: dense,
+        density-unspecified, sparse-all, sparse-any.
+
+     --multikey
+        Optional. Whether the index is multikey. By default, the index is not
+        multikey. For non-multikey indexes, none of the paths in the index
+        definition reach or traverse an array, except via an explicit array
+        index. For multikey indexes, at most one of the paths in the index
+        definition reach or traverse an array, except via an explicit array
+        index. Violations will result in errors. Note this field only applies
+        to index with MONGODB_COMPATIBLE_API ApiScope.
 
      --query-scope=QUERY_SCOPE; default="collection"
         Query scope the index applies to. QUERY_SCOPE must be one of:

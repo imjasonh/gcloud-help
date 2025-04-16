@@ -5,7 +5,9 @@ SYNOPSIS
     gcloud bigtable instances tables create (TABLE : --instance=INSTANCE)
         --column-families=[COLUMN_FAMILIES,...]
         [--change-stream-retention-period=CHANGE_STREAM_RETENTION_PERIOD]
-        [--deletion-protection] [--splits=[SPLITS,...]]
+        [--deletion-protection]
+        [--row-key-schema-definition-file=ROW_KEY_SCHEMA_DEFINITION_FILE]
+        [--row-key-schema-pre-encoded-bytes] [--splits=[SPLITS,...]]
         [--automated-backup-retention-period=AUTOMATED_BACKUP_RETENTION_PERIOD
           | --enable-automated-backup] [GCLOUD_WIDE_FLAG ...]
 
@@ -123,6 +125,34 @@ OPTIONAL FLAGS
 
      --deletion-protection
         Once specified, the table is deletion protected.
+
+     --row-key-schema-definition-file=ROW_KEY_SCHEMA_DEFINITION_FILE
+        The row key schema for the table. The schema is defined in a YAML or
+        JSON file, equivalent to the StructType protobuf message.
+
+        Example YAML:
+
+            encoding:
+              delimitedBytes:
+                delimiter: '#'
+            fields:
+            - fieldName: field1
+              type:
+                bytesType:
+                  encoding:
+                    raw: {}
+            - fieldName: field2
+              type:
+                bytesType:
+                  encoding:
+                    raw: {}
+
+     --row-key-schema-pre-encoded-bytes
+        By default, Base64 encoding is applied to all binary fields in the
+        YAML/JSON file (for example, encoding.delimitedBytes.delimiter).
+
+        Use this to indicate that all binary fields are already encoded in the
+        YAML/JSON file and should not be encoded again.
 
      --splits=[SPLITS,...]
         Row keys where the table should initially be split. For example:

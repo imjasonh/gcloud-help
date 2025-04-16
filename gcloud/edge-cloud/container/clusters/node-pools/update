@@ -5,10 +5,11 @@ NAME
 SYNOPSIS
     gcloud edge-cloud container clusters node-pools update
         (NODE_POOL : --cluster=CLUSTER --location=LOCATION) [--async]
-        [--lro-timeout=LRO_TIMEOUT] [--machine-filter=MACHINE_FILTER]
-        [--node-count=NODE_COUNT] [--node-labels=[KEY=VALUE,...]]
-        [--update-labels=[KEY=VALUE,...]]
-        [--clear-labels | --remove-labels=[KEY,...]] [GCLOUD_WIDE_FLAG ...]
+        [--local-disk-kms-key=LOCAL_DISK_KMS_KEY] [--lro-timeout=LRO_TIMEOUT]
+        [--machine-filter=MACHINE_FILTER] [--node-count=NODE_COUNT]
+        [--node-labels=[KEY=VALUE,...]] [--update-labels=[KEY=VALUE,...]]
+        [--use-google-managed-key] [--clear-labels | --remove-labels=[KEY,...]]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Updates an Edge Container node pool.
@@ -65,6 +66,13 @@ FLAGS
         Return immediately, without waiting for the operation in progress to
         complete.
 
+     --local-disk-kms-key=LOCAL_DISK_KMS_KEY
+        Google Cloud KMS key that will be used to secure local disks on nodes
+        in this node pool. The Edge Container service account for this project
+        must have roles/cloudkms.cryptoKeyEncrypterDecrypter on the key.
+
+        If not provided, a Google-managed key will be used instead.
+
      --lro-timeout=LRO_TIMEOUT
         Overwrite the default LRO maximum timeout.
 
@@ -88,6 +96,10 @@ FLAGS
         (-), underscores (_), lowercase characters, and numbers. Values must
         contain only hyphens (-), underscores (_), lowercase characters, and
         numbers.
+
+     --use-google-managed-key
+        Once specified, a Google-managed key will be used for the control plane
+        disk encryption.
 
      At most one of these can be specified:
 

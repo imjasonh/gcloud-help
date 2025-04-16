@@ -15,7 +15,8 @@ SYNOPSIS
           pod-ipv4-range=SECONDARY_RANGE_NAME,
           [max-pods-per-node=NUM_PODS],...]] [--async]
         [--boot-disk-kms-key=BOOT_DISK_KMS_KEY] [--cluster=CLUSTER]
-        [--containerd-config-from-file=PATH_TO_FILE] [--disk-size=DISK_SIZE]
+        [--containerd-config-from-file=PATH_TO_FILE]
+        [--data-cache-count=DATA_CACHE_COUNT] [--disk-size=DISK_SIZE]
         [--disk-type=DISK_TYPE] [--enable-autoprovisioning]
         [--enable-autorepair] [--no-enable-autoupgrade]
         [--enable-blue-green-upgrade] [--enable-confidential-nodes]
@@ -38,9 +39,12 @@ SYNOPSIS
         [--node-locations=ZONE,[ZONE,...]]
         [--node-pool-soak-duration=NODE_POOL_SOAK_DURATION]
         [--node-taints=[NODE_TAINT,...]] [--node-version=NODE_VERSION]
-        [--num-nodes=NUM_NODES] [--placement-policy=PLACEMENT_POLICY]
-        [--placement-type=PLACEMENT_TYPE] [--preemptible]
-        [--resource-manager-tags=[KEY=VALUE,...]] [--sandbox=[type=TYPE]]
+        [--num-nodes=NUM_NODES]
+        [--opportunistic-maintenance=[node-idle-time=NODE_IDLE_TIME,
+          window=WINDOW,min-nodes=MIN_NODES,...]]
+        [--placement-policy=PLACEMENT_POLICY] [--placement-type=PLACEMENT_TYPE]
+        [--preemptible] [--resource-manager-tags=[KEY=VALUE,...]]
+        [--sandbox=[type=TYPE]]
         [--secondary-boot-disk=[disk-image=DISK_IMAGE,[mode=MODE],...]]
         [--shielded-integrity-monitoring] [--shielded-secure-boot]
         [--sole-tenant-node-affinity-file=SOLE_TENANT_NODE_AFFINITY_FILE]
@@ -197,6 +201,10 @@ FLAGS
 
         Use a full or relative path to a local file containing the value of
         containerd_config.
+
+     --data-cache-count=DATA_CACHE_COUNT
+        Specifies the number of local SSDs to be utilized for GKE Data Cache in
+        the node pool.
 
      --disk-size=DISK_SIZE
         Size for node VM boot disks in GB. Defaults to 100GB.
@@ -542,6 +550,26 @@ FLAGS
         Exception: when --tpu-topology is specified for multi-host TPU machine
         types the number of nodes will be defaulted to (product of topology)/(#
         of chips per VM).
+
+     --opportunistic-maintenance=[node-idle-time=NODE_IDLE_TIME,window=WINDOW,min-nodes=MIN_NODES,...]
+        Opportunistic maintenance options.
+
+        node-idle-time: Time to be spent waiting for node to be idle before
+        starting maintenance, ending with 's'. Example: "3.5s"
+
+        window: The window of time that opportunistic maintenance can run,
+        ending with 's'. Example: A setting of 14 days (1209600s) implies that
+        opportunistic maintenance can only be ran in the 2 weeks leading up to
+        the scheduled maintenance date. Setting 28 days(2419200s) allows
+        opportunistic maintenance to run at any time in the scheduled
+        maintenance window.
+
+        min-nodes: Minimum number of nodes in the node pool to be available
+        during the opportunistic triggered maintenance.
+
+            $ gcloud container node-pools create example-cluster  \
+                --opportunistic-maintenance=node-idle-time=600s,window=600s,\
+            min-nodes=2
 
      --placement-policy=PLACEMENT_POLICY
         Indicates the desired resource policy to use.

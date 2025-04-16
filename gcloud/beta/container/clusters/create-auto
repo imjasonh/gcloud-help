@@ -22,15 +22,14 @@ SYNOPSIS
         [--enable-ip-access] [--enable-kubernetes-unstable-apis=API,[API,...]]
         [--enable-master-global-access] [--enable-multi-networking]
         [--enable-ray-cluster-logging] [--enable-ray-cluster-monitoring]
-        [--enable-ray-operator] [--enable-secret-manager]
-        [--fleet-project=PROJECT_ID_OR_NUMBER] [--hpa-profile=HPA_PROFILE]
-        [--labels=[KEY=VALUE,...]] [--logging=[COMPONENT,...]]
-        [--monitoring=[COMPONENT,...]] [--network=NETWORK]
-        [--private-endpoint-subnetwork=NAME] [--release-channel=[CHANNEL]]
-        [--security-group=SECURITY_GROUP] [--security-posture=SECURITY_POSTURE]
-        [--services-ipv4-cidr=CIDR] [--services-secondary-range-name=NAME]
-        [--subnetwork=SUBNETWORK] [--tier=TIER]
-        [--workload-policies=WORKLOAD_POLICIES]
+        [--enable-ray-operator] [--fleet-project=PROJECT_ID_OR_NUMBER]
+        [--hpa-profile=HPA_PROFILE] [--labels=[KEY=VALUE,...]]
+        [--logging=[COMPONENT,...]] [--monitoring=[COMPONENT,...]]
+        [--network=NETWORK] [--private-endpoint-subnetwork=NAME]
+        [--release-channel=[CHANNEL]] [--security-group=SECURITY_GROUP]
+        [--security-posture=SECURITY_POSTURE] [--services-ipv4-cidr=CIDR]
+        [--services-secondary-range-name=NAME] [--subnetwork=SUBNETWORK]
+        [--tier=TIER] [--workload-policies=WORKLOAD_POLICIES]
         [--workload-vulnerability-scanning=WORKLOAD_VULNERABILITY_SCANNING]
         [--additive-vpc-scope-dns-domain=ADDITIVE_VPC_SCOPE_DNS_DOMAIN
           | --disable-additive-vpc-scope]
@@ -50,6 +49,8 @@ SYNOPSIS
           --master-authorized-networks=NETWORK,[NETWORK,...]]
         [--enable-private-endpoint
           --enable-private-nodes --master-ipv4-cidr=MASTER_IPV4_CIDR]
+        [--enable-secret-manager --enable-secret-manager-rotation
+          --secret-manager-rotation-interval=SECRET_MANAGER_ROTATION_INTERVAL]
         [--location=LOCATION | --region=REGION | --zone=ZONE, -z ZONE]
         [--scopes=[SCOPE,...];
           default="gke-default" --service-account=SERVICE_ACCOUNT]
@@ -294,16 +295,6 @@ FLAGS
 
      --enable-ray-operator
         Enable the Ray Operator GKE add-on. This add-on is disabled by default.
-
-     Flags for Secret Manager configuration:
-
-       --enable-secret-manager
-          Enables the Secret Manager CSI driver provider component. See
-          https://secrets-store-csi-driver.sigs.k8s.io/introduction
-          https://github.com/GoogleCloudPlatform/secrets-store-csi-driver-provider-gcp
-
-          To disable in an existing cluster, explicitly set flag to
-          --no-enable-secret-manager
 
      --fleet-project=PROJECT_ID_OR_NUMBER
         Sets fleet host project for the cluster. If specified, the current
@@ -649,6 +640,27 @@ FLAGS
           IPv4 CIDR range to use for the master network. This should have a
           netmask of size /28 and should be used in conjunction with the
           --enable-private-nodes flag.
+
+     Flags for Secret Manager configuration:
+
+       --enable-secret-manager
+          Enables the Secret Manager CSI driver provider component. See
+          https://secrets-store-csi-driver.sigs.k8s.io/introduction
+          https://github.com/GoogleCloudPlatform/secrets-store-csi-driver-provider-gcp
+
+          To disable in an existing cluster, explicitly set flag to
+          --no-enable-secret-manager
+
+       --enable-secret-manager-rotation
+          Enables the rotation of secrets in the Secret Manager CSI driver
+          provider component.
+
+          To disable in an existing cluster, explicitly set flag to
+          --no-enable-secret-manager-rotation
+
+       --secret-manager-rotation-interval=SECRET_MANAGER_ROTATION_INTERVAL
+          Set the rotation period for secrets in the Secret Manager CSI driver
+          provider component.
 
      At most one of these can be specified:
 

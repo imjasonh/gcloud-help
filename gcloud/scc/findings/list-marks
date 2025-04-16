@@ -2,11 +2,12 @@ NAME
     gcloud scc findings list-marks - list a finding's security marks
 
 SYNOPSIS
-    gcloud scc findings list-marks
-        (FINDING : --organization=ORGANIZATION --source=SOURCE)
+    gcloud scc findings list-marks FINDING
         [--location=LOCATION; default="global"] [--page-token=PAGE_TOKEN]
-        [--read-time=READ_TIME] [--filter=EXPRESSION] [--limit=LIMIT]
-        [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [GCLOUD_WIDE_FLAG ...]
+        [--read-time=READ_TIME] [--source=SOURCE; default="-"]
+        [--folder=FOLDER | --organization=ORGANIZATION | --project=PROJECT]
+        [--filter=EXPRESSION] [--limit=LIMIT] [--page-size=PAGE_SIZE]
+        [--sort-by=[FIELD,...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     List a finding's security marks.
@@ -36,45 +37,8 @@ EXAMPLES
             --organization=123456 --source=5678 --location=eu
 
 POSITIONAL ARGUMENTS
-     Finding resource - The finding to be used for the SCC (Security Command
-     Center) command. The arguments in this group can be used to specify the
-     attributes of this resource.
-
-     This must be specified.
-
-       FINDING
-          ID of the finding or fully qualified identifier for the finding.
-
-          To set the finding attribute:
-          ▸ provide the argument finding on the command line.
-
-          This positional argument must be specified if any of the other
-          arguments in this group are specified.
-
-       --organization=ORGANIZATION
-          (Optional) If the full resource name isn't provided e.g.
-          organizations/123, then provide the organization id which is the
-          suffix of the organization. Example: organizations/123, the id is
-          123.
-
-          To set the organization attribute:
-          ▸ provide the argument finding on the command line with a fully
-            specified name;
-          ▸ provide the argument --organization on the command line;
-          ▸ Set the organization property in configuration using gcloud
-            config set scc/organization if it is not specified in command
-            line..
-
-       --source=SOURCE
-          (Optional) If the full resource name isn't provided e.g.
-          organizations/123/sources/456, then provide the source id which is
-          the suffix of the source. Example: organizations/123/sources/456, the
-          id is 456.
-
-          To set the source attribute:
-          ▸ provide the argument finding on the command line with a fully
-            specified name;
-          ▸ provide the argument --source on the command line.
+     FINDING
+        ID of the finding or fully qualified identifier for the finding.
 
 FLAGS
      --location=LOCATION; default="global"
@@ -103,6 +67,20 @@ FLAGS
         deprecation notice
         (https://cloud.google.com/security-command-center/docs/release-notes#April_15_2024)
         on the SCC release notes page.
+
+     --source=SOURCE; default="-"
+        Source id. Defaults to all sources.
+
+     At most one of these can be specified:
+
+       --folder=FOLDER
+          The folder ID (e.g., 456) that contains the finding.
+
+       --organization=ORGANIZATION
+          The organization ID (e.g., 123) that contains the finding.
+
+       --project=PROJECT
+          The project ID (e.g., example-project) that contains the finding.
 
 LIST COMMAND FLAGS
      --filter=EXPRESSION
