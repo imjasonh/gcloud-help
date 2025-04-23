@@ -193,9 +193,9 @@ FLAGS
      --[no-]enable-cdn
         Enable or disable Cloud CDN for the backend service. Only available for
         backend services with --load-balancing-scheme=EXTERNAL that use a
-        --protocol of HTTP, HTTPS, or HTTP2. Cloud CDN caches HTTP responses at
-        the edge of Google's network. Cloud CDN is disabled by default. Use
-        --enable-cdn to enable and --no-enable-cdn to disable.
+        --protocol of HTTP, HTTPS, HTTP2 or H2C. Cloud CDN caches HTTP
+        responses at the edge of Google's network. Cloud CDN is disabled by
+        default. Use --enable-cdn to enable and --no-enable-cdn to disable.
 
      --[no-]enable-logging
         The logging options for the load balancer traffic served by this
@@ -355,10 +355,12 @@ FLAGS
         Load Balancer), the protocol must be one of: TCP, UDP, UNSPECIFIED.
 
         If the load-balancing-scheme is INTERNAL_SELF_MANAGED (Traffic
-        Director), the protocol must be one of: HTTP, HTTPS, HTTP2, GRPC.
+        Director), the protocol must be one of: HTTP, HTTPS, HTTP2, GRPC, H2C
+        (beta only).
 
         If the load-balancing-scheme is INTERNAL_MANAGED (Internal Application
-        Load Balancer), the protocol must be one of: HTTP, HTTPS, HTTP2.
+        Load Balancer), the protocol must be one of: HTTP, HTTPS, HTTP2, H2C
+        (beta only).
 
         If the load-balancing-scheme is INTERNAL_MANAGED (Internal proxy
         Network Load Balancer), the protocol must be only TCP.
@@ -373,7 +375,8 @@ FLAGS
 
         If the load-balancing-scheme is EXTERNAL_MANAGED (Global external
         Application Load Balancer and regional external Application Load
-        Balancer), the protocol must be one of: HTTP, HTTPS, HTTP2.
+        Balancer), the protocol must be one of: HTTP, HTTPS, HTTP2, H2C (beta
+        only).
 
         If the load-balancing-scheme is EXTERNAL_MANAGED (Global external proxy
         Network Load Balancer), the protocol must be one of: TCP, SSL.
@@ -426,7 +429,7 @@ FLAGS
             --load-balancing-scheme is EXTERNAL or EXTERNAL_MANAGED, routes
             requests to backend VMs or endpoints in a NEG, based on the
             contents of the GCLB cookie set by the load balancer. Only
-            applicable when --protocol is HTTP, HTTPS, or HTTP2. If the
+            applicable when --protocol is HTTP, HTTPS,HTTP2 or H2C. If the
             --load-balancing-scheme is INTERNAL_MANAGED or
             INTERNAL_SELF_MANAGED, routes requests to backend VMs or endpoints
             in a NEG, based on the contents of the GCILB cookie set by the
@@ -495,21 +498,22 @@ FLAGS
         Network Load Balancers (global not set and load-balancing-scheme set to
         EXTERNAL), timeout is ignored.
 
-        If the protocol is HTTP, HTTPS, or HTTP2, timeout is a request/response
-        timeout for HTTP(S) traffic, meaning the amount of time that the load
-        balancer waits for a backend to return a full response to a request. If
-        WebSockets traffic is supported, the timeout parameter sets the maximum
-        amount of time that a WebSocket can be open (idle or not).
+        If the protocol is HTTP, HTTPS, HTTP2 or H2C, timeout is a
+        request/response timeout for HTTP(S) traffic, meaning the amount of
+        time that the load balancer waits for a backend to return a full
+        response to a request. If WebSockets traffic is supported, the timeout
+        parameter sets the maximum amount of time that a WebSocket can be open
+        (idle or not).
 
-        For example, for HTTP, HTTPS, or HTTP2 traffic, specifying a timeout of
-        10s means that backends have 10 seconds to respond to the load
-        balancer's requests. The load balancer retries the HTTP GET request one
-        time if the backend closes the connection or times out before sending
-        response headers to the load balancer. If the backend sends response
-        headers or if the request sent to the backend is not an HTTP GET
-        request, the load balancer does not retry. If the backend does not
-        reply at all, the load balancer returns a 502 Bad Gateway error to the
-        client.
+        For example, for HTTP, HTTPS, HTTP2 or H2C traffic, specifying a
+        timeout of 10s means that backends have 10 seconds to respond to the
+        load balancer's requests. The load balancer retries the HTTP GET
+        request one time if the backend closes the connection or times out
+        before sending response headers to the load balancer. If the backend
+        sends response headers or if the request sent to the backend is not an
+        HTTP GET request, the load balancer does not retry. If the backend does
+        not reply at all, the load balancer returns a 502 Bad Gateway error to
+        the client.
 
         If the protocol is SSL or TCP, timeout is an idle timeout.
 

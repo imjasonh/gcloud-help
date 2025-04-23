@@ -9,8 +9,8 @@ SYNOPSIS
           gpu-partition-size=GPU_PARTITION_SIZE,
           gpu-sharing-strategy=GPU_SHARING_STRATEGY,
           max-shared-clients-per-gpu=MAX_SHARED_CLIENTS_PER_GPU],...]]
-        [--addons=[ADDON,...]] [--allow-route-overlap] [--async]
-        [--auto-monitoring-scope=AUTO_MONITORING_SCOPE]
+        [--addons=[ADDON[=ENABLED|DISABLED],...]] [--allow-route-overlap]
+        [--async] [--auto-monitoring-scope=AUTO_MONITORING_SCOPE]
         [--autoprovisioning-enable-insecure-kubelet-readonly-port]
         [--autoprovisioning-network-tags=TAGS,[TAGS,...]]
         [--autoprovisioning-resource-manager-tags=[KEY=VALUE,...]]
@@ -133,7 +133,6 @@ SYNOPSIS
           --master-ipv4-cidr=MASTER_IPV4_CIDR --private-cluster]
         [--enable-secret-manager --enable-secret-manager-rotation
           --secret-manager-rotation-interval=SECRET_MANAGER_ROTATION_INTERVAL]
-        [--enable-tpu --enable-tpu-service-networking | --tpu-ipv4-cidr=CIDR]
         [--ephemeral-storage[=[local-ssd-count=LOCAL-SSD-COUNT]]
           | --ephemeral-storage-local-ssd[=[count=COUNT]]
           | --local-nvme-ssd-block[=[count=COUNT]]
@@ -207,7 +206,7 @@ FLAGS
             (Optional) The max number of containers allowed to share each GPU
             on the node. This field is used together with gpu-sharing-strategy.
 
-     --addons=[ADDON,...]
+     --addons=[ADDON[=ENABLED|DISABLED],...]
         Addons
         (https://cloud.google.com/kubernetes-engine/docs/reference/rest/v1/projects.locations.clusters#Cluster.AddonsConfig)
         are additional Kubernetes cluster components. Addons specified by this
@@ -2112,36 +2111,6 @@ FLAGS
        --secret-manager-rotation-interval=SECRET_MANAGER_ROTATION_INTERVAL
           Set the rotation period for secrets in the Secret Manager CSI driver
           provider component.
-
-     Flags relating to Cloud TPUs:
-
-       --enable-tpu
-          Enable Cloud TPUs for this cluster.
-
-          Can not be specified unless --enable-ip-alias is also specified.
-
-       At most one of these can be specified:
-
-         --enable-tpu-service-networking
-            Enable Cloud TPU's Service Networking mode. In this mode, the CIDR
-            blocks used by the Cloud TPUs will be allocated and managed by
-            Service Networking, instead of Kubernetes Engine.
-
-            This cannot be specified if tpu-ipv4-cidr is specified.
-
-         --tpu-ipv4-cidr=CIDR
-            Set the IP range for the Cloud TPUs.
-
-            Can be specified as a netmask size (e.g. '/20') or as in CIDR
-            notion (e.g. '10.100.0.0/20'). If given as a netmask size, the IP
-            range will be chosen automatically from the available space in the
-            network.
-
-            If unspecified, the TPU CIDR range will use automatic default
-            '/20'.
-
-            Can not be specified unless '--enable-tpu' and '--enable-ip-alias'
-            are also specified.
 
      At most one of these can be specified:
 

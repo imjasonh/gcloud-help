@@ -8,7 +8,8 @@ SYNOPSIS
           gpu-partition-size=GPU_PARTITION_SIZE,
           gpu-sharing-strategy=GPU_SHARING_STRATEGY,
           max-shared-clients-per-gpu=MAX_SHARED_CLIENTS_PER_GPU],...]]
-        [--additional-zones=ZONE,[ZONE,...]] [--addons=[ADDON,...]] [--async]
+        [--additional-zones=ZONE,[ZONE,...]]
+        [--addons=[ADDON[=ENABLED|DISABLED],...]] [--async]
         [--auto-monitoring-scope=AUTO_MONITORING_SCOPE]
         [--autoprovisioning-enable-insecure-kubelet-readonly-port]
         [--autoprovisioning-network-tags=TAGS,[TAGS,...]]
@@ -124,7 +125,6 @@ SYNOPSIS
           --resource-usage-bigquery-dataset=RESOURCE_USAGE_BIGQUERY_DATASET]
         [--enable-private-endpoint
           --enable-private-nodes --master-ipv4-cidr=MASTER_IPV4_CIDR]
-        [--enable-tpu --tpu-ipv4-cidr=CIDR]
         [--ephemeral-storage-local-ssd[=[count=COUNT]]
           | --local-nvme-ssd-block[=[count=COUNT]]
           | --local-ssd-count=LOCAL_SSD_COUNT]
@@ -216,7 +216,7 @@ FLAGS
         This flag is deprecated. Use --node-locations=PRIMARY_ZONE,[ZONE,...]
         instead.
 
-     --addons=[ADDON,...]
+     --addons=[ADDON[=ENABLED|DISABLED],...]
         Addons
         (https://cloud.google.com/kubernetes-engine/docs/reference/rest/v1/projects.locations.clusters#Cluster.AddonsConfig)
         are additional Kubernetes cluster components. Addons specified by this
@@ -1978,25 +1978,6 @@ FLAGS
           IPv4 CIDR range to use for the master network. This should have a
           netmask of size /28 and should be used in conjunction with the
           --enable-private-nodes flag.
-
-     Flags relating to Cloud TPUs:
-
-       --enable-tpu
-          Enable Cloud TPUs for this cluster.
-
-          Can not be specified unless --enable-ip-alias is also specified.
-
-       --tpu-ipv4-cidr=CIDR
-          Set the IP range for the Cloud TPUs.
-
-          Can be specified as a netmask size (e.g. '/20') or as in CIDR notion
-          (e.g. '10.100.0.0/20'). If given as a netmask size, the IP range will
-          be chosen automatically from the available space in the network.
-
-          If unspecified, the TPU CIDR range will use automatic default '/20'.
-
-          Can not be specified unless '--enable-tpu' and '--enable-ip-alias'
-          are also specified.
 
      At most one of these can be specified:
 

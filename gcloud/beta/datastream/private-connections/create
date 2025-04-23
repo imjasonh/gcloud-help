@@ -6,7 +6,7 @@ SYNOPSIS
     gcloud beta datastream private-connections create
         (PRIVATE_CONNECTION : --location=LOCATION) --display-name=DISPLAY_NAME
         (--subnet=SUBNET --vpc-name=VPC_NAME) [--labels=[KEY=VALUE,...]]
-        [GCLOUD_WIDE_FLAG ...]
+        [--validate-only] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) (DEPRECATED) Datastream beta version is deprecated. Please
@@ -15,7 +15,8 @@ DESCRIPTION
     Create a Datastream private connection
 
 EXAMPLES
-    To create a privateConnection called 'my-privateConnection', run:
+    To create a privateConnection with VPC Peering called
+    'my-privateConnection', run:
 
         $ gcloud beta datastream private-connections create \
           my-privateConnection --location=us-central1 \
@@ -60,29 +61,31 @@ REQUIRED FLAGS
 
      This must be specified.
 
-       --subnet=SUBNET
-          A free subnet for peering. (CIDR of /29).
+       Arguments for VPC Peering configuration.
 
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
+         --subnet=SUBNET
+            A free subnet for peering. (CIDR of /29).
 
-       Vpc resource - Resource ID of the private connection. This represents a
-       Cloud resource. (NOTE) Some attributes are not given arguments in this
-       group but can be set in other ways.
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
 
-       To set the project attribute:
-        ▸ provide the argument --vpc-name on the command line with a fully
-          specified name;
-        ▸ provide the argument --project on the command line;
-        ▸ set the property core/project.
+         Vpc resource - Resource ID of the VPC network to peer with. This
+         represents a Cloud resource. (NOTE) Some attributes are not given
+         arguments in this group but can be set in other ways.
 
-       This must be specified.
+         To set the project attribute:
+          ▫ provide the argument --vpc-name on the command line with a fully
+            specified name;
+          ▫ provide the argument --project on the command line;
+          ▫ set the property core/project.
 
-         --vpc-name=VPC_NAME
-            ID of the vpc or fully qualified identifier for the vpc.
+         This must be specified.
 
-            To set the vpc attribute:
-            ▫ provide the argument --vpc-name on the command line.
+           --vpc-name=VPC_NAME
+              ID of the vpc or fully qualified identifier for the vpc.
+
+              To set the vpc attribute:
+              ◇ provide the argument --vpc-name on the command line.
 
 OPTIONAL FLAGS
      --labels=[KEY=VALUE,...]
@@ -92,6 +95,10 @@ OPTIONAL FLAGS
         (-), underscores (_), lowercase characters, and numbers. Values must
         contain only hyphens (-), underscores (_), lowercase characters, and
         numbers.
+
+     --validate-only
+        If set, the request will retrieve the project id to allow in the
+        network attachment Datastream will connect to.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
