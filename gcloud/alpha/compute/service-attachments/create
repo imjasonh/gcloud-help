@@ -13,9 +13,11 @@ SYNOPSIS
         [--consumer-reject-list=[REJECT_LIST,...]] [--description=DESCRIPTION]
         [--domain-names=[DOMAIN_NAMES,...]] [--enable-proxy-protocol]
         [--nat-subnets-region=NAT_SUBNETS_REGION]
-        [--producer-forwarding-rule-region=PRODUCER_FORWARDING_RULE_REGION]
         [--propagated-connection-limit=PROPAGATED_CONNECTION_LIMIT]
-        [--reconcile-connections] [--region=REGION] [GCLOUD_WIDE_FLAG ...]
+        [--reconcile-connections] [--region=REGION]
+        [--global-producer-forwarding-rule
+          | --producer-forwarding-rule-region=PRODUCER_FORWARDING_RULE_REGION]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) gcloud alpha compute service-attachments create is used to create
@@ -114,26 +116,6 @@ OPTIONAL FLAGS
         set to the region of the service attachment. Overrides the default
         compute/region property value for this command invocation.
 
-     --producer-forwarding-rule-region=PRODUCER_FORWARDING_RULE_REGION
-        Region of the forwarding rule to operate on. If not specified, you
-        might be prompted to select a region (interactive mode only).
-
-        To avoid prompting when this flag is omitted, you can set the
-        compute/region property:
-
-            $ gcloud config set compute/region REGION
-
-        A list of regions can be fetched by running:
-
-            $ gcloud compute regions list
-
-        To unset the property, run:
-
-            $ gcloud config unset compute/region
-
-        Alternatively, the region can be stored in the environment variable
-        CLOUDSDK_COMPUTE_REGION.
-
      --propagated-connection-limit=PROPAGATED_CONNECTION_LIMIT
         The number of consumer spokes that connected Private Service Connect
         endpoints can be propagated to through Network Connectivity Center.
@@ -182,6 +164,31 @@ OPTIONAL FLAGS
 
         Alternatively, the region can be stored in the environment variable
         CLOUDSDK_COMPUTE_REGION.
+
+     At most one of these can be specified:
+
+       --global-producer-forwarding-rule
+          If set, the forwarding rule is global.
+
+       --producer-forwarding-rule-region=PRODUCER_FORWARDING_RULE_REGION
+          Region of the forwarding rule to operate on. If not specified, you
+          might be prompted to select a region (interactive mode only).
+
+          To avoid prompting when this flag is omitted, you can set the
+          compute/region property:
+
+              $ gcloud config set compute/region REGION
+
+          A list of regions can be fetched by running:
+
+              $ gcloud compute regions list
+
+          To unset the property, run:
+
+              $ gcloud config unset compute/region
+
+          Alternatively, the region can be stored in the environment variable
+          CLOUDSDK_COMPUTE_REGION.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

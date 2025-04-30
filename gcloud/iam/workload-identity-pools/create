@@ -6,6 +6,8 @@ SYNOPSIS
     gcloud iam workload-identity-pools create
         (WORKLOAD_IDENTITY_POOL : --location=LOCATION)
         [--description=DESCRIPTION] [--disabled] [--display-name=DISPLAY_NAME]
+        [--inline-certificate-issuance-config-file=INLINE_CERTIFICATE_ISSUANCE_CONFIG_FILE]
+        [--inline-trust-config-file=INLINE_TRUST_CONFIG_FILE] [--mode=MODE]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -64,6 +66,41 @@ FLAGS
 
      --display-name=DISPLAY_NAME
         A display name for the pool. Cannot exceed 32 characters.
+
+     --inline-certificate-issuance-config-file=INLINE_CERTIFICATE_ISSUANCE_CONFIG_FILE
+        YAML file with configuration for certificate issuance. Example file
+        format:            inlineCertificateIssuanceConfig:
+              caPools:
+                us-east1: projects/1234/locations/us-east1/caPools/capoolname
+                us-west1: projects/1234/locations/us-west1/caPools/capoolname
+              keyAlgorithm: RSA_4096
+              lifetime: 7200s
+              rotationWindowPercentage: 50
+
+     --inline-trust-config-file=INLINE_TRUST_CONFIG_FILE
+        YAML file with configuration for providing additional trust bundles.
+        Example file format:            inlineTrustConfig:
+              additionalTrustBundles:
+                example.com:
+                  trustAnchors:
+                  - pemCertificate: "-----BEGIN CERTIFICATE-----
+                    <certificate>
+                    -----END CERTIFICATE-----"
+                  - pemCertificate: "-----BEGIN CERTIFICATE-----
+                    <certificate>
+                    -----END CERTIFICATE-----"
+                myorg.com:
+                  trustAnchors:
+                  - pemCertificate: "-----BEGIN CERTIFICATE-----
+                    <certificate>
+                    -----END CERTIFICATE-----"
+                  - pemCertificate: "-----BEGIN CERTIFICATE-----
+                    <certificate>
+                    -----END CERTIFICATE-----"
+
+     --mode=MODE
+        The mode of the pool. MODE must be one of: federation-only,
+        mode-unspecified, trust-domain.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

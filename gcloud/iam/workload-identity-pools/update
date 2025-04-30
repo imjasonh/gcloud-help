@@ -5,6 +5,8 @@ SYNOPSIS
     gcloud iam workload-identity-pools update
         (WORKLOAD_IDENTITY_POOL : --location=LOCATION)
         [--description=DESCRIPTION] [--disabled] [--display-name=DISPLAY_NAME]
+        [--inline-trust-config-file=INLINE_TRUST_CONFIG_FILE]
+        [--inline-certificate-issuance-config-file=INLINE_CERTIFICATE_ISSUANCE_CONFIG_FILE | --certificate-lifetime=CERTIFICATE_LIFETIME --key-algorithm=KEY_ALGORITHM --rotation-window-percentage=ROTATION_WINDOW_PERCENTAGE]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -62,6 +64,52 @@ FLAGS
 
      --display-name=DISPLAY_NAME
         A display name for the pool. Cannot exceed 32 characters.
+
+     --inline-trust-config-file=INLINE_TRUST_CONFIG_FILE
+        YAML file with configuration for providing additional trust bundles.
+        Example file format:            inlineTrustConfig:
+              additionalTrustBundles:
+                example.com:
+                  trustAnchors:
+                  - pemCertificate: "-----BEGIN CERTIFICATE-----
+                    <certificate>
+                    -----END CERTIFICATE-----"
+                  - pemCertificate: "-----BEGIN CERTIFICATE-----
+                    <certificate>
+                    -----END CERTIFICATE-----"
+                myorg.com:
+                  trustAnchors:
+                  - pemCertificate: "-----BEGIN CERTIFICATE-----
+                    <certificate>
+                    -----END CERTIFICATE-----"
+                  - pemCertificate: "-----BEGIN CERTIFICATE-----
+                    <certificate>
+                    -----END CERTIFICATE-----"
+
+     At most one of these can be specified:
+
+       --inline-certificate-issuance-config-file=INLINE_CERTIFICATE_ISSUANCE_CONFIG_FILE
+          YAML file with configuration for certificate issuance. Example file
+          format:              inlineCertificateIssuanceConfig:
+                caPools:
+                  us-east1: projects/1234/locations/us-east1/caPools/capoolname
+                  us-west1: projects/1234/locations/us-west1/caPools/capoolname
+                keyAlgorithm: RSA_4096
+                lifetime: 7200s
+                rotationWindowPercentage: 50
+
+       --certificate-lifetime=CERTIFICATE_LIFETIME
+          Lifetime of the workload certificates issued by the CA pool.
+
+       --key-algorithm=KEY_ALGORITHM
+          Key algorithm to use when generating the key pair. This key pair will
+          be used to create the certificate. KEY_ALGORITHM must be one of:
+          ecdsa-p256, ecdsa-p384, key-algorithm-unspecified, rsa-2048,
+          rsa-3072, rsa-4096.
+
+       --rotation-window-percentage=ROTATION_WINDOW_PERCENTAGE
+          Rotation window percentage indicating when certificate rotation
+          should be initiated based on remaining lifetime.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
