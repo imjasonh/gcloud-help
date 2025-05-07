@@ -23,6 +23,25 @@ EXAMPLES
         $ gcloud artifacts attachments download my-attachment \
           --destination=/path/to/destination/ --chunk-size=8000
 
+    For Docker-format repositories only: to download the attachment stored in
+    the OCI version
+    projects/my-project/locations/us/repositories/my-repo/packages/my-package/versions/sha256:123
+    to /path/to/destination/:
+
+        $ gcloud artifacts attachments download \
+          --oci-version-name=projects/my-project/locations/us/\
+        repositories/my-repo/packages/my-package/versions/sha256:123 \
+            --destination=/path/to/destination/
+
+    For Docker-format repositories only: to download the attachment stored in
+    the OCI version with URI
+    us-docker.pkg.dev/my-project/my-repo/my-package@sha256:123 to
+    /path/to/destination/:
+
+        $ gcloud artifacts attachments download \
+          --oci-version-name=us-docker.pkg.dev/my-project/my-repo/\
+        my-package@sha256:123 --destination=/path/to/destination/
+
 POSITIONAL ARGUMENTS
      Attachment resource - The Artifact Registry attachment name. The arguments
      in this group can be used to specify the attributes of this resource.
@@ -73,7 +92,8 @@ OPTIONAL FLAGS
         package.
 
      --oci-version-name=OCI_VERSION_NAME
-        The version name of the OCI artifact to download.
+        For Docker-format repositories only. The version name of the OCI
+        artifact to download.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

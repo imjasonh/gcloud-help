@@ -1,0 +1,85 @@
+NAME
+    gcloud spanner databases splits add - add split points to a Spanner
+        database
+
+SYNOPSIS
+    gcloud spanner databases splits add (DATABASE : --instance=INSTANCE)
+        --splits-file=SPLITS_FILE [--initiator=INITIATOR]
+        [--split-expiration-date=SPLIT_EXPIRATION_DATE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Add split points to a Spanner database.
+
+EXAMPLES
+    To add split points to the given Spanner database, run:
+
+        $ gcloud spanner databases splits add my-database-id \
+            --instance=my-instance-id --splits-file=path/to/splits.txt \
+            --initiator=my-initiator-string \
+            --split-expiration-date=2024-08-15T15:55:10Z
+
+POSITIONAL ARGUMENTS
+     Database resource - The Cloud Spanner database on which to add split
+     points. The arguments in this group can be used to specify the attributes
+     of this resource. (NOTE) Some attributes are not given arguments in this
+     group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument database on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       DATABASE
+          ID of the database or fully qualified identifier for the database.
+
+          To set the database attribute:
+          ▸ provide the argument database on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --instance=INSTANCE
+          The Cloud Spanner instance for the database.
+
+          To set the instance attribute:
+          ▸ provide the argument database on the command line with a fully
+            specified name;
+          ▸ provide the argument --instance on the command line;
+          ▸ set the property spanner/instance.
+
+REQUIRED FLAGS
+     --splits-file=SPLITS_FILE
+        The path of a file containing split points to add to the database.
+        Separate split points in the file with a new line. The file format is
+        <ObjectType>[space]<ObjectName>[space]<Split Value>, where the
+        ObjectType is one of TABLE or INDEX and the Split Value is the split
+        point key. For index, the split point key is the index key with or
+        without a full table key prefix.
+
+OPTIONAL FLAGS
+     --initiator=INITIATOR
+        The tag to identify the initiator of the split points.
+
+     --split-expiration-date=SPLIT_EXPIRATION_DATE
+        The date when the split points become system managed and becomes
+        eligible for merging. The default is 10 days from the date of creation.
+        The maximum is 30 days from the date of creation.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha spanner databases splits add
+
+        $ gcloud beta spanner databases splits add
+

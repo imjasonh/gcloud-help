@@ -5,7 +5,8 @@ SYNOPSIS
     gcloud datastream streams create (STREAM : --location=LOCATION)
         --display-name=DISPLAY_NAME
         (--backfill-none
-          | --backfill-all --mysql-excluded-objects=MYSQL_EXCLUDED_OBJECTS
+          | --backfill-all --mongodb-excluded-objects=MONGODB_EXCLUDED_OBJECTS
+          | --mysql-excluded-objects=MYSQL_EXCLUDED_OBJECTS
           | --oracle-excluded-objects=ORACLE_EXCLUDED_OBJECTS
           | --postgresql-excluded-objects=POSTGRESQL_EXCLUDED_OBJECTS
           | --salesforce-excluded-objects=SALESFORCE_EXCLUDED_OBJECTS
@@ -13,7 +14,8 @@ SYNOPSIS
         (--destination=DESTINATION
           (--bigquery-destination-config=BIGQUERY_DESTINATION_CONFIG
           | --gcs-destination-config=GCS_DESTINATION_CONFIG))
-        (--source=SOURCE (--mysql-source-config=MYSQL_SOURCE_CONFIG
+        (--source=SOURCE (--mongodb-source-config=MONGODB_SOURCE_CONFIG
+          | --mysql-source-config=MYSQL_SOURCE_CONFIG
           | --oracle-source-config=ORACLE_SOURCE_CONFIG
           | --postgresql-source-config=POSTGRESQL_SOURCE_CONFIG
           | --salesforce-source-config=SALESFORCE_SOURCE_CONFIG
@@ -64,6 +66,16 @@ EXAMPLES
           --bigquery-destination-config=destination_config.json \
           --backfill-none
 
+    To create a stream with a MongoDB source and a Cloud Storage destination
+    and that excludes some objects from being backfilled:
+
+        $ gcloud datastream streams create STREAM --location=us-central1 \
+          --display-name=my-stream --source=source \
+          --mongodb-source-config=source_config.json \
+          --destination=destination \
+          --gcs-destination-config=destination_config.json \
+          --backfill-all --mongodb-excluded-objects=excluded_objects.json
+
 POSITIONAL ARGUMENTS
      Stream resource - The stream to create. The arguments in this group can be
      used to specify the attributes of this resource. (NOTE) Some attributes
@@ -111,6 +123,30 @@ REQUIRED FLAGS
           Cloud console.
 
        At most one of these can be specified:
+
+         --mongodb-excluded-objects=MONGODB_EXCLUDED_OBJECTS
+            Path to a YAML (or JSON) file containing the MongoDB data sources
+            to avoid backfilling.
+
+            The JSON file is formatted as follows, with camelCase field naming:
+
+                  {
+                    "databases": [
+                      {
+                        "database":"sample_database",
+                        "collections": [
+                          {
+                            "collection": "sample_collection",
+                            "fields": [
+                              {
+                                "field": "sample_field",
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
 
          --mysql-excluded-objects=MYSQL_EXCLUDED_OBJECTS
             Path to a YAML (or JSON) file containing the MySQL data sources to
@@ -350,6 +386,34 @@ REQUIRED FLAGS
             ▫ provide the argument --source on the command line.
 
        Exactly one of these must be specified:
+
+         --mongodb-source-config=MONGODB_SOURCE_CONFIG
+            Path to a YAML (or JSON) file containing the configuration for
+            MongoDB Source Config.
+
+            The JSON file is formatted as follows, with snake_case field
+            naming:
+
+                  {
+                    "includeObjects": {},
+                    "excludeObjects": {
+                      "databases": [
+                        {
+                          "database": "sampleDb",
+                          "collections": [
+                            {
+                              "collection": "sampleCollection",
+                              "fields": [
+                                {
+                                  "field": "SAMPLE_FIELD",
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
 
          --mysql-source-config=MYSQL_SOURCE_CONFIG
             Path to a YAML (or JSON) file containing the configuration for

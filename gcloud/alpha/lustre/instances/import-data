@@ -1,5 +1,6 @@
 NAME
-    gcloud alpha lustre instances import-data - import instances
+    gcloud alpha lustre instances import-data - imports data from Cloud Storage
+        to Managed Lustre instance
 
 SYNOPSIS
     gcloud alpha lustre instances import-data (INSTANCE : --location=LOCATION)
@@ -8,12 +9,14 @@ SYNOPSIS
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) import instances
+    (ALPHA) Imports data from Cloud Storage to Managed Lustre instance.
 
 EXAMPLES
-    To import all instances, run:
+    To import data from gs://my-bucket storage to my-instance run:
 
-        $ gcloud alpha lustre instances import-data
+        $ gcloud alpha lustre instances import-data my-instance \
+            --location=us-central-a --gcs-path-uri=gs://my_bucket \
+            --lustre-path='/path/to/lustre/dir'
 
 POSITIONAL ARGUMENTS
      Instance resource - Name of the resource. The arguments in this group can
@@ -47,7 +50,9 @@ POSITIONAL ARGUMENTS
 
 REQUIRED FLAGS
      --gcs-path-uri=GCS_PATH_URI
-        URI to a Cloud Storage path in the format: gs://<bucket_name>.
+        The URI to a Cloud Storage bucket, or a path within a bucket, using the
+        format gs://<bucket_name>/<optional_path_inside_bucket>/. If a path
+        inside the bucket is specified, it must end with a forward slash (/).
 
 OPTIONAL FLAGS
      --async
@@ -55,16 +60,17 @@ OPTIONAL FLAGS
         complete.
 
      --lustre-path=LUSTRE_PATH
-        Root directory path to the Managed Lustre file system, starting with /.
-        Defaults to / if unset.
+        The root directory path to the Managed Lustre file system. Must start
+        with /. Default is /. If you're importing data into Managed Lustre, any
+        path other than the default must already exist on the file system.
 
      --request-id=REQUEST_ID
         UUID to identify requests.
 
      ServiceAccount resource - User-specified service account used to perform
-     the transfer. If unspecified, the default Lustre P4 service account will
-     be used. This represents a Cloud resource. (NOTE) Some attributes are not
-     given arguments in this group but can be set in other ways.
+     the transfer. If unspecified, the default Managed Lustre service agent
+     will be used. This represents a Cloud resource. (NOTE) Some attributes are
+     not given arguments in this group but can be set in other ways.
 
      To set the project attribute:
       ◆ provide the argument --service-account on the command line with a

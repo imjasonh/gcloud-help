@@ -4,9 +4,10 @@ NAME
 
 SYNOPSIS
     gcloud alpha managed-kafka acls update
-        (ACL : --cluster=CLUSTER --location=LOCATION)
-        (--acl-entry=[host=HOST],[operation=OPERATION],
-          [permission-type=PERMISSION-TYPE],[principal=PRINCIPAL] --etag=ETAG)
+        (ACL : --cluster=CLUSTER --location=LOCATION) --etag=ETAG
+        (--acl-entries-from-file=PATH_TO_FILE
+          | --acl-entry=[host=HOST],[operation=OPERATION],
+          [permission-type=PERMISSION-TYPE],[principal=PRINCIPAL])
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -68,7 +69,18 @@ POSITIONAL ARGUMENTS
           ▸ provide the argument --location on the command line.
 
 REQUIRED FLAGS
-     At least one of these must be specified:
+     --etag=ETAG
+        etag returned in the response to a previous create or describe command.
+        The etag is used for concurrency control, to ensure that the client and
+        server agree on the current set of acl entries in the Kafka cluster,
+        before full replacement in the update command.
+
+     Exactly one of these must be specified:
+
+       --acl-entries-from-file=PATH_TO_FILE
+          Path to a JSON or YAML file containing the acl entries to use in the
+          acl. Use a full or relative path to a local file containing the value
+          of acl_entries.
 
        --acl-entry=[host=HOST],[operation=OPERATION],[permission-type=PERMISSION-TYPE],[principal=PRINCIPAL]
           An acl entry that configures access for a principal, for a specific
@@ -92,12 +104,6 @@ REQUIRED FLAGS
           Example acl-entry:
           "principal=User:admin@project.iam.gserviceaccount.com,operation=ALL,permission-type=ALLOW,host=*"
 
-       --etag=ETAG
-          etag returned in the response to a previous create or describe
-          command. The etag is used for concurrency control, to ensure that the
-          client and server agree on the current set of acl entries in the
-          Kafka cluster, before full replacement in the update command.
-
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
     --billing-project, --configuration, --flags-file, --flatten, --format,
@@ -115,5 +121,9 @@ NOTES
     This command is currently in alpha and might change without notice. If this
     command fails with API permission errors despite specifying the correct
     project, you might be trying to access an API with an invitation-only early
-    access allowlist.
+    access allowlist. These variants are also available:
+
+        $ gcloud managed-kafka acls update
+
+        $ gcloud beta managed-kafka acls update
 

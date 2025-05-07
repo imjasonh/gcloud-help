@@ -20,6 +20,7 @@ SYNOPSIS
         [--[no-]enable-google-ml-integration]
         [--[no-]enable-google-private-path] [--enable-password-policy]
         [--enable-point-in-time-recovery]
+        [--[no-]enable-private-service-connect]
         [--failover-dr-replica-name=FAILOVER_DR_REPLICA_NAME]
         [--follow-gae-app=FOLLOW_GAE_APP]
         [--[no-]include-replicas-for-major-version-upgrade]
@@ -55,6 +56,8 @@ SYNOPSIS
         [--authorized-gae-apps=APP,[APP,...] | --clear-gae-apps]
         [--authorized-networks=NETWORK,[NETWORK,...]
           | --clear-authorized-networks]
+        [--clear-custom-subject-alternative-names
+          | --custom-subject-alternative-names=DNS,[DNS,[DNS]]]
         [--clear-database-flags | --database-flags=FLAG=VALUE,[FLAG=VALUE,...]]
         [--gce-zone=GCE_ZONE | --secondary-zone=SECONDARY_ZONE --zone=ZONE]
         [--no-backup | --backup-location=BACKUP_LOCATION
@@ -224,6 +227,11 @@ FLAGS
         Allows for data recovery from a specific point in time, down to a
         fraction of a second, via write-ahead logs. Must have automatic backups
         enabled to use. Make sure storage can support at least 7 days of logs.
+
+     --[no-]enable-private-service-connect
+        Enable connecting to the Cloud SQL instance with Private Service
+        Connect. Use --enable-private-service-connect to enable and
+        --no-enable-private-service-connect to disable.
 
      --failover-dr-replica-name=FAILOVER_DR_REPLICA_NAME
         Set a Disaster Recovery (DR) replica with the specified name for the
@@ -478,6 +486,20 @@ FLAGS
        --clear-authorized-networks
           Clear the list of external networks that are allowed to connect to
           the instance.
+
+     At most one of these can be specified:
+
+       --clear-custom-subject-alternative-names
+          This clears the customer specified DNS names.
+
+       --custom-subject-alternative-names=DNS,[DNS,[DNS]]
+          A comma-separated list of DNS names to add to the instance's SSL
+          certificate. A custom SAN is a structured way to add additional DNS
+          names (host names) that are not managed by Cloud SQL to an instance.
+          It allows for hostname verification during establishment of a
+          database connection using the DNS name over SSL/TLS. When you create
+          and/or update an instance, you can add a comma-separated list of up
+          to three DNS names to the server certificate of your instance.
 
      At most one of these can be specified:
 

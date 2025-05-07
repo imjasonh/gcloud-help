@@ -18,6 +18,8 @@ SYNOPSIS
         [--psc-network-attachment-uri=PSC_NETWORK_ATTACHMENT_URI]
         [--read-pool-node-count=READ_POOL_NODE_COUNT]
         [--[no-]require-connectors] [--ssl-mode=SSL_MODE]
+        [--clear-psc-auto-connections
+          | --psc-auto-connections=[network=NETWORK],[project=PROJECT]]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -161,6 +163,40 @@ OPTIONAL FLAGS
             SSL connections are optional. CA verification is not enforced.
          ENCRYPTED_ONLY
             SSL connections are required. CA verification is not enforced.
+
+     PSC auto connection options for an AlloyDB instance.
+
+     At most one of these can be specified:
+
+       --clear-psc-auto-connections
+          Remove all PSC auto connections for an AlloyDB instance.
+
+       --psc-auto-connections=[network=NETWORK],[project=PROJECT]
+          Comma-separated list of consumer project and consumer network pairs
+          to create endpoints for Private Service Connect (PSC) connectivity
+          for the instance. Only instances in PSC-enabled clusters are allowed
+          to set this field. Both project and network must be specified. (e.g.,
+          --psc-auto-connections=project=project1,network=projects/vpc-host-project1/global/networks/network1
+          --psc-auto-connections=project=project2,network=projects/vpc-host-project2/global/networks/network2).
+          Sets psc_auto_connections value.
+
+           network
+              Required, Sets network value.
+
+           project
+              Required, Sets project value.
+
+          Shorthand Example:
+
+              --psc-auto-connections=network=string,project=string
+
+          JSON Example:
+
+              --psc-auto-connections='{"network": "string", "project": "string"}'
+
+          File Example:
+
+              --psc-auto-connections=path_to_file.(yaml|json)
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
