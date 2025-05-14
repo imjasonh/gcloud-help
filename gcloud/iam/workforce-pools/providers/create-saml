@@ -192,35 +192,43 @@ OPTIONAL FLAGS
 
      --extra-attributes-client-id=EXTRA_ATTRIBUTES_CLIENT_ID
         The OAuth 2.0 client ID for retrieving extra attributes from the
-        identity provider. Required to get the Access Token using client
+        identity provider. Required to get the access token using client
         credentials grant flow.
 
      --extra-attributes-client-secret-value=EXTRA_ATTRIBUTES_CLIENT_SECRET_VALUE
         The OAuth 2.0 client secret for retrieving extra attributes from the
-        identity provider. Required to get the Access Token using client
+        identity provider. Required to get the access token using client
         credentials grant flow.
 
      --extra-attributes-issuer-uri=EXTRA_ATTRIBUTES_ISSUER_URI
         OIDC identity provider's issuer URI. Must be a valid URI using the
-        'https' scheme. Required to get the OIDC discovery document.
+        https scheme. Required to get the OIDC discovery document.
 
      --extra-attributes-type=EXTRA_ATTRIBUTES_TYPE
         Represents the identity provider and type of claims that should be
-        fetched. EXTRA_ATTRIBUTES_TYPE must be one of:
-        attributes-type-unspecified, azure-ad-groups-display-name,
-        azure-ad-groups-id, azure-ad-groups-mail.
+        fetched. EXTRA_ATTRIBUTES_TYPE must be one of: azure-ad-groups-mail,
+        azure-ad-groups-id.
 
      --extra-attributes-filter=EXTRA_ATTRIBUTES_FILTER
-        The filter used to request specific records from IdP. When used with
-        the attributes type azure-ad-groups-mail or azure-ad-groups-id, the
-        filter requests specific groups associated with a user from the IdP. By
-        default all of the groups associated with the user are fetched. When
-        used with the attributes type azure-ad-groups-mail, the groups that are
-        used should be security and mail enabled. When used with the attributes
-        type azure-ad-groups-id, the groups that are used should be security
-        enabled. See
-        https://learn.microsoft.com/en-us/graph/search-query-parameter for more
-        details.
+        The filter used to request specific records from the IdP. By default,
+        all of the groups that are associated with a user are fetched. For
+        Microsoft Entra ID, you can add $search query parameters using [Keyword
+        Query Language]
+        (https://learn.microsoft.com/en-us/sharepoint/dev/general-development/keyword-query-language-kql-syntax-reference).
+        To learn more about $search querying in Microsoft Entra ID, see [Use
+        the $search query parameter]
+        (https://learn.microsoft.com/en-us/graph/search-query-parameter).
+
+        Additionally, Workforce Identity Federation automatically adds the
+        following [$filter query parameters]
+        (https://learn.microsoft.com/en-us/graph/filter-query-parameter), based
+        on the value of attributes_type. Values passed to filter are converted
+        to $search query parameters. Additional $filter query parameters cannot
+        be added using this field.
+
+        ◆ AZURE_AD_GROUPS_MAIL: mailEnabled and securityEnabled filters are
+          applied.
+        ◆ AZURE_AD_GROUPS_ID: securityEnabled filter is applied.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
