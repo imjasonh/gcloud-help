@@ -38,7 +38,9 @@ func main() {
 		if strings.Contains(txt, "NOTES") ||
 			strings.Contains(txt, "AVAILABLE") ||
 			strings.Contains(txt, "BACKGROUND") {
-			break
+			ingroups = false
+			incommands = false
+			continue
 		}
 		if strings.Contains(txt, " ") {
 			continue
