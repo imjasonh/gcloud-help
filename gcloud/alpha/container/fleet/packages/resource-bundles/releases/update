@@ -5,8 +5,7 @@ NAME
 SYNOPSIS
     gcloud alpha container fleet packages resource-bundles releases update
         RELEASE --resource-bundle=RESOURCE_BUNDLE [--lifecycle=LIFECYCLE]
-        [--location=LOCATION] [--source=SOURCE]
-        [--variants-pattern=VARIANTS_PATTERN] [GCLOUD_WIDE_FLAG ...]
+        [--location=LOCATION] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Update Package Rollouts Release.
@@ -15,20 +14,8 @@ EXAMPLES
     To update Release v1.0.0 for Resource Bundle my-bundle in us-central1, run:
 
         $ gcloud alpha container fleet packages resource-bundles releases \
-            update --version=v1.0.0 --resource-bundle=my-bundle \
-            --source=manifest.yaml
-
-    To update a Release with multiple variants in one directory, run:
-
-        $ gcloud alpha container fleet packages resource-bundles releases \
-            update --version=v1.0.0 --resource-bundle=my-bundle \
-            --source=/manifests/ --variants-pattern=manifest-*.yaml
-
-    To update a Release with multiple variants across multiple directories, ex:
-
-        $ gcloud alpha container fleet packages resource-bundles releases \
-            update --version=v1.0.0 --resource-bundle=my-bundle \
-            --source=/manifests/ --variants-pattern=dir-*/
+             update --version=v1.0.0 --resource-bundle=my-bundle \
+             --lifecycle=PUBLISHED
 
 POSITIONAL ARGUMENTS
      RELEASE
@@ -45,18 +32,6 @@ OPTIONAL FLAGS
      --location=LOCATION
         Google Cloud zone or region.
 
-     --source=SOURCE
-        Source file or directory to update the Release from. e.g.
-        --source=manifest.yaml, --source=/manifests-dir/ Can optionally be
-        paired with the --variants-pattern arg to create multiple variants of a
-        Release.
-
-     --variants-pattern=VARIANTS_PATTERN
-        Glob pattern to Variants of the Release, to be paired with the --source
-        arg. ex: --source=/manifests-dir/ --variants-pattern=**,
-        --source=/manifests-dir/ --variants-pattern=us-*.yaml,
-        --source=/manifests/dir/ --variants-pattern=*/*.yaml
-
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
     --billing-project, --configuration, --flags-file, --flatten, --format,
@@ -69,5 +44,8 @@ NOTES
     This command is currently in alpha and might change without notice. If this
     command fails with API permission errors despite specifying the correct
     project, you might be trying to access an API with an invitation-only early
-    access allowlist.
+    access allowlist. This variant is also available:
+
+        $ gcloud beta container fleet packages resource-bundles releases \
+            update
 

@@ -8,8 +8,8 @@ SYNOPSIS
         [--async] [--display-name=DISPLAY_NAME] [--etag=ETAG]
         [--annotations=[ANNOTATIONS,...]
           | --update-annotations=[UPDATE_ANNOTATIONS,...] --clear-annotations
-          | --remove-annotations=[__REMOVE_ANNOTATIONS,...]]
-        [--condition-description=CONDITION_DESCRIPTION
+          | --remove-annotations=REMOVE_ANNOTATIONS]
+        [--clear-condition --condition-description=CONDITION_DESCRIPTION
           --condition-expression=CONDITION_EXPRESSION
           --condition-location=CONDITION_LOCATION
           --condition-title=CONDITION_TITLE] [GCLOUD_WIDE_FLAG ...]
@@ -28,8 +28,8 @@ POSITIONAL ARGUMENTS
      PolicyBinding resource - Identifier. The name of the policy binding, in
      the format
      {binding_parent/locations/{location}/policyBindings/{policy_binding_id}.
-     The binding parent is the closest Resource Manager resource (i.e.,
-     Project, Folder or Organization) to the binding target.
+     The binding parent is the closest Resource Manager resource (project,
+     folder, or organization) to the binding target.
 
      Format:
 
@@ -108,7 +108,7 @@ FLAGS
      At most one of these can be specified:
 
        --annotations=[ANNOTATIONS,...]
-          Set annotations to new value. User defined annotations. See
+          Set annotations to new value. User-defined annotations. See
           https://google.aip.dev/148#annotations for more details such as
           format and size limitations.
 
@@ -131,7 +131,7 @@ FLAGS
               --annotations=path_to_file.(yaml|json)
 
        --update-annotations=[UPDATE_ANNOTATIONS,...]
-          Update annotations value or add key value pair. User defined
+          Update annotations value or add key value pair. User-defined
           annotations. See https://google.aip.dev/148#annotations for more
           details such as format and size limitations.
 
@@ -158,8 +158,21 @@ FLAGS
          --clear-annotations
             Clear annotations value and set to empty map.
 
-         --remove-annotations=[__REMOVE_ANNOTATIONS,...]
-            Remove existing value from map annotations.
+         --remove-annotations=REMOVE_ANNOTATIONS
+            Remove existing value from map annotations. Sets remove_annotations
+            value.
+
+            Shorthand Example:
+
+                --remove-annotations=string,string
+
+            JSON Example:
+
+                --remove-annotations=["string"]
+
+            File Example:
+
+                --remove-annotations=path_to_file.(yaml|json)
 
      Represents a textual expression in the Common Expression Language (CEL)
      syntax. CEL is a C-like expression language. The syntax and semantics of
@@ -192,6 +205,9 @@ FLAGS
      The exact variables and functions that may be referenced within an
      expression are determined by the service that evaluates it. See the
      service documentation for additional information.
+
+       --clear-condition
+          Set googleIamV3betaPolicyBinding.condition back to default value.
 
        --condition-description=CONDITION_DESCRIPTION
           Description of the expression. This is a longer text which describes

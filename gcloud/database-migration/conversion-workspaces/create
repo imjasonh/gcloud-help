@@ -7,9 +7,13 @@ SYNOPSIS
         (CONVERSION_WORKSPACE : --region=REGION)
         --destination-database-engine=DESTINATION_DATABASE_ENGINE
         --source-database-engine=SOURCE_DATABASE_ENGINE [--no-async]
+        [--destination-database-provider=DESTINATION_DATABASE_PROVIDER;
+          default="CLOUDSQL"]
         [--destination-database-version=DESTINATION_DATABASE_VERSION;
           default="unspecified"] [--display-name=DISPLAY_NAME]
         [--global-settings=[KEY=VALUE,...]]
+        [--source-database-provider=SOURCE_DATABASE_PROVIDER;
+          default="UNSPECIFIED"]
         [--source-database-version=SOURCE_DATABASE_VERSION;
           default="unspecified"] [GCLOUD_WIDE_FLAG ...]
 
@@ -24,7 +28,7 @@ EXAMPLES
           --display-name=cw1 --source-database-engine=ORACLE \
           --source-database-version=11 \
           --destination-database-engine=POSTGRESQL \
-          --destination-database-version=8
+          --destination-database-version=15
 
 POSITIONAL ARGUMENTS
      Conversion workspace resource - The conversion workspace to create. The
@@ -64,12 +68,16 @@ REQUIRED FLAGS
         (only one value is supported): POSTGRESQL.
 
      --source-database-engine=SOURCE_DATABASE_ENGINE
-        Source database engine type. SOURCE_DATABASE_ENGINE must be (only one
-        value is supported): ORACLE.
+        Source database engine type. SOURCE_DATABASE_ENGINE must be one of:
+        ORACLE, SQL_SERVER.
 
 OPTIONAL FLAGS
      --no-async
         Waits for the operation in progress to complete before returning.
+
+     --destination-database-provider=DESTINATION_DATABASE_PROVIDER; default="CLOUDSQL"
+        Destination database provider. DESTINATION_DATABASE_PROVIDER must be
+        one of: ALLOYDB, CLOUDSQL.
 
      --destination-database-version=DESTINATION_DATABASE_VERSION; default="unspecified"
         Version number for the database engine. The version number must contain
@@ -86,6 +94,11 @@ OPTIONAL FLAGS
         pair dependant and can indicate default behavior for the mapping rules
         engine or turn on or off specific features. An object containing a list
         of "key": "value" pairs.
+
+     --source-database-provider=SOURCE_DATABASE_PROVIDER; default="UNSPECIFIED"
+        Source database provider. SOURCE_DATABASE_PROVIDER must be one of:
+        AMAZON_RDS, AZURE_MANAGED_INSTANCE, AZURE_SQL_DATABASE, CLOUDSQL,
+        UNSPECIFIED.
 
      --source-database-version=SOURCE_DATABASE_VERSION; default="unspecified"
         Version number for the database engine. The version number must contain

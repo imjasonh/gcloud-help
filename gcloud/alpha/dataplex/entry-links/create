@@ -1,0 +1,106 @@
+NAME
+    gcloud alpha dataplex entry-links create - create a Dataplex Entry Link
+
+SYNOPSIS
+    gcloud alpha dataplex entry-links create
+        (ENTRY_LINK : --entry-group=ENTRY_GROUP --location=LOCATION)
+        --entry-link-type=ENTRY_LINK_TYPE --entry-references=ENTRY_REFERENCES
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Create a Dataplex Entry Link.
+
+EXAMPLES
+    To create a Dataplex Entry Link, you need to provide the entry link ID, the
+    entry group, the location, the project, the entry link type, and a path to
+    a YAML file containing the entry references. The entry references file
+    should contain a list of dictionaries, each representing an entry
+    reference.
+
+    For example, to create an entry link of entry link type
+    'projects/655216118709/locations/global/entryLinkTypes/synonym' named
+    'my-entry-link' using entry references from 'entry_references.yaml', run:
+
+        $ gcloud alpha dataplex entry-links create my-entry-link \
+        --entry-group=my-entry-group --location=us-central1 \
+        --project=test-project \
+        --entry-link-type=projects/655216118709/locations/global/\
+        entryLinkTypes/synonym \
+            --entry-references=path/to/entry_references.yaml
+
+    Example of entry_references.yaml file:          - name: projects/test-project/locations/us-central1/entryGroups/my-entry-group/entries/my-entry-1
+            type: SOURCE
+            path: my_path
+          - name: projects/test-project/locations/us-central1/entryGroups/my-entry-group/entries/my-entry-2
+            type: TARGET
+
+POSITIONAL ARGUMENTS
+     Entry link resource - Arguments and flags that define the Dataplex entry
+     link you want to create. The arguments in this group can be used to
+     specify the attributes of this resource. (NOTE) Some attributes are not
+     given arguments in this group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument entry_link on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       ENTRY_LINK
+          ID of the entry link or fully qualified identifier for the entry
+          link.
+
+          To set the entry-link attribute:
+          ▸ provide the argument entry_link on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --entry-group=ENTRY_GROUP
+          The name of entry link to use.
+
+          To set the entry-group attribute:
+          ▸ provide the argument entry_link on the command line with a fully
+            specified name;
+          ▸ provide the argument --entry-group on the command line.
+
+       --location=LOCATION
+          The location of the Dataplex resource.
+
+          To set the location attribute:
+          ▸ provide the argument entry_link on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property dataplex/location.
+
+REQUIRED FLAGS
+     --entry-link-type=ENTRY_LINK_TYPE
+        Required. The type of the entry link. It is a resource name of the
+        EntryLinkType. Example:
+        projects/my-project/locations/global/entryLinkTypes/my-link-type
+
+     --entry-references=ENTRY_REFERENCES
+        Required. Path to a YAML or JSON file containing the entry references.
+        The file should contain a list of dictionaries, each with "name",
+        "type", and optional "path" keys. Example: - name:
+        projects/test-project/locations/us-central1/entryGroups/my-entry-group/entries/my-entry-1
+        type: SOURCE path: my_path - name:
+        projects/test-project/locations/us-central1/entryGroups/my-entry-group/entries/my-entry-2
+        type: TARGET
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

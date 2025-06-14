@@ -5,7 +5,9 @@ SYNOPSIS
     gcloud beta iam policy-bindings create
         (POLICY_BINDING
           : --folder=FOLDER --location=LOCATION --organization=ORGANIZATION)
-        --policy=POLICY --target-principal-set=TARGET_PRINCIPAL_SET
+        --policy=POLICY
+        (--target-principal-set=TARGET_PRINCIPAL_SET
+          | --target-resource=TARGET_RESOURCE)
         [--annotations=[ANNOTATIONS,...]] [--async]
         [--display-name=DISPLAY_NAME] [--etag=ETAG] [--policy-kind=POLICY_KIND]
         [--condition-description=CONDITION_DESCRIPTION
@@ -31,8 +33,8 @@ POSITIONAL ARGUMENTS
      PolicyBinding resource - Identifier. The name of the policy binding, in
      the format
      {binding_parent/locations/{location}/policyBindings/{policy_binding_id}.
-     The binding parent is the closest Resource Manager resource (i.e.,
-     Project, Folder or Organization) to the binding target.
+     The binding parent is the closest Resource Manager resource (project,
+     folder, or organization) to the binding target.
 
      Format:
 
@@ -96,7 +98,7 @@ POSITIONAL ARGUMENTS
 REQUIRED FLAGS
      --policy=POLICY
         The resource name of the policy to be bound. The binding parent and
-        policy must belong to the same Organization (or Project).
+        policy must belong to the same organization.
 
      Target is the full resource name of the resource to which the policy will
      be bound. Immutable once set.
@@ -105,26 +107,46 @@ REQUIRED FLAGS
 
        Arguments for the target.
 
+       At most one of these can be specified:
+
          --target-principal-set=TARGET_PRINCIPAL_SET
             Full Resource Name used for principal access boundary policy
-            bindings Examples:
+            bindings. The principal set must be directly parented by the policy
+            binding's parent or same as the parent if the target is a
+            project/folder/organization.
 
-            ▫ Organization:
-              //cloudresourcemanager.googleapis.com/organizations/ORGANIZATION_ID
-            ▫ Folder: //cloudresourcemanager.googleapis.com/folders/FOLDER_ID
-            ▫ Project:
-              ◇ //cloudresourcemanager.googleapis.com/projects/PROJECT_NUMBER
-              ◇ //cloudresourcemanager.googleapis.com/projects/PROJECT_ID
-            ▫ Workload Identity Pool:
-              //iam.googleapis.com/projects/PROJECT_NUMBER/locations/LOCATION/workloadIdentityPools/WORKLOAD_POOL_ID
-            ▫ Workforce Identity:
-              //iam.googleapis.com/locations/global/workforcePools/WORKFORCE_POOL_ID
-            ▫ Workspace Identity:
-              //iam.googleapis.com/locations/global/workspace/WORKSPACE_ID
+            Examples:
+            ▫ For binding's parented by an organization:
+              ◇ Organization:
+                //cloudresourcemanager.googleapis.com/organizations/ORGANIZATION_ID
+              ◇ Workforce Identity:
+                //iam.googleapis.com/locations/global/workforcePools/WORKFORCE_POOL_ID
+              ◇ Workspace Identity:
+                //iam.googleapis.com/locations/global/workspace/WORKSPACE_ID
+            ▫ For binding's parented by a folder:
+              ◇ Folder:
+                //cloudresourcemanager.googleapis.com/folders/FOLDER_ID
+            ▫ For binding's parented by a project:
+              ◇ Project:
+                ▹ //cloudresourcemanager.googleapis.com/projects/PROJECT_NUMBER
+                ▹ //cloudresourcemanager.googleapis.com/projects/PROJECT_ID
+              ◇ Workload Identity Pool:
+                //iam.googleapis.com/projects/PROJECT_NUMBER/locations/LOCATION/workloadIdentityPools/WORKLOAD_POOL_ID
+
+         --target-resource=TARGET_RESOURCE
+            Full Resource Name used for access policy bindings Examples:
+
+                ▹ Organization:
+                  //cloudresourcemanager.googleapis.com/organizations/ORGANIZATION_ID
+                ▹ Folder:
+                  //cloudresourcemanager.googleapis.com/folders/FOLDER_ID
+                ▹ Project:
+                  ▪ //cloudresourcemanager.googleapis.com/projects/PROJECT_NUMBER
+                  ▪ //cloudresourcemanager.googleapis.com/projects/PROJECT_ID
 
 OPTIONAL FLAGS
      --annotations=[ANNOTATIONS,...]
-        User defined annotations. See https://google.aip.dev/148#annotations
+        User-defined annotations. See https://google.aip.dev/148#annotations
         for more details such as format and size limitations.
 
          KEY
@@ -164,8 +186,11 @@ OPTIONAL FLAGS
         ◆ Left empty (will be automatically set to the policy kind)
         ◆ The input policy kind.
 
-        POLICY_KIND must be (only one value is supported):
+        POLICY_KIND must be one of:
 
+         access
+            Access policy kind. Keep behind visibility label until Access
+            Policy launch.
          principal-access-boundary
             Principal access boundary policy kind
 

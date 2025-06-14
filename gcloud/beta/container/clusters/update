@@ -4,7 +4,8 @@ NAME
 
 SYNOPSIS
     gcloud beta container clusters update NAME
-        (--autoprovisioning-cgroup-mode=AUTOPROVISIONING_CGROUP_MODE
+        (--anonymous-authentication-config=ANONYMOUS_AUTHENTICATION_CONFIG
+          | --autoprovisioning-cgroup-mode=AUTOPROVISIONING_CGROUP_MODE
           | --autoprovisioning-enable-insecure-kubelet-readonly-port
           | --autoprovisioning-network-tags=[TAGS,...]
           | --autoprovisioning-resource-manager-tags=[KEY=VALUE,...]
@@ -135,6 +136,22 @@ POSITIONAL ARGUMENTS
 
 REQUIRED FLAGS
      Exactly one of these must be specified:
+
+       --anonymous-authentication-config=ANONYMOUS_AUTHENTICATION_CONFIG
+          Enable or restrict anonymous access to the cluster. When enabled,
+          anonymous users will be authenticated as system:anonymous with the
+          group system:unauthenticated. Limiting access restricts anonymous
+          access to only the health check endpoints /readyz, /livez, and
+          /healthz.
+
+          ANONYMOUS_AUTHENTICATION_CONFIG must be one of:
+
+           ENABLED
+              'ENABLED' enables anonymous calls.
+           LIMITED
+              'LIMITED' restricts anonymous access to the cluster. Only calls
+              to the health check endpoints are allowed anonymously, all other
+              calls will be rejected.
 
        --autoprovisioning-cgroup-mode=AUTOPROVISIONING_CGROUP_MODE
           Sets the cgroup mode for auto-provisioned nodes.
@@ -310,10 +327,16 @@ REQUIRED FLAGS
               https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity
 
        --[no-]enable-autopilot-compatibility-auditing
-          Enables the Autopilot Compatibility Auditing Feature. See
-          https://cloud.google.com/sdk/gcloud/reference/container/clusters/check-autopilot-compatibility.
-          Only applicable to clusters with version >= 1.32. Use
-          --enable-autopilot-compatibility-auditing to enable and
+          Lets you run the gcloud container clusters
+          check-autopilot-compatibility
+          (https://cloud.google.com/sdk/gcloud/reference/container/clusters/check-autopilot-compatibility)
+          command to check whether your workloads are compatible with Autopilot
+          mode. This flag is only applicable to clusters that run version
+          1.31.6-gke.1027000 or later.
+
+          Note: This flag causes a control plane restart.
+
+          Use --enable-autopilot-compatibility-auditing to enable and
           --no-enable-autopilot-compatibility-auditing to disable.
 
        --enable-autoscaling

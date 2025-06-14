@@ -1,0 +1,115 @@
+NAME
+    gcloud beta network-connectivity spokes gateways create - create a new
+        Gateway spoke
+
+SYNOPSIS
+    gcloud beta network-connectivity spokes gateways create SPOKE
+        --capacity=CAPACITY --group=GROUP --hub=HUB
+        --ip-range-reservations=[CIDR_RANGE,...] --region=REGION [--async]
+        [--description=DESCRIPTION] [--labels=[KEY=VALUE,...]]
+        [--landing-network=LANDING_NETWORK] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Create a new Gateway spoke.
+
+EXAMPLES
+    To create a Gateway spoke named myspoke in us-central1, with a capacity of
+    10 Gbps and IP range reservations of 10.1.1.0/24
+
+        $ gcloud beta network-connectivity spokes gateways create myspoke \
+            --hub=my-hub --region us-central1 --group gateways \
+            --capacity 10g --ip-range-reservations 10.1.1.0/24
+
+    To create a Gateway spoke named myspoke in us-central1, with a capacity of
+    10 Gbps, IP range reservations of 10.1.1.0/24 and 10.1.2.0/24, and a
+    landing network of my-vpc, run:
+
+        $ gcloud beta network-connectivity spokes gateways create myspoke \
+            --hub=my-hub --region us-central1 --group gateways \
+            --capacity 10g --ip-range-reservations 10.1.1.0/24,10.1.2.0/24 \
+            --landing-network my-vpc
+
+POSITIONAL ARGUMENTS
+     Spoke resource - Name of the spoke to create. This represents a Cloud
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument spoke on the command line with a fully specified
+        name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument spoke on the command line with a fully specified
+        name;
+      ◆ provide the argument --region on the command line.
+
+     This must be specified.
+
+       SPOKE
+          ID of the spoke or fully qualified identifier for the spoke.
+
+          To set the spoke attribute:
+          ▸ provide the argument spoke on the command line.
+
+REQUIRED FLAGS
+     --capacity=CAPACITY
+        Set the capacity of the gateway in Gbps. CAPACITY must be one of:
+
+         100g
+            Gateway will have capacity of 100 Gbps
+         10g
+            Gateway will have capacity of 10 Gbps
+         1g
+            Gateway will have capacity of 1 Gbps
+
+     --group=GROUP
+        Group that the spoke will be part of. The group must already exist.
+
+     --hub=HUB
+        Hub that the spoke will attach to. The hub must already exist.
+
+     --ip-range-reservations=[CIDR_RANGE,...]
+        The IP range reservation for the spoke.
+
+     --region=REGION
+        A Google Cloud region. To see the names of regions, see Viewing a list
+        of available regions
+        (https://cloud.google.com/compute/docs/regions-zones/viewing-regions-zones#viewing_a_list_of_available_regions).
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --description=DESCRIPTION
+        Description of the spoke to create.
+
+     --labels=[KEY=VALUE,...]
+        List of label KEY=VALUE pairs to add.
+
+        Keys must start with a lowercase character and contain only hyphens
+        (-), underscores (_), lowercase characters, and numbers. Values must
+        contain only hyphens (-), underscores (_), lowercase characters, and
+        numbers.
+
+     --landing-network=LANDING_NETWORK
+        The landing network for the spoke. The network must already exist.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the networkconnectivity/v1 API. The full documentation
+    for this API can be found at:
+    https://cloud.google.com/network-connectivity/docs/reference/networkconnectivity/rest
+
+NOTES
+    This command is currently in beta and might change without notice.
+

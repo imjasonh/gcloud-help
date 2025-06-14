@@ -4,9 +4,9 @@ NAME
 
 SYNOPSIS
     gcloud container hub scopes rbacrolebindings create
-        (NAME : --location=LOCATION --scope=SCOPE) --role=ROLE
-        (--group=GROUP | --user=USER) [--labels=[KEY=VALUE,...]]
-        [GCLOUD_WIDE_FLAG ...]
+        (NAME : --location=LOCATION --scope=SCOPE)
+        (--custom-role=CUSTOM_ROLE | --role=ROLE) (--group=GROUP | --user=USER)
+        [--labels=[KEY=VALUE,...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     This command can fail for the following reasons:
@@ -25,6 +25,13 @@ EXAMPLES
 
         $ gcloud container hub scopes rbacrolebindings create RBRB \
             --scope=SCOPE --role=viewer --group=people@google.com
+
+    To create an RBAC RoleBinding with a custom role custom-role in scope SCOPE
+    for user person@google.com, run:
+
+        $ gcloud container hub scopes rbacrolebindings create RBRB \
+            --scope=SCOPE --role=admin --user=person@google.com \
+            --custom-role=custom-role
 
 POSITIONAL ARGUMENTS
      Rbacrolebinding resource - The group of arguments defining an
@@ -68,9 +75,14 @@ POSITIONAL ARGUMENTS
           ▸ provide the argument --scope on the command line.
 
 REQUIRED FLAGS
-     --role=ROLE
-        Predefined role to assign to principal (admin, edit, view). ROLE must
-        be one of: admin, edit, view.
+     Exactly one of these must be specified:
+
+       --custom-role=CUSTOM_ROLE
+          Custom role to assign to principal.
+
+       --role=ROLE
+          Predefined role to assign to principal (admin, edit, view). ROLE must
+          be one of: admin, edit, view.
 
      Exactly one of these must be specified:
 

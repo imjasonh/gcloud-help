@@ -45,6 +45,7 @@ SYNOPSIS
         [--password-policy-password-change-interval=PASSWORD_POLICY_PASSWORD_CHANGE_INTERVAL]
         [--password-policy-reuse-interval=PASSWORD_POLICY_REUSE_INTERVAL]
         [--pricing-plan=PRICING_PLAN, -p PRICING_PLAN]
+        [--reconcile-psa-networking]
         [--[no-]recreate-replicas-on-primary-crash]
         [--remove-deny-maintenance-period] [--replication=REPLICATION]
         [--replication-lag-max-seconds-for-recreate=REPLICATION_LAG_MAX_SECONDS_FOR_RECREATE]
@@ -164,7 +165,10 @@ FLAGS
      --cpu=CPU
         Whole number value indicating how many cores are desired in the
         machine. Both --cpu and --memory must be specified if a custom machine
-        type is desired, and the --tier flag must be omitted.
+        type is desired, and the --tier flag must be omitted.--cpu and --memory
+        flags are not compatible with the Enterprise Plus edition. These flags
+        should not be used when creating an Enterprise Plus edition, as the
+        machine configuration is determined by the --tier flag instead.
 
      --database-version=DATABASE_VERSION
         The database engine type and versions. If left unspecified, no changes
@@ -342,7 +346,10 @@ FLAGS
         machine. A size unit should be provided (eg. 3072MiB or 9GiB) - if no
         units are specified, GiB is assumed. Both --cpu and --memory must be
         specified if a custom machine type is desired, and the --tier flag must
-        be omitted.
+        be omitted. --cpu and --memory flags are not compatible with the
+        Enterprise Plus edition. These flags should not be used when creating
+        an Enterprise Plus edition, as the machine configuration is determined
+        by the --tier flag instead.
 
      --network=NETWORK
         Network in the current project that the instance will be part of. To
@@ -387,6 +394,12 @@ FLAGS
      --pricing-plan=PRICING_PLAN, -p PRICING_PLAN
         First Generation instances only. The pricing plan for this instance.
         PRICING_PLAN must be one of: PER_USE, PACKAGE.
+
+     --reconcile-psa-networking
+        Reconciles the instance's PSA networking configuration. If the instance
+        is already on a PSA network, the DNS zone and records associated with
+        the PSA write endpoint are either added if missing or updated if
+        incorrect.
 
      --[no-]recreate-replicas-on-primary-crash
         Allow/Disallow replica recreation when a primary MySQL instance

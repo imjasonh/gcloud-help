@@ -7,8 +7,8 @@ SYNOPSIS
         [--description=DESCRIPTION] [--schedule=SCHEDULE] [--topic=TOPIC]
         [--clear-attributes | --remove-attributes=[REMOVE_ATTRIBUTES,...]
           --update-attributes=[KEY=VALUE,...]]
-        [--clear-max-backoff | --max-backoff=MAX_BACKOFF; default="1h"]
-        [--clear-max-doublings | --max-doublings=MAX_DOUBLINGS; default=16]
+        [--clear-max-backoff | --max-backoff=MAX_BACKOFF; default="3600s"]
+        [--clear-max-doublings | --max-doublings=MAX_DOUBLINGS; default=5]
         [--clear-max-retry-attempts | --max-retry-attempts=MAX_RETRY_ATTEMPTS]
         [--clear-max-retry-duration | --max-retry-duration=MAX_RETRY_DURATION]
         [--clear-min-backoff | --min-backoff=MIN_BACKOFF; default="5s"]
@@ -70,16 +70,16 @@ FLAGS
         if the n+1 execution is scheduled to run at 16:00 but the n execution
         takes until 16:15, the n+1 execution will not start until 16:15. A
         scheduled start time will be delayed if the previous execution has not
-        ended when its scheduled time occurs.
+        ended when its scheduled time occurs. Learn more about the cron job
+        format
+        (https://cloud.google.com/scheduler/docs/configuring/cron-job-schedules).
 
         If --retry-count > 0 and a job attempt fails, the job will be tried a
-        total of --retry-count times, with exponential backoff, until the next
-        scheduled start time.
-
-        The schedule can be either of the following types:
-        ◆ Crontab: http://en.wikipedia.org/wiki/Cron#Overview
-        ◆ English-like schedule:
-          https://cloud.google.com/scheduler/docs/quickstart#defining_the_job_schedule
+        total of --retry-count times, with exponential backoff, until the job
+        succeeds or the number of retries is exhausted. Note that the next
+        scheduled execution time might be skipped if the retries continue
+        through that time. For more information, see Retry jobs
+        (https://cloud.google.com/scheduler/docs/configuring/retry-jobs).
 
      --topic=TOPIC
         Name of the Google Cloud Pub/Sub topic to publish to when the job runs.
@@ -102,16 +102,16 @@ FLAGS
        --clear-max-backoff
           Clear the field corresponding to --max-backoff.
 
-       --max-backoff=MAX_BACKOFF; default="1h"
-          Maximum amount of time to wait before retrying a task after it fails.
-          For example, 10m. Default is 1h.
+       --max-backoff=MAX_BACKOFF; default="3600s"
+          Maximum amount of time to wait before retrying a job after it fails.
+          For example, 60s. Default is 3600s (1 hour).
 
      At most one of these can be specified:
 
        --clear-max-doublings
           Clear the field corresponding to --max-doublings.
 
-       --max-doublings=MAX_DOUBLINGS; default=16
+       --max-doublings=MAX_DOUBLINGS; default=5
           Maximum number of times that the interval between failed job retries
           will be doubled before the increase becomes constant.
 
@@ -130,10 +130,11 @@ FLAGS
           Clear the field corresponding to --max-retry-duration.
 
        --max-retry-duration=MAX_RETRY_DURATION
-          Time limit for retrying a failed task, measured from when the task
-          was first run. If specified with --max-retry-attempts greater than 0,
-          the task will be retried until both limits are reached. Default is 0
-          (which means unlimited).
+          Time limit for retrying a failed job, measured from when the job was
+          first run. If specified with --max-retry-attempts greater than 0, the
+          job will be retried until both limits are reached. Default is 0
+          seconds (which means unlimited); however, if --max-retry-attempts is
+          also 0, a job attempt won't be retried if it fails.
 
      At most one of these can be specified:
 
@@ -141,7 +142,7 @@ FLAGS
           Clear the field corresponding to --min-backoff.
 
        --min-backoff=MIN_BACKOFF; default="5s"
-          Minimum amount of time to wait before retrying a task after it fails.
+          Minimum amount of time to wait before retrying a job after it fails.
           For example, 10s. Default is 5s.
 
      At most one of these can be specified:

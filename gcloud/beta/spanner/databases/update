@@ -3,7 +3,9 @@ NAME
 
 SYNOPSIS
     gcloud beta spanner databases update (DATABASE : --instance=INSTANCE)
-        [--async] [--[no-]enable-drop-protection] [GCLOUD_WIDE_FLAG ...]
+        [--async]
+        [--[no-]enable-drop-protection | --kms-keys=KMS_KEY,[KMS_KEY,...]]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) Update a Cloud Spanner database.
@@ -20,6 +22,12 @@ EXAMPLES
 
         $ gcloud beta spanner databases update my-database \
             --no-enable-drop-protection
+
+    To update KMS key references for a Cloud Spanner database 'my-database',
+    run:
+
+        $ gcloud beta spanner databases update my-database \
+            --kms-keys="KEY1,KEY2"
 
 POSITIONAL ARGUMENTS
      Database resource - The Cloud Spanner database to update. The arguments in
@@ -58,10 +66,16 @@ FLAGS
         Return immediately, without waiting for the operation in progress to
         complete.
 
-     --[no-]enable-drop-protection
-        Enable database deletion protection on this database. Use
-        --enable-drop-protection to enable and --no-enable-drop-protection to
-        disable.
+     At most one of these can be specified:
+
+       --[no-]enable-drop-protection
+          Enable database deletion protection on this database. Use
+          --enable-drop-protection to enable and --no-enable-drop-protection to
+          disable.
+
+       --kms-keys=KMS_KEY,[KMS_KEY,...]
+          Update KMS key references for this database. Users should always
+          provide the full set of required KMS key references.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

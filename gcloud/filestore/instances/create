@@ -11,8 +11,9 @@ SYNOPSIS
         [--description=DESCRIPTION] [--labels=[KEY=VALUE,...]]
         [--location=LOCATION]
         [--performance=[max-iops=MAX-IOPS],[max-iops-per-tb=MAX-IOPS-PER-TB]]
-        [--region=REGION] [--source-instance=SOURCE_INSTANCE]
-        [--tags=[KEY=VALUE,...]] [--tier=TIER; default="BASIC_HDD"]
+        [--protocol=PROTOCOL; default="NFS_V3"] [--region=REGION]
+        [--source-instance=SOURCE_INSTANCE] [--tags=[KEY=VALUE,...]]
+        [--tier=TIER; default="BASIC_HDD"]
         [--deletion-protection
           : --deletion-protection-reason=DELETION_PROTECTION_REASON]
         [--kms-key=KMS_KEY : --kms-keyring=KMS_KEYRING
@@ -27,7 +28,8 @@ EXAMPLES
     volume.
 
         $ gcloud filestore instances create NAME --description=DESCRIPTION \
-          --tier=TIER --file-share=name=VOLUME_NAME,capacity=CAPACITY \
+          --tier=TIER --protocol=PROTOCOL \
+          --file-share=name=VOLUME_NAME,capacity=CAPACITY \
           --network=name=NETWORK_NAME,\
         reserved-ip-range=RESERVED_IP_RANGE,connect-mode=CONNECT_MODE \
             --zone=ZONE --performance=max-iops-per-tb=MAX-IOPS-PER-TB \
@@ -247,6 +249,15 @@ OPTIONAL FLAGS
 
             $ gcloud filestore instances create example-cluster \
                 --performance=max-iops-per-tb=17000
+
+     --protocol=PROTOCOL; default="NFS_V3"
+        The service protocol for the Cloud Filestore instance. PROTOCOL must be
+        one of:
+
+         nfs-v3
+            NFSv3 protocol.
+         nfs-v4-1
+            NFSv4.1 protocol.
 
      --region=REGION
         Region of the Cloud Filestore instance.

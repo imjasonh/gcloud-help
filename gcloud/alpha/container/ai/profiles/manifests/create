@@ -1,0 +1,70 @@
+NAME
+    gcloud alpha container ai profiles manifests create - generate
+        ready-to-deploy Kubernetes manifests with compute, load balancing, and
+        autoscaling capabilities
+
+SYNOPSIS
+    gcloud alpha container ai profiles manifests create
+        --accelerator-type=ACCELERATOR_TYPE --model=MODEL
+        --model-server=MODEL_SERVER
+        [--model-server-version=MODEL_SERVER_VERSION] [--namespace=NAMESPACE]
+        [--output=OUTPUT; default="all"] [--output-path=OUTPUT_PATH]
+        [--target-ntpot-milliseconds=TARGET_NTPOT_MILLISECONDS]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) To get supported model, model servers, and model server versions,
+    run gcloud alpha container ai profiles model-and-server-combinations list.
+    To get supported accelerators with their performance metrics, run gcloud
+    alpha container ai profiles accelerators list.
+
+REQUIRED FLAGS
+     --accelerator-type=ACCELERATOR_TYPE
+        The accelerator type.
+
+     --model=MODEL
+        The model.
+
+     --model-server=MODEL_SERVER
+        The model server.
+
+OPTIONAL FLAGS
+     --model-server-version=MODEL_SERVER_VERSION
+        The model server version. If not specified, this defaults to the latest
+        version.
+
+     --namespace=NAMESPACE
+        The namespace to deploy the manifests in. Default namespace is
+        'default'.
+
+     --output=OUTPUT; default="all"
+        The output to display. Default is all. OUTPUT must be one of: manifest,
+        comments, all.
+
+     --output-path=OUTPUT_PATH
+        The path to save the output to. If not specified, output to the
+        terminal.
+
+     --target-ntpot-milliseconds=TARGET_NTPOT_MILLISECONDS
+        The maximum normalized time per output token (NTPOT) in milliseconds.
+        NTPOT is measured as the request_latency / output_tokens. If this is
+        set, the manifests will include Horizontal Pod Autoscaler (HPA)
+        resources which automatically adjust the model server replica count in
+        response to changes in model server load to keep p50 NTPOT below the
+        specified threshold. If the provided target-ntpot-milliseconds is too
+        low to achieve, the HPA manifest will not be generated.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

@@ -9,8 +9,10 @@ SYNOPSIS
           gpu-sharing-strategy=GPU_SHARING_STRATEGY,
           max-shared-clients-per-gpu=MAX_SHARED_CLIENTS_PER_GPU],...]]
         [--additional-zones=ZONE,[ZONE,...]]
-        [--addons=[ADDON[=ENABLED|DISABLED],...]] [--async]
-        [--auto-monitoring-scope=AUTO_MONITORING_SCOPE]
+        [--addons=[ADDON[=ENABLED|DISABLED],...]]
+        [--alpha-cluster-feature-gates=[FEATURE=true|false,...]]
+        [--anonymous-authentication-config=ANONYMOUS_AUTHENTICATION_CONFIG]
+        [--async] [--auto-monitoring-scope=AUTO_MONITORING_SCOPE]
         [--autoprovisioning-enable-insecure-kubelet-readonly-port]
         [--autoprovisioning-network-tags=TAGS,[TAGS,...]]
         [--autoprovisioning-resource-manager-tags=[KEY=VALUE,...]]
@@ -68,6 +70,7 @@ SYNOPSIS
         [--node-taints=[NODE_TAINT,...]] [--node-version=NODE_VERSION]
         [--notification-config=[pubsub=ENABLED|DISABLED,
           pubsub-topic=TOPIC,...]] [--num-nodes=NUM_NODES; default=3]
+        [--performance-monitoring-unit=PERFORMANCE_MONITORING_UNIT]
         [--placement-policy=PLACEMENT_POLICY] [--placement-type=PLACEMENT_TYPE]
         [--preemptible] [--private-endpoint-subnetwork=NAME]
         [--private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE]
@@ -229,6 +232,28 @@ FLAGS
         KubernetesDashboard, NetworkPolicy, NodeLocalDNS, ConfigConnector,
         GcePersistentDiskCsiDriver, GcpFilestoreCsiDriver, BackupRestore,
         GcsFuseCsiDriver, ParallelstoreCsiDriver, RayOperator, CloudRun.
+
+     --alpha-cluster-feature-gates=[FEATURE=true|false,...]
+        Selectively enable or disable Kubernetes alpha and beta
+        kubernetesfeature gates on alpha GKE cluster. Alpha clusters are not
+        covered by the Kubernetes Engine SLA and should not be used for
+        production workloads.
+
+     --anonymous-authentication-config=ANONYMOUS_AUTHENTICATION_CONFIG
+        Enable or restrict anonymous access to the cluster. When enabled,
+        anonymous users will be authenticated as system:anonymous with the
+        group system:unauthenticated. Limiting access restricts anonymous
+        access to only the health check endpoints /readyz, /livez, and
+        /healthz.
+
+        ANONYMOUS_AUTHENTICATION_CONFIG must be one of:
+
+         ENABLED
+            'ENABLED' enables anonymous calls.
+         LIMITED
+            'LIMITED' restricts anonymous access to the cluster. Only calls to
+            the health check endpoints are allowed anonymously, all other calls
+            will be rejected.
 
      --async
         Return immediately, without waiting for the operation in progress to
@@ -1039,6 +1064,19 @@ FLAGS
 
      --num-nodes=NUM_NODES; default=3
         The number of nodes to be created in each of the cluster's zones.
+
+     --performance-monitoring-unit=PERFORMANCE_MONITORING_UNIT
+        Sets the Performance Monitoring Unit level. Valid values are
+        architectural, standard and enhanced. PERFORMANCE_MONITORING_UNIT must
+        be one of:
+
+         architectural
+            Enables architectural PMU events tied to non last level cache (LLC)
+            events.
+         enhanced
+            Enables most documented core/L2 and LLC PMU events.
+         standard
+            Enables most documented core/L2 PMU events.
 
      --placement-policy=PLACEMENT_POLICY
         Indicates the desired resource policy to use.

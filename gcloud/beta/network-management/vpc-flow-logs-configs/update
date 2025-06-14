@@ -4,15 +4,17 @@ NAME
 
 SYNOPSIS
     gcloud beta network-management vpc-flow-logs-configs update
-        (VPC_FLOW_LOGS_CONFIG : --location=LOCATION)
+        (VPC_FLOW_LOGS_CONFIG
+          : --location=LOCATION --organization=ORGANIZATION)
         [--aggregation-interval=AGGREGATION_INTERVAL] [--async]
+        [--cross-project-metadata=CROSS_PROJECT_METADATA]
         [--description=DESCRIPTION] [--filter-expr=FILTER_EXPR]
         [--flow-sampling=FLOW_SAMPLING] [--metadata=METADATA] [--state=STATE]
-        [--interconnect-attachment=INTERCONNECT_ATTACHMENT
-          | --vpn-tunnel=VPN_TUNNEL]
+        [--interconnect-attachment=INTERCONNECT_ATTACHMENT | --network=NETWORK
+          | --subnet=SUBNET | --vpn-tunnel=VPN_TUNNEL]
         [--labels=[LABELS,...]
           | --update-labels=[UPDATE_LABELS,...] --clear-labels
-          | --remove-labels=[__REMOVE_LABELS,...]]
+          | --remove-labels=REMOVE_LABELS]
         [--metadata-fields=[METADATA_FIELDS,...]
           | --add-metadata-fields=[ADD_METADATA_FIELDS,...]
           --clear-metadata-fields
@@ -28,12 +30,14 @@ EXAMPLES
     configuration my-config, run:
 
         $ gcloud beta network-management vpc-flow-logs-configs update \
-            my-config --location=global --state=DISABLED
+            my-config --location=global --organization=<my-org-number> \
+            --state=DISABLED
 
 POSITIONAL ARGUMENTS
      VpcFlowLogsConfig resource - Identifier. Unique name of the configuration
-     using the form:
+     using one of the forms:
      projects/{project_id}/locations/global/vpcFlowLogsConfigs/{vpc_flow_logs_config_id}
+     organizations/{organization_id}/locations/global/vpcFlowLogsConfigs/{vpc_flow_logs_config_id}
      The arguments in this group can be used to specify the attributes of this
      resource. (NOTE) Some attributes are not given arguments in this group but
      can be set in other ways.
@@ -42,7 +46,10 @@ POSITIONAL ARGUMENTS
       ◆ provide the argument vpc_flow_logs_config on the command line with a
         fully specified name;
       ◆ provide the argument --project on the command line;
-      ◆ set the property core/project.
+      ◆ set the property core/project. This resource can be one of the
+        following types:
+        [networkmanagement.organizations.locations.vpcFlowLogsConfigs,
+        networkmanagement.projects.locations.vpcFlowLogsConfigs].
 
      This must be specified.
 
@@ -63,6 +70,16 @@ POSITIONAL ARGUMENTS
           ▸ provide the argument vpc_flow_logs_config on the command line
             with a fully specified name;
           ▸ provide the argument --location on the command line.
+
+       --organization=ORGANIZATION
+          The organization id of the vpcFlowLogsConfig resource.
+
+          To set the organization attribute:
+          ▸ provide the argument vpc_flow_logs_config on the command line
+            with a fully specified name;
+          ▸ provide the argument --organization on the command line. Must be
+            specified for resource of type
+            [networkmanagement.organizations.locations.vpcFlowLogsConfigs].
 
 FLAGS
      Arguments for the aggregation interval.
@@ -87,6 +104,22 @@ FLAGS
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
+
+     Arguments for the cross project metadata.
+
+       --cross-project-metadata=CROSS_PROJECT_METADATA
+          Determines whether to include cross project annotations in the logs.
+          This field is available only for organization configurations. If not
+          specified in org configs will be set to
+          CROSS_PROJECT_METADATA_ENABLED. CROSS_PROJECT_METADATA must be one
+          of:
+
+           cross-project-metadata-disabled
+              When CROSS_PROJECT_METADATA_DISABLED, metadata from other
+              projects will not be included in the logs.
+           cross-project-metadata-enabled
+              When CROSS_PROJECT_METADATA_ENABLED, metadata from other projects
+              will be included in the logs.
 
      Arguments for the description.
 
@@ -125,8 +158,9 @@ FLAGS
 
        --state=STATE
           The state of the VPC Flow Log configuration. Default value is
-          ENABLED. When creating a new configuration, it must be enabled. STATE
-          must be one of:
+          ENABLED. When creating a new configuration, it must be enabled.
+          Setting state=DISABLED will pause the log generation for this config.
+          STATE must be one of:
 
            disabled
               When DISABLED, this configuration will not generate logs.
@@ -140,6 +174,15 @@ FLAGS
        --interconnect-attachment=INTERCONNECT_ATTACHMENT
           Traffic will be logged from the Interconnect Attachment. Format:
           projects/{project_id}/regions/{region}/interconnectAttachments/{name}
+
+       --network=NETWORK
+          Traffic will be logged from VMs, VPN tunnels and Interconnect
+          Attachments within the network. Format:
+          projects/{project_id}/global/networks/{name}
+
+       --subnet=SUBNET
+          Traffic will be logged from VMs within the subnetwork. Format:
+          projects/{project_id}/regions/{region}/subnetworks/{name}
 
        --vpn-tunnel=VPN_TUNNEL
           Traffic will be logged from the VPN Tunnel. Format:
@@ -202,8 +245,20 @@ FLAGS
          --clear-labels
             Clear labels value and set to empty map.
 
-         --remove-labels=[__REMOVE_LABELS,...]
-            Remove existing value from map labels.
+         --remove-labels=REMOVE_LABELS
+            Remove existing value from map labels. Sets remove_labels value.
+
+            Shorthand Example:
+
+                --remove-labels=string,string
+
+            JSON Example:
+
+                --remove-labels=["string"]
+
+            File Example:
+
+                --remove-labels=path_to_file.(yaml|json)
 
      Update metadata_fields.
 
