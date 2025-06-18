@@ -61,7 +61,24 @@ EXAMPLES
     The following command:
 
         $ gcloud alpha container hub scopes remove-app-operator-binding \
-            SCOPE --role=admin --user=person@google.com --project=PROJECT_ID
+            SCOPE --user=person@google.com --project=PROJECT_ID
+
+    assuming the user already has a custom role:
+      ▪ removes IAM policy binding: roles/gkehub.scopeViewer from SCOPE
+      ▪ removes IAM policy binding: roles/gkehub.scopeEditorProjectLevel from
+        PROJECT_ID if the user does not have the edit/admin role for any other
+        scope under the project
+      ▪ removes IAM policy binding: roles/logging.viewAccessor from
+        PROJECT_ID condition where bucket corresponds to SCOPE
+      ▪ deletes existing fleet scope RBAC role binding: role admin for user
+        person@google.com.
+
+    ---
+
+    The following command:
+
+        $ gcloud alpha container hub scopes remove-app-operator-binding \
+            SCOPE --user=person@google.com --project=PROJECT_ID
 
     assuming the user already has the admin role:
       ▪ removes IAM policy binding: roles/gkehub.scopeAdmin from SCOPE

@@ -1,6 +1,6 @@
 NAME
     gcloud beta network-management vpc-flow-logs-configs create - creates a new
-        VPC Flow Logs configuration in the specified organization
+        VPC Flow Logs configuration
 
 SYNOPSIS
     gcloud beta network-management vpc-flow-logs-configs create
@@ -16,8 +16,15 @@ SYNOPSIS
           | --subnet=SUBNET | --vpn-tunnel=VPN_TUNNEL] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (BETA) Creates a new VPC Flow Logs configuration in the specified
-    organization.
+    (BETA) Creates a new VPC Flow Logs configuration.
+
+    Project-level configuration: Specify a target resource, either: --subnet,
+    --network, --interconnect-attachment, or --vpn-tunnel
+
+    Organization-level configuration: Specify the --organization flag without a
+    target resource to apply the configuration across an entire organization.
+
+    The --location=global flag is always required.
 
 EXAMPLES
     To create a new VPC Flow Logs configuration my-config in organization
@@ -25,6 +32,37 @@ EXAMPLES
 
         $ gcloud beta network-management vpc-flow-logs-configs create \
             my-config --location=global --organization=<my-org-number>
+
+    To create a new VPC Flow Logs configuration my-config in project my-project
+    for a VLAN attachment for Cloud Interconnect, run:
+
+        $ gcloud beta network-management vpc-flow-logs-configs create \
+            my-config --location=global \
+            --interconnect-attachment="projects/{project_id}/regions/{region\
+        }/interconnectAttachments/{interconnect_attachment_id}"
+
+    To create a new VPC Flow Logs configuration my-config in project my-project
+    for a Cloud VPN tunnel, run:
+
+        $ gcloud beta network-management vpc-flow-logs-configs create \
+            my-config --location=global \
+            --subnet="projects/{project_id}/regions/{region}/vpnTunnels/{vpn\
+        _tunnel_id}"
+
+    To create a new VPC Flow Logs configuration my-config in project my-project
+    for a subnet, run:
+
+        $ gcloud beta network-management vpc-flow-logs-configs create \
+            my-config --location=global \
+            --subnet="projects/{project_id}/regions/{region}/subnets/{subnet\
+        _id}"
+
+    To create a new VPC Flow Logs configuration my-config in project my-project
+    for a VPC network, run:
+
+        $ gcloud beta network-management vpc-flow-logs-configs create \
+            my-config --location=global \
+            --network="projects/{project_id}/global/networks/{network_id}"
 
 POSITIONAL ARGUMENTS
      VpcFlowLogsConfig resource - Identifier. Unique name of the configuration
