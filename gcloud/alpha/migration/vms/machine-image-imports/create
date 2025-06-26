@@ -15,8 +15,11 @@ SYNOPSIS
         [--target-project=TARGET_PROJECT]
         [--enable-integrity-monitoring --enable-vtpm --secure-boot=SECURE_BOOT]
         [--scopes=[SCOPES,...] --service-account=SERVICE_ACCOUNT]
-        [--skip-os-adaptation | --boot-conversion=BOOT_CONVERSION
-          --generalize --license-type=LICENSE_TYPE] [GCLOUD_WIDE_FLAG ...]
+        [--skip-os-adaptation | --adaptation-modifiers=ADAPTATION_MODIFIERS
+          --boot-conversion=BOOT_CONVERSION --generalize
+          --license-type=LICENSE_TYPE
+          --rootfs-uuid=ROOTFS_UUID --suppress-package-installation-failure]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) gcloud alpha migration vms machine-image-imports create Imports
@@ -157,6 +160,11 @@ OPTIONAL FLAGS
        --skip-os-adaptation
           If true, skip OS adaptation. Default false.
 
+       --adaptation-modifiers=ADAPTATION_MODIFIERS
+          A map of flags to pass to the OS adaptation process. The actual value
+          depends on the modifier and can also be empty. e.g.
+          --adaptation-modifiers=flag1=value1,flag2
+
        --boot-conversion=BOOT_CONVERSION
           This property will trigger an internal process which will convert the
           image from using the existing boot option to another. The size of the
@@ -176,6 +184,13 @@ OPTIONAL FLAGS
           compute-engine-license-type-byol,
           compute-engine-license-type-default,
           compute-engine-license-type-payg.
+
+       --rootfs-uuid=ROOTFS_UUID
+          Identifies the file system to adapt.
+
+       --suppress-package-installation-failure
+          If true, suppress package installation failure and continue with a
+          warning.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

@@ -5,9 +5,10 @@ NAME
 SYNOPSIS
     gcloud alpha managed-kafka clusters update (CLUSTER : --location=LOCATION)
         (--auto-rebalance --cpu=CPU --labels=[KEY=VALUE,...] --memory=MEMORY
-          --mtls-ca-pools=[MTLS_CA_POOLS,...]
           --ssl-principal-mapping-rules=SSL_PRINCIPAL_MAPPING_RULES
-          --subnets=[SUBNETS,...]) [--async] [GCLOUD_WIDE_FLAG ...]
+          --subnets=[SUBNETS,...] --clear-mtls-ca-pools
+          | --mtls-ca-pools=[MTLS_CA_POOLS,...]) [--async]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Update a Managed Service for Apache Kafka cluster.
@@ -75,15 +76,6 @@ REQUIRED FLAGS
           The memory to provision for the cluster in bytes. The value must be
           between 1 GiB and 8 GiB per vCPU. Ex. 1024Mi, 4Gi.
 
-       --mtls-ca-pools=[MTLS_CA_POOLS,...]
-          A comma-separated list of CA pools from the Google Cloud Certificate
-          Authority Service. The root certificates of these CA pools will be
-          installed in the truststore of each broker in the cluster for use
-          with mTLS. A maximum of 10 CA pools can be specified. CA pools can be
-          in a different project and region than the cluster. Each CA pool must
-          be in the format
-          projects/PROJECT_ID/locations/LOCATION/caPools/CA_POOL.
-
        --ssl-principal-mapping-rules=SSL_PRINCIPAL_MAPPING_RULES
           The rules for mapping mTLS certificate Distinguished Names (DNs) to
           shortened principal names for Kafka ACLs. This flag corresponds
@@ -103,6 +95,22 @@ REQUIRED FLAGS
           required. A maximum of 10 subnets can be specified. Use commas to
           separate multiple subnets. The name of the subnet must be in the
           format projects/PROJECT_ID/regions/REGION/subnetworks/SUBNET.
+
+       At most one of these can be specified:
+
+         --clear-mtls-ca-pools
+            Remove all the CA pools from the cluster. This will remove all root
+            certificates from the truststore of each broker in the cluster.
+
+         --mtls-ca-pools=[MTLS_CA_POOLS,...]
+            A comma-separated list of CA pools from the Google Cloud
+            Certificate Authority Service. The root certificates of these CA
+            pools will be installed in the truststore of each broker in the
+            cluster for use with mTLS. A maximum of 10 CA pools can be
+            specified. CA pools can be in a different project and region than
+            the cluster. Each CA pool must be in the format
+            projects/PROJECT_ID/locations/LOCATION/caPools/CA_POOL. Clear the
+            CA pools using the --clear-mtls-ca-pools flag.
 
 OPTIONAL FLAGS
      --async

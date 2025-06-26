@@ -14,6 +14,7 @@ SYNOPSIS
         [--psc-auto-connections=[network=NETWORK],
           [port=PORT],[projectId=PROJECTID]] [--replica-count=REPLICA_COUNT]
         [--request-id=REQUEST_ID] [--shard-count=SHARD_COUNT]
+        [--simulate-maintenance-event]
         [--transit-encryption-mode=TRANSIT_ENCRYPTION_MODE]
         [--aof-config-append-fsync=AOF_CONFIG_APPEND_FSYNC
           --persistence-config-mode=PERSISTENCE_CONFIG_MODE
@@ -25,6 +26,7 @@ SYNOPSIS
         [--cross-instance-replication-config-role=CROSS_INSTANCE_REPLICATION_CONFIG_ROLE : --cross-instance-replication-config-secondary-instances=[instance=INSTANCE] --primary-instance=PRIMARY_INSTANCE]
         [--gcs-source-uris=[GCS_SOURCE_URIS,...]
           | --managed-backup-source=MANAGED_BACKUP_SOURCE]
+        [--kms-key=KMS_KEY : --key-ring=KEY_RING]
         [--zone-distribution-config=ZONE_DISTRIBUTION_CONFIG
           --zone-distribution-config-mode=ZONE_DISTRIBUTION_CONFIG_MODE]
         [GCLOUD_WIDE_FLAG ...]
@@ -190,9 +192,9 @@ FLAGS
             --labels=path_to_file.(yaml|json)
 
      --location=LOCATION
-        For resources [instance], provides fallback value for resource location
-        attribute. When the resource's full URI path is not provided, location
-        will fallback to this flag value.
+        For resources [instance, cryptoKey], provides fallback value for
+        resource location attribute. When the resource's full URI path is not
+        provided, location will fallback to this flag value.
 
      Maintenance policy per instance.
 
@@ -317,6 +319,11 @@ FLAGS
 
      --shard-count=SHARD_COUNT
         Number of shards for the instance.
+
+     Arguments for the simulate maintenance event.
+
+       --simulate-maintenance-event
+          Simulate a maintenance event.
 
      --transit-encryption-mode=TRANSIT_ENCRYPTION_MODE
         In-transit encryption mode of the instance. TRANSIT_ENCRYPTION_MODE
@@ -512,6 +519,42 @@ FLAGS
             projects/{project}/locations/{location}/backupCollections/{collection}/backups/{backup_id}
             In this case, it assumes the backup is under
             memorystore.googleapis.com.
+
+     Arguments for the kms key.
+
+       CryptoKey resource - The KMS key used to encrypt the at-rest data of the
+       cluster. The arguments in this group can be used to specify the
+       attributes of this resource. (NOTE) Some attributes are not given
+       arguments in this group but can be set in other ways.
+
+       To set the project attribute:
+        ▸ provide the argument --kms-key on the command line with a fully
+          specified name;
+        ▸ provide the argument --project on the command line;
+        ▸ set the property core/project.
+
+       To set the location attribute:
+        ▸ provide the argument --kms-key on the command line with a fully
+          specified name;
+        ▸ provide the argument --location on the command line.
+
+         --kms-key=KMS_KEY
+            ID of the cryptoKey or fully qualified identifier for the
+            cryptoKey.
+
+            To set the crypto-key attribute:
+            ▫ provide the argument --kms-key on the command line.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --key-ring=KEY_RING
+            The keyRing id of the cryptoKey resource.
+
+            To set the key-ring attribute:
+            ▫ provide the argument --kms-key on the command line with a fully
+              specified name;
+            ▫ provide the argument --key-ring on the command line.
 
      Zone distribution configuration for allocation of instance resources.
 

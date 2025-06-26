@@ -6,7 +6,10 @@ SYNOPSIS
     gcloud alpha storage insights dataset-configs create DATASET_CONFIG_NAME
         --location=LOCATION --organization=SOURCE_ORG_NUMBER
         --retention-period-days=RETENTION_DAYS
-        (--source-projects=[SOURCE_PROJECT_NUMBERS,...]
+        (--enable-organization-scope
+          | --source-folders=[SOURCE_FOLDER_NUMBERS,...]
+          | --source-folders-file=SOURCE_FOLDER_NUMBERS_IN_FILE
+          | --source-projects=[SOURCE_PROJECT_NUMBERS,...]
           | --source-projects-file=SOURCE_PROJECT_NUMBERS_IN_FILE)
         [--auto-add-new-buckets] [--description=DESCRIPTION]
         [--identity=IDENTITY_TYPE; default="IDENTITY_TYPE_PER_CONFIG"]
@@ -22,17 +25,17 @@ DESCRIPTION
     (ALPHA) Create a new dataset config for Insights.
 
 EXAMPLES
-    To create a dataset config with config name as "my-config" in location
+    To create a dataset config with config name as "my_config" in location
     "us-central1" and project numbers "123456" and "456789" belonging to
     organization number "54321":
 
-        $ gcloud alpha storage insights dataset-configs create my-config \
+        $ gcloud alpha storage insights dataset-configs create my_config \
            --location=us-central1 --source-projects=123456,456789 \
            --organization=54321 --retention-period-days=1
 
     To create a dataset config that automatically adds new buckets into config:
 
-        $ gcloud alpha storage insights dataset-configs create my-config \
+        $ gcloud alpha storage insights dataset-configs create my_config \
            --location=us-central1 --source-projects=123456,456789 \
            --organization=54321 --auto-add-new-buckets \
            --retention-period-days=1
@@ -51,9 +54,25 @@ REQUIRED FLAGS
      --retention-period-days=RETENTION_DAYS
         Provide retention period for the config.
 
-     List of source options currently supported are source projects.
+     List of source options either source projects or source folders or enable
+     organization scope. Refer Dataset Configuration Properties
+     (https://cloud.google.com/storage/docs/insights/datasets#dataset-config)
+     for more details.
 
      Exactly one of these must be specified:
+
+       --enable-organization-scope
+          If passed, the dataset config will be enabled on the organization.
+
+       List of source folder IDs or the file containing list of folder IDs.
+
+       At most one of these can be specified:
+
+         --source-folders=[SOURCE_FOLDER_NUMBERS,...]
+            List of source folder IDs.
+
+         --source-folders-file=SOURCE_FOLDER_NUMBERS_IN_FILE
+            CSV formatted file containing source folder IDs, one per line.
 
        List of source project numbers or the file containing list of project
        numbers.

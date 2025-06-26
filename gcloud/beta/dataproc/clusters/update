@@ -11,11 +11,12 @@ SYNOPSIS
         [--autoscaling-policy=AUTOSCALING_POLICY | --disable-autoscaling]
         [--clear-labels | --remove-labels=[KEY,...]]
         [--delete-expiration-time=DELETE_EXPIRATION_TIME
-          | --delete-max-age=DELETE_MAX_AGE | --no-delete-max-age
-          | --expiration-time=EXPIRATION_TIME | --max-age=MAX_AGE
-          | --no-max-age]
-        [--delete-max-idle=DELETE_MAX_IDLE | --no-delete-max-idle
-          | --max-idle=MAX_IDLE | --no-max-idle] [GCLOUD_WIDE_FLAG ...]
+          | --delete-max-age=DELETE_MAX_AGE | --no-delete-max-age]
+        [--delete-max-idle=DELETE_MAX_IDLE | --no-delete-max-idle]
+        [--stop-expiration-time=STOP_EXPIRATION_TIME
+          | --stop-max-age=STOP_MAX_AGE | --no-stop-max-age]
+        [--stop-max-idle=STOP_MAX_IDLE | --no-stop-max-idle]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) Update the number of worker nodes and/or the labels in a cluster.
@@ -182,20 +183,6 @@ FLAGS
           Cancels the cluster auto-deletion by maximum cluster age (configured
           by --delete-max-age or --delete-expiration-time flags)
 
-       --expiration-time=EXPIRATION_TIME
-          The time when the cluster will be auto-deleted, such as
-          "2017-08-29T18:52:51.142Z". See $ gcloud topic datetimes for
-          information on time formats.
-
-       --max-age=MAX_AGE
-          The lifespan of the cluster, with auto-deletion upon completion, "2h"
-          or "1d". See $ gcloud topic datetimes for information on duration
-          formats.
-
-       --no-max-age
-          Cancels the cluster auto-deletion by maximum cluster age (configured
-          by --max-age or --expiration-time flags)
-
      At most one of these can be specified:
 
        --delete-max-idle=DELETE_MAX_IDLE
@@ -207,14 +194,32 @@ FLAGS
           Cancels the cluster auto-deletion by cluster idle duration
           (configured by --delete-max-idle flag)
 
-       --max-idle=MAX_IDLE
-          The duration after the last job completes to auto-delete the cluster,
+     At most one of these can be specified:
+
+       --stop-expiration-time=STOP_EXPIRATION_TIME
+          The time when the cluster will be auto-stopped, such as
+          "2017-08-29T18:52:51.142Z". See $ gcloud topic datetimes for
+          information on time formats.
+
+       --stop-max-age=STOP_MAX_AGE
+          The lifespan of the cluster, with auto-stop upon completion, such as
+          "2h" or "1d". See $ gcloud topic datetimes for information on
+          duration formats.
+
+       --no-stop-max-age
+          Cancels the cluster auto-stop by maximum cluster age (configured by
+          --stop-max-age or --stop-expiration-time flags)
+
+     At most one of these can be specified:
+
+       --stop-max-idle=STOP_MAX_IDLE
+          The duration after the last job completes to auto-stop the cluster,
           such as "2h" or "1d". See $ gcloud topic datetimes for information on
           duration formats.
 
-       --no-max-idle
-          Cancels the cluster auto-deletion by cluster idle duration
-          (configured by --max-idle flag)
+       --no-stop-max-idle
+          Cancels the cluster auto-stop by cluster idle duration (configured by
+          --stop-max-idle flag)
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

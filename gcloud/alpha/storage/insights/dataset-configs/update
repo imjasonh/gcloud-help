@@ -4,29 +4,42 @@ NAME
 
 SYNOPSIS
     gcloud alpha storage insights dataset-configs update
-        (DATASET_CONFIG : --location=LOCATION) [--description=DESCRIPTION]
-        [--retention-period-days=RETENTION_DAYS] [GCLOUD_WIDE_FLAG ...]
+        (DATASET_CONFIG : --location=LOCATION)
+        [--auto-add-new-buckets=AUTO_ADD_NEW_BUCKETS]
+        [--description=DESCRIPTION] [--retention-period-days=RETENTION_DAYS]
+        [--enable-organization-scope
+          | --source-folders=[SOURCE_FOLDER_NUMBERS,...]
+          | --source-folders-file=SOURCE_FOLDER_NUMBERS_IN_FILE
+          | --source-projects=[SOURCE_PROJECT_NUMBERS,...]
+          | --source-projects-file=SOURCE_PROJECT_NUMBERS_IN_FILE]
+        [--exclude-bucket-names=[BUCKETS_NAMES,...]
+          --exclude-bucket-prefix-regexes=[BUCKETS_REGEXES,...]
+          | --include-bucket-names=[BUCKETS_NAMES,...]
+          --include-bucket-prefix-regexes=[BUCKETS_REGEXES,...]]
+        [--exclude-source-locations=[LIST_OF_SOURCE_LOCATIONS,...]
+          | --include-source-locations=[LIST_OF_SOURCE_LOCATIONS,...]]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Update a dataset config for Insights.
 
 EXAMPLES
-    To update the description for a dataset config "my-config" in location
+    To update the description for a dataset config "my_config" in location
     "us-central1":
 
-        $ gcloud alpha storage insights dataset-configs update my-config \
+        $ gcloud alpha storage insights dataset-configs update my_config \
           --location=us-central1 \
           --description="a user provided description"
 
     To update the same dataset config with fully specified name:
 
         $ gcloud alpha storage insights dataset-configs update \
-          projects/foo/locations/us-central1/datasetConfigs/my-config
+          projects/foo/locations/us-central1/datasetConfigs/my_config
 
-    To update the retention period days for the dataset config "my-config" in
+    To update the retention period days for the dataset config "my_config" in
     location "us-central1":
 
-        $ gcloud alpha storage insights dataset-configs update my-config \
+        $ gcloud alpha storage insights dataset-configs update my_config \
           --location=us-central1 --retention-period-days=20
 
 POSITIONAL ARGUMENTS
@@ -62,11 +75,87 @@ POSITIONAL ARGUMENTS
           ▸ provide the argument --location on the command line.
 
 FLAGS
+     --auto-add-new-buckets=AUTO_ADD_NEW_BUCKETS
+        Automatically include any new buckets created if they satisfy criteria
+        defined in config settings. AUTO_ADD_NEW_BUCKETS must be one of: true,
+        false.
+
      --description=DESCRIPTION
         Description for dataset config.
 
      --retention-period-days=RETENTION_DAYS
         Provide retention period for the config.
+
+     List of source options either source projects or source folders or enable
+     organization scope. Refer Dataset Configuration Properties
+     (https://cloud.google.com/storage/docs/insights/datasets#dataset-config)
+     for more details.
+
+     At most one of these can be specified:
+
+       --enable-organization-scope
+          If passed, the dataset config will be enabled on the organization.
+
+       List of source folder IDs or the file containing list of folder IDs.
+
+       At most one of these can be specified:
+
+         --source-folders=[SOURCE_FOLDER_NUMBERS,...]
+            List of source folder IDs.
+
+         --source-folders-file=SOURCE_FOLDER_NUMBERS_IN_FILE
+            CSV formatted file containing source folder IDs, one per line.
+
+       List of source project numbers or the file containing list of project
+       numbers.
+
+       At most one of these can be specified:
+
+         --source-projects=[SOURCE_PROJECT_NUMBERS,...]
+            List of source project numbers.
+
+         --source-projects-file=SOURCE_PROJECT_NUMBERS_IN_FILE
+            CSV formatted file containing source project numbers, one per line.
+
+     Specify the list of buckets to be included or excluded, both a list of
+     bucket names and prefix regexes can be specified for either include or
+     exclude buckets.
+
+     At most one of these can be specified:
+
+       Specify the list of buckets to be excluded.
+
+         --exclude-bucket-names=[BUCKETS_NAMES,...]
+            List of bucket names to be excluded.
+
+         --exclude-bucket-prefix-regexes=[BUCKETS_REGEXES,...]
+            List of bucket prefix regexes to be excluded. Allowed regex
+            patterns are similar to those for the
+            --include-bucket-prefix-regexes flag.
+
+       Specify the list of buckets to be included.
+
+         --include-bucket-names=[BUCKETS_NAMES,...]
+            List of bucket names be included.
+
+         --include-bucket-prefix-regexes=[BUCKETS_REGEXES,...]
+            List of bucket prefix regexes to be included. The dataset config
+            will include all the buckets that match with the prefix regex.
+            Examples of allowed prefix regex patterns can be testbucket*,
+            testbucket.*foo, testb.+foo* . It should follow syntax specified in
+            google/re2 on GitHub.
+
+     Specify the list of locations for source projects to be included or
+     excluded from available locations
+     (https://cloud.google.com/storage/docs/locations#available-locations).
+
+     At most one of these can be specified:
+
+       --exclude-source-locations=[LIST_OF_SOURCE_LOCATIONS,...]
+          List of locations for projects to be excluded.
+
+       --include-source-locations=[LIST_OF_SOURCE_LOCATIONS,...]
+          List of locations for projects to be included.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

@@ -34,6 +34,7 @@ SYNOPSIS
           --args=[ARG,...] --clear-volume-mounts --command=[COMMAND,...]
           --cpu=CPU --depends-on=[CONTAINER,...] --gpu=GPU --image=IMAGE
           --liveness-probe=[KEY=VALUE,...] --memory=MEMORY --port=PORT
+          --readiness-probe=[KEY=VALUE,...]
           --remove-volume-mount=[MOUNT_PATH,...]
           --startup-probe=[KEY=VALUE,...] --[no-]use-http2 --clear-env-vars
           | --env-vars-file=FILE_PATH | --set-env-vars=[KEY=VALUE,...]
@@ -418,6 +419,23 @@ FLAGS
             If updating an existing service with a TCP startup probe pointing
             to the previous container port, this will also update the probe
             port.
+
+         --readiness-probe=[KEY=VALUE,...]
+            Comma separated settings for readiness probe in the form KEY=VALUE.
+            Each key stands for a field of the probe described in
+            https://cloud.google.com/run/docs/reference/rest/v1/Container#Probe.
+            Currently supported keys are: timeoutSeconds, periodSeconds,
+            failureThreshold, successThreshold, httpGet.port, httpGet.path,
+            grpc.port, grpc.service.
+
+            For example, to set a probe with 10s timeout and HTTP probe
+            requests sent to 8080 port of the container:
+
+                $ --readiness-probe=timeoutSeconds=10,httpGet.port=8080
+
+            To remove existing probe:
+
+                $ --readiness-probe=""
 
          --remove-volume-mount=[MOUNT_PATH,...]
             Removes the volume mounted at the specified path from the current

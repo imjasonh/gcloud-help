@@ -1,13 +1,15 @@
 NAME
     gcloud beta quotas adjuster settings update - update the
-        QuotaAdjusterSettings of a project
+        QuotaAdjusterSettings of a resource container
 
 SYNOPSIS
     gcloud beta quotas adjuster settings update --enablement=ENABLEMENT
-        --project=PROJECT_ID_OR_NUMBER [--validate-only] [GCLOUD_WIDE_FLAG ...]
+        (--folder=FOLDER_ID | --organization=ORGANIZATION_ID
+          | --project=PROJECT_ID_OR_NUMBER) [--validate-only]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (BETA) This command updates the enablement state of a project.
+    (BETA) This command updates the enablement state of a resource container.
 
 EXAMPLES
     To update QuotaAdjusterSettings for projects/12321, run:
@@ -15,13 +17,26 @@ EXAMPLES
         $ gcloud beta quotas adjuster settings update --enablement=enabled \
             --project=12321
 
+    To update QuotaAdjusterSettings for folders/123, run:
+
+        $ gcloud beta quotas adjuster settings update \
+            --enablement=inherited --folder=123
+
 REQUIRED FLAGS
      --enablement=ENABLEMENT
         Enablement state of the QuotaAdjusterSettings. ENABLEMENT must be one
-        of: enabled, disabled.
+        of: enabled, disabled, inherited.
 
-     --project=PROJECT_ID_OR_NUMBER
-        Project of the container id.
+     Exactly one of these must be specified:
+
+       --folder=FOLDER_ID
+          Folder of the container id.
+
+       --organization=ORGANIZATION_ID
+          Organization of the container id.
+
+       --project=PROJECT_ID_OR_NUMBER
+          Project of the container id.
 
 OPTIONAL FLAGS
      --validate-only
