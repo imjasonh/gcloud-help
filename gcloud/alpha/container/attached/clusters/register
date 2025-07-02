@@ -12,7 +12,9 @@ SYNOPSIS
         [--annotations=ANNOTATION,[ANNOTATION,...]]
         [--binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE]
         [--description=DESCRIPTION] [--enable-managed-prometheus]
-        [--logging=COMPONENT,[COMPONENT,...]] [--validate-only]
+        [--logging=COMPONENT,[COMPONENT,...]]
+        [--system-component-labels=[LABEL,...]]
+        [--system-component-tolerations=[TOLERATION,...]] [--validate-only]
         [--disable-cloud-monitoring | --enable-cloud-monitoring]
         [--proxy-secret-name=PROXY_SECRET_NAME
           --proxy-secret-namespace=PROXY_SECRET_NAMESPACE]
@@ -53,6 +55,18 @@ EXAMPLES
             --fleet-project=FLEET_PROJECT_NUM --distribution=DISTRIBUTION \
             --context=CLUSTER_CONTEXT --issuer-url=https://ISSUER_URL \
             --admin-users=USER1,USER2
+
+    To specify custom tolerations and labels for system component pods, run:
+
+        $ gcloud alpha container attached clusters register my-cluster \
+            --location=us-west1 --platform-version=PLATFORM_VERSION \
+            --fleet-project=FLEET_PROJECT_NUM --distribution=DISTRIBUTION \
+            --context=CLUSTER_CONTEXT \
+            --system-component-tolerations=TOLERATIONS \
+            --system-component-labels=LABELS
+
+    where TOLERATIONS have the format:        key=value:Effect:NoSchedule (examples: key1=value1:Equal:NoSchedule,key2:Exists:PreferNoSchedule, :Exists:NoExecute)
+    and LABELS have the format:        key=value (examples: key1=value1,key2="")
 
 POSITIONAL ARGUMENTS
      Cluster resource - cluster to register. The arguments in this group can be
@@ -180,6 +194,12 @@ OPTIONAL FLAGS
             $ gcloud alpha container attached clusters register --logging=NONE
 
         COMPONENT must be one of: NONE, SYSTEM, WORKLOAD.
+
+     --system-component-labels=[LABEL,...]
+        Kubernetes labels to be applied to system component pods.
+
+     --system-component-tolerations=[TOLERATION,...]
+        Kubernetes tolerations to be applied to system component pods.
 
      --validate-only
         Validate the cluster to create, but don't actually perform it.

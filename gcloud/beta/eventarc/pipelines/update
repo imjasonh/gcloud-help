@@ -98,8 +98,7 @@ FLAGS
             DNS. For example:
 
                 $ gcloud eventarc pipelines create example-pipeline \
-                  --destinations=http_endpoint_uri='https://example.com',\
-                network_attachment=example-network-attachment
+                  --destinations=http_endpoint_uri='https://example.com'
 
          http_endpoint_message_binding_template
             The CEL expression used to construct a new HTTP request to be sent
@@ -214,8 +213,8 @@ FLAGS
                 $ gcloud eventarc pipelines create example-pipeline \
                 --destinations=http_endpoint_uri='https://example.com',\
                 http_endpoint_message_binding_template='{"headers":
-                 {"new-header-key":
-                 "new-header-value"}}',network_attachment=example-network-attachment
+                 headers.merge({"new-header-key": "new-header-value"}),"body":
+                 "new-body"}'
 
          workflow
             The destination Workflow ID. For example:
@@ -249,8 +248,7 @@ FLAGS
             then the location of the pipeline is used. For example:
 
                 $ gcloud eventarc pipelines create example-pipeline \
-                  --destinations=location=us-east1,workflow=my-workflow,\
-                network_attachment=example-network-attachment
+                  --destinations=location=us-east1,workflow=my-workflow
 
             Note: When http_endpoint_uri is set, location can't be set.
 
@@ -262,8 +260,8 @@ FLAGS
                   --destinations=network_attachment=my-network-attachment,\
                 http_endpoint_uri='https://example.com'
 
-            Note: A network attachment must be specified for a pipeline when
-            http_endpoint_uri is set.
+            Note: network_attachment can only be set when http_endpoint_uri is
+            set as well.
 
          google_oidc_authentication_service_account
             The service account email used to generate the OIDC token. The
@@ -277,7 +275,6 @@ FLAGS
 
                 $ gcloud eventarc pipelines create example-pipeline \
                   --destinations=http_endpoint_uri='https://example.com',\
-                network_attachment=example-network-attachment,\
                 google_oidc_authentication_service_account=example-service-account@e\
                 xample-project.gserviceaccount.iam.com
 
@@ -288,7 +285,6 @@ FLAGS
 
                 $ gcloud eventarc pipelines create example-pipeline \
                   --destinations=http_endpoint_uri='https://example.com',\
-                network_attachment=example-network-attachment,\
                 google_oidc_authentication_service_account=example-service-account@e\
                 xample-project.gserviceaccount.iam.com,\
                 google_oidc_authentication_audience='https://example.com'
@@ -308,7 +304,6 @@ FLAGS
 
                 $ gcloud eventarc pipelines create example-pipeline \
                   --destinations=http_endpoint_uri='https://example.com',\
-                network_attachment=example-network-attachment,\
                 oauth_token_authentication_service_account=example-service-account@e\
                 xample-project.gserviceaccount.iam.com
 
@@ -319,7 +314,6 @@ FLAGS
 
                 $ gcloud eventarc pipelines create example-pipeline \
                   --destinations=http_endpoint_uri='https://example.com',\
-                network_attachment=example-network-attachment,\
                 oauth_token_authentication_service_account=example-service-account@e\
                 xample-project.gserviceaccount.iam.com,\
                 oauth_token_authentication_scope=https://www.googleapis.com/auth/\
@@ -335,7 +329,6 @@ FLAGS
 
                 $ gcloud eventarc pipelines create example-pipeline \
                   --destinations=http_endpoint_uri='https://example.com',\
-                network_attachment=example-network-attachment,\
                 output_payload_format_json= --input-payload-format-json=
 
             Note: JSON schemas are not supported. Any value specified by this
@@ -347,7 +340,6 @@ FLAGS
 
                 $ gcloud eventarc pipelines create example-pipeline \
                   --destinations=http_endpoint_uri='https://example.com',\
-                network_attachment=example-network-attachment,\
                 output_payload_format_avro_schema_definition='{"type": "record",
                  "name": "my_record", "fields": [{"name": "field1", "type":
                  "string"}]}' \
@@ -361,7 +353,6 @@ FLAGS
 
                 $ gcloud eventarc pipelines create example-pipeline \
                   --destinations=http_endpoint_uri='https://example.com',\
-                network_attachment=example-network-attachment,\
                 output_payload_format_protobuf_schema_definition='syntax =
                  "proto3"; message Location { string home_address = 1; }' \
                     --input-payload-format-protobuf-schema-definition='syntax =

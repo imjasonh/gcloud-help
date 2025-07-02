@@ -49,6 +49,9 @@ SYNOPSIS
           | --workload-policies=WORKLOAD_POLICIES
           | --workload-pool=WORKLOAD_POOL
           | --workload-vulnerability-scanning=WORKLOAD_VULNERABILITY_SCANNING
+          | --additional-ip-ranges=[subnetwork=NAME,pod-ipv4-range=NAME,...]
+          --remove-additional-ip-ranges=[subnetwork=NAME,
+          pod-ipv4-range=NAME,...]
           | --additional-pod-ipv4-ranges=NAME,[NAME,...]
           --remove-additional-pod-ipv4-ranges=NAME,[NAME,...]
           | --auto-monitoring-scope=AUTO_MONITORING_SCOPE
@@ -828,6 +831,34 @@ REQUIRED FLAGS
 
           WORKLOAD_VULNERABILITY_SCANNING must be one of: disabled, standard,
           enterprise.
+
+       --additional-ip-ranges=[subnetwork=NAME,pod-ipv4-range=NAME,...]
+          Add additional subnetworks named "my-subnet" with pod ipv4 range
+          named "my-range" to the cluster.
+
+          Examples:
+
+              $ gcloud container clusters update example-cluster \
+                  --additional-ip-ranges=subnetwork=my-subnet,\
+              pod-ipv4-range=my-range
+
+       --remove-additional-ip-ranges=[subnetwork=NAME,pod-ipv4-range=NAME,...]
+          Additional subnetworks to be removed from the cluster.
+
+          Examples:
+
+          Remove pod range named "my-range" under additional subnetwork named
+          "my-subnet" from the cluster.
+
+              $ gcloud container clusters update example-cluster \
+                  --remove-additional-ip-ranges=subnetwork=my-subnet,\
+              pod-ipv4-range=my-range
+
+          Remove additional subnetwork named "my-subnet", including all the pod
+          ipv4 ranges under the subnetwork.
+
+              $ gcloud container clusters update example-cluster \
+                  --remove-additional-ip-ranges=subnetwork=my-subnet
 
        --additional-pod-ipv4-ranges=NAME,[NAME,...]
           Additional IP address ranges(by name) for pods that need to be added

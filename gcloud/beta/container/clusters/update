@@ -9,7 +9,7 @@ SYNOPSIS
           | --autoprovisioning-enable-insecure-kubelet-readonly-port
           | --autoprovisioning-network-tags=[TAGS,...]
           | --autoprovisioning-resource-manager-tags=[KEY=VALUE,...]
-          | --autoscaling-profile=AUTOSCALING_PROFILE | --clear-fleet-project
+          | --autoscaling-profile=AUTOSCALING_PROFILE
           | --complete-credential-rotation | --complete-ip-rotation
           | --containerd-config-from-file=PATH_TO_FILE
           | --database-encryption-key=DATABASE_ENCRYPTION_KEY
@@ -18,10 +18,9 @@ SYNOPSIS
           | --[no-]enable-autopilot-compatibility-auditing
           | --enable-autoscaling
           | --[no-]enable-cilium-clusterwide-network-policy
-          | --enable-cost-allocation | --enable-fleet
-          | --enable-fqdn-network-policy | --enable-gke-oidc
-          | --enable-identity-service | --enable-image-streaming
-          | --enable-insecure-kubelet-readonly-port
+          | --enable-cost-allocation | --enable-fqdn-network-policy
+          | --enable-gke-oidc | --enable-identity-service
+          | --enable-image-streaming | --enable-insecure-kubelet-readonly-port
           | --enable-intra-node-visibility
           | --enable-kubernetes-unstable-apis=API,[API,...]
           | --enable-l4-ilb-subsetting | --enable-legacy-authorization
@@ -30,8 +29,7 @@ SYNOPSIS
           | --enable-private-nodes | --[no-]enable-ray-cluster-logging
           | --[no-]enable-ray-cluster-monitoring | --enable-service-externalips
           | --enable-shielded-nodes | --enable-stackdriver-kubernetes
-          | --enable-vertical-pod-autoscaling
-          | --fleet-project=PROJECT_ID_OR_NUMBER | --gateway-api=GATEWAY_API
+          | --enable-vertical-pod-autoscaling | --gateway-api=GATEWAY_API
           | --generate-password | --hpa-profile=HPA_PROFILE
           | --identity-provider=IDENTITY_PROVIDER
           | --in-transit-encryption=IN_TRANSIT_ENCRYPTION
@@ -51,6 +49,9 @@ SYNOPSIS
           | --workload-policies=WORKLOAD_POLICIES
           | --workload-pool=WORKLOAD_POOL
           | --workload-vulnerability-scanning=WORKLOAD_VULNERABILITY_SCANNING
+          | --additional-ip-ranges=[subnetwork=NAME,pod-ipv4-range=NAME,...]
+          --remove-additional-ip-ranges=[subnetwork=NAME,
+          pod-ipv4-range=NAME,...]
           | --additional-pod-ipv4-ranges=NAME,[NAME,...]
           --remove-additional-pod-ipv4-ranges=NAME,[NAME,...]
           | --additional-zones=[ZONE,...] | --node-locations=ZONE,[ZONE,...]
@@ -60,8 +61,9 @@ SYNOPSIS
           | --enable-managed-prometheus
           | --binauthz-policy-bindings=[name=BINAUTHZ_POLICY]
           --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
-          | --enable-binauthz | --clear-maintenance-window
-          | --remove-maintenance-exclusion=NAME
+          | --enable-binauthz | --clear-fleet-project
+          --enable-fleet --fleet-project=PROJECT_ID_OR_NUMBER
+          | --clear-maintenance-window | --remove-maintenance-exclusion=NAME
           | [--add-maintenance-exclusion-end=TIME_STAMP
           : --add-maintenance-exclusion-name=NAME
           --add-maintenance-exclusion-scope=SCOPE
@@ -242,10 +244,6 @@ REQUIRED FLAGS
           Set autoscaling behaviour, choices are 'optimize-utilization' and
           'balanced'. Default is 'balanced'.
 
-       --clear-fleet-project
-          Remove the cluster from current fleet host project. Example: $ gcloud
-          beta container clusters update --clear-fleet-project
-
        --complete-credential-rotation
           Complete the IP and credential rotation for this cluster. For
           example:
@@ -360,12 +358,6 @@ REQUIRED FLAGS
           (https://cloud.google.com/billing/docs/how-to/export-data-bigquery).
 
           Use --no-enable-cost-allocation to disable this feature.
-
-       --enable-fleet
-          Set cluster project as the fleet host project. This will register the
-          cluster to the same project. To register the cluster to a fleet in a
-          different project, please use --fleet-project=FLEET_HOST_PROJECT.
-          Example: $ gcloud beta container clusters update --enable-fleet
 
        --enable-fqdn-network-policy
           Enable FQDN Network Policies on the cluster. FQDN Network Policies
@@ -508,14 +500,6 @@ REQUIRED FLAGS
 
          --enable-vertical-pod-autoscaling
             Enable vertical pod autoscaling for a cluster.
-
-       --fleet-project=PROJECT_ID_OR_NUMBER
-          Sets fleet host project for the cluster. If specified, the current
-          cluster will be registered as a fleet membership under the fleet host
-          project.
-
-          Example: $ gcloud beta container clusters update
-          --fleet-project=my-project
 
        --gateway-api=GATEWAY_API
           Enables GKE Gateway controller in this cluster. The value of the flag
@@ -842,6 +826,34 @@ REQUIRED FLAGS
           WORKLOAD_VULNERABILITY_SCANNING must be one of: disabled, standard,
           enterprise.
 
+       --additional-ip-ranges=[subnetwork=NAME,pod-ipv4-range=NAME,...]
+          Add additional subnetworks named "my-subnet" with pod ipv4 range
+          named "my-range" to the cluster.
+
+          Examples:
+
+              $ gcloud beta container clusters update example-cluster \
+                  --additional-ip-ranges=subnetwork=my-subnet,\
+              pod-ipv4-range=my-range
+
+       --remove-additional-ip-ranges=[subnetwork=NAME,pod-ipv4-range=NAME,...]
+          Additional subnetworks to be removed from the cluster.
+
+          Examples:
+
+          Remove pod range named "my-range" under additional subnetwork named
+          "my-subnet" from the cluster.
+
+              $ gcloud beta container clusters update example-cluster \
+                  --remove-additional-ip-ranges=subnetwork=my-subnet,\
+              pod-ipv4-range=my-range
+
+          Remove additional subnetwork named "my-subnet", including all the pod
+          ipv4 ranges under the subnetwork.
+
+              $ gcloud beta container clusters update example-cluster \
+                  --remove-additional-ip-ranges=subnetwork=my-subnet
+
        --additional-pod-ipv4-ranges=NAME,[NAME,...]
           Additional IP address ranges(by name) for pods that need to be added
           to the cluster.
@@ -982,6 +994,24 @@ REQUIRED FLAGS
 
               The --enable-binauthz flag is deprecated. Please use
               --binauthz-evaluation-mode instead.
+
+       --clear-fleet-project
+          Remove the cluster from current fleet host project. Example: $ gcloud
+          beta container clusters update --clear-fleet-project
+
+       --enable-fleet
+          Set cluster project as the fleet host project. This will register the
+          cluster to the same project. To register the cluster to a fleet in a
+          different project, please use --fleet-project=FLEET_HOST_PROJECT.
+          Example: $ gcloud beta container clusters update --enable-fleet
+
+       --fleet-project=PROJECT_ID_OR_NUMBER
+          Sets fleet host project for the cluster. If specified, the current
+          cluster will be registered as a fleet membership under the fleet host
+          project.
+
+          Example: $ gcloud beta container clusters update
+          --fleet-project=my-project
 
        At most one of these can be specified:
 
