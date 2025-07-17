@@ -17,17 +17,19 @@ SYNOPSIS
         [--create-subnetwork=[KEY=VALUE,...]]
         [--database-encryption-key=DATABASE_ENCRYPTION_KEY]
         [--disable-l4-lb-firewall-reconciliation]
-        [--enable-authorized-networks-on-private-endpoint]
+        [--enable-authorized-networks-on-private-endpoint] [--enable-auto-ipam]
         [--enable-backup-restore] [--enable-cilium-clusterwide-network-policy]
-        [--enable-dns-access] [--enable-fleet] [--enable-google-cloud-access]
-        [--enable-ip-access] [--enable-kubernetes-unstable-apis=API,[API,...]]
+        [--enable-confidential-nodes] [--enable-dns-access] [--enable-fleet]
+        [--enable-google-cloud-access] [--enable-ip-access]
+        [--enable-kubernetes-unstable-apis=API,[API,...]]
+        [--enable-legacy-lustre-port] [--enable-lustre-csi-driver]
         [--enable-master-global-access] [--enable-multi-networking]
         [--enable-ray-cluster-logging] [--enable-ray-cluster-monitoring]
         [--enable-ray-operator] [--fleet-project=PROJECT_ID_OR_NUMBER]
         [--hpa-profile=HPA_PROFILE] [--labels=[KEY=VALUE,...]]
         [--logging=[COMPONENT,...]] [--monitoring=[COMPONENT,...]]
         [--network=NETWORK] [--private-endpoint-subnetwork=NAME]
-        [--release-channel=[CHANNEL]] [--security-group=SECURITY_GROUP]
+        [--release-channel=CHANNEL] [--security-group=SECURITY_GROUP]
         [--security-posture=SECURITY_POSTURE] [--services-ipv4-cidr=CIDR]
         [--services-secondary-range-name=NAME] [--subnetwork=SUBNETWORK]
         [--tier=TIER] [--workload-policies=WORKLOAD_POLICIES]
@@ -262,6 +264,10 @@ FLAGS
         Enable enforcement of --master-authorized-networks CIDR ranges for
         traffic reaching cluster's control plane via private IP.
 
+     --enable-auto-ipam
+        Enable the Auto IP Address Management (Auto IPAM) feature for the
+        cluster.
+
      --enable-backup-restore
         Enable the Backup for GKE add-on. This add-on is disabled by default.
         To learn more, see the Backup for GKE overview:
@@ -270,6 +276,11 @@ FLAGS
      --enable-cilium-clusterwide-network-policy
         Enable Cilium Clusterwide Network Policies on the cluster. Disabled by
         default.
+
+     --enable-confidential-nodes
+        Enable confidential nodes for the cluster. Enabling Confidential Nodes
+        will create nodes using Confidential VM
+        https://cloud.google.com/compute/confidential-vm/docs/about-cvm.
 
      --enable-dns-access
         Enable access to the cluster's control plane over DNS-based endpoint.
@@ -295,6 +306,16 @@ FLAGS
         Enable Kubernetes beta API features on this cluster. Beta APIs are not
         expected to be production ready and should be avoided in
         production-grade environments.
+
+     --enable-legacy-lustre-port
+        Allow the Lustre CSI driver to initialize LNet (the virtual network
+        layer for Lustre kernel module) using port 6988. This flag is required
+        to workaround a port conflict with the gke-metadata-server on GKE
+        nodes.
+
+     --enable-lustre-csi-driver
+        Enable the Lustre CSI Driver GKE add-on. This add-on is disabled by
+        default.
 
      --enable-master-global-access
         Use with private clusters to allow access to the master's private
@@ -379,7 +400,7 @@ FLAGS
         Sets the subnetwork GKE uses to provision the control plane's private
         endpoint.
 
-     --release-channel=[CHANNEL]
+     --release-channel=CHANNEL
         Release channel a cluster is subscribed to.
 
         If left unspecified and a version is specified, the cluster is enrolled
@@ -395,8 +416,12 @@ FLAGS
 
         CHANNEL must be one of:
 
-        rapid
+         extended
+            Clusters subscribed to 'extended' can remain on a minor version for
+            24 months from when the minor version is made available in the
+            Regular channel.
 
+         rapid
             'rapid' channel is offered on an early access basis for customers
             who want to test new releases.
 
@@ -404,23 +429,14 @@ FLAGS
             to unresolved issues with no known workaround and are not subject
             to any SLAs.
 
-        regular
-
+         regular
             Clusters subscribed to 'regular' receive versions that are
             considered GA quality. 'regular' is intended for production users
             who want to take advantage of new features.
 
-        extended
-
-            Clusters subscribed to 'extended' can remain on a minor version for 24 months
-            from when the minor version is made available in the Regular channel.
-
-        stable
-
+         stable
             Clusters subscribed to 'stable' receive versions that are known to
             be stable and reliable in production.
-
-        CHANNEL must be one of: rapid, regular, extended, stable.
 
      --security-group=SECURITY_GROUP
         The name of the RBAC security group for use with Google security groups

@@ -11,8 +11,10 @@ SYNOPSIS
           | [--web (--allow-all-domains | --domains=[DOMAINS,...])
           : --allow-amp-traffic --integration-type=INTEGRATION_TYPE
           --security-preference=SECURITY_PREFERENCE
-          --testing-challenge=TESTING_CHALLENGE]) [--labels=[KEY=VALUE,...]]
-        [--testing-score=TESTING_SCORE]
+          --testing-challenge=TESTING_CHALLENGE
+          [--default-score-threshold=DEFAULT_SCORE_THRESHOLD
+          : --action-score-thresholds=[ACTION_SCORE_THRESHOLDS,...]]])
+        [--labels=[KEY=VALUE,...]] [--testing-score=TESTING_SCORE]
         [--waf-service=WAF_SERVICE : --waf-feature=WAF_FEATURE]
         [GCLOUD_WIDE_FLAG ...]
 
@@ -132,13 +134,11 @@ REQUIRED FLAGS
                 Does not display the "I'm not a robot" checkbox, but may show
                 CAPTCHA challenges after risk analysis
 
+             policy-based-challenge
+                Conditionally displays a challenge based on the score
+
              score
                 Shows no CAPTCHA challenge on the page
-
-             score-and-challenge
-                Conditionally displays a challenge based on the score. This is
-                in private preview. If you want to onboard, contact your Google
-                Cloud sales representative.
 
          --security-preference=SECURITY_PREFERENCE
             Represents the possible challenge frequency and difficulty
@@ -173,6 +173,42 @@ REQUIRED FLAGS
               query or fragment.
 
               Examples of valid domains: 'example.com' 'subdomain.example.com'
+
+         Configure if you want to use the POLICY_BASED_CHALLENGE option.
+
+           --default-score-threshold=DEFAULT_SCORE_THRESHOLD
+              The global threshold to be used for POLICY_BASED_CHALLENGE if no
+              action specific one exists.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --action-score-thresholds=[ACTION_SCORE_THRESHOLDS,...]
+              The action to score threshold used for POLICY_BASED_CHALLENGE.
+              For example: --action-score-thresholds=login='{"scoreThreshold":
+              "0.3"}',signup='{"scoreThreshold": "0.1"}' or
+              --action-score-thresholds=file_path.(json|yaml).
+
+               KEY
+                  Sets KEY value.
+
+               VALUE
+                  Sets VALUE value.
+
+                   scoreThreshold
+                      Sets scoreThreshold value.
+
+              Shorthand Example:
+
+                  --action-score-thresholds=string={scoreThreshold=float}
+
+              JSON Example:
+
+                  --action-score-thresholds='{"string": {"scoreThreshold": float}}'
+
+              File Example:
+
+                  --action-score-thresholds=path_to_file.(yaml|json)
 
 OPTIONAL FLAGS
      --labels=[KEY=VALUE,...]

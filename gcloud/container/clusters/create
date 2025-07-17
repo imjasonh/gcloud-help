@@ -30,7 +30,7 @@ SYNOPSIS
         [--default-max-pods-per-node=DEFAULT_MAX_PODS_PER_NODE]
         [--disable-default-snat] [--disable-l4-lb-firewall-reconciliation]
         [--disk-size=DISK_SIZE] [--disk-type=DISK_TYPE]
-        [--enable-authorized-networks-on-private-endpoint]
+        [--enable-authorized-networks-on-private-endpoint] [--enable-auto-ipam]
         [--enable-autorepair] [--no-enable-autoupgrade]
         [--enable-cilium-clusterwide-network-policy] [--enable-cloud-logging]
         [--enable-cloud-monitoring] [--enable-cloud-run-alpha]
@@ -44,12 +44,13 @@ SYNOPSIS
         [--enable-ip-alias] [--enable-kubernetes-alpha]
         [--enable-kubernetes-unstable-apis=API,[API,...]]
         [--enable-l4-ilb-subsetting] [--enable-legacy-authorization]
-        [--enable-managed-prometheus] [--enable-master-global-access]
-        [--enable-multi-networking] [--enable-nested-virtualization]
-        [--enable-network-policy] [--enable-ray-cluster-logging]
-        [--enable-ray-cluster-monitoring] [--enable-secret-manager]
-        [--enable-service-externalips] [--enable-shielded-nodes]
-        [--enable-stackdriver-kubernetes] [--enable-vertical-pod-autoscaling]
+        [--enable-legacy-lustre-port] [--enable-managed-prometheus]
+        [--enable-master-global-access] [--enable-multi-networking]
+        [--enable-nested-virtualization] [--enable-network-policy]
+        [--enable-ray-cluster-logging] [--enable-ray-cluster-monitoring]
+        [--enable-secret-manager] [--enable-service-externalips]
+        [--enable-shielded-nodes] [--enable-stackdriver-kubernetes]
+        [--enable-vertical-pod-autoscaling]
         [--fleet-project=PROJECT_ID_OR_NUMBER] [--gateway-api=GATEWAY_API]
         [--hpa-profile=HPA_PROFILE] [--image-type=IMAGE_TYPE]
         [--in-transit-encryption=IN_TRANSIT_ENCRYPTION]
@@ -75,7 +76,7 @@ SYNOPSIS
         [--placement-policy=PLACEMENT_POLICY] [--placement-type=PLACEMENT_TYPE]
         [--preemptible] [--private-endpoint-subnetwork=NAME]
         [--private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE]
-        [--release-channel=[CHANNEL]] [--resource-manager-tags=[KEY=VALUE,...]]
+        [--release-channel=CHANNEL] [--resource-manager-tags=[KEY=VALUE,...]]
         [--security-group=SECURITY_GROUP] [--security-posture=SECURITY_POSTURE]
         [--services-ipv4-cidr=CIDR] [--services-secondary-range-name=NAME]
         [--shielded-integrity-monitoring] [--shielded-secure-boot] [--spot]
@@ -232,7 +233,8 @@ FLAGS
         ADDON must be one of: HttpLoadBalancing, HorizontalPodAutoscaling,
         KubernetesDashboard, NetworkPolicy, NodeLocalDNS, ConfigConnector,
         GcePersistentDiskCsiDriver, GcpFilestoreCsiDriver, BackupRestore,
-        GcsFuseCsiDriver, ParallelstoreCsiDriver, RayOperator, CloudRun.
+        GcsFuseCsiDriver, ParallelstoreCsiDriver, LustreCsiDriver, RayOperator,
+        CloudRun.
 
      --alpha-cluster-feature-gates=[FEATURE=true|false,...]
         Selectively enable or disable Kubernetes alpha and beta
@@ -492,6 +494,10 @@ FLAGS
         Enable enforcement of --master-authorized-networks CIDR ranges for
         traffic reaching cluster's control plane via private IP.
 
+     --enable-auto-ipam
+        Enable the Auto IP Address Management (Auto IPAM) feature for the
+        cluster.
+
      --enable-autorepair
         Enable node autorepair feature for a cluster's default node pool(s).
 
@@ -641,6 +647,10 @@ FLAGS
         instead. For instructions, see
         https://cloud.google.com/kubernetes-engine/docs/how-to/routes-based-cluster
 
+        Note: For IPv6-only clusters, these flags are a no-op as IP Aliases do
+        not apply, and any specified IP address ranges for Pods and Services
+        will be ignored.
+
         You can't specify both --enable-ip-alias and --no-enable-ip-alias. If
         you omit both --enable-ip-alias and --no-enable-ip-alias, the default
         is a VPC-native cluster.
@@ -670,6 +680,12 @@ FLAGS
         https://kubernetes.io/docs/admin/authorization/abac/. To use RBAC
         permissions instead, create or update your cluster with the option
         --no-enable-legacy-authorization.
+
+     --enable-legacy-lustre-port
+        Allow the Lustre CSI driver to initialize LNet (the virtual network
+        layer for Lustre kernel module) using port 6988. This flag is required
+        to workaround a port conflict with the gke-metadata-server on GKE
+        nodes.
 
      --enable-managed-prometheus
         Enables managed collection for Managed Service for Prometheus in the
@@ -1153,7 +1169,7 @@ FLAGS
         PRIVATE_IPV6_GOOGLE_ACCESS_TYPE must be one of: bidirectional,
         disabled, outbound-only.
 
-     --release-channel=[CHANNEL]
+     --release-channel=CHANNEL
         Release channel a cluster is subscribed to.
 
         If left unspecified and a version is specified, the cluster is enrolled
@@ -1169,8 +1185,15 @@ FLAGS
 
         CHANNEL must be one of:
 
-        rapid
+         None
+            Use 'None' to opt-out of any release channel.
 
+         extended
+            Clusters subscribed to 'extended' can remain on a minor version for
+            24 months from when the minor version is made available in the
+            Regular channel.
+
+         rapid
             'rapid' channel is offered on an early access basis for customers
             who want to test new releases.
 
@@ -1178,27 +1201,14 @@ FLAGS
             to unresolved issues with no known workaround and are not subject
             to any SLAs.
 
-        regular
-
+         regular
             Clusters subscribed to 'regular' receive versions that are
             considered GA quality. 'regular' is intended for production users
             who want to take advantage of new features.
 
-        extended
-
-            Clusters subscribed to 'extended' can remain on a minor version for 24 months
-            from when the minor version is made available in the Regular channel.
-
-        stable
-
+         stable
             Clusters subscribed to 'stable' receive versions that are known to
             be stable and reliable in production.
-
-        None
-
-            Use 'None' to opt-out of any release channel.
-
-        CHANNEL must be one of: rapid, regular, extended, stable, None.
 
      --resource-manager-tags=[KEY=VALUE,...]
         Applies the specified comma-separated resource manager tags that has
@@ -1290,7 +1300,7 @@ FLAGS
         VM instances.
 
      --stack-type=STACK_TYPE
-        IP stack type of the node VMs. STACK_TYPE must be one of: ipv4,
+        IP stack type of the cluster nodes. STACK_TYPE must be one of: ipv4,
         ipv4-ipv6.
 
      --storage-pools=STORAGE_POOL,[...]
@@ -1366,6 +1376,8 @@ FLAGS
                                                'fs.mqueue.*', and 'net.*', and
                                                sysctls under the groups.)
           singleProcessOomKill                 true or false
+          maxParallelImagePulls                integer (The value must be
+                                               between [2, 5].)
 
           KEY                                         VALUE
           policy                                      either 'Static' or 'None'
@@ -1402,6 +1414,8 @@ FLAGS
           net.ipv4.tcp_wmem                                   Any positive
                                                               integer tuple
           net.ipv4.tcp_tw_reuse                               Must be {0, 1, 2}
+          net.ipv4.tcp_max_orphans                            Must be between
+                                                              [16384, 262144]
           net.netfilter.nf_conntrack_max                      Must be between
                                                               [65536, 4194304]
           net.netfilter.nf_conntrack_buckets                  Must be between
@@ -1427,9 +1441,40 @@ FLAGS
                                                               [0,
                                                               184467440736927743
                                                               99]
+          fs.aio-max-nr                                       Must be between
+                                                              [65536, 4194304]
+          fs.file-max                                         Must be between
+                                                              [104857, 67108864]
+          fs.inotify.max_user_instances                       Must be between
+                                                              [8192, 1048576]
+          fs.inotify.max_user_watches                         Must be between
+                                                              [8192, 1048576]
+          fs.nr_open                                          Must be between
+                                                              [1048576,
+                                                              2147483584]
+          vm.dirty_background_ratio                           Must be between
+                                                              [1, 100]
+          vm.dirty_expire_centisecs                           Must be between
+                                                              [0, 6000]
+          vm.dirty_ratio                                      Must be between
+                                                              [1, 100]
+          vm.dirty_writeback_centisecs                        Must be between
+                                                              [0, 1000]
           vm.max_map_count                                    Must be between
                                                               [65536,
                                                               2147483647]
+          vm.overcommit_memory                                Must be one of {0,
+                                                              1, 2}
+          vm.overcommit_ratio                                 Must be between
+                                                              [0, 100]
+          vm.vfs_cache_pressure                               Must be between
+                                                              [0, 100]
+          vm.swappiness                                       Must be between
+                                                              [0, 200]
+          vm.watermark_scale_factor                           Must be between
+                                                              [10, 3000]
+          vm.min_free_kbytes                                  Must be between
+                                                              [67584, 1048576]
 
         List of supported hugepage size in 'hugepageConfig'.
 
@@ -1449,6 +1494,47 @@ FLAGS
         ◆ CGROUP_MODE_V1: Use cgroupv1 on the node pool.
         ◆ CGROUP_MODE_V2: Use cgroupv2 on the node pool.
         ◆ CGROUP_MODE_UNSPECIFIED: Use the default GKE cgroup configuration.
+
+        Supported values for 'transparentHugepageEnabled' under 'linuxConfig'
+        which controls transparent hugepage support for anonymous memory.
+
+        ◆ TRANSPARENT_HUGEPAGE_ENABLED_ALWAYS: Transparent hugepage is
+          enabled system wide.
+        ◆ TRANSPARENT_HUGEPAGE_ENABLED_MADVISE: Transparent hugepage is
+          enabled inside MADV_HUGEPAGE regions. This is the default kernel
+          configuration.
+        ◆ TRANSPARENT_HUGEPAGE_ENABLED_NEVER: Transparent hugepage is
+          disabled.
+        ◆ TRANSPARENT_HUGEPAGE_ENABLED_UNSPECIFIED: Default value. GKE will
+          not modify the kernel configuration.
+
+        Supported values for 'transparentHugepageDefrag' under 'linuxConfig'
+        which defines the transparent hugepage defrag configuration on the
+        node.
+
+        ◆ TRANSPARENT_HUGEPAGE_DEFRAG_ALWAYS: It means that an application
+          requesting THP will stall on allocation failure and directly reclaim
+          pages and compact memory in an effort to allocate a THP immediately.
+        ◆ TRANSPARENT_HUGEPAGE_DEFRAG_DEFER: It means that an application
+          will wake kswapd in the background to reclaim pages and wake
+          kcompactd to compact memory so that THP is available in the near
+          future. It is the responsibility of khugepaged to then install the
+          THP pages later.
+        ◆ TRANSPARENT_HUGEPAGE_DEFRAG_DEFER_WITH_MADVISE: It means that an
+          application will enter direct reclaim and compaction like always, but
+          only for regions that have used madvise(MADV_HUGEPAGE); all other
+          regions will wake kswapd in the background to reclaim pages and wake
+          kcompactd to compact memory so that THP is available in the near
+          future.
+        ◆ TRANSPARENT_HUGEPAGE_DEFRAG_MADVISE: It means that an application
+          will enter direct reclaim and compaction like always, but only for
+          regions that have used madvise(MADV_HUGEPAGE); all other regions will
+          wake kswapd in the background to reclaim pages and wake kcompactd to
+          compact memory so that THP is available in the near future.
+        ◆ TRANSPARENT_HUGEPAGE_DEFRAG_NEVER: It means that an application
+          will never enter direct reclaim or compaction.
+        ◆ TRANSPARENT_HUGEPAGE_DEFRAG_UNSPECIFIED: Default value. GKE will
+          not modify the kernel configuration.
 
         Note, updating the system configuration of an existing node pool
         requires recreation of the nodes which which might cause a disruption.

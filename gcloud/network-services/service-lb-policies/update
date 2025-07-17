@@ -7,6 +7,9 @@ SYNOPSIS
         (SERVICE_LB_POLICY : --location=LOCATION) [--async]
         [--auto-capacity-drain] [--description=DESCRIPTION]
         [--failover-health-threshold=FAILOVER_HEALTH_THRESHOLD]
+        [--isolation-config-granularity=ISOLATION_CONFIG_GRANULARITY;
+          default="unspecified"]
+        [--isolation-config-mode=ISOLATION_CONFIG_MODE; default="unspecified"]
         [--load-balancing-algorithm=LOAD_BALANCING_ALGORITHM;
           default="waterfall-by-region"] [GCLOUD_WIDE_FLAG ...]
 
@@ -75,6 +78,31 @@ FLAGS
         backends if possible. This field should be set to a value between 1 and
         99. The default value is 50 for Proxyless service mesh, and 70 for
         others.
+
+     --isolation-config-granularity=ISOLATION_CONFIG_GRANULARITY; default="unspecified"
+        The granularity of the isolation. ISOLATION_CONFIG_GRANULARITY must be
+        one of:
+
+         region
+            Traffic for this service will be isolated at the nearest cloud
+            region.
+
+         unspecified
+            No isolation is configured for the backend service. Traffic can
+            overflow based on the load balancing algorithm.
+
+     --isolation-config-mode=ISOLATION_CONFIG_MODE; default="unspecified"
+        The granularity of the isolation. ISOLATION_CONFIG_MODE must be one of:
+
+         nearest
+            Traffic will be sent to the nearest location.
+
+         strict
+            Traffic will fail if no serving backends are available in the same
+            region as the load balancer.
+
+         unspecified
+            No isolation mode is configured for the backend service.
 
      --load-balancing-algorithm=LOAD_BALANCING_ALGORITHM; default="waterfall-by-region"
         The global load balancing algorithm to be used.

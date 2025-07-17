@@ -49,6 +49,7 @@ SYNOPSIS
         [--sandbox=[type=TYPE]]
         [--secondary-boot-disk=[disk-image=DISK_IMAGE,[mode=MODE],...]]
         [--shielded-integrity-monitoring] [--shielded-secure-boot]
+        [--sole-tenant-min-node-cpus=SOLE_TENANT_MIN_NODE_CPUS]
         [--sole-tenant-node-affinity-file=SOLE_TENANT_NODE_AFFINITY_FILE]
         [--spot]
         [--standard-rollout-policy=[batch-node-count=BATCH_NODE_COUNT,
@@ -677,6 +678,11 @@ FLAGS
      --shielded-secure-boot
         The instance will boot with secure boot enabled.
 
+     --sole-tenant-min-node-cpus=SOLE_TENANT_MIN_NODE_CPUS
+        A integer value that specifies the minimum number of vCPUs that each
+        sole tenant node must have to use CPU overcommit. If not specified, the
+        CPU overcommit feature is disabled.
+
      --sole-tenant-node-affinity-file=SOLE_TENANT_NODE_AFFINITY_FILE
         JSON/YAML file containing the configuration of desired sole tenant
         nodes onto which this node pool could be backed by. These rules filter
@@ -786,6 +792,8 @@ FLAGS
                                                'fs.mqueue.*', and 'net.*', and
                                                sysctls under the groups.)
           singleProcessOomKill                 true or false
+          maxParallelImagePulls                integer (The value must be
+                                               between [2, 5].)
 
           KEY                                         VALUE
           policy                                      either 'Static' or 'None'
@@ -822,6 +830,8 @@ FLAGS
           net.ipv4.tcp_wmem                                   Any positive
                                                               integer tuple
           net.ipv4.tcp_tw_reuse                               Must be {0, 1, 2}
+          net.ipv4.tcp_max_orphans                            Must be between
+                                                              [16384, 262144]
           net.netfilter.nf_conntrack_max                      Must be between
                                                               [65536, 4194304]
           net.netfilter.nf_conntrack_buckets                  Must be between
@@ -847,9 +857,40 @@ FLAGS
                                                               [0,
                                                               184467440736927743
                                                               99]
+          fs.aio-max-nr                                       Must be between
+                                                              [65536, 4194304]
+          fs.file-max                                         Must be between
+                                                              [104857, 67108864]
+          fs.inotify.max_user_instances                       Must be between
+                                                              [8192, 1048576]
+          fs.inotify.max_user_watches                         Must be between
+                                                              [8192, 1048576]
+          fs.nr_open                                          Must be between
+                                                              [1048576,
+                                                              2147483584]
+          vm.dirty_background_ratio                           Must be between
+                                                              [1, 100]
+          vm.dirty_expire_centisecs                           Must be between
+                                                              [0, 6000]
+          vm.dirty_ratio                                      Must be between
+                                                              [1, 100]
+          vm.dirty_writeback_centisecs                        Must be between
+                                                              [0, 1000]
           vm.max_map_count                                    Must be between
                                                               [65536,
                                                               2147483647]
+          vm.overcommit_memory                                Must be one of {0,
+                                                              1, 2}
+          vm.overcommit_ratio                                 Must be between
+                                                              [0, 100]
+          vm.vfs_cache_pressure                               Must be between
+                                                              [0, 100]
+          vm.swappiness                                       Must be between
+                                                              [0, 200]
+          vm.watermark_scale_factor                           Must be between
+                                                              [10, 3000]
+          vm.min_free_kbytes                                  Must be between
+                                                              [67584, 1048576]
 
         List of supported hugepage size in 'hugepageConfig'.
 
@@ -869,6 +910,47 @@ FLAGS
         ◆ CGROUP_MODE_V1: Use cgroupv1 on the node pool.
         ◆ CGROUP_MODE_V2: Use cgroupv2 on the node pool.
         ◆ CGROUP_MODE_UNSPECIFIED: Use the default GKE cgroup configuration.
+
+        Supported values for 'transparentHugepageEnabled' under 'linuxConfig'
+        which controls transparent hugepage support for anonymous memory.
+
+        ◆ TRANSPARENT_HUGEPAGE_ENABLED_ALWAYS: Transparent hugepage is
+          enabled system wide.
+        ◆ TRANSPARENT_HUGEPAGE_ENABLED_MADVISE: Transparent hugepage is
+          enabled inside MADV_HUGEPAGE regions. This is the default kernel
+          configuration.
+        ◆ TRANSPARENT_HUGEPAGE_ENABLED_NEVER: Transparent hugepage is
+          disabled.
+        ◆ TRANSPARENT_HUGEPAGE_ENABLED_UNSPECIFIED: Default value. GKE will
+          not modify the kernel configuration.
+
+        Supported values for 'transparentHugepageDefrag' under 'linuxConfig'
+        which defines the transparent hugepage defrag configuration on the
+        node.
+
+        ◆ TRANSPARENT_HUGEPAGE_DEFRAG_ALWAYS: It means that an application
+          requesting THP will stall on allocation failure and directly reclaim
+          pages and compact memory in an effort to allocate a THP immediately.
+        ◆ TRANSPARENT_HUGEPAGE_DEFRAG_DEFER: It means that an application
+          will wake kswapd in the background to reclaim pages and wake
+          kcompactd to compact memory so that THP is available in the near
+          future. It is the responsibility of khugepaged to then install the
+          THP pages later.
+        ◆ TRANSPARENT_HUGEPAGE_DEFRAG_DEFER_WITH_MADVISE: It means that an
+          application will enter direct reclaim and compaction like always, but
+          only for regions that have used madvise(MADV_HUGEPAGE); all other
+          regions will wake kswapd in the background to reclaim pages and wake
+          kcompactd to compact memory so that THP is available in the near
+          future.
+        ◆ TRANSPARENT_HUGEPAGE_DEFRAG_MADVISE: It means that an application
+          will enter direct reclaim and compaction like always, but only for
+          regions that have used madvise(MADV_HUGEPAGE); all other regions will
+          wake kswapd in the background to reclaim pages and wake kcompactd to
+          compact memory so that THP is available in the near future.
+        ◆ TRANSPARENT_HUGEPAGE_DEFRAG_NEVER: It means that an application
+          will never enter direct reclaim or compaction.
+        ◆ TRANSPARENT_HUGEPAGE_DEFRAG_UNSPECIFIED: Default value. GKE will
+          not modify the kernel configuration.
 
         Note, updating the system configuration of an existing node pool
         requires recreation of the nodes which which might cause a disruption.

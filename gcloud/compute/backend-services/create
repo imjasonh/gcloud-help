@@ -40,7 +40,9 @@ SYNOPSIS
         [--session-affinity=SESSION_AFFINITY]
         [--signed-url-cache-max-age=SIGNED_URL_CACHE_MAX_AGE]
         [--subsetting-policy=SUBSETTING_POLICY; default="NONE"]
-        [--timeout=TIMEOUT; default="30s"] [--tracking-mode=TRACKING_MODE]
+        [--timeout=TIMEOUT; default="30s"]
+        [--tls-settings=[authenticationConfig=AUTHENTICATIONCONFIG],[sni=SNI]]
+        [--tracking-mode=TRACKING_MODE]
         [--cache-key-query-string-blacklist=[QUERY_STRING,...]
           | --cache-key-query-string-whitelist=QUERY_STRING,[...]]
         [--custom-metrics=[CUSTOM_METRICS,...]
@@ -718,6 +720,14 @@ FLAGS
         If the protocol is SSL or TCP, timeout is an idle timeout.
 
         The full range of timeout values allowed is 1 - 2,147,483,647 seconds.
+
+     --tls-settings=[authenticationConfig=AUTHENTICATIONCONFIG],[sni=SNI]
+        Configuration for Backend Authenticated TLS and mTLS. May only be
+        specified when the backend protocol is SSL, HTTPS or HTTP2.
+
+        Example: $ gcloud compute backend-services create \
+        --tls-settings='sni=example.com,authenticationConfig=${AUTH_CONF\
+        IG_NAME}'
 
      --tracking-mode=TRACKING_MODE
         Specifies the connection key used for connection tracking. The default

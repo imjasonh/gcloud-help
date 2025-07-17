@@ -5,19 +5,28 @@ NAME
 SYNOPSIS
     gcloud database-migration private-connections create
         (PRIVATE_CONNECTION : --region=REGION) --display-name=DISPLAY_NAME
-        (--subnet=SUBNET --vpc=VPC) [--no-async] [--labels=[KEY=VALUE,...]]
-        [--skip-validation] [GCLOUD_WIDE_FLAG ...]
+        (--network-attachment=NETWORK_ATTACHMENT | --subnet=SUBNET --vpc=VPC)
+        [--no-async] [--labels=[KEY=VALUE,...]] [--skip-validation]
+        [--validate-only] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Create a Database Migration private connection
 
 EXAMPLES
-    To create a private connection called 'my-private-connection', run:
+    To create a private connection with VPC Peering called
+    'my-private-connection', run:
 
         $ gcloud database-migration private-connections create \
           my-private-connection --region=us-central1 \
           --display-name=my-private-connection --vpc=vpc-example \
           --subnet=10.0.0.0/29
+
+        To create a private connection with PSC Interface called 'my-privateConnection', run:
+
+        $ gcloud database-migration private-connections create \
+          my-private-connection --location=us-central1 \
+          --display-name=my-private-connection \
+          --network-attachment=network-attachment-example
 
         To use a private connection, all migrations and connection profiles that use this configuration must be in the same region.
 
@@ -59,31 +68,40 @@ REQUIRED FLAGS
         include letters, numbers, spaces, and hyphens, and must start with a
         letter. The maximum length allowed is 60 characters.
 
-     This must be specified.
+     Exactly one of these must be specified:
 
-       --subnet=SUBNET
-          A free subnet for peering. (CIDR of /29).
+       Arguments for Private Service Connect Interface configuration.
 
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
+         --network-attachment=NETWORK_ATTACHMENT
+            Full URI of the network attachment that datastream will connect
+            to.For example, this would be of the
+            form:network-attachment=projects/test-project/regions/us-central1/networkAttachments/my-na
 
-       Vpc resource - Resource name of the private connection. This represents
-       a Cloud resource. (NOTE) Some attributes are not given arguments in this
-       group but can be set in other ways.
+       Arguments for VPC Peering configuration.
 
-       To set the project attribute:
-        ▸ provide the argument --vpc on the command line with a fully
-          specified name;
-        ▸ provide the argument --project on the command line;
-        ▸ set the property core/project.
+         --subnet=SUBNET
+            A free subnet for peering. (CIDR of /29).
 
-       This must be specified.
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
 
-         --vpc=VPC
-            ID of the vpc or fully qualified identifier for the vpc.
+         Vpc resource - Resource ID of the VPC network to peer with. This
+         represents a Cloud resource. (NOTE) Some attributes are not given
+         arguments in this group but can be set in other ways.
 
-            To set the vpc attribute:
-            ▫ provide the argument --vpc on the command line.
+         To set the project attribute:
+          ▫ provide the argument --vpc on the command line with a fully
+            specified name;
+          ▫ provide the argument --project on the command line;
+          ▫ set the property core/project.
+
+         This must be specified.
+
+           --vpc=VPC
+              ID of the vpc or fully qualified identifier for the vpc.
+
+              To set the vpc attribute:
+              ◇ provide the argument --vpc on the command line.
 
 OPTIONAL FLAGS
      --no-async
@@ -99,6 +117,10 @@ OPTIONAL FLAGS
 
      --skip-validation
         Creates the private connection without running prior verifications.
+
+     --validate-only
+        If set, the request will retrieve the project id to allow in the
+        network attachment Datastream will connect to.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
