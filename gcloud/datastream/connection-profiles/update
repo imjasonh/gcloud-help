@@ -10,13 +10,13 @@ SYNOPSIS
         [--bucket=BUCKET --root-path=ROOT_PATH
           | --database-service=DATABASE_SERVICE
           --oracle-hostname=ORACLE_HOSTNAME --oracle-port=ORACLE_PORT
-          --oracle-username=ORACLE_USERNAME --oracle-password=ORACLE_PASSWORD
-          | --oracle-prompt-for-password
-          | --oracle-secret-manager-stored-password=ORACLE_SECRET_MANAGER_STORED_PASSWORD | --mongodb-direct-connection --mongodb-host-addresses=IPv4_ADDRESS_OR_HOSTNAME:PORT,
+          --oracle-username=ORACLE_USERNAME
+          --oracle-ca-certificate=ORACLE_CA_CERTIFICATE
+          --oracle-server-certificate-distinguished-name=ORACLE_SERVER_CERTIFICATE_DISTINGUISHED_NAME --oracle-password=ORACLE_PASSWORD | --oracle-prompt-for-password | --oracle-secret-manager-stored-password=ORACLE_SECRET_MANAGER_STORED_PASSWORD | --mongodb-direct-connection --mongodb-host-addresses=IPv4_ADDRESS_OR_HOSTNAME:PORT,
           [...] --mongodb-replica-set=MONGODB_REPLICA_SET --mongodb-tls
           --mongodb-username=MONGODB_USERNAME
           --mongodb-password=MONGODB_PASSWORD | --mongodb-prompt-for-password
-          | --mongodb-secret-manager-stored-password=MONGODB_SECRET_MANAGER_STORED_PASSWORD --mongodb-srv-connection-format | --mongodb-standard-connection-format | --mysql-hostname=MYSQL_HOSTNAME --mysql-port=MYSQL_PORT --mysql-username=MYSQL_USERNAME --ca-certificate=CA_CERTIFICATE --client-certificate=CLIENT_CERTIFICATE --client-key=CLIENT_KEY --mysql-password=MYSQL_PASSWORD | --mysql-prompt-for-password | --mysql-secret-manager-stored-password=MYSQL_SECRET_MANAGER_STORED_PASSWORD | --postgresql-database=POSTGRESQL_DATABASE --postgresql-hostname=POSTGRESQL_HOSTNAME --postgresql-port=POSTGRESQL_PORT --postgresql-username=POSTGRESQL_USERNAME --postgresql-ca-certificate=POSTGRESQL_CA_CERTIFICATE --postgresql-client-certificate=POSTGRESQL_CLIENT_CERTIFICATE --postgresql-client-key=POSTGRESQL_CLIENT_KEY --postgresql-password=POSTGRESQL_PASSWORD | --postgresql-prompt-for-password | --postgresql-secret-manager-stored-password=POSTGRESQL_SECRET_MANAGER_STORED_PASSWORD | --salesforce-domain=SALESFORCE_DOMAIN --salesforce-oauth2-client-id=SALESFORCE_OAUTH2_CLIENT_ID --salesforce-oauth2-client-secret=SALESFORCE_OAUTH2_CLIENT_SECRET | --salesforce-prompt-for-oauth2-client-secret | --salesforce-secret-manager-stored-oauth2-client-secret=SALESFORCE_SECRET_MANAGER_STORED_OAUTH2_CLIENT_SECRET | --salesforce-username=SALESFORCE_USERNAME --salesforce-password=SALESFORCE_PASSWORD | --salesforce-prompt-for-password | --salesforce-secret-manager-stored-password=SALESFORCE_SECRET_MANAGER_STORED_PASSWORD --salesforce-prompt-for-security-token | --salesforce-secret-manager-stored-security-token=SALESFORCE_SECRET_MANAGER_STORED_SECURITY_TOKEN | --salesforce-security-token=SALESFORCE_SECURITY_TOKEN | --sqlserver-database=SQLSERVER_DATABASE --sqlserver-hostname=SQLSERVER_HOSTNAME --sqlserver-port=SQLSERVER_PORT --sqlserver-username=SQLSERVER_USERNAME --sqlserver-password=SQLSERVER_PASSWORD | --sqlserver-prompt-for-password | --sqlserver-secret-manager-stored-password=SQLSERVER_SECRET_MANAGER_STORED_PASSWORD]
+          | --mongodb-secret-manager-stored-password=MONGODB_SECRET_MANAGER_STORED_PASSWORD --mongodb-srv-connection-format | --mongodb-standard-connection-format | --mysql-hostname=MYSQL_HOSTNAME --mysql-port=MYSQL_PORT --mysql-username=MYSQL_USERNAME --ca-certificate=CA_CERTIFICATE --client-certificate=CLIENT_CERTIFICATE --client-key=CLIENT_KEY --mysql-password=MYSQL_PASSWORD | --mysql-prompt-for-password | --mysql-secret-manager-stored-password=MYSQL_SECRET_MANAGER_STORED_PASSWORD | --postgresql-database=POSTGRESQL_DATABASE --postgresql-hostname=POSTGRESQL_HOSTNAME --postgresql-port=POSTGRESQL_PORT --postgresql-username=POSTGRESQL_USERNAME --postgresql-ca-certificate=POSTGRESQL_CA_CERTIFICATE --postgresql-server-certificate-hostname=POSTGRESQL_SERVER_CERTIFICATE_HOSTNAME --postgresql-client-certificate=POSTGRESQL_CLIENT_CERTIFICATE --postgresql-client-key=POSTGRESQL_CLIENT_KEY --postgresql-password=POSTGRESQL_PASSWORD | --postgresql-prompt-for-password | --postgresql-secret-manager-stored-password=POSTGRESQL_SECRET_MANAGER_STORED_PASSWORD | --salesforce-domain=SALESFORCE_DOMAIN --salesforce-oauth2-client-id=SALESFORCE_OAUTH2_CLIENT_ID --salesforce-oauth2-client-secret=SALESFORCE_OAUTH2_CLIENT_SECRET | --salesforce-prompt-for-oauth2-client-secret | --salesforce-secret-manager-stored-oauth2-client-secret=SALESFORCE_SECRET_MANAGER_STORED_OAUTH2_CLIENT_SECRET | --salesforce-username=SALESFORCE_USERNAME --salesforce-password=SALESFORCE_PASSWORD | --salesforce-prompt-for-password | --salesforce-secret-manager-stored-password=SALESFORCE_SECRET_MANAGER_STORED_PASSWORD --salesforce-prompt-for-security-token | --salesforce-secret-manager-stored-security-token=SALESFORCE_SECRET_MANAGER_STORED_SECURITY_TOKEN | --salesforce-security-token=SALESFORCE_SECURITY_TOKEN | --sqlserver-database=SQLSERVER_DATABASE --sqlserver-hostname=SQLSERVER_HOSTNAME --sqlserver-port=SQLSERVER_PORT --sqlserver-username=SQLSERVER_USERNAME --sqlserver-password=SQLSERVER_PASSWORD | --sqlserver-prompt-for-password | --sqlserver-secret-manager-stored-password=SQLSERVER_SECRET_MANAGER_STORED_PASSWORD]
         [--clear-labels | --remove-labels=[KEY,...]]
         [--private-connection=PRIVATE_CONNECTION | --static-ip-connectivity
           | --forward-ssh-hostname=FORWARD_SSH_HOSTNAME
@@ -169,6 +169,15 @@ OPTIONAL FLAGS
        --oracle-username=ORACLE_USERNAME
           Username Datastream will use to connect to the database.
 
+       --oracle-ca-certificate=ORACLE_CA_CERTIFICATE
+          PEM-encoded certificate of the CA that signed the source database
+          server's certificate.
+
+       --oracle-server-certificate-distinguished-name=ORACLE_SERVER_CERTIFICATE_DISTINGUISHED_NAME
+          The distinguished name (DN) mentioned in the server certificate. This
+          corresponds to the SSL_SERVER_CERT_DN sqlnet parameter. If this field
+          is not provided, the DN matching is not enforced.
+
        At most one of these can be specified:
 
          --oracle-password=ORACLE_PASSWORD
@@ -273,6 +282,11 @@ OPTIONAL FLAGS
           x509 PEM-encoded certificate of the CA that signed the source
           database server's certificate. The replica will use this certificate
           to verify it's connecting to the right host.
+
+       --postgresql-server-certificate-hostname=POSTGRESQL_SERVER_CERTIFICATE_HOSTNAME
+          The hostname mentioned in the Subject or SAN extension of the server
+          certificate. If this field is not provided, the hostname in the
+          server certificate is not validated.
 
        --postgresql-client-certificate=POSTGRESQL_CLIENT_CERTIFICATE
           x509 PEM-encoded certificate that will be used by the replica to

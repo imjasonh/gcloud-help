@@ -1,0 +1,82 @@
+NAME
+    gcloud beta sql instances point-in-time-restore - performs a point in time
+        restore for a Cloud SQL instance managed by Google Cloud Backup and
+        Disaster Recovery
+
+SYNOPSIS
+    gcloud beta sql instances point-in-time-restore DATASOURCE TARGET
+        POINT_IN_TIME [--allocated-ip-range-name=ALLOCATED_IP_RANGE_NAME]
+        [--async] [--preferred-secondary-zone=PREFERRED_SECONDARY_ZONE]
+        [--preferred-zone=PREFERRED_ZONE] [--private-network=PRIVATE_NETWORK]
+        [--restore-database-names=RESTORE_DATABASE_NAMES]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) gcloud beta sql instances point-in-time-restore performs a point in
+    time restore for a Cloud SQL instance managed by Google Cloud Backup and
+    Disaster Recovery.
+
+EXAMPLES
+    To perform a point in time restore from an earlier point in time:
+
+        $ gcloud beta sql instances point-in-time-restore datasource \
+            target-instance '2012-11-15T16:19:00.094Z'
+
+POSITIONAL ARGUMENTS
+     DATASOURCE
+        The Google Cloud Backup and Disaster Recovery Datasource URI, of the
+        form projects/{project}/locations/{region}/backupVaults/
+        {backupvault}/dataSources/{datasource}.
+
+     TARGET
+        Cloud SQL instance ID of the target instance.
+
+     POINT_IN_TIME
+        The point in time in which to restore the instance to. Uses RFC 3339
+        format in UTC timezone. For example, '2012-11-15T16:19:00.094Z'.
+
+FLAGS
+     --allocated-ip-range-name=ALLOCATED_IP_RANGE_NAME
+        The name of the IP range allocated for the target instance with private
+        network connectivity. For example: 'google-managed-services-default'.
+        If set, the target instance IP is created in the allocated range
+        represented by this name. Reserved for future use.
+
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --preferred-secondary-zone=PREFERRED_SECONDARY_ZONE
+        The preferred secondary zone for the cloned regional instance. If you
+        specify a value for this flag, then the target instance uses the value
+        as the secondary zone. The secondary zone can't be the same as the
+        primary zone.
+
+     --preferred-zone=PREFERRED_ZONE
+        The preferred zone for the target instance. If you specify a value for
+        this flag, then the target instance uses the value as the primary zone.
+
+     --private-network=PRIVATE_NETWORK
+        The resource link for the VPC network from which the Cloud SQL instance
+        is accessible for private IP. For example,
+        '/projects/myProject/global/networks/default'.
+
+     --restore-database-names=RESTORE_DATABASE_NAMES
+        The name of the databases to be restored for a point-in-time restore.
+        If set, the destination instance will only restore the specified
+        databases.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud alpha sql instances point-in-time-restore
+
