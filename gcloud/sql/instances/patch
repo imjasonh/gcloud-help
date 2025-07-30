@@ -29,11 +29,12 @@ SYNOPSIS
         [--insights-config-query-string-length=INSIGHTS_CONFIG_QUERY_STRING_LENGTH]
         [--[no-]insights-config-record-application-tags]
         [--[no-]insights-config-record-client-address]
+        [--instance-type=INSTANCE_TYPE]
         [--maintenance-release-channel=MAINTENANCE_RELEASE_CHANNEL]
         [--maintenance-version=MAINTENANCE_VERSION] [--maintenance-window-any]
         [--maintenance-window-day=MAINTENANCE_WINDOW_DAY]
         [--maintenance-window-hour=MAINTENANCE_WINDOW_HOUR] [--memory=MEMORY]
-        [--network=NETWORK]
+        [--network=NETWORK] [--node-count=NODE_COUNT]
         [--password-policy-complexity=PASSWORD_POLICY_COMPLEXITY]
         [--[no-]password-policy-disallow-username-substring]
         [--password-policy-min-length=PASSWORD_POLICY_MIN_LENGTH]
@@ -59,6 +60,8 @@ SYNOPSIS
         [--clear-custom-subject-alternative-names
           | --custom-subject-alternative-names=DNS,[DNS,[DNS]]]
         [--clear-database-flags | --database-flags=FLAG=VALUE,[FLAG=VALUE,...]]
+        [--clear-psc-network-attachment-uri
+          | --psc-network-attachment-uri=PSC_NETWORK_ATTACHMENT_URI]
         [--gce-zone=GCE_ZONE | --secondary-zone=SECONDARY_ZONE --zone=ZONE]
         [--no-backup | --backup-location=BACKUP_LOCATION
           --backup-start-time=BACKUP_START_TIME
@@ -267,8 +270,10 @@ FLAGS
         Allowed range: 0 to 20.
 
      --insights-config-query-string-length=INSIGHTS_CONFIG_QUERY_STRING_LENGTH
-        Query string length in bytes to be stored by the query insights
-        feature. Default length is 1024 bytes. Allowed range: 256 to 4500
+        Sets the default query length limit. For Cloud SQL Enterprise edition,
+        the range is from 256 to 4500 (in bytes) and the default query length
+        is 1024 bytes. For Cloud SQL Enterprise Plus edition, the range is from
+        1024 to 100,000 (in bytes) and the default query length is 10,000
         bytes.
 
      --[no-]insights-config-record-application-tags
@@ -282,6 +287,16 @@ FLAGS
 
         Use --insights-config-record-client-address to enable and
         --no-insights-config-record-client-address to disable.
+
+     --instance-type=INSTANCE_TYPE
+        The type of the instance. INSTANCE_TYPE must be one of:
+
+         CLOUD_SQL_INSTANCE
+            A primary instance.
+         READ_POOL_INSTANCE
+            A read pool instance.
+         READ_REPLICA_INSTANCE
+            A read replica instance.
 
      --maintenance-release-channel=MAINTENANCE_RELEASE_CHANNEL
         Which channel's updates to apply during the maintenance window. If not
@@ -331,6 +346,10 @@ FLAGS
         network. For an example host project, 'testproject', and shared
         network, 'testsharednetwork', this would use the form:
         --network=projects/testproject/global/networks/testsharednetwork
+
+     --node-count=NODE_COUNT
+        The number of nodes in the pool. This option is only available for read
+        pools.
 
      --password-policy-complexity=PASSWORD_POLICY_COMPLEXITY
         The complexity of the password. This flag is available only for
@@ -520,6 +539,18 @@ FLAGS
           e.g., skip_grant_tables=. Use on/off for booleans. View the Instance
           Resource API for allowed flags. (e.g., --database-flags
           max_allowed_packet=55555,skip_grant_tables=,log_output=1)
+
+     At most one of these can be specified:
+
+       --clear-psc-network-attachment-uri
+          Disable outbound connectivity from a Cloud SQL instance which uses
+          Private Service Connect (PSC).
+
+       --psc-network-attachment-uri=PSC_NETWORK_ATTACHMENT_URI
+          Full URI of the network attachment that is configured to support
+          outbound connectivity from a Cloud SQL instance which uses Private
+          Service Connect (PSC). For example, this would be of the
+          form:--psc-network-attachment-uri=projects/test-project/regions/us-central1/networkAttachments/my-na
 
      At most one of these can be specified:
 

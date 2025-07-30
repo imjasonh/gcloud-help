@@ -5,9 +5,11 @@ NAME
 SYNOPSIS
     gcloud oracle-database cloud-vm-clusters create CLOUD_VM_CLUSTER
         --exadata-infrastructure=EXADATA_INFRASTRUCTURE [--async]
+        [--backup-odb-subnet=BACKUP_ODB_SUBNET]
         [--backup-subnet-cidr=BACKUP_SUBNET_CIDR] [--cidr=CIDR]
         [--display-name=DISPLAY_NAME] [--labels=[LABELS,...]]
-        [--location=LOCATION] [--network=NETWORK] [--request-id=REQUEST_ID]
+        [--location=LOCATION] [--network=NETWORK] [--odb-network=ODB_NETWORK]
+        [--odb-subnet=ODB_SUBNET] [--request-id=REQUEST_ID]
         [[--properties-cpu-core-count=PROPERTIES_CPU_CORE_COUNT
           --properties-license-type=PROPERTIES_LICENSE_TYPE
           : --properties-cluster-name=PROPERTIES_CLUSTER_NAME
@@ -36,11 +38,37 @@ EXAMPLES
     Choose an available gi-versions in your location by running gcloud
     oracle-database db-system-shapes list --location=us-east4. To create
     CloudVmCluster instance with id my-instance in the location us-east4 with
-    display-name my instance, cidr 10.1.0.0/24, network
+    display-name my instance, odb-network
+    projects/network-project/locations/us-east4/odbNetworks/my-odbnetwork,
+    odb-subnet
+    projects/network-project/locations/us-east4/odbNetworks/my-odbnetwork/odbSubnets/my-odbsubnet,
+    backup-odb-subnet
+    projects/network-project/locations/us-east4/odbNetworks/my-odbnetwork/odbSubnets/my-backup-odbsubnet,
+    cidr 10.1.0.0/24, network
     projects/my-project/locations/global/networks/default, backup-subnet-cidr
     10.2.0.0/24, license-type LICENSE_INCLUDED, ssh-public-keys
     VtTxzlPJtIivthmLOmWdRDFy5l27pKUTwLp02, hostname-prefix hostname1,
     cpu-core-count 4 and choosen gi-version xx.0.0.0, run:
+
+    To set the network configuration use one of the following options:
+
+    ODBNetwork based configuration(This is the recommended way):
+
+        $ gcloud oracle-database cloud-vm-clusters create my-instance \
+            --location=us-east4 --display-name="my instance" \
+            --odb-network=projects/network-project/locations/us-east4/\
+        odbNetworks/my-odbnetwork \
+            --odb-subnet=projects/network-project/locations/us-east4/\
+        odbNetworks/my-odbnetwork/odbSubnets/my-odbsubnet \
+            --backup-odb-subnet=projects/network-project/locations/\
+        us-east4/odbNetworks/my-odbnetwork/odbSubnets/my-backup-odbsubnet \
+            --properties-license-type=LICENSE_INCLUDED \
+            --properties-ssh-public-keys="VtTxzlPJtIivthmLOmWdRDFy5l27pKUTwL\
+        p02" --properties-gi-version=xx.0.0.0 \
+            --properties-hostname-prefix=hostname1 \
+            --properties-cpu-core-count=4
+
+    Network and CIDR based configuration:
 
         $ gcloud oracle-database cloud-vm-clusters create my-instance \
             --location=us-east4 --display-name="my instance" \
@@ -114,6 +142,34 @@ OPTIONAL FLAGS
         Return immediately, without waiting for the operation in progress to
         complete.
 
+     OdbSubnet resource - The name of the backup OdbSubnet associated with the
+     VM Cluster. Format:
+     projects/{project}/locations/{location}/odbNetworks/{odb_network}/odbSubnets/{odb_subnet}
+     This represents a Cloud resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument --backup-odb-subnet on the command line with a
+        fully specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument --backup-odb-subnet on the command line with a
+        fully specified name;
+      ◆ provide the argument --location on the command line.
+
+     To set the odb-network attribute:
+      ◆ provide the argument --backup-odb-subnet on the command line with a
+        fully specified name;
+      ◆ provide the argument --odb-network on the command line.
+
+       --backup-odb-subnet=BACKUP_ODB_SUBNET
+          ID of the odbSubnet or fully qualified identifier for the odbSubnet.
+
+          To set the odb-subnet attribute:
+          ▸ provide the argument --backup-odb-subnet on the command line.
+
      --backup-subnet-cidr=BACKUP_SUBNET_CIDR
         CIDR range of the backup subnet.
 
@@ -147,10 +203,10 @@ OPTIONAL FLAGS
             --labels=path_to_file.(yaml|json)
 
      --location=LOCATION
-        For resources [cloud_vm_cluster, exadata-infrastructure], provides
-        fallback value for resource location attribute. When the resource's
-        full URI path is not provided, location will fallback to this flag
-        value.
+        For resources [backup-odb-subnet, cloud_vm_cluster,
+        exadata-infrastructure, odb-network, odb-subnet], provides fallback
+        value for resource location attribute. When the resource's full URI
+        path is not provided, location will fallback to this flag value.
 
      Network resource - The name of the VPC network. Format:
      projects/{project}/global/networks/{network} This represents a Cloud
@@ -168,6 +224,40 @@ OPTIONAL FLAGS
 
           To set the network attribute:
           ▸ provide the argument --network on the command line.
+
+     --odb-network=ODB_NETWORK
+        For resources [backup-odb-subnet, odb-network, odb-subnet], provides
+        fallback value for resource odb-network attribute. When the resource's
+        full URI path is not provided, odb-network will fallback to this flag
+        value.
+
+     OdbSubnet resource - The name of the OdbSubnet associated with the VM
+     Cluster for IP allocation. Format:
+     projects/{project}/locations/{location}/odbNetworks/{odb_network}/odbSubnets/{odb_subnet}
+     This represents a Cloud resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument --odb-subnet on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument --odb-subnet on the command line with a fully
+        specified name;
+      ◆ provide the argument --location on the command line.
+
+     To set the odb-network attribute:
+      ◆ provide the argument --odb-subnet on the command line with a fully
+        specified name;
+      ◆ provide the argument --odb-network on the command line.
+
+       --odb-subnet=ODB_SUBNET
+          ID of the odbSubnet or fully qualified identifier for the odbSubnet.
+
+          To set the odb-subnet attribute:
+          ▸ provide the argument --odb-subnet on the command line.
 
      --request-id=REQUEST_ID
         An optional ID to identify the request. This value is used to identify

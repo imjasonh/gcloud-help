@@ -7,6 +7,7 @@ SYNOPSIS
         [--admin-password=ADMIN_PASSWORD] [--async] [--cidr=CIDR]
         [--database=DATABASE] [--display-name=DISPLAY_NAME]
         [--labels=[LABELS,...]] [--location=LOCATION] [--network=NETWORK]
+        [--odb-network=ODB_NETWORK] [--odb-subnet=ODB_SUBNET]
         [--request-id=REQUEST_ID]
         [[--properties-db-workload=PROPERTIES_DB_WORKLOAD
           --properties-license-type=PROPERTIES_LICENSE_TYPE
@@ -21,11 +22,31 @@ DESCRIPTION
 
 EXAMPLES
     To create AutonomousDatabase with id my-instance in the location us-east4
-    with display-name my instance, network
-    projects/my-project/locations/global/networks/default, location us-east4,
-    database testadb, admin-password 123Abpassdord, cidr 12.2.0.0/24,
+    with display-name my instance, odb-network
+    projects/network-project/locations/us-east4/odbNetworks/my-odbnetwork,
+    odb-subnet
+    projects/network-project/locations/us-east4/odbNetworks/my-odbnetwork/odbSubnets/my-odbsubnet,
+    network projects/my-project/locations/global/networks/default, location
+    us-east4, database testadb, admin-password 123Abpassdord, cidr 12.2.0.0/24,
     properties-compute-count 2, properties-db-version 19c,
     properties-license-type LICENSE_INCLUDED, properties-db-workload DW. run:
+    To set the network configuration use one of the following options:
+
+    ODBNetwork based configuration(This is the recommended way):
+
+        $ gcloud oracle-database autonomous-databases create my-instance \
+            --location=us-east4 --display-name="my instance" \
+            --location=us-east4 --database=testadb \
+            --admin-password=123Abpassdord --properties-compute-count=2 \
+            --properties-db-version=19c \
+            --properties-license-type=LICENSE_INCLUDED \
+            --properties-db-workload=DW \
+            --odb-network=projects/network-project/locations/us-east4/\
+        odbNetworks/my-odbnetwork \
+            --odb-subnet=projects/network-project/locations/us-east4/\
+        odbNetworks/my-odbnetwork/odbSubnets/my-odbsubnet
+
+    Network and CIDR based configuration:
 
         $ gcloud oracle-database autonomous-databases create my-instance \
             --location=us-east4 --display-name="my instance" \
@@ -72,7 +93,7 @@ FLAGS
         complete.
 
      --cidr=CIDR
-        The subnet CIDR range for the Autonmous Database.
+        The subnet CIDR range for the Autonomous Database.
 
      --database=DATABASE
         The name of the Autonomous Database. The database name must be unique
@@ -107,10 +128,10 @@ FLAGS
             --labels=path_to_file.(yaml|json)
 
      --location=LOCATION
-        For resources [autonomous_database, source-config-autonomous-database],
-        provides fallback value for resource location attribute. When the
-        resource's full URI path is not provided, location will fallback to
-        this flag value.
+        For resources [autonomous_database, odb-network, odb-subnet,
+        source-config-autonomous-database], provides fallback value for
+        resource location attribute. When the resource's full URI path is not
+        provided, location will fallback to this flag value.
 
      Network resource - The name of the VPC network used by the Autonomous
      Database in the following format:
@@ -129,6 +150,39 @@ FLAGS
 
           To set the network attribute:
           ▸ provide the argument --network on the command line.
+
+     --odb-network=ODB_NETWORK
+        For resources [odb-network, odb-subnet], provides fallback value for
+        resource odb-network attribute. When the resource's full URI path is
+        not provided, odb-network will fallback to this flag value.
+
+     OdbSubnet resource - The name of the OdbSubnet associated with the
+     Autonomous Database. Format:
+     projects/{project}/locations/{location}/odbNetworks/{odb_network}/odbSubnets/{odb_subnet}
+     This represents a Cloud resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument --odb-subnet on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument --odb-subnet on the command line with a fully
+        specified name;
+      ◆ provide the argument --location on the command line.
+
+     To set the odb-network attribute:
+      ◆ provide the argument --odb-subnet on the command line with a fully
+        specified name;
+      ◆ provide the argument --odb-network on the command line.
+
+       --odb-subnet=ODB_SUBNET
+          ID of the odbSubnet or fully qualified identifier for the odbSubnet.
+
+          To set the odb-subnet attribute:
+          ▸ provide the argument --odb-subnet on the command line.
 
      --request-id=REQUEST_ID
         An optional ID to identify the request. This value is used to identify
@@ -265,7 +319,7 @@ FLAGS
        --properties-vault-id=PROPERTIES_VAULT_ID
           The ID of the Oracle Cloud Infrastructure vault.
 
-     The source configuration for the standby Autonomnous Database.
+     The source configuration for the standby Autonomous Database.
 
        --source-config-automatic-backups-replication-enabled
           This field specifies if the replication of automatic backups is

@@ -9,6 +9,9 @@ SYNOPSIS
         [--attribute-mapping=[KEY=VALUE,...]] [--description=DESCRIPTION]
         [--detailed-audit-logging] [--disabled] [--display-name=DISPLAY_NAME]
         [--idp-metadata-path=PATH_TO_FILE]
+        [--clear-extended-attributes-config
+          | --extended-attributes-client-id=EXTENDED_ATTRIBUTES_CLIENT_ID
+          --extended-attributes-client-secret-value=EXTENDED_ATTRIBUTES_CLIENT_SECRET_VALUE --extended-attributes-filter=EXTENDED_ATTRIBUTES_FILTER --extended-attributes-issuer-uri=EXTENDED_ATTRIBUTES_ISSUER_URI --extended-attributes-type=EXTENDED_ATTRIBUTES_TYPE]
         [--clear-extra-attributes-config
           | --extra-attributes-client-id=EXTRA_ATTRIBUTES_CLIENT_ID
           --extra-attributes-client-secret-value=EXTRA_ATTRIBUTES_CLIENT_SECRET_VALUE --extra-attributes-filter=EXTRA_ATTRIBUTES_FILTER --extra-attributes-issuer-uri=EXTRA_ATTRIBUTES_ISSUER_URI --extra-attributes-type=EXTRA_ATTRIBUTES_TYPE]
@@ -195,6 +198,49 @@ FLAGS
         (https://www.oasis-open.org/committees/download.php/35391/sstc-saml-metadata-errata-2.0-wd-04-diff.pdf).
         Use a full or relative path to a local file containing the value of
         idp_metadata_path.
+
+     At most one of these can be specified:
+
+       --clear-extended-attributes-config
+          Clear the extended attributes configuration.
+
+       --extended-attributes-client-id=EXTENDED_ATTRIBUTES_CLIENT_ID
+          The OAuth 2.0 client ID for retrieving extended attributes from the
+          identity provider. Required to get extended group memberships for a
+          subset of Google Cloud products.
+
+       --extended-attributes-client-secret-value=EXTENDED_ATTRIBUTES_CLIENT_SECRET_VALUE
+          The OAuth 2.0 client secret for retrieving extended attributes from
+          the identity provider. Required to get extended group memberships for
+          a subset of Google Cloud products.
+
+       --extended-attributes-filter=EXTENDED_ATTRIBUTES_FILTER
+          The filter used to request specific records from the IdP. By default,
+          all of the groups that are associated with a user are fetched. For
+          Microsoft Entra ID, you can add $search query parameters using
+          [Keyword Query Language]
+          (https://learn.microsoft.com/en-us/sharepoint/dev/general-development/keyword-query-language-kql-syntax-reference).
+          To learn more about $search querying in Microsoft Entra ID, see [Use
+          the $search query parameter]
+          (https://learn.microsoft.com/en-us/graph/search-query-parameter).
+
+          Additionally, Workforce Identity Federation automatically adds the
+          following [$filter query parameters]
+          (https://learn.microsoft.com/en-us/graph/filter-query-parameter),
+          based on the value of attributes_type. Values passed to filter are
+          converted to $search query parameters. Additional $filter query
+          parameters cannot be added using this field.
+
+          ▸ AZURE_AD_GROUPS_ID: securityEnabled filter is applied.
+
+       --extended-attributes-issuer-uri=EXTENDED_ATTRIBUTES_ISSUER_URI
+          OIDC identity provider's issuer URI. Must be a valid URI using the
+          https scheme. Required to get the OIDC discovery document.
+
+       --extended-attributes-type=EXTENDED_ATTRIBUTES_TYPE
+          Represents the identity provider and type of claims that should be
+          fetched. EXTENDED_ATTRIBUTES_TYPE must be (only one value is
+          supported): azure-ad-groups-id.
 
      At most one of these can be specified:
 

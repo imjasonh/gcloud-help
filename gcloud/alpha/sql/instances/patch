@@ -73,6 +73,8 @@ SYNOPSIS
         [--clear-labels | --remove-labels=[KEY,...]]
         [--clear-psc-auto-connections
           | --psc-auto-connections=[network=NETWORK],[project=PROJECT]]
+        [--clear-psc-network-attachment-uri
+          | --psc-network-attachment-uri=PSC_NETWORK_ATTACHMENT_URI]
         [--gce-zone=GCE_ZONE | --secondary-zone=SECONDARY_ZONE --zone=ZONE]
         [--no-backup | --backup-location=BACKUP_LOCATION
           --backup-start-time=BACKUP_START_TIME
@@ -283,8 +285,10 @@ FLAGS
         Allowed range: 0 to 20.
 
      --insights-config-query-string-length=INSIGHTS_CONFIG_QUERY_STRING_LENGTH
-        Query string length in bytes to be stored by the query insights
-        feature. Default length is 1024 bytes. Allowed range: 256 to 4500
+        Sets the default query length limit. For Cloud SQL Enterprise edition,
+        the range is from 256 to 4500 (in bytes) and the default query length
+        is 1024 bytes. For Cloud SQL Enterprise Plus edition, the range is from
+        1024 to 100,000 (in bytes) and the default query length is 10,000
         bytes.
 
      --[no-]insights-config-record-application-tags
@@ -305,9 +309,9 @@ FLAGS
          CLOUD_SQL_INSTANCE
             A primary instance.
          READ_POOL_INSTANCE
-            A read pool.
+            A read pool instance.
          READ_REPLICA_INSTANCE
-            A read replica.
+            A read replica instance.
 
      --maintenance-release-channel=MAINTENANCE_RELEASE_CHANNEL
         Which channel's updates to apply during the maintenance window. If not
@@ -645,6 +649,18 @@ FLAGS
           File Example:
 
               --psc-auto-connections=path_to_file.(yaml|json)
+
+     At most one of these can be specified:
+
+       --clear-psc-network-attachment-uri
+          Disable outbound connectivity from a Cloud SQL instance which uses
+          Private Service Connect (PSC).
+
+       --psc-network-attachment-uri=PSC_NETWORK_ATTACHMENT_URI
+          Full URI of the network attachment that is configured to support
+          outbound connectivity from a Cloud SQL instance which uses Private
+          Service Connect (PSC). For example, this would be of the
+          form:--psc-network-attachment-uri=projects/test-project/regions/us-central1/networkAttachments/my-na
 
      At most one of these can be specified:
 

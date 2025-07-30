@@ -1,0 +1,75 @@
+NAME
+    gcloud scc findings export-to-bigquery - export Security Command Center
+        findings to bigquery
+
+SYNOPSIS
+    gcloud scc findings export-to-bigquery [PARENT] --dataset=DATASET
+        [--location=LOCATION; default="global"] [--source=SOURCE; default="-"]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Export Security Command Center findings to bigquery.
+
+EXAMPLES
+    To export findings for a given parent
+    ``organizations/123/sources/456/locations/global`` and dataset
+    ``projects/project_id/datasets/dataset_id`` run:
+
+        $ gcloud scc findings export-to-bigquery organizations/123 \
+            --dataset=projects/project_id/datasets/dataset_id --source=456 \
+            --location=global
+
+POSITIONAL ARGUMENTS
+     Parent resource - parent organization, folder, or project in the Google
+     Cloud resource hierarchy to be used for the gcloud scc command. Specify
+     the argument as either [RESOURCE_TYPE/RESOURCE_ID] or [RESOURCE_ID], as
+     shown in the preceding examples. This represents a Cloud resource.
+
+       [PARENT]
+          ID of the parent or fully qualified identifier for the parent.
+
+          To set the parent attribute:
+          ▸ provide the argument parent on the command line;
+          ▸ Set the parent property in configuration using gcloud config set
+            scc/parent if it is not specified in command line.
+
+REQUIRED FLAGS
+     --dataset=DATASET
+        BigQuery dataset to export findings to.
+
+OPTIONAL FLAGS
+     --location=LOCATION; default="global"
+        When data residency controls are enabled, this attribute specifies the
+        location in which the resource is located and applicable. The location
+        attribute can be provided as part of the fully specified resource name
+        or with the --location argument on the command line. The default
+        location is global. NOTE: If you override the endpoint to a regional
+        endpoint
+        (https://cloud.google.com/security-command-center/docs/reference/rest/index.html?rep_location=global#regional-service-endpoint)
+        you must specify the correct data location
+        (https://cloud.google.com/security-command-center/docs/data-residency-support#locations)
+        using this flag. The default location on this command is unrelated to
+        the default location that is specified when data residency controls are
+        enabled for Security Command Center.
+
+     --source=SOURCE; default="-"
+        Source id. Defaults to all sources.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the Security Command Center API. For more information,
+    see Security Command Center API.
+    (https://cloud.google.com/security-command-center/docs/reference/rest)
+
+NOTES
+    This variant is also available:
+
+        $ gcloud alpha scc findings export-to-bigquery
+
