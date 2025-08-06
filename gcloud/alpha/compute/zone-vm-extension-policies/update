@@ -1,0 +1,110 @@
+NAME
+    gcloud alpha compute zone-vm-extension-policies update - update a Compute
+        Engine zone VM extension policy
+
+SYNOPSIS
+    gcloud alpha compute zone-vm-extension-policies update NAME
+        --extensions=EXTENSIONS [--description=DESCRIPTION]
+        [--filestore-config=FILESTORE_CONFIG]
+        [--filestore-version=FILESTORE_VERSION]
+        [--inclusion-labels=INCLUSION_LABELS]
+        [--priority=PRIORITY; default=1000] [--zone=ZONE]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Update a Compute Engine zone VM extension policy.
+
+EXAMPLES
+    To update a zone VM extension policy, run:
+
+        $ gcloud alpha compute zone-vm-extension-policies update \
+            test-policy-name --description="test policy" \
+            --extensions=filestore --filestore-version=20250101RC00 \
+            --filestore-config=config1 --inclusion-labels=env=prod \
+            --inclusion-labels=env=preprod,workload=load-test \
+            --priority=1000
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the zone vm extension policy to update.
+
+REQUIRED FLAGS
+     --extensions=EXTENSIONS
+        A list of extensions to be added to the policy. EXTENSIONS must be
+        (only one value is supported): filestore.
+
+OPTIONAL FLAGS
+     --description=DESCRIPTION
+        An optional textual description for the this extension policy.
+
+     --filestore-config=FILESTORE_CONFIG
+        The config send to the extension when extension starts.
+
+     --filestore-version=FILESTORE_VERSION
+        The pinned version for filestore.
+
+        If not specified, the latest version will be used, and will be upgraded
+        automatically.
+
+     --inclusion-labels=INCLUSION_LABELS
+        A list of inclusion labels to select the target VMs.
+
+        The expected format for a single selector is "key1=value1,key2=value2".
+        A VM is selected if it has ALL the inclusion labels.
+
+        When the option is specified multiple times, it assumes a logical OR
+        between the selectors.
+
+        For example, if the inclusion labels are ["env=prod,workload=frontend",
+        "workload=backend"], the following VMs will be selected:
+        ◆ VM1: env=prod, workload=frontend, something=else
+        ◆ VM2: env=prod, workload=backend But not:
+        ◆ VM3: env=prod
+
+        If not specified, ALL VMs in the zone will be selected.
+
+     --priority=PRIORITY; default=1000
+        The priority of the policy. Lower the number, higher the priority. When
+        two policies tries to apply the same extension, the one with the higher
+        priority takes precedence. If the priority is the same, the one with
+        the more recent update timestamp takes precedence. When a policy is
+        deleted, the extension would remain installed on the VM if a lower
+        priority policy still applies.
+
+        Range from 0 to 65535. Default is 1000.
+
+     --zone=ZONE
+        Zone of the zone vm extension policy to update. If not specified and
+        the compute/zone property isn't set, you might be prompted to select a
+        zone (interactive mode only).
+
+        To avoid prompting when this flag is omitted, you can set the
+        compute/zone property:
+
+            $ gcloud config set compute/zone ZONE
+
+        A list of zones can be fetched by running:
+
+            $ gcloud compute zones list
+
+        To unset the property, run:
+
+            $ gcloud config unset compute/zone
+
+        Alternatively, the zone can be stored in the environment variable
+        CLOUDSDK_COMPUTE_ZONE.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

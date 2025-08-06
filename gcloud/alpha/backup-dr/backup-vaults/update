@@ -4,11 +4,12 @@ NAME
 
 SYNOPSIS
     gcloud alpha backup-dr backup-vaults update
-        (BACKUP_VAULT : --location=LOCATION) [--no-async]
+        (BACKUP_VAULT : --location=LOCATION)
+        [--access-restriction=ACCESS_RESTRICTION] [--no-async]
         [--backup-min-enforced-retention=BACKUP_MIN_ENFORCED_RETENTION]
         [--description=DESCRIPTION] [--effective-time=EFFECTIVE_TIME]
-        [--force-update] [--unlock-backup-min-enforced-retention]
-        [GCLOUD_WIDE_FLAG ...]
+        [--force-update] [--force-update-access-restriction]
+        [--unlock-backup-min-enforced-retention] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Update a Backup and DR backup vault.
@@ -61,6 +62,37 @@ POSITIONAL ARGUMENTS
           ▸ provide the argument --location on the command line.
 
 FLAGS
+     --access-restriction=ACCESS_RESTRICTION
+        Authorize certain sources and destinations for data being sent into, or
+        restored from the current backup vault.
+
+        Access restrictions can be modified to be more or less restrictive.
+
+            ::: More restrictive access restriction update will fail by default if there will be non compliant Data Sources.
+            To allow such updates, use the --force-update-access-restriction flag.
+            :::  For Google Cloud Console resources, the following changes are allowed to make access restrictions more restrictive:
+                *   `UNRESTRICTED` to `WITHIN_PROJECT` / `WITHIN_ORG_BUT_UNRESTRICTED_FOR_BA` / `WITHIN_ORGANIZATION`
+                *   `WITHIN_PROJECT` to `WITHIN_ORGANIZATION` / `WITHIN_ORG_BUT_UNRESTRICTED_FOR_BA`
+
+            ::: For Management Server resources, the following changes are allowed to make access restrictions more restrictive:
+                *   `UNRESTRICTED` to `WITHIN_PROJECT` / `WITHIN_ORG_BUT_UNRESTRICTED_FOR_BA` / `WITHIN_ORGANIZATION`
+                *   `WITHIN_PROJECT` to `WITHIN_ORGANIZATION` / `WITHIN_ORG_BUT_UNRESTRICTED_FOR_BA`
+
+            :::   For both Google Cloud Console and Management Server resources, the following changes are allowed to make access restrictions more restrictive:
+                *   `UNRESTRICTED` to `WITHIN_PROJECT` / `WITHIN_ORG_BUT_UNRESTRICTED_FOR_BA` / `WITHIN_ORGANIZATION`
+                *   `WITHIN_PROJECT` to `WITHIN_ORGANIZATION` / `WITHIN_ORG_BUT_UNRESTRICTED_FOR_BA`
+
+            ::: For Google Cloud Console resources,  the following changes are allowed to make access restrictions less restrictive:
+                *   `WITHIN_ORGANIZATION` to `UNRESTRICTED` / `WITHIN_ORG_BUT_UNRESTRICTED_FOR_BA`
+                *   `WITHIN_PROJECT` to `UNRESTRICTED`
+                *   `WITHIN_ORG_BUT_UNRESTRICTED_FOR_BA` to `UNRESTRICTED`
+
+            ::: For Management Server resources, the following changes are allowed to make access restrictions less restrictive:
+                *   `WITHIN_ORG_BUT_UNRESTRICTED_FOR_BA` to `UNRESTRICTED`
+
+        ACCESS_RESTRICTION must be one of: within-project, within-org,
+        unrestricted, within-org-but-unrestricted-for-ba.
+
      --no-async
         Wait for the operation in progress to complete.
 
@@ -83,6 +115,11 @@ FLAGS
         retention periods. This conflict may occur when the expiration schedule
         defined by the associated backup plan is shorter than the minimum
         retention set by the backup vault.
+
+     --force-update-access-restriction
+        If set, the access restriction can be updated even if there are
+        non-compliant data sources. Backups for those data sources will fail
+        afterward.
 
      --unlock-backup-min-enforced-retention
         Removes the lock on the backup minimum enforced retention period, and

@@ -5,7 +5,8 @@ SYNOPSIS
     gcloud alpha compute backend-services update BACKEND_SERVICE_NAME
         [--affinity-cookie-name=AFFINITY_COOKIE_NAME]
         [--affinity-cookie-path=AFFINITY_COOKIE_PATH]
-        [--affinity-cookie-ttl=AFFINITY_COOKIE_TTL] [--cache-key-include-host]
+        [--affinity-cookie-ttl=AFFINITY_COOKIE_TTL] [--[no-]allow-multinetwork]
+        [--cache-key-include-host]
         [--cache-key-include-http-header=[HEADER_FIELD_NAME,...]]
         [--cache-key-include-named-cookie=[NAMED_COOKIE,...]]
         [--cache-key-include-protocol] [--cache-key-include-query-string]
@@ -88,6 +89,13 @@ FLAGS
         resulting cookie. A setting of 0 indicates that the cookie should be a
         session cookie. See $ gcloud topic datetimes for information on
         duration formats.
+
+     --[no-]allow-multinetwork
+        Allow or disallow backend services to be discovered across networks in
+        multi-network meshes. Only available for backend services with
+        --load-balancing-scheme=INTERNAL_SELF_MANAGED. This is disabled by
+        default. Use --allow-multinetwork to enable and --no-allow-multinetwork
+        to disable.
 
      --cache-key-include-host
         Enable including host in cache key. If enabled, requests to different
@@ -563,42 +571,51 @@ FLAGS
         TRACKING_MODE must be one of: PER_CONNECTION, PER_SESSION.
 
      --zonal-affinity-spillover=ZONAL_AFFINITY_SPILLOVER
-        Specifies whether zonal affinity is enabled or not.
+        Specifies whether zonal affinity is enabled or not. For further
+        details, refer to Zonal affinity options
+        (https://cloud.google.com/load-balancing/docs/internal/zonal-affinity#zonal_affinity_options).
 
         Can only be set if load balancing scheme is INTERNAL,
 
         The possible values are:
 
             ZONAL_AFFINITY_DISABLED
-              Zonal Affinity is disabled. The load balancer distributes new
-              connections to all healthy backend endpoints across all zones.
+              Default Value. Zonal Affinity is disabled. The load balancer
+              distributes new connections to all healthy backend VMs across all
+              zones.
 
             ZONAL_AFFINITY_STAY_WITHIN_ZONE
               Zonal Affinity is enabled. The load balancer distributes new
-              connections to all healthy backend endpoints in the local zone only.
-              If there are no healthy backend endpoints in the local zone, the load
-              balancer distributes new connections to all backend endpoints in the
-              local zone.
+              connections to all healthy backend VMs in the client VM's zone only.
+              If there are no healthy backend VMs in the client VM's zone, the load
+              balancer distributes new connections to all backend VMs in the client
+              VM's zone.
 
             ZONAL_AFFINITY_SPILL_CROSS_ZONE
               Zonal Affinity is enabled. The load balancer distributes new
-              connections to all healthy backend endpoints in the local zone only.
-              If there aren't enough healthy backend endpoints in the local zone,
-              the load balancer distributes new connections to all healthy backend
-              endpoints across all zones.
+              connections to all healthy backend VMs in the client VM's zone only.
+              If there aren't enough healthy backend VMs in the client VM's zone,
+              the load balancer distributes some new connections to backend VMs in
+              zones other than the client VM's zone. This distribution depends on a
+              configurable spillover ratio that determines when traffic starts
+              spilling over to backend VMs in other zones.
 
         ZONAL_AFFINITY_SPILLOVER must be one of: ZONAL_AFFINITY_DISABLED,
         ZONAL_AFFINITY_STAY_WITHIN_ZONE, ZONAL_AFFINITY_SPILL_CROSS_ZONE.
 
      --zonal-affinity-spillover-ratio=ZONAL_AFFINITY_SPILLOVER_RATIO
-        The value of the field must be in [0, 1]. When the ratio of the count
-        of healthy backend endpoints in a zone to the count of backend
-        endpoints in that same zone is equal to or above this threshold, the
-        load balancer distributes new connections to all healthy endpoints in
-        the local zone only. When the ratio of the count of healthy backend
-        endpoints in a zone to the count of backend endpoints in that same zone
-        is below this threshold, the load balancer distributes all new
-        connections to all healthy endpoints across all zones.
+        The value of the field can range from 0.0 to 1.0, inclusive. If not
+        specified, a default value of 0.0 is used.
+
+        This ratio indicates the threshold value for keeping traffic in the
+        client VM's zone. If the proportion of healthy backend VMs in a zone
+        falls below the configured spillover ratio, some new connections from
+        the client VM are distributed to healthy backend VMs in zones other
+        than the client VM's zone.
+
+        For further details, refer to How ZONAL_AFFINITY_SPILL_CROSS_ZONE and
+        spillover ratio work
+        (https://cloud.google.com/load-balancing/docs/internal/zonal-affinity#zonal-affinity-spillover-ratio).
 
      At most one of these can be specified:
 
