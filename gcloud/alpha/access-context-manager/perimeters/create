@@ -9,7 +9,8 @@ SYNOPSIS
         [--egress-policies=YAML_FILE] [--ingress-policies=YAML_FILE]
         [--perimeter-type=PERIMETER_TYPE; default="regular"]
         [--resources=[RESOURCES,...]] [--restricted-services=[SERVICE,...]]
-        [--enable-vpc-accessible-services
+        [--vpc-accessible-services=VPC_ACCESSIBLE_SERVICES_YAML_FILE
+          | --enable-vpc-accessible-services
           --vpc-allowed-services=[VPC_SERVICE,...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -112,14 +113,28 @@ OPTIONAL FLAGS
         Comma-separated list of services to which the perimeter boundary does
         apply (for example, storage.googleapis.com).
 
-     --enable-vpc-accessible-services
-        Whether to restrict API calls within the perimeter to those in the
-        vpc-allowed-services list.
+     At most one of these can be specified:
 
-     --vpc-allowed-services=[VPC_SERVICE,...]
-        Comma-separated list of APIs accessible from within the Service
-        Perimeter. In order to include all restricted services, use reference
-        "RESTRICTED-SERVICES". Requires vpc-accessible-services be enabled.
+       --vpc-accessible-services=VPC_ACCESSIBLE_SERVICES_YAML_FILE
+          Path to a YAML file containing the full VPC Accessible Services
+          configuration. This file should contain a single YAML object
+          representing a VpcAccessibleServices message as described in the API
+          reference. This cannot be used with --vpc-allowed-services or
+          --enable-vpc-accessible-services.
+
+          For more information about the alpha version, see:
+          https://cloud.google.com/access-context-manager/docs/reference/rest/v1alpha/accessPolicies.servicePerimeters
+          For more information about non-alpha versions, see:
+          https://cloud.google.com/access-context-manager/docs/reference/rest/v1/accessPolicies.servicePerimeters
+
+       --enable-vpc-accessible-services
+          Whether to restrict API calls within the perimeter to those in the
+          vpc-allowed-services list.
+
+       --vpc-allowed-services=[VPC_SERVICE,...]
+          Comma-separated list of APIs accessible from within the Service
+          Perimeter. In order to include all restricted services, use reference
+          "RESTRICTED-SERVICES". Requires vpc-accessible-services be enabled.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

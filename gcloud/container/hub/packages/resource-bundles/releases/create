@@ -1,0 +1,75 @@
+NAME
+    gcloud container hub packages resource-bundles releases create - create
+        Package Rollouts Release
+
+SYNOPSIS
+    gcloud container hub packages resource-bundles releases create
+        --resource-bundle=RESOURCE_BUNDLE --source=SOURCE --version=VERSION
+        [--lifecycle=LIFECYCLE] [--location=LOCATION]
+        [--variants-pattern=VARIANTS_PATTERN; default="*"]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Create Package Rollouts Release.
+
+EXAMPLES
+    To create Release v1.0.0 for Resource Bundle my-bundle in us-central1, run:
+
+        $ gcloud container hub packages resource-bundles releases create \
+            --version=v1.0.0 --resource-bundle=my-bundle \
+            --source=manifest.yaml
+
+    To create a Release with multiple variants in one directory, run:
+
+        $ gcloud container hub packages resource-bundles releases create \
+            --version=v1.0.0 --resource-bundle=my-bundle \
+            --source=/manifests/ --variants-pattern=manifest-*.yaml
+
+    To create a Release with multiple variants across multiple directories, ex:
+
+        $ gcloud container hub packages resource-bundles releases create \
+            --version=v1.0.0 --resource-bundle=my-bundle \
+            --source=/manifests/ --variants-pattern=dir-*/
+
+REQUIRED FLAGS
+     --resource-bundle=RESOURCE_BUNDLE
+        Resource Bundle name.
+
+     --source=SOURCE
+        Source file or directory to create the Release from. e.g.
+        --source=manifest.yaml, --source=/manifests-dir/ Can optionally be
+        paired with the --variants-pattern arg to create multiple variants of a
+        Release.
+
+     --version=VERSION
+        Version of the Release to create.
+
+OPTIONAL FLAGS
+     --lifecycle=LIFECYCLE
+        Lifecycle of the Release.
+
+     --location=LOCATION
+        Google Cloud zone or region.
+
+     --variants-pattern=VARIANTS_PATTERN; default="*"
+        Glob pattern to Variants of the Release, to be paired with the --source
+        arg. ex: --source=/manifests-dir/ --variants-pattern=**,
+        --source=/manifests-dir/ --variants-pattern=us-*.yaml,
+        --source=/manifests/dir/ --variants-pattern=*/*.yaml
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha container hub packages resource-bundles releases \
+            create
+
+        $ gcloud beta container hub packages resource-bundles releases create
+

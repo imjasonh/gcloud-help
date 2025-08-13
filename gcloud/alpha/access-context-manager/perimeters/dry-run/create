@@ -8,7 +8,8 @@ SYNOPSIS
         (--access-levels=[access_levels,...] --egress-policies=YAML_FILE
           --ingress-policies=YAML_FILE --resources=[resources,...]
           --restricted-services=[restricted_services,...]
-          --enable-vpc-accessible-services
+          --vpc-accessible-services=VPC_ACCESSIBLE_SERVICES_YAML_FILE
+          | --enable-vpc-accessible-services
           --vpc-allowed-services=[vpc_allowed_services,...]
           | [--perimeter-title=PERIMETER_TITLE --perimeter-type=PERIMETER_TYPE
           : --perimeter-access-levels=[access_levels,...]
@@ -17,7 +18,8 @@ SYNOPSIS
           --perimeter-ingress-policies=YAML_FILE
           --perimeter-resources=[resources,...]
           --perimeter-restricted-services=[restricted_services,...]
-          --perimeter-enable-vpc-accessible-services
+          --perimeter-vpc-accessible-services=VPC_ACCESSIBLE_SERVICES_YAML_FILE
+          | --perimeter-enable-vpc-accessible-services
           --perimeter-vpc-allowed-services=[vpc_allowed_services,...]])
         [--async] [GCLOUD_WIDE_FLAG ...]
 
@@ -112,15 +114,20 @@ REQUIRED FLAGS
             Comma-separated list of services to which the perimeter boundary
             does apply (for example, storage.googleapis.com).
 
-         --enable-vpc-accessible-services
-            Whether to restrict API calls within the perimeter to those in the
-            vpc-allowed-services list.
+         At most one of these can be specified:
 
-         --vpc-allowed-services=[vpc_allowed_services,...]
-            Comma-separated list of APIs accessible from within the Service
-            Perimeter. In order to include all restricted services, use
-            reference "RESTRICTED-SERVICES". Requires vpc-accessible-services
-            be enabled.
+           --vpc-accessible-services=VPC_ACCESSIBLE_SERVICES_YAML_FILE
+              Path to a YAML file containing a VpcAccessibleServices object.
+
+           --enable-vpc-accessible-services
+              Whether to restrict API calls within the perimeter to those in
+              the vpc-allowed-services list.
+
+           --vpc-allowed-services=[vpc_allowed_services,...]
+              Comma-separated list of APIs accessible from within the Service
+              Perimeter. In order to include all restricted services, use
+              reference "RESTRICTED-SERVICES". Requires vpc-accessible-services
+              be enabled.
 
        Arguments for creating a dry-run spec for a new Service Perimeter.
 
@@ -180,15 +187,20 @@ REQUIRED FLAGS
             Comma-separated list of services to which the perimeter boundary
             does apply (for example, storage.googleapis.com).
 
-         --perimeter-enable-vpc-accessible-services
-            Whether to restrict API calls within the perimeter to those in the
-            vpc-allowed-services list.
+         At most one of these can be specified:
 
-         --perimeter-vpc-allowed-services=[vpc_allowed_services,...]
-            Comma-separated list of APIs accessible from within the Service
-            Perimeter. In order to include all restricted services, use
-            reference "RESTRICTED-SERVICES". Requires vpc-accessible-services
-            be enabled.
+           --perimeter-vpc-accessible-services=VPC_ACCESSIBLE_SERVICES_YAML_FILE
+              Path to a YAML file containing a VpcAccessibleServices object.
+
+           --perimeter-enable-vpc-accessible-services
+              Whether to restrict API calls within the perimeter to those in
+              the vpc-allowed-services list.
+
+           --perimeter-vpc-allowed-services=[vpc_allowed_services,...]
+              Comma-separated list of APIs accessible from within the Service
+              Perimeter. In order to include all restricted services, use
+              reference "RESTRICTED-SERVICES". Requires vpc-accessible-services
+              be enabled.
 
 OPTIONAL FLAGS
      --async
