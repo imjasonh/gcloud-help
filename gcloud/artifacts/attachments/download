@@ -6,7 +6,8 @@ SYNOPSIS
     gcloud artifacts attachments download
         [ATTACHMENT : --location=LOCATION --repository=REPOSITORY]
         --destination=DESTINATION [--chunk-size=CHUNK_SIZE]
-        [--oci-version-name=OCI_VERSION_NAME] [GCLOUD_WIDE_FLAG ...]
+        [--oci-version-name=OCI_VERSION_NAME] [--parallelism=PARALLELISM]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Download an Artifact Registry attachment from a repository.
@@ -22,6 +23,12 @@ EXAMPLES
 
         $ gcloud artifacts attachments download my-attachment \
           --destination=/path/to/destination/ --chunk-size=8000
+
+    To download the attachment my-attachment using parallel multipart download
+    with 4 threads:
+
+        $ gcloud artifacts attachments download my-attachment \
+          --destination=/path/to/destination/ --parallelism=4
 
     For Docker-format repositories only: to download the attachment stored in
     the OCI version
@@ -94,6 +101,10 @@ OPTIONAL FLAGS
      --oci-version-name=OCI_VERSION_NAME
         For Docker-format repositories only. The version name of the OCI
         artifact to download.
+
+     --parallelism=PARALLELISM
+        Specifies the number of threads to use for downloading the attachment
+        files in parallel.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

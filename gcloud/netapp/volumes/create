@@ -4,7 +4,7 @@ NAME
 SYNOPSIS
     gcloud netapp volumes create (VOLUME : --location=LOCATION)
         --capacity=CAPACITY --protocols=PROTOCOL,[PROTOCOL,...]
-        --share-name=SHARE_NAME --storage-pool=STORAGE_POOL [--async]
+        --storage-pool=STORAGE_POOL [--async]
         [--backup-config=[backup-policies=BACKUP-POLICIES],
           [backup-vault=BACKUP-VAULT],
           [enable-scheduled-backups=ENABLE-SCHEDULED-BACKUPS]]
@@ -19,14 +19,18 @@ SYNOPSIS
           [kerberos-5p-read-write=KERBEROS-5P-READ-WRITE],
           [nfsv3=NFSV3],[nfsv4=NFSV4]]
         [--hybrid-replication-parameters=[cluster-location=CLUSTER-LOCATION],
-          [description=DESCRIPTION],[labels=LABELS],
+          [description=DESCRIPTION],
+          [hybrid-replication-type=HYBRID-REPLICATION-TYPE],[labels=LABELS],
+          [large-volume-constituent-count=LARGE-VOLUME-CONSTITUENT-COUNT],
           [peer-cluster-name=PEER-CLUSTER-NAME],
           [peer-ip-addresses=PEER-IP-ADDRESSES],[peer-svm-name=PEER-SVM-NAME],
-          [peer-volume-name=PEER-VOLUME-NAME],[replication=REPLICATION]]
+          [peer-volume-name=PEER-VOLUME-NAME],[replication=REPLICATION],
+          [replication-schedule=REPLICATION-SCHEDULE]]
         [--labels=[KEY=VALUE,...]] [--large-capacity=LARGE_CAPACITY]
         [--multiple-endpoints=MULTIPLE_ENDPOINTS]
         [--restricted-actions=RESTRICTED_ACTION,[...]]
         [--security-style=SECURITY_STYLE; default="SECURITY_STYLE_UNSPECIFIED"]
+        [--share-name=SHARE_NAME]
         [--smb-settings=SMB_SETTING,[SMB_SETTING,...]]
         [--snap-reserve=SNAP_RESERVE]
         [--snapshot-daily=[hour=HOUR],
@@ -105,9 +109,6 @@ REQUIRED FLAGS
         Type of File System protocols for the Cloud NetApp Files Volume. Valid
         component values are: NFSV3, NFSV4, SMB.
 
-     --share-name=SHARE_NAME
-        Share name of the Mount path clients will use.
-
      Storage pool resource - The Storage Pool to associate with Volume. This
      represents a Cloud resource. (NOTE) Some attributes are not given
      arguments in this group but can be set in other ways.
@@ -169,7 +170,7 @@ OPTIONAL FLAGS
         kerberos-5p-read-only=KERBEROS_5P_READ_ONLY,
         kerberos-5p-read-write=KERBEROS_5P_READ_WRITE
 
-     --hybrid-replication-parameters=[cluster-location=CLUSTER-LOCATION],[description=DESCRIPTION],[labels=LABELS],[peer-cluster-name=PEER-CLUSTER-NAME],[peer-ip-addresses=PEER-IP-ADDRESSES],[peer-svm-name=PEER-SVM-NAME],[peer-volume-name=PEER-VOLUME-NAME],[replication=REPLICATION]
+     --hybrid-replication-parameters=[cluster-location=CLUSTER-LOCATION],[description=DESCRIPTION],[hybrid-replication-type=HYBRID-REPLICATION-TYPE],[labels=LABELS],[large-volume-constituent-count=LARGE-VOLUME-CONSTITUENT-COUNT],[peer-cluster-name=PEER-CLUSTER-NAME],[peer-ip-addresses=PEER-IP-ADDRESSES],[peer-svm-name=PEER-SVM-NAME],[peer-volume-name=PEER-VOLUME-NAME],[replication=REPLICATION],[replication-schedule=REPLICATION-SCHEDULE]
         Hybrid Replication Parameters contains hybrid replication parameters on
         a volume.
 
@@ -229,6 +230,9 @@ OPTIONAL FLAGS
             NTFS security style for Volume.
          unix
             UNIX security style for Volume
+
+     --share-name=SHARE_NAME
+        Share name of the Mount path clients will use.
 
      --smb-settings=SMB_SETTING,[SMB_SETTING,...]
         List of settings specific to SMB protocol for a Cloud NetApp Files

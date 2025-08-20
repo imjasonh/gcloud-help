@@ -4,10 +4,15 @@ NAME
 SYNOPSIS
     gcloud beta netapp volumes create (VOLUME : --location=LOCATION)
         --capacity=CAPACITY --protocols=PROTOCOL,[PROTOCOL,...]
-        --share-name=SHARE_NAME --storage-pool=STORAGE_POOL [--async]
+        --storage-pool=STORAGE_POOL [--async]
         [--backup-config=[backup-policies=BACKUP-POLICIES],
           [backup-vault=BACKUP-VAULT],
           [enable-scheduled-backups=ENABLE-SCHEDULED-BACKUPS]]
+        [--cache-parameters=[cache-config=CACHE-CONFIG],
+          [enable-global-file-lock=ENABLE-GLOBAL-FILE-LOCK],
+          [peer-cluster-name=PEER-CLUSTER-NAME],
+          [peer-ip-addresses=PEER-IP-ADDRESSES],
+          [peer-svm-name=PEER-SVM-NAME],[peer-volume-name=PEER-VOLUME-NAME]]
         [--description=DESCRIPTION] [--enable-kerberos=ENABLE_KERBEROS]
         [--export-policy=[access-type=ACCESS-TYPE],
           [allowed-clients=ALLOWED-CLIENTS],[has-root-access=HAS-ROOT-ACCESS],
@@ -30,6 +35,7 @@ SYNOPSIS
         [--multiple-endpoints=MULTIPLE_ENDPOINTS]
         [--restricted-actions=RESTRICTED_ACTION,[...]]
         [--security-style=SECURITY_STYLE; default="SECURITY_STYLE_UNSPECIFIED"]
+        [--share-name=SHARE_NAME]
         [--smb-settings=SMB_SETTING,[SMB_SETTING,...]]
         [--snap-reserve=SNAP_RESERVE]
         [--snapshot-daily=[hour=HOUR],
@@ -109,9 +115,6 @@ REQUIRED FLAGS
         Type of File System protocols for the Cloud NetApp Files Volume. Valid
         component values are: NFSV3, NFSV4, SMB.
 
-     --share-name=SHARE_NAME
-        Share name of the Mount path clients will use.
-
      Storage pool resource - The Storage Pool to associate with Volume. This
      represents a Cloud resource. (NOTE) Some attributes are not given
      arguments in this group but can be set in other ways.
@@ -154,6 +157,24 @@ OPTIONAL FLAGS
         backup-vault can include a single backup-vault resource name, and
         enable-scheduled-backups is a Boolean value indicating whether or not
         scheduled backups are enabled on the volume.
+
+     --cache-parameters=[cache-config=CACHE-CONFIG],[enable-global-file-lock=ENABLE-GLOBAL-FILE-LOCK],[peer-cluster-name=PEER-CLUSTER-NAME],[peer-ip-addresses=PEER-IP-ADDRESSES],[peer-svm-name=PEER-SVM-NAME],[peer-volume-name=PEER-VOLUME-NAME]
+        Cache Parameters contains cache parameters of a volume.
+
+            Cache Parameters will have the following format
+            `--cache-parameters=peer-volume-name=PEER_VOLUME_NAME,
+              peer-cluster-name=PEER_CLUSTER_NAME,
+              peer-svm-name=PEER_SVM_NAME,
+              peer-ip-addresses=[PEER-IP-ADDRESS1#PEER-IP-ADDRESS2#...],
+              enable-global-file-lock=ENABLE_GLOBAL_FILE_LOCK,
+              cache-config=CACHE_CONFIG`
+
+            *peer-volume-name*::: Name of the user's local source volume
+            *peer-cluster-name*::: Name of the user's local source cluster
+            *peer-svm-name*::: Name of the user's local source vserver svm
+            *peer-ip-addresses*::: Hashtag-separated(#) list of IP addresses
+            *enable-global-file-lock*::: If true, enable global file lock
+            *cache-config*::: Cache-config as a hashtag-separated(#) list of key-value pairs
 
      --description=DESCRIPTION
         A description of the Cloud NetApp Volume
@@ -233,6 +254,9 @@ OPTIONAL FLAGS
             NTFS security style for Volume.
          unix
             UNIX security style for Volume
+
+     --share-name=SHARE_NAME
+        Share name of the Mount path clients will use.
 
      --smb-settings=SMB_SETTING,[SMB_SETTING,...]
         List of settings specific to SMB protocol for a Cloud NetApp Files

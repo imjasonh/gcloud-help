@@ -5,7 +5,8 @@ SYNOPSIS
     gcloud artifacts files download
         (FILE : --location=LOCATION --repository=REPOSITORY)
         --destination=DESTINATION [--allow-overwrite]
-        [--local-filename=LOCAL_FILENAME] [GCLOUD_WIDE_FLAG ...]
+        [--local-filename=LOCAL_FILENAME] [--parallelism=PARALLELISM]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Downloads an Artifact Registry file based on file name.
@@ -17,6 +18,14 @@ EXAMPLES
         $ gcloud artifacts files download --location=us-central1 \
           --project=my-project --repository=my-repo --destination=~/ \
           myfile
+
+    To download a file named myfile in project my-project under repository
+    my-repo in us-central1 to the local path ~/ using parallel multipart
+    download with 4 threads:
+
+        $ gcloud artifacts files download --location=us-central1 \
+          --project=my-project --repository=my-repo --destination=~/ \
+          --parallelism=4 myfile
 
     To download a file named myfile in project my-project under repository
     my-repo in us-central1 to the local path ~/ with file overwriting enabled:
@@ -78,6 +87,10 @@ OPTIONAL FLAGS
         If specified, the name of the downloaded file on the local system is
         set to the value you use for LOCAL_FILENAME. Otherwise the name of the
         downloaded file is based on the file name in the registry.
+
+     --parallelism=PARALLELISM
+        Specifies the number of threads to use for downloading the file in
+        parallel.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

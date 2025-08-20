@@ -5,8 +5,8 @@ NAME
 SYNOPSIS
     gcloud alpha artifacts generic download --destination=DESTINATION
         --package=ARTIFACT --version=VERSION [--chunk-size=CHUNK_SIZE]
-        [--name=NAME] [--location=LOCATION --repository=REPOSITORY]
-        [GCLOUD_WIDE_FLAG ...]
+        [--name=NAME] [--parallelism=PARALLELISM]
+        [--location=LOCATION --repository=REPOSITORY] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Download a generic artifact from a generic artifact repository.
@@ -19,6 +19,15 @@ EXAMPLES
           --project=myproject --repository=myrepo --package=mypackage \
           --version=v0.1.0 --destination=/path/to/destination/ \
           --name=myfile.txt
+
+    To download version v0.1.0 of myfile.txt located in a repository in
+    "us-central1" to /path/to/destination/ using parallel multipart download
+    with 4 threads:
+
+        $ gcloud alpha artifacts generic download --location=us-central1 \
+          --project=myproject --repository=myrepo --package=mypackage \
+          --version=v0.1.0 --destination=/path/to/destination/ \
+          --name=myfile.txt --parallelism=4
 
     To download version v0.1.0 of myfile.txt in 8000 byte chunks located in a
     repository in "us-central1" to /path/to/destination/:
@@ -53,6 +62,10 @@ OPTIONAL FLAGS
 
      --name=NAME
         If specified, the file name within the artifact to download.
+
+     --parallelism=PARALLELISM
+        Specifies the number of threads to use for downloading the file in
+        parallel.
 
      Repository resource - The Artifact Registry repository. If not specified,
      the current artifacts/repository is used. The arguments in this group can
