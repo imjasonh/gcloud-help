@@ -25,7 +25,10 @@ SYNOPSIS
         [--[no-]enable-google-private-path] [--enable-password-policy]
         [--enable-point-in-time-recovery]
         [--[no-]enable-private-service-connect]
+        [--enforce-new-sql-network-architecture]
         [--failover-dr-replica-name=FAILOVER_DR_REPLICA_NAME]
+        [--[no-]final-backup]
+        [--final-backup-retention-days=FINAL_BACKUP_RETENTION_DAYS]
         [--follow-gae-app=FOLLOW_GAE_APP]
         [--[no-]include-replicas-for-major-version-upgrade]
         [--[no-]insights-config-query-insights-enabled]
@@ -254,11 +257,23 @@ FLAGS
         Connect. Use --enable-private-service-connect to enable and
         --no-enable-private-service-connect to disable.
 
+     --enforce-new-sql-network-architecture
+        Force the instance to use the new network architecture.
+
      --failover-dr-replica-name=FAILOVER_DR_REPLICA_NAME
         Set a Disaster Recovery (DR) replica with the specified name for the
         primary instance. This must be one of the existing cross region
         replicas of the primary instance. Flag is only available for MySQL and
         PostgreSQL database instances.
+
+     --[no-]final-backup
+        Enables the final backup to be taken at the time of instance deletion.
+        Use --final-backup to enable and --no-final-backup to disable.
+
+     --final-backup-retention-days=FINAL_BACKUP_RETENTION_DAYS
+        Specifies number of days to retain final backup. The valid range is
+        between 1 and 365. For instances managed by BackupDR, the valid range
+        is between 1 day and 99 years. Default value is 30 days.
 
      --follow-gae-app=FOLLOW_GAE_APP
         First Generation instances only. The App Engine app this instance
@@ -561,9 +576,12 @@ FLAGS
        --connection-pool-flags=FLAG=VALUE,[FLAG=VALUE,...]
           Comma-separated list of connection pool flags to set on the instance
           connection pool. Use an equals sign to separate flag name and value.
-          View the Instance Resource API for allowed flags. (e.g.,
-          --connection-pool-flags
-          max_pool_size=1000,max_client_connections=2000)
+          More information on available flags can be found here:
+          https://cloud.google.com/sql/docs/mysql/managed-connection-pooling#configuration-options
+          for MySQL and
+          https://cloud.google.com/sql/docs/postgres/managed-connection-pooling#configuration-options
+          for PostgreSQL. (e.g., --connection-pool-flags
+          max_pool_size=1000,max_client_connections=20)
 
      At most one of these can be specified:
 

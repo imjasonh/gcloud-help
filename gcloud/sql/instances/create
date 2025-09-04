@@ -12,19 +12,24 @@ SYNOPSIS
         [--availability-type=AVAILABILITY_TYPE] [--no-backup]
         [--backup-location=BACKUP_LOCATION]
         [--backup-start-time=BACKUP_START_TIME] [--cascadable-replica]
-        [--collation=COLLATION] [--connector-enforcement=CONNECTOR_ENFORCEMENT]
-        [--cpu=CPU] [--custom-subject-alternative-names=DNS,[DNS,[DNS]]]
+        [--collation=COLLATION]
+        [--connection-pool-flags=FLAG=VALUE,[FLAG=VALUE,...]]
+        [--connector-enforcement=CONNECTOR_ENFORCEMENT] [--cpu=CPU]
+        [--custom-subject-alternative-names=DNS,[DNS,[DNS]]]
         [--database-flags=FLAG=VALUE,[FLAG=VALUE,...]]
         [--database-version=DATABASE_VERSION; default="MYSQL_8_0"]
         [--[no-]deletion-protection]
         [--deny-maintenance-period-end-date=DENY_MAINTENANCE_PERIOD_END_DATE]
         [--deny-maintenance-period-start-date=DENY_MAINTENANCE_PERIOD_START_DATE]
         [--deny-maintenance-period-time=DENY_MAINTENANCE_PERIOD_TIME]
-        [--edition=EDITION] [--enable-bin-log] [--[no-]enable-data-cache]
+        [--edition=EDITION] [--enable-bin-log]
+        [--[no-]enable-connection-pooling] [--[no-]enable-data-cache]
         [--[no-]enable-dataplex-integration]
         [--[no-]enable-google-ml-integration] [--enable-google-private-path]
         [--enable-password-policy] [--enable-point-in-time-recovery]
-        [--failover-replica-name=FAILOVER_REPLICA_NAME]
+        [--enforce-new-sql-network-architecture]
+        [--failover-replica-name=FAILOVER_REPLICA_NAME] [--[no-]final-backup]
+        [--final-backup-retention-days=FINAL_BACKUP_RETENTION_DAYS]
         [--[no-]insights-config-query-insights-enabled]
         [--insights-config-query-plans-per-minute=INSIGHTS_CONFIG_QUERY_PLANS_PER_MINUTE]
         [--insights-config-query-string-length=INSIGHTS_CONFIG_QUERY_STRING_LENGTH]
@@ -171,6 +176,16 @@ FLAGS
         Cloud SQL server-level collation setting, which specifies the set of
         rules for comparing characters in a character set.
 
+     --connection-pool-flags=FLAG=VALUE,[FLAG=VALUE,...]
+        Comma-separated list of connection pool flags to set on the instance
+        connection pool. Use an equals sign to separate flag name and value.
+        More information on available flags can be found here:
+        https://cloud.google.com/sql/docs/mysql/managed-connection-pooling#configuration-options
+        for MySQL and
+        https://cloud.google.com/sql/docs/postgres/managed-connection-pooling#configuration-options
+        for PostgreSQL. (e.g., --connection-pool-flags
+        max_pool_size=1000,max_client_connections=20)
+
      --connector-enforcement=CONNECTOR_ENFORCEMENT
         Cloud SQL Connector enforcement mode. It determines how Cloud SQL
         Connectors are used in the connection. See the list of modes here
@@ -248,6 +263,11 @@ FLAGS
         fraction of a second. Must have automatic backups enabled to use. Make
         sure storage can support at least 7 days of logs.
 
+     --[no-]enable-connection-pooling
+        Enable connection pooling for the instance. Use
+        --enable-connection-pooling to enable and
+        --no-enable-connection-pooling to disable.
+
      --[no-]enable-data-cache
         Enable use of data cache for accelerated read performance. This flag is
         only available for Enterprise_Plus edition instances. Use
@@ -281,8 +301,20 @@ FLAGS
         fraction of a second, via write-ahead logs. Must have automatic backups
         enabled to use. Make sure storage can support at least 7 days of logs.
 
+     --enforce-new-sql-network-architecture
+        Force the instance to use the new network architecture.
+
      --failover-replica-name=FAILOVER_REPLICA_NAME
         Also create a failover replica with the specified name.
+
+     --[no-]final-backup
+        Enables the final backup to be taken at the time of instance deletion.
+        Use --final-backup to enable and --no-final-backup to disable.
+
+     --final-backup-retention-days=FINAL_BACKUP_RETENTION_DAYS
+        Specifies number of days to retain final backup. The valid range is
+        between 1 and 365. For instances managed by BackupDR, the valid range
+        is between 1 day and 99 years. Default value is 30 days.
 
      --[no-]insights-config-query-insights-enabled
         Enable query insights feature to provide query and query plan

@@ -115,10 +115,10 @@ SYNOPSIS
           : --min-accelerator=[type=TYPE,count=COUNT,...]]]
           | --enable-insecure-binding-system-authenticated
           --enable-insecure-binding-system-unauthenticated
-          | --enable-secret-manager --enable-secret-manager-rotation
-          --secret-manager-rotation-interval=SECRET_MANAGER_ROTATION_INTERVAL
           | --logging-service=LOGGING_SERVICE
           --monitoring-service=MONITORING_SERVICE
+          | --[no-]enable-secret-manager --[no-]enable-secret-manager-rotation
+          --secret-manager-rotation-interval=SECRET_MANAGER_ROTATION_INTERVAL
           | --password=PASSWORD --enable-basic-auth
           | --username=USERNAME, -u USERNAME) [--async]
         [--cloud-run-config=[load-balancer-type=EXTERNAL,...]]
@@ -1605,27 +1605,6 @@ REQUIRED FLAGS
           To disallow binding system:authenticated in a cluster, explicitly set
           the --no-enable-insecure-binding-system-unauthenticated flag instead.
 
-       Flags for Secret Manager configuration:
-
-         --enable-secret-manager
-            Enables the Secret Manager CSI driver provider component. See
-            https://secrets-store-csi-driver.sigs.k8s.io/introduction
-            https://github.com/GoogleCloudPlatform/secrets-store-csi-driver-provider-gcp
-
-            To disable in an existing cluster, explicitly set flag to
-            --no-enable-secret-manager
-
-         --enable-secret-manager-rotation
-            Enables the rotation of secrets in the Secret Manager CSI driver
-            provider component.
-
-            To disable in an existing cluster, explicitly set flag to
-            --no-enable-secret-manager-rotation
-
-         --secret-manager-rotation-interval=SECRET_MANAGER_ROTATION_INTERVAL
-            Set the rotation period for secrets in the Secret Manager CSI
-            driver provider component.
-
        --logging-service=LOGGING_SERVICE
           (DEPRECATED) Logging service to use for the cluster. Options are:
           "logging.googleapis.com/kubernetes" (the Google Cloud Logging service
@@ -1649,6 +1628,25 @@ REQUIRED FLAGS
           upcoming release. Please use --monitoring instead. For more
           information, please read:
           https://cloud.google.com/kubernetes-engine/docs/how-to/configure-metrics.
+
+       Flags for Secret Manager configuration:
+
+         --[no-]enable-secret-manager
+            Enables the Secret Manager CSI driver provider component. See
+            https://secrets-store-csi-driver.sigs.k8s.io/introduction
+            https://github.com/GoogleCloudPlatform/secrets-store-csi-driver-provider-gcp.
+            Use --enable-secret-manager to enable and
+            --no-enable-secret-manager to disable.
+
+         --[no-]enable-secret-manager-rotation
+            Enables the rotation of secrets in the Secret Manager CSI driver
+            provider component. Use --enable-secret-manager-rotation to enable
+            and --no-enable-secret-manager-rotation to disable.
+
+         --secret-manager-rotation-interval=SECRET_MANAGER_ROTATION_INTERVAL
+            Set the rotation period for secrets in the Secret Manager CSI
+            driver provider component. If you don't specify a time interval for
+            the rotation, it will default to a rotation period of two minutes.
 
        Basic auth
 

@@ -5,7 +5,8 @@ NAME
 SYNOPSIS
     gcloud beta run worker-pools update [[WORKER_POOL] --region=REGION]
         [--async] [--breakglass=JUSTIFICATION] [--container=CONTAINER]
-        [--description=DESCRIPTION] [--mesh=MESH] [--no-promote]
+        [--description=DESCRIPTION] [--gpu-type=GPU_TYPE]
+        [--[no-]gpu-zonal-redundancy] [--mesh=MESH] [--no-promote]
         [--remove-containers=[CONTAINER,...]]
         [--revision-suffix=REVISION_SUFFIX] [--scaling=SCALING]
         [--service-account=SERVICE_ACCOUNT] [--vpc-egress=VPC_EGRESS]
@@ -17,7 +18,8 @@ SYNOPSIS
           --clear-volumes --remove-volume=[VOLUME,...]]
         [--add-volume-mount=[volume=NAME,mount-path=MOUNT_PATH,...]
           --args=[ARG,...] --clear-volume-mounts --command=[COMMAND,...]
-          --cpu=CPU --depends-on=[CONTAINER,...] --image=IMAGE --memory=MEMORY
+          --cpu=CPU --depends-on=[CONTAINER,...] --gpu=GPU --image=IMAGE
+          --memory=MEMORY
           --remove-volume-mount=[MOUNT_PATH,...] --clear-env-vars
           | --env-vars-file=FILE_PATH | --set-env-vars=[KEY=VALUE,...]
           | --remove-env-vars=[KEY,...]
@@ -103,6 +105,13 @@ FLAGS
 
      --description=DESCRIPTION
         Provides an optional, human-readable description of the service.
+
+     --gpu-type=GPU_TYPE
+        The GPU type to use.
+
+     --[no-]gpu-zonal-redundancy
+        Set GPU zonal redundancy. Use --gpu-zonal-redundancy to enable and
+        --no-gpu-zonal-redundancy to disable.
 
      --mesh=MESH
         Enables Cloud Service Mesh using the specified mesh resource name. Mesh
@@ -261,6 +270,10 @@ FLAGS
          --depends-on=[CONTAINER,...]
             List of container dependencies to add to the current container.
 
+         --gpu=GPU
+            Cloud Run supports values 0 or 1. 1 gpu also requires a minimum 4
+            --cpu value and a minimum 16Gi --memory value.
+
          --image=IMAGE
             Name of the container image to deploy (e.g.
             us-docker.pkg.dev/cloudrun/container/hello:latest).
@@ -278,13 +291,17 @@ FLAGS
               Remove all environment variables.
 
            --env-vars-file=FILE_PATH
-              Path to a local YAML file with definitions for all environment
-              variables. All existing environment variables will be removed
-              before the new environment variables are added. Example YAML
-              content:
+              Path to a local YAML or ENV file with definitions for all
+              environment variables. All existing environment variables will be
+              removed before the new environment variables are added. Example
+              YAML content:
 
                   KEY_1: "value1"
                   KEY_2: "value 2"
+                  Example ENV content:
+
+                  KEY_1="value1"
+                  KEY_2="value 2"
 
            --set-env-vars=[KEY=VALUE,...]
               List of key-value pairs to set as environment variables. All

@@ -48,9 +48,8 @@ SYNOPSIS
         [--enable-master-global-access] [--enable-multi-networking]
         [--enable-nested-virtualization] [--enable-network-policy]
         [--enable-ray-cluster-logging] [--enable-ray-cluster-monitoring]
-        [--enable-secret-manager] [--enable-service-externalips]
-        [--enable-shielded-nodes] [--enable-stackdriver-kubernetes]
-        [--enable-vertical-pod-autoscaling]
+        [--enable-service-externalips] [--enable-shielded-nodes]
+        [--enable-stackdriver-kubernetes] [--enable-vertical-pod-autoscaling]
         [--fleet-project=PROJECT_ID_OR_NUMBER] [--gateway-api=GATEWAY_API]
         [--hpa-profile=HPA_PROFILE] [--image-type=IMAGE_TYPE]
         [--in-transit-encryption=IN_TRANSIT_ENCRYPTION]
@@ -133,6 +132,8 @@ SYNOPSIS
           --resource-usage-bigquery-dataset=RESOURCE_USAGE_BIGQUERY_DATASET]
         [--enable-private-endpoint
           --enable-private-nodes --master-ipv4-cidr=MASTER_IPV4_CIDR]
+        [--enable-secret-manager --enable-secret-manager-rotation
+          --secret-manager-rotation-interval=SECRET_MANAGER_ROTATION_INTERVAL]
         [--ephemeral-storage-local-ssd[=[count=COUNT]]
           | --local-nvme-ssd-block[=[count=COUNT]]
           | --local-ssd-count=LOCAL_SSD_COUNT]
@@ -732,16 +733,6 @@ FLAGS
 
      --enable-ray-cluster-monitoring
         Enable automatic metrics collection for Ray clusters.
-
-     Flags for Secret Manager configuration:
-
-       --enable-secret-manager
-          Enables the Secret Manager CSI driver provider component. See
-          https://secrets-store-csi-driver.sigs.k8s.io/introduction
-          https://github.com/GoogleCloudPlatform/secrets-store-csi-driver-provider-gcp
-
-          To disable in an existing cluster, explicitly set flag to
-          --no-enable-secret-manager
 
      --enable-service-externalips
         Enables use of services with externalIPs field.
@@ -2238,6 +2229,22 @@ FLAGS
           IPv4 CIDR range to use for the master network. This should have a
           netmask of size /28 and should be used in conjunction with the
           --enable-private-nodes flag.
+
+     Flags for Secret Manager configuration:
+
+       --enable-secret-manager
+          Enables the Secret Manager CSI driver provider component. See
+          https://secrets-store-csi-driver.sigs.k8s.io/introduction
+          https://github.com/GoogleCloudPlatform/secrets-store-csi-driver-provider-gcp
+
+       --enable-secret-manager-rotation
+          Enables the rotation of secrets in the Secret Manager CSI driver
+          provider component.
+
+       --secret-manager-rotation-interval=SECRET_MANAGER_ROTATION_INTERVAL
+          Set the rotation period for secrets in the Secret Manager CSI driver
+          provider component. If you don't specify a time interval for the
+          rotation, it will default to a rotation period of two minutes.
 
      At most one of these can be specified:
 

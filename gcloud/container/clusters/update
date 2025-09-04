@@ -28,9 +28,9 @@ SYNOPSIS
           | --enable-legacy-lustre-port | --enable-multi-networking
           | --enable-network-policy | --enable-private-nodes
           | --[no-]enable-ray-cluster-logging
-          | --[no-]enable-ray-cluster-monitoring | --enable-secret-manager
-          | --enable-service-externalips | --enable-shielded-nodes
-          | --enable-stackdriver-kubernetes | --enable-vertical-pod-autoscaling
+          | --[no-]enable-ray-cluster-monitoring | --enable-service-externalips
+          | --enable-shielded-nodes | --enable-stackdriver-kubernetes
+          | --enable-vertical-pod-autoscaling
           | --fleet-project=PROJECT_ID_OR_NUMBER | --gateway-api=GATEWAY_API
           | --generate-password | --hpa-profile=HPA_PROFILE
           | --in-transit-encryption=IN_TRANSIT_ENCRYPTION
@@ -111,6 +111,8 @@ SYNOPSIS
           --enable-insecure-binding-system-unauthenticated
           | --logging-service=LOGGING_SERVICE
           --monitoring-service=MONITORING_SERVICE
+          | --[no-]enable-secret-manager --[no-]enable-secret-manager-rotation
+          --secret-manager-rotation-interval=SECRET_MANAGER_ROTATION_INTERVAL
           | --password=PASSWORD --enable-basic-auth
           | --username=USERNAME, -u USERNAME) [--async]
         [--cloud-run-config=[load-balancer-type=EXTERNAL,...]]
@@ -462,16 +464,6 @@ REQUIRED FLAGS
           Enable automatic metrics collection for Ray clusters. Use
           --enable-ray-cluster-monitoring to enable and
           --no-enable-ray-cluster-monitoring to disable.
-
-       Flags for Secret Manager configuration:
-
-         --enable-secret-manager
-            Enables the Secret Manager CSI driver provider component. See
-            https://secrets-store-csi-driver.sigs.k8s.io/introduction
-            https://github.com/GoogleCloudPlatform/secrets-store-csi-driver-provider-gcp
-
-            To disable in an existing cluster, explicitly set flag to
-            --no-enable-secret-manager
 
        --enable-service-externalips
           Enables use of services with externalIPs field.
@@ -1528,6 +1520,25 @@ REQUIRED FLAGS
           upcoming release. Please use --monitoring instead. For more
           information, please read:
           https://cloud.google.com/kubernetes-engine/docs/how-to/configure-metrics.
+
+       Flags for Secret Manager configuration:
+
+         --[no-]enable-secret-manager
+            Enables the Secret Manager CSI driver provider component. See
+            https://secrets-store-csi-driver.sigs.k8s.io/introduction
+            https://github.com/GoogleCloudPlatform/secrets-store-csi-driver-provider-gcp.
+            Use --enable-secret-manager to enable and
+            --no-enable-secret-manager to disable.
+
+         --[no-]enable-secret-manager-rotation
+            Enables the rotation of secrets in the Secret Manager CSI driver
+            provider component. Use --enable-secret-manager-rotation to enable
+            and --no-enable-secret-manager-rotation to disable.
+
+         --secret-manager-rotation-interval=SECRET_MANAGER_ROTATION_INTERVAL
+            Set the rotation period for secrets in the Secret Manager CSI
+            driver provider component. If you don't specify a time interval for
+            the rotation, it will default to a rotation period of two minutes.
 
        Basic auth
 

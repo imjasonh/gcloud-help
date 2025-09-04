@@ -28,7 +28,9 @@ SYNOPSIS
         [--[no-]enable-dataplex-integration]
         [--[no-]enable-google-ml-integration] [--enable-google-private-path]
         [--enable-password-policy] [--enable-point-in-time-recovery]
-        [--failover-replica-name=FAILOVER_REPLICA_NAME]
+        [--enforce-new-sql-network-architecture]
+        [--failover-replica-name=FAILOVER_REPLICA_NAME] [--[no-]final-backup]
+        [--final-backup-retention-days=FINAL_BACKUP_RETENTION_DAYS]
         [--[no-]insights-config-query-insights-enabled]
         [--insights-config-query-plans-per-minute=INSIGHTS_CONFIG_QUERY_PLANS_PER_MINUTE]
         [--insights-config-query-string-length=INSIGHTS_CONFIG_QUERY_STRING_LENGTH]
@@ -194,8 +196,12 @@ FLAGS
      --connection-pool-flags=FLAG=VALUE,[FLAG=VALUE,...]
         Comma-separated list of connection pool flags to set on the instance
         connection pool. Use an equals sign to separate flag name and value.
-        View the Instance Resource API for allowed flags. (e.g.,
-        --connection-pool-flags max_pool_size=1000,max_client_connections=2000)
+        More information on available flags can be found here:
+        https://cloud.google.com/sql/docs/mysql/managed-connection-pooling#configuration-options
+        for MySQL and
+        https://cloud.google.com/sql/docs/postgres/managed-connection-pooling#configuration-options
+        for PostgreSQL. (e.g., --connection-pool-flags
+        max_pool_size=1000,max_client_connections=20)
 
      --connector-enforcement=CONNECTOR_ENFORCEMENT
         Cloud SQL Connector enforcement mode. It determines how Cloud SQL
@@ -303,8 +309,20 @@ FLAGS
         fraction of a second, via write-ahead logs. Must have automatic backups
         enabled to use. Make sure storage can support at least 7 days of logs.
 
+     --enforce-new-sql-network-architecture
+        Force the instance to use the new network architecture.
+
      --failover-replica-name=FAILOVER_REPLICA_NAME
         Also create a failover replica with the specified name.
+
+     --[no-]final-backup
+        Enables the final backup to be taken at the time of instance deletion.
+        Use --final-backup to enable and --no-final-backup to disable.
+
+     --final-backup-retention-days=FINAL_BACKUP_RETENTION_DAYS
+        Specifies number of days to retain final backup. The valid range is
+        between 1 and 365. For instances managed by BackupDR, the valid range
+        is between 1 day and 99 years. Default value is 30 days.
 
      --[no-]insights-config-query-insights-enabled
         Enable query insights feature to provide query and query plan

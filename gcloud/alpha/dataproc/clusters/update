@@ -15,6 +15,9 @@ SYNOPSIS
         [--delete-expiration-time=DELETE_EXPIRATION_TIME
           | --delete-max-age=DELETE_MAX_AGE | --no-delete-max-age]
         [--delete-max-idle=DELETE_MAX_IDLE | --no-delete-max-idle]
+        [--identity-config-file=IDENTITY_CONFIG_FILE
+          | --add-user-mappings=[KEY=VALUE,...]
+          --remove-user-mappings=[KEY,...]]
         [--stop-expiration-time=STOP_EXPIRATION_TIME
           | --stop-max-age=STOP_MAX_AGE | --no-stop-max-age]
         [--stop-max-idle=STOP_MAX_IDLE | --no-stop-max-idle]
@@ -198,6 +201,30 @@ FLAGS
        --no-delete-max-idle
           Cancels the cluster auto-deletion by cluster idle duration
           (configured by --delete-max-idle flag)
+
+     At most one of these can be specified:
+
+       --identity-config-file=IDENTITY_CONFIG_FILE
+          Path to a YAML (or JSON) file that contains the configuration for
+          Secure Multi-Tenancy on the cluster. The path can be a Cloud Storage
+          URL (example: 'gs://path/to/file') or a local filesystem path. The
+          mappings provided in the file will overwrite existing mappings.
+
+          The YAML file is formatted as follows:
+
+                # Mapping header (first line) required.
+                user_service_account_mapping:
+                  bob@company.com: service-account-bob@project.iam.gserviceaccount.com
+                  alice@company.com: service-account-alice@project.iam.gserviceaccount.com
+
+       --add-user-mappings=[KEY=VALUE,...]
+          List of user-to-service-account mappings to add to current mappings.
+          If a mapping exists, its value is modified; otherwise, the new
+          mapping is added.
+
+       --remove-user-mappings=[KEY,...]
+          List of user-to-service-account mappings to remove from the current
+          mappings. If a mapping does not exist, it is ignored.
 
      At most one of these can be specified:
 

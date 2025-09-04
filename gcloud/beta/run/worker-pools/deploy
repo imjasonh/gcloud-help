@@ -5,7 +5,8 @@ NAME
 SYNOPSIS
     gcloud beta run worker-pools deploy [[WORKER_POOL] --region=REGION]
         [--async] [--breakglass=JUSTIFICATION] [--container=CONTAINER]
-        [--description=DESCRIPTION] [--mesh=MESH] [--no-promote]
+        [--description=DESCRIPTION] [--gpu-type=GPU_TYPE]
+        [--[no-]gpu-zonal-redundancy] [--mesh=MESH] [--no-promote]
         [--remove-containers=[CONTAINER,...]]
         [--revision-suffix=REVISION_SUFFIX] [--scaling=SCALING]
         [--service-account=SERVICE_ACCOUNT] [--vpc-egress=VPC_EGRESS]
@@ -17,7 +18,7 @@ SYNOPSIS
           --clear-volumes --remove-volume=[VOLUME,...]]
         [--add-volume-mount=[volume=NAME,mount-path=MOUNT_PATH,...]
           --args=[ARG,...] --clear-volume-mounts --command=[COMMAND,...]
-          --cpu=CPU --depends-on=[CONTAINER,...] --memory=MEMORY
+          --cpu=CPU --depends-on=[CONTAINER,...] --gpu=GPU --memory=MEMORY
           --remove-volume-mount=[MOUNT_PATH,...] --clear-env-vars
           | --env-vars-file=FILE_PATH | --set-env-vars=[KEY=VALUE,...]
           | --remove-env-vars=[KEY,...]
@@ -108,6 +109,13 @@ FLAGS
 
      --description=DESCRIPTION
         Provides an optional, human-readable description of the service.
+
+     --gpu-type=GPU_TYPE
+        The GPU type to use.
+
+     --[no-]gpu-zonal-redundancy
+        Set GPU zonal redundancy. Use --gpu-zonal-redundancy to enable and
+        --no-gpu-zonal-redundancy to disable.
 
      --mesh=MESH
         Enables Cloud Service Mesh using the specified mesh resource name. Mesh
@@ -265,6 +273,10 @@ FLAGS
 
          --depends-on=[CONTAINER,...]
             List of container dependencies to add to the current container.
+
+         --gpu=GPU
+            Cloud Run supports values 0 or 1. 1 gpu also requires a minimum 4
+            --cpu value and a minimum 16Gi --memory value.
 
          --memory=MEMORY
             Set a memory limit. Ex: 1024Mi, 4Gi.
