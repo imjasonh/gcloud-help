@@ -5,8 +5,9 @@ NAME
 SYNOPSIS
     gcloud alpha cluster-director clusters update
         (CLUSTER : --location=LOCATION)
-        --config=[compute=COMPUTE],[description=DESCRIPTION],[labels=LABELS],
-          [name=NAME],[networkResources=NETWORKRESOURCES],[networks=NETWORKS],
+        --config=[compute=COMPUTE],[computeResources=COMPUTERESOURCES],
+          [description=DESCRIPTION],[labels=LABELS],[name=NAME],
+          [networkResources=NETWORKRESOURCES],[networks=NETWORKS],
           [orchestrator=ORCHESTRATOR],[reconciling=RECONCILING],
           [storageResources=STORAGERESOURCES],[storages=STORAGES]
         --update-mask=UPDATE_MASK [--async] [GCLOUD_WIDE_FLAG ...]
@@ -70,12 +71,21 @@ POSITIONAL ARGUMENTS
           ▸ provide the argument --location on the command line.
 
 REQUIRED FLAGS
-     --config=[compute=COMPUTE],[description=DESCRIPTION],[labels=LABELS],[name=NAME],[networkResources=NETWORKRESOURCES],[networks=NETWORKS],[orchestrator=ORCHESTRATOR],[reconciling=RECONCILING],[storageResources=STORAGERESOURCES],[storages=STORAGES]
+     --config=[compute=COMPUTE],[computeResources=COMPUTERESOURCES],[description=DESCRIPTION],[labels=LABELS],[name=NAME],[networkResources=NETWORKRESOURCES],[networks=NETWORKS],[orchestrator=ORCHESTRATOR],[reconciling=RECONCILING],[storageResources=STORAGERESOURCES],[storages=STORAGES]
         Required, Configuration of the cluster specs to be updated in shorthand
         | JSON string | file path format.
 
          compute
             Sets compute value.
+
+             atmTags
+                Sets atmTags value.
+
+                 key
+                    Sets key value.
+
+                 value
+                    Sets value value.
 
              resourceRequests
                 Sets resourceRequests value.
@@ -134,6 +144,87 @@ REQUIRED FLAGS
                  zone
                     Sets zone value.
 
+         computeResources
+            Sets computeResources value.
+
+             KEY
+                Sets KEY value.
+
+             VALUE
+                Sets VALUE value.
+
+                 newDwsFlexInstances
+                    Sets newDwsFlexInstances value.
+
+                     atmTags
+                        Sets atmTags value.
+
+                         KEY
+                            Sets KEY value.
+
+                         VALUE
+                            Sets VALUE value.
+
+                     machineType
+                        Sets machineType value.
+
+                     maxDuration
+                        Sets maxDuration value.
+
+                     zone
+                        Sets zone value.
+
+                 newOnDemandInstances
+                    Sets newOnDemandInstances value.
+
+                     atmTags
+                        Sets atmTags value.
+
+                         KEY
+                            Sets KEY value.
+
+                         VALUE
+                            Sets VALUE value.
+
+                     machineType
+                        Sets machineType value.
+
+                     zone
+                        Sets zone value.
+
+                 newReservedInstances
+                    Sets newReservedInstances value.
+
+                     atmTags
+                        Sets atmTags value.
+
+                         KEY
+                            Sets KEY value.
+
+                         VALUE
+                            Sets VALUE value.
+
+                     reservation
+                        Sets reservation value.
+
+                 newSpotInstances
+                    Sets newSpotInstances value.
+
+                     atmTags
+                        Sets atmTags value.
+
+                         KEY
+                            Sets KEY value.
+
+                         VALUE
+                            Sets VALUE value.
+
+                     machineType
+                        Sets machineType value.
+
+                     zone
+                        Sets zone value.
+
          description
             Sets description value.
 
@@ -182,8 +273,26 @@ REQUIRED FLAGS
                          subnetwork
                             Sets subnetwork value.
 
+                     existingNetwork
+                        Sets existingNetwork value.
+
+                         network
+                            Sets network value.
+
+                         subnetwork
+                            Sets subnetwork value.
+
                      newComputeNetwork
                         Sets newComputeNetwork value.
+
+                         description
+                            Sets description value.
+
+                         network
+                            Sets network value.
+
+                     newNetwork
+                        Sets newNetwork value.
 
                          description
                             Sets description value.
@@ -226,6 +335,42 @@ REQUIRED FLAGS
 
                  config
                     Sets config value.
+
+                     accountingStorageEnforceFlags
+                        Sets accountingStorageEnforceFlags value.
+
+                     preemptExemptTime
+                        Sets preemptExemptTime value.
+
+                     preemptMode
+                        Sets preemptMode value.
+
+                     preemptType
+                        Sets preemptType value.
+
+                     priorityType
+                        Sets priorityType value.
+
+                     priorityWeightAge
+                        Sets priorityWeightAge value.
+
+                     priorityWeightAssoc
+                        Sets priorityWeightAssoc value.
+
+                     priorityWeightFairshare
+                        Sets priorityWeightFairshare value.
+
+                     priorityWeightJobSize
+                        Sets priorityWeightJobSize value.
+
+                     priorityWeightPartition
+                        Sets priorityWeightPartition value.
+
+                     priorityWeightQos
+                        Sets priorityWeightQos value.
+
+                     priorityWeightTres
+                        Sets priorityWeightTres value.
 
                      prologEpilogTimeout
                         Sets prologEpilogTimeout value.
@@ -320,8 +465,48 @@ REQUIRED FLAGS
                  nodeSets
                     Sets nodeSets value.
 
+                     bootDisk
+                        Sets bootDisk value.
+
+                         boot
+                            Sets boot value.
+
+                         sizeGb
+                            Sets sizeGb value.
+
+                         sourceImage
+                            Sets sourceImage value.
+
+                         type
+                            Sets type value.
+
                      canIpForward
                         Sets canIpForward value.
+
+                     computeId
+                        Sets computeId value.
+
+                     computeInstance
+                        Sets computeInstance value.
+
+                         labels
+                            Sets labels value.
+
+                             KEY
+                                Keys must start with a lowercase character and
+                                contain only hyphens (-), underscores (_),
+                                lowercase characters, and numbers.
+
+                             VALUE
+                                Values must contain only hyphens (-),
+                                underscores (_), lowercase characters, and
+                                numbers.
+
+                         startupScript
+                            Sets startupScript value.
+
+                     containerNodePool
+                        Sets containerNodePool value.
 
                      enableOsLogin
                         Sets enableOsLogin value.
@@ -598,11 +783,11 @@ REQUIRED FLAGS
 
         Shorthand Example:
 
-            --config=compute={resourceRequests=[{disks=[{boot=boolean,sizeGb=int,sourceImage=string,type=string}],guestAccelerators=[{acceleratorType=string,count=int}],id=string,machineType=string,maxRunDuration=int,provisioningModel=string,reservationAffinity={key=string,type=string,values=[string]},terminationAction=string,zone=string}]},description=string,labels={string=string},name=string,networkResources={string={computeNetwork={network=string,subnetwork=string},config={existingComputeNetwork={network=string,subnetwork=string},newComputeNetwork={description=string,network=string}}}},networks=[{initializeParams={description=string,network=string},network=string,networkSource={network=string,subnetwork=string},subnetwork=string}],orchestrator={slurm={config={prologEpilogTimeout=string,prologFlags=[string],requeueExitCodes=[int],requeueHoldExitCodes=[int]},defaultPartition=string,epilogBashScripts=[string],loginNodes={count=int,disks=[{boot=boolean,sizeGb=int,sourceImage=string,type=string}],enableOsLogin=boolean,enablePublicIps=boolean,instances=[{instance=string}],labels={string=string},machineType=string,serviceAccount={email=string,scopes=[string]},startupScript=string,storageConfigs=[{id=string,localMount=string}],zone=string},nodeSets=[{canIpForward=boolean,enableOsLogin=boolean,enablePublicIps=boolean,id=string,labels={string=string},maxDynamicNodeCount=int,resourceRequestId=string,serviceAccount={email=string,scopes=[string]},startupScript=string,staticNodeCount=int,storageConfigs=[{id=string,localMount=string}]}],partitions=[{exclusive=boolean,id=string,nodeSetIds=[string]}],prologBashScripts=[string],taskEpilogBashScripts=[string],taskPrologBashScripts=[string]}},reconciling=boolean,storageResources={string={bucket={bucket=string},config={existingBucket={bucket=string},existingFilestore={filestore=string},existingLustre={lustre=string},newBucket={autoclass={enabled=boolean,terminalStorageClass=string},bucket=string,hierarchicalNamespace={enabled=boolean},storageClass=string},newFilestore={description=string,fileShares=[{capacityGb=int,fileShare=string}],filestore=string,protocol=string,tier=string},newLustre={capacityGb=int,description=string,filesystem=string,lustre=string}},filestore={filestore=string},lustre={lustre=string}}},storages=[{id=string,initializeParams={filestore={description=string,fileShares=[{capacityGb=int,fileShare=string}],filestore=string,protocol=string,tier=string},gcs={autoclass={enabled=boolean,terminalStorageClass=string},bucket=string,hierarchicalNamespace={enabled=boolean},storageClass=string},lustre={capacityGb=int,description=string,filesystem=string,lustre=string}},storage=string,storageSource={bucket=string,filestore=string,lustre=string}}]
+            --config=compute={atmTags=[{key=string,value=string}],resourceRequests=[{disks=[{boot=boolean,sizeGb=int,sourceImage=string,type=string}],guestAccelerators=[{acceleratorType=string,count=int}],id=string,machineType=string,maxRunDuration=int,provisioningModel=string,reservationAffinity={key=string,type=string,values=[string]},terminationAction=string,zone=string}]},computeResources={string={newDwsFlexInstances={atmTags={string=string},machineType=string,maxDuration=string,zone=string},newOnDemandInstances={atmTags={string=string},machineType=string,zone=string},newReservedInstances={atmTags={string=string},reservation=string},newSpotInstances={atmTags={string=string},machineType=string,zone=string}}},description=string,labels={string=string},name=string,networkResources={string={computeNetwork={network=string,subnetwork=string},config={existingComputeNetwork={network=string,subnetwork=string},existingNetwork={network=string,subnetwork=string},newComputeNetwork={description=string,network=string},newNetwork={description=string,network=string}}}},networks=[{initializeParams={description=string,network=string},network=string,networkSource={network=string,subnetwork=string},subnetwork=string}],orchestrator={slurm={config={accountingStorageEnforceFlags=[string],preemptExemptTime=string,preemptMode=[string],preemptType=string,priorityType=string,priorityWeightAge=int,priorityWeightAssoc=int,priorityWeightFairshare=int,priorityWeightJobSize=int,priorityWeightPartition=int,priorityWeightQos=int,priorityWeightTres=string,prologEpilogTimeout=string,prologFlags=[string],requeueExitCodes=[int],requeueHoldExitCodes=[int]},defaultPartition=string,epilogBashScripts=[string],loginNodes={count=int,disks=[{boot=boolean,sizeGb=int,sourceImage=string,type=string}],enableOsLogin=boolean,enablePublicIps=boolean,instances=[{instance=string}],labels={string=string},machineType=string,serviceAccount={email=string,scopes=[string]},startupScript=string,storageConfigs=[{id=string,localMount=string}],zone=string},nodeSets=[{bootDisk={boot=boolean,sizeGb=int,sourceImage=string,type=string},canIpForward=boolean,computeId=string,computeInstance={labels={string=string},startupScript=string},containerNodePool,enableOsLogin=boolean,enablePublicIps=boolean,id=string,labels={string=string},maxDynamicNodeCount=int,resourceRequestId=string,serviceAccount={email=string,scopes=[string]},startupScript=string,staticNodeCount=int,storageConfigs=[{id=string,localMount=string}]}],partitions=[{exclusive=boolean,id=string,nodeSetIds=[string]}],prologBashScripts=[string],taskEpilogBashScripts=[string],taskPrologBashScripts=[string]}},reconciling=boolean,storageResources={string={bucket={bucket=string},config={existingBucket={bucket=string},existingFilestore={filestore=string},existingLustre={lustre=string},newBucket={autoclass={enabled=boolean,terminalStorageClass=string},bucket=string,hierarchicalNamespace={enabled=boolean},storageClass=string},newFilestore={description=string,fileShares=[{capacityGb=int,fileShare=string}],filestore=string,protocol=string,tier=string},newLustre={capacityGb=int,description=string,filesystem=string,lustre=string}},filestore={filestore=string},lustre={lustre=string}}},storages=[{id=string,initializeParams={filestore={description=string,fileShares=[{capacityGb=int,fileShare=string}],filestore=string,protocol=string,tier=string},gcs={autoclass={enabled=boolean,terminalStorageClass=string},bucket=string,hierarchicalNamespace={enabled=boolean},storageClass=string},lustre={capacityGb=int,description=string,filesystem=string,lustre=string}},storage=string,storageSource={bucket=string,filestore=string,lustre=string}}]
 
         JSON Example:
 
-            --config='{"compute": {"resourceRequests": [{"disks": [{"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}], "guestAccelerators": [{"acceleratorType": "string", "count": int}], "id": "string", "machineType": "string", "maxRunDuration": int, "provisioningModel": "string", "reservationAffinity": {"key": "string", "type": "string", "values": ["string"]}, "terminationAction": "string", "zone": "string"}]}, "description": "string", "labels": {"string": "string"}, "name": "string", "networkResources": {"string": {"computeNetwork": {"network": "string", "subnetwork": "string"}, "config": {"existingComputeNetwork": {"network": "string", "subnetwork": "string"}, "newComputeNetwork": {"description": "string", "network": "string"}}}}, "networks": [{"initializeParams": {"description": "string", "network": "string"}, "network": "string", "networkSource": {"network": "string", "subnetwork": "string"}, "subnetwork": "string"}], "orchestrator": {"slurm": {"config": {"prologEpilogTimeout": "string", "prologFlags": ["string"], "requeueExitCodes": [int], "requeueHoldExitCodes": [int]}, "defaultPartition": "string", "epilogBashScripts": ["string"], "loginNodes": {"count": int, "disks": [{"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}], "enableOsLogin": boolean, "enablePublicIps": boolean, "instances": [{"instance": "string"}], "labels": {"string": "string"}, "machineType": "string", "serviceAccount": {"email": "string", "scopes": ["string"]}, "startupScript": "string", "storageConfigs": [{"id": "string", "localMount": "string"}], "zone": "string"}, "nodeSets": [{"canIpForward": boolean, "enableOsLogin": boolean, "enablePublicIps": boolean, "id": "string", "labels": {"string": "string"}, "maxDynamicNodeCount": int, "resourceRequestId": "string", "serviceAccount": {"email": "string", "scopes": ["string"]}, "startupScript": "string", "staticNodeCount": int, "storageConfigs": [{"id": "string", "localMount": "string"}]}], "partitions": [{"exclusive": boolean, "id": "string", "nodeSetIds": ["string"]}], "prologBashScripts": ["string"], "taskEpilogBashScripts": ["string"], "taskPrologBashScripts": ["string"]}}, "reconciling": boolean, "storageResources": {"string": {"bucket": {"bucket": "string"}, "config": {"existingBucket": {"bucket": "string"}, "existingFilestore": {"filestore": "string"}, "existingLustre": {"lustre": "string"}, "newBucket": {"autoclass": {"enabled": boolean, "terminalStorageClass": "string"}, "bucket": "string", "hierarchicalNamespace": {"enabled": boolean}, "storageClass": "string"}, "newFilestore": {"description": "string", "fileShares": [{"capacityGb": int, "fileShare": "string"}], "filestore": "string", "protocol": "string", "tier": "string"}, "newLustre": {"capacityGb": int, "description": "string", "filesystem": "string", "lustre": "string"}}, "filestore": {"filestore": "string"}, "lustre": {"lustre": "string"}}}, "storages": [{"id": "string", "initializeParams": {"filestore": {"description": "string", "fileShares": [{"capacityGb": int, "fileShare": "string"}], "filestore": "string", "protocol": "string", "tier": "string"}, "gcs": {"autoclass": {"enabled": boolean, "terminalStorageClass": "string"}, "bucket": "string", "hierarchicalNamespace": {"enabled": boolean}, "storageClass": "string"}, "lustre": {"capacityGb": int, "description": "string", "filesystem": "string", "lustre": "string"}}, "storage": "string", "storageSource": {"bucket": "string", "filestore": "string", "lustre": "string"}}]}'
+            --config='{"compute": {"atmTags": [{"key": "string", "value": "string"}], "resourceRequests": [{"disks": [{"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}], "guestAccelerators": [{"acceleratorType": "string", "count": int}], "id": "string", "machineType": "string", "maxRunDuration": int, "provisioningModel": "string", "reservationAffinity": {"key": "string", "type": "string", "values": ["string"]}, "terminationAction": "string", "zone": "string"}]}, "computeResources": {"string": {"newDwsFlexInstances": {"atmTags": {"string": "string"}, "machineType": "string", "maxDuration": "string", "zone": "string"}, "newOnDemandInstances": {"atmTags": {"string": "string"}, "machineType": "string", "zone": "string"}, "newReservedInstances": {"atmTags": {"string": "string"}, "reservation": "string"}, "newSpotInstances": {"atmTags": {"string": "string"}, "machineType": "string", "zone": "string"}}}, "description": "string", "labels": {"string": "string"}, "name": "string", "networkResources": {"string": {"computeNetwork": {"network": "string", "subnetwork": "string"}, "config": {"existingComputeNetwork": {"network": "string", "subnetwork": "string"}, "existingNetwork": {"network": "string", "subnetwork": "string"}, "newComputeNetwork": {"description": "string", "network": "string"}, "newNetwork": {"description": "string", "network": "string"}}}}, "networks": [{"initializeParams": {"description": "string", "network": "string"}, "network": "string", "networkSource": {"network": "string", "subnetwork": "string"}, "subnetwork": "string"}], "orchestrator": {"slurm": {"config": {"accountingStorageEnforceFlags": ["string"], "preemptExemptTime": "string", "preemptMode": ["string"], "preemptType": "string", "priorityType": "string", "priorityWeightAge": int, "priorityWeightAssoc": int, "priorityWeightFairshare": int, "priorityWeightJobSize": int, "priorityWeightPartition": int, "priorityWeightQos": int, "priorityWeightTres": "string", "prologEpilogTimeout": "string", "prologFlags": ["string"], "requeueExitCodes": [int], "requeueHoldExitCodes": [int]}, "defaultPartition": "string", "epilogBashScripts": ["string"], "loginNodes": {"count": int, "disks": [{"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}], "enableOsLogin": boolean, "enablePublicIps": boolean, "instances": [{"instance": "string"}], "labels": {"string": "string"}, "machineType": "string", "serviceAccount": {"email": "string", "scopes": ["string"]}, "startupScript": "string", "storageConfigs": [{"id": "string", "localMount": "string"}], "zone": "string"}, "nodeSets": [{"bootDisk": {"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}, "canIpForward": boolean, "computeId": "string", "computeInstance": {"labels": {"string": "string"}, "startupScript": "string"}, "containerNodePool": {}, "enableOsLogin": boolean, "enablePublicIps": boolean, "id": "string", "labels": {"string": "string"}, "maxDynamicNodeCount": int, "resourceRequestId": "string", "serviceAccount": {"email": "string", "scopes": ["string"]}, "startupScript": "string", "staticNodeCount": int, "storageConfigs": [{"id": "string", "localMount": "string"}]}], "partitions": [{"exclusive": boolean, "id": "string", "nodeSetIds": ["string"]}], "prologBashScripts": ["string"], "taskEpilogBashScripts": ["string"], "taskPrologBashScripts": ["string"]}}, "reconciling": boolean, "storageResources": {"string": {"bucket": {"bucket": "string"}, "config": {"existingBucket": {"bucket": "string"}, "existingFilestore": {"filestore": "string"}, "existingLustre": {"lustre": "string"}, "newBucket": {"autoclass": {"enabled": boolean, "terminalStorageClass": "string"}, "bucket": "string", "hierarchicalNamespace": {"enabled": boolean}, "storageClass": "string"}, "newFilestore": {"description": "string", "fileShares": [{"capacityGb": int, "fileShare": "string"}], "filestore": "string", "protocol": "string", "tier": "string"}, "newLustre": {"capacityGb": int, "description": "string", "filesystem": "string", "lustre": "string"}}, "filestore": {"filestore": "string"}, "lustre": {"lustre": "string"}}}, "storages": [{"id": "string", "initializeParams": {"filestore": {"description": "string", "fileShares": [{"capacityGb": int, "fileShare": "string"}], "filestore": "string", "protocol": "string", "tier": "string"}, "gcs": {"autoclass": {"enabled": boolean, "terminalStorageClass": "string"}, "bucket": "string", "hierarchicalNamespace": {"enabled": boolean}, "storageClass": "string"}, "lustre": {"capacityGb": int, "description": "string", "filesystem": "string", "lustre": "string"}}, "storage": "string", "storageSource": {"bucket": "string", "filestore": "string", "lustre": "string"}}]}'
 
         File Example:
 

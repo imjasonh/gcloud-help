@@ -1,19 +1,16 @@
 NAME
-    gcloud alpha run multi-region-services update - update environment
-        variables, add/remove regions, and other configuration settings in
-        Multi-Region Services
+    gcloud run multi-region-services update - update environment variables,
+        add/remove regions, and other configuration settings in Multi-Region
+        Services
 
 SYNOPSIS
-    gcloud alpha run multi-region-services update
-        [[SERVICE] --namespace=NAMESPACE] [--async]
-        [--breakglass=JUSTIFICATION] [--clear-vpc-connector]
+    gcloud run multi-region-services update [[SERVICE] --namespace=NAMESPACE]
+        [--async] [--breakglass=JUSTIFICATION] [--clear-vpc-connector]
         [--concurrency=CONCURRENCY] [--container=CONTAINER] [--[no-]cpu-boost]
         [--[no-]cpu-throttling] [--[no-]default-url]
-        [--[no-]deploy-health-check] [--description=DESCRIPTION]
         [--execution-environment=EXECUTION_ENVIRONMENT] [--gpu-type=GPU_TYPE]
-        [--[no-]gpu-zonal-redundancy] [--[no-]iap]
-        [--ingress=INGRESS; default="all"] [--[no-]invoker-iam-check]
-        [--max=MAX] [--max-instances=MAX_INSTANCES] [--mesh=MESH] [--min=MIN]
+        [--[no-]gpu-zonal-redundancy] [--ingress=INGRESS; default="all"]
+        [--[no-]invoker-iam-check] [--max-instances=MAX_INSTANCES] [--min=MIN]
         [--min-instances=MIN_INSTANCES] [--region=REGION]
         [--remove-containers=[CONTAINER,...]]
         [--revision-suffix=REVISION_SUFFIX] [--scaling=SCALING]
@@ -34,7 +31,6 @@ SYNOPSIS
           --args=[ARG,...] --clear-volume-mounts --command=[COMMAND,...]
           --cpu=CPU --depends-on=[CONTAINER,...] --gpu=GPU --image=IMAGE
           --liveness-probe=[KEY=VALUE,...] --memory=MEMORY --port=PORT
-          --readiness-probe=[KEY=VALUE,...]
           --remove-volume-mount=[MOUNT_PATH,...]
           --startup-probe=[KEY=VALUE,...] --[no-]use-http2 --clear-env-vars
           | --env-vars-file=FILE_PATH | --set-env-vars=[KEY=VALUE,...]
@@ -56,13 +52,13 @@ SYNOPSIS
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) Update environment variables, add/remove regions, and other
-    configuration settings in Multi-Region Services.
+    Update environment variables, add/remove regions, and other configuration
+    settings in Multi-Region Services.
 
 EXAMPLES
     To update one or more env vars:
 
-        $ gcloud alpha run multi-region-services update myservice \
+        $ gcloud run multi-region-services update myservice \
           --update-env-vars=KEY1=VALUE1,KEY2=VALUE2
 
 POSITIONAL ARGUMENTS
@@ -135,17 +131,6 @@ FLAGS
         if not specified. Use --default-url to enable and --no-default-url to
         disable.
 
-     --[no-]deploy-health-check
-        Schedules a single instance of the Revision and waits for it to pass
-        its startup probe for the deployment to succeed. If disabled, the
-        startup probe runs only when the revision is first started via
-        invocation or by setting min-instances. This check is enabled by
-        default when unspecified. Use --deploy-health-check to enable and
-        --no-deploy-health-check to disable.
-
-     --description=DESCRIPTION
-        Provides an optional, human-readable description of the service.
-
      --execution-environment=EXECUTION_ENVIRONMENT
         Selects the execution environment where the application will run.
         EXECUTION_ENVIRONMENT must be one of:
@@ -161,10 +146,6 @@ FLAGS
      --[no-]gpu-zonal-redundancy
         Set GPU zonal redundancy. Use --gpu-zonal-redundancy to enable and
         --no-gpu-zonal-redundancy to disable.
-
-     --[no-]iap
-        Whether to enable IAP for the Service. Use --iap to enable and --no-iap
-        to disable.
 
      --ingress=INGRESS; default="all"
         Set the ingress traffic sources allowed to call the service. For Cloud
@@ -193,22 +174,10 @@ FLAGS
         Use --invoker-iam-check to enable and --no-invoker-iam-check to
         disable.
 
-     --max=MAX
-        The maximum number of container instances to run for this Service. This
-        instance limit will be divided among all Revisions receiving a
-        percentage of traffic and can be modified without deploying a new
-        Revision.
-
      --max-instances=MAX_INSTANCES
         The maximum number of container instances for this Revision to run or
         'default' to remove. This setting is immutably set on each new Revision
         and modifying its value will deploy another Revision.
-
-     --mesh=MESH
-        Enables Cloud Service Mesh using the specified mesh resource name. Mesh
-        resource name must be in the format of
-        projects/PROJECT/locations/global/meshes/MESH_NAME or MESH_NAME. Will
-        default to the current project if only MESH_NAME is provided.
 
      --min=MIN
         The minimum number of container instances to run for this Service or
@@ -420,23 +389,6 @@ FLAGS
             to the previous container port, this will also update the probe
             port.
 
-         --readiness-probe=[KEY=VALUE,...]
-            Comma separated settings for readiness probe in the form KEY=VALUE.
-            Each key stands for a field of the probe described in
-            https://cloud.google.com/run/docs/reference/rest/v1/Container#Probe.
-            Currently supported keys are: timeoutSeconds, periodSeconds,
-            failureThreshold, successThreshold, httpGet.port, httpGet.path,
-            grpc.port, grpc.service.
-
-            For example, to set a probe with 10s timeout and HTTP probe
-            requests sent to 8080 port of the container:
-
-                $ --readiness-probe=timeoutSeconds=10,httpGet.port=8080
-
-            To remove existing probe:
-
-                $ --readiness-probe=""
-
          --remove-volume-mount=[MOUNT_PATH,...]
             Removes the volume mounted at the specified path from the current
             container.
@@ -550,11 +502,11 @@ FLAGS
 
           For example, to remove all labels:
 
-              $ gcloud alpha run multi-region-services update --clear-labels
+              $ gcloud run multi-region-services update --clear-labels
 
           To remove all existing labels and create two new labels, foo and baz:
 
-              $ gcloud alpha run multi-region-services update --clear-labels \
+              $ gcloud run multi-region-services update --clear-labels \
                 --update-labels foo=bar,baz=qux
 
        --remove-labels=[KEY,...]
@@ -630,12 +582,9 @@ GCLOUD WIDE FLAGS
     Run $ gcloud help for details.
 
 NOTES
-    This command is currently in alpha and might change without notice. If this
-    command fails with API permission errors despite specifying the correct
-    project, you might be trying to access an API with an invitation-only early
-    access allowlist. These variants are also available:
+    These variants are also available:
 
-        $ gcloud run multi-region-services update
+        $ gcloud alpha run multi-region-services update
 
         $ gcloud beta run multi-region-services update
 
