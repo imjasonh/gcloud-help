@@ -1,23 +1,22 @@
 NAME
-    gcloud beta recommender recommendations list - list operations for a
-        recommendation
+    gcloud beta recommender recommendations list - list recommendations for
+        Google Cloud resources
 
 SYNOPSIS
     gcloud beta recommender recommendations list
         (--billing-account=BILLING_ACCOUNT | --folder=FOLDER_ID
           | --organization=ORGANIZATION_ID | --project=PROJECT_ID)
-        [--location=LOCATION] [--recommender=RECOMMENDER] [--filter=EXPRESSION]
-        [--limit=LIMIT] [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [--uri]
-        [GCLOUD_WIDE_FLAG ...]
+        [--location=LOCATION] [--recommender=RECOMMENDER] [--[no-]recursive]
+        [--filter=EXPRESSION] [--limit=LIMIT] [--page-size=PAGE_SIZE]
+        [--sort-by=[FIELD,...]] [--uri] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (BETA) This command lists all recommendations for a given Google Cloud
-    entity ID, location, and recommender. If recommender or location is not
-    specified, recommendations for all supported recommenders and locations are
-    listed. Supported recommenders can be found here:
-    https://cloud.google.com/recommender/docs/recommenders. The following
-    Google Cloud entity types are supported: project, billing_account, folder
-    and organization.
+    (BETA) This command lists all recommendations for the specified Google
+    Cloud resource, location, and recommender. If a recommender or location is
+    not specified, recommendations for all supported recommenders or locations,
+    respectively, are listed. If the --recursive flag is set, recommendations
+    for child resources and projects are also listed. Supported recommenders
+    can be found here: https://cloud.google.com/recommender/docs/recommenders.
 
 EXAMPLES
     Lists recommendations for a Cloud project.        $ gcloud beta recommender recommendations list \
@@ -48,13 +47,33 @@ REQUIRED FLAGS
 FLAGS
      --location=LOCATION
         Location to list recommendations for. If no location is specified,
-        recommendations for all supported locations are listed.
+        recommendations for all supported locations are listed. Not specifying
+        a location can add 15-20 seconds to the runtime.
 
      --recommender=RECOMMENDER
         Recommender to list recommendations for. If no recommender is
         specified, recommendations for all supported recommenders are listed.
         Supported recommenders can be found here:
-        https://cloud.google.com/recommender/docs/recommenders
+        https://cloud.google.com/recommender/docs/recommenders Not specifying a
+        recommender can add 15-20 seconds to the runtime.
+
+     --[no-]recursive
+        In addition to listing the recommendations for the specified
+        organization or folder, recursively list all of the recommendations for
+        the resource's child resources, including their descendants (for
+        example, a folder's sub-folders), and for the resource's child
+        projects. For example, when using the --recursive flag and specifying
+        an organization, the response lists all of the recommendations
+        associated with that organization, all of the recommendations
+        associated with that organization's folders and sub-folders, and all of
+        the recommendations associated with that organization's child projects.
+        The maximum number of resources (organization, folders, projects, and
+        descendant resources) that can be accessed at once with the --recursive
+        flag is 100. For a larger number of nested resources, use BigQuery
+        export
+        (https://cloud.google.com/recommender/docs/bq-export/export-recommendations-to-bq).
+        Using --recursive can add 15-20 seconds per resource to the runtime.
+        Use --recursive to enable and --no-recursive to disable.
 
 LIST COMMAND FLAGS
      --filter=EXPRESSION

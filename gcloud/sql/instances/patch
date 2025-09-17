@@ -66,6 +66,8 @@ SYNOPSIS
         [--clear-custom-subject-alternative-names
           | --custom-subject-alternative-names=DNS,[DNS,[DNS]]]
         [--clear-database-flags | --database-flags=FLAG=VALUE,[FLAG=VALUE,...]]
+        [--clear-psc-auto-connections
+          | --psc-auto-connections=[network=NETWORK],[project=PROJECT]]
         [--clear-psc-network-attachment-uri
           | --psc-network-attachment-uri=PSC_NETWORK_ATTACHMENT_URI]
         [--gce-zone=GCE_ZONE | --secondary-zone=SECONDARY_ZONE --zone=ZONE]
@@ -577,6 +579,42 @@ FLAGS
           e.g., skip_grant_tables=. Use on/off for booleans. View the Instance
           Resource API for allowed flags. (e.g., --database-flags
           max_allowed_packet=55555,skip_grant_tables=,log_output=1)
+
+     At most one of these can be specified:
+
+       --clear-psc-auto-connections
+          This removes all automatically created connections. Cloud SQL uses
+          these connections to connect to an instance using Private Service
+          Connect.
+
+       --psc-auto-connections=[network=NETWORK],[project=PROJECT]
+          A comma-separated list of networks or network-project pairs. Each
+          project is represented by a project number (numeric) or by a project
+          ID (alphanumeric). This allows Private Service Connect connections to
+          be created automatically for the specified networks. For example,
+          this connection uses "the form
+          psc-auto-connections=network=projects/testproject1/global/networks/testnetwork1"
+          or "the form
+          psc-auto-connections=project=testproject1,network=projects/testproject1/global/networks/testnetwork1".
+          Sets psc_auto_connections value.
+
+           network
+              Required, sets network value.
+
+           project
+              Sets project value.
+
+          Shorthand Example:
+
+              --psc-auto-connections=network=string,project=string
+
+          JSON Example:
+
+              --psc-auto-connections='{"network": "string", "project": "string"}'
+
+          File Example:
+
+              --psc-auto-connections=path_to_file.(yaml|json)
 
      At most one of these can be specified:
 

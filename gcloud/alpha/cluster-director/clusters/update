@@ -1,30 +1,127 @@
 NAME
-    gcloud alpha cluster-director clusters update - updates the parameters of a
-        Cluster Director resource
+    gcloud alpha cluster-director clusters update - updates a Cluster Director
+        resource
 
 SYNOPSIS
     gcloud alpha cluster-director clusters update
         (CLUSTER : --location=LOCATION)
-        --config=[compute=COMPUTE],[computeResources=COMPUTERESOURCES],
-          [description=DESCRIPTION],[labels=LABELS],[name=NAME],
-          [networkResources=NETWORKRESOURCES],[networks=NETWORKS],
-          [orchestrator=ORCHESTRATOR],[reconciling=RECONCILING],
-          [storageResources=STORAGERESOURCES],[storages=STORAGES]
-        --update-mask=UPDATE_MASK [--async] [GCLOUD_WIDE_FLAG ...]
+        (--add-dws-flex-instances=[id=ID],
+          [machineType=MACHINETYPE],[maxDuration=MAXDURATION],[zone=ZONE]
+          --add-labels=[ADD_LABELS,...]
+          --add-on-demand-instances=[id=ID],
+          [machineType=MACHINETYPE],[zone=ZONE]
+          --add-reserved-instances=[id=ID],
+          [machineType=MACHINETYPE],[reservation=RESERVATION]
+          --add-slurm-node-sets=[computeId=COMPUTEID],[id=ID],[labels=LABELS],
+          [maxDynamicNodeCount=MAXDYNAMICNODECOUNT],
+          [startupScript=STARTUPSCRIPT],[staticNodeCount=STATICNODECOUNT]
+          --add-slurm-partitions=[exclusive=EXCLUSIVE],
+          [id=ID],[nodesetIds=NODESETIDS]
+          --add-spot-instances=[id=ID],[machineType=MACHINETYPE],[zone=ZONE]
+          --description=DESCRIPTION
+          --remove-dws-flex-instances=[REMOVE_DWS_FLEX_INSTANCES,...]
+          --remove-labels=[REMOVE_LABELS,...]
+          --remove-on-demand-instances=[REMOVE_ON_DEMAND_INSTANCES,...]
+          --remove-reserved-instances=[REMOVE_RESERVED_INSTANCES,...]
+          --remove-slurm-node-sets=[REMOVE_SLURM_NODE_SETS,...]
+          --remove-slurm-partitions=[REMOVE_SLURM_PARTITIONS,...]
+          --remove-spot-instances=[REMOVE_SPOT_INSTANCES,...]
+          --slurm-default-partition=SLURM_DEFAULT_PARTITION
+          --update-slurm-node-sets=[id=ID],
+          [maxDynamicNodeCount=MAXDYNAMICNODECOUNT],
+          [staticNodeCount=STATICNODECOUNT]
+          --update-slurm-partitions=[exclusive=EXCLUSIVE],
+          [id=ID],[nodesetIds=NODESETIDS]
+          | --config=[compute=COMPUTE],[description=DESCRIPTION],
+          [labels=LABELS],[name=NAME],
+          [networks=NETWORKS],[orchestrator=ORCHESTRATOR],[storages=STORAGES]
+          --update-mask=UPDATE_MASK) [--async] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) Updates the parameters of a Cluster Director resource.
+    (ALPHA) gcloud alpha cluster-director clusters update facilitates the
+    updation of a cluster resource.
+
+    There are following ways to update a cluster:
+      ▪ [Preferred] Use granular flags to update cluster specs, based on
+        read-modify-update pattern.
+        ◆ Read the existing cluster specs through get cluster request.
+        ◆ Modify the cluster specs through granular flags.
+        ◆ Update the cluster specs through patch cluster request.
+      ▪ Use --config with cluster specs and --update-mask flags, both in JSON
+        format.
+        ◆ Map and repeated fields update requires existing and new values.
+        ◆ For e.g. if we want to update a cluster to add a new nodeset, then
+          we will use the update_mask "orchestrator.slurm.node_sets", and the
+          patch cluster must include all the existing nodesets as well as the
+          new one.
+
+    Please refer to the examples below for more details.
 
 EXAMPLES
-    To update the labels of a cluster my-cluster in location us-central1-a with
-    config file my-cluster-config.json run the following JSON example:
+    To update a cluster my-cluster in location us-central1-a with granular
+    flags, run the following example:
+
+    Add labels, reserved instances, slurm node sets, slurm partitions and
+    update description and default partition:
+
+        $ gcloud alpha cluster-director clusters update my-cluster \
+            --location us-central1-a \
+            --description "My updated cluster description" \
+            --add-labels env=prod,client=gcloud-cli \
+            --add-on-demand-instances \
+            id=compute1,zone=us-central1-a,machineType=n2-standard-2 \
+            --add-reserved-instances \
+            id=compute2,reservation=zones/us-central1-a/reservations/\
+        {reservation},machineType={machineType} \
+            --add-spot-instances \
+            id=compute3,zone=us-central1-a,machineType=n2-standard-2 \
+            --add-dws-flex-instances \
+            id=compute4,zone=us-central1-a,machineType=a4-highgpu-8g,\
+        maxDuration=10000s \
+            --add-slurm-node-sets id=nodeset1,computeId=compute1 \
+            --add-slurm-node-sets id=nodeset2,computeId=compute2 \
+            --add-slurm-node-sets id=nodeset3,computeId=compute3 \
+            --add-slurm-node-sets id=nodeset4,computeId=compute4 \
+            --add-slurm-partitions id=partition1,nodesetIds=[nodeset1] \
+            --add-slurm-partitions \
+            id=partition2,nodesetIds=[nodeset2,nodeset3,nodeset4] \
+            --slurm-default-partition partition1
+
+    Update slurm node sets and slurm partitions:
+
+        $ gcloud alpha cluster-director clusters update my-cluster \
+            --location us-central1-a \
+            --update-slurm-node-sets \
+            id=nodeset1,staticNodeCount=2,maxDynamicNodeCount=10 \
+            --update-slurm-partitions \
+            id=partition1,nodesetIds=[nodeset0],exclusive=true
+
+    Remove slurm node sets, slurm partitions and reserved instances and update
+    default partition:
+
+        $ gcloud alpha cluster-director clusters update my-cluster \
+            --location us-central1-a --slurm-default-partition partition0 \
+            --remove-labels env,client \
+            --remove-slurm-partitions partition1 \
+            --remove-slurm-partitions partition2 \
+            --remove-slurm-node-sets nodeset1 \
+            --remove-slurm-node-sets nodeset2 \
+            --remove-slurm-node-sets nodeset3 \
+            --remove-slurm-node-sets nodeset4 \
+            --remove-on-demand-instances compute1 \
+            --remove-reserved-instances compute2 \
+            --remove-spot-instances compute3 \
+            --remove-dws-flex-instances compute4
+
+    Or cluster my-cluster in location us-central1-a with config JSON run the
+    following JSON example:
 
         $ gcloud alpha cluster-director clusters update my-cluster \
             --location=us-central1-a --update-mask=labels \
             --config='{"key": "value"}'
 
-    Or create a JSON file with the cluster specs and run the following file
-    example:
+    Or create a JSON file my-cluster-config.json with the cluster specs and run
+    the following file example:
 
         $ gcloud alpha cluster-director clusters update my-cluster \
             --location=us-central1-a --update-mask=labels \
@@ -39,7 +136,7 @@ EXAMPLES
             --config-from-file=my-cluster-config.json
 
 POSITIONAL ARGUMENTS
-     Cluster resource - Identifier. Name of the cluster. Formats: cluster |
+     Cluster resource - Name of the cluster resource. Formats: cluster |
      projects/{project}/locations/{locations}/clusters/{cluster} The arguments
      in this group can be used to specify the attributes of this resource.
      (NOTE) Some attributes are not given arguments in this group but can be
@@ -71,81 +168,50 @@ POSITIONAL ARGUMENTS
           ▸ provide the argument --location on the command line.
 
 REQUIRED FLAGS
-     --config=[compute=COMPUTE],[computeResources=COMPUTERESOURCES],[description=DESCRIPTION],[labels=LABELS],[name=NAME],[networkResources=NETWORKRESOURCES],[networks=NETWORKS],[orchestrator=ORCHESTRATOR],[reconciling=RECONCILING],[storageResources=STORAGERESOURCES],[storages=STORAGES]
-        Required, Configuration of the cluster specs to be updated in shorthand
-        | JSON string | file path format.
+     Cluster configuration for provisioning with updates.
 
-         compute
-            Sets compute value.
+     Exactly one of these must be specified:
 
-             atmTags
-                Sets atmTags value.
+       Flag Configurations to define cluster updates.
 
-                 key
-                    Sets key value.
+         --add-dws-flex-instances=[id=ID],[machineType=MACHINETYPE],[maxDuration=MAXDURATION],[zone=ZONE]
+            Parameters to define cluster DWS Flex instances.
 
-                 value
-                    Sets value value.
+            For e.g. --add-dws-flex-instances
+            id={computeId},zone={zone},machineType={machineType},maxDuration=10000s.
 
-             resourceRequests
-                Sets resourceRequests value.
+            Sets add_dws_flex_instances value.
 
-                 disks
-                    Sets disks value.
+             id
+                Required, sets id value.
 
-                     boot
-                        Sets boot value.
+             machineType
+                Required, sets machineType value.
 
-                     sizeGb
-                        Sets sizeGb value.
+             maxDuration
+                Required, sets maxDuration value.
 
-                     sourceImage
-                        Sets sourceImage value.
+             zone
+                Required, sets zone value.
 
-                     type
-                        Sets type value.
+            Shorthand Example:
 
-                 guestAccelerators
-                    Sets guestAccelerators value.
+                --add-dws-flex-instances=id=string,machineType=string,maxDuration=string,zone=string --add-dws-flex-instances=id=string,machineType=string,maxDuration=string,zone=string
 
-                     acceleratorType
-                        Sets acceleratorType value.
+            JSON Example:
 
-                     count
-                        Sets count value.
+                --add-dws-flex-instances='[{"id": "string", "machineType": "string", "maxDuration": "string", "zone": "string"}]'
 
-                 id
-                    Sets id value.
+            File Example:
 
-                 machineType
-                    Sets machineType value.
+                --add-dws-flex-instances=path_to_file.(yaml|json)
 
-                 maxRunDuration
-                    Sets maxRunDuration value.
+         --add-labels=[ADD_LABELS,...]
+            Cluster labels as key value pairs.
 
-                 provisioningModel
-                    Sets provisioningModel value.
+            For e.g. --add-labels key1=value1,key2=value2.
 
-                 reservationAffinity
-                    Sets reservationAffinity value.
-
-                     key
-                        Sets key value.
-
-                     type
-                        Sets type value.
-
-                     values
-                        Sets values value.
-
-                 terminationAction
-                    Sets terminationAction value.
-
-                 zone
-                    Sets zone value.
-
-         computeResources
-            Sets computeResources value.
+            Sets add_labels value.
 
              KEY
                 Sets KEY value.
@@ -153,248 +219,304 @@ REQUIRED FLAGS
              VALUE
                 Sets VALUE value.
 
-                 newDwsFlexInstances
-                    Sets newDwsFlexInstances value.
+            Shorthand Example:
 
-                     atmTags
-                        Sets atmTags value.
+                --add-labels={string=string}
 
-                         KEY
-                            Sets KEY value.
+            JSON Example:
 
-                         VALUE
-                            Sets VALUE value.
+                --add-labels='{"string": "string"}'
 
-                     machineType
-                        Sets machineType value.
+            File Example:
 
-                     maxDuration
-                        Sets maxDuration value.
+                --add-labels=path_to_file.(yaml|json)
 
-                     zone
-                        Sets zone value.
+         --add-on-demand-instances=[id=ID],[machineType=MACHINETYPE],[zone=ZONE]
+            Parameters to define cluster on demand instances.
 
-                 newOnDemandInstances
-                    Sets newOnDemandInstances value.
+            For e.g. --add-on-demand-instances
+            id={computeId},zone={zone},machineType={machineType}.
 
-                     atmTags
-                        Sets atmTags value.
+            Sets add_on_demand_instances value.
 
-                         KEY
-                            Sets KEY value.
+             id
+                Required, sets id value.
 
-                         VALUE
-                            Sets VALUE value.
+             machineType
+                Required, sets machineType value.
 
-                     machineType
-                        Sets machineType value.
+             zone
+                Required, sets zone value.
 
-                     zone
-                        Sets zone value.
+            Shorthand Example:
 
-                 newReservedInstances
-                    Sets newReservedInstances value.
+                --add-on-demand-instances=id=string,machineType=string,zone=string --add-on-demand-instances=id=string,machineType=string,zone=string
 
-                     atmTags
-                        Sets atmTags value.
+            JSON Example:
 
-                         KEY
-                            Sets KEY value.
+                --add-on-demand-instances='[{"id": "string", "machineType": "string", "zone": "string"}]'
 
-                         VALUE
-                            Sets VALUE value.
+            File Example:
 
-                     reservation
-                        Sets reservation value.
+                --add-on-demand-instances=path_to_file.(yaml|json)
 
-                 newSpotInstances
-                    Sets newSpotInstances value.
+         --add-reserved-instances=[id=ID],[machineType=MACHINETYPE],[reservation=RESERVATION]
+            Parameters to define cluster reserved instances.
 
-                     atmTags
-                        Sets atmTags value.
+            For e.g. --add-reserved-instances
+            id={computeId},reservation=zones/{zone}/reservations/{reservation},machineType={machineType}.
 
-                         KEY
-                            Sets KEY value.
+            Sets add_reserved_instances value.
 
-                         VALUE
-                            Sets VALUE value.
+             id
+                Required, sets id value.
 
-                     machineType
-                        Sets machineType value.
+             machineType
+                Required, sets machineType value.
 
-                     zone
-                        Sets zone value.
+             reservation
+                Required, sets reservation value.
 
-         description
-            Sets description value.
+            Shorthand Example:
 
-         labels
-            Sets labels value.
+                --add-reserved-instances=id=string,machineType=string,reservation=string --add-reserved-instances=id=string,machineType=string,reservation=string
 
-             KEY
-                Keys must start with a lowercase character and contain only
-                hyphens (-), underscores (_), lowercase characters, and
-                numbers.
+            JSON Example:
 
-             VALUE
-                Values must contain only hyphens (-), underscores (_),
-                lowercase characters, and numbers.
+                --add-reserved-instances='[{"id": "string", "machineType": "string", "reservation": "string"}]'
 
-         name
-            Sets name value.
+            File Example:
 
-         networkResources
-            Sets networkResources value.
+                --add-reserved-instances=path_to_file.(yaml|json)
 
-             KEY
-                Sets KEY value.
+         --add-slurm-node-sets=[computeId=COMPUTEID],[id=ID],[labels=LABELS],[maxDynamicNodeCount=MAXDYNAMICNODECOUNT],[startupScript=STARTUPSCRIPT],[staticNodeCount=STATICNODECOUNT]
+            Parameters to define slurm cluster nodeset config.
 
-             VALUE
-                Sets VALUE value.
+            For e.g. --add-slurm-node-sets
+            id={nodesetId},computeId={computeId},staticNodeCount={staticNodeCount},maxDynamicNodeCount={maxDynamicNodeCount},startupScript="echo
+            hello",labels="{key1=value1,key2=value2}"
 
-                 computeNetwork
-                    Sets computeNetwork value.
+            Defaults:
+            ▫ staticNodeCount: 1
 
-                     network
-                        Sets network value.
+            Note:
+            ▫ startupScript:
+              ◇ Either str or file_path
+              ◇ For file_path, only bash file format (.sh or .bash) is
+                supported.
+              ◇ For file_path, only absolute path is supported.
 
-                     subnetwork
-                        Sets subnetwork value.
+              Sets add_slurm_node_sets value.
 
-                 config
-                    Sets config value.
+             computeId
+                Required, sets computeId value.
 
-                     existingComputeNetwork
-                        Sets existingComputeNetwork value.
+             id
+                Required, sets id value.
 
-                         network
-                            Sets network value.
+             labels
+                Sets labels value.
 
-                         subnetwork
-                            Sets subnetwork value.
+                 KEY
+                    Sets KEY value.
 
-                     existingNetwork
-                        Sets existingNetwork value.
+                 VALUE
+                    Sets VALUE value.
 
-                         network
-                            Sets network value.
+             maxDynamicNodeCount
+                Sets maxDynamicNodeCount value.
 
-                         subnetwork
-                            Sets subnetwork value.
+             startupScript
+                Sets startupScript value.
 
-                     newComputeNetwork
-                        Sets newComputeNetwork value.
+             staticNodeCount
+                Sets staticNodeCount value.
 
-                         description
-                            Sets description value.
+            Shorthand Example:
 
-                         network
-                            Sets network value.
+                --add-slurm-node-sets=computeId=string,id=string,labels={string=string},maxDynamicNodeCount=int,startupScript=string,staticNodeCount=int --add-slurm-node-sets=computeId=string,id=string,labels={string=string},maxDynamicNodeCount=int,startupScript=string,staticNodeCount=int
 
-                     newNetwork
-                        Sets newNetwork value.
+            JSON Example:
 
-                         description
-                            Sets description value.
+                --add-slurm-node-sets='[{"computeId": "string", "id": "string", "labels": {"string": "string"}, "maxDynamicNodeCount": int, "startupScript": "string", "staticNodeCount": int}]'
 
-                         network
-                            Sets network value.
+            File Example:
 
-         networks
-            Sets networks value.
+                --add-slurm-node-sets=path_to_file.(yaml|json)
 
-             initializeParams
-                Sets initializeParams value.
+         --add-slurm-partitions=[exclusive=EXCLUSIVE],[id=ID],[nodesetIds=NODESETIDS]
+            Parameters to define slurm cluster partitions.
 
-                 description
-                    Sets description value.
+            For e.g. --add-slurm-partitions
+            id={partitionId},nodesetIds=[{nodesetId1},{nodesetId2}],exclusive=false.
 
-                 network
-                    Sets network value.
+            Sets add_slurm_partitions value.
 
-             network
-                Sets network value.
+             exclusive
+                Sets exclusive value.
 
-             networkSource
-                Sets networkSource value.
+             id
+                Required, sets id value.
 
-                 network
-                    Sets network value.
+             nodesetIds
+                Required, sets nodesetIds value.
 
-                 subnetwork
-                    Sets subnetwork value.
+            Shorthand Example:
 
-             subnetwork
-                Sets subnetwork value.
+                --add-slurm-partitions=exclusive=boolean,id=string,nodesetIds=[string] --add-slurm-partitions=exclusive=boolean,id=string,nodesetIds=[string]
 
-         orchestrator
-            Sets orchestrator value.
+            JSON Example:
 
-             slurm
-                Sets slurm value.
+                --add-slurm-partitions='[{"exclusive": boolean, "id": "string", "nodesetIds": ["string"]}]'
 
-                 config
-                    Sets config value.
+            File Example:
 
-                     accountingStorageEnforceFlags
-                        Sets accountingStorageEnforceFlags value.
+                --add-slurm-partitions=path_to_file.(yaml|json)
 
-                     preemptExemptTime
-                        Sets preemptExemptTime value.
+         --add-spot-instances=[id=ID],[machineType=MACHINETYPE],[zone=ZONE]
+            Parameters to define cluster spot instances.
 
-                     preemptMode
-                        Sets preemptMode value.
+            For e.g. --add-spot-instances
+            id={computeId},zone={zone},machineType={machineType}.
 
-                     preemptType
-                        Sets preemptType value.
+            Sets add_spot_instances value.
 
-                     priorityType
-                        Sets priorityType value.
+             id
+                Required, sets id value.
 
-                     priorityWeightAge
-                        Sets priorityWeightAge value.
+             machineType
+                Required, sets machineType value.
 
-                     priorityWeightAssoc
-                        Sets priorityWeightAssoc value.
+             zone
+                Required, sets zone value.
 
-                     priorityWeightFairshare
-                        Sets priorityWeightFairshare value.
+            Shorthand Example:
 
-                     priorityWeightJobSize
-                        Sets priorityWeightJobSize value.
+                --add-spot-instances=id=string,machineType=string,zone=string --add-spot-instances=id=string,machineType=string,zone=string
 
-                     priorityWeightPartition
-                        Sets priorityWeightPartition value.
+            JSON Example:
 
-                     priorityWeightQos
-                        Sets priorityWeightQos value.
+                --add-spot-instances='[{"id": "string", "machineType": "string", "zone": "string"}]'
 
-                     priorityWeightTres
-                        Sets priorityWeightTres value.
+            File Example:
 
-                     prologEpilogTimeout
-                        Sets prologEpilogTimeout value.
+                --add-spot-instances=path_to_file.(yaml|json)
 
-                     prologFlags
-                        Sets prologFlags value.
+         --description=DESCRIPTION
+            Description of the cluster.
 
-                     requeueExitCodes
-                        Sets requeueExitCodes value.
+            For e.g. --description (ALPHA) Updates a Cluster Director resource.
 
-                     requeueHoldExitCodes
-                        Sets requeueHoldExitCodes value.
+         --remove-dws-flex-instances=[REMOVE_DWS_FLEX_INSTANCES,...]
+            Parameters to remove DWS Flex instance config by compute id.
 
-                 defaultPartition
-                    Sets defaultPartition value.
+            For e.g. --remove-dws-flex-instances {computeId1},{computeId2},...
 
-                 epilogBashScripts
-                    Sets epilogBashScripts value.
+         --remove-labels=[REMOVE_LABELS,...]
+            Parameters to remove cluster label by key.
 
-                 loginNodes
-                    Sets loginNodes value.
+            For e.g. --remove-labels {key1},{key2},...
 
-                     count
-                        Sets count value.
+         --remove-on-demand-instances=[REMOVE_ON_DEMAND_INSTANCES,...]
+            Parameters to remove on demand instances config by compute id.
+
+            For e.g. --remove-on-demand-instances {computeId1},{computeId2},...
+
+         --remove-reserved-instances=[REMOVE_RESERVED_INSTANCES,...]
+            Parameters to remove reserved instance config by compute id.
+
+            For e.g. --remove-reserved-instances {computeId1},{computeId2},...
+
+         --remove-slurm-node-sets=[REMOVE_SLURM_NODE_SETS,...]
+            Parameters to remove slurm nodeset config by nodeset id.
+
+            For e.g. --remove-slurm-node-sets {nodesetId1},{nodesetId2},...
+
+         --remove-slurm-partitions=[REMOVE_SLURM_PARTITIONS,...]
+            Parameters to remove slurm partition config by partition id.
+
+            For e.g. --remove-slurm-partitions
+            {partitionId1},{partitionId2},...
+
+         --remove-spot-instances=[REMOVE_SPOT_INSTANCES,...]
+            Parameters to remove spot instance config by compute id.
+
+            For e.g. --remove-spot-instances {computeId1},{computeId2},...
+
+         --slurm-default-partition=SLURM_DEFAULT_PARTITION
+            Parameters to define slurm cluster default partition.
+
+            For e.g. --slurm-default-partition {partitionId}
+
+         --update-slurm-node-sets=[id=ID],[maxDynamicNodeCount=MAXDYNAMICNODECOUNT],[staticNodeCount=STATICNODECOUNT]
+            Parameters to define and update slurm cluster nodeset config.
+
+            For e.g. --update-slurm-node-sets
+            id={nodesetId},staticNodeCount={staticNodeCount},maxDynamicNodeCount={maxDynamicNodeCount}.
+
+            Sets update_slurm_node_sets value.
+
+             id
+                Required, sets id value.
+
+             maxDynamicNodeCount
+                Sets maxDynamicNodeCount value.
+
+             staticNodeCount
+                Sets staticNodeCount value.
+
+            Shorthand Example:
+
+                --update-slurm-node-sets=id=string,maxDynamicNodeCount=int,staticNodeCount=int --update-slurm-node-sets=id=string,maxDynamicNodeCount=int,staticNodeCount=int
+
+            JSON Example:
+
+                --update-slurm-node-sets='[{"id": "string", "maxDynamicNodeCount": int, "staticNodeCount": int}]'
+
+            File Example:
+
+                --update-slurm-node-sets=path_to_file.(yaml|json)
+
+         --update-slurm-partitions=[exclusive=EXCLUSIVE],[id=ID],[nodesetIds=NODESETIDS]
+            Parameters to define and update slurm cluster partition config.
+
+            For e.g. --update-slurm-partitions
+            id={partitionId},nodesetIds=[{nodesetId1},{nodesetId2}],exclusive=false.
+
+            Sets update_slurm_partitions value.
+
+             exclusive
+                Sets exclusive value.
+
+             id
+                Required, sets id value.
+
+             nodesetIds
+                Sets nodesetIds value.
+
+            Shorthand Example:
+
+                --update-slurm-partitions=exclusive=boolean,id=string,nodesetIds=[string] --update-slurm-partitions=exclusive=boolean,id=string,nodesetIds=[string]
+
+            JSON Example:
+
+                --update-slurm-partitions='[{"exclusive": boolean, "id": "string", "nodesetIds": ["string"]}]'
+
+            File Example:
+
+                --update-slurm-partitions=path_to_file.(yaml|json)
+
+       Cluster configuration for updates.
+
+         --config=[compute=COMPUTE],[description=DESCRIPTION],[labels=LABELS],[name=NAME],[networks=NETWORKS],[orchestrator=ORCHESTRATOR],[storages=STORAGES]
+            Configuration of the cluster specs in the form of a JSON object.
+            Required, sets config value.
+
+             compute
+                Sets compute value.
+
+                 resourceRequests
+                    Sets resourceRequests value.
 
                      disks
                         Sets disks value.
@@ -403,248 +525,265 @@ REQUIRED FLAGS
                             Sets boot value.
 
                          sizeGb
-                            Sets sizeGb value.
+                            Required, sets sizeGb value.
 
                          sourceImage
                             Sets sourceImage value.
 
                          type
-                            Sets type value.
+                            Required, sets type value.
 
-                     enableOsLogin
-                        Sets enableOsLogin value.
+                     guestAccelerators
+                        Sets guestAccelerators value.
 
-                     enablePublicIps
-                        Sets enablePublicIps value.
+                         acceleratorType
+                            Sets acceleratorType value.
 
-                     instances
-                        Sets instances value.
+                         count
+                            Sets count value.
 
-                         instance
-                            Sets instance value.
-
-                     labels
-                        Sets labels value.
-
-                         KEY
-                            Keys must start with a lowercase character and
-                            contain only hyphens (-), underscores (_),
-                            lowercase characters, and numbers.
-
-                         VALUE
-                            Values must contain only hyphens (-), underscores
-                            (_), lowercase characters, and numbers.
+                     id
+                        Sets id value.
 
                      machineType
                         Sets machineType value.
 
-                     serviceAccount
-                        Sets serviceAccount value.
+                     maxRunDuration
+                        Sets maxRunDuration value.
 
-                         email
-                            Sets email value.
+                     provisioningModel
+                        Sets provisioningModel value.
 
-                         scopes
-                            Sets scopes value.
+                     reservationAffinity
+                        Sets reservationAffinity value.
 
-                     startupScript
-                        Sets startupScript value.
-
-                     storageConfigs
-                        Sets storageConfigs value.
-
-                         id
-                            Sets id value.
-
-                         localMount
-                            Sets localMount value.
-
-                     zone
-                        Sets zone value.
-
-                 nodeSets
-                    Sets nodeSets value.
-
-                     bootDisk
-                        Sets bootDisk value.
-
-                         boot
-                            Sets boot value.
-
-                         sizeGb
-                            Sets sizeGb value.
-
-                         sourceImage
-                            Sets sourceImage value.
+                         key
+                            Sets key value.
 
                          type
                             Sets type value.
 
-                     canIpForward
-                        Sets canIpForward value.
+                         values
+                            Sets values value.
 
-                     computeId
-                        Sets computeId value.
+                     terminationAction
+                        Sets terminationAction value.
 
-                     computeInstance
-                        Sets computeInstance value.
+                     zone
+                        Sets zone value.
+
+             description
+                Sets description value.
+
+             labels
+                Sets labels value.
+
+                 KEY
+                    Sets KEY value.
+
+                 VALUE
+                    Sets VALUE value.
+
+             name
+                Sets name value.
+
+             networks
+                Sets networks value.
+
+                 initializeParams
+                    Sets initializeParams value.
+
+                     description
+                        Sets description value.
+
+                     network
+                        Sets network value.
+
+                 networkSource
+                    Sets networkSource value.
+
+                     network
+                        Sets network value.
+
+                     subnetwork
+                        Sets subnetwork value.
+
+             orchestrator
+                Sets orchestrator value.
+
+                 slurm
+                    Sets slurm value.
+
+                     config
+                        Sets config value.
+
+                         prologEpilogTimeout
+                            Sets prologEpilogTimeout value.
+
+                         prologFlags
+                            Sets prologFlags value.
+
+                         requeueExitCodes
+                            Sets requeueExitCodes value.
+
+                         requeueHoldExitCodes
+                            Sets requeueHoldExitCodes value.
+
+                     defaultPartition
+                        Sets defaultPartition value.
+
+                     epilogBashScripts
+                        Sets epilogBashScripts value.
+
+                     loginNodes
+                        Sets loginNodes value.
+
+                         count
+                            Sets count value.
+
+                         disks
+                            Sets disks value.
+
+                             boot
+                                Sets boot value.
+
+                             sizeGb
+                                Required, sets sizeGb value.
+
+                             sourceImage
+                                Sets sourceImage value.
+
+                             type
+                                Required, sets type value.
+
+                         enableOsLogin
+                            Sets enableOsLogin value.
+
+                         enablePublicIps
+                            Sets enablePublicIps value.
 
                          labels
                             Sets labels value.
 
                              KEY
-                                Keys must start with a lowercase character and
-                                contain only hyphens (-), underscores (_),
-                                lowercase characters, and numbers.
+                                Sets KEY value.
 
                              VALUE
-                                Values must contain only hyphens (-),
-                                underscores (_), lowercase characters, and
-                                numbers.
+                                Sets VALUE value.
+
+                         machineType
+                            Sets machineType value.
+
+                         serviceAccount
+                            Sets serviceAccount value.
+
+                             email
+                                Sets email value.
+
+                             scopes
+                                Sets scopes value.
 
                          startupScript
                             Sets startupScript value.
 
-                     containerNodePool
-                        Sets containerNodePool value.
+                         storageConfigs
+                            Sets storageConfigs value.
 
-                     enableOsLogin
-                        Sets enableOsLogin value.
+                             id
+                                Sets id value.
 
-                     enablePublicIps
-                        Sets enablePublicIps value.
+                             localMount
+                                Sets localMount value.
 
-                     id
-                        Sets id value.
+                         zone
+                            Sets zone value.
 
-                     labels
-                        Sets labels value.
+                     nodeSets
+                        Sets nodeSets value.
 
-                         KEY
-                            Keys must start with a lowercase character and
-                            contain only hyphens (-), underscores (_),
-                            lowercase characters, and numbers.
+                         canIpForward
+                            Sets canIpForward value.
 
-                         VALUE
-                            Values must contain only hyphens (-), underscores
-                            (_), lowercase characters, and numbers.
+                         enableOsLogin
+                            Sets enableOsLogin value.
 
-                     maxDynamicNodeCount
-                        Sets maxDynamicNodeCount value.
-
-                     resourceRequestId
-                        Sets resourceRequestId value.
-
-                     serviceAccount
-                        Sets serviceAccount value.
-
-                         email
-                            Sets email value.
-
-                         scopes
-                            Sets scopes value.
-
-                     startupScript
-                        Sets startupScript value.
-
-                     staticNodeCount
-                        Sets staticNodeCount value.
-
-                     storageConfigs
-                        Sets storageConfigs value.
+                         enablePublicIps
+                            Sets enablePublicIps value.
 
                          id
                             Sets id value.
 
-                         localMount
-                            Sets localMount value.
+                         labels
+                            Sets labels value.
 
-                 partitions
-                    Sets partitions value.
+                             KEY
+                                Sets KEY value.
 
-                     exclusive
-                        Sets exclusive value.
+                             VALUE
+                                Sets VALUE value.
 
-                     id
-                        Sets id value.
+                         maxDynamicNodeCount
+                            Sets maxDynamicNodeCount value.
 
-                     nodeSetIds
-                        Sets nodeSetIds value.
+                         resourceRequestId
+                            Sets resourceRequestId value.
 
-                 prologBashScripts
-                    Sets prologBashScripts value.
+                         serviceAccount
+                            Sets serviceAccount value.
 
-                 taskEpilogBashScripts
-                    Sets taskEpilogBashScripts value.
+                             email
+                                Sets email value.
 
-                 taskPrologBashScripts
-                    Sets taskPrologBashScripts value.
+                             scopes
+                                Sets scopes value.
 
-         reconciling
-            Sets reconciling value.
+                         startupScript
+                            Sets startupScript value.
 
-         storageResources
-            Sets storageResources value.
+                         staticNodeCount
+                            Sets staticNodeCount value.
 
-             KEY
-                Sets KEY value.
+                         storageConfigs
+                            Sets storageConfigs value.
 
-             VALUE
-                Sets VALUE value.
+                             id
+                                Sets id value.
 
-                 bucket
-                    Sets bucket value.
+                             localMount
+                                Sets localMount value.
 
-                     bucket
-                        Sets bucket value.
+                     partitions
+                        Sets partitions value.
 
-                 config
-                    Sets config value.
+                         exclusive
+                            Sets exclusive value.
 
-                     existingBucket
-                        Sets existingBucket value.
+                         id
+                            Sets id value.
 
-                         bucket
-                            Sets bucket value.
+                         nodeSetIds
+                            Sets nodeSetIds value.
 
-                     existingFilestore
-                        Sets existingFilestore value.
+                     prologBashScripts
+                        Sets prologBashScripts value.
 
-                         filestore
-                            Sets filestore value.
+                     taskEpilogBashScripts
+                        Sets taskEpilogBashScripts value.
 
-                     existingLustre
-                        Sets existingLustre value.
+                     taskPrologBashScripts
+                        Sets taskPrologBashScripts value.
 
-                         lustre
-                            Sets lustre value.
+             storages
+                Sets storages value.
 
-                     newBucket
-                        Sets newBucket value.
+                 id
+                    Sets id value.
 
-                         autoclass
-                            Sets autoclass value.
+                 initializeParams
+                    Sets initializeParams value.
 
-                             enabled
-                                Sets enabled value.
-
-                             terminalStorageClass
-                                Sets terminalStorageClass value.
-
-                         bucket
-                            Sets bucket value.
-
-                         hierarchicalNamespace
-                            Sets hierarchicalNamespace value.
-
-                             enabled
-                                Sets enabled value.
-
-                         storageClass
-                            Sets storageClass value.
-
-                     newFilestore
-                        Sets newFilestore value.
+                     filestore
+                        Sets filestore value.
 
                          description
                             Sets description value.
@@ -667,8 +806,32 @@ REQUIRED FLAGS
                          tier
                             Sets tier value.
 
-                     newLustre
-                        Sets newLustre value.
+                     gcs
+                        Sets gcs value.
+
+                         autoclass
+                            Sets autoclass value.
+
+                             enabled
+                                Sets enabled value.
+
+                             terminalStorageClass
+                                Sets terminalStorageClass value.
+
+                         bucket
+                            Sets bucket value.
+
+                         hierarchicalNamespace
+                            Sets hierarchicalNamespace value.
+
+                             enabled
+                                Sets enabled value.
+
+                         storageClass
+                            Sets storageClass value.
+
+                     lustre
+                        Sets lustre value.
 
                          capacityGb
                             Sets capacityGb value.
@@ -682,128 +845,50 @@ REQUIRED FLAGS
                          lustre
                             Sets lustre value.
 
-                 filestore
-                    Sets filestore value.
-
-                     filestore
-                        Sets filestore value.
-
-                 lustre
-                    Sets lustre value.
-
-                     lustre
-                        Sets lustre value.
-
-         storages
-            Sets storages value.
-
-             id
-                Sets id value.
-
-             initializeParams
-                Sets initializeParams value.
-
-                 filestore
-                    Sets filestore value.
-
-                     description
-                        Sets description value.
-
-                     fileShares
-                        Sets fileShares value.
-
-                         capacityGb
-                            Sets capacityGb value.
-
-                         fileShare
-                            Sets fileShare value.
-
-                     filestore
-                        Sets filestore value.
-
-                     protocol
-                        Sets protocol value.
-
-                     tier
-                        Sets tier value.
-
-                 gcs
-                    Sets gcs value.
-
-                     autoclass
-                        Sets autoclass value.
-
-                         enabled
-                            Sets enabled value.
-
-                         terminalStorageClass
-                            Sets terminalStorageClass value.
+                 storageSource
+                    Sets storageSource value.
 
                      bucket
                         Sets bucket value.
 
-                     hierarchicalNamespace
-                        Sets hierarchicalNamespace value.
-
-                         enabled
-                            Sets enabled value.
-
-                     storageClass
-                        Sets storageClass value.
-
-                 lustre
-                    Sets lustre value.
-
-                     capacityGb
-                        Sets capacityGb value.
-
-                     description
-                        Sets description value.
-
-                     filesystem
-                        Sets filesystem value.
+                     filestore
+                        Sets filestore value.
 
                      lustre
                         Sets lustre value.
 
-             storage
-                Sets storage value.
+            Shorthand Example:
 
-             storageSource
-                Sets storageSource value.
+                --config=compute={resourceRequests=[{disks=[{boot=boolean,sizeGb=int,sourceImage=string,type=string}],guestAccelerators=[{acceleratorType=string,count=int}],id=string,machineType=string,maxRunDuration=int,provisioningModel=string,reservationAffinity={key=string,type=string,values},terminationAction=string,zone=string}]},description=string,labels={string=string},name=string,networks=[{initializeParams={description=string,network=string},networkSource={network=string,subnetwork=string}}],orchestrator={slurm={config={prologEpilogTimeout=string,prologFlags,requeueExitCodes,requeueHoldExitCodes},defaultPartition=string,epilogBashScripts,loginNodes={count=int,disks=[{boot=boolean,sizeGb=int,sourceImage=string,type=string}],enableOsLogin=boolean,enablePublicIps=boolean,labels={string=string},machineType=string,serviceAccount={email=string,scopes},startupScript=string,storageConfigs=[{id=string,localMount=string}],zone=string},nodeSets=[{canIpForward=boolean,enableOsLogin=boolean,enablePublicIps=boolean,id=string,labels={string=string},maxDynamicNodeCount=int,resourceRequestId=string,serviceAccount={email=string,scopes},startupScript=string,staticNodeCount=int,storageConfigs=[{id=string,localMount=string}]}],partitions=[{exclusive=boolean,id=string,nodeSetIds=[string]}],prologBashScripts,taskEpilogBashScripts,taskPrologBashScripts}},storages=[{id=string,initializeParams={filestore={description=string,fileShares=[{capacityGb=int,fileShare=string}],filestore=string,protocol=string,tier=string},gcs={autoclass={enabled=boolean,terminalStorageClass=string},bucket=string,hierarchicalNamespace={enabled=boolean},storageClass=string},lustre={capacityGb=int,description=string,filesystem=string,lustre=string}},storageSource={bucket=string,filestore=string,lustre=string}}]
 
-                 bucket
-                    Sets bucket value.
+            JSON Example:
 
-                 filestore
-                    Sets filestore value.
+                --config='{"compute": {"resourceRequests": [{"disks": [{"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}], "guestAccelerators": [{"acceleratorType": "string", "count": int}], "id": "string", "machineType": "string", "maxRunDuration": int, "provisioningModel": "string", "reservationAffinity": {"key": "string", "type": "string", "values"}, "terminationAction": "string", "zone": "string"}]}, "description": "string", "labels": {"string": "string"}, "name": "string", "networks": [{"initializeParams": {"description": "string", "network": "string"}, "networkSource": {"network": "string", "subnetwork": "string"}}], "orchestrator": {"slurm": {"config": {"prologEpilogTimeout": "string", "prologFlags", "requeueExitCodes", "requeueHoldExitCodes"}, "defaultPartition": "string", "epilogBashScripts", "loginNodes": {"count": int, "disks": [{"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}], "enableOsLogin": boolean, "enablePublicIps": boolean, "labels": {"string": "string"}, "machineType": "string", "serviceAccount": {"email": "string", "scopes"}, "startupScript": "string", "storageConfigs": [{"id": "string", "localMount": "string"}], "zone": "string"}, "nodeSets": [{"canIpForward": boolean, "enableOsLogin": boolean, "enablePublicIps": boolean, "id": "string", "labels": {"string": "string"}, "maxDynamicNodeCount": int, "resourceRequestId": "string", "serviceAccount": {"email": "string", "scopes"}, "startupScript": "string", "staticNodeCount": int, "storageConfigs": [{"id": "string", "localMount": "string"}]}], "partitions": [{"exclusive": boolean, "id": "string", "nodeSetIds": ["string"]}], "prologBashScripts", "taskEpilogBashScripts", "taskPrologBashScripts"}}, "storages": [{"id": "string", "initializeParams": {"filestore": {"description": "string", "fileShares": [{"capacityGb": int, "fileShare": "string"}], "filestore": "string", "protocol": "string", "tier": "string"}, "gcs": {"autoclass": {"enabled": boolean, "terminalStorageClass": "string"}, "bucket": "string", "hierarchicalNamespace": {"enabled": boolean}, "storageClass": "string"}, "lustre": {"capacityGb": int, "description": "string", "filesystem": "string", "lustre": "string"}}, "storageSource": {"bucket": "string", "filestore": "string", "lustre": "string"}}]}'
 
-                 lustre
-                    Sets lustre value.
+            File Example:
 
-        Shorthand Example:
+                --config=path_to_file.(yaml|json)
 
-            --config=compute={atmTags=[{key=string,value=string}],resourceRequests=[{disks=[{boot=boolean,sizeGb=int,sourceImage=string,type=string}],guestAccelerators=[{acceleratorType=string,count=int}],id=string,machineType=string,maxRunDuration=int,provisioningModel=string,reservationAffinity={key=string,type=string,values=[string]},terminationAction=string,zone=string}]},computeResources={string={newDwsFlexInstances={atmTags={string=string},machineType=string,maxDuration=string,zone=string},newOnDemandInstances={atmTags={string=string},machineType=string,zone=string},newReservedInstances={atmTags={string=string},reservation=string},newSpotInstances={atmTags={string=string},machineType=string,zone=string}}},description=string,labels={string=string},name=string,networkResources={string={computeNetwork={network=string,subnetwork=string},config={existingComputeNetwork={network=string,subnetwork=string},existingNetwork={network=string,subnetwork=string},newComputeNetwork={description=string,network=string},newNetwork={description=string,network=string}}}},networks=[{initializeParams={description=string,network=string},network=string,networkSource={network=string,subnetwork=string},subnetwork=string}],orchestrator={slurm={config={accountingStorageEnforceFlags=[string],preemptExemptTime=string,preemptMode=[string],preemptType=string,priorityType=string,priorityWeightAge=int,priorityWeightAssoc=int,priorityWeightFairshare=int,priorityWeightJobSize=int,priorityWeightPartition=int,priorityWeightQos=int,priorityWeightTres=string,prologEpilogTimeout=string,prologFlags=[string],requeueExitCodes=[int],requeueHoldExitCodes=[int]},defaultPartition=string,epilogBashScripts=[string],loginNodes={count=int,disks=[{boot=boolean,sizeGb=int,sourceImage=string,type=string}],enableOsLogin=boolean,enablePublicIps=boolean,instances=[{instance=string}],labels={string=string},machineType=string,serviceAccount={email=string,scopes=[string]},startupScript=string,storageConfigs=[{id=string,localMount=string}],zone=string},nodeSets=[{bootDisk={boot=boolean,sizeGb=int,sourceImage=string,type=string},canIpForward=boolean,computeId=string,computeInstance={labels={string=string},startupScript=string},containerNodePool,enableOsLogin=boolean,enablePublicIps=boolean,id=string,labels={string=string},maxDynamicNodeCount=int,resourceRequestId=string,serviceAccount={email=string,scopes=[string]},startupScript=string,staticNodeCount=int,storageConfigs=[{id=string,localMount=string}]}],partitions=[{exclusive=boolean,id=string,nodeSetIds=[string]}],prologBashScripts=[string],taskEpilogBashScripts=[string],taskPrologBashScripts=[string]}},reconciling=boolean,storageResources={string={bucket={bucket=string},config={existingBucket={bucket=string},existingFilestore={filestore=string},existingLustre={lustre=string},newBucket={autoclass={enabled=boolean,terminalStorageClass=string},bucket=string,hierarchicalNamespace={enabled=boolean},storageClass=string},newFilestore={description=string,fileShares=[{capacityGb=int,fileShare=string}],filestore=string,protocol=string,tier=string},newLustre={capacityGb=int,description=string,filesystem=string,lustre=string}},filestore={filestore=string},lustre={lustre=string}}},storages=[{id=string,initializeParams={filestore={description=string,fileShares=[{capacityGb=int,fileShare=string}],filestore=string,protocol=string,tier=string},gcs={autoclass={enabled=boolean,terminalStorageClass=string},bucket=string,hierarchicalNamespace={enabled=boolean},storageClass=string},lustre={capacityGb=int,description=string,filesystem=string,lustre=string}},storage=string,storageSource={bucket=string,filestore=string,lustre=string}}]
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
 
-        JSON Example:
+         --update-mask=UPDATE_MASK
+            Update mask to specify the fields to update.
 
-            --config='{"compute": {"atmTags": [{"key": "string", "value": "string"}], "resourceRequests": [{"disks": [{"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}], "guestAccelerators": [{"acceleratorType": "string", "count": int}], "id": "string", "machineType": "string", "maxRunDuration": int, "provisioningModel": "string", "reservationAffinity": {"key": "string", "type": "string", "values": ["string"]}, "terminationAction": "string", "zone": "string"}]}, "computeResources": {"string": {"newDwsFlexInstances": {"atmTags": {"string": "string"}, "machineType": "string", "maxDuration": "string", "zone": "string"}, "newOnDemandInstances": {"atmTags": {"string": "string"}, "machineType": "string", "zone": "string"}, "newReservedInstances": {"atmTags": {"string": "string"}, "reservation": "string"}, "newSpotInstances": {"atmTags": {"string": "string"}, "machineType": "string", "zone": "string"}}}, "description": "string", "labels": {"string": "string"}, "name": "string", "networkResources": {"string": {"computeNetwork": {"network": "string", "subnetwork": "string"}, "config": {"existingComputeNetwork": {"network": "string", "subnetwork": "string"}, "existingNetwork": {"network": "string", "subnetwork": "string"}, "newComputeNetwork": {"description": "string", "network": "string"}, "newNetwork": {"description": "string", "network": "string"}}}}, "networks": [{"initializeParams": {"description": "string", "network": "string"}, "network": "string", "networkSource": {"network": "string", "subnetwork": "string"}, "subnetwork": "string"}], "orchestrator": {"slurm": {"config": {"accountingStorageEnforceFlags": ["string"], "preemptExemptTime": "string", "preemptMode": ["string"], "preemptType": "string", "priorityType": "string", "priorityWeightAge": int, "priorityWeightAssoc": int, "priorityWeightFairshare": int, "priorityWeightJobSize": int, "priorityWeightPartition": int, "priorityWeightQos": int, "priorityWeightTres": "string", "prologEpilogTimeout": "string", "prologFlags": ["string"], "requeueExitCodes": [int], "requeueHoldExitCodes": [int]}, "defaultPartition": "string", "epilogBashScripts": ["string"], "loginNodes": {"count": int, "disks": [{"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}], "enableOsLogin": boolean, "enablePublicIps": boolean, "instances": [{"instance": "string"}], "labels": {"string": "string"}, "machineType": "string", "serviceAccount": {"email": "string", "scopes": ["string"]}, "startupScript": "string", "storageConfigs": [{"id": "string", "localMount": "string"}], "zone": "string"}, "nodeSets": [{"bootDisk": {"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}, "canIpForward": boolean, "computeId": "string", "computeInstance": {"labels": {"string": "string"}, "startupScript": "string"}, "containerNodePool": {}, "enableOsLogin": boolean, "enablePublicIps": boolean, "id": "string", "labels": {"string": "string"}, "maxDynamicNodeCount": int, "resourceRequestId": "string", "serviceAccount": {"email": "string", "scopes": ["string"]}, "startupScript": "string", "staticNodeCount": int, "storageConfigs": [{"id": "string", "localMount": "string"}]}], "partitions": [{"exclusive": boolean, "id": "string", "nodeSetIds": ["string"]}], "prologBashScripts": ["string"], "taskEpilogBashScripts": ["string"], "taskPrologBashScripts": ["string"]}}, "reconciling": boolean, "storageResources": {"string": {"bucket": {"bucket": "string"}, "config": {"existingBucket": {"bucket": "string"}, "existingFilestore": {"filestore": "string"}, "existingLustre": {"lustre": "string"}, "newBucket": {"autoclass": {"enabled": boolean, "terminalStorageClass": "string"}, "bucket": "string", "hierarchicalNamespace": {"enabled": boolean}, "storageClass": "string"}, "newFilestore": {"description": "string", "fileShares": [{"capacityGb": int, "fileShare": "string"}], "filestore": "string", "protocol": "string", "tier": "string"}, "newLustre": {"capacityGb": int, "description": "string", "filesystem": "string", "lustre": "string"}}, "filestore": {"filestore": "string"}, "lustre": {"lustre": "string"}}}, "storages": [{"id": "string", "initializeParams": {"filestore": {"description": "string", "fileShares": [{"capacityGb": int, "fileShare": "string"}], "filestore": "string", "protocol": "string", "tier": "string"}, "gcs": {"autoclass": {"enabled": boolean, "terminalStorageClass": "string"}, "bucket": "string", "hierarchicalNamespace": {"enabled": boolean}, "storageClass": "string"}, "lustre": {"capacityGb": int, "description": "string", "filesystem": "string", "lustre": "string"}}, "storage": "string", "storageSource": {"bucket": "string", "filestore": "string", "lustre": "string"}}]}'
+            For e.g. --update-mask "description,labels".
 
-        File Example:
+            Required, sets update_mask value.
 
-            --config=path_to_file.(yaml|json)
+            Input Example:
 
-     --update-mask=UPDATE_MASK
-        Required, Field mask to be updated in shorthand | JSON string | file
-        path format.
+                --update-mask=string
 
-        Input Example:
+            File Example:
 
-            --update-mask=string
+                --update-mask=path_to_file.(yaml|json)
 
-        File Example:
-
-            --update-mask=path_to_file.(yaml|json)
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
 
 OPTIONAL FLAGS
      --async
@@ -817,11 +902,6 @@ GCLOUD WIDE FLAGS
     --trace-token, --user-output-enabled, --verbosity.
 
     Run $ gcloud help for details.
-
-API REFERENCE
-    This command uses the hypercomputecluster/v1alpha API. The full
-    documentation for this API can be found at:
-    https://cloud.google.com/ai-hypercomputer/docs/cluster-director
 
 NOTES
     This command is currently in alpha and might change without notice. If this

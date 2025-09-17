@@ -1,0 +1,68 @@
+NAME
+    gcloud beta kms decapsulate - decapsulate an input file using a
+        key-encapsulation key version
+
+SYNOPSIS
+    gcloud beta kms decapsulate --ciphertext-file=CIPHERTEXT_FILE
+        --shared-secret-file=SHARED_SECRET_FILE [--key=KEY] [--keyring=KEYRING]
+        [--location=LOCATION] [--skip-integrity-verification]
+        [--version=VERSION] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Decapsulates the given ciphertext file using the provided
+    key-encapsulation key version and saves the decapsulated shared secret to
+    the shared secret file.
+
+    By default, the command performs integrity verification on data sent to and
+    received from Cloud KMS. Use --skip-integrity-verification to disable
+    integrity verification.
+
+EXAMPLES
+    The following command will read the file '/tmp/my/secret.file.enc',
+    decapsulate it using the key encapsulation CryptoKey my-key Version 3 and
+    write the shared secret to '/tmp/my/secret.file.dec'.
+
+        $ gcloud beta kms decapsulate --location=us-central1 \
+            --keyring=my-keyring --key=my-key --version=3 \
+            --ciphertext-file=/tmp/my/secret.file.enc \
+            --shared-secret-file=/tmp/my/secret.file.dec
+
+REQUIRED FLAGS
+     --ciphertext-file=CIPHERTEXT_FILE
+        File path of the ciphertext file to decapsulate.
+
+     --shared-secret-file=SHARED_SECRET_FILE
+        File path of the shared secret file to output.
+
+OPTIONAL FLAGS
+     --key=KEY
+        to use for decapsulation.
+
+     --keyring=KEYRING
+        Key ring of the key.
+
+     --location=LOCATION
+        Location of the keyring.
+
+     --skip-integrity-verification
+        Skip integrity verification on request and response API fields.
+
+     --version=VERSION
+        Version to use for decapsulation.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud kms decapsulate
+
+        $ gcloud alpha kms decapsulate
+

@@ -1,0 +1,858 @@
+NAME
+    gcloud alpha design-center spaces applications update - update an
+        application
+
+SYNOPSIS
+    gcloud alpha design-center spaces applications update
+        (APPLICATION : --location=LOCATION --space=SPACE)
+        [--deployment-project=DEPLOYMENT_PROJECT]
+        [--deployment-region=DEPLOYMENT_REGION] [--description=DESCRIPTION]
+        [--display-name=DISPLAY_NAME] [--[no-]import-existing-resources]
+        [--service-account=SERVICE_ACCOUNT]
+        [--app-parameters=[key=KEY],[value=VALUE]
+          | --add-app-parameters=[key=KEY],[value=VALUE] --clear-app-parameters
+          | --remove-app-parameters=[key=KEY],[value=VALUE]]
+        [--clear-attributes
+          --attributes-business-owners=[channel=CHANNEL],
+          [displayName=DISPLAYNAME],[email=EMAIL]
+          | --add-attributes-business-owners=[channel=CHANNEL],
+          [displayName=DISPLAYNAME],[email=EMAIL]
+          --clear-attributes-business-owners
+          | --remove-attributes-business-owners=[channel=CHANNEL],
+          [displayName=DISPLAYNAME],[email=EMAIL]
+          --attributes-developer-owners=[channel=CHANNEL],
+          [displayName=DISPLAYNAME],[email=EMAIL]
+          | --add-attributes-developer-owners=[channel=CHANNEL],
+          [displayName=DISPLAYNAME],[email=EMAIL]
+          --clear-attributes-developer-owners
+          | --remove-attributes-developer-owners=[channel=CHANNEL],
+          [displayName=DISPLAYNAME],[email=EMAIL]
+          --attributes-operator-owners=[channel=CHANNEL],
+          [displayName=DISPLAYNAME],[email=EMAIL]
+          | --add-attributes-operator-owners=[channel=CHANNEL],
+          [displayName=DISPLAYNAME],[email=EMAIL]
+          --clear-attributes-operator-owners
+          | --remove-attributes-operator-owners=[channel=CHANNEL],
+          [displayName=DISPLAYNAME],[email=EMAIL]
+          --criticality-level=CRITICALITY_LEVEL
+          --[no-]criticality-mission-critical
+          --criticality-type=CRITICALITY_TYPE
+          --environment=ENVIRONMENT --environment-type=ENVIRONMENT_TYPE]
+        [--clear-scope --scope-type=SCOPE_TYPE]
+        [--clear-source
+          --source-application-template-revision=SOURCE_APPLICATION_TEMPLATE_REVISION | --source-shared-template-revision-uri=SOURCE_SHARED_TEMPLATE_REVISION_URI]
+        [--component-parameters=[component=COMPONENT],[parameters=PARAMETERS]
+          | --add-component-parameters=[component=COMPONENT],
+          [parameters=PARAMETERS] --clear-component-parameters
+          | --remove-component-parameters=[component=COMPONENT],
+          [parameters=PARAMETERS]]
+        [--connection-configs=[connectionUri=CONNECTIONURI],
+          [destinationComponentParameters=DESTINATIONCOMPONENTPARAMETERS],
+          [sourceComponentParameters=SOURCECOMPONENTPARAMETERS]
+          | --add-connection-configs=[connectionUri=CONNECTIONURI],
+          [destinationComponentParameters=DESTINATIONCOMPONENTPARAMETERS],
+          [sourceComponentParameters=SOURCECOMPONENTPARAMETERS]
+          --clear-connection-configs
+          | --remove-connection-configs=[connectionUri=CONNECTIONURI],
+          [destinationComponentParameters=DESTINATIONCOMPONENTPARAMETERS],
+          [sourceComponentParameters=SOURCECOMPONENTPARAMETERS]]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Update an application in a space.
+
+EXAMPLES
+    To update the display name to My New Application Name for the application
+    my-application in space my-space, project my-project and location
+    us-central1, run:
+
+        $ gcloud alpha design-center spaces applications update \
+            my-application --space=my-space --project=my-project \
+            --location=us-central1 --display-name="My New Application Name"
+
+    Or run:
+
+        $ gcloud alpha design-center spaces applications update \
+            projects/my-project/locations/us-central1/spaces/my-space/\
+        applications/my-application --display-name="My New Application Name"
+
+    To update the source application template revision to
+    projects/my-project/locations/us-central1/spaces/my-space/applicationTemplates/my-app-template/revisions/rev2
+    for the application my-application in space my-space, project my-project
+    and location us-central1, run:
+
+        $ gcloud alpha design-center spaces applications update \
+            my-application --space=my-space --project=my-project \
+            --location=us-central1 \
+            --source-application-template-revision=projects/my-project/\
+        locations/us-central1/spaces/my-space/applicationTemplates/\
+        my-app-template/revisions/rev2
+
+    To update the component parameters with new key-value pairs of
+    project_id:new-project and service_name:new-service for the component
+    projects/my-project/locations/us-central1/spaces/my-space/applicationTemplates/my-app-template/components/my-component
+    in application my-application, space my-space, project my-project and
+    location us-central1, run the following shorthand example:
+
+        $ gcloud alpha design-center spaces applications update \
+            my-application --space=my-space --project=my-project \
+            --location=us-central1 \
+            --component-parameters=component=projects/my-project/locations/\
+        us-central1/spaces/my-space/applicationTemplates/my-app-template/\
+        components/my-component,parameters='[{"key": "project_id", "value":
+         "new-project"}, {"key": "service_name", "value": "new-service"}]'
+
+    Or run the following JSON example:
+
+        $ gcloud alpha design-center spaces applications update \
+            my-application --space=my-space --project=my-project \
+            --location=us-central1 \
+            --component-parameters='[{"component":
+         "projects/my-project/locations/us-central1/spaces/my-space/applicat\
+        ionTemplates/my-app-template/components/my-component",
+         "parameters": [{"key": "project_id", "value": "new-project"},
+         {"key": "service_name", "value": "new-service"}]}]'
+
+    Or create a YAML or JSON file with the parameters and run the following
+    file example:
+
+        $ gcloud alpha design-center spaces applications update \
+            my-application --space=my-space --project=my-project \
+            --location=us-central1 \
+            --component-parameters=component-parameters.json
+
+POSITIONAL ARGUMENTS
+     Application resource - Identifier. The name of the application. Format:
+     projects/{project}/locations/{location}/spaces/{space}/applications/{application}
+     The arguments in this group can be used to specify the attributes of this
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument application on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       APPLICATION
+          ID of the application or fully qualified identifier for the
+          application.
+
+          To set the application attribute:
+          ▸ provide the argument application on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          The location id of the application resource.
+
+          To set the location attribute:
+          ▸ provide the argument application on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line.
+
+       --space=SPACE
+          The space id of the application resource.
+
+          To set the space attribute:
+          ▸ provide the argument application on the command line with a fully
+            specified name;
+          ▸ provide the argument --space on the command line.
+
+FLAGS
+     --deployment-project=DEPLOYMENT_PROJECT
+        Deployment project of the application.
+
+     --deployment-region=DEPLOYMENT_REGION
+        The region where the application is deployed.
+
+     --description=DESCRIPTION
+        Description of the application.
+
+     --display-name=DISPLAY_NAME
+        Display name of the application.
+
+     --[no-]import-existing-resources
+        Import existing resources into the application. Use
+        --import-existing-resources to enable and
+        --no-import-existing-resources to disable.
+
+     --service-account=SERVICE_ACCOUNT
+        Your own service account that you use to deploy an application.
+
+     Update app_parameters.
+
+     At most one of these can be specified:
+
+       --app-parameters=[key=KEY],[value=VALUE]
+          Set app_parameters to new value. A list of parameters to attach to
+          the deployment source object, which is a catalog entry or application
+          template snapshot.
+
+           key
+              The key of the parameter.
+
+           value
+              The value of the parameter.
+
+          Shorthand Example:
+
+              --app-parameters=key=string,value={...} --app-parameters=key=string,value={...}
+
+          JSON Example:
+
+              --app-parameters='[{"key": "string", "value": {...}}]'
+
+          File Example:
+
+              --app-parameters=path_to_file.(yaml|json)
+
+       --add-app-parameters=[key=KEY],[value=VALUE]
+          Add new value to app_parameters list. A list of parameters to attach
+          to the deployment source object, which is a catalog entry or
+          application template snapshot.
+
+           key
+              The key of the parameter.
+
+           value
+              The value of the parameter.
+
+          Shorthand Example:
+
+              --add-app-parameters=key=string,value={...} --add-app-parameters=key=string,value={...}
+
+          JSON Example:
+
+              --add-app-parameters='[{"key": "string", "value": {...}}]'
+
+          File Example:
+
+              --add-app-parameters=path_to_file.(yaml|json)
+
+       At most one of these can be specified:
+
+         --clear-app-parameters
+            Clear app_parameters value and set to empty list.
+
+         --remove-app-parameters=[key=KEY],[value=VALUE]
+            Remove existing value from app_parameters list. A list of
+            parameters to attach to the deployment source object, which is a
+            catalog entry or application template snapshot.
+
+             key
+                The key of the parameter.
+
+             value
+                The value of the parameter.
+
+            Shorthand Example:
+
+                --remove-app-parameters=key=string,value={...} --remove-app-parameters=key=string,value={...}
+
+            JSON Example:
+
+                --remove-app-parameters='[{"key": "string", "value": {...}}]'
+
+            File Example:
+
+                --remove-app-parameters=path_to_file.(yaml|json)
+
+     Consumer provided attributes.
+
+       --clear-attributes
+          Set application.attributes back to default value.
+
+       Update attributes_business_owners.
+
+       At most one of these can be specified:
+
+         --attributes-business-owners=[channel=CHANNEL],[displayName=DISPLAYNAME],[email=EMAIL]
+            Set attributes_business_owners to new value. Business team that
+            ensures user needs are met and value is delivered.
+
+             channel
+                Communication channel of the contacts.
+
+                 uri
+                    URI of the channel.
+
+             displayName
+                Contact's name. Can have a maximum length of 63 characters.
+
+             email
+                Email address of the contacts.
+
+            Shorthand Example:
+
+                --attributes-business-owners=channel={uri=string},displayName=string,email=string --attributes-business-owners=channel={uri=string},displayName=string,email=string
+
+            JSON Example:
+
+                --attributes-business-owners='[{"channel": {"uri": "string"}, "displayName": "string", "email": "string"}]'
+
+            File Example:
+
+                --attributes-business-owners=path_to_file.(yaml|json)
+
+         --add-attributes-business-owners=[channel=CHANNEL],[displayName=DISPLAYNAME],[email=EMAIL]
+            Add new value to attributes_business_owners list. Business team
+            that ensures user needs are met and value is delivered.
+
+             channel
+                Communication channel of the contacts.
+
+                 uri
+                    URI of the channel.
+
+             displayName
+                Contact's name. Can have a maximum length of 63 characters.
+
+             email
+                Email address of the contacts.
+
+            Shorthand Example:
+
+                --add-attributes-business-owners=channel={uri=string},displayName=string,email=string --add-attributes-business-owners=channel={uri=string},displayName=string,email=string
+
+            JSON Example:
+
+                --add-attributes-business-owners='[{"channel": {"uri": "string"}, "displayName": "string", "email": "string"}]'
+
+            File Example:
+
+                --add-attributes-business-owners=path_to_file.(yaml|json)
+
+         At most one of these can be specified:
+
+           --clear-attributes-business-owners
+              Clear attributes_business_owners value and set to empty list.
+
+           --remove-attributes-business-owners=[channel=CHANNEL],[displayName=DISPLAYNAME],[email=EMAIL]
+              Remove existing value from attributes_business_owners list.
+              Business team that ensures user needs are met and value is
+              delivered.
+
+               channel
+                  Communication channel of the contacts.
+
+                   uri
+                      URI of the channel.
+
+               displayName
+                  Contact's name. Can have a maximum length of 63 characters.
+
+               email
+                  Email address of the contacts.
+
+              Shorthand Example:
+
+                  --remove-attributes-business-owners=channel={uri=string},displayName=string,email=string --remove-attributes-business-owners=channel={uri=string},displayName=string,email=string
+
+              JSON Example:
+
+                  --remove-attributes-business-owners='[{"channel": {"uri": "string"}, "displayName": "string", "email": "string"}]'
+
+              File Example:
+
+                  --remove-attributes-business-owners=path_to_file.(yaml|json)
+
+       Update attributes_developer_owners.
+
+       At most one of these can be specified:
+
+         --attributes-developer-owners=[channel=CHANNEL],[displayName=DISPLAYNAME],[email=EMAIL]
+            Set attributes_developer_owners to new value. Developer team that
+            owns development and coding.
+
+             channel
+                Communication channel of the contacts.
+
+                 uri
+                    URI of the channel.
+
+             displayName
+                Contact's name. Can have a maximum length of 63 characters.
+
+             email
+                Email address of the contacts.
+
+            Shorthand Example:
+
+                --attributes-developer-owners=channel={uri=string},displayName=string,email=string --attributes-developer-owners=channel={uri=string},displayName=string,email=string
+
+            JSON Example:
+
+                --attributes-developer-owners='[{"channel": {"uri": "string"}, "displayName": "string", "email": "string"}]'
+
+            File Example:
+
+                --attributes-developer-owners=path_to_file.(yaml|json)
+
+         --add-attributes-developer-owners=[channel=CHANNEL],[displayName=DISPLAYNAME],[email=EMAIL]
+            Add new value to attributes_developer_owners list. Developer team
+            that owns development and coding.
+
+             channel
+                Communication channel of the contacts.
+
+                 uri
+                    URI of the channel.
+
+             displayName
+                Contact's name. Can have a maximum length of 63 characters.
+
+             email
+                Email address of the contacts.
+
+            Shorthand Example:
+
+                --add-attributes-developer-owners=channel={uri=string},displayName=string,email=string --add-attributes-developer-owners=channel={uri=string},displayName=string,email=string
+
+            JSON Example:
+
+                --add-attributes-developer-owners='[{"channel": {"uri": "string"}, "displayName": "string", "email": "string"}]'
+
+            File Example:
+
+                --add-attributes-developer-owners=path_to_file.(yaml|json)
+
+         At most one of these can be specified:
+
+           --clear-attributes-developer-owners
+              Clear attributes_developer_owners value and set to empty list.
+
+           --remove-attributes-developer-owners=[channel=CHANNEL],[displayName=DISPLAYNAME],[email=EMAIL]
+              Remove existing value from attributes_developer_owners list.
+              Developer team that owns development and coding.
+
+               channel
+                  Communication channel of the contacts.
+
+                   uri
+                      URI of the channel.
+
+               displayName
+                  Contact's name. Can have a maximum length of 63 characters.
+
+               email
+                  Email address of the contacts.
+
+              Shorthand Example:
+
+                  --remove-attributes-developer-owners=channel={uri=string},displayName=string,email=string --remove-attributes-developer-owners=channel={uri=string},displayName=string,email=string
+
+              JSON Example:
+
+                  --remove-attributes-developer-owners='[{"channel": {"uri": "string"}, "displayName": "string", "email": "string"}]'
+
+              File Example:
+
+                  --remove-attributes-developer-owners=path_to_file.(yaml|json)
+
+       Update attributes_operator_owners.
+
+       At most one of these can be specified:
+
+         --attributes-operator-owners=[channel=CHANNEL],[displayName=DISPLAYNAME],[email=EMAIL]
+            Set attributes_operator_owners to new value. Operator team that
+            ensures runtime and operations.
+
+             channel
+                Communication channel of the contacts.
+
+                 uri
+                    URI of the channel.
+
+             displayName
+                Contact's name. Can have a maximum length of 63 characters.
+
+             email
+                Email address of the contacts.
+
+            Shorthand Example:
+
+                --attributes-operator-owners=channel={uri=string},displayName=string,email=string --attributes-operator-owners=channel={uri=string},displayName=string,email=string
+
+            JSON Example:
+
+                --attributes-operator-owners='[{"channel": {"uri": "string"}, "displayName": "string", "email": "string"}]'
+
+            File Example:
+
+                --attributes-operator-owners=path_to_file.(yaml|json)
+
+         --add-attributes-operator-owners=[channel=CHANNEL],[displayName=DISPLAYNAME],[email=EMAIL]
+            Add new value to attributes_operator_owners list. Operator team
+            that ensures runtime and operations.
+
+             channel
+                Communication channel of the contacts.
+
+                 uri
+                    URI of the channel.
+
+             displayName
+                Contact's name. Can have a maximum length of 63 characters.
+
+             email
+                Email address of the contacts.
+
+            Shorthand Example:
+
+                --add-attributes-operator-owners=channel={uri=string},displayName=string,email=string --add-attributes-operator-owners=channel={uri=string},displayName=string,email=string
+
+            JSON Example:
+
+                --add-attributes-operator-owners='[{"channel": {"uri": "string"}, "displayName": "string", "email": "string"}]'
+
+            File Example:
+
+                --add-attributes-operator-owners=path_to_file.(yaml|json)
+
+         At most one of these can be specified:
+
+           --clear-attributes-operator-owners
+              Clear attributes_operator_owners value and set to empty list.
+
+           --remove-attributes-operator-owners=[channel=CHANNEL],[displayName=DISPLAYNAME],[email=EMAIL]
+              Remove existing value from attributes_operator_owners list.
+              Operator team that ensures runtime and operations.
+
+               channel
+                  Communication channel of the contacts.
+
+                   uri
+                      URI of the channel.
+
+               displayName
+                  Contact's name. Can have a maximum length of 63 characters.
+
+               email
+                  Email address of the contacts.
+
+              Shorthand Example:
+
+                  --remove-attributes-operator-owners=channel={uri=string},displayName=string,email=string --remove-attributes-operator-owners=channel={uri=string},displayName=string,email=string
+
+              JSON Example:
+
+                  --remove-attributes-operator-owners='[{"channel": {"uri": "string"}, "displayName": "string", "email": "string"}]'
+
+              File Example:
+
+                  --remove-attributes-operator-owners=path_to_file.(yaml|json)
+
+       Criticality of the Application, Service, or Workload
+
+         --criticality-level=CRITICALITY_LEVEL
+            Criticality level. Can contain only lowercase letters, numeric
+            characters, underscores, and dashes. Can have a maximum length of
+            63 characters. Deprecated: Please refer to type instead.
+
+         --[no-]criticality-mission-critical
+            Indicates mission-critical Application, Service, or Workload.
+            Deprecated: Please refer to type instead. Use
+            --criticality-mission-critical to enable and
+            --no-criticality-mission-critical to disable.
+
+         --criticality-type=CRITICALITY_TYPE
+            Criticality Type. CRITICALITY_TYPE must be one of:
+
+             high
+                High impact.
+             low
+                Low impact.
+             medium
+                Medium impact.
+             mission-critical
+                Mission critical service, application or workload.
+
+       Environment of the Application, Service, or Workload
+
+         --environment=ENVIRONMENT
+            Environment name. Can contain only lowercase letters, numeric
+            characters, underscores, and dashes. Can have a maximum length of
+            63 characters. Deprecated: Please refer to type instead.
+
+         --environment-type=ENVIRONMENT_TYPE
+            Environment Type. ENVIRONMENT_TYPE must be one of:
+
+             development
+                Development environment.
+             production
+                Production environment.
+             staging
+                Staging environment.
+             test
+                Test environment.
+
+     Scope of an application.
+
+       --clear-scope
+          Set application.scope back to default value.
+
+       --scope-type=SCOPE_TYPE
+          Scope Type. SCOPE_TYPE must be one of:
+
+           global
+              Global type.
+           regional
+              Regional type.
+
+     Source template information for the deployment.
+
+       --clear-source
+          Set application.source back to default value.
+
+       Arguments for the source.
+
+       At most one of these can be specified:
+
+         --source-application-template-revision=SOURCE_APPLICATION_TEMPLATE_REVISION
+            Application template revision URI.
+
+         --source-shared-template-revision-uri=SOURCE_SHARED_TEMPLATE_REVISION_URI
+            Shared template revision URI.
+
+     Update component_parameters.
+
+     At most one of these can be specified:
+
+       --component-parameters=[component=COMPONENT],[parameters=PARAMETERS]
+          Set component_parameters to new value. A list of component parameters
+          to associate with the application.
+
+           component
+              The name of the component parameter.
+
+           parameters
+              A list of parameters associated with the component.
+
+               key
+                  The key of the parameter.
+
+               value
+                  The value of the parameter.
+
+          Shorthand Example:
+
+              --component-parameters=component=string,parameters=[{key=string,value={...}}] --component-parameters=component=string,parameters=[{key=string,value={...}}]
+
+          JSON Example:
+
+              --component-parameters='[{"component": "string", "parameters": [{"key": "string", "value": {...}}]}]'
+
+          File Example:
+
+              --component-parameters=path_to_file.(yaml|json)
+
+       --add-component-parameters=[component=COMPONENT],[parameters=PARAMETERS]
+          Add new value to component_parameters list. A list of component
+          parameters to associate with the application.
+
+           component
+              The name of the component parameter.
+
+           parameters
+              A list of parameters associated with the component.
+
+               key
+                  The key of the parameter.
+
+               value
+                  The value of the parameter.
+
+          Shorthand Example:
+
+              --add-component-parameters=component=string,parameters=[{key=string,value={...}}] --add-component-parameters=component=string,parameters=[{key=string,value={...}}]
+
+          JSON Example:
+
+              --add-component-parameters='[{"component": "string", "parameters": [{"key": "string", "value": {...}}]}]'
+
+          File Example:
+
+              --add-component-parameters=path_to_file.(yaml|json)
+
+       At most one of these can be specified:
+
+         --clear-component-parameters
+            Clear component_parameters value and set to empty list.
+
+         --remove-component-parameters=[component=COMPONENT],[parameters=PARAMETERS]
+            Remove existing value from component_parameters list. A list of
+            component parameters to associate with the application.
+
+             component
+                The name of the component parameter.
+
+             parameters
+                A list of parameters associated with the component.
+
+                 key
+                    The key of the parameter.
+
+                 value
+                    The value of the parameter.
+
+            Shorthand Example:
+
+                --remove-component-parameters=component=string,parameters=[{key=string,value={...}}] --remove-component-parameters=component=string,parameters=[{key=string,value={...}}]
+
+            JSON Example:
+
+                --remove-component-parameters='[{"component": "string", "parameters": [{"key": "string", "value": {...}}]}]'
+
+            File Example:
+
+                --remove-component-parameters=path_to_file.(yaml|json)
+
+     Update connection_configs.
+
+     At most one of these can be specified:
+
+       --connection-configs=[connectionUri=CONNECTIONURI],[destinationComponentParameters=DESTINATIONCOMPONENTPARAMETERS],[sourceComponentParameters=SOURCECOMPONENTPARAMETERS]
+          Set connection_configs to new value. Connection configuration for the
+          application.
+
+           connectionUri
+              The connection URI.
+
+           destinationComponentParameters
+              The parameters of the connection associated with the destination
+              component.
+
+               key
+                  The key of the parameter.
+
+               value
+                  The value of the parameter.
+
+           sourceComponentParameters
+              The parameters of the connection associated with the source
+              component.
+
+               key
+                  The key of the parameter.
+
+               value
+                  The value of the parameter.
+
+          Shorthand Example:
+
+              --connection-configs=connectionUri=string,destinationComponentParameters=[{key=string,value={...}}],sourceComponentParameters=[{key=string,value={...}}] --connection-configs=connectionUri=string,destinationComponentParameters=[{key=string,value={...}}],sourceComponentParameters=[{key=string,value={...}}]
+
+          JSON Example:
+
+              --connection-configs='[{"connectionUri": "string", "destinationComponentParameters": [{"key": "string", "value": {...}}], "sourceComponentParameters": [{"key": "string", "value": {...}}]}]'
+
+          File Example:
+
+              --connection-configs=path_to_file.(yaml|json)
+
+       --add-connection-configs=[connectionUri=CONNECTIONURI],[destinationComponentParameters=DESTINATIONCOMPONENTPARAMETERS],[sourceComponentParameters=SOURCECOMPONENTPARAMETERS]
+          Add new value to connection_configs list. Connection configuration
+          for the application.
+
+           connectionUri
+              The connection URI.
+
+           destinationComponentParameters
+              The parameters of the connection associated with the destination
+              component.
+
+               key
+                  The key of the parameter.
+
+               value
+                  The value of the parameter.
+
+           sourceComponentParameters
+              The parameters of the connection associated with the source
+              component.
+
+               key
+                  The key of the parameter.
+
+               value
+                  The value of the parameter.
+
+          Shorthand Example:
+
+              --add-connection-configs=connectionUri=string,destinationComponentParameters=[{key=string,value={...}}],sourceComponentParameters=[{key=string,value={...}}] --add-connection-configs=connectionUri=string,destinationComponentParameters=[{key=string,value={...}}],sourceComponentParameters=[{key=string,value={...}}]
+
+          JSON Example:
+
+              --add-connection-configs='[{"connectionUri": "string", "destinationComponentParameters": [{"key": "string", "value": {...}}], "sourceComponentParameters": [{"key": "string", "value": {...}}]}]'
+
+          File Example:
+
+              --add-connection-configs=path_to_file.(yaml|json)
+
+       At most one of these can be specified:
+
+         --clear-connection-configs
+            Clear connection_configs value and set to empty list.
+
+         --remove-connection-configs=[connectionUri=CONNECTIONURI],[destinationComponentParameters=DESTINATIONCOMPONENTPARAMETERS],[sourceComponentParameters=SOURCECOMPONENTPARAMETERS]
+            Remove existing value from connection_configs list. Connection
+            configuration for the application.
+
+             connectionUri
+                The connection URI.
+
+             destinationComponentParameters
+                The parameters of the connection associated with the
+                destination component.
+
+                 key
+                    The key of the parameter.
+
+                 value
+                    The value of the parameter.
+
+             sourceComponentParameters
+                The parameters of the connection associated with the source
+                component.
+
+                 key
+                    The key of the parameter.
+
+                 value
+                    The value of the parameter.
+
+            Shorthand Example:
+
+                --remove-connection-configs=connectionUri=string,destinationComponentParameters=[{key=string,value={...}}],sourceComponentParameters=[{key=string,value={...}}] --remove-connection-configs=connectionUri=string,destinationComponentParameters=[{key=string,value={...}}],sourceComponentParameters=[{key=string,value={...}}]
+
+            JSON Example:
+
+                --remove-connection-configs='[{"connectionUri": "string", "destinationComponentParameters": [{"key": "string", "value": {...}}], "sourceComponentParameters": [{"key": "string", "value": {...}}]}]'
+
+            File Example:
+
+                --remove-connection-configs=path_to_file.(yaml|json)
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the designcenter/v1alpha API. The full documentation for
+    this API can be found at:
+    http://cloud.google.com/application-design-center/docs
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

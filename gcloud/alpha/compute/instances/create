@@ -54,6 +54,7 @@ SYNOPSIS
         [--partner-metadata-from-file=LOCAL_FILE_PATH]
         [--performance-monitoring-unit=PERFORMANCE_MONITORING_UNIT]
         [--post-key-revocation-action-type=POLICY] [--preemptible]
+        [--preemption-notice-duration=PREEMPTION_NOTICE_DURATION]
         [--private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE]
         [--private-network-ip=PRIVATE_NETWORK_IP]
         [--provisioning-model=PROVISIONING_MODEL]
@@ -869,6 +870,10 @@ FLAGS
         will only be able to run for a limited amount of time. Preemptible
         instances can not be restarted and will not migrate.
 
+     --preemption-notice-duration=PREEMPTION_NOTICE_DURATION
+        Specifies the metadata preemption notice duration before the ACPI G2
+        soft off signal is triggered for Spot VMs. e.g. 120s.
+
      --private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE
         The private IPv6 Google access type for the VM.
         PRIVATE_IPV6_GOOGLE_ACCESS_TYPE must be one of:
@@ -885,8 +890,8 @@ FLAGS
         run. PROVISIONING_MODEL must be one of:
 
          FLEX_START
-            Instance is provisioned using the Flex Start provisioning model and
-            has a limited runtime.
+            The VM instance is provisioned using the Flex Start provisioning
+            model and has a limited runtime.
          RESERVATION_BOUND
             The VM instances run for the entire duration of their associated
             reservation. You can only specify this provisioning model if you
@@ -909,8 +914,7 @@ FLAGS
         specify 30m for a duration of 30 minutes, or 1h2m3s for 1 hour, 2
         minutes, and 3 seconds. Longer durations give you higher chances that
         your instance creation request succeeds when resources are in high
-        demand. If you don't specify a duration, then the default duration is
-        90 seconds.
+        demand.
 
      --require-csek-key-create
         Refuse to create resources not protected by a user managed key in the

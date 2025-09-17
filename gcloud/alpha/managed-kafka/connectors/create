@@ -6,6 +6,8 @@ SYNOPSIS
     gcloud alpha managed-kafka connectors create
         (CONNECTOR : --connect-cluster=CONNECT_CLUSTER --location=LOCATION)
         (--config-file=JSON|YAML|FILE | --configs=[KEY=VALUE,...])
+        [--task-restart-max-backoff=TASK_RESTART_MAX_BACKOFF
+          --task-restart-min-backoff=TASK_RESTART_MIN_BACKOFF]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -17,10 +19,14 @@ EXAMPLES
         $ gcloud alpha managed-kafka connectors create myconnector \
             --location=us-central1 --connect-cluster=mycluster \
             --configs=connector.class="com.google.pubsub.kafka.source.CloudP\
-        ubSubSourceConnector",cps.subscription="my-subscription",... OR
+        ubSubSourceConnector",cps.subscription="my-subscription",... \
+            [--task-restart-min-backoff=60s] \
+            [--task-restart-max-backoff=30m] OR
         $ gcloud alpha managed-kafka connectors create myconnector \
             --location=us-central1 --connect-cluster=mycluster \
-            --config-file=my-config-file.yaml
+            --config-file=my-config-file.yaml \
+            [--task-restart-min-backoff=60s] \
+            [--task-restart-max-backoff=30m]
 
 POSITIONAL ARGUMENTS
      Connector resource - Identifies the connector for which the command runs.
@@ -84,6 +90,19 @@ REQUIRED FLAGS
           Configuration for the connector that are overridden from the
           connector defaults. The key of the map is a Kafka topic property
           name, for example: cleanup.policy=compact,compression.type=producer.
+
+OPTIONAL FLAGS
+     --task-restart-max-backoff=TASK_RESTART_MAX_BACKOFF
+        The maximum amount of time to wait before retrying a failed task in
+        seconds. This sets an upper bound for the backoff delay. The default
+        value is 1800s (30 minutes). See $ gcloud topic datetimes for
+        information on duration formats.
+
+     --task-restart-min-backoff=TASK_RESTART_MIN_BACKOFF
+        The minimum amount of time to wait before retrying a failed task in
+        seconds. This sets a lower bound for the backoff delay. The default
+        value is 60s. See $ gcloud topic datetimes for information on duration
+        formats.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

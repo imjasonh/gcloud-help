@@ -6,8 +6,9 @@ SYNOPSIS
         --file-share=[capacity=CAPACITY],[name=NAME],
           [nfs-export-options=NFS-EXPORT-OPTIONS],[source-backup=SOURCE-BACKUP],
           [source-backup-region=SOURCE-BACKUP-REGION]
-        --network=[connect-mode=CONNECT-MODE],
-          [name=NAME],[reserved-ip-range=RESERVED-IP-RANGE] [--async]
+        --network=[connect-mode=CONNECT-MODE],[name=NAME],
+          [psc-endpoint-project=PSC-ENDPOINT-PROJECT],
+          [reserved-ip-range=RESERVED-IP-RANGE] [--async]
         [--description=DESCRIPTION] [--labels=[KEY=VALUE,...]]
         [--location=LOCATION]
         [--performance=[max-iops=MAX-IOPS],[max-iops-per-tb=MAX-IOPS-PER-TB]]
@@ -31,8 +32,9 @@ EXAMPLES
           --tier=TIER --protocol=PROTOCOL \
           --file-share=name=VOLUME_NAME,capacity=CAPACITY \
           --network=name=NETWORK_NAME,\
-        reserved-ip-range=RESERVED_IP_RANGE,connect-mode=CONNECT_MODE \
-            --zone=ZONE --performance=max-iops-per-tb=MAX-IOPS-PER-TB \
+        reserved-ip-range=RESERVED_IP_RANGE,connect-mode=CONNECT_MODE,\
+        psc-endpoint-project=PSC_ENDPOINT_PROJECT --zone=ZONE \
+            --performance=max-iops-per-tb=MAX-IOPS-PER-TB \
             --kms-key=KMS-KEY --kms-keyring=KMS_KEYRING \
             --kms-location=KMS_LOCATION --kms-project=KMS_PROJECT \
             --flags-file=FLAGS_FILE --source-instance=SOURCE_INSTANCE
@@ -167,7 +169,7 @@ REQUIRED FLAGS
          source-backup-region
             The region of the source backup.
 
-     --network=[connect-mode=CONNECT-MODE],[name=NAME],[reserved-ip-range=RESERVED-IP-RANGE]
+     --network=[connect-mode=CONNECT-MODE],[name=NAME],[psc-endpoint-project=PSC-ENDPOINT-PROJECT],[reserved-ip-range=RESERVED-IP-RANGE]
         Network configuration for a Cloud Filestore instance. Specifying
         reserved-ip-range and connect-mode is optional.
          name
@@ -192,7 +194,13 @@ REQUIRED FLAGS
             network.
          connect-mode
             Network connection mode used by instances. CONNECT_MODE must be one
-            of: DIRECT_PEERING or PRIVATE_SERVICE_ACCESS.
+            of: DIRECT_PEERING, PRIVATE_SERVICE_ACCESS or
+            PRIVATE_SERVICE_CONNECT.
+         psc-endpoint-project
+            Consumer service project in which the psc endpoint would be set up.
+            This is optional, and only relevant in case the network is a shared
+            VPC. If this is not specified, the psc endpoint would be setup in
+            the VPC host project.
 
 OPTIONAL FLAGS
      --async

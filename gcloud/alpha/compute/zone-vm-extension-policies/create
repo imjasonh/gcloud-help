@@ -4,15 +4,10 @@ NAME
 
 SYNOPSIS
     gcloud alpha compute zone-vm-extension-policies create NAME
-        --extensions=EXTENSIONS [--description=DESCRIPTION]
-        [--filestore-config=FILESTORE_CONFIG]
-        [--filestore-version=FILESTORE_VERSION]
-        [--inclusion-labels=INCLUSION_LABELS]
-        [--ops-agent-config=OPS_AGENT_CONFIG]
-        [--ops-agent-version=OPS_AGENT_VERSION]
+        --extensions=EXTENSION_NAME,[...] [--config=KEY=VALUE,[KEY=VALUE,...]]
+        [--description=DESCRIPTION] [--inclusion-labels=INCLUSION_LABELS]
         [--priority=PRIORITY; default=1000]
-        [--sap-extension-config=SAP_EXTENSION_CONFIG]
-        [--sap-extension-version=SAP_EXTENSION_VERSION] [--zone=ZONE]
+        [--version=KEY=VALUE,[KEY=VALUE,...]] [--zone=ZONE]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -23,8 +18,10 @@ EXAMPLES
 
         $ gcloud alpha compute zone-vm-extension-policies create \
             test-policy-name --description="test policy" \
-            --extensions=filestore --filestore-version=20250101RC00 \
-            --filestore-config=config1 --inclusion-labels=env=prod \
+            --extensions=extension1,extension2 \
+            --version=extension1=version1,extension2=version2 \
+            --config=extension1="config1",extension2="config2" \
+            --inclusion-labels=env=prod \
             --inclusion-labels=env=preprod,workload=load-test \
             --priority=1000
 
@@ -33,22 +30,20 @@ POSITIONAL ARGUMENTS
         Name of the zone vm extension policy to create.
 
 REQUIRED FLAGS
-     --extensions=EXTENSIONS
-        A list of extensions to be added to the policy. EXTENSIONS must be one
-        of: filestore, ops-agent, sap-extension.
+     --extensions=EXTENSION_NAME,[...]
+        One or more extensions to be added to the policy.
 
 OPTIONAL FLAGS
+     --config=KEY=VALUE,[KEY=VALUE,...]
+        A comma separated key:value list where the key is the extension name
+        and the value is the desired config for the given extension. The
+        extension name must be one of the extensions specified in the
+        --extensions flag.
+
+        E.g. --config=filestore=,ops-agent=
+
      --description=DESCRIPTION
         An optional textual description for the this extension policy.
-
-     --filestore-config=FILESTORE_CONFIG
-        The config send to the extension when extension starts.
-
-     --filestore-version=FILESTORE_VERSION
-        The pinned version for filestore.
-
-        If not specified, the latest version will be used, and will be upgraded
-        automatically.
 
      --inclusion-labels=INCLUSION_LABELS
         A list of inclusion labels to select the target VMs.
@@ -67,15 +62,6 @@ OPTIONAL FLAGS
 
         If not specified, ALL VMs in the zone will be selected.
 
-     --ops-agent-config=OPS_AGENT_CONFIG
-        The config send to the extension when extension starts.
-
-     --ops-agent-version=OPS_AGENT_VERSION
-        The pinned version for ops-agent.
-
-        If not specified, the latest version will be used, and will be upgraded
-        automatically.
-
      --priority=PRIORITY; default=1000
         The priority of the policy. Lower the number, higher the priority. When
         two policies tries to apply the same extension, the one with the higher
@@ -86,14 +72,14 @@ OPTIONAL FLAGS
 
         Range from 0 to 65535. Default is 1000.
 
-     --sap-extension-config=SAP_EXTENSION_CONFIG
-        The config send to the extension when extension starts.
+     --version=KEY=VALUE,[KEY=VALUE,...]
+        A comma separated key:value list where the key is the extension name
+        and the value is the desired version for the given extension. The
+        extension name must be one of the extensions specified in the
+        --extensions flag. If no version is specified for an extension, the
+        latest version will be used and will be upgraded automatically.
 
-     --sap-extension-version=SAP_EXTENSION_VERSION
-        The pinned version for sap-extension.
-
-        If not specified, the latest version will be used, and will be upgraded
-        automatically.
+        E.g. --version=filestore=123ABC,ops-agent=456DEF
 
      --zone=ZONE
         Zone of the zone vm extension policy to create. If not specified and

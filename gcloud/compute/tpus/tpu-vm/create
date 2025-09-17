@@ -3,8 +3,9 @@ NAME
 
 SYNOPSIS
     gcloud compute tpus tpu-vm create (TPU : --zone=ZONE) --version=VERSION
-        [--async] [--data-disk=[mode=MODE],[source=SOURCE]]
-        [--description=DESCRIPTION] [--internal-ips] [--labels=[KEY=VALUE,...]]
+        [--async] [--boot-disk=[KEY=VALUE,...]]
+        [--data-disk=[mode=MODE],[source=SOURCE]] [--description=DESCRIPTION]
+        [--internal-ips] [--labels=[KEY=VALUE,...]]
         [--metadata=[KEY=VALUE,...]] [--metadata-from-file=[KEY=VALUE,...]]
         [--network=NETWORK; default="default"] [--preemptible]
         [--queue-count=QUEUE_COUNT] [--range=RANGE] [--reserved]
@@ -81,6 +82,19 @@ OPTIONAL FLAGS
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
+
+     --boot-disk=[KEY=VALUE,...]
+        Specifies the boot disk configuration.
+
+            $ gcloud compute tpus tpu-vm create \
+                  --boot-disk kms-key=<full_kms_key_name_here>
+
+        The following keys are allowed:
+
+         kms-key
+            Specifies the fully qualified Cloud KMS cryptokey name which will
+            be used to protect the disk. KMS cryptokey name format:
+            projects/<kms-project>/locations/<kms-location>/keyRings/<kms-keyring>/cryptoKeys/<key-name>
 
      --data-disk=[mode=MODE],[source=SOURCE]
         Additional data disks for the TPU VM.

@@ -21,73 +21,72 @@ EXAMPLES
 
         $ gcloud storage restore gs://bucket#123
 
-        Restore several soft-deleted buckets with generations:
+    Restore several soft-deleted buckets with generations:
 
         $ gcloud storage restore gs://bucket1#123 gs://bucket2#456
 
-        Restore latest soft-deleted version of object in a bucket.
+    Restore latest soft-deleted version of object in a bucket.
 
         $ gcloud storage restore gs://bucket/file1.txt
 
-        Restore a specific soft-deleted version of object in a bucket by specifying the generation.
+    Restore a specific soft-deleted version of object in a bucket by specifying
+    the generation.
 
         $ gcloud storage restore gs://bucket/file1.txt#123
 
-        Restore all soft-deleted versions of object in a bucket.
+    Restore all soft-deleted versions of object in a bucket.
 
         $ gcloud storage restore gs://bucket/file1.txt --all-versions
 
-        Restore several objects in a bucket (with or without generation):
+    Restore several objects in a bucket (with or without generation):
 
         $ gcloud storage restore gs://bucket/file1.txt \
-           gs://bucket/file2.txt#456
+            gs://bucket/file2.txt#456
 
-        Restore the latest soft-deleted version of all text objects in a bucket:
+    Restore the latest soft-deleted version of all text objects in a bucket:
 
         $ gcloud storage restore gs://bucket/**.txt
 
-        Restore a list of objects read from stdin (with or without generation):
+    Restore a list of objects read from stdin (with or without generation):
 
         $ cat list-of-files.txt | gcloud storage restore \
-           --read-paths-from-stdin
+            --read-paths-from-stdin
 
-        Restore object with its original ACL policy:
+    Restore object with its original ACL policy:
 
         $ gcloud storage restore gs://bucket/file1.txt --preserve-acl
 
-        Restore all objects in a bucket asynchronously:
+    Restore all objects in a bucket asynchronously:
 
         $ gcloud storage restore gs://bucket/** --async
 
-        Restore all text files in a bucket asynchronously:
+    Restore all text files in a bucket asynchronously:
 
         $ gcloud storage restore gs://bucket/**.txt --async
 
-        Restore objects created within a specific time range:
+    Restore objects created within a specific time range:
 
         $ gcloud storage restore gs://bucket/** --async \
-           --created-after-time="2023-01-01T00:00:00Z" \
-           --created-before-time="2023-01-31T23:59:59Z"
+            --created-after-time="2023-01-01T00:00:00Z" \
+            --created-before-time="2023-01-31T23:59:59Z"
 
-        Restore objects soft-deleted within a specific time range:
+    Restore objects soft-deleted within a specific time range:
 
         $ gcloud storage restore gs://bucket/** --async \
-           --deleted-after-time="2023-01-01T00:00:00Z" \
-           --deleted-before-time="2023-01-31T23:59:59Z"
+            --deleted-after-time="2023-01-01T00:00:00Z" \
+            --deleted-before-time="2023-01-31T23:59:59Z"
 
-        Restore objects using a combination of creation and deletion time filters:
+    Restore objects using a combination of creation and deletion time filters:
 
         $ gcloud storage restore gs://bucket/** --async --allow-overwrite \
-         --created-after-time="2023-01-01T00:00:00Z" \
-         --deleted-after-time="2023-01-01T00:00:00Z"
+          --created-after-time="2023-01-01T00:00:00Z" \
+          --deleted-after-time="2023-01-01T00:00:00Z"
 
-        This command filters the objects that were live at 2023-01-01T00:00:00Z
-        and then soft-deleted afterwards.
-
-    This combination of filters is especially helpful if there is a period of
-    erroneous overwrites. They allow you to go back to the point just before
-    the overwrites began. You will also need to set the --allow-overwrite
-    option to true.
+    This command filters the objects that were live at 2023-01-01T00:00:00Z and
+    then soft-deleted afterwards. This combination of filters is especially
+    helpful if there is a period of erroneous overwrites. They allow you to go
+    back to the point just before the overwrites began. You will also need to
+    set the --allow-overwrite option to true.
 
 POSITIONAL ARGUMENTS
      [URLS ...]

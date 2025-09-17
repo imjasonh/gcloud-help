@@ -1,0 +1,383 @@
+NAME
+    gcloud alpha design-center spaces applications create - create an
+        application
+
+SYNOPSIS
+    gcloud alpha design-center spaces applications create
+        (APPLICATION : --location=LOCATION --space=SPACE)
+        (--source-application-template-revision=SOURCE_APPLICATION_TEMPLATE_REVISION | --source-shared-template-revision-uri=SOURCE_SHARED_TEMPLATE_REVISION_URI)
+        [--app-parameters=[key=KEY],[value=VALUE]]
+        [--component-parameters=[component=COMPONENT],[parameters=PARAMETERS]]
+        [--connection-configs=[connectionUri=CONNECTIONURI],
+          [destinationComponentParameters=DESTINATIONCOMPONENTPARAMETERS],
+          [sourceComponentParameters=SOURCECOMPONENTPARAMETERS]]
+        [--deployment-project=DEPLOYMENT_PROJECT]
+        [--deployment-region=DEPLOYMENT_REGION] [--description=DESCRIPTION]
+        [--display-name=DISPLAY_NAME] [--import-existing-resources]
+        [--scope-type=SCOPE_TYPE] [--service-account=SERVICE_ACCOUNT]
+        [--attributes-business-owners=[channel=CHANNEL],
+          [displayName=DISPLAYNAME],[email=EMAIL]
+          --attributes-developer-owners=[channel=CHANNEL],
+          [displayName=DISPLAYNAME],[email=EMAIL]
+          --attributes-operator-owners=[channel=CHANNEL],
+          [displayName=DISPLAYNAME],[email=EMAIL]
+          [--criticality-type=CRITICALITY_TYPE
+          : --criticality-level=CRITICALITY_LEVEL
+          --criticality-mission-critical] [--environment-type=ENVIRONMENT_TYPE
+          : --environment=ENVIRONMENT]] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Create an application in a space.
+
+EXAMPLES
+    To create the application my-application with a display name of My
+    Application, description of My application description and source
+    application template revision
+    projects/my-project/locations/us-central1/spaces/my-space/applicationTemplates/my-app-template/revisions/rev1
+    in space my-space, project my-project and location us-central1, run:
+
+        $ gcloud alpha design-center spaces applications create \
+            my-application --space=my-space --project=my-project \
+            --location=us-central1 --display-name="My Application" \
+            --description="My application description" \
+            --source-application-template-revision=projects/my-project/\
+        locations/us-central1/spaces/my-space/applicationTemplates/\
+        my-app-template/revisions/rev1
+
+    To create the application my-application with a deployment project
+    my-deployment-project, deployment region us-east1, scope type regional and
+    source application template revision
+    projects/my-project/locations/us-central1/spaces/my-space/applicationTemplates/my-app-template/revisions/rev1
+    in space my-space, project my-project and location us-central1, run:
+
+        $ gcloud alpha design-center spaces applications create \
+            my-application --space=my-space --project=my-project \
+            --location=us-central1 \
+            --deployment-project=my-deployment-project \
+            --deployment-region=us-east1 --scope-type=regional \
+            --source-application-template-revision=projects/my-project/\
+        locations/us-central1/spaces/my-space/applicationTemplates/\
+        my-app-template/revisions/rev1
+
+POSITIONAL ARGUMENTS
+     Application resource - Identifier. The name of the application. Format:
+     projects/{project}/locations/{location}/spaces/{space}/applications/{application}
+     The arguments in this group can be used to specify the attributes of this
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument application on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       APPLICATION
+          ID of the application or fully qualified identifier for the
+          application.
+
+          To set the application attribute:
+          ▸ provide the argument application on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          The location id of the application resource.
+
+          To set the location attribute:
+          ▸ provide the argument application on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line.
+
+       --space=SPACE
+          The space id of the application resource.
+
+          To set the space attribute:
+          ▸ provide the argument application on the command line with a fully
+            specified name;
+          ▸ provide the argument --space on the command line.
+
+REQUIRED FLAGS
+     Source template information for the deployment.
+
+     This must be specified.
+
+       Arguments for the source.
+
+       At most one of these can be specified:
+
+         --source-application-template-revision=SOURCE_APPLICATION_TEMPLATE_REVISION
+            Application template revision URI.
+
+         --source-shared-template-revision-uri=SOURCE_SHARED_TEMPLATE_REVISION_URI
+            Shared template revision URI.
+
+OPTIONAL FLAGS
+     --app-parameters=[key=KEY],[value=VALUE]
+        A list of parameters to attach to the deployment source object, which
+        is a catalog entry or application template snapshot.
+
+         key
+            The key of the parameter.
+
+         value
+            The value of the parameter.
+
+        Shorthand Example:
+
+            --app-parameters=key=string,value={...} --app-parameters=key=string,value={...}
+
+        JSON Example:
+
+            --app-parameters='[{"key": "string", "value": {...}}]'
+
+        File Example:
+
+            --app-parameters=path_to_file.(yaml|json)
+
+     --component-parameters=[component=COMPONENT],[parameters=PARAMETERS]
+        A list of component parameters to associate with the application.
+
+         component
+            The name of the component parameter.
+
+         parameters
+            A list of parameters associated with the component.
+
+             key
+                The key of the parameter.
+
+             value
+                The value of the parameter.
+
+        Shorthand Example:
+
+            --component-parameters=component=string,parameters=[{key=string,value={...}}] --component-parameters=component=string,parameters=[{key=string,value={...}}]
+
+        JSON Example:
+
+            --component-parameters='[{"component": "string", "parameters": [{"key": "string", "value": {...}}]}]'
+
+        File Example:
+
+            --component-parameters=path_to_file.(yaml|json)
+
+     --connection-configs=[connectionUri=CONNECTIONURI],[destinationComponentParameters=DESTINATIONCOMPONENTPARAMETERS],[sourceComponentParameters=SOURCECOMPONENTPARAMETERS]
+        Connection configuration for the application.
+
+         connectionUri
+            The connection URI.
+
+         destinationComponentParameters
+            The parameters of the connection associated with the destination
+            component.
+
+             key
+                The key of the parameter.
+
+             value
+                The value of the parameter.
+
+         sourceComponentParameters
+            The parameters of the connection associated with the source
+            component.
+
+             key
+                The key of the parameter.
+
+             value
+                The value of the parameter.
+
+        Shorthand Example:
+
+            --connection-configs=connectionUri=string,destinationComponentParameters=[{key=string,value={...}}],sourceComponentParameters=[{key=string,value={...}}] --connection-configs=connectionUri=string,destinationComponentParameters=[{key=string,value={...}}],sourceComponentParameters=[{key=string,value={...}}]
+
+        JSON Example:
+
+            --connection-configs='[{"connectionUri": "string", "destinationComponentParameters": [{"key": "string", "value": {...}}], "sourceComponentParameters": [{"key": "string", "value": {...}}]}]'
+
+        File Example:
+
+            --connection-configs=path_to_file.(yaml|json)
+
+     --deployment-project=DEPLOYMENT_PROJECT
+        Deployment project of the application.
+
+     --deployment-region=DEPLOYMENT_REGION
+        The region where the application is deployed.
+
+     --description=DESCRIPTION
+        Description of the application.
+
+     --display-name=DISPLAY_NAME
+        Display name of the application.
+
+     --import-existing-resources
+        Import existing resources into the application.
+
+     Scope of an application.
+
+       --scope-type=SCOPE_TYPE
+          Scope Type. SCOPE_TYPE must be one of:
+
+           global
+              Global type.
+           regional
+              Regional type.
+
+     --service-account=SERVICE_ACCOUNT
+        Your own service account that you use to deploy an application.
+
+     Consumer provided attributes.
+
+       --attributes-business-owners=[channel=CHANNEL],[displayName=DISPLAYNAME],[email=EMAIL]
+          Business team that ensures user needs are met and value is delivered.
+
+           channel
+              Communication channel of the contacts.
+
+               uri
+                  URI of the channel.
+
+           displayName
+              Contact's name. Can have a maximum length of 63 characters.
+
+           email
+              Email address of the contacts.
+
+          Shorthand Example:
+
+              --attributes-business-owners=channel={uri=string},displayName=string,email=string --attributes-business-owners=channel={uri=string},displayName=string,email=string
+
+          JSON Example:
+
+              --attributes-business-owners='[{"channel": {"uri": "string"}, "displayName": "string", "email": "string"}]'
+
+          File Example:
+
+              --attributes-business-owners=path_to_file.(yaml|json)
+
+       --attributes-developer-owners=[channel=CHANNEL],[displayName=DISPLAYNAME],[email=EMAIL]
+          Developer team that owns development and coding.
+
+           channel
+              Communication channel of the contacts.
+
+               uri
+                  URI of the channel.
+
+           displayName
+              Contact's name. Can have a maximum length of 63 characters.
+
+           email
+              Email address of the contacts.
+
+          Shorthand Example:
+
+              --attributes-developer-owners=channel={uri=string},displayName=string,email=string --attributes-developer-owners=channel={uri=string},displayName=string,email=string
+
+          JSON Example:
+
+              --attributes-developer-owners='[{"channel": {"uri": "string"}, "displayName": "string", "email": "string"}]'
+
+          File Example:
+
+              --attributes-developer-owners=path_to_file.(yaml|json)
+
+       --attributes-operator-owners=[channel=CHANNEL],[displayName=DISPLAYNAME],[email=EMAIL]
+          Operator team that ensures runtime and operations.
+
+           channel
+              Communication channel of the contacts.
+
+               uri
+                  URI of the channel.
+
+           displayName
+              Contact's name. Can have a maximum length of 63 characters.
+
+           email
+              Email address of the contacts.
+
+          Shorthand Example:
+
+              --attributes-operator-owners=channel={uri=string},displayName=string,email=string --attributes-operator-owners=channel={uri=string},displayName=string,email=string
+
+          JSON Example:
+
+              --attributes-operator-owners='[{"channel": {"uri": "string"}, "displayName": "string", "email": "string"}]'
+
+          File Example:
+
+              --attributes-operator-owners=path_to_file.(yaml|json)
+
+       Criticality of the Application, Service, or Workload
+
+         --criticality-type=CRITICALITY_TYPE
+            Criticality Type. CRITICALITY_TYPE must be one of:
+
+             high
+                High impact.
+             low
+                Low impact.
+             medium
+                Medium impact.
+             mission-critical
+                Mission critical service, application or workload.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --criticality-level=CRITICALITY_LEVEL
+            Criticality level. Can contain only lowercase letters, numeric
+            characters, underscores, and dashes. Can have a maximum length of
+            63 characters. Deprecated: Please refer to type instead.
+
+         --criticality-mission-critical
+            Indicates mission-critical Application, Service, or Workload.
+            Deprecated: Please refer to type instead.
+
+       Environment of the Application, Service, or Workload
+
+         --environment-type=ENVIRONMENT_TYPE
+            Environment Type. ENVIRONMENT_TYPE must be one of:
+
+             development
+                Development environment.
+             production
+                Production environment.
+             staging
+                Staging environment.
+             test
+                Test environment.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --environment=ENVIRONMENT
+            Environment name. Can contain only lowercase letters, numeric
+            characters, underscores, and dashes. Can have a maximum length of
+            63 characters. Deprecated: Please refer to type instead.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the designcenter/v1alpha API. The full documentation for
+    this API can be found at:
+    http://cloud.google.com/application-design-center/docs
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

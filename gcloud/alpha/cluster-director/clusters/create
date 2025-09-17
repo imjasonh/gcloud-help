@@ -8,58 +8,41 @@ SYNOPSIS
         (--config=[compute=COMPUTE],[description=DESCRIPTION],[labels=LABELS],
           [name=NAME],
           [networks=NETWORKS],[orchestrator=ORCHESTRATOR],[storages=STORAGES]
-          | [--compute-resource-disks=[boot=BOOT],[computeId=COMPUTEID],
-          [sizeGb=SIZEGB],[sourceImage=SOURCEIMAGE],[type=TYPE]
-          --compute-resources=[guestAcceleratorCount=GUESTACCELERATORCOUNT],
-          [guestAcceleratorType=GUESTACCELERATORTYPE],[machineType=MACHINETYPE],
-          [maxRunDuration=MAXRUNDURATION],[name=NAME],
-          [provisioningModel=PROVISIONINGMODEL],
-          [terminationAction=TERMINATIONACTION],[zone=ZONE]
-          --slurm-login-node=[count=COUNT],[enableOSLogin=ENABLEOSLOGIN],
+          | [--slurm-login-node=[count=COUNT],[enableOSLogin=ENABLEOSLOGIN],
           [enablePublicIPs=ENABLEPUBLICIPS],[labels=LABELS],
-          [machineType=MACHINETYPE],[serviceAccountEmail=SERVICEACCOUNTEMAIL],
-          [serviceAccountScopes=SERVICEACCOUNTSCOPES],
-          [startupScript=STARTUPSCRIPT],[zone=ZONE]
-          --slurm-login-node-disks=[boot=BOOT],
-          [sizeGb=SIZEGB],[sourceImage=SOURCEIMAGE],[type=TYPE]
-          --slurm-node-sets=[computeId=COMPUTEID],
-          [enableIPForward=ENABLEIPFORWARD],[enableOSLogin=ENABLEOSLOGIN],
-          [enablePublicIPs=ENABLEPUBLICIPS],[labels=LABELS],
-          [maxDynamicNodeCount=MAXDYNAMICNODECOUNT],[name=NAME],
-          [serviceAccountEmail=SERVICEACCOUNTEMAIL],
-          [serviceAccountScopes=SERVICEACCOUNTSCOPES],
+          [machineType=MACHINETYPE],[startupScript=STARTUPSCRIPT],[zone=ZONE]
+          --slurm-node-sets=[computeId=COMPUTEID],[id=ID],[labels=LABELS],
+          [maxDynamicNodeCount=MAXDYNAMICNODECOUNT],
           [startupScript=STARTUPSCRIPT],[staticNodeCount=STATICNODECOUNT]
           --slurm-partitions=[exclusive=EXCLUSIVE],
-          [name=NAME],[nodesetIds=NODESETIDS] (--create-network=CREATE_NETWORK
-          | --network=NETWORK --subnet=SUBNET)
-          : --compute-resource-reservations=[computeId=COMPUTEID],
-          [key=KEY],[type=TYPE],[values=VALUES]
-          --create-filestores=[description=DESCRIPTION],[fileshare=FILESHARE],
-          [name=NAME],[protocol=PROTOCOL],[sizeGb=SIZEGB],[tier=TIER]
-          --create-gcs-buckets=[enableAutoclass=ENABLEAUTOCLASS],
+          [id=ID],[nodesetIds=NODESETIDS]
+          (--create-network=[description=DESCRIPTION],[name=NAME]
+          | --network=NETWORK --subnet=SUBNET) : --buckets=[BUCKETS,...]
+          --create-buckets=[enableAutoclass=ENABLEAUTOCLASS],
           [enableHNS=ENABLEHNS],[name=NAME],[storageClass=STORAGECLASS]
-          --create-lustres=[description=DESCRIPTION],
-          [filesystem=FILESYSTEM],[name=NAME],[sizeGb=SIZEGB]
-          --description=DESCRIPTION --filestores=[FILESTORES,...]
-          --gcs-buckets=[GCS_BUCKETS,...] --labels=[LABELS,...]
+          --create-filestores=[capacityGb=CAPACITYGB],[description=DESCRIPTION],
+          [fileshare=FILESHARE],[name=NAME],[protocol=PROTOCOL],[tier=TIER]
+          --create-lustres=[capacityGb=CAPACITYGB],
+          [description=DESCRIPTION],[filesystem=FILESYSTEM],[name=NAME]
+          --description=DESCRIPTION
+          --dws-flex-instances=[id=ID],
+          [machineType=MACHINETYPE],[maxDuration=MAXDURATION],[zone=ZONE]
+          --filestores=[FILESTORES,...] --labels=[LABELS,...]
           --lustres=[LUSTRES,...]
-          --slurm-config=[jobEpilogBashScripts=JOBEPILOGBASHSCRIPTS],
-          [jobPrologBashScripts=JOBPROLOGBASHSCRIPTS],
-          [prologEpilogTimeout=PROLOGEPILOGTIMEOUT],[prologFlags=PROLOGFLAGS],
-          [requeueExitCodes=REQUEUEEXITCODES],
-          [requeueHoldExitCodes=REQUEUEHOLDEXITCODES],
-          [taskEpilogBashScripts=TASKEPILOGBASHSCRIPTS],
-          [taskPrologBashScripts=TASKPROLOGBASHSCRIPTS]
-          --slurm-default-partition=SLURM_DEFAULT_PARTITION]) [--async]
-        [GCLOUD_WIDE_FLAG ...]
+          --on-demand-instances=[id=ID],[machineType=MACHINETYPE],[zone=ZONE]
+          --reserved-instances=[id=ID],
+          [machineType=MACHINETYPE],[reservation=RESERVATION]
+          --slurm-default-partition=SLURM_DEFAULT_PARTITION
+          --spot-instances=[id=ID],[machineType=MACHINETYPE],[zone=ZONE]])
+        [--async] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) gcloud alpha cluster-director clusters create facilitates the
     creation of a cluster resource.
 
     There are following ways to create a cluster:
-      ▪ Using granular flags to define cluster specs.
-      ▪ Using --config flag with cluster specs in JSON format.
+      ▪ [Preferred] Use granular flags to define cluster specs.
+      ▪ Use --config flag with cluster specs in JSON format.
 
     Please refer to the examples below for more details.
 
@@ -70,31 +53,24 @@ EXAMPLES
         $ gcloud alpha cluster-director clusters create my-cluster \
             --location us-central1-a \
             --description "My cluster description" \
-            --labels env=prod,client=gcloud-cli --create-network network0 \
+            --labels env=prod,client=gcloud-cli \
+            --create-network name=network0 \
             --create-filestores \
             name=locations/us-central1-a/instances/filestore0,\
-        tier=TIER_BASIC_HDD,sizeGb={filestoreSize},fileshare={fileshare} \
+        tier=BASIC_HDD,capacityGb={filestoreSize},fileshare={fileshare} \
             --filestores locations/us-central1-a/instances/filestore1 \
-            --create-gcs-buckets name=bucket0 --gcs-buckets bucket1 \
+            --create-buckets name=bucket0 --buckets bucket1 \
             --create-lustres \
             name=locations/us-central1-a/instances/lustre0,\
-        sizeGb={lustreSize},filesystem={filesystem} \
+        capacityGb={lustreSize},filesystem={filesystem} \
             --lustres locations/us-central1-a/instances/lustre1 \
-            --compute-resources \
-            name=compute0,zone=us-central1-a,machineType={machineType} \
-            --compute-resource-disks \
-            computeId=compute0,type={diskType},sizeGb={diskSize},boot=true,\
-        sourceImage={family/image} \
-            --compute-resource-reservations \
-            computeId=compute0,type=RESERVATION_TYPE_SPECIFIC_RESERVATION,\
-        values=zones/us-central1-a/reservations/{reservation} \
+            --reserved-instances \
+            id=compute0,machineType={machineType},reservation=zones/\
+        us-central1-a/reservations/{reservation} \
             --slurm-login-node \
             machineType={machineType},zone=us-central1-a \
-            --slurm-login-node-disks \
-            type={diskType},sizeGb={diskSize},boot=true,\
-        sourceImage={family/image} \
-            --slurm-node-sets name=nodeset0,computeId=compute0 \
-            --slurm-partitions name=partition0,nodesetIds=[nodeset0] \
+            --slurm-node-sets id=nodeset0,computeId=compute0 \
+            --slurm-partitions id=partition0,nodesetIds=[nodeset0] \
             --slurm-default-partition partition0 --format json
 
     To create a cluster my-cluster in location us-central1-a with config in
@@ -509,112 +485,11 @@ REQUIRED FLAGS
 
        Flag Configurations to define cluster spec.
 
-         --compute-resource-disks=[boot=BOOT],[computeId=COMPUTEID],[sizeGb=SIZEGB],[sourceImage=SOURCEIMAGE],[type=TYPE]
-            Parameters to define disk config for compute resource.
-
-            For e.g. --compute-resource-disks
-            computeId={computeId},type={diskType},boot=true,sizeGb={diskSize},sourceImage={family/{image-family}
-            | {image}}
-
-            Note:
-            ▫ for boot disk, all fields are required.
-            ▫ for non-boot disk, only computeId, type and sizeGb are
-              required.
-
-            Required, sets compute_resource_disks value.
-
-             boot
-                Sets boot value.
-
-             computeId
-                Required, sets computeId value.
-
-             sizeGb
-                Required, sets sizeGb value.
-
-             sourceImage
-                Sets sourceImage value.
-
-             type
-                Required, sets type value.
-
-            Shorthand Example:
-
-                --compute-resource-disks=boot=boolean,computeId=string,sizeGb=int,sourceImage=string,type=string --compute-resource-disks=boot=boolean,computeId=string,sizeGb=int,sourceImage=string,type=string
-
-            JSON Example:
-
-                --compute-resource-disks='[{"boot": boolean, "computeId": "string", "sizeGb": int, "sourceImage": "string", "type": "string"}]'
-
-            File Example:
-
-                --compute-resource-disks=path_to_file.(yaml|json)
-
-            This flag argument must be specified if any of the other arguments
-            in this group are specified.
-
-         --compute-resources=[guestAcceleratorCount=GUESTACCELERATORCOUNT],[guestAcceleratorType=GUESTACCELERATORTYPE],[machineType=MACHINETYPE],[maxRunDuration=MAXRUNDURATION],[name=NAME],[provisioningModel=PROVISIONINGMODEL],[terminationAction=TERMINATIONACTION],[zone=ZONE]
-            Parameters to define cluster compute resource.
-
-            For e.g. --compute-resources
-            name={computeId},zone={zone},machineType={machineType}
-
-            Supported provisioningModel values:
-            ▫ PROVISIONING_MODEL_STANDARD
-            ▫ PROVISIONING_MODEL_SPOT
-            ▫ PROVISIONING_MODEL_FLEX_START
-            ▫ PROVISIONING_MODEL_RESERVATION_BOUND
-
-            Supported terminationAction values:
-            ▫ TERMINATION_ACTION_DELETE
-            ▫ TERMINATION_ACTION_STOP.
-
-            Required, sets compute_resources value.
-
-             guestAcceleratorCount
-                Sets guestAcceleratorCount value.
-
-             guestAcceleratorType
-                Sets guestAcceleratorType value.
-
-             machineType
-                Required, sets machineType value.
-
-             maxRunDuration
-                Sets maxRunDuration value.
-
-             name
-                Required, sets name value.
-
-             provisioningModel
-                Sets provisioningModel value.
-
-             terminationAction
-                Sets terminationAction value.
-
-             zone
-                Required, sets zone value.
-
-            Shorthand Example:
-
-                --compute-resources=guestAcceleratorCount=int,guestAcceleratorType=string,machineType=string,maxRunDuration=int,name=string,provisioningModel=string,terminationAction=string,zone=string --compute-resources=guestAcceleratorCount=int,guestAcceleratorType=string,machineType=string,maxRunDuration=int,name=string,provisioningModel=string,terminationAction=string,zone=string
-
-            JSON Example:
-
-                --compute-resources='[{"guestAcceleratorCount": int, "guestAcceleratorType": "string", "machineType": "string", "maxRunDuration": int, "name": "string", "provisioningModel": "string", "terminationAction": "string", "zone": "string"}]'
-
-            File Example:
-
-                --compute-resources=path_to_file.(yaml|json)
-
-            This flag argument must be specified if any of the other arguments
-            in this group are specified.
-
-         --slurm-login-node=[count=COUNT],[enableOSLogin=ENABLEOSLOGIN],[enablePublicIPs=ENABLEPUBLICIPS],[labels=LABELS],[machineType=MACHINETYPE],[serviceAccountEmail=SERVICEACCOUNTEMAIL],[serviceAccountScopes=SERVICEACCOUNTSCOPES],[startupScript=STARTUPSCRIPT],[zone=ZONE]
+         --slurm-login-node=[count=COUNT],[enableOSLogin=ENABLEOSLOGIN],[enablePublicIPs=ENABLEPUBLICIPS],[labels=LABELS],[machineType=MACHINETYPE],[startupScript=STARTUPSCRIPT],[zone=ZONE]
             Parameters to define slurm cluster login node.
 
             For e.g. --slurm-login-node
-            machineType={machineType},zone={zone},count={count},enableOSLogin=true,enablePublicIPs=true,serviceAccountEmail={serviceAccountEmail},serviceAccountScopes=[scope1,scope2],startupScript="echo
+            machineType={machineType},zone={zone},count={count},enableOSLogin=true,enablePublicIPs=true,startupScript="echo
             hello",labels="{key1=value1,key2=value2}"
 
             Defaults:
@@ -627,8 +502,7 @@ REQUIRED FLAGS
               ◇ Either str or file_path
               ◇ For file_path, only bash file format (.sh or .bash) is
                 supported.
-              ◇ For file_path, absolute or relative path to current work
-                directory is supported.
+              ◇ For file_path, only absolute path is supported.
 
               Required, sets slurm_login_node value.
 
@@ -653,12 +527,6 @@ REQUIRED FLAGS
              machineType
                 Required, sets machineType value.
 
-             serviceAccountEmail
-                Sets serviceAccountEmail value.
-
-             serviceAccountScopes
-                Sets serviceAccountScopes value.
-
              startupScript
                 Sets startupScript value.
 
@@ -667,11 +535,11 @@ REQUIRED FLAGS
 
             Shorthand Example:
 
-                --slurm-login-node=count=int,enableOSLogin=boolean,enablePublicIPs=boolean,labels={string=string},machineType=string,serviceAccountEmail=string,serviceAccountScopes,startupScript=string,zone=string
+                --slurm-login-node=count=int,enableOSLogin=boolean,enablePublicIPs=boolean,labels={string=string},machineType=string,startupScript=string,zone=string
 
             JSON Example:
 
-                --slurm-login-node='{"count": int, "enableOSLogin": boolean, "enablePublicIPs": boolean, "labels": {"string": "string"}, "machineType": "string", "serviceAccountEmail": "string", "serviceAccountScopes", "startupScript": "string", "zone": "string"}'
+                --slurm-login-node='{"count": int, "enableOSLogin": boolean, "enablePublicIPs": boolean, "labels": {"string": "string"}, "machineType": "string", "startupScript": "string", "zone": "string"}'
 
             File Example:
 
@@ -680,78 +548,30 @@ REQUIRED FLAGS
             This flag argument must be specified if any of the other arguments
             in this group are specified.
 
-         --slurm-login-node-disks=[boot=BOOT],[sizeGb=SIZEGB],[sourceImage=SOURCEIMAGE],[type=TYPE]
-            Parameters to define disk config for slurm cluster login node.
-
-            For e.g. --slurm-login-node-disks
-            type={diskType},boot=true,sizeGb={diskSize},sourceImage={family/{image-family}
-            | {image}}
-
-            Note:
-            ▫ for boot disk, all fields are required.
-            ▫ for non-boot disk, only type and sizeGb are required.
-
-            Required, sets slurm_login_node_disks value.
-
-             boot
-                Sets boot value.
-
-             sizeGb
-                Required, sets sizeGb value.
-
-             sourceImage
-                Sets sourceImage value.
-
-             type
-                Required, sets type value.
-
-            Shorthand Example:
-
-                --slurm-login-node-disks=[{boot=boolean,sizeGb=int,sourceImage=string,type=string}] --slurm-login-node-disks=[{boot=boolean,sizeGb=int,sourceImage=string,type=string}]
-
-            JSON Example:
-
-                --slurm-login-node-disks='[{"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}]'
-
-            File Example:
-
-                --slurm-login-node-disks=path_to_file.(yaml|json)
-
-            This flag argument must be specified if any of the other arguments
-            in this group are specified.
-
-         --slurm-node-sets=[computeId=COMPUTEID],[enableIPForward=ENABLEIPFORWARD],[enableOSLogin=ENABLEOSLOGIN],[enablePublicIPs=ENABLEPUBLICIPS],[labels=LABELS],[maxDynamicNodeCount=MAXDYNAMICNODECOUNT],[name=NAME],[serviceAccountEmail=SERVICEACCOUNTEMAIL],[serviceAccountScopes=SERVICEACCOUNTSCOPES],[startupScript=STARTUPSCRIPT],[staticNodeCount=STATICNODECOUNT]
+         --slurm-node-sets=[computeId=COMPUTEID],[id=ID],[labels=LABELS],[maxDynamicNodeCount=MAXDYNAMICNODECOUNT],[startupScript=STARTUPSCRIPT],[staticNodeCount=STATICNODECOUNT]
             Parameters to define slurm cluster nodeset config.
 
             For e.g. --slurm-node-sets
-            name={nodesetId},computeId={computeId},staticNodeCount={staticNodeCount},maxDynamicNodeCount={maxDynamicNodeCount},enableOSLogin=true,enableIPForward=false,enablePublicIPs=false,serviceAccountEmail={serviceAccountEmail},serviceAccountScopes=[scope1,scope2],startupScript="echo
+            id={nodesetId},computeId={computeId},staticNodeCount={staticNodeCount},maxDynamicNodeCount={maxDynamicNodeCount},startupScript="echo
             hello",labels="{key1=value1,key2=value2}"
 
             Defaults:
             ▫ staticNodeCount: 1
-            ▫ enableOSLogin: true
 
             Note:
             ▫ startupScript:
               ◇ Either str or file_path
               ◇ For file_path, only bash file format (.sh or .bash) is
                 supported.
-              ◇ For file_path, absolute or relative path to current work
-                directory is supported.
+              ◇ For file_path, only absolute path is supported.
 
               Required, sets slurm_node_sets value.
 
              computeId
                 Required, sets computeId value.
 
-             enableIPForward
-                Sets enableIPForward value.
-
-             enableOSLogin
-                Sets enableOSLogin value.
-
-             enablePublicIPs
-                Sets enablePublicIPs value.
+             id
+                Required, sets id value.
 
              labels
                 Sets labels value.
@@ -765,15 +585,6 @@ REQUIRED FLAGS
              maxDynamicNodeCount
                 Sets maxDynamicNodeCount value.
 
-             name
-                Required, sets name value.
-
-             serviceAccountEmail
-                Sets serviceAccountEmail value.
-
-             serviceAccountScopes
-                Sets serviceAccountScopes value.
-
              startupScript
                 Sets startupScript value.
 
@@ -782,11 +593,11 @@ REQUIRED FLAGS
 
             Shorthand Example:
 
-                --slurm-node-sets=computeId=string,enableIPForward=boolean,enableOSLogin=boolean,enablePublicIPs=boolean,labels={string=string},maxDynamicNodeCount=int,name=string,serviceAccountEmail=string,serviceAccountScopes=[string],startupScript=string,staticNodeCount=int --slurm-node-sets=computeId=string,enableIPForward=boolean,enableOSLogin=boolean,enablePublicIPs=boolean,labels={string=string},maxDynamicNodeCount=int,name=string,serviceAccountEmail=string,serviceAccountScopes=[string],startupScript=string,staticNodeCount=int
+                --slurm-node-sets=computeId=string,id=string,labels={string=string},maxDynamicNodeCount=int,startupScript=string,staticNodeCount=int --slurm-node-sets=computeId=string,id=string,labels={string=string},maxDynamicNodeCount=int,startupScript=string,staticNodeCount=int
 
             JSON Example:
 
-                --slurm-node-sets='[{"computeId": "string", "enableIPForward": boolean, "enableOSLogin": boolean, "enablePublicIPs": boolean, "labels": {"string": "string"}, "maxDynamicNodeCount": int, "name": "string", "serviceAccountEmail": "string", "serviceAccountScopes": ["string"], "startupScript": "string", "staticNodeCount": int}]'
+                --slurm-node-sets='[{"computeId": "string", "id": "string", "labels": {"string": "string"}, "maxDynamicNodeCount": int, "startupScript": "string", "staticNodeCount": int}]'
 
             File Example:
 
@@ -795,30 +606,30 @@ REQUIRED FLAGS
             This flag argument must be specified if any of the other arguments
             in this group are specified.
 
-         --slurm-partitions=[exclusive=EXCLUSIVE],[name=NAME],[nodesetIds=NODESETIDS]
+         --slurm-partitions=[exclusive=EXCLUSIVE],[id=ID],[nodesetIds=NODESETIDS]
             Parameters to define slurm cluster partitions.
 
             For e.g. --slurm-partitions
-            name={partitionId},nodesetIds=[{nodesetId1},{nodesetId2}],exclusive=false.
+            id={partitionId},nodesetIds=[{nodesetId1},{nodesetId2}],exclusive=false.
 
             Required, sets slurm_partitions value.
 
              exclusive
                 Sets exclusive value.
 
-             name
-                Required, sets name value.
+             id
+                Required, sets id value.
 
              nodesetIds
                 Required, sets nodesetIds value.
 
             Shorthand Example:
 
-                --slurm-partitions=exclusive=boolean,name=string,nodesetIds=[string] --slurm-partitions=exclusive=boolean,name=string,nodesetIds=[string]
+                --slurm-partitions=exclusive=boolean,id=string,nodesetIds=[string] --slurm-partitions=exclusive=boolean,id=string,nodesetIds=[string]
 
             JSON Example:
 
-                --slurm-partitions='[{"exclusive": boolean, "name": "string", "nodesetIds": ["string"]}]'
+                --slurm-partitions='[{"exclusive": boolean, "id": "string", "nodesetIds": ["string"]}]'
 
             File Example:
 
@@ -827,122 +638,31 @@ REQUIRED FLAGS
             This flag argument must be specified if any of the other arguments
             in this group are specified.
 
-         --compute-resource-reservations=[computeId=COMPUTEID],[key=KEY],[type=TYPE],[values=VALUES]
-            Parameters to define reservation for compute resource.
+         --buckets=[BUCKETS,...]
+            Reference of existing Google Cloud Storage bucket.
 
-            For e.g. --compute-resource-reservations
-            computeId={computeId},type=RESERVATION_TYPE_SPECIFIC_RESERVATION,values=zones/{zone}/reservations/{reservation}
+            For e.g. --buckets {bucket-path}
 
-            Supported type values:
-            ▫ RESERVATION_TYPE_NO_RESERVATION
-            ▫ RESERVATION_TYPE_ANY_RESERVATION
-            ▫ RESERVATION_TYPE_SPECIFIC_RESERVATION
-
-            Defaults:
-            ▫ key: compute.googleapis.com/reservation-name (if type is
-              RESERVATION_TYPE_SPECIFIC_RESERVATION or
-              RESERVATION_TYPE_ANY_RESERVATION).
-
-            Sets compute_resource_reservations value.
-
-             computeId
-                Required, sets computeId value.
-
-             key
-                Sets key value.
-
-             type
-                Required, sets type value.
-
-             values
-                Sets values value.
-
-            Shorthand Example:
-
-                --compute-resource-reservations=computeId=string,key=string,type=string,values --compute-resource-reservations=computeId=string,key=string,type=string,values
-
-            JSON Example:
-
-                --compute-resource-reservations='[{"computeId": "string", "key": "string", "type": "string", "values"}]'
-
-            File Example:
-
-                --compute-resource-reservations=path_to_file.(yaml|json)
-
-         --create-filestores=[description=DESCRIPTION],[fileshare=FILESHARE],[name=NAME],[protocol=PROTOCOL],[sizeGb=SIZEGB],[tier=TIER]
-            Parameters to create a filestore instance.
-
-            For e.g. --create-filestores
-            name=locations/{location}/instances/{filestore},tier=TIER_BASIC_HDD,sizeGb=100,fileshare=nfsshare
-
-            Supported tier values:
-            ▫ TIER_BASIC_HDD
-            ▫ TIER_BASIC_SSD
-            ▫ TIER_HIGH_SCALE_SSD
-            ▫ TIER_ZONAL
-            ▫ TIER_ENTERPRISE
-            ▫ TIER_REGIONAL
-
-            Supported protocol values:
-            ▫ PROTOCOL_NFSV3
-            ▫ PROTOCOL_NFSV41
-            ▫ If not specified, defaults to PROTOCOL_NFSV3
-
-            Defaults:
-            ▫ protocol: PROTOCOL_NFSV3.
-
-            Sets create_filestores value.
-
-             description
-                Sets description value.
-
-             fileshare
-                Required, sets fileshare value.
-
-             name
-                Required, sets name value.
-
-             protocol
-                Sets protocol value.
-
-             sizeGb
-                Required, sets sizeGb value.
-
-             tier
-                Required, sets tier value.
-
-            Shorthand Example:
-
-                --create-filestores=description=string,fileshare=string,name=string,protocol=string,sizeGb=int,tier=string --create-filestores=description=string,fileshare=string,name=string,protocol=string,sizeGb=int,tier=string
-
-            JSON Example:
-
-                --create-filestores='[{"description": "string", "fileshare": "string", "name": "string", "protocol": "string", "sizeGb": int, "tier": "string"}]'
-
-            File Example:
-
-                --create-filestores=path_to_file.(yaml|json)
-
-         --create-gcs-buckets=[enableAutoclass=ENABLEAUTOCLASS],[enableHNS=ENABLEHNS],[name=NAME],[storageClass=STORAGECLASS]
+         --create-buckets=[enableAutoclass=ENABLEAUTOCLASS],[enableHNS=ENABLEHNS],[name=NAME],[storageClass=STORAGECLASS]
             Parameters to create a Google Cloud Storage bucket.
 
-            For e.g. --create-gcs-buckets name={bucket-path}
+            For e.g. --create-buckets name={bucket-path}
 
             Supported storageClass values:
-            ▫ STORAGE_CLASS_STANDARD
-            ▫ STORAGE_CLASS_NEARLINE
-            ▫ STORAGE_CLASS_COLDLINE
-            ▫ STORAGE_CLASS_ARCHIVE
+            ▫ STANDARD
+            ▫ NEARLINE
+            ▫ COLDLINE
+            ▫ ARCHIVE
 
             Defaults:
-            ▫ storageClass: STORAGE_CLASS_STANDARD
+            ▫ storageClass: STANDARD
 
             Note:
             ▫ Either storageClass or enableAutoclass can be set.
             ▫ if enableAutoclass is set, enableHNS should not be set.
             ▫ HNS: Hierarchical namespace.
 
-            Sets create_gcs_buckets value.
+            Sets create_buckets value.
 
              enableAutoclass
                 Sets enableAutoclass value.
@@ -958,23 +678,80 @@ REQUIRED FLAGS
 
             Shorthand Example:
 
-                --create-gcs-buckets=enableAutoclass=boolean,enableHNS=boolean,name=string,storageClass=string --create-gcs-buckets=enableAutoclass=boolean,enableHNS=boolean,name=string,storageClass=string
+                --create-buckets=enableAutoclass=boolean,enableHNS=boolean,name=string,storageClass=string --create-buckets=enableAutoclass=boolean,enableHNS=boolean,name=string,storageClass=string
 
             JSON Example:
 
-                --create-gcs-buckets='[{"enableAutoclass": boolean, "enableHNS": boolean, "name": "string", "storageClass": "string"}]'
+                --create-buckets='[{"enableAutoclass": boolean, "enableHNS": boolean, "name": "string", "storageClass": "string"}]'
 
             File Example:
 
-                --create-gcs-buckets=path_to_file.(yaml|json)
+                --create-buckets=path_to_file.(yaml|json)
 
-         --create-lustres=[description=DESCRIPTION],[filesystem=FILESYSTEM],[name=NAME],[sizeGb=SIZEGB]
+         --create-filestores=[capacityGb=CAPACITYGB],[description=DESCRIPTION],[fileshare=FILESHARE],[name=NAME],[protocol=PROTOCOL],[tier=TIER]
+            Parameters to create a filestore instance.
+
+            For e.g. --create-filestores
+            name=locations/{location}/instances/{filestore},tier=BASIC_HDD,capacityGb={filestoreSize},fileshare={fileshare}
+
+            Supported tier values:
+            ▫ BASIC_HDD
+            ▫ BASIC_SSD
+            ▫ HIGH_SCALE_SSD
+            ▫ ZONAL
+            ▫ ENTERPRISE
+            ▫ REGIONAL
+
+            Supported protocol values:
+            ▫ NFSV3
+            ▫ NFSV41
+            ▫ If not specified, defaults to NFSV3
+
+            Defaults:
+            ▫ protocol: NFSV3.
+
+            Sets create_filestores value.
+
+             capacityGb
+                Required, sets capacityGb value.
+
+             description
+                Sets description value.
+
+             fileshare
+                Required, sets fileshare value.
+
+             name
+                Required, sets name value.
+
+             protocol
+                Sets protocol value.
+
+             tier
+                Required, sets tier value.
+
+            Shorthand Example:
+
+                --create-filestores=capacityGb=int,description=string,fileshare=string,name=string,protocol=string,tier=string --create-filestores=capacityGb=int,description=string,fileshare=string,name=string,protocol=string,tier=string
+
+            JSON Example:
+
+                --create-filestores='[{"capacityGb": int, "description": "string", "fileshare": "string", "name": "string", "protocol": "string", "tier": "string"}]'
+
+            File Example:
+
+                --create-filestores=path_to_file.(yaml|json)
+
+         --create-lustres=[capacityGb=CAPACITYGB],[description=DESCRIPTION],[filesystem=FILESYSTEM],[name=NAME]
             Parameters to create a Lustre instance.
 
             For e.g. --create-lustres
-            name=locations/{location}/instances/{lustre},sizeGb={lustreSize},filesystem={filesystem}.
+            name=locations/{location}/instances/{lustre},capacityGb={lustreSize},filesystem={filesystem}.
 
             Sets create_lustres value.
+
+             capacityGb
+                Required, sets capacityGb value.
 
              description
                 Sets description value.
@@ -985,16 +762,13 @@ REQUIRED FLAGS
              name
                 Required, sets name value.
 
-             sizeGb
-                Required, sets sizeGb value.
-
             Shorthand Example:
 
-                --create-lustres=description=string,filesystem=string,name=string,sizeGb=int --create-lustres=description=string,filesystem=string,name=string,sizeGb=int
+                --create-lustres=capacityGb=int,description=string,filesystem=string,name=string --create-lustres=capacityGb=int,description=string,filesystem=string,name=string
 
             JSON Example:
 
-                --create-lustres='[{"description": "string", "filesystem": "string", "name": "string", "sizeGb": int}]'
+                --create-lustres='[{"capacityGb": int, "description": "string", "filesystem": "string", "name": "string"}]'
 
             File Example:
 
@@ -1005,15 +779,42 @@ REQUIRED FLAGS
 
             For e.g. --description (ALPHA) Creates a Cluster Director resource.
 
+         --dws-flex-instances=[id=ID],[machineType=MACHINETYPE],[maxDuration=MAXDURATION],[zone=ZONE]
+            Parameters to define cluster DWS Flex instances.
+
+            For e.g. --dws-flex-instances
+            id={computeId},zone={zone},machineType={machineType},maxDuration=10000s.
+
+            Sets dws_flex_instances value.
+
+             id
+                Required, sets id value.
+
+             machineType
+                Required, sets machineType value.
+
+             maxDuration
+                Required, sets maxDuration value.
+
+             zone
+                Required, sets zone value.
+
+            Shorthand Example:
+
+                --dws-flex-instances=id=string,machineType=string,maxDuration=string,zone=string --dws-flex-instances=id=string,machineType=string,maxDuration=string,zone=string
+
+            JSON Example:
+
+                --dws-flex-instances='[{"id": "string", "machineType": "string", "maxDuration": "string", "zone": "string"}]'
+
+            File Example:
+
+                --dws-flex-instances=path_to_file.(yaml|json)
+
          --filestores=[FILESTORES,...]
             Reference of existing filestore instance.
 
             For e.g. --filestores locations/{location}/instances/{filestore}
-
-         --gcs-buckets=[GCS_BUCKETS,...]
-            Reference of existing Google Cloud Storage bucket.
-
-            For e.g. --gcs-buckets {bucket-path}
 
          --labels=[LABELS,...]
             Cluster labels as key value pairs.
@@ -1045,85 +846,127 @@ REQUIRED FLAGS
 
             For e.g. --lustres locations/{location}/instances/{lustre}
 
-         --slurm-config=[jobEpilogBashScripts=JOBEPILOGBASHSCRIPTS],[jobPrologBashScripts=JOBPROLOGBASHSCRIPTS],[prologEpilogTimeout=PROLOGEPILOGTIMEOUT],[prologFlags=PROLOGFLAGS],[requeueExitCodes=REQUEUEEXITCODES],[requeueHoldExitCodes=REQUEUEHOLDEXITCODES],[taskEpilogBashScripts=TASKEPILOGBASHSCRIPTS],[taskPrologBashScripts=TASKPROLOGBASHSCRIPTS]
-            Parameters to define slurm cluster config.
+         --on-demand-instances=[id=ID],[machineType=MACHINETYPE],[zone=ZONE]
+            Parameters to define cluster on demand instances.
 
-            For e.g. --slurm-config
-            requeueExitCodes=[1,2,3],requeueHoldExitCodes=[4,5,6],prologFlags=[ALLOC,CONTAIN,NO_HOLD],prologEpilogTimeout=10000s,jobPrologBashScripts=["echo
-            hello",...],jobEpilogBashScripts=["echo
-            goodbye",...],taskPrologBashScripts=["echo
-            hi",...],taskEpilogBashScripts=["echo bye",...]
+            For e.g. --on-demand-instances
+            id={computeId},zone={zone},machineType={machineType}.
 
-            Supported prologFlags values:
-            ▫ ALLOC
-            ▫ CONTAIN
-            ▫ DEFER_BATCH
-            ▫ NO_HOLD
-            ▫ FORCE_REQUEUE_ON_FAIL
-            ▫ RUN_IN_JOB
-            ▫ SERIAL
-            ▫ X11
+            Sets on_demand_instances value.
 
-            Note:
-            ▫ jobPrologBashScripts, jobEpilogBashScripts,
-              taskPrologBashScripts, taskEpilogBashScripts:
-              ◇ Either str or file_path
-              ◇ For file_path, only bash file format (.sh or .bash) is
-                supported.
-              ◇ For file_path, absolute or relative path to current work
-                directory is supported.
+             id
+                Required, sets id value.
 
-              Sets slurm_config value.
+             machineType
+                Required, sets machineType value.
 
-             jobEpilogBashScripts
-                Sets jobEpilogBashScripts value.
-
-             jobPrologBashScripts
-                Sets jobPrologBashScripts value.
-
-             prologEpilogTimeout
-                Sets prologEpilogTimeout value.
-
-             prologFlags
-                Sets prologFlags value.
-
-             requeueExitCodes
-                Sets requeueExitCodes value.
-
-             requeueHoldExitCodes
-                Sets requeueHoldExitCodes value.
-
-             taskEpilogBashScripts
-                Sets taskEpilogBashScripts value.
-
-             taskPrologBashScripts
-                Sets taskPrologBashScripts value.
+             zone
+                Required, sets zone value.
 
             Shorthand Example:
 
-                --slurm-config=jobEpilogBashScripts=[string],jobPrologBashScripts=[string],prologEpilogTimeout=string,prologFlags=[string],requeueExitCodes=[int],requeueHoldExitCodes=[int],taskEpilogBashScripts=[string],taskPrologBashScripts=[string]
+                --on-demand-instances=id=string,machineType=string,zone=string --on-demand-instances=id=string,machineType=string,zone=string
 
             JSON Example:
 
-                --slurm-config='{"jobEpilogBashScripts": ["string"], "jobPrologBashScripts": ["string"], "prologEpilogTimeout": "string", "prologFlags": ["string"], "requeueExitCodes": [int], "requeueHoldExitCodes": [int], "taskEpilogBashScripts": ["string"], "taskPrologBashScripts": ["string"]}'
+                --on-demand-instances='[{"id": "string", "machineType": "string", "zone": "string"}]'
 
             File Example:
 
-                --slurm-config=path_to_file.(yaml|json)
+                --on-demand-instances=path_to_file.(yaml|json)
+
+         --reserved-instances=[id=ID],[machineType=MACHINETYPE],[reservation=RESERVATION]
+            Parameters to define cluster reserved instances.
+
+            For e.g. --reserved-instances
+            id={computeId},reservation=zones/{zone}/reservations/{reservation},machineType={machineType}.
+
+            Sets reserved_instances value.
+
+             id
+                Required, sets id value.
+
+             machineType
+                Required, sets machineType value.
+
+             reservation
+                Required, sets reservation value.
+
+            Shorthand Example:
+
+                --reserved-instances=id=string,machineType=string,reservation=string --reserved-instances=id=string,machineType=string,reservation=string
+
+            JSON Example:
+
+                --reserved-instances='[{"id": "string", "machineType": "string", "reservation": "string"}]'
+
+            File Example:
+
+                --reserved-instances=path_to_file.(yaml|json)
 
          --slurm-default-partition=SLURM_DEFAULT_PARTITION
             Parameters to define slurm cluster default partition.
 
             For e.g. --slurm-default-partition {partitionId}
 
+         --spot-instances=[id=ID],[machineType=MACHINETYPE],[zone=ZONE]
+            Parameters to define cluster spot instances.
+
+            For e.g. --spot-instances
+            id={computeId},zone={zone},machineType={machineType}.
+
+            Sets spot_instances value.
+
+             id
+                Required, sets id value.
+
+             machineType
+                Required, sets machineType value.
+
+             zone
+                Required, sets zone value.
+
+            Shorthand Example:
+
+                --spot-instances=id=string,machineType=string,zone=string --spot-instances=id=string,machineType=string,zone=string
+
+            JSON Example:
+
+                --spot-instances='[{"id": "string", "machineType": "string", "zone": "string"}]'
+
+            File Example:
+
+                --spot-instances=path_to_file.(yaml|json)
+
          Network configuration for the cluster.
 
          Exactly one of these must be specified:
 
-           --create-network=CREATE_NETWORK
-              Name of the network to be created.
+           --create-network=[description=DESCRIPTION],[name=NAME]
+              Parameters to create a network.
 
-              For e.g. --create-network {network}
+              For e.g. --create-network name={network},description=(ALPHA)
+              Creates a Cluster Director resource..
+
+              Sets create_network value.
+
+               description
+                  Sets description value.
+
+               name
+                  Required, sets name value.
+
+              Shorthand Example:
+
+                  --create-network=description=string,name=string
+
+              JSON Example:
+
+                  --create-network='{"description": "string", "name": "string"}'
+
+              File Example:
+
+                  --create-network=path_to_file.(yaml|json)
 
            Use an existing network source for the cluster.
 
@@ -1132,10 +975,16 @@ REQUIRED FLAGS
 
                 For e.g. --network {network}
 
+                This flag argument must be specified if any of the other
+                arguments in this group are specified.
+
              --subnet=SUBNET
                 Reference of existing subnetwork name.
 
                 For e.g. --subnet regions/{region}/subnetworks/{subnetwork}
+
+                This flag argument must be specified if any of the other
+                arguments in this group are specified.
 
 OPTIONAL FLAGS
      --async

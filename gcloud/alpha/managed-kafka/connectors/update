@@ -5,7 +5,9 @@ NAME
 SYNOPSIS
     gcloud alpha managed-kafka connectors update
         (CONNECTOR : --connect-cluster=CONNECT_CLUSTER --location=LOCATION)
-        (--config-file=JSON|YAML|FILE | --configs=[KEY=VALUE,...])
+        [--config-file=JSON|YAML|FILE | --configs=[KEY=VALUE,...]]
+        [--task-restart-max-backoff=TASK_RESTART_MAX_BACKOFF
+          --task-restart-min-backoff=TASK_RESTART_MIN_BACKOFF]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -16,10 +18,12 @@ EXAMPLES
 
         $ gcloud alpha managed-kafka connectors update myconnector \
             --location=us-central1 --configs=KEY1=VALUE1,KEY2=VALUE2... \
-            --connect-cluster=mycluster OR
+            --connect-cluster=mycluster [--task-restart-min-backoff=60s] \
+            [--task-restart-max-backoff=30m] OR
         $ gcloud alpha managed-kafka connectors update myconnector \
             --location=us-central1 --config-file=my-config-file.yaml \
-            --connect-cluster=mycluster
+            --connect-cluster=mycluster [--task-restart-min-backoff=60s] \
+            [--task-restart-max-backoff=30m]
 
 POSITIONAL ARGUMENTS
      Connector resource - Identifies the connector for which the command runs.
@@ -63,8 +67,8 @@ POSITIONAL ARGUMENTS
             specified name;
           ▸ provide the argument --location on the command line.
 
-REQUIRED FLAGS
-     Exactly one of these must be specified:
+FLAGS
+     At most one of these can be specified:
 
        --config-file=JSON|YAML|FILE
           The path to the JSON or YAML file containing the configuration that
@@ -83,6 +87,18 @@ REQUIRED FLAGS
           Configuration for the connector that are overridden from the
           connector defaults. The key of the map is a Kafka topic property
           name, for example: cleanup.policy=compact,compression.type=producer.
+
+     --task-restart-max-backoff=TASK_RESTART_MAX_BACKOFF
+        The maximum amount of time to wait before retrying a failed task in
+        seconds. This sets an upper bound for the backoff delay. The default
+        value is 1800s (30 minutes). See $ gcloud topic datetimes for
+        information on duration formats.
+
+     --task-restart-min-backoff=TASK_RESTART_MIN_BACKOFF
+        The minimum amount of time to wait before retrying a failed task in
+        seconds. This sets a lower bound for the backoff delay. The default
+        value is 60s. See $ gcloud topic datetimes for information on duration
+        formats.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
