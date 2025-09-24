@@ -4,8 +4,10 @@ NAME
 
 SYNOPSIS
     gcloud alpha alloydb clusters restore CLUSTER --region=REGION
-        (--backup=BACKUP
-          | --point-in-time=POINT_IN_TIME --source-cluster=SOURCE_CLUSTER)
+        (--backup=BACKUP | --backupdr-backup=BACKUPDR_BACKUP
+          | --point-in-time=POINT_IN_TIME
+          (--backupdr-data-source=BACKUPDR_DATA_SOURCE
+          | --source-cluster=SOURCE_CLUSTER))
         [--allocated-ip-range-name=ALLOCATED_IP_RANGE_NAME] [--async]
         [--enable-private-service-connect] [--network=NETWORK]
         [--tags=[KEY=VALUE,...]]
@@ -49,6 +51,10 @@ REQUIRED FLAGS
           location are assumed to be the same as the restored cluster that is
           being created.
 
+       --backupdr-backup=BACKUPDR_BACKUP
+          Backup DR backup to restore from. This is a resource path of the form
+          projects/myProject/locations/us-central1/backupVaults/myBackupVault/dataSources/myDataSource/backups/myBackup.
+
        Restore a cluster from a source cluster at a given point in time.
 
          --point-in-time=POINT_IN_TIME
@@ -61,6 +67,11 @@ REQUIRED FLAGS
          Source for a point in time restore operation.
 
          Exactly one of these must be specified:
+
+           --backupdr-data-source=BACKUPDR_DATA_SOURCE
+              Backup DR data source to restore from. This is a resource path of
+              the form
+              projects/myProject/locations/us-central1/backupVaults/myBackupVault/dataSources/myDataSource.
 
            --source-cluster=SOURCE_CLUSTER
               AlloyDB source cluster to restore from. This must either be the

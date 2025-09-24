@@ -42,8 +42,9 @@ SYNOPSIS
         [--provisioning-model=PROVISIONING_MODEL] [--region=REGION]
         [--resource-policies=[RESOURCE_POLICY,...]] [--no-restart-on-failure]
         [--shielded-integrity-monitoring] [--shielded-secure-boot]
-        [--shielded-vtpm] [--stack-type=STACK_TYPE] [--subnet=SUBNET]
-        [--tags=TAG,[TAG,...]] [--address=ADDRESS | --no-address]
+        [--shielded-vtpm] [--[no-]skip-guest-os-shutdown]
+        [--stack-type=STACK_TYPE] [--subnet=SUBNET] [--tags=TAG,[TAG,...]]
+        [--address=ADDRESS | --no-address]
         [--custom-cpu=CUSTOM_CPU --custom-memory=CUSTOM_MEMORY
           : --custom-extensions --custom-vm-type=CUSTOM_VM_TYPE]
         [--image-project=IMAGE_PROJECT --image=IMAGE
@@ -55,6 +56,11 @@ SYNOPSIS
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
+    (DEPRECATED) The option to deploy a container during VM creation using the
+    container startup agent is deprecated. Use alternative services to run
+    containers on your VMs. Learn more at
+    https://cloud.google.com/compute/docs/containers/migrate-containers.
+
     gcloud compute instance-templates create-with-container creates a Compute
     Engine virtual machine instance template that runs a container image. To
     create an instance template named 'instance-template-1' that runs the
@@ -719,6 +725,12 @@ FLAGS
         On Shielded VM instances, vTPM is enabled by default. For information
         about how to modify Shielded VM options, see
         https://cloud.google.com/compute/docs/instances/modifying-shielded-vm.
+
+     --[no-]skip-guest-os-shutdown
+        If enabled, then, when the instance is stopped or deleted, the instance
+        is immediately stopped without giving time to the guest OS to cleanly
+        shut down. Use --skip-guest-os-shutdown to enable and
+        --no-skip-guest-os-shutdown to disable.
 
      --stack-type=STACK_TYPE
         Specifies whether IPv6 is enabled on the default network interface. If

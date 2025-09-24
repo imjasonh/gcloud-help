@@ -10,8 +10,20 @@ SYNOPSIS
         [--assign-inbound-public-ip=ASSIGN_INBOUND_PUBLIC_IP] [--async]
         [--authorized-external-networks=[AUTHORIZED_NETWORK,...]]
         [--availability-type=AVAILABILITY_TYPE]
+        [--connection-pooling-client-connection-idle-timeout=CONNECTION_POOLING_CLIENT_CONNECTION_IDLE_TIMEOUT]
+        [--connection-pooling-ignore-startup-parameters=[STARTUP_PARAMETERS,
+          ...]]
+        [--connection-pooling-max-client-connections=CONNECTION_POOLING_MAX_CLIENT_CONNECTIONS]
+        [--connection-pooling-max-pool-size=CONNECTION_POOLING_MAX_POOL_SIZE]
+        [--connection-pooling-max-prepared-statements=CONNECTION_POOLING_MAX_PREPARED_STATEMENTS]
+        [--connection-pooling-min-pool-size=CONNECTION_POOLING_MIN_POOL_SIZE]
+        [--connection-pooling-pool-mode=CONNECTION_POOLING_POOL_MODE]
+        [--connection-pooling-query-wait-timeout=CONNECTION_POOLING_QUERY_WAIT_TIMEOUT]
+        [--connection-pooling-server-idle-timeout=CONNECTION_POOLING_SERVER_IDLE_TIMEOUT]
+        [--connection-pooling-server-lifetime=CONNECTION_POOLING_SERVER_LIFETIME]
+        [--connection-pooling-stats-users=[STATS_USERS,...]]
         [--database-flags=FLAG=VALUE,[FLAG=VALUE,...]]
-        [--[no-]outbound-public-ip]
+        [--[no-]enable-connection-pooling] [--[no-]outbound-public-ip]
         [--psc-auto-connections=[network=NETWORK],[project=PROJECT]]
         [--psc-network-attachment-uri=PSC_NETWORK_ATTACHMENT_URI]
         [--[no-]require-connectors] [--ssl-mode=SSL_MODE]
@@ -85,6 +97,51 @@ OPTIONAL FLAGS
             production instances; instance does not automatically fail over to
             another zone.
 
+     --connection-pooling-client-connection-idle-timeout=CONNECTION_POOLING_CLIENT_CONNECTION_IDLE_TIMEOUT
+        The maximum number of seconds a client is allowed to be idle before it
+        is disconnected.
+
+     --connection-pooling-ignore-startup-parameters=[STARTUP_PARAMETERS,...]
+        Comma-separated list of startup parameters that should be ignored by
+        the connection pool.
+
+     --connection-pooling-max-client-connections=CONNECTION_POOLING_MAX_CLIENT_CONNECTIONS
+        The max client connections for managed connection pooling.
+
+     --connection-pooling-max-pool-size=CONNECTION_POOLING_MAX_POOL_SIZE
+        The max pool size for managed connection pooling.
+
+     --connection-pooling-max-prepared-statements=CONNECTION_POOLING_MAX_PREPARED_STATEMENTS
+        The maximum number of prepared statements allowed.
+
+     --connection-pooling-min-pool-size=CONNECTION_POOLING_MIN_POOL_SIZE
+        The min pool size for managed connection pooling.
+
+     --connection-pooling-pool-mode=CONNECTION_POOLING_POOL_MODE
+        The pool mode for managed connection pooling.
+        CONNECTION_POOLING_POOL_MODE must be one of:
+
+         SESSION
+            Session mode for managed connection pooling.
+         TRANSACTION
+            Transaction mode for managed connection pooling.
+
+     --connection-pooling-query-wait-timeout=CONNECTION_POOLING_QUERY_WAIT_TIMEOUT
+        The query wait timeout for managed connection pooling.
+
+     --connection-pooling-server-idle-timeout=CONNECTION_POOLING_SERVER_IDLE_TIMEOUT
+        The server idle timeout for managed connection pooling.
+
+     --connection-pooling-server-lifetime=CONNECTION_POOLING_SERVER_LIFETIME
+        The lifetime of a server connection in seconds. The pooler will close
+        an unused (not currently linked to any client connection) server
+        connection that has been connected longer than this. Setting it to 0
+        means the connection is to be used only once, then closed.
+
+     --connection-pooling-stats-users=[STATS_USERS,...]
+        Comma-separated list of database users to access connection pooling
+        stats.
+
      --database-flags=FLAG=VALUE,[FLAG=VALUE,...]
         Comma-separated list of database flags to set on the instance. Use an
         equals sign to separate flag name and value. Flags without values, like
@@ -92,6 +149,11 @@ OPTIONAL FLAGS
         skip_grant_tables=. Use on/off for booleans. View the Instance Resource
         API for allowed flags. (e.g., --database-flags
         max_allowed_packet=55555,skip_grant_tables=,log_output=1)
+
+     --[no-]enable-connection-pooling
+        Enable connection pooling for the instance. Use
+        --enable-connection-pooling to enable and
+        --no-enable-connection-pooling to disable.
 
      --[no-]outbound-public-ip
         Add outbound Public IP connectivity to an AlloyDB instance. Use

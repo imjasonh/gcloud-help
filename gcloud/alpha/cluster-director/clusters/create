@@ -5,9 +5,9 @@ NAME
 SYNOPSIS
     gcloud alpha cluster-director clusters create
         (CLUSTER : --location=LOCATION)
-        (--config=[compute=COMPUTE],[description=DESCRIPTION],[labels=LABELS],
-          [name=NAME],
-          [networks=NETWORKS],[orchestrator=ORCHESTRATOR],[storages=STORAGES]
+        (--config=[computeResources=COMPUTERESOURCES],[description=DESCRIPTION],
+          [labels=LABELS],[name=NAME],[networkResources=NETWORKRESOURCES],
+          [orchestrator=ORCHESTRATOR],[storageResources=STORAGERESOURCES]
           | [--slurm-login-node=[count=COUNT],[enableOSLogin=ENABLEOSLOGIN],
           [enablePublicIPs=ENABLEPUBLICIPS],[labels=LABELS],
           [machineType=MACHINETYPE],[startupScript=STARTUPSCRIPT],[zone=ZONE]
@@ -122,69 +122,57 @@ REQUIRED FLAGS
 
      Exactly one of these must be specified:
 
-       --config=[compute=COMPUTE],[description=DESCRIPTION],[labels=LABELS],[name=NAME],[networks=NETWORKS],[orchestrator=ORCHESTRATOR],[storages=STORAGES]
+       --config=[computeResources=COMPUTERESOURCES],[description=DESCRIPTION],[labels=LABELS],[name=NAME],[networkResources=NETWORKRESOURCES],[orchestrator=ORCHESTRATOR],[storageResources=STORAGERESOURCES]
           Configuration of the cluster specs in the form of a JSON object. Sets
           config value.
 
-           compute
-              Sets compute value.
+           computeResources
+              Sets computeResources value.
 
-               resourceRequests
-                  Sets resourceRequests value.
+               KEY
+                  Sets KEY value.
 
-                   disks
-                      Sets disks value.
+               VALUE
+                  Sets VALUE value.
 
-                       boot
-                          Sets boot value.
+                   newDwsFlexInstances
+                      Sets newDwsFlexInstances value.
 
-                       sizeGb
-                          Required, sets sizeGb value.
+                       machineType
+                          Sets machineType value.
 
-                       sourceImage
-                          Sets sourceImage value.
+                       maxDuration
+                          Sets maxDuration value.
 
-                       type
-                          Required, sets type value.
+                       zone
+                          Sets zone value.
 
-                   guestAccelerators
-                      Sets guestAccelerators value.
+                   newOnDemandInstances
+                      Sets newOnDemandInstances value.
 
-                       acceleratorType
-                          Sets acceleratorType value.
+                       machineType
+                          Sets machineType value.
 
-                       count
-                          Sets count value.
+                       zone
+                          Sets zone value.
 
-                   id
-                      Sets id value.
+                   newReservedInstances
+                      Sets newReservedInstances value.
 
-                   machineType
-                      Sets machineType value.
+                       machineType
+                          Sets machineType value.
 
-                   maxRunDuration
-                      Sets maxRunDuration value.
+                       reservation
+                          Sets reservation value.
 
-                   provisioningModel
-                      Sets provisioningModel value.
+                   newSpotInstances
+                      Sets newSpotInstances value.
 
-                   reservationAffinity
-                      Sets reservationAffinity value.
+                       machineType
+                          Sets machineType value.
 
-                       key
-                          Sets key value.
-
-                       type
-                          Sets type value.
-
-                       values
-                          Sets values value.
-
-                   terminationAction
-                      Sets terminationAction value.
-
-                   zone
-                      Sets zone value.
+                       zone
+                          Sets zone value.
 
            description
               Sets description value.
@@ -201,26 +189,35 @@ REQUIRED FLAGS
            name
               Sets name value.
 
-           networks
-              Sets networks value.
+           networkResources
+              Sets networkResources value.
 
-               initializeParams
-                  Sets initializeParams value.
+               KEY
+                  Sets KEY value.
 
-                   description
-                      Sets description value.
+               VALUE
+                  Sets VALUE value.
 
-                   network
-                      Sets network value.
+                   config
+                      Sets config value.
 
-               networkSource
-                  Sets networkSource value.
+                       existingNetwork
+                          Sets existingNetwork value.
 
-                   network
-                      Sets network value.
+                           network
+                              Sets network value.
 
-                   subnetwork
-                      Sets subnetwork value.
+                           subnetwork
+                              Sets subnetwork value.
+
+                       newNetwork
+                          Sets newNetwork value.
+
+                           description
+                              Sets description value.
+
+                           network
+                              Sets network value.
 
            orchestrator
               Sets orchestrator value.
@@ -228,26 +225,8 @@ REQUIRED FLAGS
                slurm
                   Sets slurm value.
 
-                   config
-                      Sets config value.
-
-                       prologEpilogTimeout
-                          Sets prologEpilogTimeout value.
-
-                       prologFlags
-                          Sets prologFlags value.
-
-                       requeueExitCodes
-                          Sets requeueExitCodes value.
-
-                       requeueHoldExitCodes
-                          Sets requeueHoldExitCodes value.
-
                    defaultPartition
                       Sets defaultPartition value.
-
-                   epilogBashScripts
-                      Sets epilogBashScripts value.
 
                    loginNodes
                       Sets loginNodes value.
@@ -259,10 +238,10 @@ REQUIRED FLAGS
                           Sets disks value.
 
                            boot
-                              Sets boot value.
+                              Required, sets boot value.
 
                            sizeGb
-                              Required, sets sizeGb value.
+                              Sets sizeGb value.
 
                            sourceImage
                               Sets sourceImage value.
@@ -288,15 +267,6 @@ REQUIRED FLAGS
                        machineType
                           Sets machineType value.
 
-                       serviceAccount
-                          Sets serviceAccount value.
-
-                           email
-                              Sets email value.
-
-                           scopes
-                              Sets scopes value.
-
                        startupScript
                           Sets startupScript value.
 
@@ -315,14 +285,20 @@ REQUIRED FLAGS
                    nodeSets
                       Sets nodeSets value.
 
-                       canIpForward
-                          Sets canIpForward value.
+                       bootDisk
+                          Sets bootDisk value.
 
-                       enableOsLogin
-                          Sets enableOsLogin value.
+                           boot
+                              Required, sets boot value.
 
-                       enablePublicIps
-                          Sets enablePublicIps value.
+                           sizeGb
+                              Sets sizeGb value.
+
+                           sourceImage
+                              Sets sourceImage value.
+
+                           type
+                              Required, sets type value.
 
                        id
                           Sets id value.
@@ -341,15 +317,6 @@ REQUIRED FLAGS
 
                        resourceRequestId
                           Sets resourceRequestId value.
-
-                       serviceAccount
-                          Sets serviceAccount value.
-
-                           email
-                              Sets email value.
-
-                           scopes
-                              Sets scopes value.
 
                        startupScript
                           Sets startupScript value.
@@ -378,106 +345,103 @@ REQUIRED FLAGS
                        nodeSetIds
                           Sets nodeSetIds value.
 
-                   prologBashScripts
-                      Sets prologBashScripts value.
+           storageResources
+              Sets storageResources value.
 
-                   taskEpilogBashScripts
-                      Sets taskEpilogBashScripts value.
+               KEY
+                  Sets KEY value.
 
-                   taskPrologBashScripts
-                      Sets taskPrologBashScripts value.
+               VALUE
+                  Sets VALUE value.
 
-           storages
-              Sets storages value.
+                   config
+                      Sets config value.
 
-               id
-                  Sets id value.
+                       existingBucket
+                          Sets existingBucket value.
 
-               initializeParams
-                  Sets initializeParams value.
+                           bucket
+                              Sets bucket value.
 
-                   filestore
-                      Sets filestore value.
+                       existingFilestore
+                          Sets existingFilestore value.
 
-                       description
-                          Sets description value.
+                           filestore
+                              Sets filestore value.
 
-                       fileShares
-                          Sets fileShares value.
+                       existingLustre
+                          Sets existingLustre value.
+
+                           lustre
+                              Sets lustre value.
+
+                       newBucket
+                          Sets newBucket value.
+
+                           autoclass
+                              Sets autoclass value.
+
+                               enabled
+                                  Sets enabled value.
+
+                           bucket
+                              Sets bucket value.
+
+                           hierarchicalNamespace
+                              Sets hierarchicalNamespace value.
+
+                               enabled
+                                  Sets enabled value.
+
+                           storageClass
+                              Sets storageClass value.
+
+                       newFilestore
+                          Sets newFilestore value.
+
+                           description
+                              Sets description value.
+
+                           fileShares
+                              Sets fileShares value.
+
+                               capacityGb
+                                  Sets capacityGb value.
+
+                               fileShare
+                                  Sets fileShare value.
+
+                           filestore
+                              Sets filestore value.
+
+                           protocol
+                              Sets protocol value.
+
+                           tier
+                              Sets tier value.
+
+                       newLustre
+                          Sets newLustre value.
 
                            capacityGb
                               Sets capacityGb value.
 
-                           fileShare
-                              Sets fileShare value.
+                           description
+                              Sets description value.
 
-                       filestore
-                          Sets filestore value.
+                           filesystem
+                              Sets filesystem value.
 
-                       protocol
-                          Sets protocol value.
-
-                       tier
-                          Sets tier value.
-
-                   gcs
-                      Sets gcs value.
-
-                       autoclass
-                          Sets autoclass value.
-
-                           enabled
-                              Sets enabled value.
-
-                           terminalStorageClass
-                              Sets terminalStorageClass value.
-
-                       bucket
-                          Sets bucket value.
-
-                       hierarchicalNamespace
-                          Sets hierarchicalNamespace value.
-
-                           enabled
-                              Sets enabled value.
-
-                       storageClass
-                          Sets storageClass value.
-
-                   lustre
-                      Sets lustre value.
-
-                       capacityGb
-                          Sets capacityGb value.
-
-                       description
-                          Sets description value.
-
-                       filesystem
-                          Sets filesystem value.
-
-                       lustre
-                          Sets lustre value.
-
-               storageSource
-                  Sets storageSource value.
-
-                   bucket
-                      Sets bucket value.
-
-                   filestore
-                      Sets filestore value.
-
-                   lustre
-                      Sets lustre value.
+                           lustre
+                              Sets lustre value.
 
           Shorthand Example:
 
-              --config=compute={resourceRequests=[{disks=[{boot=boolean,sizeGb=int,sourceImage=string,type=string}],guestAccelerators=[{acceleratorType=string,count=int}],id=string,machineType=string,maxRunDuration=int,provisioningModel=string,reservationAffinity={key=string,type=string,values},terminationAction=string,zone=string}]},description=string,labels={string=string},name=string,networks=[{initializeParams={description=string,network=string},networkSource={network=string,subnetwork=string}}],orchestrator={slurm={config={prologEpilogTimeout=string,prologFlags,requeueExitCodes,requeueHoldExitCodes},defaultPartition=string,epilogBashScripts,loginNodes={count=int,disks=[{boot=boolean,sizeGb=int,sourceImage=string,type=string}],enableOsLogin=boolean,enablePublicIps=boolean,labels={string=string},machineType=string,serviceAccount={email=string,scopes},startupScript=string,storageConfigs=[{id=string,localMount=string}],zone=string},nodeSets=[{canIpForward=boolean,enableOsLogin=boolean,enablePublicIps=boolean,id=string,labels={string=string},maxDynamicNodeCount=int,resourceRequestId=string,serviceAccount={email=string,scopes},startupScript=string,staticNodeCount=int,storageConfigs=[{id=string,localMount=string}]}],partitions=[{exclusive=boolean,id=string,nodeSetIds=[string]}],prologBashScripts,taskEpilogBashScripts,taskPrologBashScripts}},storages=[{id=string,initializeParams={filestore={description=string,fileShares=[{capacityGb=int,fileShare=string}],filestore=string,protocol=string,tier=string},gcs={autoclass={enabled=boolean,terminalStorageClass=string},bucket=string,hierarchicalNamespace={enabled=boolean},storageClass=string},lustre={capacityGb=int,description=string,filesystem=string,lustre=string}},storageSource={bucket=string,filestore=string,lustre=string}}]
+              --config=computeResources={string={newDwsFlexInstances={machineType=string,maxDuration=string,zone=string},newOnDemandInstances={machineType=string,zone=string},newReservedInstances={machineType=string,reservation=string},newSpotInstances={machineType=string,zone=string}}},description=string,labels={string=string},name=string,networkResources={string={config={existingNetwork={network=string,subnetwork=string},newNetwork={description=string,network=string}}}},orchestrator={slurm={defaultPartition=string,loginNodes={count=int,disks=[{boot=boolean,sizeGb=int,sourceImage=string,type=string}],enableOsLogin=boolean,enablePublicIps=boolean,labels={string=string},machineType=string,startupScript=string,storageConfigs=[{id=string,localMount=string}],zone=string},nodeSets=[{bootDisk={boot=boolean,sizeGb=int,sourceImage=string,type=string},id=string,labels={string=string},maxDynamicNodeCount=int,resourceRequestId=string,startupScript=string,staticNodeCount=int,storageConfigs=[{id=string,localMount=string}]}],partitions=[{exclusive=boolean,id=string,nodeSetIds=[string]}]}},storageResources={string={config={existingBucket={bucket=string},existingFilestore={filestore=string},existingLustre={lustre=string},newBucket={autoclass={enabled=boolean},bucket=string,hierarchicalNamespace={enabled=boolean},storageClass=string},newFilestore={description=string,fileShares=[{capacityGb=int,fileShare=string}],filestore=string,protocol=string,tier=string},newLustre={capacityGb=int,description=string,filesystem=string,lustre=string}}}}
 
           JSON Example:
 
-              --config='{"compute": {"resourceRequests": [{"disks": [{"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}], "guestAccelerators": [{"acceleratorType": "string", "count": int}], "id": "string", "machineType": "string", "maxRunDuration": int, "provisioningModel": "string", "reservationAffinity": {"key": "string", "type": "string", "values"}, "terminationAction": "string", "zone": "string"}]}, "description": "string", "labels": {"string": "string"}, "name": "string", "networks": [{"initializeParams": {"description": "string", "network": "string"}, "networkSource": {"network": "string", "subnetwork": "string"}}], "orchestrator": {"slurm": {"config": {"prologEpilogTimeout": "string", "prologFlags", "requeueExitCodes", "requeueHoldExitCodes"}, "defaultPartition": "string", "epilogBashScripts", "loginNodes": {"count": int, "disks": [{"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}], "enableOsLogin": boolean, "enablePublicIps": boolean, "labels": {"string": "string"}, "machineType": "string", "serviceAccount": {"email": "string", "scopes"}, "startupScript": "string", "storageConfigs": [{"id": "string", "localMount": "string"}], "zone": "string"}, "nodeSets": [{"canIpForward": boolean, "enableOsLogin": boolean, "enablePublicIps": boolean, "id": "string", "labels": {"string": "string"}, "maxDynamicNodeCount": int, "resourceRequestId": "string", "serviceAccount": {"email": "string", "scopes"}, "startupScript": "string", "staticNodeCount": int, "storageConfigs": [{"id": "string", "localMount": "string"}]}], "partitions": [{"exclusive": boolean, "id": "string", "nodeSetIds": ["string"]}], "prologBashScripts", "taskEpilogBashScripts", "taskPrologBashScripts"}}, "storages": [{"id": "string", "initializeParams": {"filestore": {"description": "string", "fileShares": [{"capacityGb": int, "fileShare": "string"}], "filestore": "string", "protocol": "string", "tier": "string"}, "gcs": {"autoclass": {"enabled": boolean, "terminalStorageClass": "string"}, "bucket": "string", "hierarchicalNamespace": {"enabled": boolean}, "storageClass": "string"}, "lustre": {"capacityGb": int, "description": "string", "filesystem": "string", "lustre": "string"}}, "storageSource": {"bucket": "string", "filestore": "string", "lustre": "string"}}]}'
+              --config='{"computeResources": {"string": {"newDwsFlexInstances": {"machineType": "string", "maxDuration": "string", "zone": "string"}, "newOnDemandInstances": {"machineType": "string", "zone": "string"}, "newReservedInstances": {"machineType": "string", "reservation": "string"}, "newSpotInstances": {"machineType": "string", "zone": "string"}}}, "description": "string", "labels": {"string": "string"}, "name": "string", "networkResources": {"string": {"config": {"existingNetwork": {"network": "string", "subnetwork": "string"}, "newNetwork": {"description": "string", "network": "string"}}}}, "orchestrator": {"slurm": {"defaultPartition": "string", "loginNodes": {"count": int, "disks": [{"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}], "enableOsLogin": boolean, "enablePublicIps": boolean, "labels": {"string": "string"}, "machineType": "string", "startupScript": "string", "storageConfigs": [{"id": "string", "localMount": "string"}], "zone": "string"}, "nodeSets": [{"bootDisk": {"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}, "id": "string", "labels": {"string": "string"}, "maxDynamicNodeCount": int, "resourceRequestId": "string", "startupScript": "string", "staticNodeCount": int, "storageConfigs": [{"id": "string", "localMount": "string"}]}], "partitions": [{"exclusive": boolean, "id": "string", "nodeSetIds": ["string"]}]}}, "storageResources": {"string": {"config": {"existingBucket": {"bucket": "string"}, "existingFilestore": {"filestore": "string"}, "existingLustre": {"lustre": "string"}, "newBucket": {"autoclass": {"enabled": boolean}, "bucket": "string", "hierarchicalNamespace": {"enabled": boolean}, "storageClass": "string"}, "newFilestore": {"description": "string", "fileShares": [{"capacityGb": int, "fileShare": "string"}], "filestore": "string", "protocol": "string", "tier": "string"}, "newLustre": {"capacityGb": int, "description": "string", "filesystem": "string", "lustre": "string"}}}}}'
 
           File Example:
 

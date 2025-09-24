@@ -6,10 +6,8 @@ SYNOPSIS
     gcloud alpha design-center spaces catalogs templates revisions create
         (REVISION : --catalog=CATALOG
           --location=LOCATION --space=SPACE --template=TEMPLATE)
-        --developer-connect-repo=DEVELOPER_CONNECT_REPO
-        --developer-connect-repo-dir=DEVELOPER_CONNECT_REPO_DIR
-        --developer-connect-repo-ref=DEVELOPER_CONNECT_REPO_REF [--async]
-        [--description=DESCRIPTION] [--metadata=METADATA]
+        (--application-template-revision-source=APPLICATION_TEMPLATE_REVISION_SOURCE | --gcs-source-uri=GCS_SOURCE_URI | --developer-connect-repo=DEVELOPER_CONNECT_REPO --developer-connect-repo-dir=DEVELOPER_CONNECT_REPO_DIR --developer-connect-repo-ref=DEVELOPER_CONNECT_REPO_REF | [--git-source-ref-tag=GIT_SOURCE_REF_TAG --git-source-repo=GIT_SOURCE_REPO : --git-source-dir=GIT_SOURCE_DIR] | [--oci-repo-uri=OCI_REPO_URI : --oci-repo-version=OCI_REPO_VERSION])
+        [--async] [--description=DESCRIPTION] [--metadata=METADATA]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -51,6 +49,49 @@ EXAMPLES
         us-central1/connections/my-connection/gitRepositoryLinks/my-repo \
             --developer-connect-repo-ref=refs/tags/v1.0.0 \
             --developer-connect-repo-dir=modules/my-product \
+            --metadata=/path/to/metadata.yaml
+
+        To create a revision using a Git repository as the source, run:
+
+        $ gcloud alpha design-center spaces catalogs templates revisions \
+           create my-revision --project=my-project --location=us-central1 \
+           --space=my-space --catalog=my-catalog --template=my-template \
+           --git-source-repo=GoogleCloudPlatform/\
+        terraform-google-cloud-run --git-source-ref-tag=v1.0.0 \
+            --git-source-dir=modules/my-product
+
+        To create a revision using a Google Cloud Storage URI as the source, run:
+
+        $ gcloud alpha design-center spaces catalogs templates revisions \
+           create my-revision --project=my-project --location=us-central1 \
+           --space=my-space --catalog=my-catalog --template=my-template \
+           --gcs-source-uri=gs://my-bucket/my-template
+
+        To create a revision using an OCI repository as the source, run:
+
+        $ gcloud alpha design-center spaces catalogs templates revisions \
+           create my-revision --project=my-project --location=us-central1 \
+           --space=my-space --catalog=my-catalog --template=my-template \
+           --oci-repo-uri=oci://us-west1-docker.pkg.dev/my-project/\
+        my-repo/my-chart --oci-repo-version=1.0.0
+
+        To create a revision using an Application Template Revision as the source, run:
+
+        $ gcloud alpha design-center spaces catalogs templates revisions \
+           create my-revision --project=my-project --location=us-central1 \
+           --space=my-space --catalog=my-catalog --template=my-template \
+           --application-template-revision-source=projects/my-project/\
+        locations/us-central1/spaces/my-space/applicationTemplates/\
+        my-app-template/revisions/a1
+
+        To create a revision using Git source and a metadata file from a local path, run:
+
+        $ gcloud alpha design-center spaces catalogs templates revisions \
+           create my-revision --project=my-project --location=us-central1 \
+           --space=my-space --catalog=my-catalog --template=my-template \
+           --git-source-repo=GoogleCloudPlatform/\
+        terraform-google-cloud-run --git-source-ref-tag=v1.0.0 \
+            --git-source-dir=modules/my-product \
             --metadata=/path/to/metadata.yaml
 
 POSITIONAL ARGUMENTS
@@ -109,18 +150,71 @@ POSITIONAL ARGUMENTS
           ▸ provide the argument --template on the command line.
 
 REQUIRED FLAGS
-     --developer-connect-repo=DEVELOPER_CONNECT_REPO
-        The Developer Connect repository to use as a source. Example:
-        projects/my-project/locations/us-central1/connections/my-connection/gitRepositoryLinks/my-repo
+     Exactly one of these must be specified:
 
-     --developer-connect-repo-dir=DEVELOPER_CONNECT_REPO_DIR
-        The directory within the repository to use. Example:
-        "modules/my-product"
+       --application-template-revision-source=APPLICATION_TEMPLATE_REVISION_SOURCE
+          Application template revision to use as source. Example:
+          projects/my-project/locations/us-central1/spaces/my-space/catalogs/my-catalog/templates/my-template/revisions/r1
 
-     --developer-connect-repo-ref=DEVELOPER_CONNECT_REPO_REF
-        The Git ref (branch or tag) within the repository to use. Example:
-        "refs/tags/v1.0.0" or "refs/heads/main" or
-        "refs/commits/269b518b99d06b31ff938a2d182e75f5e41941c7".
+       --gcs-source-uri=GCS_SOURCE_URI
+          Google Cloud Storage URI for source. Example:
+          gs://my-bucket/my-template.
+
+       Flags for Developer Connect source.
+
+         --developer-connect-repo=DEVELOPER_CONNECT_REPO
+            The Developer Connect repository to use as a source. Example:
+            projects/my-project/locations/us-central1/connections/my-connection/gitRepositoryLinks/my-repo
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --developer-connect-repo-dir=DEVELOPER_CONNECT_REPO_DIR
+            The directory within the repository to use. Example:
+            "modules/my-product"
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --developer-connect-repo-ref=DEVELOPER_CONNECT_REPO_REF
+            The Git ref (branch or tag) within the repository to use. Example:
+            "refs/tags/v1.0.0" or "refs/heads/main" or
+            "refs/commits/269b518b99d06b31ff938a2d182e75f5e41941c7".
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+       Flags for Git source.
+
+         --git-source-ref-tag=GIT_SOURCE_REF_TAG
+            Git reference tag for Git source. Example: "v1.0.0"
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --git-source-repo=GIT_SOURCE_REPO
+            Git repository for Git source. Example:
+            GoogleCloudPlatform/terraform-google-cloud-run
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --git-source-dir=GIT_SOURCE_DIR
+            Git directory for Git source. Example: "modules/my-product". This
+            field is optional.
+
+       Flags for OCI Repo source.
+
+         --oci-repo-uri=OCI_REPO_URI
+            OCI Repo URI for OCI Repo source. Example:
+            oci://us-west1-docker.pkg.dev/my-project/my-repo/my-chart
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --oci-repo-version=OCI_REPO_VERSION
+            OCI Repo version for OCI Repo source. Example: "1.0.0". This field
+            is optional.
 
 OPTIONAL FLAGS
      --async
@@ -131,7 +225,8 @@ OPTIONAL FLAGS
         A description for the revision.
 
      --metadata=METADATA
-        Path to a local YAML file containing the template metadata.
+        Path to a local YAML file containing the template metadata. Example:
+        "path/to/metadata.yaml".
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

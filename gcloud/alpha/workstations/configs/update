@@ -19,6 +19,7 @@ SYNOPSIS
         [--machine-type=MACHINE_TYPE]
         [--max-usable-workstations-count=MAX_USABLE_WORKSTATIONS_COUNT]
         [--network-tags=[NETWORK_TAGS,...]] [--pool-size=POOL_SIZE]
+        [--reservation-affinity=[RESERVATION_AFFINITY,...]]
         [--running-timeout=RUNNING_TIMEOUT] [--service-account=SERVICE_ACCOUNT]
         [--service-account-scopes=[SERVICE_ACCOUNT_SCOPES,...]]
         [--shielded-integrity-monitoring] [--shielded-secure-boot]
@@ -168,13 +169,25 @@ FLAGS
          pool-size
             Sets pool-size value.
 
+         reservation-affinity
+            Sets reservation-affinity value.
+
+             consume-reservation-type
+                Sets consume-reservation-type value.
+
+             key
+                Sets key value.
+
+             values
+                Sets values value.
+
         Shorthand Example:
 
-            --boost-config=accelerator-count=int,accelerator-type=string,boot-disk-size=int,enable-nested-virtualization=boolean,id=string,machine-type=string,pool-size=int
+            --boost-config=accelerator-count=int,accelerator-type=string,boot-disk-size=int,enable-nested-virtualization=boolean,id=string,machine-type=string,pool-size=int,reservation-affinity={consume-reservation-type=string,key=string,values}
 
         JSON Example:
 
-            --boost-config='{"accelerator-count": int, "accelerator-type": "string", "boot-disk-size": int, "enable-nested-virtualization": boolean, "id": "string", "machine-type": "string", "pool-size": int}'
+            --boost-config='{"accelerator-count": int, "accelerator-type": "string", "boot-disk-size": int, "enable-nested-virtualization": boolean, "id": "string", "machine-type": "string", "pool-size": int, "reservation-affinity": {"consume-reservation-type": "string", "key": "string", "values"}}'
 
         File Example:
 
@@ -271,6 +284,38 @@ FLAGS
 
      --pool-size=POOL_SIZE
         Number of instances to pool for faster Workstation startup.
+
+     --reservation-affinity=[RESERVATION_AFFINITY,...]
+        Reservation Affinity for the VM. This includes key, values, and
+        consumeReservationType.
+
+        Example: $ gcloud alpha workstations configs update \
+        --reservation-affinity=key=compute.googleapis.com/\
+        reservation-name,consumeReservationType=SPECIFIC_RESERVATION,\
+        values=my-reservation
+
+        Sets reservation_affinity value.
+
+         consume-reservation-type
+            Sets consume-reservation-type value.
+
+         key
+            Sets key value.
+
+         values
+            Sets values value.
+
+        Shorthand Example:
+
+            --reservation-affinity=consume-reservation-type=string,key=string,values
+
+        JSON Example:
+
+            --reservation-affinity='{"consume-reservation-type": "string", "key": "string", "values"}'
+
+        File Example:
+
+            --reservation-affinity=path_to_file.(yaml|json)
 
      --running-timeout=RUNNING_TIMEOUT
         How long (in seconds) to wait before automatically stopping a

@@ -9,8 +9,8 @@ SYNOPSIS
         [--[no-]cpu-throttling] [--[no-]default-url]
         [--execution-environment=EXECUTION_ENVIRONMENT] [--gpu-type=GPU_TYPE]
         [--[no-]gpu-zonal-redundancy] [--ingress=INGRESS; default="all"]
-        [--[no-]invoker-iam-check] [--max-instances=MAX_INSTANCES] [--min=MIN]
-        [--min-instances=MIN_INSTANCES] [--region=REGION]
+        [--[no-]invoker-iam-check] [--max=MAX] [--max-instances=MAX_INSTANCES]
+        [--min=MIN] [--min-instances=MIN_INSTANCES] [--region=REGION]
         [--remove-containers=[CONTAINER,...]]
         [--revision-suffix=REVISION_SUFFIX] [--scaling=SCALING]
         [--service-account=SERVICE_ACCOUNT] [--[no-]session-affinity]
@@ -172,6 +172,12 @@ FLAGS
         Use --invoker-iam-check to enable and --no-invoker-iam-check to
         disable.
 
+     --max=MAX
+        The maximum number of container instances to run for this Service. This
+        instance limit will be divided among all Revisions receiving a
+        percentage of traffic and can be modified without deploying a new
+        Revision.
+
      --max-instances=MAX_INSTANCES
         The maximum number of container instances for this Revision to run or
         'default' to remove. This setting is immutably set on each new Revision
@@ -317,6 +323,9 @@ FLAGS
           this volume
         ◆ readonly: (optional) A boolean. If true, this volume will be
           read-only from all mounts.
+        ◆ mount-options: (optional) A list of flags to pass to GCSFuse. Flags
+          should be specified without leading dashes and separated by
+          semicolons.
 
         in-memory: An ephemeral volume that stores data in the instance's
         memory. With this type of volume, data is not shared between instances
@@ -443,13 +452,17 @@ FLAGS
               Remove all environment variables.
 
            --env-vars-file=FILE_PATH
-              Path to a local YAML file with definitions for all environment
-              variables. All existing environment variables will be removed
-              before the new environment variables are added. Example YAML
-              content:
+              Path to a local YAML or ENV file with definitions for all
+              environment variables. All existing environment variables will be
+              removed before the new environment variables are added. Example
+              YAML content:
 
                   KEY_1: "value1"
                   KEY_2: "value 2"
+                  Example ENV content:
+
+                  KEY_1="value1"
+                  KEY_2="value 2"
 
            --set-env-vars=[KEY=VALUE,...]
               List of key-value pairs to set as environment variables. All

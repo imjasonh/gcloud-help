@@ -1,52 +1,90 @@
 NAME
     gcloud network-management vpc-flow-logs-configs create - creates a new VPC
-        Flow Logs configuration in the specified project
+        Flow Logs configuration
 
 SYNOPSIS
     gcloud network-management vpc-flow-logs-configs create
-        (VPC_FLOW_LOGS_CONFIG : --location=LOCATION)
+        (VPC_FLOW_LOGS_CONFIG
+          : --location=LOCATION --organization=ORGANIZATION)
         [--aggregation-interval=AGGREGATION_INTERVAL] [--async]
+        [--cross-project-metadata=CROSS_PROJECT_METADATA]
         [--description=DESCRIPTION] [--filter-expr=FILTER_EXPR]
         [--flow-sampling=FLOW_SAMPLING] [--labels=[LABELS,...]]
         [--metadata=METADATA] [--metadata-fields=[METADATA_FIELDS,...]]
         [--state=STATE]
-        [--interconnect-attachment=INTERCONNECT_ATTACHMENT
-          | --vpn-tunnel=VPN_TUNNEL] [GCLOUD_WIDE_FLAG ...]
+        [--interconnect-attachment=INTERCONNECT_ATTACHMENT | --network=NETWORK
+          | --subnet=SUBNET | --vpn-tunnel=VPN_TUNNEL] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    Creates a new VPC Flow Logs configuration in the specified project. The
-    target-resource project must be the same as the configuration project.
+    Creates a new VPC Flow Logs configuration.
+
+    Project-level configuration: Specify a target resource, either: --subnet,
+    --network, --interconnect-attachment, or --vpn-tunnel
+
+    Organization-level configuration: Specify the --organization flag without a
+    target resource to apply the configuration across an entire organization.
+
+    The --location=global flag is always required.
 
 EXAMPLES
+    To create a new VPC Flow Logs configuration my-config in organization
+    my-org-number, run:
+
+        $ gcloud network-management vpc-flow-logs-configs create my-config \
+            --location=global --organization=<my-org-number>
+
     To create a new VPC Flow Logs configuration my-config in project my-project
     for a VLAN attachment for Cloud Interconnect, run:
 
         $ gcloud network-management vpc-flow-logs-configs create my-config \
             --location=global \
-            --interconnect-attachment="projects/my-project/regions/{region}/\
-        interconnectAttachments/{interconnect_attachment_id}"
+            --interconnect-attachment="projects/{project_id}/regions/{region\
+        }/interconnectAttachments/{interconnect_attachment_id}"
 
     To create a new VPC Flow Logs configuration my-config in project my-project
     for a Cloud VPN tunnel, run:
 
         $ gcloud network-management vpc-flow-logs-configs create my-config \
             --location=global \
-            --vpn-tunnel="projects/my-project/regions/{region}/vpnTunnels/{v\
-        pn_tunnel_id}"
+            --subnet="projects/{project_id}/regions/{region}/vpnTunnels/{vpn\
+        _tunnel_id}"
+
+    To create a new VPC Flow Logs configuration my-config in project my-project
+    for a subnet, run:
+
+        $ gcloud network-management vpc-flow-logs-configs create my-config \
+            --location=global \
+            --subnet="projects/{project_id}/regions/{region}/subnets/{subnet\
+        _id}"
+
+    To create a new VPC Flow Logs configuration my-config in project my-project
+    for a VPC network, run:
+
+        $ gcloud network-management vpc-flow-logs-configs create my-config \
+            --location=global \
+            --network="projects/{project_id}/global/networks/{network_id}"
 
 POSITIONAL ARGUMENTS
-     VpcFlowLogsConfig resource - Identifier. Unique name of the configuration
-     using the form:
-     projects/{project_id}/locations/global/vpcFlowLogsConfigs/{vpc_flow_logs_config_id}
-     The arguments in this group can be used to specify the attributes of this
-     resource. (NOTE) Some attributes are not given arguments in this group but
-     can be set in other ways.
+     VpcFlowLogsConfig resource - Identifier. Unique name of the configuration.
+     The name can have one of the following forms:
+
+      ◆ For project-level configurations:
+        projects/{project_id}/locations/global/vpcFlowLogsConfigs/{vpc_flow_logs_config_id}
+
+      ◆ For organization-level configurations:
+        organizations/{organization_id}/locations/global/vpcFlowLogsConfigs/{vpc_flow_logs_config_id}
+        The arguments in this group can be used to specify the attributes of
+        this resource. (NOTE) Some attributes are not given arguments in this
+        group but can be set in other ways.
 
      To set the project attribute:
       ◆ provide the argument vpc_flow_logs_config on the command line with a
         fully specified name;
       ◆ provide the argument --project on the command line;
-      ◆ set the property core/project.
+      ◆ set the property core/project. This resource can be one of the
+        following types:
+        [networkmanagement.organizations.locations.vpcFlowLogsConfigs,
+        networkmanagement.projects.locations.vpcFlowLogsConfigs].
 
      This must be specified.
 
@@ -67,6 +105,16 @@ POSITIONAL ARGUMENTS
           ▸ provide the argument vpc_flow_logs_config on the command line
             with a fully specified name;
           ▸ provide the argument --location on the command line.
+
+       --organization=ORGANIZATION
+          The organization id of the vpcFlowLogsConfig resource.
+
+          To set the organization attribute:
+          ▸ provide the argument vpc_flow_logs_config on the command line
+            with a fully specified name;
+          ▸ provide the argument --organization on the command line. Must be
+            specified for resource of type
+            [networkmanagement.organizations.locations.vpcFlowLogsConfigs].
 
 FLAGS
      Arguments for the aggregation interval.
@@ -91,6 +139,22 @@ FLAGS
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
+
+     Arguments for the cross project metadata.
+
+       --cross-project-metadata=CROSS_PROJECT_METADATA
+          Determines whether to include cross project annotations in the logs.
+          This field is available only for organization configurations. If not
+          specified in org configs will be set to
+          CROSS_PROJECT_METADATA_ENABLED. CROSS_PROJECT_METADATA must be one
+          of:
+
+           cross-project-metadata-disabled
+              When CROSS_PROJECT_METADATA_DISABLED, metadata from other
+              projects will not be included in the logs.
+           cross-project-metadata-enabled
+              When CROSS_PROJECT_METADATA_ENABLED, metadata from other projects
+              will be included in the logs.
 
      Arguments for the description.
 
@@ -156,8 +220,9 @@ FLAGS
 
        --state=STATE
           The state of the VPC Flow Log configuration. Default value is
-          ENABLED. When creating a new configuration, it must be enabled. STATE
-          must be one of:
+          ENABLED. When creating a new configuration, it must be enabled.
+          Setting state=DISABLED will pause the log generation for this config.
+          STATE must be one of:
 
            disabled
               When DISABLED, this configuration will not generate logs.
@@ -171,6 +236,15 @@ FLAGS
        --interconnect-attachment=INTERCONNECT_ATTACHMENT
           Traffic will be logged from the Interconnect Attachment. Format:
           projects/{project_id}/regions/{region}/interconnectAttachments/{name}
+
+       --network=NETWORK
+          Traffic will be logged from VMs, VPN tunnels and Interconnect
+          Attachments within the network. Format:
+          projects/{project_id}/global/networks/{name}
+
+       --subnet=SUBNET
+          Traffic will be logged from VMs within the subnetwork. Format:
+          projects/{project_id}/regions/{region}/subnetworks/{name}
 
        --vpn-tunnel=VPN_TUNNEL
           Traffic will be logged from the VPN Tunnel. Format:
