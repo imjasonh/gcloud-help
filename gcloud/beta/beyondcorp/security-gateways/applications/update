@@ -6,14 +6,18 @@ SYNOPSIS
     gcloud beta beyondcorp security-gateways applications update
         (APPLICATION : --location=LOCATION --security-gateway=SECURITY_GATEWAY)
         [--async] [--display-name=DISPLAY_NAME] [--request-id=REQUEST_ID]
+        [--schema=SCHEMA]
         [--endpoint-matchers=[hostname=HOSTNAME],[ports=PORTS]
           | --add-endpoint-matchers=[hostname=HOSTNAME],[ports=PORTS]
           --clear-endpoint-matchers
           | --remove-endpoint-matchers=[hostname=HOSTNAME],[ports=PORTS]]
-        [--upstreams=[egressPolicy=EGRESSPOLICY],[network=NETWORK]
-          | --add-upstreams=[egressPolicy=EGRESSPOLICY],[network=NETWORK]
+        [--upstreams=[egressPolicy=EGRESSPOLICY],
+          [external=EXTERNAL],[network=NETWORK],[proxyProtocol=PROXYPROTOCOL]
+          | --add-upstreams=[egressPolicy=EGRESSPOLICY],
+          [external=EXTERNAL],[network=NETWORK],[proxyProtocol=PROXYPROTOCOL]
           --clear-upstreams
-          | --remove-upstreams=[egressPolicy=EGRESSPOLICY],[network=NETWORK]]
+          | --remove-upstreams=[egressPolicy=EGRESSPOLICY],
+          [external=EXTERNAL],[network=NETWORK],[proxyProtocol=PROXYPROTOCOL]]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -71,7 +75,7 @@ FLAGS
         complete.
 
      --display-name=DISPLAY_NAME
-        An arbitrary user-provided name for the Application resource. Cannot
+        An arbitrary user-provided name for the application resource. Cannot
         exceed 64 characters.
 
      --request-id=REQUEST_ID
@@ -89,6 +93,16 @@ FLAGS
         The request ID must be a valid UUID with the exception that zero UUID
         is not supported (00000000-0000-0000-0000-000000000000).
 
+     --schema=SCHEMA
+        Type of the external application. SCHEMA must be one of:
+
+         api-gateway
+            Service Discovery API endpoint when Service Discovery is enabled in
+            Gateway.
+         proxy-gateway
+            Proxy which routes traffic to actual applications, like Netscaler
+            Gateway.
+
      Update endpoint_matchers.
 
      At most one of these can be specified:
@@ -99,12 +113,11 @@ FLAGS
           matchers is used to match the application. Match conditions for OR
           logic. An array of match conditions to allow for multiple matching
           criteria. The rule is considered a match if one of the conditions is
-          met. The conditions can be one of the following combinations
-          (Hostname), (Hostname & Ports)
+          met. The conditions should be the following combination: (Hostname &
+          Ports)
 
-          EXAMPLES: Hostname - (".example.com"), ("xyz.example.com") Hostname
-          and Ports - ("example.com" and "22"), ("example.com" and "22,33")
-          etc.
+          EXAMPLES: Hostname and Ports - (".example.com", "443"),
+          ("example.com" and "22"), ("example.com" and "22,33") etc.
 
            hostname
               Hostname of the application.
@@ -130,12 +143,11 @@ FLAGS
           matchers is used to match the application. Match conditions for OR
           logic. An array of match conditions to allow for multiple matching
           criteria. The rule is considered a match if one of the conditions is
-          met. The conditions can be one of the following combinations
-          (Hostname), (Hostname & Ports)
+          met. The conditions should be the following combination: (Hostname &
+          Ports)
 
-          EXAMPLES: Hostname - (".example.com"), ("xyz.example.com") Hostname
-          and Ports - ("example.com" and "22"), ("example.com" and "22,33")
-          etc.
+          EXAMPLES: Hostname and Ports - (".example.com", "443"),
+          ("example.com" and "22"), ("example.com" and "22,33") etc.
 
            hostname
               Hostname of the application.
@@ -166,12 +178,11 @@ FLAGS
             and ports as endpoint matchers is used to match the application.
             Match conditions for OR logic. An array of match conditions to
             allow for multiple matching criteria. The rule is considered a
-            match if one of the conditions is met. The conditions can be one of
-            the following combinations (Hostname), (Hostname & Ports)
+            match if one of the conditions is met. The conditions should be the
+            following combination: (Hostname & Ports)
 
-            EXAMPLES: Hostname - (".example.com"), ("xyz.example.com") Hostname
-            and Ports - ("example.com" and "22"), ("example.com" and "22,33")
-            etc.
+            EXAMPLES: Hostname and Ports - (".example.com", "443"),
+            ("example.com" and "22"), ("example.com" and "22,33") etc.
 
              hostname
                 Hostname of the application.
@@ -195,7 +206,7 @@ FLAGS
 
      At most one of these can be specified:
 
-       --upstreams=[egressPolicy=EGRESSPOLICY],[network=NETWORK]
+       --upstreams=[egressPolicy=EGRESSPOLICY],[external=EXTERNAL],[network=NETWORK],[proxyProtocol=PROXYPROTOCOL]
           Set upstreams to new value. Which upstream resources to forward
           traffic to.
 
@@ -205,6 +216,18 @@ FLAGS
                regions
                   List of the regions where the application sends traffic.
 
+           external
+              List of the external endpoints to forward traffic to.
+
+               endpoints
+                  List of the endpoints to forward traffic to.
+
+                   hostname
+                      Hostname of the endpoint.
+
+                   port
+                      Port of the endpoint.
+
            network
               Network to forward traffic to.
 
@@ -212,19 +235,69 @@ FLAGS
                   Network name is of the format:
                   projects/{project}/global/networks/{network}.
 
+           proxyProtocol
+              Enables proxy protocol configuration for the upstream.
+
+               allowedClientHeaders
+                  List of the allowed client header names.
+
+               clientIp
+                  Client IP configuration. The client IP address is included if
+                  true.
+
+               contextualHeaders
+                  Configuration for the contextual headers.
+
+                   deviceInfo
+                      Device info configuration.
+
+                       outputType
+                          The output type of the delegated device info.
+
+                   groupInfo
+                      Group info configuration.
+
+                       outputType
+                          The output type of the delegated group info.
+
+                   outputType
+                      Default output type for all enabled headers.
+
+                   userInfo
+                      User info configuration.
+
+                       outputType
+                          The output type of the delegated user info.
+
+               gatewayIdentity
+                  Gateway identity configuration.
+
+               metadataHeaders
+                  Custom resource specific headers along with the values. The
+                  names should conform to RFC 9110: > Field names SHOULD
+                  constrain themselves to alphanumeric characters, "-", and
+                  ".", and SHOULD begin with a letter. Field values SHOULD
+                  contain only ASCII printable characters and tab.
+
+                   KEY
+                      Sets KEY value.
+
+                   VALUE
+                      Sets VALUE value.
+
           Shorthand Example:
 
-              --upstreams=egressPolicy={regions=[string]},network={name=string} --upstreams=egressPolicy={regions=[string]},network={name=string}
+              --upstreams=egressPolicy={regions=[string]},external={endpoints=[{hostname=string,port=int}]},network={name=string},proxyProtocol={allowedClientHeaders=[string],clientIp=boolean,contextualHeaders={deviceInfo={outputType=string},groupInfo={outputType=string},outputType=string,userInfo={outputType=string}},gatewayIdentity=string,metadataHeaders={string=string}} --upstreams=egressPolicy={regions=[string]},external={endpoints=[{hostname=string,port=int}]},network={name=string},proxyProtocol={allowedClientHeaders=[string],clientIp=boolean,contextualHeaders={deviceInfo={outputType=string},groupInfo={outputType=string},outputType=string,userInfo={outputType=string}},gatewayIdentity=string,metadataHeaders={string=string}}
 
           JSON Example:
 
-              --upstreams='[{"egressPolicy": {"regions": ["string"]}, "network": {"name": "string"}}]'
+              --upstreams='[{"egressPolicy": {"regions": ["string"]}, "external": {"endpoints": [{"hostname": "string", "port": int}]}, "network": {"name": "string"}, "proxyProtocol": {"allowedClientHeaders": ["string"], "clientIp": boolean, "contextualHeaders": {"deviceInfo": {"outputType": "string"}, "groupInfo": {"outputType": "string"}, "outputType": "string", "userInfo": {"outputType": "string"}}, "gatewayIdentity": "string", "metadataHeaders": {"string": "string"}}}]'
 
           File Example:
 
               --upstreams=path_to_file.(yaml|json)
 
-       --add-upstreams=[egressPolicy=EGRESSPOLICY],[network=NETWORK]
+       --add-upstreams=[egressPolicy=EGRESSPOLICY],[external=EXTERNAL],[network=NETWORK],[proxyProtocol=PROXYPROTOCOL]
           Add new value to upstreams list. Which upstream resources to forward
           traffic to.
 
@@ -234,6 +307,18 @@ FLAGS
                regions
                   List of the regions where the application sends traffic.
 
+           external
+              List of the external endpoints to forward traffic to.
+
+               endpoints
+                  List of the endpoints to forward traffic to.
+
+                   hostname
+                      Hostname of the endpoint.
+
+                   port
+                      Port of the endpoint.
+
            network
               Network to forward traffic to.
 
@@ -241,13 +326,63 @@ FLAGS
                   Network name is of the format:
                   projects/{project}/global/networks/{network}.
 
+           proxyProtocol
+              Enables proxy protocol configuration for the upstream.
+
+               allowedClientHeaders
+                  List of the allowed client header names.
+
+               clientIp
+                  Client IP configuration. The client IP address is included if
+                  true.
+
+               contextualHeaders
+                  Configuration for the contextual headers.
+
+                   deviceInfo
+                      Device info configuration.
+
+                       outputType
+                          The output type of the delegated device info.
+
+                   groupInfo
+                      Group info configuration.
+
+                       outputType
+                          The output type of the delegated group info.
+
+                   outputType
+                      Default output type for all enabled headers.
+
+                   userInfo
+                      User info configuration.
+
+                       outputType
+                          The output type of the delegated user info.
+
+               gatewayIdentity
+                  Gateway identity configuration.
+
+               metadataHeaders
+                  Custom resource specific headers along with the values. The
+                  names should conform to RFC 9110: > Field names SHOULD
+                  constrain themselves to alphanumeric characters, "-", and
+                  ".", and SHOULD begin with a letter. Field values SHOULD
+                  contain only ASCII printable characters and tab.
+
+                   KEY
+                      Sets KEY value.
+
+                   VALUE
+                      Sets VALUE value.
+
           Shorthand Example:
 
-              --add-upstreams=egressPolicy={regions=[string]},network={name=string} --add-upstreams=egressPolicy={regions=[string]},network={name=string}
+              --add-upstreams=egressPolicy={regions=[string]},external={endpoints=[{hostname=string,port=int}]},network={name=string},proxyProtocol={allowedClientHeaders=[string],clientIp=boolean,contextualHeaders={deviceInfo={outputType=string},groupInfo={outputType=string},outputType=string,userInfo={outputType=string}},gatewayIdentity=string,metadataHeaders={string=string}} --add-upstreams=egressPolicy={regions=[string]},external={endpoints=[{hostname=string,port=int}]},network={name=string},proxyProtocol={allowedClientHeaders=[string],clientIp=boolean,contextualHeaders={deviceInfo={outputType=string},groupInfo={outputType=string},outputType=string,userInfo={outputType=string}},gatewayIdentity=string,metadataHeaders={string=string}}
 
           JSON Example:
 
-              --add-upstreams='[{"egressPolicy": {"regions": ["string"]}, "network": {"name": "string"}}]'
+              --add-upstreams='[{"egressPolicy": {"regions": ["string"]}, "external": {"endpoints": [{"hostname": "string", "port": int}]}, "network": {"name": "string"}, "proxyProtocol": {"allowedClientHeaders": ["string"], "clientIp": boolean, "contextualHeaders": {"deviceInfo": {"outputType": "string"}, "groupInfo": {"outputType": "string"}, "outputType": "string", "userInfo": {"outputType": "string"}}, "gatewayIdentity": "string", "metadataHeaders": {"string": "string"}}}]'
 
           File Example:
 
@@ -258,7 +393,7 @@ FLAGS
          --clear-upstreams
             Clear upstreams value and set to empty list.
 
-         --remove-upstreams=[egressPolicy=EGRESSPOLICY],[network=NETWORK]
+         --remove-upstreams=[egressPolicy=EGRESSPOLICY],[external=EXTERNAL],[network=NETWORK],[proxyProtocol=PROXYPROTOCOL]
             Remove existing value from upstreams list. Which upstream resources
             to forward traffic to.
 
@@ -268,6 +403,18 @@ FLAGS
                  regions
                     List of the regions where the application sends traffic.
 
+             external
+                List of the external endpoints to forward traffic to.
+
+                 endpoints
+                    List of the endpoints to forward traffic to.
+
+                     hostname
+                        Hostname of the endpoint.
+
+                     port
+                        Port of the endpoint.
+
              network
                 Network to forward traffic to.
 
@@ -275,13 +422,63 @@ FLAGS
                     Network name is of the format:
                     projects/{project}/global/networks/{network}.
 
+             proxyProtocol
+                Enables proxy protocol configuration for the upstream.
+
+                 allowedClientHeaders
+                    List of the allowed client header names.
+
+                 clientIp
+                    Client IP configuration. The client IP address is included
+                    if true.
+
+                 contextualHeaders
+                    Configuration for the contextual headers.
+
+                     deviceInfo
+                        Device info configuration.
+
+                         outputType
+                            The output type of the delegated device info.
+
+                     groupInfo
+                        Group info configuration.
+
+                         outputType
+                            The output type of the delegated group info.
+
+                     outputType
+                        Default output type for all enabled headers.
+
+                     userInfo
+                        User info configuration.
+
+                         outputType
+                            The output type of the delegated user info.
+
+                 gatewayIdentity
+                    Gateway identity configuration.
+
+                 metadataHeaders
+                    Custom resource specific headers along with the values. The
+                    names should conform to RFC 9110: > Field names SHOULD
+                    constrain themselves to alphanumeric characters, "-", and
+                    ".", and SHOULD begin with a letter. Field values SHOULD
+                    contain only ASCII printable characters and tab.
+
+                     KEY
+                        Sets KEY value.
+
+                     VALUE
+                        Sets VALUE value.
+
             Shorthand Example:
 
-                --remove-upstreams=egressPolicy={regions=[string]},network={name=string} --remove-upstreams=egressPolicy={regions=[string]},network={name=string}
+                --remove-upstreams=egressPolicy={regions=[string]},external={endpoints=[{hostname=string,port=int}]},network={name=string},proxyProtocol={allowedClientHeaders=[string],clientIp=boolean,contextualHeaders={deviceInfo={outputType=string},groupInfo={outputType=string},outputType=string,userInfo={outputType=string}},gatewayIdentity=string,metadataHeaders={string=string}} --remove-upstreams=egressPolicy={regions=[string]},external={endpoints=[{hostname=string,port=int}]},network={name=string},proxyProtocol={allowedClientHeaders=[string],clientIp=boolean,contextualHeaders={deviceInfo={outputType=string},groupInfo={outputType=string},outputType=string,userInfo={outputType=string}},gatewayIdentity=string,metadataHeaders={string=string}}
 
             JSON Example:
 
-                --remove-upstreams='[{"egressPolicy": {"regions": ["string"]}, "network": {"name": "string"}}]'
+                --remove-upstreams='[{"egressPolicy": {"regions": ["string"]}, "external": {"endpoints": [{"hostname": "string", "port": int}]}, "network": {"name": "string"}, "proxyProtocol": {"allowedClientHeaders": ["string"], "clientIp": boolean, "contextualHeaders": {"deviceInfo": {"outputType": "string"}, "groupInfo": {"outputType": "string"}, "outputType": "string", "userInfo": {"outputType": "string"}}, "gatewayIdentity": "string", "metadataHeaders": {"string": "string"}}}]'
 
             File Example:
 

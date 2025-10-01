@@ -3,7 +3,7 @@ NAME
 
 SYNOPSIS
     gcloud bigtable logical-views update (LOGICAL_VIEW : --instance=INSTANCE)
-        --query=QUERY [--async] [--deletion-protection=DELETION_PROTECTION]
+        (--deletion-protection=DELETION_PROTECTION --query=QUERY) [--async]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -15,6 +15,11 @@ EXAMPLES
         $ gcloud bigtable logical-views update my-logical-view-id \
             --instance=my-instance-id \
             --query="SELECT my-column-family2 FROM my-table"
+
+    To enable deletion protection on a logical view, run:
+
+        $ gcloud bigtable logical-views update my-logical-view-id \
+            --instance=my-instance-id --deletion-protection
 
 POSITIONAL ARGUMENTS
      Logical view resource - The logical view to update. The arguments in this
@@ -49,16 +54,18 @@ POSITIONAL ARGUMENTS
           ▸ provide the argument --instance on the command line.
 
 REQUIRED FLAGS
-     --query=QUERY
-        The query of the view.
+     At least one of these must be specified:
+
+       --deletion-protection=DELETION_PROTECTION
+          Whether the view is protected from deletion.
+
+       --query=QUERY
+          The query of the view.
 
 OPTIONAL FLAGS
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
-
-     --deletion-protection=DELETION_PROTECTION
-        Whether the view is protected from deletion.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

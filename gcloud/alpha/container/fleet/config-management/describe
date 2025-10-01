@@ -5,7 +5,11 @@ NAME
 SYNOPSIS
     gcloud alpha container fleet config-management describe
         [--memberships=[MEMBERSHIPS,...] : --location=LOCATION]
+        [--view=VIEW : --filter=EXPRESSION --sort-by=[FIELD,...]]
         [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Describe the Config Management feature.
 
 EXAMPLES
     To describe the entire Config Management feature, run:
@@ -16,6 +20,15 @@ EXAMPLES
 
         $ gcloud alpha container fleet config-management describe \
             --memberships=example-membership-1,example-membership-2
+
+    To list the membership configurations, run:
+
+        $ gcloud alpha container fleet config-management describe --view=list
+
+      MEMBERSHIP            LOCATION     STATUS  INSTALL_STATE              STOP_STATE   SYNC_STATE     VERSION  SYNCED_TO_FLEET_DEFAULT
+      example-membership-1  asia-east1   OK      CONFIG_SYNC_NOT_INSTALLED               NOT_INSTALLED           FLEET_DEFAULT_NOT_CONFIGURED
+      example-membership-2  us-central1  OK      CONFIG_SYNC_INSTALLED      NOT_STOPPED  SYNCED         1.22.0   FLEET_DEFAULT_NOT_CONFIGURED
+      example-membership-3  us-central1  ERROR   CONFIG_SYNC_INSTALLED      NOT_STOPPED  ERROR          1.21.3   FLEET_DEFAULT_NOT_CONFIGURED
 
 FLAGS
      Memberships to print configurations for. Errors if a specified membership
@@ -50,6 +63,86 @@ FLAGS
               fully specified name;
             ▫ provide the argument --location on the command line;
             ▫ set the property gkehub/location.
+
+     --view=VIEW
+        View of the feature. VIEW must be one of:
+
+         full
+            Default view. Prints the entire feature.
+         list
+            List of membership configurations. Default format is a table
+            summary.
+
+            The SYNCED_TO_FLEET_DEFAULT column may display UNKNOWN for any
+            membership whose configuration has not been updated since the
+            fleet-default membership configuration
+            (https://cloud.google.com/kubernetes-engine/fleet-management/docs/manage-features)
+            enablement.
+
+            To view the underlying configurations instead of the table summary
+            for select memberships, run:
+
+                $ gcloud alpha container fleet config-management describe \
+                    --view=list --format=yaml \
+                    --memberships=example-membership-1,example-membership-2
+
+     List command flags. Only specify when --view=list. Does not include
+     support for --limit.
+
+       --filter=EXPRESSION
+          Apply a Boolean filter EXPRESSION to each resource item to be listed.
+          If the expression evaluates True, then that item is listed. For more
+          details and examples of filter expressions, run $ gcloud topic
+          filters. This flag interacts with other flags that are applied in
+          this order: --flatten, --sort-by, --filter, --limit.
+
+          To filter for memberships with an overall status of ERROR, use the
+          COLUMN~VALUE pattern and run:
+
+              $ gcloud alpha container fleet config-management describe \
+                  --view=list --filter=STATUS~ERROR
+
+          To filter for memberships that are synced to the fleet-default
+          membership configuration, run:
+
+              $ gcloud alpha container fleet config-management describe \
+                  --view=list \
+                  --filter="spec.origin.type.synced_to_fleet_default()~YES"
+
+          SYNCED_TO_FLEET_DEFAULT is the only column that requires filtering on
+          the underlying configuration field instead of the column name. An
+          alternative is to --sort-by=SYNCED_TO_FLEET_DEFAULT and filter by
+          eye.
+
+          To filter on a configuration field not in the table summary, in this
+          case the Config Sync repo, run:
+
+              $ gcloud alpha container fleet config-management describe \
+                  --view=list --format=yaml \
+                  --filter="spec.configmanagement.configSync.git.syncRepo~https://\
+              github.com/GoogleCloudPlatform/anthos-config-management-samples.git"
+
+       --sort-by=[FIELD,...]
+          Comma-separated list of resource field key names to sort by. The
+          default order is ascending. Prefix a field with ``~'' for descending
+          order on that field. This flag interacts with other flags that are
+          applied in this order: --flatten, --sort-by, --filter, --limit.
+
+          The default table summary sorts by LOCATION then MEMBERSHIP.
+
+          To sort the table by VERSION instead, run:
+
+              $ gcloud alpha container fleet config-management describe \
+                  --view=list --sort-by=VERSION
+
+          To sort by a configuration field not in the table summary, in this
+          case the Config Sync repo, and print its values in a table, run:
+
+              $ gcloud alpha container fleet config-management describe \
+                  --view=list \
+                  --sort-by="spec.configmanagement.configSync.git.syncRepo" \
+                  --format="table(MEMBERSHIP,LOCATION,spec.configmanagement.config\
+              Sync.git.syncRepo:label=REPO)"
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

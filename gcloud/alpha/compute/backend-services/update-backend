@@ -12,14 +12,15 @@ SYNOPSIS
         [--balancing-mode=BALANCING_MODE] [--capacity-scaler=CAPACITY_SCALER]
         [--description=DESCRIPTION] [--failover]
         [--max-utilization=MAX_UTILIZATION] [--preference=PREFERENCE]
+        [--traffic-duration=TRAFFIC_DURATION]
         [--clear-custom-metrics | --custom-metrics=[CUSTOM_METRICS,...]
           | --custom-metrics-file=[CUSTOM_METRICS,...]]
         [--global | --region=REGION]
         [--max-connections=MAX_CONNECTIONS
           | --max-connections-per-endpoint=MAX_CONNECTIONS_PER_ENDPOINT
           | --max-connections-per-instance=MAX_CONNECTIONS_PER_INSTANCE
-          | --max-rate=MAX_RATE | --max-rate-per-endpoint=MAX_RATE_PER_ENDPOINT
-          | --max-rate-per-instance=MAX_RATE_PER_INSTANCE]
+          | --max-in-flight-requests=MAX_IN_FLIGHT_REQUESTS
+          | --max-in-flight-requests-per-endpoint=MAX_IN_FLIGHT_REQUESTS_PER_ENDPOINT | --max-in-flight-requests-per-instance=MAX_IN_FLIGHT_REQUESTS_PER_INSTANCE | --max-rate=MAX_RATE | --max-rate-per-endpoint=MAX_RATE_PER_ENDPOINT | --max-rate-per-instance=MAX_RATE_PER_INSTANCE]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -160,6 +161,19 @@ OPTIONAL FLAGS
          CUSTOM_METRICS
             Spreads load based on custom defined and reported metrics.
 
+         IN_FLIGHT
+                Available if the backend service's load balancing scheme is
+            INTERNAL_MANAGED, INTERNAL_SELF_MANAGED, or EXTERNAL_MANAGED.
+            Available if the backend service's protocol is one of HTTP, HTTPS,
+            or HTTP/2.
+
+            Spreads load based on how many in-flight requests the backend can
+            handle.
+
+            You must specify exactly one of these additional parameters:
+            --max-in-flight-requests, --max-in-flight-requests-per-instance, or
+            --max-in-flight-requests-per-endpoint, and --traffic-duration=LONG.
+
          RATE
             Available if the backend service's load balancing scheme is
             INTERNAL_MANAGED, INTERNAL_SELF_MANAGED, or EXTERNAL. Available if
@@ -224,6 +238,20 @@ OPTIONAL FLAGS
          PREFERRED
             Backends with this preference setting are used up to their capacity
             limits first, while optimizing overall network latency.
+
+     --traffic-duration=TRAFFIC_DURATION
+        The expected traffic duration for this service. TRAFFIC_DURATION must
+        be one of:
+
+         LONG
+            Most of the requests are expected to take more than multiple
+            seconds to finish.
+
+         SHORT
+            Most requests are expected to finish with a sub-second latency.
+
+         TRAFFIC_DURATION_UNSPECIFIED
+            Default value. Defaults to SHORT.
 
      At most one of these can be specified:
 
@@ -335,6 +363,17 @@ OPTIONAL FLAGS
           is calculated by multiplying MAX_CONNECTIONS_PER_INSTANCE by the
           number of instances in the instance group, and then dividing by the
           number of healthy instances.
+
+       --max-in-flight-requests=MAX_IN_FLIGHT_REQUESTS
+          Maximum number of in-flight requests that the backend can handle.
+
+       --max-in-flight-requests-per-endpoint=MAX_IN_FLIGHT_REQUESTS_PER_ENDPOINT
+          Only valid for network endpoint group backends. Defines the maximum
+          number of in-flight requests per endpoint.
+
+       --max-in-flight-requests-per-instance=MAX_IN_FLIGHT_REQUESTS_PER_INSTANCE
+          Only valid for instance group backends. Defines the maximum number of
+          in-flight requests per instance.
 
        --max-rate=MAX_RATE
           Maximum number of HTTP requests per second (RPS) that the backend can

@@ -1,0 +1,126 @@
+NAME
+    gcloud managed-kafka connectors create - create a Managed Service for
+        Apache Kafka connector
+
+SYNOPSIS
+    gcloud managed-kafka connectors create
+        (CONNECTOR : --connect-cluster=CONNECT_CLUSTER --location=LOCATION)
+        (--config-file=JSON|YAML|FILE | --configs=[KEY=VALUE,...])
+        [--task-restart-max-backoff=TASK_RESTART_MAX_BACKOFF
+          --task-restart-min-backoff=TASK_RESTART_MIN_BACKOFF]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Create a Managed Service for Apache Kafka connector.
+
+EXAMPLES
+    To create a connector, run the following:
+
+        $ gcloud managed-kafka connectors create myconnector \
+            --location=us-central1 --connect-cluster=mycluster \
+            --configs=connector.class="com.google.pubsub.kafka.source.CloudP\
+        ubSubSourceConnector",cps.subscription="my-subscription",... \
+            [--task-restart-min-backoff=60s] \
+            [--task-restart-max-backoff=30m] OR
+        $ gcloud managed-kafka connectors create myconnector \
+            --location=us-central1 --connect-cluster=mycluster \
+            --config-file=my-config-file.yaml \
+            [--task-restart-min-backoff=60s] \
+            [--task-restart-max-backoff=30m]
+
+POSITIONAL ARGUMENTS
+     Connector resource - Identifies the connector for which the command runs.
+     The arguments in this group can be used to specify the attributes of this
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument connector on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       CONNECTOR
+          ID of the connector or fully qualified identifier for the connector.
+
+          To set the connector attribute:
+          ▸ provide the argument connector on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --connect-cluster=CONNECT_CLUSTER
+          The connect cluster name.
+
+          To set the connect-cluster attribute:
+          ▸ provide the argument connector on the command line with a fully
+            specified name;
+          ▸ provide the argument --connect-cluster on the command line.
+
+       --location=LOCATION
+          ID of the location of the Managed Service for Apache Kafka resource.
+          See
+          https://cloud.google.com/managed-service-for-apache-kafka/docs/locations
+          for a list of supported locations.
+
+          To set the location attribute:
+          ▸ provide the argument connector on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line.
+
+REQUIRED FLAGS
+     Exactly one of these must be specified:
+
+       --config-file=JSON|YAML|FILE
+          The path to the JSON or YAML file containing the configuration that
+          are overridden from the connector defaults. This also supports inline
+          JSON or YAML. Sets config_file value.
+
+          Input Example:
+
+              --config-file=string
+
+          File Example:
+
+              --config-file=path_to_file.(yaml|json)
+
+       --configs=[KEY=VALUE,...]
+          Configuration for the connector that are overridden from the
+          connector defaults. The key of the map is a Kafka topic property
+          name, for example: cleanup.policy=compact,compression.type=producer.
+
+OPTIONAL FLAGS
+     --task-restart-max-backoff=TASK_RESTART_MAX_BACKOFF
+        The maximum amount of time to wait before retrying a failed task in
+        seconds. This sets an upper bound for the backoff delay. The default
+        value is 1800s (30 minutes). See $ gcloud topic datetimes for
+        information on duration formats.
+
+     --task-restart-min-backoff=TASK_RESTART_MIN_BACKOFF
+        The minimum amount of time to wait before retrying a failed task in
+        seconds. This sets a lower bound for the backoff delay. The default
+        value is 60s. See $ gcloud topic datetimes for information on duration
+        formats.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the managedkafka/v1 API. The full documentation for this
+    API can be found at:
+    https://cloud.google.com/managed-service-for-apache-kafka/docs
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha managed-kafka connectors create
+
+        $ gcloud beta managed-kafka connectors create
+

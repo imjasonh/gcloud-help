@@ -5,7 +5,15 @@ SYNOPSIS
     gcloud beta beyondcorp security-gateways create
         (SECURITY_GATEWAY : --location=LOCATION) [--async]
         [--display-name=DISPLAY_NAME] [--hubs=[HUBS,...]]
-        [--request-id=REQUEST_ID] [GCLOUD_WIDE_FLAG ...]
+        [--request-id=REQUEST_ID]
+        [--resource-override-path=RESOURCE_OVERRIDE_PATH]
+        [--proxy-protocol-config-allowed-client-headers=[PROXY_PROTOCOL_CONFIG_ALLOWED_CLIENT_HEADERS,
+          ...] --proxy-protocol-config-client-ip
+          --proxy-protocol-config-gateway-identity=PROXY_PROTOCOL_CONFIG_GATEWAY_IDENTITY --proxy-protocol-config-metadata-headers=[PROXY_PROTOCOL_CONFIG_METADATA_HEADERS,
+          ...] --contextual-headers-output-type=CONTEXTUAL_HEADERS_OUTPUT_TYPE
+          --device-info-output-type=DEVICE_INFO_OUTPUT_TYPE
+          --group-info-output-type=GROUP_INFO_OUTPUT_TYPE
+          --user-info-output-type=USER_INFO_OUTPUT_TYPE] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) Create a securityGateway
@@ -82,8 +90,115 @@ FLAGS
      --request-id=REQUEST_ID
         An optional request ID to identify requests. Specify a unique request
         ID so that if you must retry your request, the server will know to
-        ignore request if it has already been completed. The server will
+        ignore the request if it has already been completed. The server will
         guarantee that for at least 60 minutes since the first request.
+
+     Settings related to the Service Discovery.
+
+       If Service Discovery is done through API, defines its settings.
+
+       This must be specified.
+
+         API operation descriptor.
+
+         This must be specified.
+
+           --resource-override-path=RESOURCE_OVERRIDE_PATH
+              Contains uri path fragment where HTTP request is sent.
+
+     The configuration for the proxy.
+
+       --proxy-protocol-config-allowed-client-headers=[PROXY_PROTOCOL_CONFIG_ALLOWED_CLIENT_HEADERS,...]
+          List of the allowed client header names.
+
+       --proxy-protocol-config-client-ip
+          Client IP configuration. The client IP address is included if true.
+
+       --proxy-protocol-config-gateway-identity=PROXY_PROTOCOL_CONFIG_GATEWAY_IDENTITY
+          Gateway identity configuration.
+          PROXY_PROTOCOL_CONFIG_GATEWAY_IDENTITY must be (only one value is
+          supported):
+
+           resource-name
+              Resource name for gateway identity, in the format:
+              projects/{project_id}/locations/{location_id}/securityGateways/{security_gateway_id}
+
+       --proxy-protocol-config-metadata-headers=[PROXY_PROTOCOL_CONFIG_METADATA_HEADERS,...]
+          Custom resource specific headers along with the values. The names
+          should conform to RFC 9110: > Field names SHOULD constrain themselves
+          to alphanumeric characters, "-", and ".", and SHOULD begin with a
+          letter. Field values SHOULD contain only ASCII printable characters
+          and tab.
+
+           KEY
+              Sets KEY value.
+
+           VALUE
+              Sets VALUE value.
+
+          Shorthand Example:
+
+              --proxy-protocol-config-metadata-headers=string=string
+
+          JSON Example:
+
+              --proxy-protocol-config-metadata-headers='{"string": "string"}'
+
+          File Example:
+
+              --proxy-protocol-config-metadata-headers=path_to_file.(yaml|json)
+
+       Contextual headers configuration.
+
+         --contextual-headers-output-type=CONTEXTUAL_HEADERS_OUTPUT_TYPE
+            Default output type for all enabled headers.
+            CONTEXTUAL_HEADERS_OUTPUT_TYPE must be one of:
+
+             json
+                JSON output type.
+             none
+                Explicitly disable header output.
+             protobuf
+                Protobuf output type.
+
+         Delegated device info configuration.
+
+           --device-info-output-type=DEVICE_INFO_OUTPUT_TYPE
+              The output type of the delegated device info.
+              DEVICE_INFO_OUTPUT_TYPE must be one of:
+
+               json
+                  JSON output type.
+               none
+                  Explicitly disable header output.
+               protobuf
+                  Protobuf output type.
+
+         Delegated group info configuration.
+
+           --group-info-output-type=GROUP_INFO_OUTPUT_TYPE
+              The output type of the delegated group info.
+              GROUP_INFO_OUTPUT_TYPE must be one of:
+
+               json
+                  JSON output type.
+               none
+                  Explicitly disable header output.
+               protobuf
+                  Protobuf output type.
+
+         Delegated user info configuration.
+
+           --user-info-output-type=USER_INFO_OUTPUT_TYPE
+              The output type of the delegated user info. USER_INFO_OUTPUT_TYPE
+              must be one of:
+
+               json
+                  JSON output type.
+               none
+                  Explicitly disable header output.
+               protobuf
+                  Protobuf output type.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

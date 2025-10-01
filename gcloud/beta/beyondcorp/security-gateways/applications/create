@@ -7,7 +7,9 @@ SYNOPSIS
         (APPLICATION : --location=LOCATION --security-gateway=SECURITY_GATEWAY)
         --endpoint-matchers=[hostname=HOSTNAME],[ports=PORTS] [--async]
         [--display-name=DISPLAY_NAME] [--request-id=REQUEST_ID]
-        [--upstreams=[egressPolicy=EGRESSPOLICY],[network=NETWORK]]
+        [--schema=SCHEMA]
+        [--upstreams=[egressPolicy=EGRESSPOLICY],
+          [external=EXTERNAL],[network=NETWORK],[proxyProtocol=PROXYPROTOCOL]]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -65,11 +67,11 @@ REQUIRED FLAGS
         combination of hostname and ports as endpoint matchers is used to match
         the application. Match conditions for OR logic. An array of match
         conditions to allow for multiple matching criteria. The rule is
-        considered a match if one of the conditions is met. The conditions can
-        be one of the following combinations (Hostname), (Hostname & Ports)
+        considered a match if one of the conditions is met. The conditions
+        should be the following combination: (Hostname & Ports)
 
-        EXAMPLES: Hostname - (".example.com"), ("xyz.example.com") Hostname and
-        Ports - ("example.com" and "22"), ("example.com" and "22,33") etc.
+        EXAMPLES: Hostname and Ports - (".example.com", "443"), ("example.com"
+        and "22"), ("example.com" and "22,33") etc.
 
          hostname
             Hostname of the application.
@@ -95,7 +97,7 @@ OPTIONAL FLAGS
         complete.
 
      --display-name=DISPLAY_NAME
-        An arbitrary user-provided name for the Application resource. Cannot
+        An arbitrary user-provided name for the application resource. Cannot
         exceed 64 characters.
 
      --request-id=REQUEST_ID
@@ -104,7 +106,17 @@ OPTIONAL FLAGS
         ignore request if it has already been completed. The server will
         guarantee that for at least 60 minutes since the first request.
 
-     --upstreams=[egressPolicy=EGRESSPOLICY],[network=NETWORK]
+     --schema=SCHEMA
+        Type of the external application. SCHEMA must be one of:
+
+         api-gateway
+            Service Discovery API endpoint when Service Discovery is enabled in
+            Gateway.
+         proxy-gateway
+            Proxy which routes traffic to actual applications, like Netscaler
+            Gateway.
+
+     --upstreams=[egressPolicy=EGRESSPOLICY],[external=EXTERNAL],[network=NETWORK],[proxyProtocol=PROXYPROTOCOL]
         Which upstream resources to forward traffic to.
 
          egressPolicy
@@ -113,6 +125,18 @@ OPTIONAL FLAGS
              regions
                 List of the regions where the application sends traffic.
 
+         external
+            List of the external endpoints to forward traffic to.
+
+             endpoints
+                List of the endpoints to forward traffic to.
+
+                 hostname
+                    Hostname of the endpoint.
+
+                 port
+                    Port of the endpoint.
+
          network
             Network to forward traffic to.
 
@@ -120,13 +144,63 @@ OPTIONAL FLAGS
                 Network name is of the format:
                 projects/{project}/global/networks/{network}.
 
+         proxyProtocol
+            Enables proxy protocol configuration for the upstream.
+
+             allowedClientHeaders
+                List of the allowed client header names.
+
+             clientIp
+                Client IP configuration. The client IP address is included if
+                true.
+
+             contextualHeaders
+                Configuration for the contextual headers.
+
+                 deviceInfo
+                    Device info configuration.
+
+                     outputType
+                        The output type of the delegated device info.
+
+                 groupInfo
+                    Group info configuration.
+
+                     outputType
+                        The output type of the delegated group info.
+
+                 outputType
+                    Default output type for all enabled headers.
+
+                 userInfo
+                    User info configuration.
+
+                     outputType
+                        The output type of the delegated user info.
+
+             gatewayIdentity
+                Gateway identity configuration.
+
+             metadataHeaders
+                Custom resource specific headers along with the values. The
+                names should conform to RFC 9110: > Field names SHOULD
+                constrain themselves to alphanumeric characters, "-", and ".",
+                and SHOULD begin with a letter. Field values SHOULD contain
+                only ASCII printable characters and tab.
+
+                 KEY
+                    Sets KEY value.
+
+                 VALUE
+                    Sets VALUE value.
+
         Shorthand Example:
 
-            --upstreams=egressPolicy={regions=[string]},network={name=string} --upstreams=egressPolicy={regions=[string]},network={name=string}
+            --upstreams=egressPolicy={regions=[string]},external={endpoints=[{hostname=string,port=int}]},network={name=string},proxyProtocol={allowedClientHeaders=[string],clientIp=boolean,contextualHeaders={deviceInfo={outputType=string},groupInfo={outputType=string},outputType=string,userInfo={outputType=string}},gatewayIdentity=string,metadataHeaders={string=string}} --upstreams=egressPolicy={regions=[string]},external={endpoints=[{hostname=string,port=int}]},network={name=string},proxyProtocol={allowedClientHeaders=[string],clientIp=boolean,contextualHeaders={deviceInfo={outputType=string},groupInfo={outputType=string},outputType=string,userInfo={outputType=string}},gatewayIdentity=string,metadataHeaders={string=string}}
 
         JSON Example:
 
-            --upstreams='[{"egressPolicy": {"regions": ["string"]}, "network": {"name": "string"}}]'
+            --upstreams='[{"egressPolicy": {"regions": ["string"]}, "external": {"endpoints": [{"hostname": "string", "port": int}]}, "network": {"name": "string"}, "proxyProtocol": {"allowedClientHeaders": ["string"], "clientIp": boolean, "contextualHeaders": {"deviceInfo": {"outputType": "string"}, "groupInfo": {"outputType": "string"}, "outputType": "string", "userInfo": {"outputType": "string"}}, "gatewayIdentity": "string", "metadataHeaders": {"string": "string"}}}]'
 
         File Example:
 

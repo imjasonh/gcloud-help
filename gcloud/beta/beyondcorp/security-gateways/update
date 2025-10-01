@@ -5,6 +5,20 @@ SYNOPSIS
     gcloud beta beyondcorp security-gateways update
         (SECURITY_GATEWAY : --location=LOCATION) [--async]
         [--display-name=DISPLAY_NAME] [--request-id=REQUEST_ID]
+        [--clear-proxy-protocol-config --[no-]proxy-protocol-config-client-ip
+          --proxy-protocol-config-gateway-identity=PROXY_PROTOCOL_CONFIG_GATEWAY_IDENTITY --contextual-headers-output-type=CONTEXTUAL_HEADERS_OUTPUT_TYPE --device-info-output-type=DEVICE_INFO_OUTPUT_TYPE --group-info-output-type=GROUP_INFO_OUTPUT_TYPE --user-info-output-type=USER_INFO_OUTPUT_TYPE --proxy-protocol-config-allowed-client-headers=[PROXY_PROTOCOL_CONFIG_ALLOWED_CLIENT_HEADERS,
+          ...]
+          | --add-proxy-protocol-config-allowed-client-headers=[ADD_PROXY_PROTOCOL_CONFIG_ALLOWED_CLIENT_HEADERS,
+          ...] --clear-proxy-protocol-config-allowed-client-headers
+          | --remove-proxy-protocol-config-allowed-client-headers=[REMOVE_PROXY_PROTOCOL_CONFIG_ALLOWED_CLIENT_HEADERS,
+          ...]
+          --proxy-protocol-config-metadata-headers=[PROXY_PROTOCOL_CONFIG_METADATA_HEADERS,
+          ...]
+          | --update-proxy-protocol-config-metadata-headers=[UPDATE_PROXY_PROTOCOL_CONFIG_METADATA_HEADERS,
+          ...] --clear-proxy-protocol-config-metadata-headers
+          | --remove-proxy-protocol-config-metadata-headers=REMOVE_PROXY_PROTOCOL_CONFIG_METADATA_HEADERS]
+        [--clear-service-discovery
+          --resource-override-path=RESOURCE_OVERRIDE_PATH]
         [--hubs=[HUBS,...] | --update-hubs=[UPDATE_HUBS,...] --clear-hubs
           | --remove-hubs=REMOVE_HUBS] [GCLOUD_WIDE_FLAG ...]
 
@@ -72,6 +86,192 @@ FLAGS
 
         The request ID must be a valid UUID with the exception that zero UUID
         is not supported (00000000-0000-0000-0000-000000000000).
+
+     The configuration for the proxy.
+
+       --clear-proxy-protocol-config
+          Set
+          googleCloudBeyondcorpSecuritygatewaysV1SecurityGateway.proxyProtocolConfig
+          back to default value.
+
+       --[no-]proxy-protocol-config-client-ip
+          Client IP configuration. The client IP address is included if true.
+          Use --proxy-protocol-config-client-ip to enable and
+          --no-proxy-protocol-config-client-ip to disable.
+
+       --proxy-protocol-config-gateway-identity=PROXY_PROTOCOL_CONFIG_GATEWAY_IDENTITY
+          Gateway identity configuration.
+          PROXY_PROTOCOL_CONFIG_GATEWAY_IDENTITY must be (only one value is
+          supported):
+
+           resource-name
+              Resource name for gateway identity, in the format:
+              projects/{project_id}/locations/{location_id}/securityGateways/{security_gateway_id}
+
+       Contextual headers configuration.
+
+         --contextual-headers-output-type=CONTEXTUAL_HEADERS_OUTPUT_TYPE
+            Default output type for all enabled headers.
+            CONTEXTUAL_HEADERS_OUTPUT_TYPE must be one of:
+
+             json
+                JSON output type.
+             none
+                Explicitly disable header output.
+             protobuf
+                Protobuf output type.
+
+         Delegated device info configuration.
+
+           --device-info-output-type=DEVICE_INFO_OUTPUT_TYPE
+              The output type of the delegated device info.
+              DEVICE_INFO_OUTPUT_TYPE must be one of:
+
+               json
+                  JSON output type.
+               none
+                  Explicitly disable header output.
+               protobuf
+                  Protobuf output type.
+
+         Delegated group info configuration.
+
+           --group-info-output-type=GROUP_INFO_OUTPUT_TYPE
+              The output type of the delegated group info.
+              GROUP_INFO_OUTPUT_TYPE must be one of:
+
+               json
+                  JSON output type.
+               none
+                  Explicitly disable header output.
+               protobuf
+                  Protobuf output type.
+
+         Delegated user info configuration.
+
+           --user-info-output-type=USER_INFO_OUTPUT_TYPE
+              The output type of the delegated user info. USER_INFO_OUTPUT_TYPE
+              must be one of:
+
+               json
+                  JSON output type.
+               none
+                  Explicitly disable header output.
+               protobuf
+                  Protobuf output type.
+
+       Update proxy_protocol_config_allowed_client_headers.
+
+       At most one of these can be specified:
+
+         --proxy-protocol-config-allowed-client-headers=[PROXY_PROTOCOL_CONFIG_ALLOWED_CLIENT_HEADERS,...]
+            Set proxy_protocol_config_allowed_client_headers to new value.
+
+         --add-proxy-protocol-config-allowed-client-headers=[ADD_PROXY_PROTOCOL_CONFIG_ALLOWED_CLIENT_HEADERS,...]
+            Add new value to proxy_protocol_config_allowed_client_headers list.
+
+         At most one of these can be specified:
+
+           --clear-proxy-protocol-config-allowed-client-headers
+              Clear proxy_protocol_config_allowed_client_headers value and set
+              to empty list.
+
+           --remove-proxy-protocol-config-allowed-client-headers=[REMOVE_PROXY_PROTOCOL_CONFIG_ALLOWED_CLIENT_HEADERS,...]
+              Remove existing value from
+              proxy_protocol_config_allowed_client_headers list.
+
+       Update proxy_protocol_config_metadata_headers.
+
+       At most one of these can be specified:
+
+         --proxy-protocol-config-metadata-headers=[PROXY_PROTOCOL_CONFIG_METADATA_HEADERS,...]
+            Set proxy_protocol_config_metadata_headers to new value. Custom
+            resource specific headers along with the values. The names should
+            conform to RFC 9110: > Field names SHOULD constrain themselves to
+            alphanumeric characters, "-", and ".", and SHOULD begin with a
+            letter. Field values SHOULD contain only ASCII printable characters
+            and tab.
+
+             KEY
+                Sets KEY value.
+
+             VALUE
+                Sets VALUE value.
+
+            Shorthand Example:
+
+                --proxy-protocol-config-metadata-headers=string=string
+
+            JSON Example:
+
+                --proxy-protocol-config-metadata-headers='{"string": "string"}'
+
+            File Example:
+
+                --proxy-protocol-config-metadata-headers=path_to_file.(yaml|json)
+
+         --update-proxy-protocol-config-metadata-headers=[UPDATE_PROXY_PROTOCOL_CONFIG_METADATA_HEADERS,...]
+            Update proxy_protocol_config_metadata_headers value or add key
+            value pair. Custom resource specific headers along with the values.
+            The names should conform to RFC 9110: > Field names SHOULD
+            constrain themselves to alphanumeric characters, "-", and ".", and
+            SHOULD begin with a letter. Field values SHOULD contain only ASCII
+            printable characters and tab.
+
+             KEY
+                Sets KEY value.
+
+             VALUE
+                Sets VALUE value.
+
+            Shorthand Example:
+
+                --update-proxy-protocol-config-metadata-headers=string=string
+
+            JSON Example:
+
+                --update-proxy-protocol-config-metadata-headers='{"string": "string"}'
+
+            File Example:
+
+                --update-proxy-protocol-config-metadata-headers=path_to_file.(yaml|json)
+
+         At most one of these can be specified:
+
+           --clear-proxy-protocol-config-metadata-headers
+              Clear proxy_protocol_config_metadata_headers value and set to
+              empty map.
+
+           --remove-proxy-protocol-config-metadata-headers=REMOVE_PROXY_PROTOCOL_CONFIG_METADATA_HEADERS
+              Remove existing value from map
+              proxy_protocol_config_metadata_headers. Sets
+              remove_proxy_protocol_config_metadata_headers value.
+
+              Shorthand Example:
+
+                  --remove-proxy-protocol-config-metadata-headers=string,string
+
+              JSON Example:
+
+                  --remove-proxy-protocol-config-metadata-headers=["string"]
+
+              File Example:
+
+                  --remove-proxy-protocol-config-metadata-headers=path_to_file.(yaml|json)
+
+     Settings related to the Service Discovery.
+
+       --clear-service-discovery
+          Set
+          googleCloudBeyondcorpSecuritygatewaysV1SecurityGateway.serviceDiscovery
+          back to default value.
+
+       If Service Discovery is done through API, defines its settings.
+
+         API operation descriptor.
+
+           --resource-override-path=RESOURCE_OVERRIDE_PATH
+              Contains uri path fragment where HTTP request is sent.
 
      Update hubs.
 

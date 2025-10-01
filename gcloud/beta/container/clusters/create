@@ -110,13 +110,11 @@ SYNOPSIS
           | --disable-dataplane-v2-flow-observability
           | --enable-dataplane-v2-flow-observability]
         [--disable-dataplane-v2-metrics | --enable-dataplane-v2-metrics]
-        [[--enable-autoprovisioning
-          : --autoprovisioning-config-file=PATH_TO_FILE
-          | [--max-cpu=MAX_CPU --max-memory=MAX_MEMORY
-          : --autoprovisioning-image-type=AUTOPROVISIONING_IMAGE_TYPE
+        [--enable-autoprovisioning --autoprovisioning-config-file=PATH_TO_FILE
+          | --autoprovisioning-image-type=AUTOPROVISIONING_IMAGE_TYPE
           --autoprovisioning-locations=ZONE,[ZONE,...]
-          --autoprovisioning-min-cpu-platform=PLATFORM --min-cpu=MIN_CPU
-          --min-memory=MIN_MEMORY
+          --autoprovisioning-min-cpu-platform=PLATFORM --max-cpu=MAX_CPU
+          --max-memory=MAX_MEMORY --min-cpu=MIN_CPU --min-memory=MIN_MEMORY
           --autoprovisioning-max-surge-upgrade=AUTOPROVISIONING_MAX_SURGE_UPGRADE --autoprovisioning-max-unavailable-upgrade=AUTOPROVISIONING_MAX_UNAVAILABLE_UPGRADE --autoprovisioning-node-pool-soak-duration=AUTOPROVISIONING_NODE_POOL_SOAK_DURATION --autoprovisioning-standard-rollout-policy=[batch-node-count=BATCH_NODE_COUNT,
           batch-percent=BATCH_NODE_PERCENTAGE,
           batch-soak-duration=BATCH_SOAK_DURATION,...]
@@ -127,7 +125,7 @@ SYNOPSIS
           --enable-autoprovisioning-autorepair
           --enable-autoprovisioning-autoupgrade
           [--max-accelerator=[type=TYPE,count=COUNT,...]
-          : --min-accelerator=[type=TYPE,count=COUNT,...]]]]]
+          : --min-accelerator=[type=TYPE,count=COUNT,...]]]
         [--enable-autoscaling --location-policy=LOCATION_POLICY
           --max-nodes=MAX_NODES --min-nodes=MIN_NODES
           --total-max-nodes=TOTAL_MAX_NODES --total-min-nodes=TOTAL_MIN_NODES]
@@ -1405,7 +1403,9 @@ FLAGS
           cpuManagerPolicy                      either 'static' or 'none'
           cpuCFSQuota                           true or false (enabled by
                                                 default)
-          cpuCFSQuotaPeriod                     interval (e.g., '100ms')
+          cpuCFSQuotaPeriod                     interval (e.g., '100ms'. The
+                                                value must be between 1ms and 1
+                                                second, inclusive.)
           memoryManager                         specify memory manager policy
           topologyManager                       specify topology manager policy
                                                 and scope
@@ -1415,7 +1415,7 @@ FLAGS
           containerLogMaxSize                   positive number plus unit suffix
                                                 (e.g., '100Mi', '0.2Gi'. The
                                                 value must be between 10Mi and
-                                                500Mi.)
+                                                500Mi, inclusive.)
           containerLogMaxFiles                  integer (The value must be
                                                 between [2, 10].)
           imageGcLowThresholdPercent            integer (The value must be
@@ -2032,9 +2032,6 @@ FLAGS
           Cluster Autoscaler will be able to create new node pools. Requires
           maximum CPU and memory limits to be specified.
 
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
-
        At most one of these can be specified:
 
          --autoprovisioning-config-file=PATH_TO_FILE
@@ -2112,23 +2109,6 @@ FLAGS
 
          Flags to configure autoprovisioned nodes
 
-           --max-cpu=MAX_CPU
-              Maximum number of cores in the cluster.
-
-              Maximum number of cores to which the cluster can scale.
-
-              This flag argument must be specified if any of the other
-              arguments in this group are specified.
-
-           --max-memory=MAX_MEMORY
-              Maximum memory in the cluster.
-
-              Maximum number of gigabytes of memory to which the cluster can
-              scale.
-
-              This flag argument must be specified if any of the other
-              arguments in this group are specified.
-
            --autoprovisioning-image-type=AUTOPROVISIONING_IMAGE_TYPE
               Node Autoprovisioning will create new nodes with the specified
               image type
@@ -2146,6 +2126,17 @@ FLAGS
               The --autoprovisioning-min-cpu-platform flag is deprecated and
               will be removed in an upcoming release. More info:
               https://cloud.google.com/kubernetes-engine/docs/release-notes#March_08_2022
+
+           --max-cpu=MAX_CPU
+              Maximum number of cores in the cluster.
+
+              Maximum number of cores to which the cluster can scale.
+
+           --max-memory=MAX_MEMORY
+              Maximum memory in the cluster.
+
+              Maximum number of gigabytes of memory to which the cluster can
+              scale.
 
            --min-cpu=MIN_CPU
               Minimum number of cores in the cluster.
