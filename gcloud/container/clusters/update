@@ -9,7 +9,7 @@ SYNOPSIS
           | --autoprovisioning-enable-insecure-kubelet-readonly-port
           | --autoprovisioning-network-tags=[TAGS,...]
           | --autoprovisioning-resource-manager-tags=[KEY=VALUE,...]
-          | --autoscaling-profile=AUTOSCALING_PROFILE | --clear-fleet-project
+          | --autoscaling-profile=AUTOSCALING_PROFILE
           | --complete-credential-rotation | --complete-ip-rotation
           | --containerd-config-from-file=PATH_TO_FILE
           | --database-encryption-key=DATABASE_ENCRYPTION_KEY
@@ -19,9 +19,8 @@ SYNOPSIS
           | --enable-autoscaling
           | --[no-]enable-cilium-clusterwide-network-policy
           | --enable-cost-allocation | --enable-default-compute-class
-          | --enable-fleet | --enable-fqdn-network-policy
-          | --enable-identity-service | --enable-image-streaming
-          | --enable-insecure-kubelet-readonly-port
+          | --enable-fqdn-network-policy | --enable-identity-service
+          | --enable-image-streaming | --enable-insecure-kubelet-readonly-port
           | --enable-intra-node-visibility
           | --enable-kubernetes-unstable-apis=API,[API,...]
           | --enable-l4-ilb-subsetting | --enable-legacy-authorization
@@ -30,8 +29,7 @@ SYNOPSIS
           | --[no-]enable-ray-cluster-logging
           | --[no-]enable-ray-cluster-monitoring | --enable-service-externalips
           | --enable-shielded-nodes | --enable-stackdriver-kubernetes
-          | --enable-vertical-pod-autoscaling
-          | --fleet-project=PROJECT_ID_OR_NUMBER | --gateway-api=GATEWAY_API
+          | --enable-vertical-pod-autoscaling | --gateway-api=GATEWAY_API
           | --generate-password | --hpa-profile=HPA_PROFILE
           | --in-transit-encryption=IN_TRANSIT_ENCRYPTION
           | --logging-variant=LOGGING_VARIANT | --maintenance-window=START_TIME
@@ -61,8 +59,10 @@ SYNOPSIS
           --monitoring=[COMPONENT,...] --disable-managed-prometheus
           | --enable-managed-prometheus
           | --binauthz-evaluation-mode=BINAUTHZ_EVALUATION_MODE
-          | --enable-binauthz | --clear-maintenance-window
-          | --remove-maintenance-exclusion=NAME
+          | --enable-binauthz | --clear-fleet-project --enable-fleet
+          --fleet-project=PROJECT_ID_OR_NUMBER
+          --membership-type=MEMBERSHIP_TYPE --unset-membership-type
+          | --clear-maintenance-window | --remove-maintenance-exclusion=NAME
           | [--add-maintenance-exclusion-end=TIME_STAMP
           : --add-maintenance-exclusion-name=NAME
           --add-maintenance-exclusion-scope=SCOPE
@@ -244,10 +244,6 @@ REQUIRED FLAGS
           Set autoscaling behaviour, choices are 'optimize-utilization' and
           'balanced'. Default is 'balanced'.
 
-       --clear-fleet-project
-          Remove the cluster from current fleet host project. Example: $ gcloud
-          container clusters update --clear-fleet-project
-
        --complete-credential-rotation
           Complete the IP and credential rotation for this cluster. For
           example:
@@ -369,12 +365,6 @@ REQUIRED FLAGS
           To disable Default Compute Class in an existing cluster, explicitly
           set flag --no-enable-default-compute-class.
 
-       --enable-fleet
-          Set cluster project as the fleet host project. This will register the
-          cluster to the same project. To register the cluster to a fleet in a
-          different project, please use --fleet-project=FLEET_HOST_PROJECT.
-          Example: $ gcloud container clusters update --enable-fleet
-
        --enable-fqdn-network-policy
           Enable FQDN Network Policies on the cluster. FQDN Network Policies
           are disabled by default.
@@ -488,14 +478,6 @@ REQUIRED FLAGS
 
          --enable-vertical-pod-autoscaling
             Enable vertical pod autoscaling for a cluster.
-
-       --fleet-project=PROJECT_ID_OR_NUMBER
-          Sets fleet host project for the cluster. If specified, the current
-          cluster will be registered as a fleet membership under the fleet host
-          project.
-
-          Example: $ gcloud container clusters update
-          --fleet-project=my-project
 
        --gateway-api=GATEWAY_API
           Enables GKE Gateway controller in this cluster. The value of the flag
@@ -947,6 +929,37 @@ REQUIRED FLAGS
 
               The --enable-binauthz flag is deprecated. Please use
               --binauthz-evaluation-mode instead.
+
+       --clear-fleet-project
+          Remove the cluster from current fleet host project. Example: $ gcloud
+          container clusters update --clear-fleet-project
+
+       --enable-fleet
+          Set cluster project as the fleet host project. This will register the
+          cluster to the same project. To register the cluster to a fleet in a
+          different project, please use --fleet-project=FLEET_HOST_PROJECT.
+          Example: $ gcloud container clusters update --enable-fleet
+
+       --fleet-project=PROJECT_ID_OR_NUMBER
+          Sets fleet host project for the cluster. If specified, the current
+          cluster will be registered as a fleet membership under the fleet host
+          project.
+
+          Example: $ gcloud container clusters update
+          --fleet-project=my-project
+
+       --membership-type=MEMBERSHIP_TYPE
+          Specify a membership type for the cluster's fleet membership.
+          Example: $ gcloud container clusters update
+          --membership-type=LIGHTWEIGHT. \ MEMBERSHIP_TYPE must be (only one
+          value is supported):
+
+           LIGHTWEIGHT
+              Fleet membership representing this cluster will be lightweight.
+
+       --unset-membership-type
+          Set the membership type for the cluster's fleet membership to empty.
+          Example: $ gcloud container clusters update --unset-membership-type
 
        At most one of these can be specified:
 

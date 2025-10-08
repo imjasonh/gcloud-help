@@ -5,6 +5,8 @@ NAME
 SYNOPSIS
     gcloud alpha storage objects compose SOURCE [SOURCE ...] DESTINATION
         [--additional-headers=HEADER=VALUE]
+        [--custom-contexts=[CUSTOM_CONTEXTS_KEYS_AND_VALUES,...]
+          | --custom-contexts-file=CUSTOM_CONTEXTS_FILE]
         [--if-generation-match=GENERATION
           --if-metageneration-match=METAGENERATION]
         [--retain-until=DATETIME --retention-mode=RETENTION_MODE]
@@ -26,6 +28,14 @@ EXAMPLES
         $ gcloud alpha storage objects compose gs://bucket/a.txt \
             gs://bucket/b.txt gs://bucket/target.txt
 
+    Contexts are merged from source objects on the composed object by default.
+    However, the following command overwrites custom contexts on composed
+    object:
+
+        $ gcloud alpha storage objects compose gs://bucket/a.txt \
+            gs://bucket/b.txt gs://bucket/target.txt \
+            --custom-contexts=key1=value1,key2=value2
+
 POSITIONAL ARGUMENTS
      SOURCE [SOURCE ...]
         The list of source objects that will be concatenated into a single
@@ -40,6 +50,38 @@ FLAGS
         separated list of key=value pairs, e.g. header1=value1,header2=value2.
         Overrides the default storage/additional_headers property value for
         this command invocation.
+
+OBJECT CONTEXTS FLAGS
+     Group that allow users to handle object contexts.
+
+     At most one of these can be specified:
+
+       --custom-contexts=[CUSTOM_CONTEXTS_KEYS_AND_VALUES,...]
+          Sets custom contexts on objects. The existing custom contexts (if
+          any) would be overwritten.
+
+       --custom-contexts-file=CUSTOM_CONTEXTS_FILE
+          Path to a local JSON or YAML file containing custom contexts one
+          wants to set on an object. For example:
+
+          1. The following JSON document shows two key value pairs, i.e. (key1,
+          value1) and (key2, value2):
+
+                {
+                  "key1": {"value": "value1"},
+                  "key2": {"value": "value2"}
+                }
+
+          2. The following YAML document shows two key value pairs, i.e. (key1,
+          value1) and (key2, value2):
+
+                key1:
+                  value: value1
+                key2:
+                  value: value2
+
+          Note: Currently object contexts only supports string format for
+          values.
 
 PRECONDITION FLAGS
      --if-generation-match=GENERATION

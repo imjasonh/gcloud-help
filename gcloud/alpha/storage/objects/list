@@ -4,8 +4,8 @@ NAME
 SYNOPSIS
     gcloud alpha storage objects list URLS [URLS ...]
         [--additional-headers=HEADER=VALUE] [--exhaustive]
-        [--fetch-encrypted-object-hashes] [--next-page-token=NEXT_PAGE_TOKEN]
-        [--raw] [--soft-deleted] [--stat]
+        [--fetch-encrypted-object-hashes] [--metadata-filter=METADATA_FILTER]
+        [--next-page-token=NEXT_PAGE_TOKEN] [--raw] [--soft-deleted] [--stat]
         [--decryption-keys=[DECRYPTION_KEY,...]] [--filter=EXPRESSION]
         [--limit=LIMIT] [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [--uri]
         [GCLOUD_WIDE_FLAG ...]
@@ -36,6 +36,11 @@ EXAMPLES
         $ gcloud alpha storage objects list gs://my-bucket \
             --format="json(name)"
 
+    List only contexts attached to objects as key value pairs.
+
+        $ gcloud alpha storage objects list gs://my-bucket \
+            --format=contextsonly
+
 POSITIONAL ARGUMENTS
      URLS [URLS ...]
         Specifies URL of objects to list.
@@ -57,6 +62,15 @@ FLAGS
         objects by default. If this flag is set, a GET request is sent for each
         encrypted object in order to fetch hashes. This can significantly
         increase the cost of the command.
+
+     --metadata-filter=METADATA_FILTER
+        Server side filtering for objects. Works only for Google Cloud Storage
+        URLs. The filter only works for objects, and not directories or
+        buckets, which means commands like storage ls and storage du will still
+        list directories or buckets even if they do not contain any objects
+        matching the filter. See
+        https://cloud.google.com/storage/docs/listing-objects#filter-by-object-contexts-syntax
+        for more details.
 
      --next-page-token=NEXT_PAGE_TOKEN
         Page token for resuming LIST calls.

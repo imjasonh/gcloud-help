@@ -1,0 +1,103 @@
+NAME
+    gcloud alpha compute health-sources create - create a health source
+
+SYNOPSIS
+    gcloud alpha compute health-sources create
+        (HEALTH_SOURCE : --region=REGION)
+        --health-aggregation-policy=HEALTH_AGGREGATION_POLICY
+        --sources=[SOURCES,...] [--async] [--description=DESCRIPTION]
+        [--source-type=SOURCE_TYPE; default="backend-service"]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Create a health source.
+
+EXAMPLES
+    The following command creates a new health source:
+
+        $ gcloud alpha compute health-sources create <HEALTH_SOURCE_NAME> \
+            --region=<REGION> --source-type=BACKEND_SERVICE \
+            --sources=my-backend-service \
+            --health-aggregation-policy=my-health-aggregation-policy
+
+POSITIONAL ARGUMENTS
+     Health source resource - The name of the health source you want to create.
+     The arguments in this group can be used to specify the attributes of this
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument health_source on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       HEALTH_SOURCE
+          ID of the health source or fully qualified identifier for the health
+          source.
+
+          To set the health_source attribute:
+          ▸ provide the argument health_source on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --region=REGION
+          The name of the Google Compute Engine region.
+
+          To set the region attribute:
+          ▸ provide the argument health_source on the command line with a
+            fully specified name;
+          ▸ provide the argument --region on the command line;
+          ▸ set the property compute/region.
+
+REQUIRED FLAGS
+     --health-aggregation-policy=HEALTH_AGGREGATION_POLICY
+        URL to the health aggregation policy resource. Must be set. Must be
+        regional and in the same region as the HealthSource. Can be mutated.
+
+     --sources=[SOURCES,...]
+        URLs to the source resources. Must be size 1. Must be a BackendService
+        if the sourceType is BACKEND_SERVICE. The BackendService must have load
+        balancing scheme INTERNAL or INTERNAL_MANAGED and must be regional and
+        in the same region as the HealthSource (cross-region deployment for
+        INTERNAL_MANAGED is not supported). The BackendService may use only
+        IGs, MIGs, or NEGs of type GCE_VM_IP or GCE_VM_IP_PORT. The
+        BackendService may not use haPolicy. Can be mutated.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --description=DESCRIPTION
+        A textual description of the HealthSource.
+
+     --source-type=SOURCE_TYPE; default="backend-service"
+        Specifies the type of the HealthSource. The only allowed value is
+        BACKEND_SERVICE. Must be specified when the HealthSource is created,
+        and cannot be mutated. SOURCE_TYPE must be (only one value is
+        supported): backend-service.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the compute/alpha API. The full documentation for this
+    API can be found at: https://cloud.google.com/compute/
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. This variant is also available:
+
+        $ gcloud beta compute health-sources create
+

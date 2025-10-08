@@ -5,9 +5,9 @@ SYNOPSIS
     gcloud alpha storage ls [PATH ...] [--additional-headers=HEADER=VALUE]
         [--all-versions, -a] [--buckets, -b] [--etag, -e] [--exhaustive]
         [--fetch-encrypted-object-hashes] [--format=FORMAT]
-        [--next-page-token=NEXT_PAGE_TOKEN] [--read-paths-from-stdin, -I]
-        [--readable-sizes] [--recursive, -R, -r] [--soft-deleted]
-        [--full, -L | --json, -j | --long, -l]
+        [--metadata-filter=METADATA_FILTER] [--next-page-token=NEXT_PAGE_TOKEN]
+        [--read-paths-from-stdin, -I] [--readable-sizes] [--recursive, -R, -r]
+        [--soft-deleted] [--full, -L | --json, -j | --long, -l]
         [--decryption-keys=[DECRYPTION_KEY,...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -64,6 +64,14 @@ EXAMPLES
     Recursive listings are similar to ** except recursive listings include line
     breaks and header formatting for each subdirectory.
 
+    The following command filters objects based on specified filter while
+    listing. Note that the flag is only supported for Google Cloud Storage URLs
+    and only applies to objects. This means that directories or buckets will
+    still be listed even if they do not contain objects that match the filter.
+
+        $ gcloud alpha storage ls gs://my-bucket \
+            --metadata-filter='contexts."foo"="bar"'
+
 POSITIONAL ARGUMENTS
      [PATH ...]
         The path of objects and directories to list. The path must begin with
@@ -107,6 +115,15 @@ FLAGS
         Use "gsutil" to get the style of the older gsutil CLI. (e.g.
         "--format=gsutil"). Other format values (e.g. "json") do not work. See
         different ls flags and commands for alternative formatting.
+
+     --metadata-filter=METADATA_FILTER
+        Server side filtering for objects. Works only for Google Cloud Storage
+        URLs. The filter only works for objects, and not directories or
+        buckets, which means commands like storage ls and storage du will still
+        list directories or buckets even if they do not contain any objects
+        matching the filter. See
+        https://cloud.google.com/storage/docs/listing-objects#filter-by-object-contexts-syntax
+        for more details.
 
      --next-page-token=NEXT_PAGE_TOKEN
         Page token for resuming LIST calls.

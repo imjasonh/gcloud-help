@@ -7,9 +7,9 @@ SYNOPSIS
         [--all-versions, -a]
         [--exclude-name-pattern=EXCLUDE_NAME_PATTERN, -e EXCLUDE_NAME_PATTERN]
         [--exclude-name-pattern-file=EXCLUDE_NAME_PATTERN_FILE,
-          -X EXCLUDE_NAME_PATTERN_FILE] [--readable-sizes, -r]
-        [--summarize, -s] [--total, -c] [--zero-terminator, -0]
-        [GCLOUD_WIDE_FLAG ...]
+          -X EXCLUDE_NAME_PATTERN_FILE] [--metadata-filter=METADATA_FILTER]
+        [--readable-sizes, -r] [--summarize, -s] [--total, -c]
+        [--zero-terminator, -0] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Displays the amount of space in bytes used by the objects in a
@@ -52,6 +52,12 @@ EXAMPLES
 
         $ gcloud alpha storage du --summarize --readable-sizes --total
 
+    The following command summarizes the size of objects that match the
+    specified filter.
+
+        $ gcloud alpha storage du gs://my-bucket \
+            --metadata-filter='contexts."foo"="bar"' --summarize
+
 POSITIONAL ARGUMENTS
      [URL ...]
         The url of objects to list.
@@ -75,6 +81,15 @@ FLAGS
      --exclude-name-pattern-file=EXCLUDE_NAME_PATTERN_FILE, -X EXCLUDE_NAME_PATTERN_FILE
         Similar to -e, but excludes patterns from the given file. The patterns
         to exclude should be listed one per line.
+
+     --metadata-filter=METADATA_FILTER
+        Server side filtering for objects. Works only for Google Cloud Storage
+        URLs. The filter only works for objects, and not directories or
+        buckets, which means commands like storage ls and storage du will still
+        list directories or buckets even if they do not contain any objects
+        matching the filter. See
+        https://cloud.google.com/storage/docs/listing-objects#filter-by-object-contexts-syntax
+        for more details.
 
      --readable-sizes, -r
         Prints object sizes in human-readable format. For example, 1 KiB, 234

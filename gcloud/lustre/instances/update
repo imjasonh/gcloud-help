@@ -7,7 +7,16 @@ SYNOPSIS
         [--capacity-gib=CAPACITY_GIB] [--description=DESCRIPTION]
         [--[no-]gke-support-enabled]
         [--per-unit-storage-throughput=PER_UNIT_STORAGE_THROUGHPUT]
-        [--request-id=REQUEST_ID]
+        [--placement-policy=PLACEMENT_POLICY] [--request-id=REQUEST_ID]
+        [--clear- --default-squash-gid=DEFAULT_SQUASH_GID
+          --default-squash-mode=DEFAULT_SQUASH_MODE
+          --default-squash-uid=DEFAULT_SQUASH_UID
+          --access-rules=[ipAddressRanges=IPADDRESSRANGES],
+          [name=NAME],[squashMode=SQUASHMODE]
+          | --add-access-rules=[ipAddressRanges=IPADDRESSRANGES],
+          [name=NAME],[squashMode=SQUASHMODE] --clear-access-rules
+          | --remove-access-rules=[ipAddressRanges=IPADDRESSRANGES],
+          [name=NAME],[squashMode=SQUASHMODE]]
         [--labels=[LABELS,...]
           | --update-labels=[UPDATE_LABELS,...] --clear-labels
           | --remove-labels=REMOVE_LABELS] [GCLOUD_WIDE_FLAG ...]
@@ -60,7 +69,11 @@ FLAGS
 
      --capacity-gib=CAPACITY_GIB
         The storage capacity of the instance in gibibytes (GiB). Allowed values
-        are from 18000 to 954000, in increments of 9000.
+        are from 18000 to 7632000, depending on the perUnitStorageThroughput.
+        See Performance tiers and maximum storage capacities
+        (https://cloud.google.com/managed-lustre/docs/create-instance#performance-tiers)
+        for specific minimums, maximums, and step sizes for each performance
+        tier.
 
      --description=DESCRIPTION
         A user-readable description of the instance.
@@ -73,7 +86,13 @@ FLAGS
 
      --per-unit-storage-throughput=PER_UNIT_STORAGE_THROUGHPUT
         The throughput of the instance in MB/s/TiB. Valid values are 125, 250,
-        500, 1000.
+        500, 1000. See Performance tiers and maximum storage capacities
+        (https://cloud.google.com/managed-lustre/docs/create-instance#performance-tiers)
+        for more information.
+
+     --placement-policy=PLACEMENT_POLICY
+        The placement policy name for the instance in the format of
+        projects/{project}/locations/{location}/resourcePolicies/{resource_policy}
 
      --request-id=REQUEST_ID
         An optional request ID to identify requests. Specify a unique request
@@ -89,6 +108,153 @@ FLAGS
 
         The request ID must be a valid UUID with the exception that zero UUID
         is not supported (00000000-0000-0000-0000-000000000000).
+
+     IP-based access rules for the Managed Lustre instance. These options
+     define the root user squash configuration.
+
+       --clear-
+          Set instance.accessRulesOptions back to default value.
+
+       --default-squash-gid=DEFAULT_SQUASH_GID
+          The user squash GID for the default access rule. This user squash GID
+          applies to all root users connecting from clients that are not
+          matched by any of the access rules. If not set, the default is 0 (no
+          GID squash).
+
+       --default-squash-mode=DEFAULT_SQUASH_MODE
+          The squash mode for the default access rule. DEFAULT_SQUASH_MODE must
+          be one of:
+
+           no-squash
+              Squash is disabled.
+
+              If set inside an
+              [AccessRule][google.cloud.lustre.v1.AccessRulesOptions.AccessRule],
+              root users matching the [ip_ranges][AccessRule.ip_ranges] are not
+              squashed.
+
+              If set as the
+              [default_squash_mode][google.cloud.lustre.v1.AccessRulesOptions.default_squash_mode],
+              root squash is disabled for this instance.
+
+              If the default squash mode is NO_SQUASH, do not set the
+              [default_squash_uid][google.cloud.lustre.v1.AccessRulesOptions.default_squash_uid]
+              or
+              [default_squash_gid][google.cloud.lustre.v1.AccessRulesOptions.default_squash_gid],
+              or an invalid argument error is returned.
+           root-squash
+              Root user squash is enabled.
+
+              Not supported inside an
+              [AccessRule][google.cloud.lustre.v1.AccessRulesOptions.AccessRule].
+
+              If set as the
+              [default_squash_mode][google.cloud.lustre.v1.AccessRulesOptions.default_squash_mode],
+              root users not matching any of the
+              [access_rules][google.cloud.lustre.v1.AccessRulesOptions.access_rules]
+              are squashed to the
+              [default_squash_uid][google.cloud.lustre.v1.AccessRulesOptions.default_squash_uid]
+              and
+              [default_squash_gid][google.cloud.lustre.v1.AccessRulesOptions.default_squash_gid].
+
+       --default-squash-uid=DEFAULT_SQUASH_UID
+          The user squash UID for the default access rule. This user squash UID
+          applies to all root users connecting from clients that are not
+          matched by any of the access rules. If not set, the default is 0 (no
+          UID squash).
+
+       Update access_rules.
+
+       At most one of these can be specified:
+
+         --access-rules=[ipAddressRanges=IPADDRESSRANGES],[name=NAME],[squashMode=SQUASHMODE]
+            Set access_rules to new value. The access rules for the instance.
+
+             ipAddressRanges
+                The IP address ranges to which to apply this access rule.
+                Accepts non-overlapping CIDR ranges (e.g., 192.168.1.0/24) and
+                IP addresses (e.g., 192.168.1.0).
+
+             name
+                The name of the access rule policy group. Must be 16 characters
+                or less and include only alphanumeric characters or ''.
+
+             squashMode
+                Squash mode for the access rule.
+
+            Shorthand Example:
+
+                --access-rules=ipAddressRanges=[string],name=string,squashMode=string --access-rules=ipAddressRanges=[string],name=string,squashMode=string
+
+            JSON Example:
+
+                --access-rules='[{"ipAddressRanges": ["string"], "name": "string", "squashMode": "string"}]'
+
+            File Example:
+
+                --access-rules=path_to_file.(yaml|json)
+
+         --add-access-rules=[ipAddressRanges=IPADDRESSRANGES],[name=NAME],[squashMode=SQUASHMODE]
+            Add new value to access_rules list. The access rules for the
+            instance.
+
+             ipAddressRanges
+                The IP address ranges to which to apply this access rule.
+                Accepts non-overlapping CIDR ranges (e.g., 192.168.1.0/24) and
+                IP addresses (e.g., 192.168.1.0).
+
+             name
+                The name of the access rule policy group. Must be 16 characters
+                or less and include only alphanumeric characters or ''.
+
+             squashMode
+                Squash mode for the access rule.
+
+            Shorthand Example:
+
+                --add-access-rules=ipAddressRanges=[string],name=string,squashMode=string --add-access-rules=ipAddressRanges=[string],name=string,squashMode=string
+
+            JSON Example:
+
+                --add-access-rules='[{"ipAddressRanges": ["string"], "name": "string", "squashMode": "string"}]'
+
+            File Example:
+
+                --add-access-rules=path_to_file.(yaml|json)
+
+         At most one of these can be specified:
+
+           --clear-access-rules
+              Clear access_rules value and set to empty list.
+
+           --remove-access-rules=[ipAddressRanges=IPADDRESSRANGES],[name=NAME],[squashMode=SQUASHMODE]
+              Remove existing value from access_rules list. The access rules
+              for the instance.
+
+               ipAddressRanges
+                  The IP address ranges to which to apply this access rule.
+                  Accepts non-overlapping CIDR ranges (e.g., 192.168.1.0/24)
+                  and IP addresses (e.g., 192.168.1.0).
+
+               name
+                  The name of the access rule policy group. Must be 16
+                  characters or less and include only alphanumeric characters
+                  or ''.
+
+               squashMode
+                  Squash mode for the access rule.
+
+              Shorthand Example:
+
+                  --remove-access-rules=ipAddressRanges=[string],name=string,squashMode=string --remove-access-rules=ipAddressRanges=[string],name=string,squashMode=string
+
+              JSON Example:
+
+                  --remove-access-rules='[{"ipAddressRanges": ["string"], "name": "string", "squashMode": "string"}]'
+
+              File Example:
+
+                  --remove-access-rules=path_to_file.(yaml|json)
 
      Update labels.
 

@@ -23,7 +23,12 @@ SYNOPSIS
           --content-disposition=CONTENT_DISPOSITION
           --content-encoding=CONTENT_ENCODING
           --content-language=CONTENT_LANGUAGE --content-type=CONTENT_TYPE
-          --custom-time=CUSTOM_TIME --clear-custom-metadata
+          --custom-time=CUSTOM_TIME --clear-custom-contexts
+          | --custom-contexts=[CUSTOM_CONTEXTS_KEYS_AND_VALUES,...]
+          | --custom-contexts-file=CUSTOM_CONTEXTS_FILE
+          | --remove-custom-contexts=[CUSTOM_CONTEXTS_KEYS,...]
+          --update-custom-contexts=[CUSTOM_CONTEXTS_KEYS_AND_VALUES,...]
+          --clear-custom-metadata
           | --custom-metadata=[CUSTOM_METADATA_KEYS_AND_VALUES,...]
           | --remove-custom-metadata=[METADATA_KEYS,...]
           --update-custom-metadata=[CUSTOM_METADATA_KEYS_AND_VALUES,...]]
@@ -68,6 +73,14 @@ EXAMPLES
     copied in the following.
 
         $ gcloud alpha storage cp ~/Downloads/**/dir gs://my-bucket
+
+    The contexts are preserved when copying to Google Cloud Storage. To
+    overwrite contexts on the destination object, use --custom-contexts or
+    --custom-contexts-file. For example:
+
+        $ gcloud alpha storage cp gs://my-bucket/object \
+            gs://destination-bucket/object \
+            --custom-contexts=key1=value1,key2=value2
 
 POSITIONAL ARGUMENTS
      [SOURCE ...]
@@ -312,6 +325,54 @@ OBJECT METADATA FLAGS
 
      --custom-time=CUSTOM_TIME
         Custom time for Cloud Storage objects in RFC 3339 format.
+
+     Group that allow users to handle object contexts.
+
+     At most one of these can be specified:
+
+       --clear-custom-contexts
+          Clears all custom contexts on objects.
+
+       --custom-contexts=[CUSTOM_CONTEXTS_KEYS_AND_VALUES,...]
+          Sets custom contexts on objects. The existing custom contexts (if
+          any) would be overwritten.
+
+       --custom-contexts-file=CUSTOM_CONTEXTS_FILE
+          Path to a local JSON or YAML file containing custom contexts one
+          wants to set on an object. For example:
+
+          1. The following JSON document shows two key value pairs, i.e. (key1,
+          value1) and (key2, value2):
+
+                {
+                  "key1": {"value": "value1"},
+                  "key2": {"value": "value2"}
+                }
+
+          2. The following YAML document shows two key value pairs, i.e. (key1,
+          value1) and (key2, value2):
+
+                key1:
+                  value: value1
+                key2:
+                  value: value2
+
+          Note: Currently object contexts only supports string format for
+          values.
+
+       Flags that preserve the existing contexts on the object, and can be
+       specified together. However they cannot be specified with
+       --clear-custom-contexts, --custom-contexts or --custom-contexts-file. If
+       --update-custom-contexts and --remove-custom-contexts are specified
+       together, the --remove-custom-contexts would be applied first on object.
+
+         --remove-custom-contexts=[CUSTOM_CONTEXTS_KEYS,...]
+            Removes the custom contexts on the object, if an entry is not
+            found, it would be ignored.
+
+         --update-custom-contexts=[CUSTOM_CONTEXTS_KEYS_AND_VALUES,...]
+            Updates the custom contexts on the object, if an entry is found, it
+            would be overwritten, otherwise the entry would be added.
 
      At most one of these can be specified:
 
