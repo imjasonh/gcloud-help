@@ -24,11 +24,8 @@ SYNOPSIS
           | --storage-pools=STORAGE_POOL,[...]
           | --system-config-from-file=PATH_TO_FILE | --tags=[TAG,...]
           | --windows-os-version=WINDOWS_OS_VERSION
-          | --workload-metadata=WORKLOAD_METADATA | --enable-blue-green-upgrade
-          --enable-surge-upgrade --max-surge-upgrade=MAX_SURGE_UPGRADE
-          --max-unavailable-upgrade=MAX_UNAVAILABLE_UPGRADE
-          --node-pool-soak-duration=NODE_POOL_SOAK_DURATION
-          --standard-rollout-policy=[batch-node-count=BATCH_NODE_COUNT,
+          | --workload-metadata=WORKLOAD_METADATA
+          | --autoscaled-rollout-policy=[wait-for-drain-duration=WAIT-FOR-DRAIN-DURATION] --enable-blue-green-upgrade --enable-surge-upgrade --max-surge-upgrade=MAX_SURGE_UPGRADE --max-unavailable-upgrade=MAX_UNAVAILABLE_UPGRADE --node-pool-soak-duration=NODE_POOL_SOAK_DURATION --standard-rollout-policy=[batch-node-count=BATCH_NODE_COUNT,
           batch-percent=BATCH_NODE_PERCENTAGE,
           batch-soak-duration=BATCH_SOAK_DURATION,...]
           | --boot-disk-provisioned-iops=BOOT_DISK_PROVISIONED_IOPS
@@ -761,6 +758,23 @@ REQUIRED FLAGS
               in the future and later removed.
 
        Upgrade settings
+
+         --autoscaled-rollout-policy=[wait-for-drain-duration=WAIT-FOR-DRAIN-DURATION]
+            Autoscaled rollout policy options for blue-green upgrade.
+
+             wait-for-drain-duration
+                (Optional) Time in seconds to wait after cordoning the blue
+                pool before draining the nodes.
+
+                Examples:
+
+                    $ gcloud alpha container node-pools update node-pool-1 \
+                        --cluster=example-cluster  --enable-blue-green-upgrade  \
+                        --autoscaled-rollout-policy=""
+
+                    $ gcloud alpha container node-pools update node-pool-1 \
+                        --cluster=example-cluster  --enable-blue-green-upgrade  \
+                        --autoscaled-rollout-policy=wait-for-drain-duration=7200s
 
          --enable-blue-green-upgrade
             Changes node pool upgrade strategy to blue-green upgrade.

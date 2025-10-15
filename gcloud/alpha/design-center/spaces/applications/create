@@ -15,6 +15,7 @@ SYNOPSIS
         [--deployment-region=DEPLOYMENT_REGION] [--description=DESCRIPTION]
         [--display-name=DISPLAY_NAME] [--import-existing-resources]
         [--scope-type=SCOPE_TYPE] [--service-account=SERVICE_ACCOUNT]
+        [--type=TYPE]
         [--attributes-business-owners=[channel=CHANNEL],
           [displayName=DISPLAYNAME],[email=EMAIL]
           --attributes-developer-owners=[channel=CHANNEL],
@@ -24,22 +25,24 @@ SYNOPSIS
           [--criticality-type=CRITICALITY_TYPE
           : --criticality-level=CRITICALITY_LEVEL
           --criticality-mission-critical] [--environment-type=ENVIRONMENT_TYPE
-          : --environment=ENVIRONMENT]] [GCLOUD_WIDE_FLAG ...]
+          : --environment=ENVIRONMENT]]
+        [--gke-deployment-target-cluster-self-link=GKE_DEPLOYMENT_TARGET_CLUSTER_SELF_LINK --gke-deployment-target-kubernetes-service-account=GKE_DEPLOYMENT_TARGET_KUBERNETES_SERVICE_ACCOUNT --gke-deployment-target-namespace=GKE_DEPLOYMENT_TARGET_NAMESPACE]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Create an application in a space.
 
 EXAMPLES
-    To create the application my-application with a display name of My
-    Application, description of My application description and source
-    application template revision
+    To create the application my-application with a display name My
+    Application, description My application description, scope type global and
+    source application template revision
     projects/my-project/locations/us-central1/spaces/my-space/applicationTemplates/my-app-template/revisions/rev1
     in space my-space, project my-project and location us-central1, run:
 
         $ gcloud alpha design-center spaces applications create \
             my-application --space=my-space --project=my-project \
             --location=us-central1 --display-name="My Application" \
-            --description="My application description" \
+            --description="My application description" --scope-type=global \
             --source-application-template-revision=projects/my-project/\
         locations/us-central1/spaces/my-space/applicationTemplates/\
         my-app-template/revisions/rev1
@@ -231,6 +234,14 @@ OPTIONAL FLAGS
      --service-account=SERVICE_ACCOUNT
         Your own service account that you use to deploy an application.
 
+     --type=TYPE
+        The type of the application. TYPE must be one of:
+
+         helm-app
+            Application type is helm application.
+         terraform-app
+            Application type is terraform application.
+
      Consumer provided attributes.
 
        --attributes-business-owners=[channel=CHANNEL],[displayName=DISPLAYNAME],[email=EMAIL]
@@ -361,6 +372,32 @@ OPTIONAL FLAGS
             Environment name. Can contain only lowercase letters, numeric
             characters, underscores, and dashes. Can have a maximum length of
             63 characters. Deprecated: Please refer to type instead.
+
+     The deployment target of the application.
+
+       Arguments for the target.
+
+         The GKE deployment target.
+
+           --gke-deployment-target-cluster-self-link=GKE_DEPLOYMENT_TARGET_CLUSTER_SELF_LINK
+              The self link of the cluster where GKE based application is
+              deployed.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --gke-deployment-target-kubernetes-service-account=GKE_DEPLOYMENT_TARGET_KUBERNETES_SERVICE_ACCOUNT
+              The kubernetes service account that is created within the
+              namespace provided above. Example: default or node-sa
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --gke-deployment-target-namespace=GKE_DEPLOYMENT_TARGET_NAMESPACE
+              The namespace where the application is deployed.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

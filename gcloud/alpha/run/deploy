@@ -15,6 +15,8 @@ SYNOPSIS
         [--min-instances=MIN_INSTANCES] [--region=REGION] [--regions=REGIONS]
         [--remove-containers=[CONTAINER,...]]
         [--revision-suffix=REVISION_SUFFIX] [--scaling=SCALING]
+        [--scaling-concurrency-utilization=SCALING_CONCURRENCY_UTILIZATION]
+        [--scaling-cpu-utilization=SCALING_CPU_UTILIZATION]
         [--service-account=SERVICE_ACCOUNT] [--[no-]session-affinity]
         [--tag=TAG] [--timeout=TIMEOUT] [--no-traffic]
         [--vpc-connector=VPC_CONNECTOR] [--vpc-egress=VPC_EGRESS]
@@ -281,6 +283,18 @@ FLAGS
         "auto" for automatic scaling, or a positive integer to configure manual
         scaling with the given integer as a fixed instance count.
 
+     --scaling-concurrency-utilization=SCALING_CONCURRENCY_UTILIZATION
+        A value between 0.0 and 1.0 that indicates the target concurrency
+        utilization where a new instance should be started. Also accepts
+        "default" to restore the default value or "disabled" to disable
+        concurrency utilization scaling.
+
+     --scaling-cpu-utilization=SCALING_CPU_UTILIZATION
+        A value between 0.0 and 1.0 that indicates the target CPU utilization
+        where a new instance should be started. Also accepts "default" to
+        restore the default value or "disabled" to disable CPU utilization
+        scaling.
+
      --service-account=SERVICE_ACCOUNT
         the email address of an IAM service account associated with the
         revision of the service. The service account represents the identity of
@@ -400,6 +414,12 @@ FLAGS
         ◆ instances: (required) The name of the Cloud SQL instances to mount.
           Must be in the form project_id:region:instance_id and separated by
           semicolons.
+
+        ephemeral-disk: A volume that stores data on a temporary disk. With
+        this type of volume, data is not shared between instances and all data
+        will be lost when the instance it is on is terminated. Additional keys:
+        ◆ size: (optional) A quantity representing the amount of disk space
+          allocated to this volume, such as "512Mi" or "3G".
 
         in-memory: An ephemeral volume that stores data in the instance's
         memory. With this type of volume, data is not shared between instances

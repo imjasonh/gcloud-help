@@ -12,7 +12,7 @@ SYNOPSIS
         [[--properties-db-workload=PROPERTIES_DB_WORKLOAD
           --properties-license-type=PROPERTIES_LICENSE_TYPE
           : --properties-allowlisted-ips=[PROPERTIES_ALLOWLISTED_IPS,...]
-          --properties-backup-retention-period-days=PROPERTIES_BACKUP_RETENTION_PERIOD_DAYS --properties-character-set=PROPERTIES_CHARACTER_SET --properties-compute-count=PROPERTIES_COMPUTE_COUNT --properties-cpu-core-count=PROPERTIES_CPU_CORE_COUNT --properties-customer-contacts=[email=EMAIL] --properties-data-storage-size-gb=PROPERTIES_DATA_STORAGE_SIZE_GB --properties-data-storage-size-tb=PROPERTIES_DATA_STORAGE_SIZE_TB --properties-db-edition=PROPERTIES_DB_EDITION --properties-db-version=PROPERTIES_DB_VERSION --properties-is-auto-scaling-enabled --properties-is-storage-auto-scaling-enabled --properties-maintenance-schedule-type=PROPERTIES_MAINTENANCE_SCHEDULE_TYPE --properties-mtls-connection-required --properties-n-character-set=PROPERTIES_N_CHARACTER_SET --properties-private-endpoint-ip=PROPERTIES_PRIVATE_ENDPOINT_IP --properties-private-endpoint-label=PROPERTIES_PRIVATE_ENDPOINT_LABEL --properties-secret-id=PROPERTIES_SECRET_ID --properties-vault-id=PROPERTIES_VAULT_ID --encryption-key-kms=ENCRYPTION_KEY_KMS --encryption-key-provider=ENCRYPTION_KEY_PROVIDER]]
+          --properties-backup-retention-period-days=PROPERTIES_BACKUP_RETENTION_PERIOD_DAYS --properties-character-set=PROPERTIES_CHARACTER_SET --properties-compute-count=PROPERTIES_COMPUTE_COUNT --properties-cpu-core-count=PROPERTIES_CPU_CORE_COUNT --properties-customer-contacts=[email=EMAIL] --properties-data-storage-size-gb=PROPERTIES_DATA_STORAGE_SIZE_GB --properties-data-storage-size-tb=PROPERTIES_DATA_STORAGE_SIZE_TB --properties-db-edition=PROPERTIES_DB_EDITION --properties-db-version=PROPERTIES_DB_VERSION --properties-is-auto-scaling-enabled --properties-is-storage-auto-scaling-enabled --properties-maintenance-schedule-type=PROPERTIES_MAINTENANCE_SCHEDULE_TYPE --properties-mtls-connection-required --properties-n-character-set=PROPERTIES_N_CHARACTER_SET --properties-private-endpoint-ip=PROPERTIES_PRIVATE_ENDPOINT_IP --properties-private-endpoint-label=PROPERTIES_PRIVATE_ENDPOINT_LABEL --properties-secret-id=PROPERTIES_SECRET_ID --properties-vault-id=PROPERTIES_VAULT_ID --encryption-key-provider=ENCRYPTION_KEY_PROVIDER [--encryption-key-kms=ENCRYPTION_KEY_KMS : --key-ring=KEY_RING]]]
         [--source-config-automatic-backups-replication-enabled
           --source-config-autonomous-database=SOURCE_CONFIG_AUTONOMOUS_DATABASE]
         [GCLOUD_WIDE_FLAG ...]
@@ -128,10 +128,10 @@ FLAGS
             --labels=path_to_file.(yaml|json)
 
      --location=LOCATION
-        For resources [autonomous_database, odb-network, odb-subnet,
-        source-config-autonomous-database], provides fallback value for
-        resource location attribute. When the resource's full URI path is not
-        provided, location will fallback to this flag value.
+        For resources [autonomous_database, encryption-key-kms, odb-network,
+        odb-subnet, source-config-autonomous-database], provides fallback value
+        for resource location attribute. When the resource's full URI path is
+        not provided, location will fallback to this flag value.
 
      Network resource - The name of the VPC network used by the Autonomous
      Database in the following format:
@@ -321,12 +321,6 @@ FLAGS
 
        The encryption key used to encrypt the Autonomous Database.
 
-         --encryption-key-kms=ENCRYPTION_KEY_KMS
-            The KMS key used to encrypt the Autonomous Database. This field is
-            required if the provider is GOOGLE_MANAGED. The name of the KMS key
-            resource in the following format:
-            projects/{project}/locations/{location}/keyRings/{key_ring}/cryptoKeys/{crypto_key}.
-
          --encryption-key-provider=ENCRYPTION_KEY_PROVIDER
             The provider of the encryption key. ENCRYPTION_KEY_PROVIDER must be
             one of:
@@ -336,6 +330,44 @@ FLAGS
                 name.
              oracle-managed
                 Oracle Managed.
+
+         CryptoKey resource - The KMS key used to encrypt the Autonomous
+         Database. This field is required if the provider is GOOGLE_MANAGED.
+         The name of the KMS key resource in the following format:
+         projects/{project}/locations/{location}/keyRings/{key_ring}/cryptoKeys/{crypto_key}.
+         The arguments in this group can be used to specify the attributes of
+         this resource. (NOTE) Some attributes are not given arguments in this
+         group but can be set in other ways.
+
+         To set the project attribute:
+          ▫ provide the argument --encryption-key-kms on the command line
+            with a fully specified name;
+          ▫ provide the argument --project on the command line;
+          ▫ set the property core/project.
+
+         To set the location attribute:
+          ▫ provide the argument --encryption-key-kms on the command line
+            with a fully specified name;
+          ▫ provide the argument --location on the command line.
+
+           --encryption-key-kms=ENCRYPTION_KEY_KMS
+              ID of the cryptoKey or fully qualified identifier for the
+              cryptoKey.
+
+              To set the crypto-key attribute:
+              ◇ provide the argument --encryption-key-kms on the command
+                line.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --key-ring=KEY_RING
+              The keyRing id of the cryptoKey resource.
+
+              To set the key-ring attribute:
+              ◇ provide the argument --encryption-key-kms on the command line
+                with a fully specified name;
+              ◇ provide the argument --key-ring on the command line.
 
      The source configuration for the standby Autonomous Database.
 

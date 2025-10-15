@@ -1,0 +1,99 @@
+NAME
+    gcloud beta compute reservations sub-blocks report-subblock-as-faulty -
+        report a sub-block within a reservation as faulty
+
+SYNOPSIS
+    gcloud beta compute reservations sub-blocks report-subblock-as-faulty
+        RESERVATION --block-name=BLOCK_NAME
+        --disruption-schedule=DISRUPTION_SCHEDULE
+        --failure-component=FAILURE_COMPONENT
+        --fault-reasons=[behavior=BEHAVIOR],[description=DESCRIPTION]
+        --sub-block-name=SUB_BLOCK_NAME [--zone=ZONE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Report a sub-block within a reservation as faulty.
+
+EXAMPLES
+    To report reservation exr-1 in ZONE with block name block-1 and sub block
+    name sub-block-1 as faulty, run:
+
+        $ gcloud beta compute reservations sub-blocks \
+            report-subblock-as-faulty exr-1 --zone=ZONE \
+            --block-name=block-1 --sub-block-name=sub-block-1 \
+            --disruption-schedule=IMMEDIATE \
+            --fault-reasons=behavior=PERFORMANCE,description="performance \
+        issues" --failure-component=NVLINK_SWITCH
+
+POSITIONAL ARGUMENTS
+     RESERVATION
+        The name of the reservation containing the sub-block to report as
+        faulty
+
+REQUIRED FLAGS
+     --block-name=BLOCK_NAME
+        The name of the reservation block.
+
+     --disruption-schedule=DISRUPTION_SCHEDULE
+        The disruption schedule for the sub-block. DISRUPTION_SCHEDULE must be
+        (only one value is supported):
+
+         IMMEDIATE
+            All VMs are immediately disrupted.
+
+     --failure-component=FAILURE_COMPONENT
+        The component that experienced the fault. FAILURE_COMPONENT must be one
+        of:
+
+         MULTIPLE_FAULTY_HOSTS
+            Multiple hosts experienced the fault.
+         NVLINK_SWITCH
+            The NVLink switch experienced the fault.
+
+     --fault-reasons=[behavior=BEHAVIOR],[description=DESCRIPTION]
+        The reasons for reporting the sub-block as faulty. You can repeat this
+        flag. Each flag must specify a "behavior" attribute and can optionally
+        include a "description" attribute. The possible values for "behavior"
+        are: PERFORMANCE, SWITCH_FAILURE, GPU_ERROR.
+
+     --sub-block-name=SUB_BLOCK_NAME
+        The name of the reservation sub block.
+
+OPTIONAL FLAGS
+     --zone=ZONE
+        Zone of the reservation to report-subblock-as-faulty. If not specified
+        and the compute/zone property isn't set, you might be prompted to
+        select a zone (interactive mode only).
+
+        To avoid prompting when this flag is omitted, you can set the
+        compute/zone property:
+
+            $ gcloud config set compute/zone ZONE
+
+        A list of zones can be fetched by running:
+
+            $ gcloud compute zones list
+
+        To unset the property, run:
+
+            $ gcloud config unset compute/zone
+
+        Alternatively, the zone can be stored in the environment variable
+        CLOUDSDK_COMPUTE_ZONE.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. These
+    variants are also available:
+
+        $ gcloud compute reservations sub-blocks report-subblock-as-faulty
+
+        $ gcloud alpha compute reservations sub-blocks \
+            report-subblock-as-faulty
+

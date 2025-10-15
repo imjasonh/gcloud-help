@@ -1,0 +1,116 @@
+NAME
+    gcloud alpha compute health-aggregation-policies create - create a health
+        aggregation policy
+
+SYNOPSIS
+    gcloud alpha compute health-aggregation-policies create
+        (HEALTH_AGGREGATION_POLICY : --region=REGION) [--async]
+        [--description=DESCRIPTION]
+        [--healthy-percent-threshold=HEALTHY_PERCENT_THRESHOLD; default=60]
+        [--min-healthy-threshold=MIN_HEALTHY_THRESHOLD; default=1]
+        [--policy-type=POLICY_TYPE; default="backend-service-policy"]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Create a health aggregation policy.
+
+EXAMPLES
+    The following command creates a new health aggregation policy:
+
+        $ gcloud alpha compute health-aggregation-policies create \
+            <HEALTH_AGGREGATION_POLICY_NAME> --region=<REGION> \
+            --healthy-percent-threshold 60 --min-healthy-threshold 2 \
+            --policy-type=BACKEND_SERVICE_POLICY
+
+POSITIONAL ARGUMENTS
+     Health aggregation policy resource - The name of the health aggregation
+     policy you want to create. The arguments in this group can be used to
+     specify the attributes of this resource. (NOTE) Some attributes are not
+     given arguments in this group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument health_aggregation_policy on the command line
+        with a fully specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       HEALTH_AGGREGATION_POLICY
+          ID of the health aggregation policy or fully qualified identifier for
+          the health aggregation policy.
+
+          To set the health_aggregation_policy attribute:
+          ▸ provide the argument health_aggregation_policy on the command
+            line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --region=REGION
+          The name of the Google Compute Engine region.
+
+          To set the region attribute:
+          ▸ provide the argument health_aggregation_policy on the command
+            line with a fully specified name;
+          ▸ provide the argument --region on the command line;
+          ▸ set the property compute/region.
+
+FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --description=DESCRIPTION
+        A textual description of the health aggregation policy.
+
+     --healthy-percent-threshold=HEALTHY_PERCENT_THRESHOLD; default=60
+        Can only be set if the policyType field is BACKEND_SERVICE_POLICY.
+        Specifies the threshold (as a percentage) of healthy endpoints required
+        in order to consider the aggregated health result HEALTHY. Defaults to
+        60. Must be in range [0, 100]. Not applicable if the policyType field
+        is DNS_PUBLIC_IP_POLICY. Can be mutated. This field is optional, and
+        will be set to the default if unspecified. Note that both this
+        threshold and minHealthyThreshold must be satisfied in order for
+        HEALTHY to be the aggregated result. "Endpoints" refers to network
+        endpoints within a Network Endpoint Group or instances within an
+        Instance Group.
+
+     --min-healthy-threshold=MIN_HEALTHY_THRESHOLD; default=1
+        Can only be set if the policyType field is BACKEND_SERVICE_POLICY.
+        Specifies the minimum number of healthy endpoints required in order to
+        consider the aggregated health result HEALTHY. Defaults to 1. Must be
+        positive. Not applicable if the policyType field is
+        DNS_PUBLIC_IP_POLICY. Can be mutated. This field is optional, and will
+        be set to the default if unspecified. Note that both this threshold and
+        healthyPercentThreshold must be satisfied in order for HEALTHY to be
+        the aggregated result. "Endpoints" refers to network endpoints within a
+        Network Endpoint Group or instances within an Instance Group.
+
+     --policy-type=POLICY_TYPE; default="backend-service-policy"
+        Specifies the type of the healthAggregationPolicy. The only allowed
+        value for regional resources is BACKEND_SERVICE_POLICY. Must be
+        specified when the healthAggregationPolicy is created, and cannot be
+        mutated. POLICY_TYPE must be one of: backend-service-policy,
+        dns-public-ip-policy.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the compute/alpha API. The full documentation for this
+    API can be found at: https://cloud.google.com/compute/
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. This variant is also available:
+
+        $ gcloud beta compute health-aggregation-policies create
+

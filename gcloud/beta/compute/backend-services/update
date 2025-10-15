@@ -26,7 +26,6 @@ SYNOPSIS
         [--ip-address-selection-policy=IP_ADDRESS_SELECTION_POLICY]
         [--ip-port-dynamic-forwarding]
         [--load-balancing-scheme=LOAD_BALANCING_SCHEME]
-        [--locality-lb-policy=LOCALITY_LB_POLICY]
         [--logging-optional=LOGGING_OPTIONAL]
         [--logging-optional-fields=[LOGGING_OPTIONAL_FIELDS,...]]
         [--logging-sample-rate=LOGGING_SAMPLE_RATE] [--port-name=PORT_NAME]
@@ -55,6 +54,7 @@ SYNOPSIS
         [--default-ttl=DEFAULT_TTL | --no-default-ttl]
         [--global | --region=REGION]
         [--global-health-checks | --health-checks-region=HEALTH_CHECKS_REGION]
+        [--locality-lb-policy=LOCALITY_LB_POLICY | --no-locality-lb-policy]
         [--max-ttl=MAX_TTL | --no-max-ttl]
         [--[no-]negative-caching | --no-negative-caching-policies
           | --negative-caching-policy=[[CODE=TTL],...]]
@@ -321,12 +321,6 @@ FLAGS
         The value of this field must be EXTERNAL or EXTERNAL_MANAGED.
 
         LOAD_BALANCING_SCHEME must be one of: EXTERNAL, EXTERNAL_MANAGED.
-
-     --locality-lb-policy=LOCALITY_LB_POLICY
-        The load balancing algorithm used within the scope of the locality.
-        LOCALITY_LB_POLICY must be one of: INVALID_LB_POLICY, ROUND_ROBIN,
-        LEAST_REQUEST, RING_HASH, RANDOM, ORIGINAL_DESTINATION, MAGLEV,
-        WEIGHTED_MAGLEV, WEIGHTED_ROUND_ROBIN.
 
      --logging-optional=LOGGING_OPTIONAL
         This field can only be specified if logging is enabled for the backend
@@ -866,6 +860,17 @@ FLAGS
 
           Alternatively, the region can be stored in the environment variable
           CLOUDSDK_COMPUTE_REGION.
+
+     At most one of these can be specified:
+
+       --locality-lb-policy=LOCALITY_LB_POLICY
+          The load balancing algorithm used within the scope of the locality.
+          LOCALITY_LB_POLICY must be one of: INVALID_LB_POLICY, ROUND_ROBIN,
+          LEAST_REQUEST, RING_HASH, RANDOM, ORIGINAL_DESTINATION, MAGLEV,
+          WEIGHTED_MAGLEV, WEIGHTED_ROUND_ROBIN, WEIGHTED_GCP_RENDEZVOUS.
+
+       --no-locality-lb-policy
+          Removes the locality load balancing policy from the backend service.
 
      At most one of these can be specified:
 

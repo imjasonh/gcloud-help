@@ -15,6 +15,7 @@ SYNOPSIS
         [--additional-pod-network=[subnetwork=SUBNETWORK_NAME,
           pod-ipv4-range=SECONDARY_RANGE_NAME,
           [max-pods-per-node=NUM_PODS],...]] [--async]
+        [--autoscaled-rollout-policy=[wait-for-drain-duration=WAIT-FOR-DRAIN-DURATION]]
         [--boot-disk-kms-key=BOOT_DISK_KMS_KEY]
         [--boot-disk-provisioned-iops=BOOT_DISK_PROVISIONED_IOPS]
         [--boot-disk-provisioned-throughput=BOOT_DISK_PROVISIONED_THROUGHPUT]
@@ -196,6 +197,23 @@ FLAGS
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
+
+     --autoscaled-rollout-policy=[wait-for-drain-duration=WAIT-FOR-DRAIN-DURATION]
+        Autoscaled rollout policy options for blue-green upgrade.
+
+         wait-for-drain-duration
+            (Optional) Time in seconds to wait after cordoning the blue pool
+            before draining the nodes.
+
+            Examples:
+
+                $ gcloud alpha container node-pools create node-pool-1 \
+                    --cluster=example-cluster  --enable-blue-green-upgrade  \
+                    --autoscaled-rollout-policy=""
+
+                $ gcloud alpha container node-pools create node-pool-1 \
+                    --cluster=example-cluster  --enable-blue-green-upgrade  \
+                    --autoscaled-rollout-policy=wait-for-drain-duration=7200s
 
      --boot-disk-kms-key=BOOT_DISK_KMS_KEY
         The Customer Managed Encryption Key used to encrypt the boot disk

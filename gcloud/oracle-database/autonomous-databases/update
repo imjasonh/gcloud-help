@@ -1,6 +1,6 @@
 NAME
-    gcloud oracle-database autonomous-databases update - update
-        autonomousDatabases
+    gcloud oracle-database autonomous-databases update - update an
+        AutonomousDatabase
 
 SYNOPSIS
     gcloud oracle-database autonomous-databases update AUTONOMOUS_DATABASE
@@ -11,7 +11,7 @@ SYNOPSIS
         [--clear-network | --network=NETWORK]
         [--clear-odb-subnet | --odb-subnet=ODB_SUBNET]
         [--clear-properties
-          --properties-backup-retention-period-days=PROPERTIES_BACKUP_RETENTION_PERIOD_DAYS --properties-character-set=PROPERTIES_CHARACTER_SET --properties-compute-count=PROPERTIES_COMPUTE_COUNT --properties-cpu-core-count=PROPERTIES_CPU_CORE_COUNT --properties-data-storage-size-gb=PROPERTIES_DATA_STORAGE_SIZE_GB --properties-data-storage-size-tb=PROPERTIES_DATA_STORAGE_SIZE_TB --properties-db-edition=PROPERTIES_DB_EDITION --properties-db-version=PROPERTIES_DB_VERSION --properties-db-workload=PROPERTIES_DB_WORKLOAD --[no-]properties-is-auto-scaling-enabled --[no-]properties-is-storage-auto-scaling-enabled --properties-license-type=PROPERTIES_LICENSE_TYPE --properties-maintenance-schedule-type=PROPERTIES_MAINTENANCE_SCHEDULE_TYPE --[no-]properties-mtls-connection-required --properties-n-character-set=PROPERTIES_N_CHARACTER_SET --properties-private-endpoint-ip=PROPERTIES_PRIVATE_ENDPOINT_IP --properties-private-endpoint-label=PROPERTIES_PRIVATE_ENDPOINT_LABEL --properties-secret-id=PROPERTIES_SECRET_ID --properties-vault-id=PROPERTIES_VAULT_ID --encryption-key-kms=ENCRYPTION_KEY_KMS --encryption-key-provider=ENCRYPTION_KEY_PROVIDER --properties-allowlisted-ips=[PROPERTIES_ALLOWLISTED_IPS,
+          --properties-backup-retention-period-days=PROPERTIES_BACKUP_RETENTION_PERIOD_DAYS --properties-character-set=PROPERTIES_CHARACTER_SET --properties-compute-count=PROPERTIES_COMPUTE_COUNT --properties-cpu-core-count=PROPERTIES_CPU_CORE_COUNT --properties-data-storage-size-gb=PROPERTIES_DATA_STORAGE_SIZE_GB --properties-data-storage-size-tb=PROPERTIES_DATA_STORAGE_SIZE_TB --properties-db-edition=PROPERTIES_DB_EDITION --properties-db-version=PROPERTIES_DB_VERSION --properties-db-workload=PROPERTIES_DB_WORKLOAD --[no-]properties-is-auto-scaling-enabled --[no-]properties-is-storage-auto-scaling-enabled --properties-license-type=PROPERTIES_LICENSE_TYPE --properties-maintenance-schedule-type=PROPERTIES_MAINTENANCE_SCHEDULE_TYPE --[no-]properties-mtls-connection-required --properties-n-character-set=PROPERTIES_N_CHARACTER_SET --properties-private-endpoint-ip=PROPERTIES_PRIVATE_ENDPOINT_IP --properties-private-endpoint-label=PROPERTIES_PRIVATE_ENDPOINT_LABEL --properties-secret-id=PROPERTIES_SECRET_ID --properties-vault-id=PROPERTIES_VAULT_ID --encryption-key-provider=ENCRYPTION_KEY_PROVIDER --key-ring=KEY_RING --clear-encryption-key-kms | --encryption-key-kms=ENCRYPTION_KEY_KMS --properties-allowlisted-ips=[PROPERTIES_ALLOWLISTED_IPS,
           ...]
           | --add-properties-allowlisted-ips=[ADD_PROPERTIES_ALLOWLISTED_IPS,
           ...] --clear-properties-allowlisted-ips
@@ -29,12 +29,19 @@ SYNOPSIS
           | --remove-labels=REMOVE_LABELS] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    Update an autonomousDatabase
+    Update an AutonomousDatabase.
 
 EXAMPLES
-    To update the autonomousDatabase, run:
+    To Update the encryption for a given AutonomousDatabase with id
+    my-autonomous-database with custom KMS encryption key
+    projects/project-id/locations/us-east4/keyRings/keyring/cryptoKeys/key,
+    run:
 
-        $ gcloud oracle-database autonomous-databases update
+        $ gcloud oracle-database autonomous-databases update \
+            my-autonomous-database --location=us-east4 \
+            --properties-encryption-key-provider=GOOGLE_MANAGED \
+            --properties-encryption-key-kms-key=projects/project-id/\
+        locations/us-east4/keyRings/keyring/cryptoKeys/key
 
 POSITIONAL ARGUMENTS
      AutonomousDatabase resource - Identifier. The name of the Autonomous
@@ -89,10 +96,10 @@ FLAGS
         be unique within your project.
 
      --location=LOCATION
-        For resources [autonomous_database, odb-network, odb-subnet,
-        source-config-autonomous-database], provides fallback value for
-        resource location attribute. When the resource's full URI path is not
-        provided, location will fallback to this flag value.
+        For resources [autonomous_database, encryption-key-kms, odb-network,
+        odb-subnet, source-config-autonomous-database], provides fallback value
+        for resource location attribute. When the resource's full URI path is
+        not provided, location will fallback to this flag value.
 
      --odb-network=ODB_NETWORK
         For resources [odb-network, odb-subnet], provides fallback value for
@@ -279,12 +286,6 @@ FLAGS
 
        The encryption key used to encrypt the Autonomous Database.
 
-         --encryption-key-kms=ENCRYPTION_KEY_KMS
-            The KMS key used to encrypt the Autonomous Database. This field is
-            required if the provider is GOOGLE_MANAGED. The name of the KMS key
-            resource in the following format:
-            projects/{project}/locations/{location}/keyRings/{key_ring}/cryptoKeys/{crypto_key}.
-
          --encryption-key-provider=ENCRYPTION_KEY_PROVIDER
             The provider of the encryption key. ENCRYPTION_KEY_PROVIDER must be
             one of:
@@ -294,6 +295,56 @@ FLAGS
                 name.
              oracle-managed
                 Oracle Managed.
+
+         All arguments needed to update encryption_key_kms.
+
+           --key-ring=KEY_RING
+              The keyRing id of the cryptoKey resource.
+
+              To set the key-ring attribute:
+              ◇ provide the argument --current on the command line with a
+                fully specified name;
+              ◇ provide the argument --key-ring on the command line.
+
+           Update encryption_key_kms.
+
+           At most one of these can be specified:
+
+             --clear-encryption-key-kms
+                Clear encryption_key_kms value and set to null.
+
+             CryptoKey resource - Set encryption_key_kms to new value.
+
+             The KMS key used to encrypt the Autonomous Database. This field is
+             required if the provider is GOOGLE_MANAGED. The name of the KMS
+             key resource in the following format:
+             projects/{project}/locations/{location}/keyRings/{key_ring}/cryptoKeys/{crypto_key}.
+             This represents a Cloud resource. (NOTE) Some attributes are not
+             given arguments in this group but can be set in other ways.
+
+             To set the project attribute:
+              ▹ provide the argument --encryption-key-kms on the command line
+                with a fully specified name;
+              ▹ provide the argument --project on the command line;
+              ▹ set the property core/project.
+
+             To set the location attribute:
+              ▹ provide the argument --encryption-key-kms on the command line
+                with a fully specified name;
+              ▹ provide the argument --location on the command line.
+
+             To set the key-ring attribute:
+              ▹ provide the argument --encryption-key-kms on the command line
+                with a fully specified name;
+              ▹ provide the argument --key-ring on the command line.
+
+               --encryption-key-kms=ENCRYPTION_KEY_KMS
+                  ID of the cryptoKey or fully qualified identifier for the
+                  cryptoKey.
+
+                  To set the crypto-key attribute:
+                  ▪ provide the argument --encryption-key-kms on the command
+                    line.
 
        Update properties_allowlisted_ips.
 

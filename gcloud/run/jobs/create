@@ -3,7 +3,8 @@ NAME
 
 SYNOPSIS
     gcloud run jobs create [JOB] [--binary-authorization=POLICY]
-        [--breakglass=JUSTIFICATION] [--container=CONTAINER] [--key=KEY]
+        [--breakglass=JUSTIFICATION] [--container=CONTAINER]
+        [--gpu-type=GPU_TYPE] [--[no-]gpu-zonal-redundancy] [--key=KEY]
         [--labels=[KEY=VALUE,...]] [--max-retries=MAX_RETRIES]
         [--parallelism=PARALLELISM] [--region=REGION]
         [--service-account=SERVICE_ACCOUNT]
@@ -14,8 +15,8 @@ SYNOPSIS
           --clear-volumes --remove-volume=[VOLUME,...]]
         [--add-volume-mount=[volume=NAME,mount-path=MOUNT_PATH,...]
           --args=[ARG,...] --clear-volume-mounts --command=[COMMAND,...]
-          --cpu=CPU --depends-on=[CONTAINER,...] --image=IMAGE --memory=MEMORY
-          --remove-volume-mount=[MOUNT_PATH,...]
+          --cpu=CPU --depends-on=[CONTAINER,...] --gpu=GPU --image=IMAGE
+          --memory=MEMORY --remove-volume-mount=[MOUNT_PATH,...]
           --startup-probe=[KEY=VALUE,...] --clear-env-vars
           | --env-vars-file=FILE_PATH | --set-env-vars=[KEY=VALUE,...]
           | --remove-env-vars=[KEY,...]
@@ -78,6 +79,13 @@ FLAGS
 
         Flags that are not container-specific must be specified before
         --container.
+
+     --gpu-type=GPU_TYPE
+        The GPU type to use.
+
+     --[no-]gpu-zonal-redundancy
+        Set GPU zonal redundancy. Use --gpu-zonal-redundancy to enable and
+        --no-gpu-zonal-redundancy to disable.
 
      --key=KEY
         CMEK key reference to encrypt the container with.
@@ -221,6 +229,10 @@ FLAGS
 
          --depends-on=[CONTAINER,...]
             List of container dependencies to add to the current container.
+
+         --gpu=GPU
+            Cloud Run supports values 0 or 1. 1 gpu also requires a minimum 4
+            --cpu value and a minimum 16Gi --memory value.
 
          --image=IMAGE
             Name of the container image to deploy (e.g.
