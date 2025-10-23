@@ -162,10 +162,11 @@ FLAGS
 
      --add-volume=[KEY=VALUE,...]
         Adds a volume to the Cloud Run resource. To add more than one volume,
-        specify this flag multiple times. Volumes must have a name and type
-        key. Only certain values are supported for type. Depending on the
-        provided type, other keys will be required. The following types are
-        supported with the specified additional keys:
+        specify this flag multiple times. Volumes must have a type key. Volumes
+        must have a name key if mount-path is not specified. A name key is
+        optional if mount-path is specified.Only certain values are supported
+        for type. Depending on the provided type, other keys will be required.
+        The following types are supported with the specified additional keys:
 
         cloud-storage: A volume representing a Cloud Storage bucket. This
         volume type is mounted using Cloud Storage FUSE. See
@@ -181,15 +182,30 @@ FLAGS
         ◆ dynamic-mounting: (optional) A boolean. If true, the volume will be
           mounted dynamically. Note: You will either need to specify a bucket
           or set dynamic-mounting to true, but not both.
+        ◆ mount-path: (optional) The path at which the volume should be
+          mounted. The mount-path parameter is only supported for single
+          container services which do not make use of the --container flag. For
+          multi-container services, specify the mount-path parameter under the
+          --add-volume-mount flag.
 
         cloudsql: Represents a Cloud SQL instance as a volume. Additional keys:
         ◆ instances: (required) The name of the Cloud SQL instances to mount.
           Must be in the form project_id:region:instance_id and separated by
           semicolons.
+        ◆ mount-path: (optional) The path at which the volume should be
+          mounted. The mount-path parameter is only supported for single
+          container services which do not make use of the --container flag. For
+          multi-container services, specify the mount-path parameter under the
+          --add-volume-mount flag.
 
         ephemeral-disk: A volume that stores data on a temporary disk. With
         this type of volume, data is not shared between instances and all data
         will be lost when the instance it is on is terminated. Additional keys:
+        ◆ mount-path: (optional) The path at which the volume should be
+          mounted. The mount-path parameter is only supported for single
+          container services which do not make use of the --container flag. For
+          multi-container services, specify the mount-path parameter under the
+          --add-volume-mount flag.
         ◆ size: (optional) A quantity representing the amount of disk space
           allocated to this volume, such as "512Mi" or "3G".
 
@@ -197,6 +213,11 @@ FLAGS
         memory. With this type of volume, data is not shared between instances
         and all data will be lost when the instance it is on is terminated.
         Additional keys:
+        ◆ mount-path: (optional) The path at which the volume should be
+          mounted. The mount-path parameter is only supported for single
+          container services which do not make use of the --container flag. For
+          multi-container services, specify the mount-path parameter under the
+          --add-volume-mount flag.
         ◆ size-limit: (optional) A quantity representing the maximum amount
           of memory allocated to this volume, such as "512Mi" or "3G". Data
           stored in an in-memory volume consumes the memory allocation of the
@@ -206,6 +227,11 @@ FLAGS
         nfs: Represents a volume backed by an NFS server. Additional keys:
         ◆ location: (required) The location of the NFS Server, in the form
           SERVER:/PATH
+        ◆ mount-path: (optional) The path at which the volume should be
+          mounted. The mount-path parameter is only supported for single
+          container services which do not make use of the --container flag. For
+          multi-container services, specify the mount-path parameter under the
+          --add-volume-mount flag.
         ◆ readonly: (optional) A boolean. If true, this volume will be
           read-only from all mounts.
 
@@ -218,6 +244,11 @@ FLAGS
           the volume.
         ◆ path: (required) The relative path within the volume to mount that
           version.
+        ◆ mount-path: (optional) The path at which the volume should be
+          mounted. The mount-path parameter is only supported for single
+          container services which do not make use of the --container flag. For
+          multi-container services, specify the mount-path parameter under the
+          --add-volume-mount flag.
 
      --clear-volumes
         Remove all existing volumes from the Cloud Run resource, including

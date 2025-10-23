@@ -6,11 +6,12 @@ SYNOPSIS
     gcloud database-migration migration-jobs update
         (MIGRATION_JOB : --region=REGION) [--no-async] [--commit-id=COMMIT_ID]
         [--destination=DESTINATION] [--display-name=DISPLAY_NAME]
-        [--dump-parallel-level=DUMP_PARALLEL_LEVEL] [--dump-path=DUMP_PATH]
-        [--dump-type=DUMP_TYPE] [--filter=FILTER] [--source=SOURCE]
-        [--type=TYPE] [--update-labels=[KEY=VALUE,...]]
+        [--dump-parallel-level=DUMP_PARALLEL_LEVEL] [--dump-type=DUMP_TYPE]
+        [--filter=FILTER] [--source=SOURCE] [--type=TYPE]
+        [--update-labels=[KEY=VALUE,...]]
         [--all-databases | --databases-filter=databaseName,[...]]
         [--clear-labels | --remove-labels=[KEY,...]]
+        [--dump-flags=[KEY=VALUE,...] | --dump-path=DUMP_PATH]
         [--max-concurrent-cdc-connections=MAX_CONCURRENT_CDC_CONNECTIONS
           --max-concurrent-full-dump-connections=MAX_CONCURRENT_FULL_DUMP_CONNECTIONS --max-concurrent-destination-connections=MAX_CONCURRENT_DESTINATION_CONNECTIONS --transaction-timeout=TRANSACTION_TIMEOUT]
         [--peer-vpc=PEER_VPC | --static-ip
@@ -111,10 +112,6 @@ FLAGS
         specified, will be defaulted to OPTIMAL. DUMP_PARALLEL_LEVEL must be
         one of: MIN, OPTIMAL, MAX.
 
-     --dump-path=DUMP_PATH
-        Path to the dump file in Google Cloud Storage, in the format:
-        gs://[BUCKET_NAME]/[OBJECT_NAME].
-
      --dump-type=DUMP_TYPE
         The type of the data dump. Currently applicable for MySQL to MySQL
         migrations only. DUMP_TYPE must be one of: LOGICAL, PHYSICAL.
@@ -196,6 +193,16 @@ FLAGS
           List of label keys to remove. If a label does not exist it is
           silently ignored. If --update-labels is also specified then
           --update-labels is applied first.
+
+     At most one of these can be specified:
+
+       --dump-flags=[KEY=VALUE,...]
+          A list of dump flags. An object containing a list of "key": "value"
+          pairs.
+
+       --dump-path=DUMP_PATH
+          Path to the dump file in Google Cloud Storage, in the format:
+          gs://[BUCKET_NAME]/[OBJECT_NAME].
 
      The heterogeneous migration config. This is used only for Oracle to Cloud
      SQL for PostgreSQL and SQL Server to Cloud SQL for PostgreSQL migrations.

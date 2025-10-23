@@ -9,7 +9,7 @@ SYNOPSIS
         [--attribute-mapping=[KEY=VALUE,...]] [--client-id=CLIENT_ID]
         [--description=DESCRIPTION] [--detailed-audit-logging] [--disabled]
         [--display-name=DISPLAY_NAME] [--issuer-uri=ISSUER_URI]
-        [--jwk-json-path=PATH_TO_FILE]
+        [--jwk-json-path=PATH_TO_FILE] [--scim-usage=SCIM_USAGE]
         [--web-sso-additional-scopes=[WEB_SSO_ADDITIONAL_SCOPES,...]]
         [--web-sso-assertion-claims-behavior=WEB_SSO_ASSERTION_CLAIMS_BEHAVIOR]
         [--web-sso-response-type=WEB_SSO_RESPONSE_TYPE]
@@ -228,115 +228,164 @@ FLAGS
                  }
               ]
             }
-            ```. Use a full or relative path to a local file containing the value of jwk_json_path.
+        . Use a full or relative path to a local file containing the value of
+        jwk_json_path.
 
-            *--web-sso-additional-scopes*=[_WEB_SSO_ADDITIONAL_SCOPES_,...]::
+     --scim-usage=SCIM_USAGE
+        Specifies whether the workforce identity pool provider uses
+        SCIM-managed groups instead of the google.groups attribute mapping for
+        authorization checks.
 
-            Additional scopes to request for the OIDC authentication on
-            top of scopes requested by default. By default, the `openid`, `profile`
-            and `email` scopes that are supported by the identity provider are
-            requested.
+        The scim_usage and extended_attributes_oauth2_client fields are
+        mutually exclusive. A request that enables both fields on the same
+        workforce identity pool provider will produce an error.
 
-            Each additional scope may be at most 256
-            characters. A maximum of 10 additional scopes may be configured.
+        Use enabled-for-groups to enable SCIM-managed groups. Use
+        scim-usage-unspecified to disable SCIM-managed groups.
 
-            *--web-sso-assertion-claims-behavior*=_WEB_SSO_ASSERTION_CLAIMS_BEHAVIOR_::
+        SCIM_USAGE must be one of: enabled-for-groups, scim-usage-unspecified.
 
-            The behavior for how OIDC Claims are included in the `assertion` object used for attribute mapping and attribute condition.
-            Use `merge-user-info-over-id-token-claims` to merge the UserInfo Endpoint Claims with ID Token
-            Claims, preferring UserInfo Claim Values for the same Claim Name. Currently this option is only
-            available for Authorization Code flow.
-            Use `only-id-token-claims` to include only ID token claims. _WEB_SSO_ASSERTION_CLAIMS_BEHAVIOR_ must be one of: *assertion-claims-behavior-unspecified*, *merge-user-info-over-id-token-claims*, *only-id-token-claims*.
+     --web-sso-additional-scopes=[WEB_SSO_ADDITIONAL_SCOPES,...]
+        Additional scopes to request for the OIDC authentication on top of
+        scopes requested by default. By default, the openid, profile and email
+        scopes that are supported by the identity provider are requested.
 
-            *--web-sso-response-type*=_WEB_SSO_RESPONSE_TYPE_::
+        Each additional scope may be at most 256 characters. A maximum of 10
+        additional scopes may be configured.
 
-            Response Type to request for in the OIDC Authorization Request for web sign-in.
-            Use `code` to select the authorization code flow (https://openid.net/specs/openid-connect-core-1_0.html#CodeFlowAuth)
-            Use `id-token` to select the implicit flow (https://openid.net/specs/openid-connect-core-1_0.html#ImplicitFlowAuth). _WEB_SSO_RESPONSE_TYPE_ must be one of: *code*, *id-token*, *response-type-unspecified*.
+     --web-sso-assertion-claims-behavior=WEB_SSO_ASSERTION_CLAIMS_BEHAVIOR
+        The behavior for how OIDC Claims are included in the assertion object
+        used for attribute mapping and attribute condition. Use
+        merge-user-info-over-id-token-claims to merge the UserInfo Endpoint
+        Claims with ID Token Claims, preferring UserInfo Claim Values for the
+        same Claim Name. Currently this option is only available for
+        Authorization Code flow. Use only-id-token-claims to include only ID
+        token claims. WEB_SSO_ASSERTION_CLAIMS_BEHAVIOR must be one of:
+        assertion-claims-behavior-unspecified,
+        merge-user-info-over-id-token-claims, only-id-token-claims.
 
-            :: At most one of these can be specified:
+     --web-sso-response-type=WEB_SSO_RESPONSE_TYPE
+        Response Type to request for in the OIDC Authorization Request for web
+        sign-in. Use code to select the authorization code flow
+        (https://openid.net/specs/openid-connect-core-1_0.html#CodeFlowAuth)
+        Use id-token to select the implicit flow
+        (https://openid.net/specs/openid-connect-core-1_0.html#ImplicitFlowAuth).
+        WEB_SSO_RESPONSE_TYPE must be one of: code, id-token,
+        response-type-unspecified.
 
-            *--clear-client-secret*:::
+     At most one of these can be specified:
 
-            Clear the OIDC client secret.
+       --clear-client-secret
+          Clear the OIDC client secret.
 
-            *--client-secret-value*=_CLIENT_SECRET_VALUE_:::
+       --client-secret-value=CLIENT_SECRET_VALUE
+          The OIDC client secret. Required to enable Authorization Code flow
+          for web sign-in.
 
-            The OIDC client secret. Required to enable Authorization Code flow for web sign-in.
+     At most one of these can be specified:
 
-            :: At most one of these can be specified:
+       --clear-extended-attributes-config
+          Clear the extended attributes configuration.
 
-            *--clear-extended-attributes-config*:::
+       --extended-attributes-client-id=EXTENDED_ATTRIBUTES_CLIENT_ID
+          The OAuth 2.0 client ID for retrieving extended attributes from the
+          identity provider. Required to get extended group memberships for a
+          subset of Google Cloud products.
 
-            Clear the extended attributes configuration.
+       --extended-attributes-client-secret-value=EXTENDED_ATTRIBUTES_CLIENT_SECRET_VALUE
+          The OAuth 2.0 client secret for retrieving extended attributes from
+          the identity provider. Required to get extended group memberships for
+          a subset of Google Cloud products.
 
-            *--extended-attributes-client-id*=_EXTENDED_ATTRIBUTES_CLIENT_ID_:::
+       --extended-attributes-filter=EXTENDED_ATTRIBUTES_FILTER
+          The filter used to request specific records from the IdP. By default,
+          all of the groups that are associated with a user are fetched. For
+          Microsoft Entra ID, you can add $search query parameters using
+          [Keyword Query Language]
+          (https://learn.microsoft.com/en-us/sharepoint/dev/general-development/keyword-query-language-kql-syntax-reference).
+          To learn more about $search querying in Microsoft Entra ID, see [Use
+          the $search query parameter]
+          (https://learn.microsoft.com/en-us/graph/search-query-parameter).
 
-            The OAuth 2.0 client ID for retrieving extended attributes from the identity provider. Required to get extended group memberships for a subset of Google Cloud products.
+          Additionally, Workforce Identity Federation automatically adds the
+          following [$filter query parameters]
+          (https://learn.microsoft.com/en-us/graph/filter-query-parameter),
+          based on the value of attributes_type. Values passed to filter are
+          converted to $search query parameters. Additional $filter query
+          parameters cannot be added using this field.
 
-            *--extended-attributes-client-secret-value*=_EXTENDED_ATTRIBUTES_CLIENT_SECRET_VALUE_:::
+          ▸ AZURE_AD_GROUPS_ID: securityEnabled filter is applied.
 
-            The OAuth 2.0 client secret for retrieving extended attributes from the identity provider. Required to get extended group memberships for a subset of Google Cloud products.
+       --extended-attributes-issuer-uri=EXTENDED_ATTRIBUTES_ISSUER_URI
+          OIDC identity provider's issuer URI. Must be a valid URI using the
+          https scheme. Required to get the OIDC discovery document.
 
-            *--extended-attributes-filter*=_EXTENDED_ATTRIBUTES_FILTER_:::
+       --extended-attributes-type=EXTENDED_ATTRIBUTES_TYPE
+          Represents the identity provider and type of claims that should be
+          fetched. EXTENDED_ATTRIBUTES_TYPE must be (only one value is
+          supported): azure-ad-groups-id.
 
-            The filter used to request specific records from the IdP. By default, all of the groups that are associated with a user are fetched. For Microsoft Entra ID, you can add `$search` query parameters using [Keyword Query Language] (https://learn.microsoft.com/en-us/sharepoint/dev/general-development/keyword-query-language-kql-syntax-reference). To learn more about `$search` querying in Microsoft Entra ID, see [Use the `$search` query parameter] (https://learn.microsoft.com/en-us/graph/search-query-parameter).
+     At most one of these can be specified:
 
-            Additionally, Workforce Identity Federation automatically adds the following [`$filter` query parameters] (https://learn.microsoft.com/en-us/graph/filter-query-parameter), based on the value of `attributes_type`. Values passed to `filter` are converted to `$search` query parameters. Additional `$filter` query parameters cannot be added using this field.
+       --clear-extra-attributes-config
+          Clear the extra attributes configuration.
 
-            * `AZURE_AD_GROUPS_ID`: `securityEnabled` filter is applied.
+       --extra-attributes-client-id=EXTRA_ATTRIBUTES_CLIENT_ID
+          The OAuth 2.0 client ID for retrieving extra attributes from the
+          identity provider. Required to get the access token using client
+          credentials grant flow.
 
-            *--extended-attributes-issuer-uri*=_EXTENDED_ATTRIBUTES_ISSUER_URI_:::
+       --extra-attributes-client-secret-value=EXTRA_ATTRIBUTES_CLIENT_SECRET_VALUE
+          The OAuth 2.0 client secret for retrieving extra attributes from the
+          identity provider. Required to get the access token using client
+          credentials grant flow.
 
-            OIDC identity provider's issuer URI. Must be a valid URI using the `https` scheme. Required to get the OIDC discovery document.
+       --extra-attributes-filter=EXTRA_ATTRIBUTES_FILTER
+          The filter used to request specific records from the IdP. By default,
+          all of the groups that are associated with a user are fetched. For
+          Microsoft Entra ID, you can add $search query parameters using
+          [Keyword Query Language]
+          (https://learn.microsoft.com/en-us/sharepoint/dev/general-development/keyword-query-language-kql-syntax-reference).
+          To learn more about $search querying in Microsoft Entra ID, see [Use
+          the $search query parameter]
+          (https://learn.microsoft.com/en-us/graph/search-query-parameter).
 
-            *--extended-attributes-type*=_EXTENDED_ATTRIBUTES_TYPE_:::
+          Additionally, Workforce Identity Federation automatically adds the
+          following [$filter query parameters]
+          (https://learn.microsoft.com/en-us/graph/filter-query-parameter),
+          based on the value of attributes_type. Values passed to filter are
+          converted to $search query parameters. Additional $filter query
+          parameters cannot be added using this field.
 
-            Represents the identity provider and type of claims that should be fetched. _EXTENDED_ATTRIBUTES_TYPE_ must be (only one value is supported): *azure-ad-groups-id*.
+          ▸ AZURE_AD_GROUPS_MAIL: mailEnabled and securityEnabled filters are
+            applied.
+          ▸ AZURE_AD_GROUPS_ID: securityEnabled filter is applied.
 
-            :: At most one of these can be specified:
+       --extra-attributes-issuer-uri=EXTRA_ATTRIBUTES_ISSUER_URI
+          OIDC identity provider's issuer URI. Must be a valid URI using the
+          https scheme. Required to get the OIDC discovery document.
 
-            *--clear-extra-attributes-config*:::
-
-            Clear the extra attributes configuration.
-
-            *--extra-attributes-client-id*=_EXTRA_ATTRIBUTES_CLIENT_ID_:::
-
-            The OAuth 2.0 client ID for retrieving extra attributes from the identity provider. Required to get the access token using client credentials grant flow.
-
-            *--extra-attributes-client-secret-value*=_EXTRA_ATTRIBUTES_CLIENT_SECRET_VALUE_:::
-
-            The OAuth 2.0 client secret for retrieving extra attributes from the identity provider. Required to get the access token using client credentials grant flow.
-
-            *--extra-attributes-filter*=_EXTRA_ATTRIBUTES_FILTER_:::
-
-            The filter used to request specific records from the IdP. By default, all of the groups that are associated with a user are fetched. For Microsoft Entra ID, you can add `$search` query parameters using [Keyword Query Language] (https://learn.microsoft.com/en-us/sharepoint/dev/general-development/keyword-query-language-kql-syntax-reference). To learn more about `$search` querying in Microsoft Entra ID, see [Use the `$search` query parameter] (https://learn.microsoft.com/en-us/graph/search-query-parameter).
-
-            Additionally, Workforce Identity Federation automatically adds the following [`$filter` query parameters] (https://learn.microsoft.com/en-us/graph/filter-query-parameter), based on the value of `attributes_type`. Values passed to `filter` are converted to `$search` query parameters. Additional `$filter` query parameters cannot be added using this field.
-
-            * `AZURE_AD_GROUPS_MAIL`: `mailEnabled` and `securityEnabled` filters are applied.
-            * `AZURE_AD_GROUPS_ID`: `securityEnabled` filter is applied.
-
-            *--extra-attributes-issuer-uri*=_EXTRA_ATTRIBUTES_ISSUER_URI_:::
-
-            OIDC identity provider's issuer URI. Must be a valid URI using the `https` scheme. Required to get the OIDC discovery document.
-
-            *--extra-attributes-type*=_EXTRA_ATTRIBUTES_TYPE_:::
-
-            Represents the identity provider and type of claims that should be fetched. _EXTRA_ATTRIBUTES_TYPE_ must be one of: *azure-ad-groups-mail*, *azure-ad-groups-id*.
+       --extra-attributes-type=EXTRA_ATTRIBUTES_TYPE
+          Represents the identity provider and type of claims that should be
+          fetched. EXTRA_ATTRIBUTES_TYPE must be one of: azure-ad-groups-mail,
+          azure-ad-groups-id.
 
 GCLOUD WIDE FLAGS
-        These flags are available to all commands: --access-token-file, --account, --billing-project, --configuration, --flags-file, --flatten, --format, --help, --impersonate-service-account, --log-http, --project, --quiet, --trace-token, --user-output-enabled, --verbosity.
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
 
-        Run *$ gcloud help* for details.
+    Run $ gcloud help for details.
 
 API REFERENCE
-        This command uses the *iam/v1* API. The full documentation for this API can be found at: https://cloud.google.com/iam/
+    This command uses the iam/v1 API. The full documentation for this API can
+    be found at: https://cloud.google.com/iam/
 
 NOTES
-        These variants are also available:
+    These variants are also available:
 
-          $ gcloud alpha iam workforce-pools providers update-oidc
+        $ gcloud alpha iam workforce-pools providers update-oidc
 
-          $ gcloud beta iam workforce-pools providers update-oidc
+        $ gcloud beta iam workforce-pools providers update-oidc
 

@@ -6,9 +6,9 @@ SYNOPSIS
     gcloud alpha database-migration migration-jobs update
         (MIGRATION_JOB : --region=REGION) [--no-async]
         [--destination=DESTINATION] [--display-name=DISPLAY_NAME]
-        [--dump-path=DUMP_PATH] [--source=SOURCE] [--type=TYPE]
-        [--update-labels=[KEY=VALUE,...]]
+        [--source=SOURCE] [--type=TYPE] [--update-labels=[KEY=VALUE,...]]
         [--clear-labels | --remove-labels=[KEY,...]]
+        [--dump-flags=[KEY=VALUE,...] | --dump-path=DUMP_PATH]
         [--peer-vpc=PEER_VPC | --static-ip
           | --vm=VM --vm-ip=VM_IP --vm-port=VM_PORT --vpc=VPC]
         [GCLOUD_WIDE_FLAG ...]
@@ -96,10 +96,6 @@ FLAGS
         include letters, numbers, spaces, and hyphens, and must start with a
         letter.
 
-     --dump-path=DUMP_PATH
-        Path to the dump file in Google Cloud Storage, in the format:
-        gs://[BUCKET_NAME]/[OBJECT_NAME].
-
      Connection profile resource - ID of the source connection profile,
      representing the source database. This represents a Cloud resource. (NOTE)
      Some attributes are not given arguments in this group but can be set in
@@ -155,6 +151,16 @@ FLAGS
           List of label keys to remove. If a label does not exist it is
           silently ignored. If --update-labels is also specified then
           --update-labels is applied first.
+
+     At most one of these can be specified:
+
+       --dump-flags=[KEY=VALUE,...]
+          A list of dump flags. An object containing a list of "key": "value"
+          pairs.
+
+       --dump-path=DUMP_PATH
+          Path to the dump file in Google Cloud Storage, in the format:
+          gs://[BUCKET_NAME]/[OBJECT_NAME].
 
      The connectivity method used by the migration job. If a connectivity
      method isn't specified, then it isn't updated for the migration job.

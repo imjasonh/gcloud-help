@@ -5,6 +5,7 @@ NAME
 SYNOPSIS
     gcloud container clusters update NAME
         (--anonymous-authentication-config=ANONYMOUS_AUTHENTICATION_CONFIG
+          | --autopilot-workload-policies=WORKLOAD_POLICIES
           | --autoprovisioning-cgroup-mode=AUTOPROVISIONING_CGROUP_MODE
           | --autoprovisioning-enable-insecure-kubelet-readonly-port
           | --autoprovisioning-network-tags=[TAGS,...]
@@ -38,7 +39,9 @@ SYNOPSIS
           | --notification-config=[pubsub=ENABLED|DISABLED,
           pubsub-topic=TOPIC,...] | --patch-update=[PATCH_UPDATE]
           | --private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE
-          | --release-channel=CHANNEL | --remove-labels=[KEY,...]
+          | --release-channel=CHANNEL
+          | --remove-autopilot-workload-policies=REMOVE_WORKLOAD_POLICIES
+          | --remove-labels=[KEY,...]
           | --remove-workload-policies=REMOVE_WORKLOAD_POLICIES
           | --security-group=SECURITY_GROUP
           | --security-posture=SECURITY_POSTURE | --set-password
@@ -155,6 +158,16 @@ REQUIRED FLAGS
               'LIMITED' restricts anonymous access to the cluster. Only calls
               to the health check endpoints are allowed anonymously, all other
               calls will be rejected.
+
+       --autopilot-workload-policies=WORKLOAD_POLICIES
+          Add Autopilot workload policies to the cluster.
+
+          Examples:
+
+              $ gcloud container clusters update example-cluster \
+                  --autopilot-workload-policies=allow-net-admin
+
+          The only supported workload policy is 'allow-net-admin'.
 
        --autoprovisioning-cgroup-mode=AUTOPROVISIONING_CGROUP_MODE
           Sets the cgroup mode for auto-provisioned nodes.
@@ -672,6 +685,16 @@ REQUIRED FLAGS
            stable
               Clusters subscribed to 'stable' receive versions that are known
               to be stable and reliable in production.
+
+       --remove-autopilot-workload-policies=REMOVE_WORKLOAD_POLICIES
+          Remove Autopilot workload policies from the cluster.
+
+          Examples:
+
+              $ gcloud container clusters update example-cluster \
+                  --remove-autopilot-workload-policies=allow-net-admin
+
+          The only supported workload policy is 'allow-net-admin'.
 
        --remove-labels=[KEY,...]
           Labels to remove from the Google Cloud resources in use by the

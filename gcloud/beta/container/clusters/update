@@ -5,6 +5,7 @@ NAME
 SYNOPSIS
     gcloud beta container clusters update NAME
         (--anonymous-authentication-config=ANONYMOUS_AUTHENTICATION_CONFIG
+          | --autopilot-workload-policies=WORKLOAD_POLICIES
           | --autoprovisioning-cgroup-mode=AUTOPROVISIONING_CGROUP_MODE
           | --autoprovisioning-enable-insecure-kubelet-readonly-port
           | --autoprovisioning-network-tags=[TAGS,...]
@@ -40,7 +41,9 @@ SYNOPSIS
           | --notification-config=[pubsub=ENABLED|DISABLED,
           pubsub-topic=TOPIC,...] | --patch-update=[PATCH_UPDATE]
           | --private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE
-          | --release-channel=CHANNEL | --remove-labels=[KEY,...]
+          | --release-channel=CHANNEL
+          | --remove-autopilot-workload-policies=REMOVE_WORKLOAD_POLICIES
+          | --remove-labels=[KEY,...]
           | --remove-workload-policies=REMOVE_WORKLOAD_POLICIES
           | --security-group=SECURITY_GROUP
           | --security-posture=SECURITY_POSTURE | --set-password
@@ -118,6 +121,8 @@ SYNOPSIS
           --monitoring-service=MONITORING_SERVICE
           | --[no-]enable-secret-manager --[no-]enable-secret-manager-rotation
           --secret-manager-rotation-interval=SECRET_MANAGER_ROTATION_INTERVAL
+          | --[no-]enable-secret-sync --[no-]enable-secret-sync-rotation
+          --secret-sync-rotation-interval=SECRET_SYNC_ROTATION_INTERVAL
           | --password=PASSWORD --enable-basic-auth
           | --username=USERNAME, -u USERNAME) [--async]
         [--cloud-run-config=[load-balancer-type=EXTERNAL,...]]
@@ -159,6 +164,16 @@ REQUIRED FLAGS
               'LIMITED' restricts anonymous access to the cluster. Only calls
               to the health check endpoints are allowed anonymously, all other
               calls will be rejected.
+
+       --autopilot-workload-policies=WORKLOAD_POLICIES
+          Add Autopilot workload policies to the cluster.
+
+          Examples:
+
+              $ gcloud beta container clusters update example-cluster \
+                  --autopilot-workload-policies=allow-net-admin
+
+          The only supported workload policy is 'allow-net-admin'.
 
        --autoprovisioning-cgroup-mode=AUTOPROVISIONING_CGROUP_MODE
           Sets the cgroup mode for auto-provisioned nodes.
@@ -692,6 +707,16 @@ REQUIRED FLAGS
            stable
               Clusters subscribed to 'stable' receive versions that are known
               to be stable and reliable in production.
+
+       --remove-autopilot-workload-policies=REMOVE_WORKLOAD_POLICIES
+          Remove Autopilot workload policies from the cluster.
+
+          Examples:
+
+              $ gcloud beta container clusters update example-cluster \
+                  --remove-autopilot-workload-policies=allow-net-admin
+
+          The only supported workload policy is 'allow-net-admin'.
 
        --remove-labels=[KEY,...]
           Labels to remove from the Google Cloud resources in use by the
@@ -1640,6 +1665,22 @@ REQUIRED FLAGS
             Set the rotation period for secrets in the Secret Manager CSI
             driver provider component. If you don't specify a time interval for
             the rotation, it will default to a rotation period of two minutes.
+
+       Flags for Secret Sync configuration:
+
+         --[no-]enable-secret-sync
+            Enables the Secret Sync component. See
+            https://cloud.google.com/secret-manager/docs/sync-k8-secrets. Use
+            --enable-secret-sync to enable and --no-enable-secret-sync to
+            disable.
+
+         --[no-]enable-secret-sync-rotation
+            Enables the rotation of secrets in the Secret Sync component.
+            provider component. Use --enable-secret-sync-rotation to enable and
+            --no-enable-secret-sync-rotation to disable.
+
+         --secret-sync-rotation-interval=SECRET_SYNC_ROTATION_INTERVAL
+            Set the rotation period for secrets in the Secret Sync component.
 
        Basic auth
 

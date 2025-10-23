@@ -4,15 +4,20 @@ NAME
 SYNOPSIS
     gcloud beta sql backups restore ID --restore-instance=RESTORE_INSTANCE
         [--activation-policy=ACTIVATION_POLICY]
-        [--active-directory-domain=ACTIVE_DIRECTORY_DOMAIN] [--[no-]assign-ip]
-        [--async] [--audit-bucket-path=AUDIT_BUCKET_PATH]
+        [--active-directory-dns-servers=[DNS_SERVER_IP_ADDRESS,...]]
+        [--active-directory-domain=ACTIVE_DIRECTORY_DOMAIN]
+        [--active-directory-mode=ACTIVE_DIRECTORY_MODE]
+        [--active-directory-organizational-unit=ACTIVE_DIRECTORY_ORGANIZATIONAL_UNIT]
+        [--active-directory-secret-manager-key=ACTIVE_DIRECTORY_SECRET_MANAGER_KEY]
+        [--[no-]assign-ip] [--async] [--audit-bucket-path=AUDIT_BUCKET_PATH]
         [--audit-retention-interval=AUDIT_RETENTION_INTERVAL]
         [--audit-upload-interval=AUDIT_UPLOAD_INTERVAL]
         [--authorized-networks=NETWORK,[NETWORK,...]]
         [--availability-type=AVAILABILITY_TYPE] [--no-backup]
         [--backup-instance=BACKUP_INSTANCE] [--backup-location=BACKUP_LOCATION]
         [--backup-project=BACKUP_PROJECT]
-        [--backup-start-time=BACKUP_START_TIME]
+        [--backup-start-time=BACKUP_START_TIME] [--clear-active-directory]
+        [--clear-active-directory-dns-servers]
         [--clear-disk-encryption=CLEAR_DISK_ENCRYPTION] [--clear-network]
         [--collation=COLLATION] [--connector-enforcement=CONNECTOR_ENFORCEMENT]
         [--cpu=CPU] [--database-version=DATABASE_VERSION]
@@ -75,9 +80,28 @@ OPTIONAL FLAGS
         https://cloud.google.com/sql/docs/mysql/start-stop-restart-instance#activation_policy.
         ACTIVATION_POLICY must be one of: always, never.
 
+     --active-directory-dns-servers=[DNS_SERVER_IP_ADDRESS,...]
+        A comma-separated list of the DNS servers to be used for Active
+        Directory. Only available for SQL Server instances. E.g:
+        10.0.0.1,10.0.0.2
+
      --active-directory-domain=ACTIVE_DIRECTORY_DOMAIN
         Managed Service for Microsoft Active Directory domain this instance is
         joined to. Only available for SQL Server instances.
+
+     --active-directory-mode=ACTIVE_DIRECTORY_MODE
+        Defines the Active Directory mode. Only available for SQL Server
+        instances. ACTIVE_DIRECTORY_MODE must be one of:
+        MANAGED_ACTIVE_DIRECTORY, CUSTOMER_MANAGED_ACTIVE_DIRECTORY.
+
+     --active-directory-organizational-unit=ACTIVE_DIRECTORY_ORGANIZATIONAL_UNIT
+        Defines the organizational unit to be used for Active Directory. Only
+        available for SQL Server instances. E.g:
+        OU=Cloud,DC=ad,DC=example,DC=com
+
+     --active-directory-secret-manager-key=ACTIVE_DIRECTORY_SECRET_MANAGER_KEY
+        The secret manager key storing administrator credentials. Only
+        available for SQL Server instances.
 
      --[no-]assign-ip
         Assign a public IP address to the instance. This is a public,
@@ -141,6 +165,12 @@ OPTIONAL FLAGS
      --backup-start-time=BACKUP_START_TIME
         Start time of daily backups, specified in the HH:MM format, in the UTC
         timezone.
+
+     --clear-active-directory
+        Clears the Active Directory configuration.
+
+     --clear-active-directory-dns-servers
+        Removes the list of DNS Servers from the Active Directory Config.
 
      --clear-disk-encryption=CLEAR_DISK_ENCRYPTION
         Disables CMEK in the restored instance.

@@ -5,12 +5,17 @@ NAME
 SYNOPSIS
     gcloud alpha sql instances patch INSTANCE
         [--activation-policy=ACTIVATION_POLICY]
+        [--active-directory-dns-servers=[DNS_SERVER_IP_ADDRESS,...]]
         [--active-directory-domain=ACTIVE_DIRECTORY_DOMAIN]
+        [--active-directory-mode=ACTIVE_DIRECTORY_MODE]
+        [--active-directory-organizational-unit=ACTIVE_DIRECTORY_ORGANIZATIONAL_UNIT]
+        [--active-directory-secret-manager-key=ACTIVE_DIRECTORY_SECRET_MANAGER_KEY]
         [--allocated-ip-range-name=ALLOCATED_IP_RANGE_NAME] [--[no-]assign-ip]
         [--async] [--audit-bucket-path=AUDIT_BUCKET_PATH]
         [--audit-retention-interval=AUDIT_RETENTION_INTERVAL]
         [--audit-upload-interval=AUDIT_UPLOAD_INTERVAL]
-        [--availability-type=AVAILABILITY_TYPE]
+        [--availability-type=AVAILABILITY_TYPE] [--clear-active-directory]
+        [--clear-active-directory-dns-servers]
         [--clear-failover-dr-replica-name] [--clear-password-policy]
         [--connector-enforcement=CONNECTOR_ENFORCEMENT] [--cpu=CPU]
         [--database-version=DATABASE_VERSION] [--[no-]deletion-protection]
@@ -80,6 +85,12 @@ SYNOPSIS
         [--clear-psc-network-attachment-uri
           | --psc-network-attachment-uri=PSC_NETWORK_ATTACHMENT_URI]
         [--gce-zone=GCE_ZONE | --secondary-zone=SECONDARY_ZONE --zone=ZONE]
+        [--[no-]auto-scale-disable-scale-in --[no-]auto-scale-enabled
+          --auto-scale-in-cooldown-seconds=AUTO_SCALE_IN_COOLDOWN_SECONDS
+          --auto-scale-max-node-count=AUTO_SCALE_MAX_NODE_COUNT
+          --auto-scale-min-node-count=AUTO_SCALE_MIN_NODE_COUNT
+          --auto-scale-out-cooldown-seconds=AUTO_SCALE_OUT_COOLDOWN_SECONDS
+          --auto-scale-target-metrics=[METRIC=VALUE,...]]
         [--no-backup | --backup-location=BACKUP_LOCATION
           --backup-start-time=BACKUP_START_TIME
           --retained-backups-count=RETAINED_BACKUPS_COUNT
@@ -102,9 +113,28 @@ FLAGS
         https://cloud.google.com/sql/docs/mysql/start-stop-restart-instance#activation_policy.
         ACTIVATION_POLICY must be one of: always, never.
 
+     --active-directory-dns-servers=[DNS_SERVER_IP_ADDRESS,...]
+        A comma-separated list of the DNS servers to be used for Active
+        Directory. Only available for SQL Server instances. E.g:
+        10.0.0.1,10.0.0.2
+
      --active-directory-domain=ACTIVE_DIRECTORY_DOMAIN
         Managed Service for Microsoft Active Directory domain this instance is
         joined to. Only available for SQL Server instances.
+
+     --active-directory-mode=ACTIVE_DIRECTORY_MODE
+        Defines the Active Directory mode. Only available for SQL Server
+        instances. ACTIVE_DIRECTORY_MODE must be one of:
+        MANAGED_ACTIVE_DIRECTORY, CUSTOMER_MANAGED_ACTIVE_DIRECTORY.
+
+     --active-directory-organizational-unit=ACTIVE_DIRECTORY_ORGANIZATIONAL_UNIT
+        Defines the organizational unit to be used for Active Directory. Only
+        available for SQL Server instances. E.g:
+        OU=Cloud,DC=ad,DC=example,DC=com
+
+     --active-directory-secret-manager-key=ACTIVE_DIRECTORY_SECRET_MANAGER_KEY
+        The secret manager key storing administrator credentials. Only
+        available for SQL Server instances.
 
      --allocated-ip-range-name=ALLOCATED_IP_RANGE_NAME
         The name of the IP range allocated for a Cloud SQL instance with
@@ -144,6 +174,12 @@ FLAGS
             your selected region.
          zonal
             Provides no failover capability. This is the default.
+
+     --clear-active-directory
+        Clears the Active Directory configuration.
+
+     --clear-active-directory-dns-servers
+        Removes the list of DNS Servers from the Active Directory Config.
 
      --clear-failover-dr-replica-name
         Clear the DR replica setting for the primary instance. Flag is only
@@ -715,6 +751,44 @@ FLAGS
        --zone=ZONE
           Preferred Compute Engine zone (e.g. us-central1-a, us-central1-b,
           etc.). WARNING: Instance may be restarted.
+
+     Options for configuring read pool auto scale.
+
+       --[no-]auto-scale-disable-scale-in
+          Disables automatic read pool scale-in. When disabled, read pool auto
+          scaling only supports increasing the read pool node count. By
+          default, both automatic read pool scale-in and scale-out are enabled.
+          Use --auto-scale-disable-scale-in to enable and
+          --no-auto-scale-disable-scale-in to disable.
+
+       --[no-]auto-scale-enabled
+          Enables read pool auto scaling. Supports automatically increasing and
+          decreasing the read pool's node count based on need. Use
+          --auto-scale-enabled to enable and --no-auto-scale-enabled to
+          disable.
+
+       --auto-scale-in-cooldown-seconds=AUTO_SCALE_IN_COOLDOWN_SECONDS
+          The cooldown period for automatic read pool scale-in. Minimum time
+          between scale-in events. Must be an integer value. For example, if
+          the value is 60, then a scale-in event will not be triggered within
+          60 seconds of the last scale-in event.
+
+       --auto-scale-max-node-count=AUTO_SCALE_MAX_NODE_COUNT
+          Maximum number of read pool nodes to be maintained.
+
+       --auto-scale-min-node-count=AUTO_SCALE_MIN_NODE_COUNT
+          Minimum number of read pool nodes to be maintained.
+
+       --auto-scale-out-cooldown-seconds=AUTO_SCALE_OUT_COOLDOWN_SECONDS
+          The cooldown period for automatic read pool scale-out. Minimum time
+          between scale-out events. Must be an integer value. For example, if
+          the value is 60, then a scale-out event will not be triggered within
+          60 seconds of the last scale-out event.
+
+       --auto-scale-target-metrics=[METRIC=VALUE,...]
+          Target metrics for read pool auto scaling. Options are:
+          AVERAGE_CPU_UTILIZATION and AVERAGE_DB_CONNECTIONS. Example:
+          --auto-scale-target-metrics=AVERAGE_CPU_UTILIZATION=0.8
 
      At most one of these can be specified:
 
