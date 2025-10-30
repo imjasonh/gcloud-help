@@ -17,12 +17,27 @@ SYNOPSIS
         [--[no-]request-coalescing] [--resource-manager-tags=[KEY=VALUE,...]]
         [--serve-while-stale=SERVE_WHILE_STALE]
         [--signed-url-cache-max-age=SIGNED_URL_CACHE_MAX_AGE]
-        [GCLOUD_WIDE_FLAG ...]
+        [--global | --region=REGION] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) gcloud beta compute backend-buckets create is used to create backend
     buckets. Backend buckets define Google Cloud Storage buckets that can serve
     content. URL maps define which requests are sent to which backend buckets.
+
+    To create a global backend bucket, run either of the following:
+
+        $ gcloud beta compute backend-buckets create my-backend-bucket
+          --gcs-bucket-name gcs-bucket-1
+          --global
+
+        $ gcloud beta compute backend-buckets create my-backend-bucket
+          --gcs-bucket-name gcs-bucket-1
+
+    To create a regional backend bucket, run the following:
+
+        $ gcloud beta compute backend-buckets create my-backend-bucket
+          --gcs-bucket-name gcs-bucket-1
+          --region=us-central1
 
 POSITIONAL ARGUMENTS
      BACKEND_BUCKET_NAME
@@ -163,7 +178,7 @@ OPTIONAL FLAGS
         The load balancing scheme of the backend bucket. If left blank, the
         backend bucket will be compatible with Global External Application Load
         Balancer or Classic Application Load Balancer. LOAD_BALANCING_SCHEME
-        must be (only one value is supported): INTERNAL_MANAGED.
+        must be one of: INTERNAL_MANAGED, EXTERNAL_MANAGED.
 
      --max-ttl=MAX_TTL
         Specifies the maximum allowed TTL for cached content served by this
@@ -293,6 +308,15 @@ OPTIONAL FLAGS
         datetimes for information on duration formats.
 
         This flag only affects signed URL requests.
+
+     At most one of these can be specified:
+
+       --global
+          If set, the backend bucket is global.
+
+       --region=REGION
+          Region of the backend bucket to create. Overrides the default
+          compute/region property value for this command invocation.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

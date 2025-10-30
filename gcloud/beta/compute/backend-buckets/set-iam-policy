@@ -4,16 +4,24 @@ NAME
 
 SYNOPSIS
     gcloud beta compute backend-buckets set-iam-policy BACKEND_BUCKET
-        POLICY_FILE [GCLOUD_WIDE_FLAG ...]
+        POLICY_FILE [--global | --region=REGION] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) Sets the IAM policy for the given backend bucket as defined in a
     JSON or YAML file.
 
 EXAMPLES
-    The following command reads an IAM policy defined in a JSON file called
-    'policy.json' and sets it for the backend bucket called
-    'my-backend-bucket':
+    The following command will read an IAM policy defined in a JSON file
+    'policy.json' and set it for the regionalbackend bucket my-backend-bucket:
+
+        $ gcloud beta compute backend-buckets set-iam-policy \
+            my-backend-bucket policy.json --region=REGION
+
+    The following commands will read an IAM policy defined in a JSON file
+    'policy.json' and set it for the global backend bucket my-backend-bucket:
+
+        $ gcloud beta compute backend-buckets set-iam-policy \
+            my-backend-bucket policy.json --global
 
         $ gcloud beta compute backend-buckets set-iam-policy \
             my-backend-bucket policy.json
@@ -22,24 +30,12 @@ EXAMPLES
     policy file format and contents.
 
 POSITIONAL ARGUMENTS
-     Backend bucket resource - The backend bucket to set the IAM policy for.
-     This represents a Cloud resource. (NOTE) Some attributes are not given
-     arguments in this group but can be set in other ways.
+     BACKEND_BUCKET
+        ID of the backend bucket or fully qualified identifier for the backend
+        bucket.
 
-     To set the project attribute:
-      ◆ provide the argument backend_bucket on the command line with a fully
-        specified name;
-      ◆ provide the argument --project on the command line;
-      ◆ set the property core/project.
-
-     This must be specified.
-
-       BACKEND_BUCKET
-          ID of the backend bucket or fully qualified identifier for the
-          backend bucket.
-
-          To set the backend_bucket attribute:
-          ▸ provide the argument backend_bucket on the command line.
+            To set the backend_bucket attribute:
+            + provide the argument backend_bucket on the command line.
 
      POLICY_FILE
         Path to a local JSON or YAML formatted file containing a valid policy.
@@ -47,6 +43,16 @@ POSITIONAL ARGUMENTS
         The output of the get-iam-policy command is a valid file, as is any
         JSON or YAML file conforming to the structure of a Policy
         (https://cloud.google.com/iam/reference/rest/v1/Policy).
+
+FLAGS
+     At most one of these can be specified:
+
+       --global
+          If set, the backend bucket is global.
+
+       --region=REGION
+          Region of the backend bucket to setIamPolicy. Overrides the default
+          compute/region property value for this command invocation.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
@@ -57,8 +63,8 @@ GCLOUD WIDE FLAGS
     Run $ gcloud help for details.
 
 API REFERENCE
-    This command uses the compute/beta API. The full documentation for this API
-    can be found at: https://cloud.google.com/compute/
+    This command uses the compute API. The full documentation for this API can
+    be found at: https://cloud.google.com/compute/
 
 NOTES
     This command is currently in beta and might change without notice. These

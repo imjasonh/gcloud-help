@@ -23,8 +23,9 @@ SYNOPSIS
         [--cloud-sql-ipv4-cidr=CLOUD_SQL_IPV4_CIDR
           --composer-network-ipv4-cidr=COMPOSER_NETWORK_IPV4_CIDR
           --connection-subnetwork=CONNECTION_SUBNETWORK
-          --connection-type=CONNECTION_TYPE --enable-private-endpoint
-          --enable-private-environment --enable-privately-used-public-ips
+          --connection-type=CONNECTION_TYPE --disable-private-environment
+          --enable-private-endpoint --enable-private-environment
+          --enable-privately-used-public-ips
           --master-ipv4-cidr=MASTER_IPV4_CIDR
           --web-server-ipv4-cidr=WEB_SERVER_IPV4_CIDR]
         [--cluster-ipv4-cidr=CLUSTER_IPV4_CIDR
@@ -306,6 +307,12 @@ FLAGS
           CONNECTION_TYPE must be one of: connection-type-unspecified,
           private-service-connect, vpc-peering.
 
+       --disable-private-environment
+          Enables internet connection for Composer components.
+
+          When used with Composer 2, this means the environment cluster is
+          created with public IP addresses on the cluster nodes.
+
        --enable-private-endpoint
           Environment cluster is managed using the private IP address of the
           master API endpoint. Therefore access to the master endpoint must be
@@ -318,13 +325,11 @@ FLAGS
           specified.
 
        --enable-private-environment
-          Environment cluster is created with no public IP addresses on the
-          cluster nodes.
+          Disables internet connection from any Composer component.
 
-          If not specified, cluster nodes will be assigned public IP addresses.
-
-          When used with Composer 3, disable internet connection from any
-          Composer component.
+          When used with Composer 2, the environment cluster is created with no
+          public IP addresses on the cluster nodes. If not specified, cluster
+          nodes will be assigned public IP addresses.
 
           When used with Composer 1.x, cannot be specified unless
           --enable-ip-alias is also specified.

@@ -4,8 +4,9 @@ NAME
 
 SYNOPSIS
     gcloud bigtable materialized-views list --instance=INSTANCE
-        [--filter=EXPRESSION] [--limit=LIMIT] [--page-size=PAGE_SIZE]
-        [--sort-by=[FIELD,...]] [--uri] [GCLOUD_WIDE_FLAG ...]
+        [--view=VIEW; default="schema"] [--filter=EXPRESSION] [--limit=LIMIT]
+        [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [--uri]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     List existing Bigtable materialized views.
@@ -14,6 +15,16 @@ EXAMPLES
     To list all materialized views for an instance, run:
 
         $ gcloud bigtable materialized-views list --instance=my-instance-id
+
+    You may also specify what information to return by supplying the --view
+    flag, such as:
+
+        $ gcloud bigtable materialized-views list \
+            --instance=my-instance-id --view=schema
+
+    Currently, only the schema view is supported for this command. This is the
+    default view, and it returns information about the schemas of your
+    materialized views.
 
 REQUIRED FLAGS
      Instance resource - The instance to list materialized views for. This
@@ -33,6 +44,11 @@ REQUIRED FLAGS
 
           To set the instance attribute:
           ▸ provide the argument --instance on the command line.
+
+FLAGS
+     --view=VIEW; default="schema"
+        Specifies what type of information to return about the view. VIEW must
+        be one of: full, replication, schema.
 
 LIST COMMAND FLAGS
      --filter=EXPRESSION

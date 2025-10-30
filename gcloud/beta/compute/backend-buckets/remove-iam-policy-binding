@@ -4,7 +4,8 @@ NAME
 
 SYNOPSIS
     gcloud beta compute backend-buckets remove-iam-policy-binding
-        BACKEND_BUCKET --member=PRINCIPAL --role=ROLE [GCLOUD_WIDE_FLAG ...]
+        BACKEND_BUCKET --member=PRINCIPAL --role=ROLE
+        [--global | --region=REGION] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) Remove an IAM policy binding from a Compute Engine backend bucket.
@@ -12,34 +13,35 @@ DESCRIPTION
 EXAMPLES
     To remove an IAM policy binding for the role of
     'roles/compute.loadBalancerServiceUser' for the user 'test-user@gmail.com'
-    with backend bucket 'my-backend-bucket' run:
+    with backend bucket 'my-backend-bucket' and region 'REGION', run:
 
         $ gcloud beta compute backend-buckets remove-iam-policy-binding \
-            my-backend-bucket --member='user:test-user@gmail.com' \
-            --role='roles/compute.loadBalancerServiceUser'
+          my-backend-bucket --region=REGION \
+          --member='user:test-user@gmail.com' \
+          --role='roles/compute.loadBalancerServiceUser'
+
+    To remove an IAM policy binding for the role of
+    'roles/compute.loadBalancerServiceUser' for the user 'test-user@gmail.com'
+    with globalbackend bucket 'my-backend-bucket', run either of the following:
+
+        $ gcloud beta compute backend-buckets remove-iam-policy-binding \
+          my-backend-bucket --global --member='user:test-user@gmail.com' \
+          --role='roles/compute.loadBalancerServiceUser'
+
+        $ gcloud beta compute backend-buckets remove-iam-policy-binding \
+          my-backend-bucket --member='user:test-user@gmail.com' \
+          --role='roles/compute.loadBalancerServiceUser'
 
     See https://cloud.google.com/iam/docs/managing-policies for details of
     policy role and member types.
 
 POSITIONAL ARGUMENTS
-     Backend bucket resource - The backend bucket for which to remove the IAM
-     policy from. This represents a Cloud resource. (NOTE) Some attributes are
-     not given arguments in this group but can be set in other ways.
+     BACKEND_BUCKET
+        ID of the backend bucket or fully qualified identifier for the backend
+        bucket.
 
-     To set the project attribute:
-      ◆ provide the argument backend_bucket on the command line with a fully
-        specified name;
-      ◆ provide the argument --project on the command line;
-      ◆ set the property core/project.
-
-     This must be specified.
-
-       BACKEND_BUCKET
-          ID of the backend bucket or fully qualified identifier for the
-          backend bucket.
-
-          To set the backend_bucket attribute:
-          ▸ provide the argument backend_bucket on the command line.
+            To set the backend_bucket attribute:
+            + provide the argument backend_bucket on the command line.
 
 REQUIRED FLAGS
      --member=PRINCIPAL
@@ -63,6 +65,16 @@ REQUIRED FLAGS
      --role=ROLE
         The role to remove the principal from.
 
+OPTIONAL FLAGS
+     At most one of these can be specified:
+
+       --global
+          If set, the backend bucket is global.
+
+       --region=REGION
+          Region of the backend bucket to operate on. Overrides the default
+          compute/region property value for this command invocation.
+
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
     --billing-project, --configuration, --flags-file, --flatten, --format,
@@ -72,8 +84,8 @@ GCLOUD WIDE FLAGS
     Run $ gcloud help for details.
 
 API REFERENCE
-    This command uses the compute/beta API. The full documentation for this API
-    can be found at: https://cloud.google.com/compute/
+    This command uses the compute API. The full documentation for this API can
+    be found at: https://cloud.google.com/compute/
 
 NOTES
     This command is currently in beta and might change without notice. These

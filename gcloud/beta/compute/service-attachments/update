@@ -5,7 +5,7 @@ NAME
 SYNOPSIS
     gcloud beta compute service-attachments update NAME
         [--connection-preference=CONNECTION_PREFERENCE]
-        [--consumer-accept-list=[PROJECT_OR_NETWORK=LIMIT,...]]
+        [--consumer-accept-list=[PROJECT_OR_NETWORK_OR_ENDPOINT=LIMIT,...]]
         [--consumer-reject-list=[REJECT_LIST,...]] [--description=DESCRIPTION]
         [--[no-]enable-proxy-protocol]
         [--nat-subnets=NAT_SUBNETS,[NAT_SUBNETS,...]]
@@ -51,21 +51,22 @@ FLAGS
             Only accept connection requests from consumers with the approval of
             the service provider.
 
-     --consumer-accept-list=[PROJECT_OR_NETWORK=LIMIT,...]
-        Specifies which consumer projects or networks are allowed to connect to
-        the service attachment. Each project or network has a connection limit.
-        A given service attachment can manage connections at either the project
-        or network level. Therefore, both the accept and reject lists for a
-        given service attachment must contain either only projects or only
-        networks.
+     --consumer-accept-list=[PROJECT_OR_NETWORK_OR_ENDPOINT=LIMIT,...]
+        Specifies which consumer projects/networks/endpoints are allowed to
+        connect to the service attachment. Each project or network has a
+        connection limit. For endpoints, the connection limit is optional. Both
+        the accept and reject lists for a given service attachment must contain
+        either only one of projects, networks or endpoints.
 
         For example, --consumer-accept-list myProjectId1=20 accepts a consumer
         project myProjectId1 with connection limit 20; --consumer-accept-list
         projects/myProjectId1/global/networks/myNet1=20 accepts a consumer
-        network myNet1 with connection limit 20
+        network myNet1 with connection limit 20 --consumer-accept-list
+        projects/myProjectId1/regions/myRegion1/forwardingRules/8167352512 also
+        accepts a consumer endpoint with ID 8167352512.
 
-        ◆ PROJECT_OR_NETWORK - Consumer project ID, project number or network
-          URL.
+        ◆ PROJECT_OR_NETWORK_OR_ENDPOINT - Consumer project ID/number or
+          network URL orendpoint URL.
         ◆ CONNECTION_LIMIT - The maximum number of allowed connections.
 
      --consumer-reject-list=[REJECT_LIST,...]

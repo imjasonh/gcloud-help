@@ -4,8 +4,8 @@ NAME
 
 SYNOPSIS
     gcloud beta compute backend-buckets get-iam-policy BACKEND_BUCKET
-        [--filter=EXPRESSION] [--limit=LIMIT] [--page-size=PAGE_SIZE]
-        [--sort-by=[FIELD,...]] [GCLOUD_WIDE_FLAG ...]
+        [--global | --region=REGION] [--filter=EXPRESSION] [--limit=LIMIT]
+        [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) gcloud beta compute backend-buckets get-iam-policy displays the IAM
@@ -16,30 +16,37 @@ DESCRIPTION
     set-iam-policy for additional details.
 
 EXAMPLES
-    To print the IAM policy for a given backend bucket, run:
+    To print the IAM policy for a given regional backend bucket, run:
+
+        $ gcloud beta compute backend-buckets get-iam-policy \
+            my-backend-bucket --region=REGION
+
+    To print the IAM policy for a given global backend bucket, run either of
+    the following:
+
+        $ gcloud beta compute backend-buckets get-iam-policy \
+            my-backend-bucket --global
 
         $ gcloud beta compute backend-buckets get-iam-policy \
             my-backend-bucket
 
 POSITIONAL ARGUMENTS
-     Backend bucket resource - The network to display the IAM policy for. This
-     represents a Cloud resource. (NOTE) Some attributes are not given
-     arguments in this group but can be set in other ways.
+     BACKEND_BUCKET
+        ID of the backend bucket or fully qualified identifier for the backend
+        bucket.
 
-     To set the project attribute:
-      ◆ provide the argument backend_bucket on the command line with a fully
-        specified name;
-      ◆ provide the argument --project on the command line;
-      ◆ set the property core/project.
+            To set the backend_bucket attribute:
+            + provide the argument backend_bucket on the command line.
 
-     This must be specified.
+FLAGS
+     At most one of these can be specified:
 
-       BACKEND_BUCKET
-          ID of the backend bucket or fully qualified identifier for the
-          backend bucket.
+       --global
+          If set, the backend bucket is global.
 
-          To set the backend_bucket attribute:
-          ▸ provide the argument backend_bucket on the command line.
+       --region=REGION
+          Region of the backend bucket to operate on. Overrides the default
+          compute/region property value for this command invocation.
 
 LIST COMMAND FLAGS
      --filter=EXPRESSION
@@ -76,8 +83,8 @@ GCLOUD WIDE FLAGS
     Run $ gcloud help for details.
 
 API REFERENCE
-    This command uses the compute/beta API. The full documentation for this API
-    can be found at: https://cloud.google.com/compute/
+    This command uses the compute API. The full documentation for this API can
+    be found at: https://cloud.google.com/compute/
 
 NOTES
     This command is currently in beta and might change without notice. These

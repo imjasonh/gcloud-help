@@ -1,0 +1,72 @@
+NAME
+    gcloud alpha services policies update - update consumer policy for a
+        project, folder or organization
+
+SYNOPSIS
+    gcloud alpha services policies update
+        --consumer-policy-file=CONSUMER_POLICY_FILE [--bypass-api-usage-check]
+        [--bypass-dependency-check] [--validate-only] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Update consumer policy for a project, folder or organization.
+
+EXAMPLES
+    Update consumer policy
+
+        $ gcloud alpha services policies update \
+             --consumer-policy-file=/path/to/the/file.yaml
+
+    Validate the update action on the policy:
+
+        $ gcloud alpha services policies update \
+             --consumer-policy-file=/path/to/the/file.yaml --validate-only
+
+    Update consumer policy and bypass dependency check:
+
+        $ gcloud alpha services policies update \
+             --consumer-policy-file=/path/to/the/file.yaml \
+             --bypass-dependency-check
+
+    Update consumer policy and bypass api usage check:
+
+        $ gcloud alpha services policies update \
+             --consumer-policy-file=/path/to/the/file.yaml \
+             --bypass-api-usage-check
+
+REQUIRED FLAGS
+     --consumer-policy-file=CONSUMER_POLICY_FILE
+        Path to the file that contains the consumer policy in the YAML format.
+
+OPTIONAL FLAGS
+     --bypass-api-usage-check
+        If true, the system will bypass usage checks for services that are
+        being removed. If false, the system will check if the service to be
+        removed was used in the last 30 days or enabled in the last 3 days. If
+        so, an error will be returned.
+
+     --bypass-dependency-check
+        This flag controls dependency management within the consumer policy. If
+        false, dependencies are enforced. When adding a new service, it
+        verifies that all the services dependencies are already present in the
+        policy. When removing a service, the system will ensure that no other
+        services in the policy depend on it. If the policy lacks any required
+        dependencies, the update will not succeed, and an error will be
+        returned.
+
+     --validate-only
+        Validate the to update action, but don't actually perform it
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

@@ -23,6 +23,11 @@ EXAMPLES
 
 FLAGS
      --default-upgrade-soaking=DEFAULT_UPGRADE_SOAKING
+        Note: This flag only applies to Rollout Sequencing v1, not Rollout
+        Sequencing v2 (which uses custom stages). If using Rollout Sequencing
+        v1 and this flag is not provided, a default value of 7 days will be
+        used.
+
         Configures the default soaking duration for each upgrade propagating
         through the current fleet to become "COMPLETE". Soaking begins after
         all clusters in the fleet are on the target version, or after 30 days
@@ -53,16 +58,16 @@ FLAGS
 
        Upgrade soaking override.
 
-           Defines a specific soaking time override for a particular upgrade
-           propagating through the current fleet that supercedes the default
-           soaking duration configured by `--default-upgrade-soaking`.
+       Defines a specific soaking time override for a particular upgrade
+       propagating through the current fleet that supercedes the default
+       soaking duration configured by --default-upgrade-soaking.
 
-           To set an upgrade soaking override of 12 hours for the upgrade with
-           name, `k8s_control_plane`, and version, `1.23.1-gke.1000`, run:
+       To set an upgrade soaking override of 12 hours for the upgrade with
+       name, k8s_control_plane, and version, 1.23.1-gke.1000, run:
 
            $ gcloud beta container hub clusterupgrade update               \
-           --add-upgrade-soaking-override=12h               \
-           --upgrade-selector=name="k8s_control_plane",\
+               --add-upgrade-soaking-override=12h               \
+               --upgrade-selector=name="k8s_control_plane",\
            version="1.23.1-gke.1000"
 
          --add-upgrade-soaking-override=ADD_UPGRADE_SOAKING_OVERRIDE

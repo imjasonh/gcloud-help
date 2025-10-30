@@ -14,10 +14,10 @@ SYNOPSIS
           [oauth_token_authentication_scope=OAUTH_TOKEN_AUTHENTICATION_SCOPE],
           [output_payload_format_json=OUTPUT_PAYLOAD_FORMAT_JSON],
           [output_payload_format_avro_schema_definition=OUTPUT_PAYLOAD_FORMAT_AVRO_SCHEMA_DEFINITION],
-          [output_payload_format_protobuf_schema_definition=OUTPUT_PAYLOAD_FORMAT_PROTOBUF_SCHEMA_DEFINITION]|[...]
+          [output_payload_format_protobuf_schema_definition=OUTPUT_PAYLOAD_FORMAT_PROTOBUF_SCHEMA_DEFINITION]#[...]
         [--async] [--crypto-key=CRYPTO_KEY] [--labels=[KEY=VALUE,...]]
         [--logging-config=LOGGING_CONFIG]
-        [--mediations=[transformation_template=TRANSFORMATION_TEMPLATE|...]]
+        [--mediations=[transformation_template=TRANSFORMATION_TEMPLATE#...]]
         [--input-payload-format-avro-schema-definition=INPUT_PAYLOAD_FORMAT_AVRO_SCHEMA_DEFINITION | --input-payload-format-json=INPUT_PAYLOAD_FORMAT_JSON | --input-payload-format-protobuf-schema-definition=INPUT_PAYLOAD_FORMAT_PROTOBUF_SCHEMA_DEFINITION]
         [--max-retry-attempts=MAX_RETRY_ATTEMPTS
           --max-retry-delay=MAX_RETRY_DELAY --min-retry-delay=MIN_RETRY_DELAY]
@@ -28,13 +28,12 @@ DESCRIPTION
 
 EXAMPLES
     To create a new pipeline my-pipeline in location us-central1 with its
-    destination targeting HTTP endpoint URI 'https://example-endpoint.com' and
-    network attachment 'my-network-attachment', run:
+    destination targeting HTTP endpoint URI 'https://example-endpoint.com',
+    run:
 
         $ gcloud eventarc pipelines create my-pipeline \
             --location=us-central1 \
-            --destinations=http_endpoint_uri='https://example-endpoint.com',\
-        network_attachment=my-network-attachment
+            --destinations=http_endpoint_uri='https://example-endpoint.com'
 
     To create a new pipeline my-pipeline in location us-central1 with an HTTP
     endpoint URI destination and a message binding template, run:
@@ -43,8 +42,7 @@ EXAMPLES
             --location=us-central1 \
             --destinations=http_endpoint_uri='https://example-endpoint.com',\
         http_endpoint_message_binding_template='{"headers":
-         {"new-header-key":
-         "new-header-value"}}',network_attachment=my-network-attachment
+         {"new-header-key": "new-header-value"}}'
 
     To create a new pipeline my-pipeline in location us-central1 with a Cloud
     Workflow destination my-workflow, run:
@@ -80,7 +78,6 @@ EXAMPLES
         $ gcloud eventarc pipelines create my-pipeline \
             --location=us-central1 \
             --destinations=http_endpoint_uri='https://example-endpoint.com',\
-        network_attachment=my-network-attachment,\
         google_oidc_authentication_service_account=example-service-account@e\
         xample-project.gserviceaccount.iam.com
 
@@ -92,7 +89,6 @@ EXAMPLES
         $ gcloud eventarc pipelines create my-pipeline \
             --location=us-central1 \
             --destinations=http_endpoint_uri='https://example-endpoint.com',\
-        network_attachment=my-network-attachment,\
         google_oidc_authentication_service_account=example-service-account@e\
         xample-project.gserviceaccount.iam.com,\
         google_oidc_authentication_audience='https://example.com'
@@ -105,7 +101,6 @@ EXAMPLES
         $ gcloud eventarc pipelines create my-pipeline \
             --location=us-central1 \
             --destinations=http_endpoint_uri='https://example-endpoint.com',\
-        network_attachment=my-network-attachment,\
         oauth_token_authentication_service_account=example-service-account@e\
         xample-project.gserviceaccount.iam.com
 
@@ -118,7 +113,6 @@ EXAMPLES
         $ gcloud eventarc pipelines create my-pipeline \
             --location=us-central1 \
             --destinations=http_endpoint_uri='https://example-endpoint.com',\
-        network_attachment=my-network-attachment,\
         oauth_token_authentication_service_account=example-service-account@e\
         xample-project.gserviceaccount.iam.com,\
         oauth_token_authentication_scope='https://www.googleapis.com/auth/cl\
@@ -131,7 +125,6 @@ EXAMPLES
         $ gcloud eventarc pipelines create my-pipeline \
             --location=us-central1 \
             --destinations=http_endpoint_uri='https://example-endpoint.com',\
-        network_attachment=my-network-attachment,\
         output_payload_format_json= --input-payload-format-json=
 
     To create a new pipeline my-pipeline in location us-central1 with an HTTP
@@ -141,7 +134,6 @@ EXAMPLES
         $ gcloud eventarc pipelines create my-pipeline \
             --location=us-central1 \
             --destinations=http_endpoint_uri='https://example-endpoint.com',\
-        network_attachment=my-network-attachment,\
         output_payload_format_avro_schema_definition='{"type": "record",
          "name": "my_record", "fields": [{"name": "my_field", "type":
          "string"}]}' \
@@ -156,7 +148,6 @@ EXAMPLES
         $ gcloud eventarc pipelines create my-pipeline \
             --location=us-central1 \
             --destinations=http_endpoint_uri='https://example-endpoint.com',\
-        network_attachment=my-network-attachment,\
         output_payload_format_protobuf_schema_definition='syntax =
          "proto3"; message Location { string home_address = 1; }' \
             --input-payload-format-protobuf-schema-definition='syntax =
@@ -168,10 +159,9 @@ EXAMPLES
 
         $ gcloud eventarc pipelines create my-pipeline \
             --location=us-central1 \
-            --destinations=http_endpoint_uri='https://example-endpoint.com',\
-        network_attachment=my-network-attachment \
-            --mediations=transformation_template='message.removeFields(["dat\
-        a.credit_card_number","data.ssn"])'
+            --destinations=http_endpoint_uri='https://example-endpoint.com'-\
+        -mediations=transformation_template='message.removeFields(["data.cre\
+        dit_card_number","data.ssn"])'
 
     To create a new pipeline my-pipeline in location us-central1 with an HTTP
     endpoint URI destination https://example-endpoint.com and a INFO level
@@ -179,8 +169,8 @@ EXAMPLES
 
         $ gcloud eventarc pipelines create my-pipeline \
             --location=us-central1 \
-            --destinations=http_endpoint_uri='https://example-endpoint.com',\
-        network_attachment=my-network-attachment --logging_config=INFO
+            --destinations=http_endpoint_uri='https://example-endpoint.com'-\
+        -logging_config=INFO
 
     To create a new pipeline my-pipeline in location us-central1 with an HTTP
     endpoint URI destination https://example-endpoint.com and a custom retry
@@ -188,9 +178,8 @@ EXAMPLES
 
         $ gcloud eventarc pipelines create my-pipeline \
             --location=us-central1 \
-            --destinations=http_endpoint_uri='https://example-endpoint.com',\
-        network_attachment=my-network-attachment --max-retry-attempts=10 \
-            --min-retry-delay=2s --max-retry-delay=64s
+            --destinations=http_endpoint_uri='https://example-endpoint.com' \
+        --max-retry-attempts=10 --min-retry-delay=2s --max-retry-delay=64s
 
     To create a new pipeline my-pipeline in location us-central1 with an HTTP
     endpoint URI destination https://example-endpoint.com and a Cloud KMS
@@ -198,10 +187,9 @@ EXAMPLES
 
         $ gcloud eventarc pipelines create my-pipeline \
             --location=us-central1 \
-            --destinations=http_endpoint_uri='https://example-endpoint.com',\
-        network_attachment=my-network-attachment \
-            --crypto-key=projects/PROJECT_ID/locations/KMS_LOCATION/\
-        keyRings/KEYRING/cryptoKeys/KEY
+            --destinations=http_endpoint_uri='https://example-endpoint.com' \
+        --crypto-key=projects/PROJECT_ID/locations/KMS_LOCATION/keyRings/\
+        KEYRING/cryptoKeys/KEY
 
 POSITIONAL ARGUMENTS
      Pipeline resource - The pipeline to create. The arguments in this group
@@ -238,7 +226,7 @@ POSITIONAL ARGUMENTS
           ▸ set the property eventarc/location.
 
 REQUIRED FLAGS
-     --destinations=[http_endpoint_uri=URI],[http_endpoint_message_binding_template=HTTP_ENDPOINT_MESSAGE_BINDING_TEMPLATE],[workflow=WORKFLOW],[message_bus=MESSAGE_BUS],[pubsub_topic=PUBSUB_TOPIC],[project=PROJECT],[location=LOCATION],[network_attachment=NETWORK_ATTACHMENT],[google_oidc_authentication_service_account=GOOGLE_OIDC_AUTHENTICATION_SERVICE_ACCOUNT],[google_oidc_authentication_audience=GOOGLE_OIDC_AUTHENTICATION_AUDIENCE],[oauth_token_authentication_service_account=OAUTH_TOKEN_AUTHENTICATION_SERVICE_ACCOUNT],[oauth_token_authentication_scope=OAUTH_TOKEN_AUTHENTICATION_SCOPE],[output_payload_format_json=OUTPUT_PAYLOAD_FORMAT_JSON],[output_payload_format_avro_schema_definition=OUTPUT_PAYLOAD_FORMAT_AVRO_SCHEMA_DEFINITION],[output_payload_format_protobuf_schema_definition=OUTPUT_PAYLOAD_FORMAT_PROTOBUF_SCHEMA_DEFINITION]|[...]
+     --destinations=[http_endpoint_uri=URI],[http_endpoint_message_binding_template=HTTP_ENDPOINT_MESSAGE_BINDING_TEMPLATE],[workflow=WORKFLOW],[message_bus=MESSAGE_BUS],[pubsub_topic=PUBSUB_TOPIC],[project=PROJECT],[location=LOCATION],[network_attachment=NETWORK_ATTACHMENT],[google_oidc_authentication_service_account=GOOGLE_OIDC_AUTHENTICATION_SERVICE_ACCOUNT],[google_oidc_authentication_audience=GOOGLE_OIDC_AUTHENTICATION_AUDIENCE],[oauth_token_authentication_service_account=OAUTH_TOKEN_AUTHENTICATION_SERVICE_ACCOUNT],[oauth_token_authentication_scope=OAUTH_TOKEN_AUTHENTICATION_SCOPE],[output_payload_format_json=OUTPUT_PAYLOAD_FORMAT_JSON],[output_payload_format_avro_schema_definition=OUTPUT_PAYLOAD_FORMAT_AVRO_SCHEMA_DEFINITION],[output_payload_format_protobuf_schema_definition=OUTPUT_PAYLOAD_FORMAT_PROTOBUF_SCHEMA_DEFINITION]#[...]
         The pipeline's destinations. This flag can be repeated to add more
         destinations to the list. Currently, only one destination is supported
         per pipeline. A destination is specified in a dict format. For more
@@ -550,7 +538,7 @@ OPTIONAL FLAGS
         The logging config of the pipeline. LOGGING_CONFIG must be one of:
         NONE, DEBUG, INFO, NOTICE, WARNING, ERROR, CRITICAL, ALERT, EMERGENCY.
 
-     --mediations=[transformation_template=TRANSFORMATION_TEMPLATE|...]
+     --mediations=[transformation_template=TRANSFORMATION_TEMPLATE#...]
         The different ways to modify the pipeline. Currently, only one
         mediation is supported per pipeline.
 
