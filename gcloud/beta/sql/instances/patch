@@ -18,6 +18,7 @@ SYNOPSIS
         [--clear-active-directory-dns-servers]
         [--clear-failover-dr-replica-name] [--clear-password-policy]
         [--connector-enforcement=CONNECTOR_ENFORCEMENT] [--cpu=CPU]
+        [--data-api-access=DATA_API_ACCESS]
         [--database-version=DATABASE_VERSION] [--[no-]deletion-protection]
         [--deny-maintenance-period-end-date=DENY_MAINTENANCE_PERIOD_END_DATE]
         [--deny-maintenance-period-start-date=DENY_MAINTENANCE_PERIOD_START_DATE]
@@ -64,7 +65,7 @@ SYNOPSIS
         [--storage-auto-increase-limit=STORAGE_AUTO_INCREASE_LIMIT]
         [--storage-provisioned-iops=STORAGE_PROVISIONED_IOPS]
         [--storage-provisioned-throughput=STORAGE_PROVISIONED_THROUGHPUT]
-        [--storage-size=STORAGE_SIZE]
+        [--storage-size=STORAGE_SIZE] [--storage-type=STORAGE_TYPE]
         [--switch-transaction-logs-to-cloud-storage]
         [--threads-per-core=THREADS_PER_CORE] [--tier=TIER, -t TIER]
         [--time-zone=TIME_ZONE] [--update-labels=[KEY=VALUE,...]]
@@ -211,6 +212,19 @@ FLAGS
         flags are not compatible with the Enterprise Plus edition. These flags
         should not be used when creating an Enterprise Plus edition, as the
         machine configuration is determined by the --tier flag instead.
+
+     --data-api-access=DATA_API_ACCESS
+        Controls connectivity to the instance using ExecuteSql API.
+        DATA_API_ACCESS must be one of:
+
+         ALLOW_DATA_API
+            Allow using ExecuteSql API to connect to the instance. For Private
+            IP instances, this will allow authorized users to access the
+            instance from the public internet using ExecuteSql API.
+         DATA_API_ACCESS_UNSPECIFIED
+            Unspecified mode, effectively the same as DISALLOW_DATA_API.
+         DISALLOW_DATA_API
+            Disallow using ExecuteSql API to connect to the instance.
 
      --database-version=DATABASE_VERSION
         The database engine type and versions. If left unspecified, no changes
@@ -550,6 +564,10 @@ FLAGS
         Amount of storage allocated to the instance. Must be an integer number
         of GB. The default is 10GB. Information on storage limits can be found
         here: https://cloud.google.com/sql/docs/quotas#storage_limits
+
+     --storage-type=STORAGE_TYPE
+        The storage type for the instance, determined by the selected machine
+        type. STORAGE_TYPE must be one of: SSD, HDD, HYPERDISK_BALANCED.
 
      --switch-transaction-logs-to-cloud-storage
         Switches the location of the transaction logs used for PITR from disk

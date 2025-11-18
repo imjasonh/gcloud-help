@@ -5,9 +5,16 @@ SYNOPSIS
     gcloud alpha lustre instances create (INSTANCE : --location=LOCATION)
         --capacity-gib=CAPACITY_GIB --filesystem=FILESYSTEM --network=NETWORK
         --per-unit-storage-throughput=PER_UNIT_STORAGE_THROUGHPUT [--async]
-        [--description=DESCRIPTION] [--gke-support-enabled]
-        [--labels=[LABELS,...]] [--request-id=REQUEST_ID]
-        [GCLOUD_WIDE_FLAG ...]
+        [--description=DESCRIPTION] [--gke-support-enabled] [--kms-key=KMS_KEY]
+        [--labels=[LABELS,...]] [--placement-policy=PLACEMENT_POLICY]
+        [--request-id=REQUEST_ID]
+        [[--default-squash-mode=DEFAULT_SQUASH_MODE
+          : --access-rules=[accessMode=ACCESSMODE],
+          [ipAddressRanges=IPADDRESSRANGES],
+          [mountableSubdirectories=MOUNTABLESUBDIRECTORIES],[name=NAME],
+          [squashGid=SQUASHGID],[squashMode=SQUASHMODE],[squashUid=SQUASHUID]
+          --default-squash-gid=DEFAULT_SQUASH_GID
+          --default-squash-uid=DEFAULT_SQUASH_UID]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Creates a Managed Lustre instance.
@@ -105,6 +112,13 @@ OPTIONAL FLAGS
         default, GKE clients are not supported. Deprecated. No longer required
         for GKE instance creation.
 
+     --kms-key=KMS_KEY
+        The Cloud KMS key name to use for data encryption. If not set, the
+        instance will use Google-managed encryption keys. If set, the instance
+        will use customer-managed encryption keys. The key must be in the same
+        region as the instance. The key format is:
+        projects/{project}/locations/{location}/keyRings/{key_ring}/cryptoKeys/{key}
+
      --labels=[LABELS,...]
         Labels as key value pairs.
 
@@ -128,6 +142,10 @@ OPTIONAL FLAGS
 
             --labels=path_to_file.(yaml|json)
 
+     --placement-policy=PLACEMENT_POLICY
+        The placement policy name for the instance in the format of
+        projects/{project}/locations/{location}/resourcePolicies/{resource_policy}
+
      --request-id=REQUEST_ID
         An optional request ID to identify requests. Specify a unique request
         ID so that if you must retry your request, the server will know to
@@ -142,6 +160,113 @@ OPTIONAL FLAGS
 
         The request ID must be a valid UUID with the exception that zero UUID
         is not supported (00000000-0000-0000-0000-000000000000).
+
+     IP-based access rules for the Managed Lustre instance. These options
+     define the root user squash configuration.
+
+       --default-squash-mode=DEFAULT_SQUASH_MODE
+          The squash mode for the default access rule. DEFAULT_SQUASH_MODE must
+          be one of:
+
+           no-squash
+              Squash is disabled.
+
+              If set inside an
+              [AccessRule][google.cloud.lustre.v1alpha.AccessRulesOptions.AccessRule],
+              root users matching the [ip_ranges][AccessRule.ip_ranges] are not
+              squashed.
+
+              If set as the
+              [default_squash_mode][google.cloud.lustre.v1alpha.AccessRulesOptions.default_squash_mode],
+              root squash is disabled for this instance.
+
+              If the default squash mode is NO_SQUASH, do not set the
+              [default_squash_uid][google.cloud.lustre.v1alpha.AccessRulesOptions.default_squash_uid]
+              or
+              [default_squash_gid][google.cloud.lustre.v1alpha.AccessRulesOptions.default_squash_gid],
+              or an invalid argument error is returned.
+           root-squash
+              Root user squash is enabled.
+
+              Not supported inside an
+              [AccessRule][google.cloud.lustre.v1alpha.AccessRulesOptions.AccessRule].
+
+              If set as the
+              [default_squash_mode][google.cloud.lustre.v1alpha.AccessRulesOptions.default_squash_mode],
+              root users not matching any of the
+              [access_rules][google.cloud.lustre.v1alpha.AccessRulesOptions.access_rules]
+              are squashed to the
+              [default_squash_uid][google.cloud.lustre.v1alpha.AccessRulesOptions.default_squash_uid]
+              and
+              [default_squash_gid][google.cloud.lustre.v1alpha.AccessRulesOptions.default_squash_gid].
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --access-rules=[accessMode=ACCESSMODE],[ipAddressRanges=IPADDRESSRANGES],[mountableSubdirectories=MOUNTABLESUBDIRECTORIES],[name=NAME],[squashGid=SQUASHGID],[squashMode=SQUASHMODE],[squashUid=SQUASHUID]
+          The access rules for the instance.
+
+           accessMode
+              The access mode for the access rule nodemap. Default is
+              [READ_WRITE][google.cloud.lustre.v1alpha.AccessRulesOptions.AccessRule.AccessMode.READ_WRITE].
+
+           ipAddressRanges
+              The IP address ranges to which to apply this access rule. Accepts
+              non-overlapping CIDR ranges (e.g., 192.168.1.0/24) and IP
+              addresses (e.g., 192.168.1.0).
+
+           mountableSubdirectories
+              The list of non-root directories that can be mounted from clients
+              in this NID range subset. Currently, there can be only a single
+              directory at most. If no directory is mentioned, then the root
+              directory will be accessible.
+
+           name
+              The name of the access rule policy group. Must be 16 characters
+              or less and include only alphanumeric characters or ''.
+
+           squashGid
+              Squash GID for the access rule. If the squash mode for this rule
+              is
+              [ROOT_SQUASH][google.cloud.lustre.v1alpha.AccessRulesOptions.SquashMode.ROOT_SQUASH],
+              root users matching the
+              [ip_address_ranges][google.cloud.lustre.v1alpha.AccessRulesOptions.AccessRule.ip_address_ranges]
+              are squashed to this GID. Defaults to 0 (no root squash).
+
+           squashMode
+              Squash mode for the access rule.
+
+           squashUid
+              Squash UID for the access rule. If the squash mode for this rule
+              is
+              [ROOT_SQUASH][google.cloud.lustre.v1alpha.AccessRulesOptions.SquashMode.ROOT_SQUASH],
+              root users matching the
+              [ip_address_ranges][google.cloud.lustre.v1alpha.AccessRulesOptions.AccessRule.ip_address_ranges]
+              are squashed to this UID. Defaults to 0 (no root squash).
+
+          Shorthand Example:
+
+              --access-rules=accessMode=string,ipAddressRanges=[string],mountableSubdirectories=[string],name=string,squashGid=int,squashMode=string,squashUid=int --access-rules=accessMode=string,ipAddressRanges=[string],mountableSubdirectories=[string],name=string,squashGid=int,squashMode=string,squashUid=int
+
+          JSON Example:
+
+              --access-rules='[{"accessMode": "string", "ipAddressRanges": ["string"], "mountableSubdirectories": ["string"], "name": "string", "squashGid": int, "squashMode": "string", "squashUid": int}]'
+
+          File Example:
+
+              --access-rules=path_to_file.(yaml|json)
+
+       --default-squash-gid=DEFAULT_SQUASH_GID
+          The user squash GID for the default access rule. This user squash GID
+          applies to all root users connecting from clients that are not
+          matched by any of the access rules. If not set, the default is 0 (no
+          GID squash).
+
+       --default-squash-uid=DEFAULT_SQUASH_UID
+          The user squash UID for the default access rule. This user squash UID
+          applies to all root users connecting from clients that are not
+          matched by any of the access rules. If not set, the default is 0 (no
+          UID squash).
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

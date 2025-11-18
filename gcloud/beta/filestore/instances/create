@@ -5,9 +5,10 @@ SYNOPSIS
     gcloud beta filestore instances create (INSTANCE : --zone=ZONE)
         --file-share=[capacity=CAPACITY],[name=NAME],
           [nfs-export-options=NFS-EXPORT-OPTIONS],[source-backup=SOURCE-BACKUP],
-          [source-backup-region=SOURCE-BACKUP-REGION]
-        --network=[connect-mode=CONNECT-MODE],[name=NAME],
-          [psc-endpoint-project=PSC-ENDPOINT-PROJECT],
+          [source-backup-region=SOURCE-BACKUP-REGION],
+          [source-backupdr-backup=SOURCE-BACKUPDR-BACKUP]
+        --network=[address-mode=ADDRESS-MODE],[connect-mode=CONNECT-MODE],
+          [name=NAME],[psc-endpoint-project=PSC-ENDPOINT-PROJECT],
           [reserved-ip-range=RESERVED-IP-RANGE] [--async]
         [--description=DESCRIPTION] [--labels=[KEY=VALUE,...]]
         [--location=LOCATION]
@@ -26,47 +27,46 @@ DESCRIPTION
     (BETA) Create a Filestore instance.
 
 EXAMPLES
-    The following command creates a Filestore instance named NAME with a single
-    volume.
+    To create a Basic HDD instance named my-instance in zone us-central1-c with
+    a 1TB volume named my_vol on the default network, run:
 
-        $ gcloud beta filestore instances create NAME \
-          --description=DESCRIPTION --tier=TIER --protocol=PROTOCOL \
-          --file-share=name=VOLUME_NAME,capacity=CAPACITY \
-          --network=name=NETWORK_NAME,\
-        reserved-ip-range=RESERVED_IP_RANGE,connect-mode=CONNECT_MODE,\
-        psc-endpoint-project=PSC_ENDPOINT_PROJECT --zone=ZONE \
-            --performance=max-iops-per-tb=MAX-IOPS-PER-TB \
-            --kms-key=KMS-KEY --kms-keyring=KMS_KEYRING \
-            --kms-location=KMS_LOCATION --kms-project=KMS_PROJECT \
-            --managed-ad=domain=DOMAIN,computer=COMPUTER \
-            --flags-file=FLAGS_FILE --source-instance=SOURCE_INSTANCE
+        $ gcloud beta filestore instances create my-instance \
+          --zone=us-central1-c --tier=BASIC_HDD \
+          --file-share=name=my_vol,capacity=1TB --network=name=default
 
-        Example json configuration file:
-    { "--file-share": {        "capacity": "61440",
+        To create an Enterprise instance named `my-ent-instance` in region `us-central1` with a 2TB volume named `my_vol` on network `my-network`, run:
+
+        $ gcloud beta filestore instances create my-ent-instance \
+          --zone=us-central1 --tier=ENTERPRISE \
+          --file-share=name=my_vol,capacity=2TB --network=name=my-network
+
+        To create an instance with specific NFS export options, you can use a JSON configuration file with `--flags-file`. For example, create a file named `config.json` with the following content:
+    { "--file-share": {        "capacity": "1024",
         "name": "my_vol",
         "nfs-export-options": [
           {
             "access-mode": "READ_WRITE",
             "ip-ranges": [
-              "10.0.0.0/8",
+              "10.0.0.0/8"
             ],
-            "squash-mode": "NO_ROOT_SQUASH",
-            "security-flavors": [
-                "AUTH_SYS",
-                "KRB5P",
-            ],
+            "squash-mode": "NO_ROOT_SQUASH"
           },
            {
             "access-mode": "READ_ONLY",
             "ip-ranges": [
               "192.168.0.0/24"
             ],
-            "squash-mode": "ROOT_SQUASH"
+            "squash-mode": "ROOT_SQUASH",
             "anon_uid": 1003,
             "anon_gid": 1003
           }
-        ],
+        ]
     } }
+
+        To create a Basic SSD instance named `my-nfs-instance` using the above configuration file, run:
+          $ gcloud beta filestore instances create my-nfs-instance \
+            --zone=us-central1-c --tier=BASIC_SSD --network=name=default \
+            --flags-file=config.json
 
 POSITIONAL ARGUMENTS
      Instance resource - The instance to create. The arguments in this group
@@ -105,7 +105,7 @@ POSITIONAL ARGUMENTS
           ▸ set the property filestore/location.
 
 REQUIRED FLAGS
-     --file-share=[capacity=CAPACITY],[name=NAME],[nfs-export-options=NFS-EXPORT-OPTIONS],[source-backup=SOURCE-BACKUP],[source-backup-region=SOURCE-BACKUP-REGION]
+     --file-share=[capacity=CAPACITY],[name=NAME],[nfs-export-options=NFS-EXPORT-OPTIONS],[source-backup=SOURCE-BACKUP],[source-backup-region=SOURCE-BACKUP-REGION],[source-backupdr-backup=SOURCE-BACKUPDR-BACKUP]
         File share configuration for an instance. Specifying both name and
         capacity is required.
 
@@ -194,9 +194,9 @@ REQUIRED FLAGS
          source-backup-region
             The region of the source backup.
 
-     --network=[connect-mode=CONNECT-MODE],[name=NAME],[psc-endpoint-project=PSC-ENDPOINT-PROJECT],[reserved-ip-range=RESERVED-IP-RANGE]
+     --network=[address-mode=ADDRESS-MODE],[connect-mode=CONNECT-MODE],[name=NAME],[psc-endpoint-project=PSC-ENDPOINT-PROJECT],[reserved-ip-range=RESERVED-IP-RANGE]
         Network configuration for a Cloud Filestore instance. Specifying
-        reserved-ip-range and connect-mode is optional.
+        reserved-ip-range, address-mode and connect-mode is optional.
          name
             The name of the Google Compute Engine VPC network to which the
             instance is connected.
@@ -221,6 +221,9 @@ REQUIRED FLAGS
             Network connection mode used by instances. CONNECT_MODE must be one
             of: DIRECT_PEERING, PRIVATE_SERVICE_ACCESS or
             PRIVATE_SERVICE_CONNECT.
+         address-mode
+            Internet protocol version for which the instance has IP address
+            assigned.
          psc-endpoint-project
             Consumer service project in which the psc endpoint would be set up.
             This is optional, and only relevant in case the network is a shared

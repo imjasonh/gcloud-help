@@ -7,7 +7,16 @@ SYNOPSIS
         (CLUSTER : --location=LOCATION)
         (--add-dws-flex-instances=[id=ID],
           [machineType=MACHINETYPE],[maxDuration=MAXDURATION],[zone=ZONE]
+          --add-filestore-instances=[ADD_FILESTORE_INSTANCES,...]
           --add-labels=[ADD_LABELS,...]
+          --add-lustre-instances=[ADD_LUSTRE_INSTANCES,...]
+          --add-new-filestore-instances=[capacityGb=CAPACITYGB],
+          [description=DESCRIPTION],
+          [fileshare=FILESHARE],[name=NAME],[protocol=PROTOCOL],[tier=TIER]
+          --add-new-lustre-instances=[capacityGb=CAPACITYGB],
+          [description=DESCRIPTION],[filesystem=FILESYSTEM],[name=NAME]
+          --add-new-storage-buckets=[enableAutoclass=ENABLEAUTOCLASS],
+          [enableHNS=ENABLEHNS],[name=NAME],[storageClass=STORAGECLASS]
           --add-on-demand-instances=[id=ID],
           [machineType=MACHINETYPE],[zone=ZONE]
           --add-reserved-instances=[id=ID],
@@ -18,14 +27,18 @@ SYNOPSIS
           --add-slurm-partitions=[exclusive=EXCLUSIVE],
           [id=ID],[nodesetIds=NODESETIDS]
           --add-spot-instances=[id=ID],[machineType=MACHINETYPE],[zone=ZONE]
+          --add-storage-buckets=[ADD_STORAGE_BUCKETS,...]
           --description=DESCRIPTION
           --remove-dws-flex-instances=[REMOVE_DWS_FLEX_INSTANCES,...]
+          --remove-filestore-instances=[REMOVE_FILESTORE_INSTANCES,...]
           --remove-labels=[REMOVE_LABELS,...]
+          --remove-lustre-instances=[REMOVE_LUSTRE_INSTANCES,...]
           --remove-on-demand-instances=[REMOVE_ON_DEMAND_INSTANCES,...]
           --remove-reserved-instances=[REMOVE_RESERVED_INSTANCES,...]
           --remove-slurm-node-sets=[REMOVE_SLURM_NODE_SETS,...]
           --remove-slurm-partitions=[REMOVE_SLURM_PARTITIONS,...]
           --remove-spot-instances=[REMOVE_SPOT_INSTANCES,...]
+          --remove-storage-buckets=[REMOVE_STORAGE_BUCKETS,...]
           --slurm-default-partition=SLURM_DEFAULT_PARTITION
           --update-slurm-login-node=[count=COUNT],[startupScript=STARTUPSCRIPT]
           --update-slurm-node-sets=[id=ID],
@@ -33,10 +46,11 @@ SYNOPSIS
           [staticNodeCount=STATICNODECOUNT]
           --update-slurm-partitions=[exclusive=EXCLUSIVE],
           [id=ID],[nodesetIds=NODESETIDS]
-          | --config=[computeResources=COMPUTERESOURCES],
+          | --config=[compute=COMPUTE],[computeResources=COMPUTERESOURCES],
           [description=DESCRIPTION],[labels=LABELS],[name=NAME],
-          [networkResources=NETWORKRESOURCES],
-          [orchestrator=ORCHESTRATOR],[storageResources=STORAGERESOURCES]
+          [networkResources=NETWORKRESOURCES],[networks=NETWORKS],
+          [orchestrator=ORCHESTRATOR],
+          [storageResources=STORAGERESOURCES],[storages=STORAGES]
           --update-mask=UPDATE_MASK) [--async] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -80,6 +94,11 @@ EXAMPLES
             --add-dws-flex-instances \
             id=compute4,zone=us-central1-a,machineType=a4-highgpu-8g,\
         maxDuration=10000s \
+            --add-new-lustre-instances \
+            lustre=locations/us-central1-a/instances/lustre1,\
+        capacityGb=1024,filesystem=lustre1 \
+            --add-lustre-instances \
+            locations/us-central1-a/instances/lustre0 \
             --add-slurm-node-sets id=nodeset1,computeId=compute1 \
             --add-slurm-node-sets id=nodeset2,computeId=compute2 \
             --add-slurm-node-sets id=nodeset3,computeId=compute3 \
@@ -104,6 +123,8 @@ EXAMPLES
         $ gcloud alpha cluster-director clusters update my-cluster \
             --location us-central1-a --slurm-default-partition partition0 \
             --remove-labels env,client \
+            --remove-lustre-instances \
+            locations/us-central1-a/instances/lustre0 \
             --remove-slurm-partitions partition1 \
             --remove-slurm-partitions partition2 \
             --remove-slurm-node-sets nodeset1 \
@@ -208,6 +229,12 @@ REQUIRED FLAGS
 
                 --add-dws-flex-instances=path_to_file.(yaml|json)
 
+         --add-filestore-instances=[ADD_FILESTORE_INSTANCES,...]
+            Reference of existing filestore instance.
+
+            For e.g. --add-filestore-instances
+            locations/{location}/instances/{filestore}
+
          --add-labels=[ADD_LABELS,...]
             Cluster labels as key value pairs.
 
@@ -232,6 +259,139 @@ REQUIRED FLAGS
             File Example:
 
                 --add-labels=path_to_file.(yaml|json)
+
+         --add-lustre-instances=[ADD_LUSTRE_INSTANCES,...]
+            Reference of existing Lustre instance.
+
+            For e.g. --add-lustre-instances
+            locations/{location}/instances/{lustre}
+
+         --add-new-filestore-instances=[capacityGb=CAPACITYGB],[description=DESCRIPTION],[fileshare=FILESHARE],[name=NAME],[protocol=PROTOCOL],[tier=TIER]
+            Parameters to create a filestore instance.
+
+            For e.g. --create-filestores
+            name=locations/{location}/instances/{filestore},tier=REGIONAL,capacityGb={filestoreSize},fileshare={fileshare}
+
+            Supported tier values:
+            ▫ ZONAL
+            ▫ REGIONAL
+
+            Supported protocol values:
+            ▫ NFSV3
+            ▫ NFSV41
+            ▫ If not specified, defaults to NFSV3
+
+            Defaults:
+            ▫ protocol: NFSV3.
+
+            Sets add_new_filestore_instances value.
+
+             capacityGb
+                Required, sets capacityGb value.
+
+             description
+                Sets description value.
+
+             fileshare
+                Required, sets fileshare value.
+
+             name
+                Required, sets name value.
+
+             protocol
+                Sets protocol value.
+
+             tier
+                Required, sets tier value.
+
+            Shorthand Example:
+
+                --add-new-filestore-instances=capacityGb=int,description=string,fileshare=string,name=string,protocol=string,tier=string --add-new-filestore-instances=capacityGb=int,description=string,fileshare=string,name=string,protocol=string,tier=string
+
+            JSON Example:
+
+                --add-new-filestore-instances='[{"capacityGb": int, "description": "string", "fileshare": "string", "name": "string", "protocol": "string", "tier": "string"}]'
+
+            File Example:
+
+                --add-new-filestore-instances=path_to_file.(yaml|json)
+
+         --add-new-lustre-instances=[capacityGb=CAPACITYGB],[description=DESCRIPTION],[filesystem=FILESYSTEM],[name=NAME]
+            Parameters to create a Lustre instance.
+
+            For e.g. --add-new-lustre-instances
+            name=locations/{location}/instances/{lustre},capacityGb={lustreSize},filesystem={filesystem}.
+
+            Sets add_new_lustre_instances value.
+
+             capacityGb
+                Required, sets capacityGb value.
+
+             description
+                Sets description value.
+
+             filesystem
+                Required, sets filesystem value.
+
+             name
+                Required, sets name value.
+
+            Shorthand Example:
+
+                --add-new-lustre-instances=capacityGb=int,description=string,filesystem=string,name=string --add-new-lustre-instances=capacityGb=int,description=string,filesystem=string,name=string
+
+            JSON Example:
+
+                --add-new-lustre-instances='[{"capacityGb": int, "description": "string", "filesystem": "string", "name": "string"}]'
+
+            File Example:
+
+                --add-new-lustre-instances=path_to_file.(yaml|json)
+
+         --add-new-storage-buckets=[enableAutoclass=ENABLEAUTOCLASS],[enableHNS=ENABLEHNS],[name=NAME],[storageClass=STORAGECLASS]
+            Parameters to create a Google Cloud Storage bucket.
+
+            For e.g. --add-new-storage-buckets name={bucket-path}
+
+            Supported storageClass values:
+            ▫ STANDARD
+            ▫ NEARLINE
+            ▫ COLDLINE
+            ▫ ARCHIVE
+
+            Defaults:
+            ▫ storageClass: STANDARD
+
+            Note:
+            ▫ Either storageClass or enableAutoclass can be set.
+            ▫ if enableAutoclass is set, enableHNS should not be set.
+            ▫ HNS: Hierarchical namespace.
+
+            Sets add_new_storage_buckets value.
+
+             enableAutoclass
+                Sets enableAutoclass value.
+
+             enableHNS
+                Sets enableHNS value.
+
+             name
+                Required, sets name value.
+
+             storageClass
+                Sets storageClass value.
+
+            Shorthand Example:
+
+                --add-new-storage-buckets=enableAutoclass=boolean,enableHNS=boolean,name=string,storageClass=string --add-new-storage-buckets=enableAutoclass=boolean,enableHNS=boolean,name=string,storageClass=string
+
+            JSON Example:
+
+                --add-new-storage-buckets='[{"enableAutoclass": boolean, "enableHNS": boolean, "name": "string", "storageClass": "string"}]'
+
+            File Example:
+
+                --add-new-storage-buckets=path_to_file.(yaml|json)
 
          --add-on-demand-instances=[id=ID],[machineType=MACHINETYPE],[zone=ZONE]
             Parameters to define cluster on demand instances.
@@ -404,6 +564,11 @@ REQUIRED FLAGS
 
                 --add-spot-instances=path_to_file.(yaml|json)
 
+         --add-storage-buckets=[ADD_STORAGE_BUCKETS,...]
+            Reference of existing Google Cloud Storage bucket.
+
+            For e.g. --add-storage-buckets {bucket-path}
+
          --description=DESCRIPTION
             Description of the cluster.
 
@@ -414,10 +579,22 @@ REQUIRED FLAGS
 
             For e.g. --remove-dws-flex-instances {computeId1},{computeId2},...
 
+         --remove-filestore-instances=[REMOVE_FILESTORE_INSTANCES,...]
+            Parameters to remove filestore instance config by filestore name.
+
+            For e.g. --remove-filestore-instances
+            locations/{location}/instances/{filestore1},locations/{location}/instances/{filestore2},...
+
          --remove-labels=[REMOVE_LABELS,...]
             Parameters to remove cluster label by key.
 
             For e.g. --remove-labels {key1},{key2},...
+
+         --remove-lustre-instances=[REMOVE_LUSTRE_INSTANCES,...]
+            Parameters to remove lustre instance config by lustre name.
+
+            For e.g. --remove-lustre-instances
+            locations/{location}/instances/{lustre1},locations/{location}/instances/{lustre2},...
 
          --remove-on-demand-instances=[REMOVE_ON_DEMAND_INSTANCES,...]
             Parameters to remove on demand instances config by compute id.
@@ -444,6 +621,11 @@ REQUIRED FLAGS
             Parameters to remove spot instance config by compute id.
 
             For e.g. --remove-spot-instances {computeId1},{computeId2},...
+
+         --remove-storage-buckets=[REMOVE_STORAGE_BUCKETS,...]
+            Parameters to remove Google Cloud Storage bucket by bucket name.
+
+            For e.g. --remove-storage-buckets {bucket1},{bucket2},...
 
          --slurm-default-partition=SLURM_DEFAULT_PARTITION
             Parameters to define slurm cluster default partition.
@@ -537,9 +719,60 @@ REQUIRED FLAGS
 
        Cluster configuration for updates.
 
-         --config=[computeResources=COMPUTERESOURCES],[description=DESCRIPTION],[labels=LABELS],[name=NAME],[networkResources=NETWORKRESOURCES],[orchestrator=ORCHESTRATOR],[storageResources=STORAGERESOURCES]
+         --config=[compute=COMPUTE],[computeResources=COMPUTERESOURCES],[description=DESCRIPTION],[labels=LABELS],[name=NAME],[networkResources=NETWORKRESOURCES],[networks=NETWORKS],[orchestrator=ORCHESTRATOR],[storageResources=STORAGERESOURCES],[storages=STORAGES]
             Configuration of the cluster specs in the form of a JSON object.
             Required, sets config value.
+
+             compute
+                Sets compute value.
+
+                 resourceRequests
+                    Sets resourceRequests value.
+
+                     disks
+                        Sets disks value.
+
+                         boot
+                            Required, sets boot value.
+
+                         sizeGb
+                            Sets sizeGb value.
+
+                         sourceImage
+                            Sets sourceImage value.
+
+                         type
+                            Required, sets type value.
+
+                     id
+                        Sets id value.
+
+                     machineType
+                        Sets machineType value.
+
+                     maxRunDuration
+                        Sets maxRunDuration value.
+
+                     provisioningModel
+                        Sets provisioningModel value.
+
+                     reservationAffinity
+                        Sets reservationAffinity value.
+
+                         key
+                            Sets key value.
+
+                         type
+                            Sets type value.
+
+                         values
+                            Sets values value.
+
+                     terminationAction
+                        Sets terminationAction value.
+
+                     zone
+                        Sets zone value.
 
              computeResources
                 Sets computeResources value.
@@ -556,11 +789,38 @@ REQUIRED FLAGS
                          newDwsFlexInstances
                             Sets newDwsFlexInstances value.
 
+                             atmTags
+                                Sets atmTags value.
+
+                                 KEY
+                                    Sets KEY value.
+
+                                 VALUE
+                                    Sets VALUE value.
+
+                             bootDisk
+                                Sets bootDisk value.
+
+                                 boot
+                                    Required, sets boot value.
+
+                                 sizeGb
+                                    Sets sizeGb value.
+
+                                 sourceImage
+                                    Sets sourceImage value.
+
+                                 type
+                                    Required, sets type value.
+
                              machineType
                                 Sets machineType value.
 
                              maxDuration
                                 Sets maxDuration value.
+
+                             terminationAction
+                                Sets terminationAction value.
 
                              zone
                                 Sets zone value.
@@ -568,17 +828,68 @@ REQUIRED FLAGS
                          newFlexStartInstances
                             Sets newFlexStartInstances value.
 
+                             atmTags
+                                Sets atmTags value.
+
+                                 KEY
+                                    Sets KEY value.
+
+                                 VALUE
+                                    Sets VALUE value.
+
+                             bootDisk
+                                Sets bootDisk value.
+
+                                 boot
+                                    Required, sets boot value.
+
+                                 sizeGb
+                                    Sets sizeGb value.
+
+                                 sourceImage
+                                    Sets sourceImage value.
+
+                                 type
+                                    Required, sets type value.
+
                              machineType
                                 Sets machineType value.
 
                              maxDuration
                                 Sets maxDuration value.
 
+                             terminationAction
+                                Sets terminationAction value.
+
                              zone
                                 Sets zone value.
 
                          newOnDemandInstances
                             Sets newOnDemandInstances value.
+
+                             atmTags
+                                Sets atmTags value.
+
+                                 KEY
+                                    Sets KEY value.
+
+                                 VALUE
+                                    Sets VALUE value.
+
+                             bootDisk
+                                Sets bootDisk value.
+
+                                 boot
+                                    Required, sets boot value.
+
+                                 sizeGb
+                                    Sets sizeGb value.
+
+                                 sourceImage
+                                    Sets sourceImage value.
+
+                                 type
+                                    Required, sets type value.
 
                              machineType
                                 Sets machineType value.
@@ -589,11 +900,41 @@ REQUIRED FLAGS
                          newReservedInstances
                             Sets newReservedInstances value.
 
+                             atmTags
+                                Sets atmTags value.
+
+                                 KEY
+                                    Sets KEY value.
+
+                                 VALUE
+                                    Sets VALUE value.
+
+                             bootDisk
+                                Sets bootDisk value.
+
+                                 boot
+                                    Required, sets boot value.
+
+                                 sizeGb
+                                    Sets sizeGb value.
+
+                                 sourceImage
+                                    Sets sourceImage value.
+
+                                 type
+                                    Required, sets type value.
+
                              machineType
                                 Sets machineType value.
 
                              reservation
                                 Sets reservation value.
+
+                             reservationBlock
+                                Sets reservationBlock value.
+
+                             reservationSubBlock
+                                Sets reservationSubBlock value.
 
                              type
                                 Sets type value.
@@ -604,8 +945,35 @@ REQUIRED FLAGS
                          newSpotInstances
                             Sets newSpotInstances value.
 
+                             atmTags
+                                Sets atmTags value.
+
+                                 KEY
+                                    Sets KEY value.
+
+                                 VALUE
+                                    Sets VALUE value.
+
+                             bootDisk
+                                Sets bootDisk value.
+
+                                 boot
+                                    Required, sets boot value.
+
+                                 sizeGb
+                                    Sets sizeGb value.
+
+                                 sourceImage
+                                    Sets sourceImage value.
+
+                                 type
+                                    Required, sets type value.
+
                              machineType
                                 Sets machineType value.
+
+                             terminationAction
+                                Sets terminationAction value.
 
                              zone
                                 Sets zone value.
@@ -637,6 +1005,15 @@ REQUIRED FLAGS
                      config
                         Sets config value.
 
+                         existingComputeNetwork
+                            Sets existingComputeNetwork value.
+
+                             network
+                                Sets network value.
+
+                             subnetwork
+                                Sets subnetwork value.
+
                          existingNetwork
                             Sets existingNetwork value.
 
@@ -645,6 +1022,15 @@ REQUIRED FLAGS
 
                              subnetwork
                                 Sets subnetwork value.
+
+                         newComputeNetwork
+                            Sets newComputeNetwork value.
+
+                             description
+                                Sets description value.
+
+                             network
+                                Sets network value.
 
                          newNetwork
                             Sets newNetwork value.
@@ -655,17 +1041,104 @@ REQUIRED FLAGS
                              network
                                 Sets network value.
 
+             networks
+                Sets networks value.
+
+                 initializeParams
+                    Sets initializeParams value.
+
+                     description
+                        Sets description value.
+
+                     network
+                        Sets network value.
+
+                 networkSource
+                    Sets networkSource value.
+
+                     network
+                        Sets network value.
+
+                     subnetwork
+                        Sets subnetwork value.
+
              orchestrator
                 Sets orchestrator value.
 
                  slurm
                     Sets slurm value.
 
+                     config
+                        Sets config value.
+
+                         accountingStorageEnforceFlags
+                            Sets accountingStorageEnforceFlags value.
+
+                         preemptExemptTime
+                            Sets preemptExemptTime value.
+
+                         preemptMode
+                            Sets preemptMode value.
+
+                         preemptType
+                            Sets preemptType value.
+
+                         priorityType
+                            Sets priorityType value.
+
+                         priorityWeightAge
+                            Sets priorityWeightAge value.
+
+                         priorityWeightAssoc
+                            Sets priorityWeightAssoc value.
+
+                         priorityWeightFairshare
+                            Sets priorityWeightFairshare value.
+
+                         priorityWeightJobSize
+                            Sets priorityWeightJobSize value.
+
+                         priorityWeightPartition
+                            Sets priorityWeightPartition value.
+
+                         priorityWeightQos
+                            Sets priorityWeightQos value.
+
+                         priorityWeightTres
+                            Sets priorityWeightTres value.
+
+                         prologEpilogTimeout
+                            Sets prologEpilogTimeout value.
+
+                         prologFlags
+                            Sets prologFlags value.
+
+                         requeueExitCodes
+                            Sets requeueExitCodes value.
+
+                         requeueHoldExitCodes
+                            Sets requeueHoldExitCodes value.
+
                      defaultPartition
                         Sets defaultPartition value.
 
+                     epilogBashScripts
+                        Sets epilogBashScripts value.
+
                      loginNodes
                         Sets loginNodes value.
+
+                         bootDisk
+                            Sets bootDisk value.
+
+                             image
+                                Sets image value.
+
+                             sizeGb
+                                Required, sets sizeGb value.
+
+                             type
+                                Required, sets type value.
 
                          count
                             Sets count value.
@@ -703,6 +1176,15 @@ REQUIRED FLAGS
                          machineType
                             Sets machineType value.
 
+                         serviceAccount
+                            Sets serviceAccount value.
+
+                             email
+                                Sets email value.
+
+                             scopes
+                                Sets scopes value.
+
                          startupScript
                             Sets startupScript value.
 
@@ -736,6 +1218,48 @@ REQUIRED FLAGS
                              type
                                 Required, sets type value.
 
+                         canIpForward
+                            Sets canIpForward value.
+
+                         computeId
+                            Sets computeId value.
+
+                         computeInstance
+                            Sets computeInstance value.
+
+                             bootDisk
+                                Sets bootDisk value.
+
+                                 image
+                                    Sets image value.
+
+                                 sizeGb
+                                    Required, sets sizeGb value.
+
+                                 type
+                                    Required, sets type value.
+
+                             labels
+                                Sets labels value.
+
+                                 KEY
+                                    Sets KEY value.
+
+                                 VALUE
+                                    Sets VALUE value.
+
+                             startupScript
+                                Sets startupScript value.
+
+                         containerNodePool
+                            Sets containerNodePool value.
+
+                         enableOsLogin
+                            Sets enableOsLogin value.
+
+                         enablePublicIps
+                            Sets enablePublicIps value.
+
                          id
                             Sets id value.
 
@@ -753,6 +1277,15 @@ REQUIRED FLAGS
 
                          resourceRequestId
                             Sets resourceRequestId value.
+
+                         serviceAccount
+                            Sets serviceAccount value.
+
+                             email
+                                Sets email value.
+
+                             scopes
+                                Sets scopes value.
 
                          startupScript
                             Sets startupScript value.
@@ -780,6 +1313,15 @@ REQUIRED FLAGS
 
                          nodeSetIds
                             Sets nodeSetIds value.
+
+                     prologBashScripts
+                        Sets prologBashScripts value.
+
+                     taskEpilogBashScripts
+                        Sets taskEpilogBashScripts value.
+
+                     taskPrologBashScripts
+                        Sets taskPrologBashScripts value.
 
              storageResources
                 Sets storageResources value.
@@ -819,6 +1361,9 @@ REQUIRED FLAGS
 
                                  enabled
                                     Sets enabled value.
+
+                                 terminalStorageClass
+                                    Sets terminalStorageClass value.
 
                              bucket
                                 Sets bucket value.
@@ -871,13 +1416,100 @@ REQUIRED FLAGS
                              lustre
                                 Sets lustre value.
 
+                             perUnitStorageThroughput
+                                Sets perUnitStorageThroughput value.
+
+             storages
+                Sets storages value.
+
+                 id
+                    Sets id value.
+
+                 initializeParams
+                    Sets initializeParams value.
+
+                     filestore
+                        Sets filestore value.
+
+                         description
+                            Sets description value.
+
+                         fileShares
+                            Sets fileShares value.
+
+                             capacityGb
+                                Sets capacityGb value.
+
+                             fileShare
+                                Sets fileShare value.
+
+                         filestore
+                            Sets filestore value.
+
+                         protocol
+                            Sets protocol value.
+
+                         tier
+                            Sets tier value.
+
+                     gcs
+                        Sets gcs value.
+
+                         autoclass
+                            Sets autoclass value.
+
+                             enabled
+                                Sets enabled value.
+
+                             terminalStorageClass
+                                Sets terminalStorageClass value.
+
+                         bucket
+                            Sets bucket value.
+
+                         hierarchicalNamespace
+                            Sets hierarchicalNamespace value.
+
+                             enabled
+                                Sets enabled value.
+
+                         storageClass
+                            Sets storageClass value.
+
+                     lustre
+                        Sets lustre value.
+
+                         capacityGb
+                            Sets capacityGb value.
+
+                         description
+                            Sets description value.
+
+                         filesystem
+                            Sets filesystem value.
+
+                         lustre
+                            Sets lustre value.
+
+                 storageSource
+                    Sets storageSource value.
+
+                     bucket
+                        Sets bucket value.
+
+                     filestore
+                        Sets filestore value.
+
+                     lustre
+                        Sets lustre value.
+
             Shorthand Example:
 
-                --config=computeResources={string={config={newDwsFlexInstances={machineType=string,maxDuration=string,zone=string},newFlexStartInstances={machineType=string,maxDuration=string,zone=string},newOnDemandInstances={machineType=string,zone=string},newReservedInstances={machineType=string,reservation=string,type=string,zone=string},newSpotInstances={machineType=string,zone=string}}}},description=string,labels={string=string},name=string,networkResources={string={config={existingNetwork={network=string,subnetwork=string},newNetwork={description=string,network=string}}}},orchestrator={slurm={defaultPartition=string,loginNodes={count=int,disks=[{boot=boolean,sizeGb=int,sourceImage=string,type=string}],enableOsLogin=boolean,enablePublicIps=boolean,labels={string=string},machineType=string,startupScript=string,storageConfigs=[{id=string,localMount=string}],zone=string},nodeSets=[{bootDisk={boot=boolean,sizeGb=int,sourceImage=string,type=string},id=string,labels={string=string},maxDynamicNodeCount=int,resourceRequestId=string,startupScript=string,staticNodeCount=int,storageConfigs=[{id=string,localMount=string}]}],partitions=[{exclusive=boolean,id=string,nodeSetIds=[string]}]}},storageResources={string={config={existingBucket={bucket=string},existingFilestore={filestore=string},existingLustre={lustre=string},newBucket={autoclass={enabled=boolean},bucket=string,hierarchicalNamespace={enabled=boolean},storageClass=string},newFilestore={description=string,fileShares=[{capacityGb=int,fileShare=string}],filestore=string,protocol=string,tier=string},newLustre={capacityGb=int,description=string,filesystem=string,lustre=string}}}}
+                --config=compute={resourceRequests=[{disks=[{boot=boolean,sizeGb=int,sourceImage=string,type=string}],id=string,machineType=string,maxRunDuration=int,provisioningModel=string,reservationAffinity={key=string,type=string,values},terminationAction=string,zone=string}]},computeResources={string={config={newDwsFlexInstances={atmTags={string=string},bootDisk={boot=boolean,sizeGb=int,sourceImage=string,type=string},machineType=string,maxDuration=string,terminationAction=string,zone=string},newFlexStartInstances={atmTags={string=string},bootDisk={boot=boolean,sizeGb=int,sourceImage=string,type=string},machineType=string,maxDuration=string,terminationAction=string,zone=string},newOnDemandInstances={atmTags={string=string},bootDisk={boot=boolean,sizeGb=int,sourceImage=string,type=string},machineType=string,zone=string},newReservedInstances={atmTags={string=string},bootDisk={boot=boolean,sizeGb=int,sourceImage=string,type=string},machineType=string,reservation=string,reservationBlock=string,reservationSubBlock=string,type=string,zone=string},newSpotInstances={atmTags={string=string},bootDisk={boot=boolean,sizeGb=int,sourceImage=string,type=string},machineType=string,terminationAction=string,zone=string}}}},description=string,labels={string=string},name=string,networkResources={string={config={existingComputeNetwork={network=string,subnetwork=string},existingNetwork={network=string,subnetwork=string},newComputeNetwork={description=string,network=string},newNetwork={description=string,network=string}}}},networks=[{initializeParams={description=string,network=string},networkSource={network=string,subnetwork=string}}],orchestrator={slurm={config={accountingStorageEnforceFlags,preemptExemptTime=string,preemptMode,preemptType=string,priorityType=string,priorityWeightAge=int,priorityWeightAssoc=int,priorityWeightFairshare=int,priorityWeightJobSize=int,priorityWeightPartition=int,priorityWeightQos=int,priorityWeightTres=string,prologEpilogTimeout=string,prologFlags,requeueExitCodes,requeueHoldExitCodes},defaultPartition=string,epilogBashScripts,loginNodes={bootDisk={image=string,sizeGb=int,type=string},count=int,disks=[{boot=boolean,sizeGb=int,sourceImage=string,type=string}],enableOsLogin=boolean,enablePublicIps=boolean,labels={string=string},machineType=string,serviceAccount={email=string,scopes},startupScript=string,storageConfigs=[{id=string,localMount=string}],zone=string},nodeSets=[{bootDisk={boot=boolean,sizeGb=int,sourceImage=string,type=string},canIpForward=boolean,computeId=string,computeInstance={bootDisk={image=string,sizeGb=int,type=string},labels={string=string},startupScript=string},containerNodePool,enableOsLogin=boolean,enablePublicIps=boolean,id=string,labels={string=string},maxDynamicNodeCount=int,resourceRequestId=string,serviceAccount={email=string,scopes},startupScript=string,staticNodeCount=int,storageConfigs=[{id=string,localMount=string}]}],partitions=[{exclusive=boolean,id=string,nodeSetIds=[string]}],prologBashScripts,taskEpilogBashScripts,taskPrologBashScripts}},storageResources={string={config={existingBucket={bucket=string},existingFilestore={filestore=string},existingLustre={lustre=string},newBucket={autoclass={enabled=boolean,terminalStorageClass=string},bucket=string,hierarchicalNamespace={enabled=boolean},storageClass=string},newFilestore={description=string,fileShares=[{capacityGb=int,fileShare=string}],filestore=string,protocol=string,tier=string},newLustre={capacityGb=int,description=string,filesystem=string,lustre=string,perUnitStorageThroughput=int}}}},storages=[{id=string,initializeParams={filestore={description=string,fileShares=[{capacityGb=int,fileShare=string}],filestore=string,protocol=string,tier=string},gcs={autoclass={enabled=boolean,terminalStorageClass=string},bucket=string,hierarchicalNamespace={enabled=boolean},storageClass=string},lustre={capacityGb=int,description=string,filesystem=string,lustre=string}},storageSource={bucket=string,filestore=string,lustre=string}}]
 
             JSON Example:
 
-                --config='{"computeResources": {"string": {"config": {"newDwsFlexInstances": {"machineType": "string", "maxDuration": "string", "zone": "string"}, "newFlexStartInstances": {"machineType": "string", "maxDuration": "string", "zone": "string"}, "newOnDemandInstances": {"machineType": "string", "zone": "string"}, "newReservedInstances": {"machineType": "string", "reservation": "string", "type": "string", "zone": "string"}, "newSpotInstances": {"machineType": "string", "zone": "string"}}}}, "description": "string", "labels": {"string": "string"}, "name": "string", "networkResources": {"string": {"config": {"existingNetwork": {"network": "string", "subnetwork": "string"}, "newNetwork": {"description": "string", "network": "string"}}}}, "orchestrator": {"slurm": {"defaultPartition": "string", "loginNodes": {"count": int, "disks": [{"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}], "enableOsLogin": boolean, "enablePublicIps": boolean, "labels": {"string": "string"}, "machineType": "string", "startupScript": "string", "storageConfigs": [{"id": "string", "localMount": "string"}], "zone": "string"}, "nodeSets": [{"bootDisk": {"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}, "id": "string", "labels": {"string": "string"}, "maxDynamicNodeCount": int, "resourceRequestId": "string", "startupScript": "string", "staticNodeCount": int, "storageConfigs": [{"id": "string", "localMount": "string"}]}], "partitions": [{"exclusive": boolean, "id": "string", "nodeSetIds": ["string"]}]}}, "storageResources": {"string": {"config": {"existingBucket": {"bucket": "string"}, "existingFilestore": {"filestore": "string"}, "existingLustre": {"lustre": "string"}, "newBucket": {"autoclass": {"enabled": boolean}, "bucket": "string", "hierarchicalNamespace": {"enabled": boolean}, "storageClass": "string"}, "newFilestore": {"description": "string", "fileShares": [{"capacityGb": int, "fileShare": "string"}], "filestore": "string", "protocol": "string", "tier": "string"}, "newLustre": {"capacityGb": int, "description": "string", "filesystem": "string", "lustre": "string"}}}}}'
+                --config='{"compute": {"resourceRequests": [{"disks": [{"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}], "id": "string", "machineType": "string", "maxRunDuration": int, "provisioningModel": "string", "reservationAffinity": {"key": "string", "type": "string", "values"}, "terminationAction": "string", "zone": "string"}]}, "computeResources": {"string": {"config": {"newDwsFlexInstances": {"atmTags": {"string": "string"}, "bootDisk": {"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}, "machineType": "string", "maxDuration": "string", "terminationAction": "string", "zone": "string"}, "newFlexStartInstances": {"atmTags": {"string": "string"}, "bootDisk": {"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}, "machineType": "string", "maxDuration": "string", "terminationAction": "string", "zone": "string"}, "newOnDemandInstances": {"atmTags": {"string": "string"}, "bootDisk": {"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}, "machineType": "string", "zone": "string"}, "newReservedInstances": {"atmTags": {"string": "string"}, "bootDisk": {"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}, "machineType": "string", "reservation": "string", "reservationBlock": "string", "reservationSubBlock": "string", "type": "string", "zone": "string"}, "newSpotInstances": {"atmTags": {"string": "string"}, "bootDisk": {"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}, "machineType": "string", "terminationAction": "string", "zone": "string"}}}}, "description": "string", "labels": {"string": "string"}, "name": "string", "networkResources": {"string": {"config": {"existingComputeNetwork": {"network": "string", "subnetwork": "string"}, "existingNetwork": {"network": "string", "subnetwork": "string"}, "newComputeNetwork": {"description": "string", "network": "string"}, "newNetwork": {"description": "string", "network": "string"}}}}, "networks": [{"initializeParams": {"description": "string", "network": "string"}, "networkSource": {"network": "string", "subnetwork": "string"}}], "orchestrator": {"slurm": {"config": {"accountingStorageEnforceFlags", "preemptExemptTime": "string", "preemptMode", "preemptType": "string", "priorityType": "string", "priorityWeightAge": int, "priorityWeightAssoc": int, "priorityWeightFairshare": int, "priorityWeightJobSize": int, "priorityWeightPartition": int, "priorityWeightQos": int, "priorityWeightTres": "string", "prologEpilogTimeout": "string", "prologFlags", "requeueExitCodes", "requeueHoldExitCodes"}, "defaultPartition": "string", "epilogBashScripts", "loginNodes": {"bootDisk": {"image": "string", "sizeGb": int, "type": "string"}, "count": int, "disks": [{"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}], "enableOsLogin": boolean, "enablePublicIps": boolean, "labels": {"string": "string"}, "machineType": "string", "serviceAccount": {"email": "string", "scopes"}, "startupScript": "string", "storageConfigs": [{"id": "string", "localMount": "string"}], "zone": "string"}, "nodeSets": [{"bootDisk": {"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}, "canIpForward": boolean, "computeId": "string", "computeInstance": {"bootDisk": {"image": "string", "sizeGb": int, "type": "string"}, "labels": {"string": "string"}, "startupScript": "string"}, "containerNodePool": {}, "enableOsLogin": boolean, "enablePublicIps": boolean, "id": "string", "labels": {"string": "string"}, "maxDynamicNodeCount": int, "resourceRequestId": "string", "serviceAccount": {"email": "string", "scopes"}, "startupScript": "string", "staticNodeCount": int, "storageConfigs": [{"id": "string", "localMount": "string"}]}], "partitions": [{"exclusive": boolean, "id": "string", "nodeSetIds": ["string"]}], "prologBashScripts", "taskEpilogBashScripts", "taskPrologBashScripts"}}, "storageResources": {"string": {"config": {"existingBucket": {"bucket": "string"}, "existingFilestore": {"filestore": "string"}, "existingLustre": {"lustre": "string"}, "newBucket": {"autoclass": {"enabled": boolean, "terminalStorageClass": "string"}, "bucket": "string", "hierarchicalNamespace": {"enabled": boolean}, "storageClass": "string"}, "newFilestore": {"description": "string", "fileShares": [{"capacityGb": int, "fileShare": "string"}], "filestore": "string", "protocol": "string", "tier": "string"}, "newLustre": {"capacityGb": int, "description": "string", "filesystem": "string", "lustre": "string", "perUnitStorageThroughput": int}}}}, "storages": [{"id": "string", "initializeParams": {"filestore": {"description": "string", "fileShares": [{"capacityGb": int, "fileShare": "string"}], "filestore": "string", "protocol": "string", "tier": "string"}, "gcs": {"autoclass": {"enabled": boolean, "terminalStorageClass": "string"}, "bucket": "string", "hierarchicalNamespace": {"enabled": boolean}, "storageClass": "string"}, "lustre": {"capacityGb": int, "description": "string", "filesystem": "string", "lustre": "string"}}, "storageSource": {"bucket": "string", "filestore": "string", "lustre": "string"}}]}'
 
             File Example:
 

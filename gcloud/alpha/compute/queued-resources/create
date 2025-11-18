@@ -24,6 +24,7 @@ SYNOPSIS
         [--erase-windows-vss-signature] [--graceful-shutdown]
         [--graceful-shutdown-max-duration=GRACEFUL_SHUTDOWN_MAX_DURATION]
         [--host-error-timeout-seconds=HOST_ERROR_TIMEOUT_SECONDS]
+        [--identity=IDENTITY] [--[no-]identity-certificate]
         [--instance-termination-action=INSTANCE_TERMINATION_ACTION]
         [--labels=[KEY=VALUE,...]]
         [--local-ssd=[device-name=DEVICE-NAME],
@@ -66,6 +67,9 @@ SYNOPSIS
         [--image-project=IMAGE_PROJECT
           --source-snapshot-region=SOURCE_SNAPSHOT_REGION --image=IMAGE
           | --image-family=IMAGE_FAMILY | --source-snapshot=SOURCE_SNAPSHOT]
+        [--instance-selection=name=NAME[,
+          rank=RANK][,machine-type=MACHINE_TYPE]...[,disk=DISK_JSON]...
+          | --instance-selection-machine-types=[MACHINE_TYPE,...]]
         [--maintenance-policy=MAINTENANCE_POLICY
           | --on-host-maintenance=MAINTENANCE_POLICY]
         [--public-dns | --no-public-dns]
@@ -460,6 +464,14 @@ OPTIONAL FLAGS
         The timeout in seconds for host error detection. The value must be set
         with 30 second increments, with a range of 90 to 330 seconds. If unset,
         the default behavior of the host error recovery is used.
+
+     --identity=IDENTITY
+        The workload identity to use for the instance.
+
+     --[no-]identity-certificate
+        Enables or disables managed workload identities on a VM. Use
+        --identity-certificate to enable and --no-identity-certificate to
+        disable.
 
      --instance-termination-action=INSTANCE_TERMINATION_ACTION
         Specifies the termination action that will be taken upon VM preemption
@@ -1074,6 +1086,27 @@ OPTIONAL FLAGS
 
           ▸ https://compute.googleapis.com/compute/v1/projects/myproject/global/snapshots/snapshot
           ▸ snapshot
+
+     At most one of these can be specified:
+
+       --instance-selection=name=NAME[,rank=RANK][,machine-type=MACHINE_TYPE]...[,disk=DISK_JSON]...
+          \ Specifies a list of machine types to consider for instance
+          creation. The bulk create operation will attempt to create instances
+          from this list based on capacity availability. This flag is only
+          valid when a region is specified.
+
+              Keys for each instance selection:
+
+              name: (Required) A unique name for this instance selection group.
+              machine-type: (Required) Repeatable. Specifies a machine type to include in this group (e.g., machine-type=n1-standard-1).
+              rank: (Optional) An integer representing the priority. Lower ranks are preferred. Defaults to 0.
+              disk: (Optional) Repeatable. A JSON string defining a disk to attach or override, conforming to the Compute Engine AttachedDisk API structure. Example: disk='{"deviceName": "boot-disk", "boot": true, "initializeParams": {"sourceImage": "IMAGE_URL"}}'
+
+       --instance-selection-machine-types=[MACHINE_TYPE,...]
+          \ Specifies a list of machine types to consider for instance
+          creation. The bulk create operation will attempt to create instances
+          from this list based on capacity availability. This flag is only
+          valid when a region is specified.
 
      Maintenance Behavior.
 

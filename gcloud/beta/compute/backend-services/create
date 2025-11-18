@@ -43,9 +43,7 @@ SYNOPSIS
         [--signed-url-cache-max-age=SIGNED_URL_CACHE_MAX_AGE]
         [--subsetting-policy=SUBSETTING_POLICY; default="NONE"]
         [--subsetting-subset-size=SUBSETTING_SUBSET_SIZE]
-        [--timeout=TIMEOUT; default="30s"]
-        [--tls-settings=[authenticationConfig=AUTHENTICATIONCONFIG],[sni=SNI]]
-        [--tracking-mode=TRACKING_MODE]
+        [--timeout=TIMEOUT; default="30s"] [--tracking-mode=TRACKING_MODE]
         [--zonal-affinity-spillover=ZONAL_AFFINITY_SPILLOVER]
         [--zonal-affinity-spillover-ratio=ZONAL_AFFINITY_SPILLOVER_RATIO]
         [--cache-key-query-string-blacklist=[QUERY_STRING,...]
@@ -54,7 +52,9 @@ SYNOPSIS
           | --custom-metrics-file=[CUSTOM_METRICS,...]]
         [--global | --region=REGION]
         [--global-health-checks | --health-checks-region=HEALTH_CHECKS_REGION]
-        [GCLOUD_WIDE_FLAG ...]
+        [--identity=IDENTITY
+          | --tls-settings=[authenticationConfig=AUTHENTICATIONCONFIG],
+          [sni=SNI]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) gcloud beta compute backend-services create creates a backend
@@ -742,14 +742,6 @@ FLAGS
 
         The full range of timeout values allowed is 1 - 2,147,483,647 seconds.
 
-     --tls-settings=[authenticationConfig=AUTHENTICATIONCONFIG],[sni=SNI]
-        Configuration for Backend Authenticated TLS and mTLS. May only be
-        specified when the backend protocol is SSL, HTTPS or HTTP2.
-
-        Example: $ gcloud beta compute backend-services create \
-        --tls-settings='sni=example.com,authenticationConfig=${AUTH_CONF\
-        IG_NAME}'
-
      --tracking-mode=TRACKING_MODE
         Specifies the connection key used for connection tracking. The default
         value is PER_CONNECTION. Applicable only for backend service-based
@@ -926,6 +918,37 @@ FLAGS
 
           Alternatively, the region can be stored in the environment variable
           CLOUDSDK_COMPUTE_REGION.
+
+     At most one of these can be specified:
+
+       --identity=IDENTITY
+          Assigns the Managed Identity for the BackendService Workload. Use
+          this property to configure the load balancer back-end to use
+          certificates and roots of trust provisioned by the Managed Workload
+          Identity system. The identity property is the scheme-less SPIFFE ID
+          to use in the SVID presented by the Load Balancer Workload. The
+          SPIFFE ID must be a resource starting with the trustDomain property
+          value, followed by the path to the Managed Workload Identity.
+          Supported SPIFFE ID format:
+          //<trust_domain>/ns/<namespace>/sa/<subject> The Trust Domain within
+          the Managed Identity must refer to a valid Workload Identity Pool.
+          The TrustConfig and CertificateIssuanceConfig will be inherited from
+          the Workload Identity Pool. Restrictions: If you set the identity
+          property, you cannot manually set the following fields:
+          tlsSettings.sni, tlsSettings.subjectAltNames,
+          tlsSettings.authenticationConfig. When defining a identity for a
+          RegionBackendServices, the corresponding Workload Identity Pool must
+          have a ca_pool configured in the same region. The system will set up
+          a read-only tlsSettings.authenticationConfig for the Managed
+          Identity.
+
+       --tls-settings=[authenticationConfig=AUTHENTICATIONCONFIG],[sni=SNI]
+          Configuration for Backend Authenticated TLS and mTLS. May only be
+          specified when the backend protocol is SSL, HTTPS or HTTP2.
+
+          Example: $ gcloud beta compute backend-services create \
+          --tls-settings='sni=example.com,authenticationConfig=${AUTH_CONF\
+          IG_NAME}'
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

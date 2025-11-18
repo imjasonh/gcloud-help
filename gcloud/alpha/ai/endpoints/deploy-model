@@ -8,9 +8,12 @@ SYNOPSIS
         [--accelerator=[count=COUNT],[type=TYPE]]
         [--autoscaling-metric-specs=[METRIC-NAME=TARGET,...]]
         [--deployed-model-id=DEPLOYED_MODEL_ID] [--enable-access-logging]
-        [--enable-container-logging] [--machine-type=MACHINE_TYPE]
-        [--max-replica-count=MAX_REPLICA_COUNT]
+        [--enable-container-logging]
+        [--idle-scaledown-period=IDLE_SCALEDOWN_PERIOD]
+        [--initial-replica-count=INITIAL_REPLICA_COUNT]
+        [--machine-type=MACHINE_TYPE] [--max-replica-count=MAX_REPLICA_COUNT]
         [--min-replica-count=MIN_REPLICA_COUNT]
+        [--min-scaleup-period=MIN_SCALEUP_PERIOD]
         [--multihost-gpu-node-count=MULTIHOST_GPU_NODE_COUNT]
         [--required-replica-count=REQUIRED_REPLICA_COUNT]
         [--reservation-affinity=[key=KEY],
@@ -125,6 +128,15 @@ OPTIONAL FLAGS
         Currently, only supported for custom-trained Models and AutoML Tabular
         Models.
 
+     --idle-scaledown-period=IDLE_SCALEDOWN_PERIOD
+        Duration (in seconds) without traffic before a deployment is scaled
+        down to zero replicas. Defaults to 1 hour if min replica count is 0.
+
+     --initial-replica-count=INITIAL_REPLICA_COUNT
+        Initial number of replicas for the deployment resources the model will
+        be scaled up to. Cannot be smaller than min replica count or larger
+        than max replica count.
+
      --machine-type=MACHINE_TYPE
         The machine resources to be used for each node of this deployment. For
         available machine types, see
@@ -143,6 +155,11 @@ OPTIONAL FLAGS
 
         NOTE: DeploymentResourcePools (model-cohosting) is currently not
         supported for scale-to-zero deployments.
+
+     --min-scaleup-period=MIN_SCALEUP_PERIOD
+        Minimum duration (in seconds) that a deployment will be scaled up
+        before traffic is evaluated for potential scale-down. Defaults to 1
+        hour if min replica count is 0.
 
      --multihost-gpu-node-count=MULTIHOST_GPU_NODE_COUNT
         The number of nodes per replica for multihost GPU deployments. Required

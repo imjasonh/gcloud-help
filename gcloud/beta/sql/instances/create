@@ -21,6 +21,7 @@ SYNOPSIS
         [--connection-pool-flags=FLAG=VALUE,[FLAG=VALUE,...]]
         [--connector-enforcement=CONNECTOR_ENFORCEMENT] [--cpu=CPU]
         [--custom-subject-alternative-names=DNS,[DNS,[DNS]]]
+        [--data-api-access=DATA_API_ACCESS]
         [--database-flags=FLAG=VALUE,[FLAG=VALUE,...]]
         [--database-version=DATABASE_VERSION; default="MYSQL_8_0"]
         [--[no-]deletion-protection]
@@ -266,6 +267,19 @@ FLAGS
         connection using the DNS name over SSL/TLS. When you create and/or
         update an instance, you can add a comma-separated list of up to three
         DNS names to the server certificate of your instance.
+
+     --data-api-access=DATA_API_ACCESS
+        Controls connectivity to the instance using ExecuteSql API.
+        DATA_API_ACCESS must be one of:
+
+         ALLOW_DATA_API
+            Allow using ExecuteSql API to connect to the instance. For Private
+            IP instances, this will allow authorized users to access the
+            instance from the public internet using ExecuteSql API.
+         DATA_API_ACCESS_UNSPECIFIED
+            Unspecified mode, effectively the same as DISALLOW_DATA_API.
+         DISALLOW_DATA_API
+            Disallow using ExecuteSql API to connect to the instance.
 
      --database-flags=FLAG=VALUE,[FLAG=VALUE,...]
         Comma-separated list of database flags to set on the instance. Use an
@@ -620,8 +634,8 @@ FLAGS
         here: https://cloud.google.com/sql/docs/quotas#storage_limits
 
      --storage-type=STORAGE_TYPE
-        The storage type for the instance. The default is SSD. STORAGE_TYPE
-        must be one of: SSD, HDD, HYPERDISK_BALANCED.
+        The storage type for the instance, determined by the selected machine
+        type. STORAGE_TYPE must be one of: SSD, HDD, HYPERDISK_BALANCED.
 
      --tags=TAG=VALUE,[TAG=VALUE,...]
         Comma-separated list of tags to set on the instance. Use an equals

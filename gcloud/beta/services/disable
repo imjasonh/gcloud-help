@@ -1,10 +1,13 @@
 NAME
     gcloud beta services disable - disable a service for consumption for a
-        project
+        project, folder or organization
 
 SYNOPSIS
-    gcloud beta services disable [SERVICE ...] [--async] [--force]
-        [GCLOUD_WIDE_FLAG ...]
+    gcloud beta services disable [SERVICE ...] [--async]
+        [--bypass-api-usage-check] [--force] [--validate-only]
+        [--bypass-dependency-service-check | --disable-dependency-services]
+        [--folder=FOLDER_ID | --organization=ORGANIZATION_ID
+          | --project=PROJECT_ID] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) This command disables one or more previously-enabled services for
@@ -19,10 +22,27 @@ DESCRIPTION
     a service at: https://cloud.google.com/service-usage/docs/enable-disable
 
 EXAMPLES
-    To disable a service called my-consumed-service for the active project,
+    To disable a service called my-consumed-service for the current project,
     run:
 
         $ gcloud beta services disable my-consumed-service
+
+    To disable a service called my-consumed-service for the project my-project,
+    run:
+
+        $ gcloud beta services disable my-consumed-service \
+            --project=my-project
+
+    To disable a service called my-consumed-service for the folder my-folder,
+    run:
+
+        $ gcloud beta services disable my-consumed-service --folder=my-folder
+
+    To disable a service called my-consumed-service for the organization
+    my-organization, run:
+
+        $ gcloud beta services disable my-consumed-service \
+            --organization=my-organization
 
     To run the same command asynchronously (non-blocking), run:
 
@@ -37,12 +57,54 @@ FLAGS
         Return immediately, without waiting for the operation in progress to
         complete.
 
+     --bypass-api-usage-check
+        If specified, the system will bypass usage checks for services that are
+        being removed. Otherwise, the system will check if the service to be
+        removed was used in the last 30 days or enabled in the last 3 days. If
+        so, the system will return an error.
+
      --force
         If specified, the disable call will proceed even if there are enabled
-        services which depend on the service to be disabled or disable the
-        service used in last 30 days or was enabled in recent 3 days. Forcing
-        the call means that the services which depend on the service to be
-        disabled will also be disabled.
+        services which depend on the service to be disabled, or the service to
+        be disabled was used in the last 30 days, or the service to be disabled
+        was enabled in the last 3 days. Forcing the call means that the
+        services which depend on the service to be disabled will also be
+        disabled. (Note): If --bypass-api-usage-check,
+        --bypass-dependency-service-check, or --disable-dependency-services
+        flags are used, they will take precedence over --force.
+
+     --validate-only
+        Validate the disable action, but don't actually perform it
+
+     At most one of these can be specified:
+
+       --bypass-dependency-service-check
+          If specified, the disable call will bypass the check for dependencies
+          and the dependencies will remain enabled.
+
+       --disable-dependency-services
+          If specified, the disable call will proceed disabling the service and
+          all the enabled services depend on the service to be disabled
+
+     At most one of these can be specified:
+
+       --folder=FOLDER_ID
+          The Google Cloud Platform folder ID to use for this invocation.
+
+       --organization=ORGANIZATION_ID
+          The Google Cloud Platform organization ID to use for this invocation.
+
+       --project=PROJECT_ID
+          The Google Cloud project ID to use for this invocation. If omitted,
+          then the current project is assumed; the current project can be
+          listed using gcloud config list --format='text(core.project)' and can
+          be set using gcloud config set project PROJECTID.
+
+          --project and its fallback core/project property play two roles in
+          the invocation. It specifies the project of the resource to operate
+          on. It also specifies the project for API enablement check, quota,
+          and billing. To specify a different project for quota and billing,
+          use --billing-project or billing/quota_project property.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

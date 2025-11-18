@@ -5,7 +5,9 @@ SYNOPSIS
     gcloud beta iam policy-bindings create
         (POLICY_BINDING
           : --folder=FOLDER --location=LOCATION --organization=ORGANIZATION)
-        --policy=POLICY --target-principal-set=TARGET_PRINCIPAL_SET
+        --policy=POLICY
+        (--target-principal-set=TARGET_PRINCIPAL_SET
+          | --target-resource=TARGET_RESOURCE)
         [--annotations=[ANNOTATIONS,...]] [--async]
         [--display-name=DISPLAY_NAME] [--etag=ETAG] [--policy-kind=POLICY_KIND]
         [--condition-description=CONDITION_DESCRIPTION
@@ -98,8 +100,8 @@ REQUIRED FLAGS
         The resource name of the policy to be bound. The binding parent and
         policy must belong to the same organization.
 
-     Target is the full resource name of the resource to which the policy will
-     be bound. Immutable once set.
+     The full resource name of the resource to which the policy will be bound.
+     Immutable once set.
 
      This must be specified.
 
@@ -108,28 +110,41 @@ REQUIRED FLAGS
        At most one of these can be specified:
 
          --target-principal-set=TARGET_PRINCIPAL_SET
-            Full Resource Name used for principal access boundary policy
-            bindings. The principal set must be directly parented by the policy
-            binding's parent or same as the parent if the target is a
-            project/folder/organization.
+            The full resource name that's used for principal access boundary
+            policy bindings. The principal set must be directly parented by the
+            policy binding's parent or same as the parent if the target is a
+            project, folder, or organization.
 
             Examples:
-            ▫ For binding's parented by an organization:
+
+            ▫ For bindings parented by an organization:
               ◇ Organization:
                 //cloudresourcemanager.googleapis.com/organizations/ORGANIZATION_ID
               ◇ Workforce Identity:
                 //iam.googleapis.com/locations/global/workforcePools/WORKFORCE_POOL_ID
               ◇ Workspace Identity:
                 //iam.googleapis.com/locations/global/workspace/WORKSPACE_ID
-            ▫ For binding's parented by a folder:
+            ▫ For bindings parented by a folder:
               ◇ Folder:
                 //cloudresourcemanager.googleapis.com/folders/FOLDER_ID
-            ▫ For binding's parented by a project:
+            ▫ For bindings parented by a project:
               ◇ Project:
                 ▹ //cloudresourcemanager.googleapis.com/projects/PROJECT_NUMBER
                 ▹ //cloudresourcemanager.googleapis.com/projects/PROJECT_ID
               ◇ Workload Identity Pool:
                 //iam.googleapis.com/projects/PROJECT_NUMBER/locations/LOCATION/workloadIdentityPools/WORKLOAD_POOL_ID
+
+         --target-resource=TARGET_RESOURCE
+            The full resource name that's used for access policy bindings
+            Examples:
+
+                ▹ Organization:
+                  //cloudresourcemanager.googleapis.com/organizations/ORGANIZATION_ID
+                ▹ Folder:
+                  //cloudresourcemanager.googleapis.com/folders/FOLDER_ID
+                ▹ Project:
+                  ▪ //cloudresourcemanager.googleapis.com/projects/PROJECT_NUMBER
+                  ▪ //cloudresourcemanager.googleapis.com/projects/PROJECT_ID
 
 OPTIONAL FLAGS
      --annotations=[ANNOTATIONS,...]

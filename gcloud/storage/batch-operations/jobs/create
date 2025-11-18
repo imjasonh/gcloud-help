@@ -28,13 +28,14 @@ EXAMPLES
           --manifest-location=gs://my-bucket/manifest.csv --delete-object
 
     To create a batch job with the name my-job to update object metadata
-    Content-Disposition to inline and Content-Language to en on bucket
-    my-bucket where you want to match objects with the prefix prefix1 or
-    prefix2:
+    Content-Disposition to inline, Content-Language to en, and set object
+    retention mode to locked on bucket my-bucket where you want to match
+    objects with prefixes prefix1 or prefix2:
 
         $ gcloud storage batch-operations jobs create my-job \
           --bucket=my-bucket --included-object-prefixes=prefix1,prefix2 \
-          --put-metadata=Content-Disposition=inline,Content-Language=en
+          --put-metadata=Content-Disposition=inline,Content-Language=en,\
+        Retain-Until=2025-01-01T00:00:00Z,Retention-Mode=locked
 
     To create a batch job with the name my-job to put object event based hold
     on objects in bucket my-bucket with logging config enabled for
@@ -106,12 +107,15 @@ REQUIRED FLAGS
           Content-Type={VALUE}. To set how caches should handle requests and
           responses, specify the key-value pair Cache-Control={VALUE}. To set
           custom time for Cloud Storage objects in RFC 3339 format, specify the
-          key-value pair Custom-Time={VALUE}. To set custom metadata on
+          key-value pair Custom-Time={VALUE}. To set object retention, specify
+          Retain-Until={TIMESTAMP} in RFC 3339 format and Retention-Mode={MODE}
+          where mode can be Locked or Unlocked. To set custom metadata on
           objects, specify key-value pairs {CUSTOM-KEY}:{VALUE}. Note that all
           predefined keys (e.g. Content-Disposition) are case-insensitive. Any
           other key that is not specified above will be treated as a custom
-          key. Multiple key-value pairs can be specified by separating them
-          with commas. For example,
+          key. To clear a field, provide the key with an empty value (e.g.
+          Content-Disposition=). Multiple key-value pairs can be specified by
+          separating them with commas. For example,
           --put-metadata=Content-Disposition=inline,Content-Encoding=gzip
 
        --rewrite-object=KEY=VALUE,[KEY=VALUE,...]
