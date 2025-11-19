@@ -20,9 +20,10 @@ SYNOPSIS
         [--src-region-codes=[SOURCE_REGION_CODES,...]]
         [--src-secure-tags=[SOURCE_SECURE_TAGS,...]]
         [--src-threat-intelligence=[SOURCE_THREAT_INTELLIGENCE_LISTS,...]]
+        [--target-forwarding-rules=[TARGET_FORWARDING_RULES,...]]
         [--target-secure-tags=[TARGET_SECURE_TAGS,...]]
         [--target-service-accounts=[TARGET_SERVICE_ACCOUNTS,...]]
-        [--[no-]tls-inspect]
+        [--target-type=TARGET_TYPE] [--[no-]tls-inspect]
         [--firewall-policy-region=FIREWALL_POLICY_REGION
           | --global-firewall-policy] [GCLOUD_WIDE_FLAG ...]
 
@@ -166,12 +167,25 @@ OPTIONAL FLAGS
         lists can be found here:
         https://cloud.google.com/vpc/docs/firewall-policies-rule-details#threat-intelligence-fw-policy.
 
+     --target-forwarding-rules=[TARGET_FORWARDING_RULES,...]
+        A list of forwarding rules to which this rule applies. This field
+        allows you to control which load balancers get this rule. If not
+        specified, the rule applies to all load balancers. This field is only
+        applicable when --target-type is INTERNAL_MANAGED_LB. It accepts full
+        or partial resource URLs.
+
      --target-secure-tags=[TARGET_SECURE_TAGS,...]
         An optional, list of target secure tags with a name of the format
         tagValues/ or full namespaced name
 
      --target-service-accounts=[TARGET_SERVICE_ACCOUNTS,...]
         List of target service accounts for the rule.
+
+     --target-type=TARGET_TYPE
+        Target type of the rule. By default a rule applies to VM instances
+        (target-type = INSTANCES). Use INTERNAL_MANAGED_LB value to apply the
+        rule to load balancers. TARGET_TYPE must be one of: INSTANCES,
+        INTERNAL_MANAGED_LB.
 
      --[no-]tls-inspect
         Use this flag to indicate whether TLS traffic should be inspected using

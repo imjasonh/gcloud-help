@@ -10,9 +10,11 @@ SYNOPSIS
         [--image-name=IMAGE_NAME] [--kms-key=KMS_KEY]
         [--labels=[KEY=VALUE,...]] [--single-region-storage]
         [--target-project=TARGET_PROJECT]
-        [--skip-os-adaptation | --adaptation-modifiers=ADAPTATION_MODIFIERS
+        [--adaptation-modifiers=ADAPTATION_MODIFIERS
           --boot-conversion=BOOT_CONVERSION
-          --generalize --license-type=LICENSE_TYPE --rootfs-uuid=ROOTFS_UUID]
+          --generalize --license-type=LICENSE_TYPE --rootfs-uuid=ROOTFS_UUID
+          | [--skip-os-adaptation
+          : --guest-os-features=[GUEST_OS_FEATURES,...]]]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -107,9 +109,6 @@ OPTIONAL FLAGS
 
      At most one of these can be specified:
 
-       --skip-os-adaptation
-          If true, skip OS adaptation. Default false.
-
        --adaptation-modifiers=ADAPTATION_MODIFIERS
           A map of flags to pass to the OS adaptation process. The actual value
           depends on the modifier and can also be empty. e.g.
@@ -139,6 +138,18 @@ OPTIONAL FLAGS
 
        --rootfs-uuid=ROOTFS_UUID
           Identifies the file system to adapt.
+
+       --skip-os-adaptation
+          If true, skip OS adaptation. Default false.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --guest-os-features=[GUEST_OS_FEATURES,...]
+          Guest OS features to enable on the imported image. This field does
+          not change the OS of the image; it only marks the image with the
+          specified features, so ensure they are compatible with the OS. If
+          specified, --skip-os-adaptation must be specified.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

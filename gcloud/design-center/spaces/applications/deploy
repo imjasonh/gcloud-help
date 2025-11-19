@@ -1,0 +1,140 @@
+NAME
+    gcloud design-center spaces applications deploy - deploy an application
+
+SYNOPSIS
+    gcloud design-center spaces applications deploy
+        (APPLICATION : --location=LOCATION --space=SPACE) [--async] [--replace]
+        [--service-account=SERVICE_ACCOUNT] [--worker-pool=WORKER_POOL]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Deploy an application in a space.
+
+EXAMPLES
+    To deploy the application my-application in space my-space, project
+    my-project and location us-central1, run:
+
+        $ gcloud design-center spaces applications deploy my-application \
+            --space=my-space --project=my-project --location=us-central1
+
+    Or run:
+
+        $ gcloud design-center spaces applications deploy \
+            projects/my-project/locations/us-central1/spaces/my-space/\
+        applications/my-application
+
+    To deploy the application my-application in space my-space, project
+    my-project and location us-central1 and replace the existing deployment,
+    run:
+
+        $ gcloud design-center spaces applications deploy my-application \
+            --space=my-space --project=my-project --location=us-central1 \
+            --replace
+
+    To deploy the application my-application in space my-space, project
+    my-project and location us-central1 using a worker pool
+    projects/my-project/locations/us-central1/workerPools/my-worker-pool, run:
+
+        $ gcloud design-center spaces applications deploy my-application \
+            --space=my-space --project=my-project --location=us-central1 \
+            --worker-pool=projects/my-project/locations/us-central1/\
+        workerPools/my-worker-pool
+
+    To deploy the application my-application in space my-space, project
+    my-project and location us-central1 asynchronously, run:
+
+        $ gcloud design-center spaces applications deploy my-application \
+            --space=my-space --project=my-project --location=us-central1 \
+            --async
+
+POSITIONAL ARGUMENTS
+     Application resource - The application name. Format:
+     projects/$project/locations/$location/spaces/$space/applications/$application
+     The arguments in this group can be used to specify the attributes of this
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument application on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       APPLICATION
+          ID of the application or fully qualified identifier for the
+          application.
+
+          To set the application attribute:
+          ▸ provide the argument application on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          The location id of the application resource.
+
+          To set the location attribute:
+          ▸ provide the argument application on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line.
+
+       --space=SPACE
+          The space id of the application resource.
+
+          To set the space attribute:
+          ▸ provide the argument application on the command line with a fully
+            specified name;
+          ▸ provide the argument --space on the command line.
+
+FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --replace
+        Flag to update the existing deployment. If not set or false, deploy
+        will fail if application state is in the DEPLOYED state.
+
+     --service-account=SERVICE_ACCOUNT
+        The email address of the service account to use for this deployment.
+
+        ◆ If provided, this service account will be used to execute the
+          deployment process, taking precedence over any service_account
+          specified on the Application resource.
+        ◆ The caller must have the 'iam.serviceAccounts.actAs' permission on
+          this service account.
+        ◆ If this field is omitted, the system will use the 'service_account'
+          defined within the Application resource.
+        ◆ We recommend that you provide a service account here or on the
+          Application resource. If you don't provide a service account, the
+          deployment will fail. Format:
+          projects/{PROJECT}/serviceAccounts/{EMAIL_ADDRESS}
+
+     --worker-pool=WORKER_POOL
+        The user-specified Worker Pool resource in which the Cloud Build job
+        will execute. Format:
+        projects/{project}/locations/{location}/workerPools/{workerPoolId} If
+        this flag is omitted, the worker pool already defined on the
+        application will be used. If no worker pool is defined on the
+        application, the default Cloud Build worker pool is used. The worker
+        pool must exist in the same region as the application.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the designcenter/v1 API. The full documentation for this
+    API can be found at: http://cloud.google.com/application-design-center/docs
+
+NOTES
+    This variant is also available:
+
+        $ gcloud alpha design-center spaces applications deploy
+

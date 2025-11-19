@@ -1,0 +1,145 @@
+NAME
+    gcloud beta compute global-vm-extension-policies update - update a Compute
+        Engine global VM extension policy
+
+SYNOPSIS
+    gcloud beta compute global-vm-extension-policies update NAME
+        --extensions=EXTENSION_NAME,[...] [--config=KEY=VALUE,[KEY=VALUE,...]]
+        [--config-from-file=KEY=FILE_PATH,[...]] [--description=DESCRIPTION]
+        [--inclusion-labels=INCLUSION_LABELS]
+        [--priority=PRIORITY; default=1000]
+        [--rollout-conflict-behavior=ROLLOUT_CONFLICT_BEHAVIOR]
+        [--rollout-custom-plan=ROLLOUT_CUSTOM_PLAN]
+        [--rollout-predefined-plan=ROLLOUT_PREDEFINED_PLAN]
+        [--rollout-retry-uuid=ROLLOUT_RETRY_UUID]
+        [--version=KEY=VALUE,[KEY=VALUE,...]] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Update a Compute Engine global VM extension policy.
+
+EXAMPLES
+    To update a global VM extension policy, run:
+
+        $ gcloud beta compute global-vm-extension-policies update \
+            test-policy-name --description="test policy" \
+            --extensions=extension1,extension2 \
+            --version=extension1=version1,extension2=version2 \
+            --config=extension1="config1",extension2="config2" \
+            --inclusion-labels=env=prod \
+            --inclusion-labels=env=preprod,workload=load-test \
+            --priority=1000
+
+POSITIONAL ARGUMENTS
+     NAME
+        Name of the global vm extension policy to update.
+
+REQUIRED FLAGS
+     --extensions=EXTENSION_NAME,[...]
+        One or more extensions to be added to the policy.
+
+OPTIONAL FLAGS
+     --config=KEY=VALUE,[KEY=VALUE,...]
+        A comma separated key:value list where the key is the extension name
+        and the value is the desired config for the given extension. The
+        extension name must be one of the extensions specified in the
+        --extensions flag.
+
+        E.g. --config=filestore='filestore config',ops-agent='ops agent config'
+
+        Raises: ArgumentTypeError: If the extension name is not specified in
+        the --extensions flag.
+
+     --config-from-file=KEY=FILE_PATH,[...]
+        Same as --config except that the value for the entry will be read from
+        a local file. The extension name must be one of the extensions
+        specified in the --extensions flag.
+
+        It is an error to specify the same extension in both --config and
+        --config-from-file.
+
+     --description=DESCRIPTION
+        An optional textual description for the this extension policy.
+
+     --inclusion-labels=INCLUSION_LABELS
+        A list of inclusion labels to select the target VMs.
+
+        The expected format for a single selector is "key1=value1,key2=value2".
+        A VM is selected if it has ALL the inclusion labels.
+
+        When the option is specified multiple times, it assumes a logical OR
+        between the selectors.
+
+        For example, if the inclusion labels are ["env=prod,workload=frontend",
+        "workload=backend"], the following VMs will be selected:
+        ◆ VM1: env=prod, workload=frontend, something=else
+        ◆ VM2: env=prod, workload=backend But not:
+        ◆ VM3: env=prod
+
+        If not specified, ALL VMs in the project/folder will be selected.
+
+     --priority=PRIORITY; default=1000
+        The priority of the policy. Lower the number, higher the priority. When
+        two policies tries to apply the same extension, the one with the higher
+        priority takes precedence. If the priority is the same, the one with
+        the more recent update timestamp takes precedence. When a policy is
+        deleted, the extension would remain installed on the VM if a lower
+        priority policy still applies.
+
+        Range from 0 to 65535. Default is 1000.
+
+     --rollout-conflict-behavior=ROLLOUT_CONFLICT_BEHAVIOR
+        Specifies the behavior of the Rollout if a conflict is detected in a
+        project during a Rollout. Default behavior is to keep the local value
+        if conflict happens. Specifying 'overwrite' will overwrite the local
+        value if conflict happens.
+
+        The default value for --rollout-conflict-behavior is ''. If you set
+        this flag to overwrite and would like to go back to the default value,
+        use the update command and omit the --rollout-conflict-behavior flag.
+
+     --rollout-custom-plan=ROLLOUT_CUSTOM_PLAN
+        Provide the name of a custom rollout plan to be used for the rollout.
+
+        One of either --rollout-predefined-plan or --rollout-custom-plan must
+        be specified, but not both.
+
+     --rollout-predefined-plan=ROLLOUT_PREDEFINED_PLAN
+        Provide the name of a predefined rollout plan from [fast_rollout,
+        slow_rollout] to be used for the rollout.
+
+        One of either --rollout-predefined-plan or --rollout-custom-plan must
+        be specified, but not both.
+
+        ROLLOUT_PREDEFINED_PLAN must be one of: fast_rollout,
+        rollout_plan_unspecified, slow_rollout.
+
+     --rollout-retry-uuid=ROLLOUT_RETRY_UUID
+        The UUID of the rollout retry action. Only set it if this is a retry
+        for an existing resource.
+
+     --version=KEY=VALUE,[KEY=VALUE,...]
+        A comma separated key:value list where the key is the extension name
+        and the value is the desired version for the given extension. The
+        extension name must be one of the extensions specified in the
+        --extensions flag. If no version is specified for an extension, the
+        latest version will be used and will be upgraded automatically.
+
+        E.g. --version=filestore=123ABC,ops-agent=456DEF
+
+        Raises: ArgumentTypeError: If the extension name is not specified in
+        the --extensions flag.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud alpha compute global-vm-extension-policies update
+

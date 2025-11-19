@@ -13,6 +13,7 @@ SYNOPSIS
           | --containerd-config-from-file=PATH_TO_FILE
           | --enable-confidential-nodes | --enable-gvnic
           | --enable-image-streaming | --enable-insecure-kubelet-readonly-port
+          | --enable-kernel-module-signature-enforcement
           | --enable-private-nodes | --enable-queued-provisioning
           | --flex-start | --labels=[KEY=VALUE,...]
           | --logging-variant=LOGGING_VARIANT
@@ -136,6 +137,19 @@ REQUIRED FLAGS
 
           To disable the readonly port on a cluster or node-pool set the flag
           to --no-enable-insecure-kubelet-readonly-port.
+
+       --enable-kernel-module-signature-enforcement
+          Enforces that kernel modules are signed on all nodes in the node
+          pool. This setting overrides the cluster-level setting. For example,
+          if the cluster disables enforcement, you can enable enforcement only
+          for a specific node pool. When the policy is modified on an existing
+          node pool, nodes will be immediately recreated to use the new policy.
+          Use --no-enable-kernel-module-signature-enforcement to disable.
+
+          Examples:
+
+              $ gcloud alpha container node-pools update node-pool-1 \
+                  --enable-kernel-module-signature-enforcement
 
        --enable-private-nodes
           Enables provisioning nodes with private IP addresses only.

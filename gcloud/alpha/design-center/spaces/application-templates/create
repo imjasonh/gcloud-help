@@ -6,8 +6,8 @@ SYNOPSIS
     gcloud alpha design-center spaces application-templates create
         (APPLICATION_TEMPLATE : --location=LOCATION --space=SPACE)
         [--application-parameters=[key=KEY],[value=VALUE]]
-        [--description=DESCRIPTION] [--display-name=DISPLAY_NAME]
-        [GCLOUD_WIDE_FLAG ...]
+        [--composition-type=COMPOSITION_TYPE] [--description=DESCRIPTION]
+        [--display-name=DISPLAY_NAME] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Create an application template.
@@ -123,6 +123,21 @@ FLAGS
 
             --application-parameters=path_to_file.(yaml|json)
 
+     --composition-type=COMPOSITION_TYPE
+        The composition type of the applicationTemplate: STANDARD OR COMPOSITE.
+        This is a create time only param. In future, we may support conversion
+        from STANDARD to COMPOSITE. COMPOSITION_TYPE must be one of:
+
+         composite
+            ApplicationCompositionType is COMPOSITE. The template is composed
+            of STANDARD applicationTemplate(s) and might be having multiple
+            root modules in terraform code.
+         standard
+            ApplicationCompositionType is STANDARD. The applicationTemplate or
+            application is composed of components only of type
+            service/workload/asset and has a single root module in terraform
+            code.
+
      --description=DESCRIPTION
         Application template description.
 
@@ -146,5 +161,7 @@ NOTES
     This command is currently in alpha and might change without notice. If this
     command fails with API permission errors despite specifying the correct
     project, you might be trying to access an API with an invitation-only early
-    access allowlist.
+    access allowlist. This variant is also available:
+
+        $ gcloud design-center spaces application-templates create
 
