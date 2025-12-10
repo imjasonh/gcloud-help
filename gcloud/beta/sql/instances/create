@@ -52,6 +52,7 @@ SYNOPSIS
         [--password-policy-min-length=PASSWORD_POLICY_MIN_LENGTH]
         [--password-policy-password-change-interval=PASSWORD_POLICY_PASSWORD_CHANGE_INTERVAL]
         [--password-policy-reuse-interval=PASSWORD_POLICY_REUSE_INTERVAL]
+        [--performance-capture-config=KEY=VALUE,[KEY=VALUE,...]]
         [--psc-auto-connections=[network=NETWORK],[project=PROJECT]]
         [--[no-]recreate-replicas-on-primary-crash]
         [--replica-type=REPLICA_TYPE] [--replication=REPLICATION]
@@ -75,6 +76,8 @@ SYNOPSIS
           : --disk-encryption-key-keyring=DISK_ENCRYPTION_KEY_KEYRING
           --disk-encryption-key-location=DISK_ENCRYPTION_KEY_LOCATION
           --disk-encryption-key-project=DISK_ENCRYPTION_KEY_PROJECT]
+        [--entra-id-application-id=ENTRA_ID_APPLICATION_ID
+          --entra-id-tenant-id=ENTRA_ID_TENANT_ID]
         [--master-dump-file-path=MASTER_DUMP_FILE_PATH
           --master-username=MASTER_USERNAME
           : [--master-ca-certificate-path=MASTER_CA_CERTIFICATE_PATH
@@ -503,6 +506,15 @@ FLAGS
         Number of previous passwords that cannot be reused. The valid range is
         0 to 100.
 
+     --performance-capture-config=KEY=VALUE,[KEY=VALUE,...]
+        A comma-separated list of performance capture settings to add to the
+        MySQL instance. The input should be in a format of key=value. Available
+        case-sensitive keys are: enabled (boolean), probing-interval-seconds
+        (integer), probe-threshold (integer), running-threads-threshold
+        (integer), seconds-behind-source-threshold (integer), and
+        transaction-duration-threshold (integer). Example:
+        --performance-capture-config enabled=true,probe-threshold=5
+
      --psc-auto-connections=[network=NETWORK],[project=PROJECT]
         A comma-separated list of networks or network-project pairs. Each
         project is represented by a project number (numeric) or by a project ID
@@ -715,6 +727,20 @@ FLAGS
           ▸ provide the argument --disk-encryption-key-project on the command
             line;
           ▸ set the property core/project.
+
+     Entraid configuration for the SQL Server instance.
+
+       --entra-id-application-id=ENTRA_ID_APPLICATION_ID
+          Set the Entraid application ID.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --entra-id-tenant-id=ENTRA_ID_TENANT_ID
+          Set the Entraid tenant ID.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
 
      Options for creating an internal replica of an external data source.
 

@@ -8,7 +8,7 @@ SYNOPSIS
         --key-source=KEY_SOURCE --[no-]validation-work-enabled [--async]
         [--blockchain-node-id=BLOCKCHAIN_NODE_ID] [--labels=[LABELS,...]]
         [--location=LOCATION] [--request-id=REQUEST_ID]
-        [--ethereum-protocol-details-gas-limit=ETHEREUM_PROTOCOL_DETAILS_GAS_LIMIT --ethereum-protocol-details-graffiti=ETHEREUM_PROTOCOL_DETAILS_GRAFFITI --ethereum-protocol-details-suggested-fee-recipient=ETHEREUM_PROTOCOL_DETAILS_SUGGESTED_FEE_RECIPIENT --ethereum-protocol-details-use-block-builder-proposals]
+        [--ethereum-protocol-details-suggested-fee-recipient=ETHEREUM_PROTOCOL_DETAILS_SUGGESTED_FEE_RECIPIENT : --ethereum-protocol-details-deposit-gwei=ETHEREUM_PROTOCOL_DETAILS_DEPOSIT_GWEI --ethereum-protocol-details-eth1-withdrawal-address=ETHEREUM_PROTOCOL_DETAILS_ETH1_WITHDRAWAL_ADDRESS --ethereum-protocol-details-gas-limit=ETHEREUM_PROTOCOL_DETAILS_GAS_LIMIT --ethereum-protocol-details-graffiti=ETHEREUM_PROTOCOL_DETAILS_GRAFFITI --ethereum-protocol-details-use-block-builder-proposals]
         [[--existing-seed-phrase-reference-secret=EXISTING_SEED_PHRASE_REFERENCE_SECRET : --existing-seed-phrase-reference-derivation-index=EXISTING_SEED_PHRASE_REFERENCE_DERIVATION_INDEX] | [--remote-web3-signer-voting-public-key=REMOTE_WEB3_SIGNER_VOTING_PUBLIC_KEY --remote-web3-signer-web3signer-uri=REMOTE_WEB3_SIGNER_WEB3SIGNER_URI : --remote-web3-signer-timeout-duration=REMOTE_WEB3_SIGNER_TIMEOUT_DURATION] | [--seed-phrase-reference-secret=SEED_PHRASE_REFERENCE_SECRET : --seed-phrase-reference-export]]
         [GCLOUD_WIDE_FLAG ...]
 
@@ -31,12 +31,15 @@ EXAMPLES
         blockchainNodes/my-node
 
 POSITIONAL ARGUMENTS
-     BlockchainValidatorConfig resource - Blockchain Validator Config Name The
-     name of the Blockchain Validator Config. The fully specified name must
-     have the format
-     projects/{project}/locations/{location}/blockchainValidatorConfigs/{validator}.
-     This represents a Cloud resource. (NOTE) Some attributes are not given
-     arguments in this group but can be set in other ways.
+     BlockchainValidatorConfig resource - Identifier. The name of the
+     validator. It must have the format
+     "projects/{project}/locations/{location}/blockchainValidatorConfigs/{validator}".
+     {validator} must contain only letters ([A-Za-z]), numbers ([0-9]), dashes
+     (-), underscores (), periods (.), tildes (~), plus (+) or percent signs
+     (%). It must be between 3 and 255 characters in length, and it must not
+     start with "goog". This represents a Cloud resource. (NOTE) Some
+     attributes are not given arguments in this group but can be set in other
+     ways.
 
      To set the project attribute:
       ◆ provide the argument blockchain_validator_config on the command line
@@ -152,6 +155,30 @@ OPTIONAL FLAGS
 
        Blockchain validator configuration unique to Ethereum blockchains.
 
+         --ethereum-protocol-details-suggested-fee-recipient=ETHEREUM_PROTOCOL_DETAILS_SUGGESTED_FEE_RECIPIENT
+            The Ethereum address to which fee rewards should be sent. This can
+            only be set when creating the validator. If no blockchain node is
+            specified for the validator, this has no effect as no validator
+            client is run. See also
+            https://lighthouse-book.sigmaprime.io/suggested-fee-recipient.html
+            for more context.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         Arguments for the deposit gwei.
+
+           --ethereum-protocol-details-deposit-gwei=ETHEREUM_PROTOCOL_DETAILS_DEPOSIT_GWEI
+              The number of Gwei (Ethereum currency unit) initially deposited
+              for the validator. This is set when the deposit is made and
+              cannot be changed.
+
+         Arguments for the eth1 withdrawal address.
+
+           --ethereum-protocol-details-eth1-withdrawal-address=ETHEREUM_PROTOCOL_DETAILS_ETH1_WITHDRAWAL_ADDRESS
+              The Ethereum wallet address to which withdrawals are sent. Once
+              set this cannot be changed.
+
          Arguments for the gas limit.
 
            --ethereum-protocol-details-gas-limit=ETHEREUM_PROTOCOL_DETAILS_GAS_LIMIT
@@ -171,14 +198,6 @@ OPTIONAL FLAGS
               example of how this is used. If not set, the validator client's
               default is used. If no blockchain node is specified, this has no
               effect as no validator client is run.
-
-         --ethereum-protocol-details-suggested-fee-recipient=ETHEREUM_PROTOCOL_DETAILS_SUGGESTED_FEE_RECIPIENT
-            The Ethereum address to which fee rewards should be sent. This can
-            only be set when creating the validator. If no blockchain node is
-            specified for the validator, this has no effect as no validator
-            client is run. See also
-            https://lighthouse-book.sigmaprime.io/suggested-fee-recipient.html
-            for more context.
 
          Arguments for the use block builder proposals.
 
@@ -251,7 +270,8 @@ OPTIONAL FLAGS
          Arguments for the timeout duration.
 
            --remote-web3-signer-timeout-duration=REMOTE_WEB3_SIGNER_TIMEOUT_DURATION
-              Timeout for requests to the Web3Signer service.
+              Timeout for requests to the Web3Signer service. If not set, a
+              default timeout of 12 seconds is used.
 
        Derivation path used to generate the voting key, and optionally Secret
        Manager secret to backup the seed phrase to.

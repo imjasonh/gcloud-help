@@ -31,8 +31,8 @@ POSITIONAL ARGUMENTS
      PolicyBinding resource - Identifier. The name of the policy binding, in
      the format
      {binding_parent/locations/{location}/policyBindings/{policy_binding_id}.
-     The binding parent is the closest Resource Manager resource (i.e.,
-     Project, Folder or Organization) to the binding target.
+     The binding parent is the closest Resource Manager resource (project,
+     folder, or organization) to the binding target.
 
      Format:
 
@@ -96,35 +96,43 @@ POSITIONAL ARGUMENTS
 REQUIRED FLAGS
      --policy=POLICY
         The resource name of the policy to be bound. The binding parent and
-        policy must belong to the same Organization (or Project).
+        policy must belong to the same organization.
 
-     Target is the full resource name of the resource to which the policy will
-     be bound. Immutable once set.
+     The full resource name of the resource to which the policy will be bound.
+     Immutable once set.
 
      This must be specified.
 
        Arguments for the target.
 
          --target-principal-set=TARGET_PRINCIPAL_SET
-            Full Resource Name used for principal access boundary policy
-            bindings Examples:
+            The full resource name that's used for principal access boundary
+            policy bindings. The principal set must be directly parented by the
+            policy binding's parent or same as the parent if the target is a
+            project, folder, or organization.
 
-            ▫ Organization:
-              //cloudresourcemanager.googleapis.com/organizations/ORGANIZATION_ID
-            ▫ Folder: //cloudresourcemanager.googleapis.com/folders/FOLDER_ID
-            ▫ Project:
-              ◇ //cloudresourcemanager.googleapis.com/projects/PROJECT_NUMBER
-              ◇ //cloudresourcemanager.googleapis.com/projects/PROJECT_ID
-            ▫ Workload Identity Pool:
-              //iam.googleapis.com/projects/PROJECT_NUMBER/locations/LOCATION/workloadIdentityPools/WORKLOAD_POOL_ID
-            ▫ Workforce Identity:
-              //iam.googleapis.com/locations/global/workforcePools/WORKFORCE_POOL_ID
-            ▫ Workspace Identity:
-              //iam.googleapis.com/locations/global/workspace/WORKSPACE_ID
+            Examples:
+
+            ▫ For bindings parented by an organization:
+              ◇ Organization:
+                //cloudresourcemanager.googleapis.com/organizations/ORGANIZATION_ID
+              ◇ Workforce Identity:
+                //iam.googleapis.com/locations/global/workforcePools/WORKFORCE_POOL_ID
+              ◇ Workspace Identity:
+                //iam.googleapis.com/locations/global/workspace/WORKSPACE_ID
+            ▫ For bindings parented by a folder:
+              ◇ Folder:
+                //cloudresourcemanager.googleapis.com/folders/FOLDER_ID
+            ▫ For bindings parented by a project:
+              ◇ Project:
+                ▹ //cloudresourcemanager.googleapis.com/projects/PROJECT_NUMBER
+                ▹ //cloudresourcemanager.googleapis.com/projects/PROJECT_ID
+              ◇ Workload Identity Pool:
+                //iam.googleapis.com/projects/PROJECT_NUMBER/locations/LOCATION/workloadIdentityPools/WORKLOAD_POOL_ID
 
 OPTIONAL FLAGS
      --annotations=[ANNOTATIONS,...]
-        User defined annotations. See https://google.aip.dev/148#annotations
+        User-defined annotations. See https://google.aip.dev/148#annotations
         for more details such as format and size limitations.
 
          KEY

@@ -9,9 +9,12 @@ SYNOPSIS
         --model-server=MODEL_SERVER [--model-bucket-uri=MODEL_BUCKET_URI]
         [--model-server-version=MODEL_SERVER_VERSION] [--namespace=NAMESPACE]
         [--output=OUTPUT; default="all"] [--output-path=OUTPUT_PATH]
+        [--serving-stack=SERVING_STACK]
+        [--serving-stack-version=SERVING_STACK_VERSION]
+        [--target-itl-milliseconds=TARGET_ITL_MILLISECONDS]
         [--target-ntpot-milliseconds=TARGET_NTPOT_MILLISECONDS]
         [--target-ttft-milliseconds=TARGET_TTFT_MILLISECONDS]
-        [GCLOUD_WIDE_FLAG ...]
+        [--use-case=USE_CASE] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     To get supported model, model servers, and model server versions, run
@@ -52,6 +55,24 @@ OPTIONAL FLAGS
         The path to save the output to. If not specified, output to the
         terminal.
 
+     --serving-stack=SERVING_STACK
+        The serving stack to filter manifests by. If not provided, manifests
+        for all serving stacks that support the given model and model server
+        will be considered.
+
+     --serving-stack-version=SERVING_STACK_VERSION
+        The serving stack version to filter manifests by. If not provided,
+        manifests for all versions that support the given model and model
+        server will be considered.
+
+     --target-itl-milliseconds=TARGET_ITL_MILLISECONDS
+        The target inter-token latency (ITL) in milliseconds. If this is set,
+        the manifest will include Horizontal Pod Autoscaler (HPA) resources
+        which automatically adjust the model server replica count in response
+        to changes in model server load to keep p50 ITL below the specified
+        threshold. If the provided target-itl-milliseconds is too low to
+        achieve, the HPA manifest will not be generated.
+
      --target-ntpot-milliseconds=TARGET_NTPOT_MILLISECONDS
         The maximum normalized time per output token (NTPOT) in milliseconds.
         NTPOT is measured as the request_latency / output_tokens. If this is
@@ -65,6 +86,12 @@ OPTIONAL FLAGS
         If specified, results will only show accelerators that can meet the
         latency target and will show their throughput performances at the
         target ttft target to achieve, the HPA manifest will not be generated.
+
+     --use-case=USE_CASE
+        The manifest will be optimized for this use case. Options are: Advanced
+        Customer Support, Code Completion, Text Summarization, Chatbot
+        (ShareGPT), Code Generation, Deep Research. Will default to Chatbot if
+        not specified.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

@@ -10,17 +10,20 @@ SYNOPSIS
           [peer-cluster-name=PEER-CLUSTER-NAME],
           [peer-ip-addresses=PEER-IP-ADDRESSES],
           [peer-svm-name=PEER-SVM-NAME],[peer-volume-name=PEER-VOLUME-NAME]]
-        [--capacity=CAPACITY] [--description=DESCRIPTION]
-        [--enable-kerberos=ENABLE_KERBEROS]
+        [--cache-pre-populate=[exclude-path-list=EXCLUDE-PATH-LIST],
+          [path-list=PATH-LIST],[recursion=RECURSION]] [--capacity=CAPACITY]
+        [--description=DESCRIPTION] [--enable-kerberos=ENABLE_KERBEROS]
         [--export-policy=[access-type=ACCESS-TYPE],
-          [allowed-clients=ALLOWED-CLIENTS],[has-root-access=HAS-ROOT-ACCESS],
+          [allowed-clients=ALLOWED-CLIENTS],[anon-uid=ANON-UID],
+          [has-root-access=HAS-ROOT-ACCESS],
           [kerberos-5-read-only=KERBEROS-5-READ-ONLY],
           [kerberos-5-read-write=KERBEROS-5-READ-WRITE],
           [kerberos-5i-read-only=KERBEROS-5I-READ-ONLY],
           [kerberos-5i-read-write=KERBEROS-5I-READ-WRITE],
           [kerberos-5p-read-only=KERBEROS-5P-READ-ONLY],
           [kerberos-5p-read-write=KERBEROS-5P-READ-WRITE],
-          [nfsv3=NFSV3],[nfsv4=NFSV4]] [--protocols=PROTOCOL,[PROTOCOL,...]]
+          [nfsv3=NFSV3],[nfsv4=NFSV4],[squash-mode=SQUASH-MODE]]
+        [--protocols=PROTOCOL,[PROTOCOL,...]]
         [--restricted-actions=RESTRICTED_ACTION,[...]]
         [--security-style=SECURITY_STYLE; default="SECURITY_STYLE_UNSPECIFIED"]
         [--share-name=SHARE_NAME]
@@ -125,6 +128,22 @@ FLAGS
             *enable-global-file-lock*::: If true, enable global file lock
             *cache-config*::: Cache-config as a hashtag-separated(#) list of key-value pairs
 
+     --cache-pre-populate=[exclude-path-list=EXCLUDE-PATH-LIST],[path-list=PATH-LIST],[recursion=RECURSION]
+        Cache Pre-populate contains cache pre-populate parameters of a volume.
+
+        Cache Pre-populate will have the following format
+        --cache-pre-populate=path-list=PATH_LIST1#PATH_LIST2,
+        exclude-path-list=EXCLUDE_PATH_LIST1#EXCLUDE_PATH_LIST2,
+        recursion=RECURSION
+
+         path-list
+            Hashtag-separated(#) list of paths to be pre-populated
+         exclude-path-list
+            Hashtag-separated(#) list of paths to be excluded from
+            pre-population
+         recursion
+            Boolean value indicating pre-populate recursion.
+
      --capacity=CAPACITY
         The desired capacity of the Volume in GiB or TiB units.If no capacity
         unit is specified, GiB is assumed.
@@ -135,7 +154,7 @@ FLAGS
      --enable-kerberos=ENABLE_KERBEROS
         Boolean flag indicating whether Volume is a kerberos Volume or not
 
-     --export-policy=[access-type=ACCESS-TYPE],[allowed-clients=ALLOWED-CLIENTS],[has-root-access=HAS-ROOT-ACCESS],[kerberos-5-read-only=KERBEROS-5-READ-ONLY],[kerberos-5-read-write=KERBEROS-5-READ-WRITE],[kerberos-5i-read-only=KERBEROS-5I-READ-ONLY],[kerberos-5i-read-write=KERBEROS-5I-READ-WRITE],[kerberos-5p-read-only=KERBEROS-5P-READ-ONLY],[kerberos-5p-read-write=KERBEROS-5P-READ-WRITE],[nfsv3=NFSV3],[nfsv4=NFSV4]
+     --export-policy=[access-type=ACCESS-TYPE],[allowed-clients=ALLOWED-CLIENTS],[anon-uid=ANON-UID],[has-root-access=HAS-ROOT-ACCESS],[kerberos-5-read-only=KERBEROS-5-READ-ONLY],[kerberos-5-read-write=KERBEROS-5-READ-WRITE],[kerberos-5i-read-only=KERBEROS-5I-READ-ONLY],[kerberos-5i-read-write=KERBEROS-5I-READ-WRITE],[kerberos-5p-read-only=KERBEROS-5P-READ-ONLY],[kerberos-5p-read-write=KERBEROS-5P-READ-WRITE],[nfsv3=NFSV3],[nfsv4=NFSV4],[squash-mode=SQUASH-MODE]
         Export Policy of a Cloud NetApp Files Volume. This will be a field
         similar to network in which export policy fields can be specified as
         such: --export-policy=allowed-clients=ALLOWED_CLIENTS_IP_ADDRESSES,
@@ -145,7 +164,8 @@ FLAGS
         kerberos-5i-read-only=KERBEROS_5I_READ_ONLY,
         kerberos-5i-read-write=KERBEROS_5I_READ_WRITE,
         kerberos-5p-read-only=KERBEROS_5P_READ_ONLY,
-        kerberos-5p-read-write=KERBEROS_5P_READ_WRITE
+        kerberos-5p-read-write=KERBEROS_5P_READ_WRITE,
+        squash-mode=SQUASH_MODE,anon-uid=ANON_UID
 
      --protocols=PROTOCOL,[PROTOCOL,...]
         Type of File System protocols for the Cloud NetApp Files Volume. Valid

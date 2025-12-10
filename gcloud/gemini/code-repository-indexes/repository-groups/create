@@ -6,8 +6,11 @@ SYNOPSIS
     gcloud gemini code-repository-indexes repository-groups create
         (REPOSITORY_GROUP
           : --code-repository-index=CODE_REPOSITORY_INDEX --location=LOCATION)
-        --repositories=[branchPattern=BRANCHPATTERN],[resource=RESOURCE]
-        [--async] [--labels=[LABELS,...]] [--request-id=REQUEST_ID]
+        [--async] [--labels=[LABELS,...]]
+        [--repositories=[branchPattern=BRANCHPATTERN],[resource=RESOURCE]]
+        [--request-id=REQUEST_ID]
+        [--resources=[authConfig=AUTHCONFIG],
+          [connection=CONNECTION],[sourceConfig=SOURCECONFIG],[type=TYPE]]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -103,31 +106,7 @@ POSITIONAL ARGUMENTS
             fully specified name;
           ▸ provide the argument --location on the command line.
 
-REQUIRED FLAGS
-     --repositories=[branchPattern=BRANCHPATTERN],[resource=RESOURCE]
-        Required, List of repositories to group.
-
-         branchPattern
-            The Git branch pattern used for indexing in RE2 syntax. See
-            https://github.com/google/re2/wiki/syntax for syntax.
-
-         resource
-            The DeveloperConnect repository full resource name, relative
-            resource name or resource URL to be indexed.
-
-        Shorthand Example:
-
-            --repositories=branchPattern=string,resource=string --repositories=branchPattern=string,resource=string
-
-        JSON Example:
-
-            --repositories='[{"branchPattern": "string", "resource": "string"}]'
-
-        File Example:
-
-            --repositories=path_to_file.(yaml|json)
-
-OPTIONAL FLAGS
+FLAGS
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
@@ -155,6 +134,29 @@ OPTIONAL FLAGS
 
             --labels=path_to_file.(yaml|json)
 
+     --repositories=[branchPattern=BRANCHPATTERN],[resource=RESOURCE]
+        List of repositories to group.
+
+         branchPattern
+            The Git branch pattern used for indexing in RE2 syntax. See
+            https://github.com/google/re2/wiki/syntax for syntax.
+
+         resource
+            The DeveloperConnect repository full resource name, relative
+            resource name or resource URL to be indexed.
+
+        Shorthand Example:
+
+            --repositories=branchPattern=string,resource=string --repositories=branchPattern=string,resource=string
+
+        JSON Example:
+
+            --repositories='[{"branchPattern": "string", "resource": "string"}]'
+
+        File Example:
+
+            --repositories=path_to_file.(yaml|json)
+
      --request-id=REQUEST_ID
         An optional request ID to identify requests. Specify a unique request
         ID so that if you must retry your request, the server will know to
@@ -163,6 +165,56 @@ OPTIONAL FLAGS
 
         The request ID must be a valid UUID with the exception that zero UUID
         is not supported (00000000-0000-0000-0000-000000000000).
+
+     --resources=[authConfig=AUTHCONFIG],[connection=CONNECTION],[sourceConfig=SOURCECONFIG],[type=TYPE]
+        List of third party connection resources.
+
+         authConfig
+            The authentication configuration for the resource.
+
+             apiToken
+                API Token based authentication.
+
+                 tokenSecretResource
+                    The secret key for the API token. Example:
+                    projects/<project>/secrets/<secret>/versions/<version>.
+
+                 username
+                    The username for the API token.
+
+         connection
+            The DeveloperConnect connection full resource name, relative
+            resource name or resource URL to be indexed.
+
+         sourceConfig
+            The source configuration for the resource.
+
+             confluenceConfig
+                Confluence source configuration.
+
+                 pageId
+                    The optional page ID of the Confluence page.
+
+                 spaceKey
+                    The space key of the Confluence space.
+
+                 uri
+                    The host address of the Confluence instance.
+
+         type
+            The type of the 3p resource.
+
+        Shorthand Example:
+
+            --resources=authConfig={apiToken={tokenSecretResource=string,username=string}},connection=string,sourceConfig={confluenceConfig={pageId=string,spaceKey=string,uri=string}},type=string --resources=authConfig={apiToken={tokenSecretResource=string,username=string}},connection=string,sourceConfig={confluenceConfig={pageId=string,spaceKey=string,uri=string}},type=string
+
+        JSON Example:
+
+            --resources='[{"authConfig": {"apiToken": {"tokenSecretResource": "string", "username": "string"}}, "connection": "string", "sourceConfig": {"confluenceConfig": {"pageId": "string", "spaceKey": "string", "uri": "string"}}, "type": "string"}]'
+
+        File Example:
+
+            --resources=path_to_file.(yaml|json)
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

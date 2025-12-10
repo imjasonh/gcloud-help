@@ -38,8 +38,11 @@ SYNOPSIS
           | --container-predefined-image=CONTAINER_PREDEFINED_IMAGE;
           default="codeoss"]
         [--kms-key=KMS_KEY : --kms-key-service-account=KMS_KEY_SERVICE_ACCOUNT]
-        [--no-persistent-storage | --pd-disk-type=PD_DISK_TYPE;
-          default="pd-standard" --pd-reclaim-policy=PD_RECLAIM_POLICY;
+        [--no-persistent-storage | --disk-reclaim-policy=DISK_RECLAIM_POLICY;
+          default="delete" --disk-type=DISK_TYPE --disk-size=DISK_SIZE
+          | --disk-source-snapshot=DISK_SOURCE_SNAPSHOT
+          | --pd-disk-type=PD_DISK_TYPE; default="pd-standard"
+          --pd-reclaim-policy=PD_RECLAIM_POLICY;
           default="delete" --pd-disk-size=PD_DISK_SIZE; default=200
           | --pd-source-snapshot=PD_SOURCE_SNAPSHOT] [GCLOUD_WIDE_FLAG ...]
 
@@ -516,30 +519,51 @@ FLAGS
           If set, workstations under this configuration will not have a
           persistent directory.
 
-       Persistent directory configuration.
+       --disk-reclaim-policy=DISK_RECLAIM_POLICY; default="delete"
+          What should happen to the disk after the Workstation is deleted.
+          DISK_RECLAIM_POLICY must be one of:
 
-         --pd-disk-type=PD_DISK_TYPE; default="pd-standard"
-            Type of the persistent directory. PD_DISK_TYPE must be one of:
-            pd-standard, pd-balanced, pd-ssd.
+           delete
+              The persistent disk will be deleted with the Workstation.
+           retain
+              The persistent disk will be remain after the workstation is
+              deleted and the administrator must manually delete the disk.
 
-         --pd-reclaim-policy=PD_RECLAIM_POLICY; default="delete"
-            What should happen to the disk after the Workstation is deleted.
-            PD_RECLAIM_POLICY must be one of:
+       --disk-type=DISK_TYPE
+          Type of the persistent directory. DISK_TYPE must be one of:
+          pd-standard, pd-balanced, pd-ssd, hyperdisk-balanced-ha.
 
-             delete
-                The persistent disk will be deleted with the Workstation.
-             retain
-                The persistent disk will be remain after the workstation is
-                deleted and the administrator must manually delete the disk.
+       At most one of these can be specified:
 
-         At most one of these can be specified:
+         --disk-size=DISK_SIZE
+            Size of the persistent directory in GB. DISK_SIZE must be one of:
+            10, 50, 100, 200, 500, 1000.
 
-           --pd-disk-size=PD_DISK_SIZE; default=200
-              Size of the persistent directory in GB. PD_DISK_SIZE must be one
-              of: 10, 50, 100, 200, 500, 1000.
+         --disk-source-snapshot=DISK_SOURCE_SNAPSHOT
+            Name of the snapshot to use as the source for the home disk.
 
-           --pd-source-snapshot=PD_SOURCE_SNAPSHOT
-              Name of the snapshot to use as the source for the home disk.
+       --pd-disk-type=PD_DISK_TYPE; default="pd-standard"
+          Type of the persistent directory. PD_DISK_TYPE must be one of:
+          pd-standard, pd-balanced, pd-ssd.
+
+       --pd-reclaim-policy=PD_RECLAIM_POLICY; default="delete"
+          What should happen to the disk after the Workstation is deleted.
+          PD_RECLAIM_POLICY must be one of:
+
+           delete
+              The persistent disk will be deleted with the Workstation.
+           retain
+              The persistent disk will be remain after the workstation is
+              deleted and the administrator must manually delete the disk.
+
+       At most one of these can be specified:
+
+         --pd-disk-size=PD_DISK_SIZE; default=200
+            Size of the persistent directory in GB. PD_DISK_SIZE must be one
+            of: 10, 50, 100, 200, 500, 1000.
+
+         --pd-source-snapshot=PD_SOURCE_SNAPSHOT
+            Name of the snapshot to use as the source for the home disk.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

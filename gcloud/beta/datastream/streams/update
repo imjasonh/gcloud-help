@@ -3,7 +3,7 @@ NAME
 
 SYNOPSIS
     gcloud beta datastream streams update (STREAM : --location=LOCATION)
-        [--display-name=DISPLAY_NAME] [--state=STATE]
+        [--display-name=DISPLAY_NAME] [--rule-sets=RULE_SETS] [--state=STATE]
         [--update-labels=[KEY=VALUE,...]] [--update-mask=UPDATE_MASK]
         [--backfill-none
           | --backfill-all --mongodb-excluded-objects=MONGODB_EXCLUDED_OBJECTS
@@ -86,6 +86,52 @@ POSITIONAL ARGUMENTS
 FLAGS
      --display-name=DISPLAY_NAME
         Friendly name for the stream.
+
+     --rule-sets=RULE_SETS
+        Path to a JSON file containing a list of rule sets to be applied to the
+        stream.
+
+            The JSON file is formatted as follows, with camelCase field naming:
+
+            [
+              {
+                "objectFilter": {
+                  "sourceObjectIdentifier": {
+                    "oracleIdentifier": {
+                      "schema": "schema1",
+                      "table": "table1"
+                    }
+                  }
+                },
+                "customizationRules": [
+                  {
+                    "bigqueryClustering": {
+                      "columns": ["COL_A"]
+                    }
+                  }
+                ]
+              },
+              {
+                "objectFilter": {
+                  "sourceObjectIdentifier": {
+                    "oracleIdentifier": {
+                      "schema": "schema2",
+                      "table": "table2"
+                    }
+                  }
+                },
+                "customizationRules": [
+                  {
+                    "bigqueryPartitioning": {
+                      "timeUnitPartition": {
+                        "column": "TIME_COL",
+                        "partitioningTimeGranularity": "PARTITIONING_TIME_GRANULARITY_DAY"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
 
      --state=STATE
         Stream state, can be set to: "RUNNING" or "PAUSED".

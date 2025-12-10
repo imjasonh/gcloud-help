@@ -20,8 +20,8 @@ SYNOPSIS
           | --postgresql-source-config=POSTGRESQL_SOURCE_CONFIG
           | --salesforce-source-config=SALESFORCE_SOURCE_CONFIG
           | --sqlserver-source-config=SQLSERVER_SOURCE_CONFIG))
-        [--labels=[KEY=VALUE,...]] [--force | --validate-only]
-        [GCLOUD_WIDE_FLAG ...]
+        [--labels=[KEY=VALUE,...]] [--rule-sets=RULE_SETS]
+        [--force | --validate-only] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Create a Datastream stream. If successful, the response body contains a
@@ -559,6 +559,52 @@ OPTIONAL FLAGS
         (-), underscores (_), lowercase characters, and numbers. Values must
         contain only hyphens (-), underscores (_), lowercase characters, and
         numbers.
+
+     --rule-sets=RULE_SETS
+        Path to a JSON file containing a list of rule sets to be applied to the
+        stream.
+
+            The JSON file is formatted as follows, with camelCase field naming:
+
+            [
+              {
+                "objectFilter": {
+                  "sourceObjectIdentifier": {
+                    "oracleIdentifier": {
+                      "schema": "schema1",
+                      "table": "table1"
+                    }
+                  }
+                },
+                "customizationRules": [
+                  {
+                    "bigqueryClustering": {
+                      "columns": ["COL_A"]
+                    }
+                  }
+                ]
+              },
+              {
+                "objectFilter": {
+                  "sourceObjectIdentifier": {
+                    "oracleIdentifier": {
+                      "schema": "schema2",
+                      "table": "table2"
+                    }
+                  }
+                },
+                "customizationRules": [
+                  {
+                    "bigqueryPartitioning": {
+                      "timeUnitPartition": {
+                        "column": "TIME_COL",
+                        "partitioningTimeGranularity": "PARTITIONING_TIME_GRANULARITY_DAY"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
 
      At most one of these can be specified:
 

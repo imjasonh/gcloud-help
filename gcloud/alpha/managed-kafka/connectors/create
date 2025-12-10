@@ -6,6 +6,7 @@ SYNOPSIS
     gcloud alpha managed-kafka connectors create
         (CONNECTOR : --connect-cluster=CONNECT_CLUSTER --location=LOCATION)
         (--config-file=JSON|YAML|FILE | --configs=[KEY=VALUE,...])
+        [--task-retry-disabled]
         [--task-restart-max-backoff=TASK_RESTART_MAX_BACKOFF
           --task-restart-min-backoff=TASK_RESTART_MIN_BACKOFF]
         [GCLOUD_WIDE_FLAG ...]
@@ -21,12 +22,12 @@ EXAMPLES
             --configs=connector.class="com.google.pubsub.kafka.source.CloudP\
         ubSubSourceConnector",cps.subscription="my-subscription",... \
             [--task-restart-min-backoff=60s] \
-            [--task-restart-max-backoff=30m] OR
+            [--task-restart-max-backoff=30m] [--task-retry-disabled=true] OR
         $ gcloud alpha managed-kafka connectors create myconnector \
             --location=us-central1 --connect-cluster=mycluster \
             --config-file=my-config-file.yaml \
             [--task-restart-min-backoff=60s] \
-            [--task-restart-max-backoff=30m]
+            [--task-restart-max-backoff=30m] [--task-retry-disabled=true]
 
 POSITIONAL ARGUMENTS
      Connector resource - Identifies the connector for which the command runs.
@@ -92,6 +93,9 @@ REQUIRED FLAGS
           name, for example: cleanup.policy=compact,compression.type=producer.
 
 OPTIONAL FLAGS
+     --task-retry-disabled
+        Disable default task retry policy.
+
      --task-restart-max-backoff=TASK_RESTART_MAX_BACKOFF
         The maximum amount of time to wait before retrying a failed task in
         seconds. This sets an upper bound for the backoff delay. The default

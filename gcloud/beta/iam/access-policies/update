@@ -38,13 +38,14 @@ POSITIONAL ARGUMENTS
      policy.
 
      The following formats are supported:
-     projects/{project_id}/locations/{location}/accessPolicies/{policy_id}
-     projects/{project_number}/locations/{location}/accessPolicies/{policy_id}
-     folders/{folder_id}/locations/{location}/accessPolicies/{policy_id}
-     organizations/{organization_id}/locations/{location}/accessPolicies/{policy_id}
-     The arguments in this group can be used to specify the attributes of this
-     resource. (NOTE) Some attributes are not given arguments in this group but
-     can be set in other ways.
+
+      ◆ projects/{project_id}/locations/{location}/accessPolicies/{policy_id}
+      ◆ projects/{project_number}/locations/{location}/accessPolicies/{policy_id}
+      ◆ folders/{folder_id}/locations/{location}/accessPolicies/{policy_id}
+      ◆ organizations/{organization_id}/locations/{location}/accessPolicies/{policy_id}
+        The arguments in this group can be used to specify the attributes of
+        this resource. (NOTE) Some attributes are not given arguments in this
+        group but can be set in other ways.
 
      To set the project attribute:
       ◆ provide the argument access_policy on the command line with a fully
@@ -199,28 +200,20 @@ FLAGS
              conditions
                 The conditions that determine whether this rule applies to a
                 request. Conditions are identified by their key, which is the
-                FQDN of the service that they are relevant to, e.g.:
+                FQDN of the service that they are relevant to. For example:
+                "conditions": { "iam.googleapis.com": <cel expression> }. Each
+                rule is evaluated independently. If this rule does not apply to
+                a request, other rules might still apply. Currently supported
+                keys are as follows:
 
-                "conditions": { "iam.googleapis.com": <cel expression> }
+                ◇ eventarc.googleapis.com: Can use CEL functions that
+                  evaluate resource fields.
 
-                Each rule is evaluated independently. If this rule does not
-                apply to a request, other rules might still apply. Currently
-                supported keys are:
-
-                ◇ eventarc.googleapis.com// The conditions that determine
-                  whether this rule applies to a request. Conditions are
-                  identified by their key, which is the FQDN of the service
-                  that they are relevant to, e.g.:
-
-                "conditions": { "iam.googleapis.com": { "cel_condition": <cel
-                expression> } }
-
-                Each rule is evaluated independently. If this rule does not
-                apply to a request, other rules might still apply. Currently
-                supported keys are:
-
-                ◇ eventarc.googleapis.com
-                ◇ iam.googleapis.com.
+                ◇ iam.googleapis.com: Can use CEL functions that evaluate
+                  resource tags
+                  (https://cloud.google.com/iam/help/conditions/resource-tags)
+                  and combine them using boolean and logical operators. Other
+                  functions and operators are not supported.
 
                  KEY
                     Sets KEY value.
@@ -279,7 +272,7 @@ FLAGS
                     Each permission uses the format
                     {service_fqdn}/{resource}.{verb}, where {service_fqdn} is
                     the fully qualified domain name for the service. Currently
-                    supported permissions are:
+                    supported permissions are as follows:
 
                     ▹ eventarc.googleapis.com/messageBuses.publish.
 
@@ -293,14 +286,17 @@ FLAGS
                   user accounts. For example,
                   principal://goog/subject/alice@example.com.
 
-                    If an identifier that was previously set on a policy is soft deleted, then
-                    calls to read that policy will return the identifier with a deleted
-                    prefix. Users cannot set identifiers with this syntax.
-                    * `deleted:principal://goog/subject/{email_id}?uid={uid}`: A specific
-                      Google Account that was deleted recently. For example,
-                      `deleted:principal://goog/subject/alice@example.com?uid=1234567890`. If
-                      the Google Account is recovered, this identifier reverts to the standard
-                      identifier for a Google Account.
+                If an identifier that was previously set on a policy is soft
+                deleted, then calls to read that policy will return the
+                identifier with a deleted prefix. Users cannot set identifiers
+                with this syntax.
+
+                ◇ deleted:principal://goog/subject/{email_id}?uid={uid}: A
+                  specific Google Account that was deleted recently. For
+                  example,
+                  deleted:principal://goog/subject/alice@example.com?uid=1234567890.
+                  If the Google Account is recovered, this identifier reverts
+                  to the standard identifier for a Google Account.
 
                 ◇ deleted:principalSet://goog/group/{group_id}?uid={uid}: A
                   Google group that was deleted recently. For example,
@@ -333,28 +329,20 @@ FLAGS
              conditions
                 The conditions that determine whether this rule applies to a
                 request. Conditions are identified by their key, which is the
-                FQDN of the service that they are relevant to, e.g.:
+                FQDN of the service that they are relevant to. For example:
+                "conditions": { "iam.googleapis.com": <cel expression> }. Each
+                rule is evaluated independently. If this rule does not apply to
+                a request, other rules might still apply. Currently supported
+                keys are as follows:
 
-                "conditions": { "iam.googleapis.com": <cel expression> }
+                ◇ eventarc.googleapis.com: Can use CEL functions that
+                  evaluate resource fields.
 
-                Each rule is evaluated independently. If this rule does not
-                apply to a request, other rules might still apply. Currently
-                supported keys are:
-
-                ◇ eventarc.googleapis.com// The conditions that determine
-                  whether this rule applies to a request. Conditions are
-                  identified by their key, which is the FQDN of the service
-                  that they are relevant to, e.g.:
-
-                "conditions": { "iam.googleapis.com": { "cel_condition": <cel
-                expression> } }
-
-                Each rule is evaluated independently. If this rule does not
-                apply to a request, other rules might still apply. Currently
-                supported keys are:
-
-                ◇ eventarc.googleapis.com
-                ◇ iam.googleapis.com.
+                ◇ iam.googleapis.com: Can use CEL functions that evaluate
+                  resource tags
+                  (https://cloud.google.com/iam/help/conditions/resource-tags)
+                  and combine them using boolean and logical operators. Other
+                  functions and operators are not supported.
 
                  KEY
                     Sets KEY value.
@@ -413,7 +401,7 @@ FLAGS
                     Each permission uses the format
                     {service_fqdn}/{resource}.{verb}, where {service_fqdn} is
                     the fully qualified domain name for the service. Currently
-                    supported permissions are:
+                    supported permissions are as follows:
 
                     ▹ eventarc.googleapis.com/messageBuses.publish.
 
@@ -427,14 +415,17 @@ FLAGS
                   user accounts. For example,
                   principal://goog/subject/alice@example.com.
 
-                    If an identifier that was previously set on a policy is soft deleted, then
-                    calls to read that policy will return the identifier with a deleted
-                    prefix. Users cannot set identifiers with this syntax.
-                    * `deleted:principal://goog/subject/{email_id}?uid={uid}`: A specific
-                      Google Account that was deleted recently. For example,
-                      `deleted:principal://goog/subject/alice@example.com?uid=1234567890`. If
-                      the Google Account is recovered, this identifier reverts to the standard
-                      identifier for a Google Account.
+                If an identifier that was previously set on a policy is soft
+                deleted, then calls to read that policy will return the
+                identifier with a deleted prefix. Users cannot set identifiers
+                with this syntax.
+
+                ◇ deleted:principal://goog/subject/{email_id}?uid={uid}: A
+                  specific Google Account that was deleted recently. For
+                  example,
+                  deleted:principal://goog/subject/alice@example.com?uid=1234567890.
+                  If the Google Account is recovered, this identifier reverts
+                  to the standard identifier for a Google Account.
 
                 ◇ deleted:principalSet://goog/group/{group_id}?uid={uid}: A
                   Google group that was deleted recently. For example,
@@ -473,28 +464,20 @@ FLAGS
                conditions
                   The conditions that determine whether this rule applies to a
                   request. Conditions are identified by their key, which is the
-                  FQDN of the service that they are relevant to, e.g.:
-
-                  "conditions": { "iam.googleapis.com": <cel expression> }
-
+                  FQDN of the service that they are relevant to. For example:
+                  "conditions": { "iam.googleapis.com": <cel expression> }.
                   Each rule is evaluated independently. If this rule does not
                   apply to a request, other rules might still apply. Currently
-                  supported keys are:
+                  supported keys are as follows:
 
-                  ▹ eventarc.googleapis.com// The conditions that determine
-                    whether this rule applies to a request. Conditions are
-                    identified by their key, which is the FQDN of the service
-                    that they are relevant to, e.g.:
+                  ▹ eventarc.googleapis.com: Can use CEL functions that
+                    evaluate resource fields.
 
-                  "conditions": { "iam.googleapis.com": { "cel_condition": <cel
-                  expression> } }
-
-                  Each rule is evaluated independently. If this rule does not
-                  apply to a request, other rules might still apply. Currently
-                  supported keys are:
-
-                  ▹ eventarc.googleapis.com
-                  ▹ iam.googleapis.com.
+                  ▹ iam.googleapis.com: Can use CEL functions that evaluate
+                    resource tags
+                    (https://cloud.google.com/iam/help/conditions/resource-tags)
+                    and combine them using boolean and logical operators. Other
+                    functions and operators are not supported.
 
                    KEY
                       Sets KEY value.
@@ -553,7 +536,7 @@ FLAGS
                       rule. Each permission uses the format
                       {service_fqdn}/{resource}.{verb}, where {service_fqdn} is
                       the fully qualified domain name for the service.
-                      Currently supported permissions are:
+                      Currently supported permissions are as follows:
 
                       ▪ eventarc.googleapis.com/messageBuses.publish.
 
@@ -567,14 +550,17 @@ FLAGS
                     Workspace user accounts. For example,
                     principal://goog/subject/alice@example.com.
 
-                      If an identifier that was previously set on a policy is soft deleted, then
-                      calls to read that policy will return the identifier with a deleted
-                      prefix. Users cannot set identifiers with this syntax.
-                      * `deleted:principal://goog/subject/{email_id}?uid={uid}`: A specific
-                        Google Account that was deleted recently. For example,
-                        `deleted:principal://goog/subject/alice@example.com?uid=1234567890`. If
-                        the Google Account is recovered, this identifier reverts to the standard
-                        identifier for a Google Account.
+                  If an identifier that was previously set on a policy is soft
+                  deleted, then calls to read that policy will return the
+                  identifier with a deleted prefix. Users cannot set
+                  identifiers with this syntax.
+
+                  ▹ deleted:principal://goog/subject/{email_id}?uid={uid}: A
+                    specific Google Account that was deleted recently. For
+                    example,
+                    deleted:principal://goog/subject/alice@example.com?uid=1234567890.
+                    If the Google Account is recovered, this identifier reverts
+                    to the standard identifier for a Google Account.
 
                   ▹ deleted:principalSet://goog/group/{group_id}?uid={uid}: A
                     Google group that was deleted recently. For example,
