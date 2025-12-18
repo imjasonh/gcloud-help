@@ -3,7 +3,8 @@ NAME
         operation job
 
 SYNOPSIS
-    gcloud alpha storage batch-operations jobs create BATCH_JOB --bucket=BUCKET
+    gcloud alpha storage batch-operations jobs create BATCH_JOB
+        (--bucket=BUCKET | --bucket-list=[BUCKETS,...])
         (--included-object-prefixes=[PREFIXES,...]
           | --manifest-location=MANIFEST_LOCATION)
         (--put-metadata=KEY=VALUE,[KEY=VALUE,...]
@@ -20,17 +21,25 @@ DESCRIPTION
     manner.
 
 EXAMPLES
-    To create a batch job with the name my-job to perform object deletion on
-    bucket my-bucket and the manifest file gs://my-bucket/manifest.csv
-    specifies the objects to be transformed:
+    The following example command creates a batch job, named my-job, that
+    performs object deletion on bucket my-bucket for objects specified in the
+    manifest file gs://my-bucket/manifest.csv:
 
         $ gcloud alpha storage batch-operations jobs create my-job \
           --bucket=my-bucket \
           --manifest-location=gs://my-bucket/manifest.csv --delete-object
 
-    To create a batch job with the name my-job to update object metadata
-    Content-Disposition to inline, Content-Language to en, and set object
-    retention mode to locked on bucket my-bucket where you want to match
+    The following example command creates a batch job, named my-job, that
+    performs object deletion on buckets my-bucket-1 and my-bucket-2 for all
+    objects in them:
+
+        $ gcloud alpha storage batch-operations jobs create my-job \
+          --bucket-list=my-bucket-1,my-bucket-2 \
+          --included-object-prefixes='' --delete-object
+
+    The following example command creates a batch job, named my-job, that
+    updates object metadata Content-Disposition to inline, Content-Language to
+    en, and sets object retention mode to locked on bucket my-bucket for
     objects with prefixes prefix1 or prefix2:
 
         $ gcloud alpha storage batch-operations jobs create my-job \
@@ -38,9 +47,10 @@ EXAMPLES
           --put-metadata=Content-Disposition=inline,Content-Language=en,\
         Retain-Until=2025-01-01T00:00:00Z,Retention-Mode=locked
 
-    To create a batch job with the name my-job to put object event based hold
-    on objects in bucket my-bucket with logging config enabled for
-    corresponding transform action and succeeded and failed action states:
+    The following example command creates a batch job, named my-job, that puts
+    object event based hold on objects in bucket my-bucket with logging config
+    enabled for corresponding transform action and succeeded and failed action
+    states:
 
         $ gcloud alpha storage batch-operations jobs create my-job \
           --bucket=my-bucket --put-object-event-based-hold \
@@ -72,8 +82,14 @@ POSITIONAL ARGUMENTS
           ▸ provide the argument batch_job on the command line.
 
 REQUIRED FLAGS
-     --bucket=BUCKET
-        Bucket containing the objects that the batch job will operate on.
+     Exactly one of these must be specified:
+
+       --bucket=BUCKET
+          Bucket containing the objects that the batch job will operate on.
+
+       --bucket-list=[BUCKETS,...]
+          List of buckets containing the objects that the batch job will
+          operate on.
 
      Source specifying objects to perform batch operations on. Must be one of
      --manifest-location=``MANIFEST_LOCATION or

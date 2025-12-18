@@ -1,0 +1,95 @@
+NAME
+    gcloud beta container fleet rolloutsequences update - update a rollout
+        sequence resource
+
+SYNOPSIS
+    gcloud beta container fleet rolloutsequences update ROLLOUTSEQUENCE
+        --stage-config=PATH_TO_FILE [--async] [--display-name=DISPLAY_NAME]
+        [--labels=[KEY=VALUE,...]] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Update a rollout sequence resource.
+
+EXAMPLES
+    To update a rollout sequence, run:
+
+        $ gcloud beta container fleet rolloutsequences update \
+            ROLLOUT_SEQUENCE_NAME --stage-config=path/to/config.yaml
+
+POSITIONAL ARGUMENTS
+     RolloutSequence resource - The group of arguments defining a Rollout
+     Sequence. This represents a Cloud resource. (NOTE) Some attributes are not
+     given arguments in this group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument rolloutSequence on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument rolloutSequence on the command line with a fully
+        specified name;
+      ◆ global is the only supported location.
+
+     This must be specified.
+
+       ROLLOUTSEQUENCE
+          ID of the rolloutSequence or fully qualified identifier for the
+          rolloutSequence.
+
+          To set the rollout_sequence attribute:
+          ▸ provide the argument rolloutSequence on the command line.
+
+REQUIRED FLAGS
+     --stage-config=PATH_TO_FILE
+        Path to the YAML file containing the stage configurations. The YAML
+        file should contain a list of stages. Fleet projects and soak_duration
+        are required. If label_selector is not specified, there is no
+        filtering. A fleet project is the project where the fleet is hosted.
+        Example:
+
+            - stage:
+              fleet-projects:
+              # Expected format: projects/{project}
+              - projects/my-dev-project
+              soak-duration: 604800s # 7 days
+            - stage:
+              fleet-projects:
+              - projects/my-prod-project
+              soak-duration: 604800s # 7 days
+              label-selector: resource.labels.canary=='true'
+            - stage:
+              fleet-projects:
+              # Expected format: projects/{project}
+              - projects/my-prod-project
+              soak-duration: 604800s # 7 days
+
+        Use a full or relative path to a local file containing the value of
+        stage_config.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --display-name=DISPLAY_NAME
+        Display name of the rollout sequence to be created (optional).
+
+     --labels=[KEY=VALUE,...]
+        Labels for the rollout sequence.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud alpha container fleet rolloutsequences update
+

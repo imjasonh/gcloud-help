@@ -1,0 +1,115 @@
+NAME
+    gcloud alpha container fleet config-management update - update the Config
+        Management feature
+
+SYNOPSIS
+    gcloud alpha container fleet config-management update
+        ([--config=CONFIG : --all-memberships
+          | [--memberships=[MEMBERSHIPS,...] : --location=LOCATION]])
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Update the Config Management feature.
+
+    gcloud alpha container fleet config-management update replaces the apply
+    command. It accepts the describe command output as input to ease
+    configuration updates and supports updates to multiple memberships. This
+    command will gradually introduce all the apply command flags and graduate
+    to GA.
+
+EXAMPLES
+    To update only the Config Sync sync directory on an existing membership
+    configuration, run:
+
+        $ gcloud alpha container fleet config-management describe \
+            --view=config --memberships=example-membership-1 > config.yaml
+
+        $ sed -i "s/policyDir: foo/policyDir: bar/g" config.yaml
+
+        $ gcloud alpha container fleet config-management update \
+            --config=config.yaml --memberships=example-membership-1
+
+REQUIRED FLAGS
+     This must be specified.
+
+       --config=CONFIG
+          Path to YAML file, or - to read from stdin, that specifies the
+          configuration to update the target membership(s) to. Accepts the same
+          schema as the Spec API field
+          (https://cloud.google.com/kubernetes-engine/fleet-management/docs/reference/rpc/google.cloud.gkehub.configmanagement.v2alpha#google.cloud.gkehub.configmanagement.v2alpha.Spec).
+          Provides the additional field-handling documented in "gcloud
+          configuration field behavior"
+          (https://cloud.google.com/kubernetes-engine/config-sync/docs/reference/gcloud-configuration-field-behavior).
+
+          To update the entire configuration for select memberships to that
+          specified in a config.yaml, run:
+
+              $ gcloud alpha container fleet config-management update \
+                  --config=path/to/config.yaml
+                  --memberships=example-membership-1,example-membership-2
+
+          To update only the Config Sync sync directory on an existing
+          membership configuration in a single invocation, making sure to first
+          inspect the existing membership configuration, run:
+
+              $ gcloud alpha container fleet config-management describe \
+                  --view=config --memberships=example-membership-1
+
+              $ gcloud alpha container fleet config-management describe \
+                  --view=config --memberships=example-membership-1 | sed \
+                  "s/policyDir: foo/policyDir: bar/g" | gcloud alpha container \
+                  fleet config-management update --config="-" \
+                  --memberships=example-membership-1
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       At most one of these can be specified:
+
+         --all-memberships
+            All memberships in the fleet.
+
+         Membership resource - The group of arguments defining one or more
+         memberships. The arguments in this group can be used to specify the
+         attributes of this resource. (NOTE) Some attributes are not given
+         arguments in this group but can be set in other ways.
+
+         To set the project attribute:
+          ▫ provide the argument --memberships on the command line with a
+            fully specified name;
+          ▫ provide the argument --project on the command line;
+          ▫ set the property core/project.
+
+           --memberships=[MEMBERSHIPS,...]
+              IDs of the memberships or fully qualified identifiers for the
+              memberships.
+
+              To set the memberships attribute:
+              ◇ provide the argument --memberships on the command line.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --location=LOCATION
+              Location for the memberships.
+
+              To set the location attribute:
+              ◇ provide the argument --memberships on the command line with a
+                fully specified name;
+              ◇ provide the argument --location on the command line;
+              ◇ set the property gkehub/location.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

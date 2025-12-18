@@ -15,7 +15,9 @@ SYNOPSIS
           --include-field-names=INCLUDE_FIELD_NAMES
           --row-filter=ROW_FILTER --sampling-percent=SAMPLING_PERCENT]
         [--incremental-field=INCREMENTAL_FIELD --on-demand=ON_DEMAND
-          | --schedule=SCHEDULE] [GCLOUD_WIDE_FLAG ...]
+          | --schedule=SCHEDULE
+          | --one-time --ttl-after-scan-completion=TTL_AFTER_SCAN_COMPLETION]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Represents a user-visible job which provides the insights for the related
@@ -163,6 +165,22 @@ OPTIONAL FLAGS
             string from IANA time zone database. For example,
             CRON_TZ=America/New_York 1 * * * * or TZ=America/New_York 1 * * *
             *. This field is required for RECURRING scans.
+
+         Data profile scan one-time trigger settings.
+
+           --one-time
+              If set, the data profile scan runs once, and auto deleted once
+              the ttl_after_scan_completion expires.
+
+           --ttl-after-scan-completion=TTL_AFTER_SCAN_COMPLETION
+              The time to live for one-time scans. Default value is 24 hours,
+              minimum value is 0 seconds, and maximum value is 365 days. The
+              time is calculated from the data scan job completion time. If
+              value is set as 0 seconds, the scan will be immediately deleted
+              upon job completion, regardless of whether the job succeeded or
+              failed. The value should be a number followed by a unit suffix
+              "s". Example: "100s" for 100 seconds.The argument is only valid
+              when --one-time is set.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

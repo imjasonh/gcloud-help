@@ -9,9 +9,10 @@ SYNOPSIS
           | --disable-high-resilience | --disable-logs-in-cloud-logging-only
           | --disable-private-environment | --enable-high-resilience
           | --enable-logs-in-cloud-logging-only | --enable-private-environment
-          | --environment-size=ENVIRONMENT_SIZE | --image-version=IMAGE_VERSION
-          | --node-count=NODE_COUNT | --support-web-server-plugins
+          | --environment-size=ENVIRONMENT_SIZE | --node-count=NODE_COUNT
+          | --support-web-server-plugins
           | --web-server-machine-type=WEB_SERVER_MACHINE_TYPE
+          | --airflow-version=AIRFLOW_VERSION | --image-version=IMAGE_VERSION
           | --clear-maintenance-window
           | --maintenance-window-end=MAINTENANCE_WINDOW_END
           --maintenance-window-recurrence=MAINTENANCE_WINDOW_RECURRENCE
@@ -141,7 +142,33 @@ REQUIRED FLAGS
           will be chosen. ENVIRONMENT_SIZE must be one of: extra-large, large,
           medium, small, unspecified.
 
+       --node-count=NODE_COUNT
+          The new number of nodes running the environment. Must be >= 3.
+
+       --support-web-server-plugins
+          Enable the support for web server plugins, supported in Composer 3 or
+          greater.
+
+       --web-server-machine-type=WEB_SERVER_MACHINE_TYPE
+          machine type used by the Airflow web server. The list of available
+          machine types is available here:
+          https://cloud.google.com/composer/pricing.
+
        Group of arguments for performing in-place environment upgrades.
+
+       At most one of these can be specified:
+
+         --airflow-version=AIRFLOW_VERSION
+            Upgrade the environment to a later Apache Airflow version in-place.
+
+            Must be of the form X[.Y[.Z]], where [] denotes optional fragments.
+            Examples: 2, 2.3, 2.3.4.
+
+            The Apache Airflow version is a semantic version or an alias in the
+            form of major or major.minor version numbers, resolved to the
+            latest matching Apache Airflow version supported in the current
+            Cloud Composer version. The resolved version is stored in the
+            upgraded environment.
 
          --image-version=IMAGE_VERSION
             Upgrade the environment to a later version in-place.
@@ -162,18 +189,6 @@ REQUIRED FLAGS
             latest matching Apache Airflow version supported in the given Cloud
             Composer version. The resolved versions are stored in the upgraded
             environment.
-
-       --node-count=NODE_COUNT
-          The new number of nodes running the environment. Must be >= 3.
-
-       --support-web-server-plugins
-          Enable the support for web server plugins, supported in Composer 3 or
-          greater.
-
-       --web-server-machine-type=WEB_SERVER_MACHINE_TYPE
-          machine type used by the Airflow web server. The list of available
-          machine types is available here:
-          https://cloud.google.com/composer/pricing.
 
        Group of arguments for setting the maintenance window value during
        update.

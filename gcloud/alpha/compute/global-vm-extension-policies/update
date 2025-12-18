@@ -27,7 +27,7 @@ EXAMPLES
             --config=extension1="config1",extension2="config2" \
             --inclusion-labels=env=prod \
             --inclusion-labels=env=preprod,workload=load-test \
-            --priority=1000
+            --rollout-predefined-plan=slow_rollout --priority=1000
 
 POSITIONAL ARGUMENTS
      NAME
@@ -58,7 +58,7 @@ OPTIONAL FLAGS
         --config-from-file.
 
      --description=DESCRIPTION
-        An optional textual description for the this extension policy.
+        An optional text description for the extension policy.
 
      --inclusion-labels=INCLUSION_LABELS
         A list of inclusion labels to select the target VMs.
@@ -79,23 +79,27 @@ OPTIONAL FLAGS
 
      --priority=PRIORITY; default=1000
         The priority of the policy. Lower the number, higher the priority. When
-        two policies tries to apply the same extension, the one with the higher
-        priority takes precedence. If the priority is the same, the one with
-        the more recent update timestamp takes precedence. When a policy is
-        deleted, the extension would remain installed on the VM if a lower
-        priority policy still applies.
+        two policies try to apply the same extension to a VM, the policy with
+        higher priority takes precedence. If the priorities are the same, the
+        policy with the more recent update timestamp takes precedence. If a
+        policy is deleted, the extension remains installed on the VM if a
+        lower-priority policy still applies.
 
         Range from 0 to 65535. Default is 1000.
 
      --rollout-conflict-behavior=ROLLOUT_CONFLICT_BEHAVIOR
-        Specifies the behavior of the Rollout if a conflict is detected in a
-        project during a Rollout. Default behavior is to keep the local value
-        if conflict happens. Specifying 'overwrite' will overwrite the local
-        value if conflict happens.
+        Specifies the behavior of a rollout if a conflict is detected between a
+        zonal policy and a global policy. See gcloud compute
+        zone-vm-extension-policies for more details on zonal policies.
 
-        The default value for --rollout-conflict-behavior is ''. If you set
-        this flag to overwrite and would like to go back to the default value,
-        use the update command and omit the --rollout-conflict-behavior flag.
+        The possible values are:
+        ◆ "": The zonal policy value is used in case of a conflict. This is
+          the default behavior.
+        ◆ overwrite: The global policy overwrites the zonal policy.
+
+        If you set --rollout-conflict-behavior to overwrite and want to revert
+        to the default behavior, use the update command and omit the
+        --rollout-conflict-behavior flag.
 
      --rollout-custom-plan=ROLLOUT_CUSTOM_PLAN
         Provide the name of a custom rollout plan to be used for the rollout.
@@ -110,8 +114,7 @@ OPTIONAL FLAGS
         One of either --rollout-predefined-plan or --rollout-custom-plan must
         be specified, but not both.
 
-        ROLLOUT_PREDEFINED_PLAN must be one of: fast_rollout,
-        rollout_plan_unspecified, slow_rollout.
+        ROLLOUT_PREDEFINED_PLAN must be one of: fast_rollout, slow_rollout.
 
      --rollout-retry-uuid=ROLLOUT_RETRY_UUID
         The UUID of the rollout retry action. Only set it if this is a retry

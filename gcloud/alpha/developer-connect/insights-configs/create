@@ -5,7 +5,8 @@ NAME
 SYNOPSIS
     gcloud alpha developer-connect insights-configs create
         (INSIGHTS_CONFIG : --location=LOCATION)
-        --app-hub-application=APP_HUB_APPLICATION
+        (--app-hub-application=APP_HUB_APPLICATION
+          | --target-projects=[TARGET_PROJECTS,...])
         [--artifact-config=ARTIFACT_CONFIG_ITEM] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -18,6 +19,11 @@ EXAMPLES
             insights-config-name \
             --app-hub-application=projects/my-project/locations/\
         us-central1/applications/my-app-hub-application
+
+    To create an insights config with projects, run:
+
+        $ gcloud alpha developer-connect insights-configs create \
+            insights-config-name --target-projects=project1,project2
 
 POSITIONAL ARGUMENTS
      Insights config resource - The insights config to create. The arguments in
@@ -52,8 +58,17 @@ POSITIONAL ARGUMENTS
           ▸ provide the argument --location on the command line.
 
 REQUIRED FLAGS
-     --app-hub-application=APP_HUB_APPLICATION
-        The App Hub application to which the insight config is associated.
+     Exactly one of these must be specified:
+
+       --app-hub-application=APP_HUB_APPLICATION
+          The App Hub application to which the insight config is associated.
+
+       --target-projects=[TARGET_PROJECTS,...]
+          A comma-separated list of target project IDs/numbers to which the
+          insight config is associated.
+
+          Format examples: --target-projects=123567890,my-project
+          --target-projects=projects/1234567890,projects/my-project
 
 OPTIONAL FLAGS
      --artifact-config=ARTIFACT_CONFIG_ITEM
