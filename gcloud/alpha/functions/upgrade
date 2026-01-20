@@ -5,7 +5,8 @@ NAME
 SYNOPSIS
     gcloud alpha functions upgrade (NAME : --region=REGION)
         [--abort | --commit | --redirect-traffic | --rollback-traffic
-          | --setup-config --trigger-service-account=TRIGGER_SERVICE_ACCOUNT]
+          | --max-instances=MAX_INSTANCES --runtime=RUNTIME
+          --setup-config --trigger-service-account=TRIGGER_SERVICE_ACCOUNT]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -68,12 +69,12 @@ POSITIONAL ARGUMENTS
           ▸ set the property functions/region.
 
 FLAGS
-     Upgrade a 1st gen Cloud Function to the 2nd gen environment. You must
-     specify one of the following flags:
+     Upgrade a 1st gen Cloud Function to a Cloud Run Function. You must specify
+     one of the following flags:
       ◆ --setup-config and optionally --trigger-service-account,
       ◆ --redirect-traffic,
       ◆ --rollback-traffic,
-      ◆ --commit,
+      ◆ --commit and optionally --skip-detach,
       ◆ --abort.
 
      At most one of these can be specified:
@@ -93,6 +94,18 @@ FLAGS
        --rollback-traffic
           Rolls back production traffic to the original 1st gen copy of the
           function. The 2nd gen copy will still be available for testing.
+
+       --max-instances=MAX_INSTANCES
+          Sets the maximum number of instances for the function. A function
+          execution that would exceed max-instances times out.
+
+       --runtime=RUNTIME
+          Runtime in which to run the function.
+
+          Required when deploying a new function; optional when updating an
+          existing function.
+
+          For a list of available runtimes, run gcloud functions runtimes list.
 
        --setup-config
           Sets up the function upgrade config by creating a 2nd gen copy of the

@@ -4,9 +4,9 @@ NAME
 
 SYNOPSIS
     gcloud alpha design-center spaces applications deploy
-        (APPLICATION : --location=LOCATION --space=SPACE) [--async] [--replace]
-        [--service-account=SERVICE_ACCOUNT] [--worker-pool=WORKER_POOL]
-        [GCLOUD_WIDE_FLAG ...]
+        (APPLICATION : --location=LOCATION --space=SPACE) [--async]
+        [--create-sa] [--replace] [--service-account=SERVICE_ACCOUNT]
+        [--worker-pool=WORKER_POOL] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Deploy an application in a space.
@@ -16,13 +16,13 @@ EXAMPLES
     my-project and location us-central1, run:
 
         $ gcloud alpha design-center spaces applications deploy \
-            my-application --space=my-space --project=my-project \
-            --location=us-central1
+          my-application --space=my-space --project=my-project \
+          --location=us-central1
 
     Or run:
 
         $ gcloud alpha design-center spaces applications deploy \
-            projects/my-project/locations/us-central1/spaces/my-space/\
+          projects/my-project/locations/us-central1/spaces/my-space/\
         applications/my-application
 
     To deploy the application my-application in space my-space, project
@@ -30,35 +30,59 @@ EXAMPLES
     run:
 
         $ gcloud alpha design-center spaces applications deploy \
-            my-application --space=my-space --project=my-project \
-            --location=us-central1 --replace
+          my-application --space=my-space --project=my-project \
+          --location=us-central1 --replace
 
     To deploy the application my-application in space my-space, project
     my-project and location us-central1 using a worker pool
     projects/my-project/locations/us-central1/workerPools/my-worker-pool, run:
 
         $ gcloud alpha design-center spaces applications deploy \
-            my-application --space=my-space --project=my-project \
-            --location=us-central1 \
-            --worker-pool=projects/my-project/locations/us-central1/\
+          my-application --space=my-space --project=my-project \
+          --location=us-central1 \
+          --worker-pool=projects/my-project/locations/us-central1/\
         workerPools/my-worker-pool
+
+    To deploy the application my-application and create a new service account
+    for the deployment, run:
+
+        $ gcloud alpha design-center spaces applications deploy \
+          my-application --space=my-space --project=my-project \
+          --location=us-central1 --create-sa
+
+    To deploy the application my-application and create a new service account
+    and create a specific service account for the deployment, run:
+
+        $ gcloud alpha design-center spaces applications deploy \
+          my-application --space=my-space --project=my-project \
+          --location=us-central1 --create-sa \
+          --service-account=my-service-account@my-project.iam.gserviceacco\
+        unt.com
+
+    To deploy the application my-application and use a specific service account
+    for the deployment, run:
+
+        $ gcloud alpha design-center spaces applications deploy \
+          my-application --space=my-space --project=my-project \
+          --location=us-central1 \
+          --service-account=projects/my-project/serviceAccounts/\
+        my-service-account@my-project.iam.gserviceaccount.com
 
     To deploy the application my-application in space my-space, project
     my-project and location us-central1 asynchronously, run:
 
         $ gcloud alpha design-center spaces applications deploy \
-            my-application --space=my-space --project=my-project \
-            --location=us-central1 --async
+          my-application --space=my-space --project=my-project \
+          --location=us-central1 --async
 
 POSITIONAL ARGUMENTS
-     Application resource - The application name. Format:
-     projects/$project/locations/$location/spaces/$space/applications/$application
-     The arguments in this group can be used to specify the attributes of this
-     resource. (NOTE) Some attributes are not given arguments in this group but
-     can be set in other ways.
+     Application resource - The application to deploy IaC. The arguments in
+     this group can be used to specify the attributes of this resource. (NOTE)
+     Some attributes are not given arguments in this group but can be set in
+     other ways.
 
      To set the project attribute:
-      ◆ provide the argument application on the command line with a fully
+      ◆ provide the argument APPLICATION on the command line with a fully
         specified name;
       ◆ provide the argument --project on the command line;
       ◆ set the property core/project.
@@ -70,24 +94,24 @@ POSITIONAL ARGUMENTS
           application.
 
           To set the application attribute:
-          ▸ provide the argument application on the command line.
+          ▸ provide the argument APPLICATION on the command line.
 
           This positional argument must be specified if any of the other
           arguments in this group are specified.
 
        --location=LOCATION
-          The location id of the application resource.
+          The Cloud location for the application.
 
           To set the location attribute:
-          ▸ provide the argument application on the command line with a fully
+          ▸ provide the argument APPLICATION on the command line with a fully
             specified name;
           ▸ provide the argument --location on the command line.
 
        --space=SPACE
-          The space id of the application resource.
+          The ID of the space.
 
           To set the space attribute:
-          ▸ provide the argument application on the command line with a fully
+          ▸ provide the argument APPLICATION on the command line with a fully
             specified name;
           ▸ provide the argument --space on the command line.
 
@@ -96,24 +120,34 @@ FLAGS
         Return immediately, without waiting for the operation in progress to
         complete.
 
+     --create-sa
+        Create a new service account for the deployment.
+
      --replace
         Flag to update the existing deployment. If not set or false, deploy
         will fail if application state is in the DEPLOYED state.
 
      --service-account=SERVICE_ACCOUNT
-        The email address of the service account to use for this deployment.
+        The service account to use for this deployment.
 
         ◆ If provided, this service account will be used to execute the
           deployment process, taking precedence over any service_account
           specified on the Application resource.
-        ◆ The caller must have the 'iam.serviceAccounts.actAs' permission on
+        ◆ The caller must have the "iam.serviceAccounts.actAs" permission on
           this service account.
-        ◆ If this field is omitted, the system will use the 'service_account'
+        ◆ If this field is omitted, the system will use the "service_account"
           defined within the Application resource.
+        ◆ If this field is omitted with --create-sa flag, the system will
+          create a new and unique service_account and use it for the
+          deployment.
         ◆ We recommend that you provide a service account here or on the
           Application resource. If you don't provide a service account, the
-          deployment will fail. Format:
-          projects/{PROJECT}/serviceAccounts/{EMAIL_ADDRESS}
+          deployment will fail.
+        ◆ If the --create-sa flag is also provided, this value is the ID of a
+          new service account to be created (e.g., my-new-sa).
+
+        Format: projects/{PROJECT}/serviceAccounts/{EMAIL_ADDRESS} (when not
+        using --create-sa)
 
      --worker-pool=WORKER_POOL
         The user-specified Worker Pool resource in which the Cloud Build job
@@ -131,11 +165,6 @@ GCLOUD WIDE FLAGS
     --trace-token, --user-output-enabled, --verbosity.
 
     Run $ gcloud help for details.
-
-API REFERENCE
-    This command uses the designcenter/v1alpha API. The full documentation for
-    this API can be found at:
-    http://cloud.google.com/application-design-center/docs
 
 NOTES
     This command is currently in alpha and might change without notice. If this

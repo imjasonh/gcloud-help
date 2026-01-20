@@ -30,13 +30,13 @@ SYNOPSIS
         [--enable-ray-cluster-logging] [--enable-ray-cluster-monitoring]
         [--enable-ray-operator] [--fleet-project=PROJECT_ID_OR_NUMBER]
         [--hpa-profile=HPA_PROFILE] [--labels=[KEY=VALUE,...]]
-        [--logging=[COMPONENT,...]] [--membership-type=MEMBERSHIP_TYPE]
-        [--monitoring=[COMPONENT,...]] [--network=NETWORK]
-        [--private-endpoint-subnetwork=NAME] [--release-channel=CHANNEL]
-        [--security-group=SECURITY_GROUP] [--security-posture=SECURITY_POSTURE]
-        [--services-ipv4-cidr=CIDR] [--services-secondary-range-name=NAME]
-        [--subnetwork=SUBNETWORK] [--tier=TIER]
-        [--workload-policies=WORKLOAD_POLICIES]
+        [--logging=[COMPONENT,...]] [--managed-otel-scope=MANAGED_OTEL_SCOPE]
+        [--membership-type=MEMBERSHIP_TYPE] [--monitoring=[COMPONENT,...]]
+        [--network=NETWORK] [--private-endpoint-subnetwork=NAME]
+        [--release-channel=CHANNEL] [--security-group=SECURITY_GROUP]
+        [--security-posture=SECURITY_POSTURE] [--services-ipv4-cidr=CIDR]
+        [--services-secondary-range-name=NAME] [--subnetwork=SUBNETWORK]
+        [--tier=TIER] [--workload-policies=WORKLOAD_POLICIES]
         [--workload-vulnerability-scanning=WORKLOAD_VULNERABILITY_SCANNING]
         [--additive-vpc-scope-dns-domain=ADDITIVE_VPC_SCOPE_DNS_DOMAIN
           | --disable-additive-vpc-scope]
@@ -286,7 +286,7 @@ FLAGS
      --enable-confidential-nodes
         Enable confidential nodes for the cluster. Enabling Confidential Nodes
         will create nodes using Confidential VM
-        https://cloud.google.com/compute/confidential-vm/docs/about-cvm.
+        https://docs.cloud.google.com/compute/docs/about-confidential-vm.
 
      --enable-default-compute-class
         Enable the default compute class to use for the cluster.
@@ -407,6 +407,17 @@ FLAGS
             $ gcloud beta container clusters create-auto \
                 --logging=SYSTEM,WORKLOAD,API_SERVER,CONTROLLER_MANAGER,\
             SCHEDULER
+
+     --managed-otel-scope=MANAGED_OTEL_SCOPE
+        Specifies the scope of Managed OpenTelemetry within the cluster.
+
+        COLLECTION_AND_INSTRUMENTATION_COMPONENTS: Enables GKE Managed
+        OpenTelemetry Collector and other Instrumentations components like
+        Instrumentation CRD within the cluster. NONE: Disables the GKE Managed
+        OpenTelemetry.
+
+        MANAGED_OTEL_SCOPE must be one of:
+        COLLECTION_AND_INSTRUMENTATION_COMPONENTS, NONE.
 
      --membership-type=MEMBERSHIP_TYPE
         Specify a membership type for the cluster's fleet membership. Example:

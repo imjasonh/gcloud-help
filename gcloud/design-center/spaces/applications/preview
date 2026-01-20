@@ -1,11 +1,12 @@
 NAME
-    gcloud design-center spaces applications preview - preview an application
+    gcloud design-center spaces applications preview - preview a Design Center
+        application
 
 SYNOPSIS
     gcloud design-center spaces applications preview
         (APPLICATION : --location=LOCATION --space=SPACE) [--async]
-        [--service-account=SERVICE_ACCOUNT] [--worker-pool=WORKER_POOL]
-        [GCLOUD_WIDE_FLAG ...]
+        [--create-sa] [--service-account=SERVICE_ACCOUNT]
+        [--worker-pool=WORKER_POOL] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Preview an application in a space.
@@ -15,12 +16,12 @@ EXAMPLES
     my-project and location us-central1, run:
 
         $ gcloud design-center spaces applications preview my-application \
-            --space=my-space --project=my-project --location=us-central1
+          --space=my-space --project=my-project --location=us-central1
 
     Or run:
 
         $ gcloud design-center spaces applications preview \
-            projects/my-project/locations/us-central1/spaces/my-space/\
+          projects/my-project/locations/us-central1/spaces/my-space/\
         applications/my-application
 
     To preview the application my-application in space my-space, project
@@ -28,26 +29,49 @@ EXAMPLES
     projects/my-project/locations/us-central1/workerPools/my-worker-pool, run:
 
         $ gcloud design-center spaces applications preview my-application \
-            --space=my-space --project=my-project --location=us-central1 \
-            --worker-pool=projects/my-project/locations/us-central1/\
+          --space=my-space --project=my-project --location=us-central1 \
+          --worker-pool=projects/my-project/locations/us-central1/\
         workerPools/my-worker-pool
+
+    To preview the application my-application and create a new service account
+    for the preview, run:
+
+        $ gcloud design-center spaces applications preview my-application \
+          --space=my-space --project=my-project --location=us-central1 \
+          --create-sa
+
+    To preview the application my-application and create a new provided service
+    account for the preview, run:
+
+        $ gcloud design-center spaces applications preview my-application \
+          --space=my-space --project=my-project --location=us-central1 \
+          --create-sa \
+          --service-account=my-service-account@my-project.iam.gserviceacco\
+        unt.com
+
+    To preview the application my-application and use a specific existing
+    service account for the preview, run:
+
+        $ gcloud design-center spaces applications preview my-application \
+          --space=my-space --project=my-project --location=us-central1 \
+          --service-account=projects/my-project/serviceAccounts/\
+        my-service-account@my-project.iam.gserviceaccount.com
 
     To preview the application my-application in space my-space, project
     my-project and location us-central1 asynchronously, run:
 
         $ gcloud design-center spaces applications preview my-application \
-            --space=my-space --project=my-project --location=us-central1 \
-            --async
+          --space=my-space --project=my-project --location=us-central1 \
+          --async
 
 POSITIONAL ARGUMENTS
-     Application resource - The application name in the following format:
-     projects/$project/locations/$location/spaces/$space/applications/$application
-     The arguments in this group can be used to specify the attributes of this
-     resource. (NOTE) Some attributes are not given arguments in this group but
-     can be set in other ways.
+     Application resource - The application to preview IaC. The arguments in
+     this group can be used to specify the attributes of this resource. (NOTE)
+     Some attributes are not given arguments in this group but can be set in
+     other ways.
 
      To set the project attribute:
-      ◆ provide the argument application on the command line with a fully
+      ◆ provide the argument APPLICATION on the command line with a fully
         specified name;
       ◆ provide the argument --project on the command line;
       ◆ set the property core/project.
@@ -59,24 +83,24 @@ POSITIONAL ARGUMENTS
           application.
 
           To set the application attribute:
-          ▸ provide the argument application on the command line.
+          ▸ provide the argument APPLICATION on the command line.
 
           This positional argument must be specified if any of the other
           arguments in this group are specified.
 
        --location=LOCATION
-          The location id of the application resource.
+          The Cloud location for the application.
 
           To set the location attribute:
-          ▸ provide the argument application on the command line with a fully
+          ▸ provide the argument APPLICATION on the command line with a fully
             specified name;
           ▸ provide the argument --location on the command line.
 
        --space=SPACE
-          The space id of the application resource.
+          The ID of the space.
 
           To set the space attribute:
-          ▸ provide the argument application on the command line with a fully
+          ▸ provide the argument APPLICATION on the command line with a fully
             specified name;
           ▸ provide the argument --space on the command line.
 
@@ -85,21 +109,29 @@ FLAGS
         Return immediately, without waiting for the operation in progress to
         complete.
 
+     --create-sa
+        Create a new service account for the preview.
+
      --service-account=SERVICE_ACCOUNT
-        The email address of the service account to use for this preview
-        operation.
+        The service account to use for this preview.
 
         ◆ If provided, this service account will be used to execute the
           preview process, taking precedence over any service_account specified
           on the Application resource.
-        ◆ The caller must have the 'iam.serviceAccounts.actAs' permission on
+        ◆ The caller must have the "iam.serviceAccounts.actAs" permission on
           this service account.
-        ◆ If this field is omitted, the system will use the 'service_account'
+        ◆ If this field is omitted, the system will use the "service_account"
           defined within the Application resource.
+        ◆ If this field is omitted with --create-sa flag, the system will
+          create a new and unique service_account and use it for the preview.
         ◆ We recommend that you provide a service account here or on the
           Application resource. If you don't provide a service account, the
-          preview will fail. Format:
-          projects/{PROJECT}/serviceAccounts/{EMAIL_ADDRESS}
+          preview will fail.
+        ◆ If the --create-sa flag is also provided, this value is the ID of a
+          new service account to be created (e.g., my-new-sa).
+
+        Format: projects/{PROJECT}/serviceAccounts/{EMAIL_ADDRESS} (when not
+        using --create-sa)
 
      --worker-pool=WORKER_POOL
         The user-specified Worker Pool resource in which the Cloud Build job
@@ -117,10 +149,6 @@ GCLOUD WIDE FLAGS
     --trace-token, --user-output-enabled, --verbosity.
 
     Run $ gcloud help for details.
-
-API REFERENCE
-    This command uses the designcenter/v1 API. The full documentation for this
-    API can be found at: http://cloud.google.com/application-design-center/docs
 
 NOTES
     This variant is also available:

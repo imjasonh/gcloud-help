@@ -11,6 +11,7 @@ SYNOPSIS
           | [--delete-object : --enable-permanent-object-deletion]
           | --[no-]put-object-event-based-hold
           --[no-]put-object-temporary-hold) [--description=DESCRIPTION]
+        [--dry-run]
         [--log-actions=[LOG_ACTIONS,...]
           --log-action-states=[LOG_ACTION_STATES,...]] [GCLOUD_WIDE_FLAG ...]
 
@@ -19,6 +20,15 @@ DESCRIPTION
     deletion, updating metadata, and more on objects in a serverless manner.
 
 EXAMPLES
+    The following example command creates a batch job, named my-dry-run, that
+    performs a dry run of object deletion on bucket my-bucket for objects
+    specified in the manifest file gs://my-bucket/manifest.csv:
+
+        $ gcloud storage batch-operations jobs create my-dry-run-job \
+          --bucket=my-bucket \
+          --manifest-location=gs://my-bucket/manifest.csv \
+          --delete-object --dry-run
+
     The following example command creates a batch job, named my-job, that
     performs object deletion on bucket my-bucket for objects specified in the
     manifest file gs://my-bucket/manifest.csv:
@@ -158,6 +168,11 @@ REQUIRED FLAGS
 FLAGS
      --description=DESCRIPTION
         Description for the batch job.
+
+     --dry-run
+        If true, the job will run in dry run mode, returning the total object
+        count and, if the object configuration is a prefix list, the bytes
+        found from source. No transformations will be performed.
 
 LOGGING_CONFIG FLAGS
      LOGGING CONFIG

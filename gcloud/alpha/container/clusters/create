@@ -67,6 +67,7 @@ SYNOPSIS
         [--local-ssd-encryption-mode=LOCAL_SSD_ENCRYPTION_MODE]
         [--logging=[COMPONENT,...]] [--logging-variant=LOGGING_VARIANT]
         [--machine-type=MACHINE_TYPE, -m MACHINE_TYPE]
+        [--managed-otel-scope=MANAGED_OTEL_SCOPE]
         [--max-nodes-per-pool=MAX_NODES_PER_POOL]
         [--max-pods-per-node=MAX_PODS_PER_NODE]
         [--max-surge-upgrade=MAX_SURGE_UPGRADE; default=1]
@@ -236,7 +237,8 @@ FLAGS
         KubernetesDashboard, NetworkPolicy, NodeLocalDNS, ConfigConnector,
         GcePersistentDiskCsiDriver, GcpFilestoreCsiDriver, BackupRestore,
         GcsFuseCsiDriver, ParallelstoreCsiDriver, HighScaleCheckpointing,
-        LustreCsiDriver, RayOperator, Istio, CloudBuild, CloudRun.
+        LustreCsiDriver, RayOperator, SlurmOperator, Istio, CloudBuild,
+        CloudRun.
 
      --allow-route-overlap
         Allows the provided cluster CIDRs to overlap with existing routes that
@@ -405,7 +407,7 @@ FLAGS
      --confidential-node-type=CONFIDENTIAL_NODE_TYPE
         Enable confidential nodes for the cluster. Enabling Confidential Nodes
         will create nodes using Confidential VM
-        https://cloud.google.com/compute/confidential-vm/docs/about-cvm.
+        https://docs.cloud.google.com/compute/docs/about-confidential-vm.
         CONFIDENTIAL_NODE_TYPE must be one of: sev, sev_snp, tdx.
 
      --containerd-config-from-file=PATH_TO_FILE
@@ -590,7 +592,7 @@ FLAGS
      --enable-confidential-nodes
         Enable confidential nodes for the cluster. Enabling Confidential Nodes
         will create nodes using Confidential VM
-        https://cloud.google.com/compute/confidential-vm/docs/about-cvm.
+        https://docs.cloud.google.com/compute/docs/about-confidential-vm.
 
      --enable-confidential-storage
         Enable confidential storage for the cluster. Enabling Confidential
@@ -980,6 +982,17 @@ FLAGS
 
             $ gcloud alpha container clusters create high-mem-pool \
                 --machine-type=custom-2-12288
+
+     --managed-otel-scope=MANAGED_OTEL_SCOPE
+        Specifies the scope of Managed OpenTelemetry within the cluster.
+
+        COLLECTION_AND_INSTRUMENTATION_COMPONENTS: Enables GKE Managed
+        OpenTelemetry Collector and other Instrumentations components like
+        Instrumentation CRD within the cluster. NONE: Disables the GKE Managed
+        OpenTelemetry.
+
+        MANAGED_OTEL_SCOPE must be one of:
+        COLLECTION_AND_INSTRUMENTATION_COMPONENTS, NONE.
 
      --max-nodes-per-pool=MAX_NODES_PER_POOL
         The maximum number of nodes to allocate per default initial node pool.
@@ -1731,7 +1744,10 @@ FLAGS
                                                               [65536,
                                                               2147483647]
           vm.overcommit_memory                                Must be one of {0,
-                                                              1, 2}
+                                                              1, 2}. Not
+                                                              supported on
+                                                              machines with less
+                                                              than 15 GB memory.
           vm.overcommit_ratio                                 Must be between
                                                               [0, 100]
           vm.vfs_cache_pressure                               Must be between
@@ -1789,9 +1805,15 @@ FLAGS
           KEY                                         VALUE
           diskCount                                   integer
 
-        Allocated hugepage size should not exceed 60% of available memory on
-        the node. For example, c2d-highcpu-4 has 8GB memory, total allocated
-        hugepage of 2m and 1g should not exceed 8GB * 0.6 = 4.8GB.
+        The upper limit for total allocated hugepage size differs based upon
+        machine size.
+
+        ◆ On machines with less than 30 GB memory: 60% of the total memory.
+          For example, on e2-standard-2 machine with 8 GB of memory, you can't
+          allocate more than 4.8 GB for hugepages.
+        ◆ On machines with more than 30 GB memory: 80% of the total memory.
+          For example, on c4a-standard-8 machines with 32 GB of memory,
+          hugepages cannot exceed 25.6 GB.
 
         1G hugepages are only available in following machine familes: c3, m2,
         c2d, c3d, h3, m3, a2, a3, g2.

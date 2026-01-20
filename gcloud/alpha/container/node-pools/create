@@ -81,6 +81,9 @@ SYNOPSIS
           | --local-ssd-volumes=[[count=COUNT],
           [type=TYPE],[format=FORMAT],...]]
         [--location=LOCATION | --region=REGION | --zone=ZONE, -z ZONE]
+        [--node-drain-grace-period-seconds=NODE_DRAIN_GRACE_PERIOD_SECONDS
+          --node-drain-pdb-timeout-seconds=NODE_DRAIN_PDB_TIMEOUT_SECONDS
+          --respect-pdb-during-node-pool-deletion]
         [--reservation=RESERVATION --reservation-affinity=RESERVATION_AFFINITY]
         [--scopes=[SCOPE,...];
           default="gke-default" --service-account=SERVICE_ACCOUNT]
@@ -236,7 +239,7 @@ FLAGS
      --confidential-node-type=CONFIDENTIAL_NODE_TYPE
         Enable confidential nodes for the node pool. Enabling Confidential
         Nodes will create nodes using Confidential VM
-        https://cloud.google.com/compute/confidential-vm/docs/about-cvm.
+        https://docs.cloud.google.com/compute/docs/about-confidential-vm.
         CONFIDENTIAL_NODE_TYPE must be one of: sev, sev_snp, tdx, disabled.
 
      --containerd-config-from-file=PATH_TO_FILE
@@ -308,7 +311,7 @@ FLAGS
      --enable-confidential-nodes
         Enable confidential nodes for the node pool. Enabling Confidential
         Nodes will create nodes using Confidential VM
-        https://cloud.google.com/compute/confidential-vm/docs/about-cvm.
+        https://docs.cloud.google.com/compute/docs/about-confidential-vm.
 
      --enable-confidential-storage
         Enable confidential storage for the node pool. Enabling Confidential
@@ -1103,7 +1106,10 @@ FLAGS
                                                               [65536,
                                                               2147483647]
           vm.overcommit_memory                                Must be one of {0,
-                                                              1, 2}
+                                                              1, 2}. Not
+                                                              supported on
+                                                              machines with less
+                                                              than 15 GB memory.
           vm.overcommit_ratio                                 Must be between
                                                               [0, 100]
           vm.vfs_cache_pressure                               Must be between
@@ -1161,9 +1167,15 @@ FLAGS
           KEY                                         VALUE
           diskCount                                   integer
 
-        Allocated hugepage size should not exceed 60% of available memory on
-        the node. For example, c2d-highcpu-4 has 8GB memory, total allocated
-        hugepage of 2m and 1g should not exceed 8GB * 0.6 = 4.8GB.
+        The upper limit for total allocated hugepage size differs based upon
+        machine size.
+
+        ◆ On machines with less than 30 GB memory: 60% of the total memory.
+          For example, on e2-standard-2 machine with 8 GB of memory, you can't
+          allocate more than 4.8 GB for hugepages.
+        ◆ On machines with more than 30 GB memory: 80% of the total memory.
+          For example, on c4a-standard-8 machines with 32 GB of memory,
+          hugepages cannot exceed 25.6 GB.
 
         1G hugepages are only available in following machine familes: c3, m2,
         c2d, c3d, h3, m3, a2, a3, g2.
@@ -1515,6 +1527,18 @@ FLAGS
        --zone=ZONE, -z ZONE
           Compute zone (e.g. us-central1-a) for a zonal cluster. Overrides the
           default compute/zone property value for this command invocation.
+
+     Node drain settings
+
+       --node-drain-grace-period-seconds=NODE_DRAIN_GRACE_PERIOD_SECONDS
+          The grace period in seconds for nodes to drain before being
+          forcefully removed.
+
+       --node-drain-pdb-timeout-seconds=NODE_DRAIN_PDB_TIMEOUT_SECONDS
+          The timeout in seconds for the node pool to be drained.
+
+       --respect-pdb-during-node-pool-deletion
+          Whether to respect PDBs when deleting nodes in the node pool.
 
      Specifies the reservation for the node pool.
 

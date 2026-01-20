@@ -4,9 +4,9 @@ NAME
 SYNOPSIS
     gcloud alpha functions deploy (NAME : --region=REGION)
         [--[no-]allow-unauthenticated] [--buildpack-stack=BUILDPACK_STACK]
-        [--concurrency=CONCURRENCY] [--docker-registry=DOCKER_REGISTRY]
-        [--egress-settings=EGRESS_SETTINGS] [--entry-point=ENTRY_POINT]
-        [--gen2] [--ignore-file=IGNORE_FILE]
+        [--concurrency=CONCURRENCY] [--direct-vpc-egress=DIRECT_VPC_EGRESS]
+        [--docker-registry=DOCKER_REGISTRY] [--egress-settings=EGRESS_SETTINGS]
+        [--entry-point=ENTRY_POINT] [--gen2] [--ignore-file=IGNORE_FILE]
         [--ingress-settings=INGRESS_SETTINGS] [--retry]
         [--run-service-account=RUN_SERVICE_ACCOUNT] [--runtime=RUNTIME]
         [--runtime-update-policy=RUNTIME_UPDATE_POLICY]
@@ -34,6 +34,9 @@ SYNOPSIS
         [--clear-labels | --remove-labels=[KEY,...]]
         [--clear-max-instances | --max-instances=MAX_INSTANCES]
         [--clear-min-instances | --min-instances=MIN_INSTANCES]
+        [--clear-network
+          | --network=NETWORK --subnet=SUBNET --clear-network-tags
+          | --network-tags=[TAGS,...]]
         [--clear-secrets
           | --set-secrets=[SECRET_ENV_VAR=SECRET_VALUE_REF,
           /secret_path=SECRET_VALUE_REF,
@@ -114,6 +117,11 @@ FLAGS
         Set the maximum number of concurrent requests allowed per container
         instance. Leave concurrency unspecified to receive the server default
         value.
+
+     --direct-vpc-egress=DIRECT_VPC_EGRESS
+        Specify which of the outbound traffic to send through Direct VPC
+        egress. Configuring Direct VPC network is required to use this flag.
+        DIRECT_VPC_EGRESS must be one of: private-ranges-only, all.
 
      --docker-registry=DOCKER_REGISTRY
         (DEPRECATED) Docker Registry to use for storing the function's Docker
@@ -484,6 +492,37 @@ FLAGS
        --min-instances=MIN_INSTANCES
           Sets the minimum number of instances for the function. This is
           helpful for reducing cold start times. Defaults to zero.
+
+     At most one of these can be specified:
+
+       --clear-network
+          Disconnect this Cloud Function from the Direct VPC network it is
+          connected to.
+
+       Direct VPC egress setting flags group.
+
+         --network=NETWORK
+            The VPC network that the Cloud Function will be able to send
+            traffic to. If --subnet is also specified, subnet must be a
+            subnetwork of the network specified by this --network flag. To
+            clear existing VPC network settings, use --clear-network.
+
+         --subnet=SUBNET
+            The VPC subnetwork that the Cloud Function will get IPs from. The
+            subnetwork must be /26 or larger. If --network is also specified,
+            subnet must be a subnetwork of the network specified by the
+            --network flag. If --network is not specified, network will be
+            looked up from this subnetwork. To clear existing VPC network
+            settings, use --clear-network.
+
+         At most one of these can be specified:
+
+           --clear-network-tags
+              Clears all existing network tags from the Cloud Function.
+
+           --network-tags=[TAGS,...]
+              Applies the given network tags (comma separated) to the Cloud
+              Function. To clear existing tags, use --clear-network-tags.
 
      At most one of these can be specified:
 

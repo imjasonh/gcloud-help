@@ -6,10 +6,10 @@ SYNOPSIS
     gcloud alpha run worker-pools deploy [[WORKER_POOL] --region=REGION]
         [--async] [--breakglass=JUSTIFICATION] [--container=CONTAINER]
         [--description=DESCRIPTION] [--gpu-type=GPU_TYPE]
-        [--[no-]gpu-zonal-redundancy] [--max=MAX] [--min=MIN] [--no-promote]
+        [--[no-]gpu-zonal-redundancy] [--instances=INSTANCES] [--no-promote]
         [--remove-containers=[CONTAINER,...]]
-        [--revision-suffix=REVISION_SUFFIX] [--scaling=SCALING]
-        [--service-account=SERVICE_ACCOUNT] [--vpc-egress=VPC_EGRESS]
+        [--revision-suffix=REVISION_SUFFIX] [--service-account=SERVICE_ACCOUNT]
+        [--vpc-egress=VPC_EGRESS]
         [--add-cloudsql-instances=[CLOUDSQL-INSTANCES,...]
           | --clear-cloudsql-instances
           | --remove-cloudsql-instances=[CLOUDSQL-INSTANCES,...]
@@ -117,17 +117,10 @@ FLAGS
         Set GPU zonal redundancy. Use --gpu-zonal-redundancy to enable and
         --no-gpu-zonal-redundancy to disable.
 
-     --max=MAX
-        The maximum number of container instances to run for this WorkerPool or
-        'default' to use system default of 100. This instance limit will be
-        divided among all Revisions receiving a percentage of instance
-        assignments and can be modified without deploying a new Revision.
-
-     --min=MIN
-        The minimum number of container instances to run for this WorkerPool or
-        'default' to use system default of 1. These instances will be divided
-        among all Revisions receiving a percentage of instance assignments and
-        can be modified without deploying a new Revision.
+     --instances=INSTANCES
+        The number of instances to run for this WorkerPool. Flag value should
+        be a positive integer to configure manual scaling with the given
+        integer as a fixed instance count.
 
      --no-promote
         True to avoid assign instances to the worker revision being deployed.
@@ -150,11 +143,6 @@ FLAGS
         [--revision-suffix=v1] for a service named 'helloworld', would lead to
         a revision named 'helloworld-v1'. Set empty string to clear the suffix
         and resume server-assigned naming.
-
-     --scaling=SCALING
-        The scaling mode to use for this resource. Flag value could be either
-        "auto" for automatic scaling, or a positive integer to configure manual
-        scaling with the given integer as a fixed instance count.
 
      --service-account=SERVICE_ACCOUNT
         the email address of an IAM service account associated with the
@@ -359,7 +347,8 @@ FLAGS
 
                   KEY_1: "value1"
                   KEY_2: "value 2"
-                  Example ENV content:
+
+              Example ENV content:
 
                   KEY_1="value1"
                   KEY_2="value 2"

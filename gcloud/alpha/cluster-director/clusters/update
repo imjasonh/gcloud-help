@@ -21,8 +21,8 @@ SYNOPSIS
           [machineType=MACHINETYPE],[zone=ZONE]
           --add-reserved-instances=[id=ID],
           [machineType=MACHINETYPE],[reservation=RESERVATION]
-          --add-slurm-node-sets=[computeId=COMPUTEID],[id=ID],[labels=LABELS],
-          [maxDynamicNodeCount=MAXDYNAMICNODECOUNT],
+          --add-slurm-node-sets=[bootDisk=BOOTDISK],[computeId=COMPUTEID],
+          [id=ID],[labels=LABELS],[maxDynamicNodeCount=MAXDYNAMICNODECOUNT],
           [startupScript=STARTUPSCRIPT],[staticNodeCount=STATICNODECOUNT]
           --add-slurm-partitions=[exclusive=EXCLUSIVE],
           [id=ID],[nodesetIds=NODESETIDS]
@@ -42,7 +42,7 @@ SYNOPSIS
           --slurm-default-partition=SLURM_DEFAULT_PARTITION
           --update-slurm-login-node=[bootDisk=BOOTDISK],
           [count=COUNT],[startupScript=STARTUPSCRIPT]
-          --update-slurm-node-sets=[id=ID],
+          --update-slurm-node-sets=[bootDisk=BOOTDISK],[id=ID],
           [maxDynamicNodeCount=MAXDYNAMICNODECOUNT],
           [staticNodeCount=STATICNODECOUNT]
           --update-slurm-partitions=[exclusive=EXCLUSIVE],
@@ -452,7 +452,7 @@ REQUIRED FLAGS
 
                 --add-reserved-instances=path_to_file.(yaml|json)
 
-         --add-slurm-node-sets=[computeId=COMPUTEID],[id=ID],[labels=LABELS],[maxDynamicNodeCount=MAXDYNAMICNODECOUNT],[startupScript=STARTUPSCRIPT],[staticNodeCount=STATICNODECOUNT]
+         --add-slurm-node-sets=[bootDisk=BOOTDISK],[computeId=COMPUTEID],[id=ID],[labels=LABELS],[maxDynamicNodeCount=MAXDYNAMICNODECOUNT],[startupScript=STARTUPSCRIPT],[staticNodeCount=STATICNODECOUNT]
             Parameters to define slurm cluster nodeset config.
 
             For e.g. --add-slurm-node-sets
@@ -470,6 +470,18 @@ REQUIRED FLAGS
               ◇ For file_path, only absolute path is supported.
 
               Sets add_slurm_node_sets value.
+
+             bootDisk
+                Sets bootDisk value.
+
+                 image
+                    Sets image value.
+
+                 sizeGb
+                    Required, sets sizeGb value.
+
+                 type
+                    Required, sets type value.
 
              computeId
                 Required, sets computeId value.
@@ -497,11 +509,11 @@ REQUIRED FLAGS
 
             Shorthand Example:
 
-                --add-slurm-node-sets=computeId=string,id=string,labels={string=string},maxDynamicNodeCount=int,startupScript=string,staticNodeCount=int --add-slurm-node-sets=computeId=string,id=string,labels={string=string},maxDynamicNodeCount=int,startupScript=string,staticNodeCount=int
+                --add-slurm-node-sets=bootDisk={image=string,sizeGb=int,type=string},computeId=string,id=string,labels={string=string},maxDynamicNodeCount=int,startupScript=string,staticNodeCount=int --add-slurm-node-sets=bootDisk={image=string,sizeGb=int,type=string},computeId=string,id=string,labels={string=string},maxDynamicNodeCount=int,startupScript=string,staticNodeCount=int
 
             JSON Example:
 
-                --add-slurm-node-sets='[{"computeId": "string", "id": "string", "labels": {"string": "string"}, "maxDynamicNodeCount": int, "startupScript": "string", "staticNodeCount": int}]'
+                --add-slurm-node-sets='[{"bootDisk": {"image": "string", "sizeGb": int, "type": "string"}, "computeId": "string", "id": "string", "labels": {"string": "string"}, "maxDynamicNodeCount": int, "startupScript": "string", "staticNodeCount": int}]'
 
             File Example:
 
@@ -672,13 +684,25 @@ REQUIRED FLAGS
 
                 --update-slurm-login-node=path_to_file.(yaml|json)
 
-         --update-slurm-node-sets=[id=ID],[maxDynamicNodeCount=MAXDYNAMICNODECOUNT],[staticNodeCount=STATICNODECOUNT]
+         --update-slurm-node-sets=[bootDisk=BOOTDISK],[id=ID],[maxDynamicNodeCount=MAXDYNAMICNODECOUNT],[staticNodeCount=STATICNODECOUNT]
             Parameters to define and update slurm cluster nodeset config.
 
             For e.g. --update-slurm-node-sets
             id={nodesetId},staticNodeCount={staticNodeCount},maxDynamicNodeCount={maxDynamicNodeCount}.
 
             Sets update_slurm_node_sets value.
+
+             bootDisk
+                Sets bootDisk value.
+
+                 image
+                    Sets image value.
+
+                 sizeGb
+                    Required, sets sizeGb value.
+
+                 type
+                    Required, sets type value.
 
              id
                 Required, sets id value.
@@ -691,11 +715,11 @@ REQUIRED FLAGS
 
             Shorthand Example:
 
-                --update-slurm-node-sets=id=string,maxDynamicNodeCount=int,staticNodeCount=int --update-slurm-node-sets=id=string,maxDynamicNodeCount=int,staticNodeCount=int
+                --update-slurm-node-sets=bootDisk={image=string,sizeGb=int,type=string},id=string,maxDynamicNodeCount=int,staticNodeCount=int --update-slurm-node-sets=bootDisk={image=string,sizeGb=int,type=string},id=string,maxDynamicNodeCount=int,staticNodeCount=int
 
             JSON Example:
 
-                --update-slurm-node-sets='[{"id": "string", "maxDynamicNodeCount": int, "staticNodeCount": int}]'
+                --update-slurm-node-sets='[{"bootDisk": {"image": "string", "sizeGb": int, "type": "string"}, "id": "string", "maxDynamicNodeCount": int, "staticNodeCount": int}]'
 
             File Example:
 

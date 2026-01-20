@@ -14,7 +14,8 @@ SYNOPSIS
         [--disable-public-ip-addresses] [--enable-audit-agent]
         [--enable-confidential-compute] [--enable-nested-virtualization]
         [--grant-workstation-admin-role-on-create]
-        [--idle-timeout=IDLE_TIMEOUT] [--labels=[LABELS,...]]
+        [--idle-timeout=IDLE_TIMEOUT]
+        [--instance-metadata=[INSTANCE_METADATA,...]] [--labels=[LABELS,...]]
         [--machine-type=MACHINE_TYPE]
         [--max-usable-workstations-count=MAX_USABLE_WORKSTATIONS_COUNT]
         [--network-tags=[NETWORK_TAGS,...]] [--pool-size=POOL_SIZE]
@@ -29,7 +30,10 @@ SYNOPSIS
           | --container-predefined-image=CONTAINER_PREDEFINED_IMAGE]
         [--disable-ssh-to-vm | --enable-ssh-to-vm]
         [--disable-tcp-connections | --enable-tcp-connections]
-        [--pd-source-snapshot=PD_SOURCE_SNAPSHOT | --pd-disk-size=PD_DISK_SIZE
+        [--disk-source-snapshot=DISK_SOURCE_SNAPSHOT
+          | --pd-source-snapshot=PD_SOURCE_SNAPSHOT
+          | --disk-size=DISK_SIZE --disk-type=DISK_TYPE
+          | --pd-disk-size=PD_DISK_SIZE
           --pd-disk-type=PD_DISK_TYPE; default="pd-standard"]
         [GCLOUD_WIDE_FLAG ...]
 
@@ -188,6 +192,14 @@ FLAGS
         that hasn't received any user traffic. A value of 0 indicates that this
         instance should never time out due to idleness.
 
+     --instance-metadata=[INSTANCE_METADATA,...]
+        Custom metadata to apply to Compute Engine instances.
+
+        Example:
+
+            $ gcloud workstations configs update \
+                --instance-metadata=key1=value1,key2=value2
+
      --labels=[LABELS,...]
         Labels that are applied to the configuration and propagated to the
         underlying Compute Engine resources.
@@ -333,9 +345,20 @@ FLAGS
 
      At most one of these can be specified:
 
+       --disk-source-snapshot=DISK_SOURCE_SNAPSHOT
+          Name of the snapshot to use as the source for the home disk.
+
        --pd-source-snapshot=PD_SOURCE_SNAPSHOT
           Name of the snapshot to use as the source for the persistent
           directory.
+
+       --disk-size=DISK_SIZE
+          Size of the persistent directory in GB. DISK_SIZE must be one of: 10,
+          50, 100, 200, 500, 1000.
+
+       --disk-type=DISK_TYPE
+          Type of the persistent directory. DISK_TYPE must be one of:
+          pd-standard, pd-balanced, pd-ssd, hyperdisk-balanced-ha.
 
        --pd-disk-size=PD_DISK_SIZE
           Size of the persistent directory in GB. PD_DISK_SIZE must be one of:

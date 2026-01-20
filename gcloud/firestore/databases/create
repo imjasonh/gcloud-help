@@ -5,16 +5,34 @@ NAME
 SYNOPSIS
     gcloud firestore databases create --location=LOCATION
         [--database=DATABASE; default="(default)"] [--delete-protection]
-        [--edition=EDITION; default="standard"] [--enable-pitr]
-        [--kms-key-name=KMS_KEY_NAME] [--tags=[KEY=VALUE,...]]
-        [--type=TYPE; default="firestore-native"] [GCLOUD_WIDE_FLAG ...]
+        [--edition=EDITION; default="standard"]
+        [--enable-firestore-data-access]
+        [--enable-mongodb-compatible-data-access] [--enable-pitr]
+        [--enable-realtime-updates] [--kms-key-name=KMS_KEY_NAME]
+        [--tags=[KEY=VALUE,...]] [--type=TYPE; default="firestore-native"]
+        [GCLOUD_WIDE_FLAG ...]
 
 EXAMPLES
     To create a Firestore Enterprise database named foo in nam5 for use with
-    MongoDB Compatibility.
+    MongoDB Compatible API with Data Access Mode enabled.
 
         $ gcloud firestore databases create --database=foo \
-          --edition=enterprise --location=nam5
+          --edition=enterprise --location=nam5 \
+          --enable-mongodb-compatible-data-access
+
+    To create a Firestore Enterprise database named foo in nam5 for use with
+    Firestore API Data Access Mode enabled and Realtime Updates disabled.
+
+        $ gcloud firestore databases create --database=foo \
+          --edition=enterprise --location=nam5 \
+          --enable-firestore-data-access
+
+    To create a Firestore Enterprise database named foo in nam5 for use with
+    Firestore API Data Access Mode enabled and Realtime Updates enabled.
+
+        $ gcloud firestore databases create --database=foo \
+          --edition=enterprise --location=nam5 \
+          --enable-firestore-data-access --enable-realtime-updates
 
     To create a Firestore Native database in nam5.
 
@@ -87,12 +105,36 @@ OPTIONAL FLAGS
         The edition of the database. EDITION must be one of: standard,
         enterprise.
 
+     --enable-firestore-data-access
+        Whether to enable Firestore API Data Access on the created database.
+
+        If set to true, Firestore API Data Access on the new database will be
+        enabled. By default, this feature is disabled for Enterprise edition
+        databases. To explicitly disable, use
+        --no-enable-firestore-data-access.
+
+     --enable-mongodb-compatible-data-access
+        Whether to enable MongoDB Compatible API Data Access on the created
+        database.
+
+        If set to true, MongoDB Compatible API Data Access on the new database
+        will be enabled. By default, this feature is enabled for Enterprise
+        edition databases. To disable, use
+        --no-enable-mongodb-compatible-data-access.
+
      --enable-pitr
         Whether to enable Point In Time Recovery (PITR) on the created
         database.
 
         If set to true, PITR on the new database will be enabled. By default,
         this feature is not enabled.
+
+     --enable-realtime-updates
+        Whether to enable Realtime Updates feature on the created database.
+
+        If set to true, Realtime Updates feature on the new database will be
+        enabled. By default, this feature is disabled for Enterprise edition
+        databases. To explicitly disable, use --no-enable-realtime-updates.
 
      --kms-key-name=KMS_KEY_NAME
         The resource ID of a Cloud KMS key. If set, the database created will

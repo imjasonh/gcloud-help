@@ -16,7 +16,8 @@ SYNOPSIS
         [--enable-confidential-compute] [--enable-nested-virtualization]
         [--enable-ssh-to-vm] [--ephemeral-directory=[PROPERTY=VALUE,...]]
         [--grant-workstation-admin-role-on-create]
-        [--idle-timeout=IDLE_TIMEOUT; default=7200] [--labels=[LABELS,...]]
+        [--idle-timeout=IDLE_TIMEOUT; default=7200]
+        [--instance-metadata=[INSTANCE_METADATA,...]] [--labels=[LABELS,...]]
         [--machine-type=MACHINE_TYPE; default="e2-standard-4"]
         [--max-usable-workstations-count=MAX_USABLE_WORKSTATIONS_COUNT]
         [--network-tags=[NETWORK_TAGS,...]] [--pool-size=POOL_SIZE]
@@ -33,8 +34,11 @@ SYNOPSIS
           | --container-predefined-image=CONTAINER_PREDEFINED_IMAGE;
           default="codeoss"]
         [--kms-key=KMS_KEY : --kms-key-service-account=KMS_KEY_SERVICE_ACCOUNT]
-        [--no-persistent-storage | --pd-disk-type=PD_DISK_TYPE;
-          default="pd-standard" --pd-reclaim-policy=PD_RECLAIM_POLICY;
+        [--no-persistent-storage | --disk-reclaim-policy=DISK_RECLAIM_POLICY;
+          default="delete" --disk-type=DISK_TYPE --disk-size=DISK_SIZE
+          | --disk-source-snapshot=DISK_SOURCE_SNAPSHOT
+          | --pd-disk-type=PD_DISK_TYPE; default="pd-standard"
+          --pd-reclaim-policy=PD_RECLAIM_POLICY;
           default="delete" --pd-disk-size=PD_DISK_SIZE; default=200
           | --pd-source-snapshot=PD_SOURCE_SNAPSHOT] [GCLOUD_WIDE_FLAG ...]
 
@@ -246,6 +250,14 @@ FLAGS
         that hasn't received any user traffic. A value of 0 indicates that this
         instance should never time out due to idleness.
 
+     --instance-metadata=[INSTANCE_METADATA,...]
+        Custom metadata to apply to Compute Engine instances.
+
+        Example:
+
+            $ gcloud workstations configs create \
+                --instance-metadata=key1=value1,key2=value2
+
      --labels=[LABELS,...]
         Labels that are applied to the configuration and propagated to the
         underlying Compute Engine resources.
@@ -401,6 +413,29 @@ FLAGS
        --no-persistent-storage
           If set, workstations under this configuration will not have a
           persistent directory.
+
+       --disk-reclaim-policy=DISK_RECLAIM_POLICY; default="delete"
+          What should happen to the disk after the Workstation is deleted.
+          DISK_RECLAIM_POLICY must be one of:
+
+           delete
+              The persistent disk will be deleted with the Workstation.
+           retain
+              The persistent disk will be remain after the workstation is
+              deleted and the administrator must manually delete the disk.
+
+       --disk-type=DISK_TYPE
+          Type of the persistent directory. DISK_TYPE must be one of:
+          pd-standard, pd-balanced, pd-ssd, hyperdisk-balanced-ha.
+
+       At most one of these can be specified:
+
+         --disk-size=DISK_SIZE
+            Size of the persistent directory in GB. DISK_SIZE must be one of:
+            10, 50, 100, 200, 500, 1000.
+
+         --disk-source-snapshot=DISK_SOURCE_SNAPSHOT
+            Name of the snapshot to use as the source for the home disk.
 
        --pd-disk-type=PD_DISK_TYPE; default="pd-standard"
           Type of the persistent directory. PD_DISK_TYPE must be one of:
