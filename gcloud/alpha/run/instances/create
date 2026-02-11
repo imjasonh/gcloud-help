@@ -5,7 +5,8 @@ SYNOPSIS
     gcloud alpha run instances create [INSTANCE] [--async]
         [--binary-authorization=POLICY] [--breakglass=JUSTIFICATION]
         [--container=CONTAINER] [--gpu-type=GPU_TYPE]
-        [--[no-]gpu-zonal-redundancy] [--key=KEY] [--labels=[KEY=VALUE,...]]
+        [--[no-]gpu-zonal-redundancy] [--ingress=INGRESS; default="all"]
+        [--[no-]invoker-iam-check] [--key=KEY] [--labels=[KEY=VALUE,...]]
         [--region=REGION] [--service-account=SERVICE_ACCOUNT]
         [--set-cloudsql-instances=[CLOUDSQL-INSTANCES,...]]
         [--vpc-connector=VPC_CONNECTOR] [--vpc-egress=VPC_EGRESS]
@@ -14,7 +15,7 @@ SYNOPSIS
         [--add-volume-mount=[volume=NAME,mount-path=MOUNT_PATH,...]
           --args=[ARG,...] --clear-volume-mounts --command=[COMMAND,...]
           --cpu=CPU --depends-on=[CONTAINER,...] --gpu=GPU --image=IMAGE
-          --memory=MEMORY --remove-volume-mount=[MOUNT_PATH,...]
+          --memory=MEMORY --port=PORT --remove-volume-mount=[MOUNT_PATH,...]
           --startup-probe=[KEY=VALUE,...] --clear-env-vars
           | --env-vars-file=FILE_PATH | --set-env-vars=[KEY=VALUE,...]
           | --remove-env-vars=[KEY,...]
@@ -52,12 +53,12 @@ POSITIONAL ARGUMENTS
       ◆ provide the argument --project on the command line;
       ◆ set the property core/project.
 
-       [INSTANCE]
-          ID of the Instance or fully qualified identifier for the Instance.
+     [INSTANCE]
+        ID of the Instance or fully qualified identifier for the Instance.
 
-          To set the instances attribute:
-          ▸ provide the argument INSTANCE on the command line;
-          ▸ specify the instance name from an interactive prompt.
+        To set the instances attribute:
+        ◆ provide the argument INSTANCE on the command line;
+        ◆ specify the instance name from an interactive prompt.
 
 FLAGS
      --async
@@ -88,6 +89,32 @@ FLAGS
      --[no-]gpu-zonal-redundancy
         Set GPU zonal redundancy. Use --gpu-zonal-redundancy to enable and
         --no-gpu-zonal-redundancy to disable.
+
+     --ingress=INGRESS; default="all"
+        Set the ingress traffic sources allowed to call the service. For Cloud
+        Run the --[no-]allow-unauthenticated flag separately controls the
+        identities allowed to call the service. INGRESS must be one of:
+
+         all
+            Inbound requests from all sources are allowed.
+         internal
+            For Cloud Run, only inbound requests from VPC networks in the same
+            project or VPC Service Controls perimeter, as well as Pub/Sub
+            subscriptions and Eventarc events in the same project or VPC
+            Service Controls perimeter are allowed. All other requests are
+            rejected. See https://cloud.google.com/run/docs/securing/ingress
+            for full details on the definition of internal traffic for Cloud
+            Run.
+
+         internal-and-cloud-load-balancing
+            Only inbound requests from Google Cloud Load Balancing or a traffic
+            source allowed by the internal option are allowed.
+
+     --[no-]invoker-iam-check
+        Optionally disable invoker IAM checks. More info at
+        https://cloud.google.com/run/docs/securing/managing-access#invoker_check.
+        Use --invoker-iam-check to enable and --no-invoker-iam-check to
+        disable.
 
      --key=KEY
         CMEK key reference to encrypt the container with.
@@ -236,146 +263,155 @@ FLAGS
 
         If the --container is specified the following arguments may only be specified after a --container flag.
 
-         --add-volume-mount=[volume=NAME,mount-path=MOUNT_PATH,...]
-            Adds a mount to the current container. Must contain the keys
-            volume=NAME and mount-path=/PATH where NAME is the name of a volume
-            on this resource and PATH is the path within the container's
-            filesystem to mount this volume.
+     --add-volume-mount=[volume=NAME,mount-path=MOUNT_PATH,...]
+        Adds a mount to the current container. Must contain the keys
+        volume=NAME and mount-path=/PATH where NAME is the name of a volume on
+        this resource and PATH is the path within the container's filesystem to
+        mount this volume.
 
-         --args=[ARG,...]
-            Comma-separated arguments passed to the command run by the
-            container image. If not specified and no '--command' is provided,
-            the container image's default Cmd is used. Otherwise, if not
-            specified, no arguments are passed. To reset this field to its
-            default, pass an empty string.
+     --args=[ARG,...]
+        Comma-separated arguments passed to the command run by the container
+        image. If not specified and no '--command' is provided, the container
+        image's default Cmd is used. Otherwise, if not specified, no arguments
+        are passed. To reset this field to its default, pass an empty string.
 
-         --clear-volume-mounts
-            Remove all existing mounts from the current container.
+     --clear-volume-mounts
+        Remove all existing mounts from the current container.
 
-         --command=[COMMAND,...]
-            Entrypoint for the container image. If not specified, the container
-            image's default Entrypoint is run. To reset this field to its
-            default, pass an empty string.
+     --command=[COMMAND,...]
+        Entrypoint for the container image. If not specified, the container
+        image's default Entrypoint is run. To reset this field to its default,
+        pass an empty string.
 
-         --cpu=CPU
-            Set a CPU limit in Kubernetes cpu units.
+     --cpu=CPU
+        Set a CPU limit in Kubernetes cpu units.
 
-            Cloud Run supports values fractional values below 1, 1, 2, 4, and
-            8. Some CPU values requires a minimum Memory --memory value.
+        Cloud Run supports values fractional values below 1, 1, 2, 4, and 8.
+        Some CPU values requires a minimum Memory --memory value.
 
-         --depends-on=[CONTAINER,...]
-            List of container dependencies to add to the current container.
+     --depends-on=[CONTAINER,...]
+        List of container dependencies to add to the current container.
 
-         --gpu=GPU
-            Cloud Run supports values 0 or 1. 1 gpu also requires a minimum 4
-            --cpu value and a minimum 16Gi --memory value.
+     --gpu=GPU
+        Cloud Run supports values 0 or 1. 1 gpu also requires a minimum 4 --cpu
+        value and a minimum 16Gi --memory value.
 
-         --image=IMAGE
-            Name of the container image to deploy (e.g.
-            us-docker.pkg.dev/cloudrun/container/hello:latest).
+     --image=IMAGE
+        Name of the container image to deploy (e.g.
+        us-docker.pkg.dev/cloudrun/container/hello:latest).
 
-         --memory=MEMORY
-            Set a memory limit. Ex: 1024Mi, 4Gi.
+     --memory=MEMORY
+        Set a memory limit. Ex: 1024Mi, 4Gi.
 
-         --remove-volume-mount=[MOUNT_PATH,...]
-            Removes the volume mounted at the specified path from the current
-            container.
+     --port=PORT
+        Container port to receive requests at. Also sets the $PORT environment
+        variable. Must be a number between 1 and 65535, inclusive. To unset
+        this field, pass the special value "default". If updating an existing
+        service with a TCP startup probe pointing to the previous container
+        port, this will also update the probe port.
 
-         --startup-probe=[KEY=VALUE,...]
-            Comma separated settings for startup probe in the form KEY=VALUE.
-            Each key stands for a field of the probe described in
-            https://cloud.google.com/run/docs/reference/rest/v1/Container#Probe.
-            Currently supported keys are: initialDelaySeconds, timeoutSeconds,
-            periodSeconds, failureThreshold, httpGet.port, httpGet.path,
-            grpc.port, grpc.service, tcpSocket.port.
+     --remove-volume-mount=[MOUNT_PATH,...]
+        Removes the volume mounted at the specified path from the current
+        container.
 
-            For example, to set a probe with 10s timeout and HTTP probe
-            requests sent to 8080 port of the container:
+     --startup-probe=[KEY=VALUE,...]
+        Comma separated settings for startup probe in the form KEY=VALUE. Each
+        key stands for a field of the probe described in
+        https://cloud.google.com/run/docs/reference/rest/v1/Container#Probe.
+        Currently supported keys are: initialDelaySeconds, timeoutSeconds,
+        periodSeconds, failureThreshold, httpGet.port, httpGet.path, grpc.port,
+        grpc.service, tcpSocket.port.
 
-                $ --startup-probe=timeoutSeconds=10,httpGet.port=8080
+        For example, to set a probe with 10s timeout and HTTP probe requests
+        sent to 8080 port of the container:
 
-            To remove existing probe:
+            $ --startup-probe=timeoutSeconds=10,httpGet.port=8080
 
-                $ --startup-probe=""
+        To remove existing probe:
 
-         At most one of these can be specified:
+            $ --startup-probe=""
 
-           --clear-env-vars
-              Remove all environment variables.
+     At most one of these can be specified:
 
-           --env-vars-file=FILE_PATH
-              Path to a local YAML or ENV file with definitions for all
-              environment variables. All existing environment variables will be
-              removed before the new environment variables are added. Example
-              YAML content:
+       --clear-env-vars
+          Remove all environment variables.
 
-                  KEY_1: "value1"
-                  KEY_2: "value 2"
+       --env-vars-file=FILE_PATH
+          Path to a local YAML or ENV file with definitions for all environment
+          variables. All existing environment variables will be removed before
+          the new environment variables are added. Example YAML content:
 
-              Example ENV content:
+              KEY_1: "value1"
+              KEY_2: "value 2"
 
-                  KEY_1="value1"
-                  KEY_2="value 2"
+          Example ENV content:
 
-           --set-env-vars=[KEY=VALUE,...]
-              List of key-value pairs to set as environment variables. All
-              existing environment variables will be removed first.
+              KEY_1="value1"
+              KEY_2="value 2"
 
-           Only --update-env-vars and --remove-env-vars can be used together.
-           If both are specified, --remove-env-vars will be applied first.
+       --set-env-vars=[KEY=VALUE,...]
+          List of key-value pairs to set as environment variables. All existing
+          environment variables will be removed first.
 
-             --remove-env-vars=[KEY,...]
-                List of environment variables to be removed.
+       Or at least one of these can be specified:
 
-             --update-env-vars=[KEY=VALUE,...]
-                List of key-value pairs to set as environment variables.
+         Only --update-env-vars and --remove-env-vars can be used together. If
+         both are specified, --remove-env-vars will be applied first.
 
-         Specify secrets to mount or provide as environment variables. Keys
-         starting with a forward slash '/' are mount paths. All other keys
-         correspond to environment variables. Values should be in the form
-         SECRET_NAME:SECRET_VERSION. For example:
-         '--update-secrets=/secrets/api/key=mysecret:latest,ENV=othersecret:1'
-         will mount a volume at '/secrets/api' containing a file 'key' with the
-         latest version of secret 'mysecret'. An environment variable named ENV
-         will also be created whose value is version 1 of secret 'othersecret'.
+         --remove-env-vars=[KEY,...]
+            List of environment variables to be removed.
 
-         At most one of these can be specified:
+         --update-env-vars=[KEY=VALUE,...]
+            List of key-value pairs to set as environment variables.
 
-           --clear-secrets
-              Remove all secrets.
+     Specify secrets to mount or provide as environment variables. Keys
+     starting with a forward slash '/' are mount paths. All other keys
+     correspond to environment variables. Values should be in the form
+     SECRET_NAME:SECRET_VERSION. For example:
+     '--update-secrets=/secrets/api/key=mysecret:latest,ENV=othersecret:1' will
+     mount a volume at '/secrets/api' containing a file 'key' with the latest
+     version of secret 'mysecret'. An environment variable named ENV will also
+     be created whose value is version 1 of secret 'othersecret'.
 
-           --set-secrets=[KEY=VALUE,...]
-              List of key-value pairs to set as secrets. All existing secrets
-              will be removed first.
+     At most one of these can be specified:
 
-           Only --update-secrets and --remove-secrets can be used together. If
-           both are specified, --remove-secrets will be applied first.
+       --clear-secrets
+          Remove all secrets.
 
-             --remove-secrets=[KEY,...]
-                List of secrets to be removed.
+       --set-secrets=[KEY=VALUE,...]
+          List of key-value pairs to set as secrets. All existing secrets will
+          be removed first.
 
-             --update-secrets=[KEY=VALUE,...]
-                List of key-value pairs to set as secrets.
+       Or at least one of these can be specified:
+
+         Only --update-secrets and --remove-secrets can be used together. If
+         both are specified, --remove-secrets will be applied first.
+
+         --remove-secrets=[KEY,...]
+            List of secrets to be removed.
+
+         --update-secrets=[KEY=VALUE,...]
+            List of key-value pairs to set as secrets.
 
      Direct VPC egress setting flags group.
 
-       --network=NETWORK
-          The VPC network that the Cloud Run job will be able to send traffic
-          to. If --subnet is also specified, subnet must be a subnetwork of the
-          network specified by this --network flag. To clear existing VPC
-          network settings, use --clear-network.
+     --network=NETWORK
+        The VPC network that the Cloud Run job will be able to send traffic to.
+        If --subnet is also specified, subnet must be a subnetwork of the
+        network specified by this --network flag. To clear existing VPC network
+        settings, use --clear-network.
 
-       --network-tags=[TAG,...]
-          Applies the given network tags (comma separated) to the Cloud Run
-          job. To clear existing tags, use --clear-network-tags.
+     --network-tags=[TAG,...]
+        Applies the given network tags (comma separated) to the Cloud Run job.
+        To clear existing tags, use --clear-network-tags.
 
-       --subnet=SUBNET
-          The VPC subnetwork that the Cloud Run job will get IPs from. The
-          subnetwork must be /26 or larger. If --network is also specified,
-          subnet must be a subnetwork of the network specified by the --network
-          flag. If --network is not specified, network will be looked up from
-          this subnetwork. To clear existing VPC network settings, use
-          --clear-network.
+     --subnet=SUBNET
+        The VPC subnetwork that the Cloud Run job will get IPs from. The
+        subnetwork must be /26 or larger. If --network is also specified,
+        subnet must be a subnetwork of the network specified by the --network
+        flag. If --network is not specified, network will be looked up from
+        this subnetwork. To clear existing VPC network settings, use
+        --clear-network.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

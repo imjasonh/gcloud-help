@@ -111,50 +111,49 @@ REQUIRED FLAGS
        If the issuing CA is not hosted on Private CA, you must provide these
        settings:
 
-         --create-csr
-            Indicates that a CSR should be generated which can be signed by the
-            issuing CA. This must be set if --issuer is not provided.
+       --create-csr
+          Indicates that a CSR should be generated which can be signed by the
+          issuing CA. This must be set if --issuer is not provided.
 
-            This flag argument must be specified if any of the other arguments
-            in this group are specified.
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
 
-         --csr-output-file=CSR_OUTPUT_FILE
-            The path where the resulting PEM-encoded CSR file should be
-            written.
+       --csr-output-file=CSR_OUTPUT_FILE
+          The path where the resulting PEM-encoded CSR file should be written.
 
-            This flag argument must be specified if any of the other arguments
-            in this group are specified.
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
 
        The issuing resource used for this CA certificate.
 
-         Issuer resource - The issuing CA Pool to use, if it is on Private CA.
-         The arguments in this group can be used to specify the attributes of
-         this resource. (NOTE) Some attributes are not given arguments in this
-         group but can be set in other ways.
+       Issuer resource - The issuing CA Pool to use, if it is on Private CA.
+       The arguments in this group can be used to specify the attributes of
+       this resource. (NOTE) Some attributes are not given arguments in this
+       group but can be set in other ways.
 
-         To set the project attribute:
-          ▫ provide the argument --issuer-pool on the command line with a
+       To set the project attribute:
+        ▸ provide the argument --issuer-pool on the command line with a fully
+          specified name;
+        ▸ provide the argument --project on the command line;
+        ▸ set the property core/project.
+
+       --issuer-pool=ISSUER_POOL
+          ID of the Issuer or fully qualified identifier for the Issuer.
+
+          To set the pool attribute:
+          ▸ provide the argument --issuer-pool on the command line.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --issuer-location=ISSUER_LOCATION
+          The location of the Issuer.
+
+          To set the location attribute:
+          ▸ provide the argument --issuer-pool on the command line with a
             fully specified name;
-          ▫ provide the argument --project on the command line;
-          ▫ set the property core/project.
-
-           --issuer-pool=ISSUER_POOL
-              ID of the Issuer or fully qualified identifier for the Issuer.
-
-              To set the pool attribute:
-              ◇ provide the argument --issuer-pool on the command line.
-
-              This flag argument must be specified if any of the other
-              arguments in this group are specified.
-
-           --issuer-location=ISSUER_LOCATION
-              The location of the Issuer.
-
-              To set the location attribute:
-              ◇ provide the argument --issuer-pool on the command line with a
-                fully specified name;
-              ◇ provide the argument --issuer-location on the command line;
-              ◇ set the property privateca/location.
+          ▸ provide the argument --issuer-location on the command line;
+          ▸ set the property privateca/location.
 
 OPTIONAL FLAGS
      --auto-enable
@@ -206,11 +205,11 @@ OPTIONAL FLAGS
         specified name;
       ◆ provide the argument --pool on the command line.
 
-       --from-ca=FROM_CA
-          ID of the source CA or fully qualified identifier for the source CA.
+     --from-ca=FROM_CA
+        ID of the source CA or fully qualified identifier for the source CA.
 
-          To set the certificate_authority attribute:
-          ▸ provide the argument --from-ca on the command line.
+        To set the certificate_authority attribute:
+        ◆ provide the argument --from-ca on the command line.
 
      --ip-san=[IP_SAN,...]
         One or more comma-separated IP Subject Alternative Names.
@@ -256,9 +255,11 @@ OPTIONAL FLAGS
           rsa-pkcs1-2048-sha256, rsa-pkcs1-3072-sha256, rsa-pkcs1-4096-sha256,
           rsa-pss-2048-sha256, rsa-pss-3072-sha256, rsa-pss-4096-sha256.
 
-       Key version resource - The KMS key version backing this CA. The
-       arguments in this group can be used to specify the attributes of this
-       resource.
+       Or at least one of these can be specified:
+
+         Key version resource - The KMS key version backing this CA. The
+         arguments in this group can be used to specify the attributes of this
+         resource.
 
          --kms-key-version=KMS_KEY_VERSION
             ID of the key version or fully qualified identifier for the key
@@ -322,32 +323,35 @@ OPTIONAL FLAGS
           For more information, see
           https://cloud.google.com/certificate-authority-service/docs/certificate-profile.
 
-       --extended-key-usages=[EXTENDED_KEY_USAGES,...]
-          The list of extended key usages for this CA. This can only be
-          provided if --use-preset-profile is not provided. EXTENDED_KEY_USAGES
-          must be one of: server_auth, client_auth, code_signing,
-          email_protection, time_stamping, ocsp_signing.
+       Or at least one of these can be specified:
 
-       --key-usages=[KEY_USAGES,...]
-          The list of key usages for this CA. This can only be provided if
-          --use-preset-profile is not provided. KEY_USAGES must be one of:
-          digital_signature, content_commitment, key_encipherment,
-          data_encipherment, key_agreement, cert_sign, crl_sign, encipher_only,
-          decipher_only.
+         --extended-key-usages=[EXTENDED_KEY_USAGES,...]
+            The list of extended key usages for this CA. This can only be
+            provided if --use-preset-profile is not provided.
+            EXTENDED_KEY_USAGES must be one of: server_auth, client_auth,
+            code_signing, email_protection, time_stamping, ocsp_signing.
 
-       At most one of these can be specified:
+         --key-usages=[KEY_USAGES,...]
+            The list of key usages for this CA. This can only be provided if
+            --use-preset-profile is not provided. KEY_USAGES must be one of:
+            digital_signature, content_commitment, key_encipherment,
+            data_encipherment, key_agreement, cert_sign, crl_sign,
+            encipher_only, decipher_only.
 
-         --max-chain-length=MAX_CHAIN_LENGTH
-            Maximum depth of subordinate CAs allowed under this CA for a CA
-            certificate. This can only be provided if neither
-            --use-preset-profile nor --unconstrained-chain-length are provided.
+         At most one of these can be specified:
 
-         --unconstrained-chain-length
-            If set, allows an unbounded number of subordinate CAs under this
-            newly issued CA certificate. This can only be provided if neither
-            --use-preset-profile nor --max-chain-length are provided.
+           --max-chain-length=MAX_CHAIN_LENGTH
+              Maximum depth of subordinate CAs allowed under this CA for a CA
+              certificate. This can only be provided if neither
+              --use-preset-profile nor --unconstrained-chain-length are
+              provided.
 
-       The x509 name constraints configurations
+           --unconstrained-chain-length
+              If set, allows an unbounded number of subordinate CAs under this
+              newly issued CA certificate. This can only be provided if neither
+              --use-preset-profile nor --max-chain-length are provided.
+
+         The x509 name constraints configurations
 
          --name-constraints-critical
             Indicates whether or not name constraints are marked as critical.

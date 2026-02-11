@@ -133,7 +133,16 @@ REQUIRED FLAGS
           nodes using either a node-pool upgrade or node-pool creation.
 
        --enable-image-streaming
-          Specifies whether to enable image streaming on node pool.
+          Enable Image Streaming for the node pool, allowing nodes to stream
+          container image data from Artifact Registry on demand to reduce
+          container start times. This setting overrides the cluster-level Image
+          Streaming default for this specific node pool.
+
+          See Image Streaming documentation
+          (https://cloud.google.com/kubernetes-engine/docs/how-to/image-streaming)
+          for full requirements (including version, API enablement and Artifact
+          Registry usage). To disable Image Streaming for the node pool, use
+          --no-enable-image-streaming.
 
        --enable-insecure-kubelet-readonly-port
           Enables the Kubelet's insecure read only port.
@@ -327,62 +336,78 @@ REQUIRED FLAGS
                   bootDiskProfile:
                     swapSizeGib: 8
                 cgroupMode: 'CGROUP_MODE_V2'
+                nodeKernelModuleLoading:
+                  policy: 'ENFORCE_SIGNED_MODULES'
 
           List of supported kubelet configs in 'kubeletConfig'.
 
-            KEY                                   VALUE
-            cpuManagerPolicy                      either 'static' or 'none'
-            cpuCFSQuota                           true or false (enabled by
-                                                  default)
-            cpuCFSQuotaPeriod                     interval (e.g., '100ms'. The
-                                                  value must be between 1ms and
-                                                  1 second, inclusive.)
-            memoryManager                         specify memory manager policy
-            topologyManager                       specify topology manager
-                                                  policy and scope
-            podPidsLimit                          integer (The value must be
-                                                  greater than or equal to 1024
-                                                  and less than 4194304.)
-            containerLogMaxSize                   positive number plus unit
-                                                  suffix (e.g., '100Mi',
-                                                  '0.2Gi'. The value must be
-                                                  between 10Mi and 500Mi,
-                                                  inclusive.)
-            containerLogMaxFiles                  integer (The value must be
-                                                  between [2, 10].)
-            imageGcLowThresholdPercent            integer (The value must be
-                                                  between [10, 85], and lower
-                                                  than
-                                                  imageGcHighThresholdPercent.)
-            imageGcHighThresholdPercent           integer (The value must be
-                                                  between [10, 85], and greater
-                                                  than
-                                                  imageGcLowThresholdPercent.)
-            imageMinimumGcAge                     interval (e.g., '100s', '1m'.
-                                                  The value must be less than
-                                                  '2m'.)
-            imageMaximumGcAge                     interval (e.g., '100s', '1m'.
-                                                  The value must be greater than
-                                                  imageMinimumGcAge.)
-            evictionSoft                          specify eviction soft
-                                                  thresholds
-            evictionSoftGracePeriod               specify eviction soft grace
-                                                  period
-            evictionMinimumReclaim                specify eviction minimum
-                                                  reclaim thresholds
-            evictionMaxPodGracePeriodSeconds      integer (Max grace period for
-                                                  pod termination during
-                                                  eviction, in seconds. The
-                                                  value must be between [0,
-                                                  300].)
-            allowedUnsafeSysctls                  list of sysctls (Allowlisted
-                                                  groups: 'kernel.shm*',
-                                                  'kernel.msg*', 'kernel.sem',
-                                                  'fs.mqueue.*', and 'net.*',
-                                                  and sysctls under the groups.)
-            singleProcessOomKill                  true or false
-            maxParallelImagePulls                 integer (The value must be
-                                                  between [2, 5].)
+            KEY                                     VALUE
+            cpuManagerPolicy                        either 'static' or 'none'
+            cpuCFSQuota                             true or false (enabled by
+                                                    default)
+            cpuCFSQuotaPeriod                       interval (e.g., '100ms'. The
+                                                    value must be between 1ms
+                                                    and 1 second, inclusive.)
+            memoryManager                           specify memory manager
+                                                    policy
+            topologyManager                         specify topology manager
+                                                    policy and scope
+            podPidsLimit                            integer (The value must be
+                                                    greater than or equal to
+                                                    1024 and less than 4194304.)
+            containerLogMaxSize                     positive number plus unit
+                                                    suffix (e.g., '100Mi',
+                                                    '0.2Gi'. The value must be
+                                                    between 10Mi and 500Mi,
+                                                    inclusive.)
+            containerLogMaxFiles                    integer (The value must be
+                                                    between [2, 10].)
+            imageGcLowThresholdPercent              integer (The value must be
+                                                    between [10, 85], and lower
+                                                    than
+                                                    imageGcHighThresholdPercent.
+                                                    )
+            imageGcHighThresholdPercent             integer (The value must be
+                                                    between [10, 85], and
+                                                    greater than
+                                                    imageGcLowThresholdPercent.)
+            imageMinimumGcAge                       interval (e.g., '100s',
+                                                    '1m'. The value must be less
+                                                    than '2m'.)
+            imageMaximumGcAge                       interval (e.g., '100s',
+                                                    '1m'. The value must be
+                                                    greater than
+                                                    imageMinimumGcAge.)
+            evictionSoft                            specify eviction soft
+                                                    thresholds
+            evictionSoftGracePeriod                 specify eviction soft grace
+                                                    period
+            evictionMinimumReclaim                  specify eviction minimum
+                                                    reclaim thresholds
+            evictionMaxPodGracePeriodSeconds        integer (Max grace period
+                                                    for pod termination during
+                                                    eviction, in seconds. The
+                                                    value must be between [0,
+                                                    300].)
+            shutdownGracePeriodSeconds              integer (Grace period for
+                                                    pods terminating on node
+                                                    shutdown, in seconds.
+                                                    Allowed values: 0, 30, 120.)
+            shutdownGracePeriodCriticalPodsSeconds  integer (Grace period for
+                                                    critical pods terminating on
+                                                    node shutdown, in seconds.
+                                                    The value must be between
+                                                    [0, 120] and less than
+                                                    shutdownGracePeriodSeconds.)
+            allowedUnsafeSysctls                    list of sysctls (Allowlisted
+                                                    groups: 'kernel.shm*',
+                                                    'kernel.msg*', 'kernel.sem',
+                                                    'fs.mqueue.*', and 'net.*',
+                                                    and sysctls under the
+                                                    groups.)
+            singleProcessOomKill                    true or false
+            maxParallelImagePulls                   integer (The value must be
+                                                    between [2, 5].)
 
           List of supported keys in memoryManager in 'kubeletConfig'.
 
@@ -673,6 +698,14 @@ REQUIRED FLAGS
             KEY                                         VALUE
             diskCount                                   integer
 
+          List of supported keys in 'nodeKernelModuleLoading'.
+
+            KEY                                         VALUE
+            policy                                      ENFORCE_SIGNED_MODULES,
+                                                        DO_NOT_ENFORCE_SIGNED_MO
+                                                        DULES,
+                                                        POLICY_UNSPECIFIED
+
           The upper limit for total allocated hugepage size differs based upon
           machine size.
 
@@ -735,6 +768,20 @@ REQUIRED FLAGS
             will never enter direct reclaim or compaction.
           ▸ TRANSPARENT_HUGEPAGE_DEFRAG_UNSPECIFIED: Default value. GKE will
             not modify the kernel configuration.
+
+          Supported values for 'policy' under 'nodeKernelModuleLoading'.
+
+          ▸ POLICY_UNSPECIFIED: Default behavior. GKE selects the image based
+            on node type. For CPU and TPU nodes, the image will not allow
+            loading external kernel modules. For GPU nodes, the image will
+            allow loading any module, whether it is signed or not.
+          ▸ ENFORCE_SIGNED_MODULES: Enforced signature verification: Node
+            pools will use a Container-Optimized OS image configured to allow
+            loading of Google-signed external kernel modules. Loadpin is
+            enabled but configured to exclude modules, and kernel module
+            signature checking is enforced.
+          ▸ DO_NOT_ENFORCE_SIGNED_MODULES: Do not enforce kernel module
+            signature enforcement. Mirrors existing DEFAULT behavior.
 
           Note, updating the system configuration of an existing node pool
           requires recreation of the nodes which which might cause a
@@ -799,7 +846,9 @@ REQUIRED FLAGS
               security improvements. This feature is scheduled to be deprecated
               in the future and later removed.
 
-       Upgrade settings
+       Or at least one of these can be specified:
+
+         Upgrade settings
 
          --autoscaled-rollout-policy=[wait-for-drain-duration=WAIT-FOR-DRAIN-DURATION]
             Autoscaled rollout policy options for blue-green upgrade.
@@ -880,7 +929,9 @@ REQUIRED FLAGS
                     --standard-rollout-policy=batch-percent=0.3,\
                 batch-soak-duration=60s
 
-       Node config
+       Or at least one of these can be specified:
+
+         Node config
 
          --boot-disk-provisioned-iops=BOOT_DISK_PROVISIONED_IOPS
             Configure the Provisioned IOPS for the node pool boot disks. Only
@@ -917,7 +968,9 @@ REQUIRED FLAGS
                 $ gcloud alpha container node-pools update high-mem-pool \
                     --machine-type=custom-2-12288
 
-       Cluster autoscaling
+       Or at least one of these can be specified:
+
+         Cluster autoscaling
 
          --enable-autoprovisioning
             Enables Cluster Autoscaler to treat the node pool as if it was
@@ -973,7 +1026,9 @@ REQUIRED FLAGS
             --node-pool (or default node pool if unspecified) can scale.
             Ignored unless --enable-autoscaling is also specified.
 
-       Node management
+       Or at least one of these can be specified:
+
+         Node management
 
          --enable-autorepair
             Enable node autorepair feature for a node pool.
@@ -995,7 +1050,9 @@ REQUIRED FLAGS
             https://cloud.google.com/kubernetes-engine/docs/node-auto-upgrades
             for more info.
 
-       Node drain settings
+       Or at least one of these can be specified:
+
+         Node drain settings
 
          --node-drain-grace-period-seconds=NODE_DRAIN_GRACE_PERIOD_SECONDS
             The grace period in seconds for nodes to drain before being

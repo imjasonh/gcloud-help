@@ -9,6 +9,10 @@ SYNOPSIS
           | --manifest-location=MANIFEST_LOCATION)
         (--put-metadata=KEY=VALUE,[KEY=VALUE,...]
           | --rewrite-object=KEY=VALUE,[KEY=VALUE,...]
+          | --clear-all-object-custom-contexts
+          | --clear-object-custom-contexts=[CUSTOM_CONTEXTS_KEYS,...]
+          --update-object-custom-contexts=[CUSTOM_CONTEXTS_KEYS_AND_VALUES,...]
+          | --update-object-custom-contexts-file=CUSTOM_CONTEXTS_FILE
           | [--delete-object : --enable-permanent-object-deletion]
           | --[no-]put-object-event-based-hold
           --[no-]put-object-temporary-hold) [--description=DESCRIPTION]
@@ -152,7 +156,61 @@ REQUIRED FLAGS
           will rewrite the Cloud KMS key that will be used to encrypt the
           object.
 
-       Describes options to delete objects.
+       Or at most one of these can be specified:
+
+         Describes options to update object custom contexts.
+
+         --clear-all-object-custom-contexts
+            Clears all object custom contexts.
+
+         Or at least one of these can be specified:
+
+           Flags for updating or clearing individual custom contexts. A key
+           cannot be present in both --update-object-custom-contexts and
+           --clear-object-custom-contexts.
+
+           --clear-object-custom-contexts=[CUSTOM_CONTEXTS_KEYS,...]
+              Removes object custom contexts by key. If an entry is not found,
+              it will be ignored.
+
+           Flags for specifying custom context updates in key-value pairs or
+           from a file.
+
+           At most one of these can be specified:
+
+             --update-object-custom-contexts=[CUSTOM_CONTEXTS_KEYS_AND_VALUES,...]
+                Inserts or updates object custom contexts. If an existing entry
+                is found, the value will be updated, otherwise the entry would
+                be added.
+
+             --update-object-custom-contexts-file=CUSTOM_CONTEXTS_FILE
+                Path to a local JSON or YAML file containing custom contexts
+                one wants to update on an object. If an entry is found, any
+                fields set in the payload will be updated, otherwise the entry
+                would be added. For example:
+
+                1. The following JSON document shows two key value pairs, i.e.
+                (key1, value1) and (key2, value2):
+
+                      {
+                        "key1": {"value": "value1"},
+                        "key2": {"value": "value2"}
+                      }
+
+                2. The following YAML document shows two key value pairs, i.e.
+                (key1, value1) and (key2, value2):
+
+                      key1:
+                        value: value1
+                      key2:
+                        value: value2
+
+                Note: Currently object contexts only supports string format for
+                values.
+
+       Or at least one of these can be specified:
+
+         Describes options to delete objects.
 
          --delete-object
             If this flag is set, objects specified in source will be deleted.
@@ -167,7 +225,9 @@ REQUIRED FLAGS
             If this flag is set and versioning is enabled on the buckets, both
             live and noncurrent objects will be permanently deleted.
 
-       Describes options to update object hold.
+       Or at least one of these can be specified:
+
+         Describes options to update object hold.
 
          --[no-]put-object-event-based-hold
             Sets or unsets object event based holds state. When object event
@@ -198,16 +258,16 @@ LOGGING_CONFIG FLAGS
      command: gcloud logging read
      "resource.type=storagebatchoperations.googleapis.com/Job"
 
-       --log-actions=[LOG_ACTIONS,...]
-          Define the batch job actions to report in logs. (e.g.,
-          --log-actions=transform). LOG_ACTIONS must be (only one value is
-          supported): transform.
+     --log-actions=[LOG_ACTIONS,...]
+        Define the batch job actions to report in logs. (e.g.,
+        --log-actions=transform). LOG_ACTIONS must be (only one value is
+        supported): transform.
 
-       --log-action-states=[LOG_ACTION_STATES,...]
-          The states in which the actions specified in --log-actions are
-          logged. Separate multiple states with a comma, omitting the space
-          after the comma (e.g., --log-action-states=succeeded,failed).
-          LOG_ACTION_STATES must be one of: failed, succeeded.
+     --log-action-states=[LOG_ACTION_STATES,...]
+        The states in which the actions specified in --log-actions are logged.
+        Separate multiple states with a comma, omitting the space after the
+        comma (e.g., --log-action-states=succeeded,failed). LOG_ACTION_STATES
+        must be one of: failed, succeeded.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

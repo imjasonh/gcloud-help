@@ -7,6 +7,7 @@ SYNOPSIS
         (--destination-cloud-sql-instance=DESTINATION_CLOUD_SQL_INSTANCE
           --destination-forwarding-rule=DESTINATION_FORWARDING_RULE
           --destination-gke-master-cluster=DESTINATION_GKE_MASTER_CLUSTER
+          --destination-gke-pod=DESTINATION_GKE_POD
           --destination-instance=DESTINATION_INSTANCE
           --destination-ip-address=DESTINATION_IP_ADDRESS
           --destination-redis-cluster=DESTINATION_REDIS_CLUSTER
@@ -16,7 +17,7 @@ SYNOPSIS
           --source-cloud-run-revision=SOURCE_CLOUD_RUN_REVISION
           --source-cloud-sql-instance=SOURCE_CLOUD_SQL_INSTANCE
           --source-gke-master-cluster=SOURCE_GKE_MASTER_CLUSTER
-          --source-instance=SOURCE_INSTANCE
+          --source-gke-pod=SOURCE_GKE_POD --source-instance=SOURCE_INSTANCE
           --source-ip-address=SOURCE_IP_ADDRESS) [--async]
         [--bypass-firewall-checks] [--description=DESCRIPTION]
         [--destination-fqdn=DESTINATION_FQDN]
@@ -25,7 +26,7 @@ SYNOPSIS
         [--destination-project=DESTINATION_PROJECT] [--labels=[KEY=VALUE,...]]
         [--other-projects=[OTHER_PROJECTS,...]] [--protocol=PROTOCOL]
         [--round-trip] [--source-network=SOURCE_NETWORK]
-        [--source-network-type=SOURCE_NETWORK_TYPE; default="gcp-network"]
+        [--source-network-type=SOURCE_NETWORK_TYPE; default="unspecified"]
         [--source-project=SOURCE_PROJECT] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -75,6 +76,9 @@ REQUIRED FLAGS
           A cluster URI for Google Kubernetes Engine master as the destination
           endpoint.
 
+       --destination-gke-pod=DESTINATION_GKE_POD
+          A GKE Pod URI as the destination endpoint.
+
        --destination-instance=DESTINATION_INSTANCE
           A Compute Engine instance URI as the destination endpoint.
 
@@ -106,6 +110,9 @@ REQUIRED FLAGS
           A cluster URI for Google Kubernetes Engine master as the source
           endpoint.
 
+       --source-gke-pod=SOURCE_GKE_POD
+          A GKE Pod URI as the source endpoint.
+
        --source-instance=SOURCE_INSTANCE
           A Compute Engine instance URI as the source endpoint.
 
@@ -128,7 +135,9 @@ OPTIONAL FLAGS
         Kubernetes Engine.
 
      --destination-network=DESTINATION_NETWORK
-        A VPC network URI where the destination is located.
+        A VPC network URI for the destination endpoint. Used only when the
+        source is an external IP address endpoint, and the destination is an
+        internal IP address endpoint.
 
      --destination-port=DESTINATION_PORT
         The IP protocol port of the destination. Only applicable when protocol
@@ -153,16 +162,39 @@ OPTIONAL FLAGS
         reaches the destination from the source.
 
      --source-network=SOURCE_NETWORK
-        A VPC network URI where the source is located.
+        A VPC network URI for the source endpoint. Used according to the
+        source-network-type flag.
 
-     --source-network-type=SOURCE_NETWORK_TYPE; default="gcp-network"
+     --source-network-type=SOURCE_NETWORK_TYPE; default="unspecified"
         Type of the network where the source is located. SOURCE_NETWORK_TYPE
         must be one of:
 
          gcp-network
-            Network in Google Cloud Platform.
+            A VPC network. Should be used for internal IP addresses in VPC
+            networks. The source-network field should be set to the URI of this
+            network. Only endpoints within this network will be considered.
+         internet
+            Internet. Should be used for internet-routable external IP
+            addresses or IP addresses for global Google APIs and services.
          non-gcp-network
-            Network outside Google Cloud Platform.
+            A network outside of Google Cloud (for example, an on-premises
+            network or another cloud provider network). Should be used for
+            internal IP addresses outside of Google Cloud. The source-network
+            field should be set to the URI of the VPC network containing a
+            corresponding Cloud VPN tunnel, Cloud Interconnect VLAN attachment,
+            or a router appliance instance. Only endpoints reachable from the
+            provided VPC network via the routes to networks outside of Google
+            Cloud will be considered.
+         unspecified
+            Unspecified. The test will analyze all possible IP address
+            locations. This might take longer and produce inaccurate or
+            ambiguous results, so prefer specifying an explicit network type.
+            The source-project field should be set to the project where the
+            Google Cloud endpoint is located, or where the endpoint outside of
+            Google Cloud should be reachable from (via routes to networks
+            outside of Google Cloud). The project might also be inferred from
+            the Connectivity Test project or other projects referenced in the
+            request.
 
      --source-project=SOURCE_PROJECT
         Project ID of the source endpoint.

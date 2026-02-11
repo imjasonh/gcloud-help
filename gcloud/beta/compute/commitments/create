@@ -112,15 +112,15 @@ OPTIONAL FLAGS
         compute-optimized-c3d, compute-optimized-h3, compute-optimized-h4d,
         general-purpose, general-purpose-c4, general-purpose-c4a,
         general-purpose-c4d, general-purpose-e2, general-purpose-n2,
-        general-purpose-n2d, general-purpose-n4, general-purpose-n4d,
-        general-purpose-t2d, graphics-optimized, graphics-optimized-g4,
-        memory-optimized, memory-optimized-m3, memory-optimized-m4,
-        memory-optimized-m4-6tb, memory-optimized-x4-1440-24t,
-        memory-optimized-x4-16tb, memory-optimized-x4-1920-32t,
-        memory-optimized-x4-24tb, memory-optimized-x4-32tb,
-        memory-optimized-x4-480-6t, memory-optimized-x4-480-8t,
-        memory-optimized-x4-960-12t, memory-optimized-x4-960-16t,
-        storage-optimized-z3.
+        general-purpose-n2d, general-purpose-n4, general-purpose-n4a,
+        general-purpose-n4d, general-purpose-t2d, graphics-optimized,
+        graphics-optimized-g4, memory-optimized, memory-optimized-m3,
+        memory-optimized-m4, memory-optimized-m4-6tb,
+        memory-optimized-x4-1440-24t, memory-optimized-x4-16tb,
+        memory-optimized-x4-1920-32t, memory-optimized-x4-24tb,
+        memory-optimized-x4-32tb, memory-optimized-x4-480-6t,
+        memory-optimized-x4-480-8t, memory-optimized-x4-960-12t,
+        memory-optimized-x4-960-16t, storage-optimized-z3.
 
      Manage the reservations to be created with the commitment.
 
@@ -145,7 +145,9 @@ OPTIONAL FLAGS
           full or relative path to a local file containing the value of
           reservations.
 
-       Manage the reservation to be created with the commitment.
+       Or at least one of these can be specified:
+
+         Manage the reservation to be created with the commitment.
 
          --reservation=RESERVATION
             Name of the reservation to operate on.
@@ -155,16 +157,16 @@ OPTIONAL FLAGS
 
          Manage the properties of a reservation sharing policy to create
 
-           --reservation-sharing-policy=RESERVATION_SHARING_POLICY
-              The reservation sharing policy to use for this reservation.
-              RESERVATION_SHARING_POLICY must be one of:
+         --reservation-sharing-policy=RESERVATION_SHARING_POLICY
+            The reservation sharing policy to use for this reservation.
+            RESERVATION_SHARING_POLICY must be one of:
 
-               ALLOW_ALL
-                  The reservation can be shared with Google Cloud services.
-               DISALLOW_ALL
-                  The reservation won't be shared with Google Cloud services.
-                  If you omit this flag during creation, the default value is
-                  DISALLOW_ALL.
+             ALLOW_ALL
+                The reservation can be shared with Google Cloud services.
+             DISALLOW_ALL
+                The reservation won't be shared with Google Cloud services. If
+                you omit this flag during creation, the default value is
+                DISALLOW_ALL.
 
          --reservation-zone=RESERVATION_ZONE
             Zone of the reservation to operate on. If not specified and the
@@ -189,96 +191,93 @@ OPTIONAL FLAGS
 
          Manage the specific SKU reservation properties to create.
 
-           --accelerator=[count=COUNT],[type=TYPE]
-              Manage the configuration of the type and number of accelerator
-              cards attached.
-               count
-                  The number of accelerators to attach to each instance in the
-                  reservation.
-               type
-                  The specific type (e.g. nvidia-tesla-k80 for nVidia Tesla
-                  K80) of accelerator to attach to instances in the
-                  reservation. Use gcloud compute accelerator-types list to
-                  learn about all available accelerator types.
+         --accelerator=[count=COUNT],[type=TYPE]
+            Manage the configuration of the type and number of accelerator
+            cards attached.
+             count
+                The number of accelerators to attach to each instance in the
+                reservation.
+             type
+                The specific type (e.g. nvidia-tesla-k80 for nVidia Tesla K80)
+                of accelerator to attach to instances in the reservation. Use
+                gcloud compute accelerator-types list to learn about all
+                available accelerator types.
 
-           --local-ssd=[interface=INTERFACE],[size=SIZE]
-              Manage the size and the interface of local SSD to use. See
-              https://cloud.google.com/compute/docs/disks/local-ssd for more
-              information.
-               interface
-                  The kind of disk interface exposed to the VM for this SSD.
-                  Valid values are scsi and nvme. SCSI is the default and is
-                  supported by more guest operating systems. NVME may provide
-                  higher performance.
-               size
-                  The size of the local SSD in base-2 GB.
+         --local-ssd=[interface=INTERFACE],[size=SIZE]
+            Manage the size and the interface of local SSD to use. See
+            https://cloud.google.com/compute/docs/disks/local-ssd for more
+            information.
+             interface
+                The kind of disk interface exposed to the VM for this SSD.
+                Valid values are scsi and nvme. SCSI is the default and is
+                supported by more guest operating systems. NVME may provide
+                higher performance.
+             size
+                The size of the local SSD in base-2 GB.
 
-           --machine-type=MACHINE_TYPE
-              The type of machine (name only) that has a fixed number of vCPUs
-              and a fixed amount of memory. You can also specify a custom
-              machine type by using the pattern
-              custom-number_of_CPUs-amount_of_memory-for example,
-              custom-32-29440.
+         --machine-type=MACHINE_TYPE
+            The type of machine (name only) that has a fixed number of vCPUs
+            and a fixed amount of memory. You can also specify a custom machine
+            type by using the pattern
+            custom-number_of_CPUs-amount_of_memory-for example,
+            custom-32-29440.
 
-           --maintenance-interval=MAINTENANCE_INTERVAL
-              Specifies how infrastructure upgrades should be applied to the
-              VM. MAINTENANCE_INTERVAL must be one of:
+         --maintenance-interval=MAINTENANCE_INTERVAL
+            Specifies how infrastructure upgrades should be applied to the VM.
+            MAINTENANCE_INTERVAL must be one of:
 
-               PERIODIC
-                  VMs receive infrastructure and hypervisor updates on a
-                  periodic basis, minimizing the number of maintenance
-                  operations (live migrations or terminations) on an individual
-                  VM. Security updates will still be applied as soon as they
-                  are available.
-               RECURRENT
-                  VMs receive infrastructure and hypervisor updates on a
-                  periodic basis, minimizing the number of maintenance
-                  operations (live migrations or terminations) on an individual
-                  VM. This may mean a VM will take longer to receive an update
-                  than if it was configured for AS_NEEDED. Security updates
-                  will still be applied as soonas they are available. RECURRENT
-                  is used for GEN3 and Sliceof Hardware VMs.
+             PERIODIC
+                VMs receive infrastructure and hypervisor updates on a periodic
+                basis, minimizing the number of maintenance operations (live
+                migrations or terminations) on an individual VM. Security
+                updates will still be applied as soon as they are available.
+             RECURRENT
+                VMs receive infrastructure and hypervisor updates on a periodic
+                basis, minimizing the number of maintenance operations (live
+                migrations or terminations) on an individual VM. This may mean
+                a VM will take longer to receive an update than if it was
+                configured for AS_NEEDED. Security updates will still be
+                applied as soonas they are available. RECURRENT is used for
+                GEN3 and Sliceof Hardware VMs.
 
-           --min-cpu-platform=MIN_CPU_PLATFORM
-              Optional minimum CPU platform of the reservation to create.
+         --min-cpu-platform=MIN_CPU_PLATFORM
+            Optional minimum CPU platform of the reservation to create.
 
-           --require-specific-reservation
-              Indicates whether the reservation can be consumed by VMs with
-              "any reservation" defined. If enabled, then only VMs that target
-              this reservation by name using --reservation-affinity=specific
-              can consume from this reservation.
+         --require-specific-reservation
+            Indicates whether the reservation can be consumed by VMs with "any
+            reservation" defined. If enabled, then only VMs that target this
+            reservation by name using --reservation-affinity=specific can
+            consume from this reservation.
 
-           --resource-policies=[KEY=VALUE,...]
-              The resource policies to include in this reservation. If you omit
-              this flag, no resource policies are added. You can specify any
-              string as the key, and specify the name of a resource policy as
-              the value.
+         --resource-policies=[KEY=VALUE,...]
+            The resource policies to include in this reservation. If you omit
+            this flag, no resource policies are added. You can specify any
+            string as the key, and specify the name of a resource policy as the
+            value.
 
-           --vm-count=VM_COUNT
-              The number of VM instances that are allocated to this
-              reservation. The value of this field must be an int in the range
-              [1, 1000].
+         --vm-count=VM_COUNT
+            The number of VM instances that are allocated to this reservation.
+            The value of this field must be an int in the range [1, 1000].
 
          Manage the properties of a shared reservation to create
 
-           --share-setting=SHARE_SETTING
-              The projects that can use the reservation. SHARE_SETTING must be
-              one of:
+         --share-setting=SHARE_SETTING
+            The projects that can use the reservation. SHARE_SETTING must be
+            one of:
 
-               local
-                  Only your project can use the reservation. This is the
-                  default value.
-               projects
-                  Your project and up to 100 other projects within your
-                  project's organization can use the reservation. If you
-                  specify this value, then you must also include the
-                  --share-with flag in the command.
+             local
+                Only your project can use the reservation. This is the default
+                value.
+             projects
+                Your project and up to 100 other projects within your project's
+                organization can use the reservation. If you specify this
+                value, then you must also include the --share-with flag in the
+                command.
 
-           --share-with=SHARE_WITH,[SHARE_WITH,...]
-              If this reservation is shared (--share-setting=projects), then
-              specify a comma-separated list of projects to share the
-              reservation with. List projects using project IDs or project
-              numbers.
+         --share-with=SHARE_WITH,[SHARE_WITH,...]
+            If this reservation is shared (--share-setting=projects), then
+            specify a comma-separated list of projects to share the reservation
+            with. List projects using project IDs or project numbers.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

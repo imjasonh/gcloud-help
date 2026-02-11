@@ -1,5 +1,5 @@
 NAME
-    gcloud alpha container hub config-management enable - enable Config
+    gcloud alpha container hub config-management enable - enable the Config
         Management feature
 
 SYNOPSIS
@@ -8,35 +8,50 @@ SYNOPSIS
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) Enables the Config Management feature in a fleet. Without any
-    flags, this command no-ops if the feature is already enabled. This command
-    can also enable the feature with a fleet-default membership configuration
-    (https://cloud.google.com/kubernetes-engine/fleet-management/docs/manage-features)
-    for Config Sync.
+    (ALPHA) Enable the Config Management feature in a fleet.
+
+    gcloud alpha container hub config-management enable without flags creates
+    the Config Management feature or no-ops if the feature already exists.
 
 EXAMPLES
     To enable the Config Management feature, run:
 
         $ gcloud alpha container hub config-management enable
 
-    To enable the Config Management feature with a fleet-default membership
-    configuration for Config Sync, run:
-
-        $ gcloud alpha container hub config-management enable \
-            --fleet-default-member-config=config.yaml
-
 FLAGS
      --fleet-default-member-config=FLEET_DEFAULT_MEMBER_CONFIG
-        Path to YAML file that contains the fleet-default membership
-        configuration
-        (https://cloud.google.com/kubernetes-engine/fleet-management/docs/manage-features)
-        to enable with a new feature. This file shares the syntax of the
-        --config flag on the apply command: see recognized fields here
-        (https://cloud.google.com/kubernetes-engine/enterprise/config-sync/docs/reference/gcloud-apply-fields).
-        Errors if the Policy Controller or Hierarchy Controller field is set.
-        This flag will also enable or update the fleet-default membership
-        configuration on an existing feature. See the apply command for how to
-        sync a membership to the fleet-default membership configuration.
+        Path to YAML file, or - to read from stdin, that specifies the
+        fleet-default membership configuration
+        (https://docs.cloud.google.com/kubernetes-engine/fleet-management/docs/manage-features)
+        to create the feature with. Errors if the feature already exists.
+        Accepts the same schema as the MembershipSpec API field
+        (https://docs.cloud.google.com/kubernetes-engine/fleet-management/docs/reference/rpc/google.cloud.gkehub.configmanagement.v1alpha#google.cloud.gkehub.configmanagement.v1alpha.MembershipSpec).
+        Provides the additional field-handling documented at
+        https://docs.cloud.google.com/kubernetes-engine/config-sync/docs/reference/gcloud-configuration-field-behavior.
+        Use the update command to update the fleet-default membership
+        configuration or sync a membership to the fleet-default membership
+        configuration.
+
+        To create a Config Management feature with a fleet-default membership
+        configuration from a file and debug logs, populate a config.yaml and
+        run:
+
+            $ gcloud alpha container hub config-management enable \
+                --fleet-default-member-config=config.yaml --verbosity=debug
+
+        To create a Config Management feature in the current project with the
+        same fleet-default membership configuration as another project
+        ${PROJECT_ID}, run:
+
+            $ gcloud alpha container fleet config-management describe \
+                --view=fleet-default-member-config --project="${PROJECT_ID}" | \
+                gcloud alpha container hub config-management enable \
+                --fleet-default-member-config="-"
+
+        Supports fleet-default membership configuration updates in the apply
+        spec schema
+        (https://docs.cloud.google.com/kubernetes-engine/config-sync/docs/reference/gcloud-apply-fields)
+        in YAML files for backward compatibility.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

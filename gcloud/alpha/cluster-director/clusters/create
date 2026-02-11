@@ -5,39 +5,68 @@ NAME
 SYNOPSIS
     gcloud alpha cluster-director clusters create
         (CLUSTER : --location=LOCATION)
-        (--config=[compute=COMPUTE],[computeResources=COMPUTERESOURCES],
-          [description=DESCRIPTION],[labels=LABELS],[name=NAME],
-          [networkResources=NETWORKRESOURCES],[networks=NETWORKS],
-          [orchestrator=ORCHESTRATOR],
-          [storageResources=STORAGERESOURCES],[storages=STORAGES]
+        (--config=[computeResources=COMPUTERESOURCES],[description=DESCRIPTION],
+          [labels=LABELS],[name=NAME],[networkResources=NETWORKRESOURCES],
+          [orchestrator=ORCHESTRATOR],[storageResources=STORAGERESOURCES]
           | [--slurm-login-node=[bootDisk=BOOTDISK],[count=COUNT],
           [enableOSLogin=ENABLEOSLOGIN],[enablePublicIPs=ENABLEPUBLICIPS],
-          [labels=LABELS],
-          [machineType=MACHINETYPE],[startupScript=STARTUPSCRIPT],[zone=ZONE]
-          --slurm-node-sets=[bootDisk=BOOTDISK],[computeId=COMPUTEID],[id=ID],
-          [labels=LABELS],[maxDynamicNodeCount=MAXDYNAMICNODECOUNT],
-          [startupScript=STARTUPSCRIPT],[staticNodeCount=STATICNODECOUNT]
-          --slurm-partitions=[exclusive=EXCLUSIVE],
-          [id=ID],[nodesetIds=NODESETIDS]
+          [labels=LABELS],[machineType=MACHINETYPE],
+          [serviceAccount=SERVICEACCOUNT],
+          [startupScript=STARTUPSCRIPT],[zone=ZONE]
           (--create-network=[description=DESCRIPTION],[name=NAME]
-          | --network=NETWORK --subnet=SUBNET) : --buckets=[BUCKETS,...]
-          --create-buckets=[enableAutoclass=ENABLEAUTOCLASS],
+          | [--network=NETWORK --subnet=SUBNET
+          : --network-project=NETWORK_PROJECT]) : --buckets=[BUCKETS,...]
+          --create-buckets=[autoclassTerminalStorageClass=AUTOCLASSTERMINALSTORAGECLASS],
+          [enableAutoclass=ENABLEAUTOCLASS],
           [enableHNS=ENABLEHNS],[name=NAME],[storageClass=STORAGECLASS]
           --create-filestores=[capacityGb=CAPACITYGB],[description=DESCRIPTION],
           [fileshare=FILESHARE],[name=NAME],[protocol=PROTOCOL],[tier=TIER]
-          --create-lustres=[capacityGb=CAPACITYGB],
-          [description=DESCRIPTION],[filesystem=FILESYSTEM],[name=NAME]
-          --description=DESCRIPTION
-          --dws-flex-instances=[id=ID],
+          --create-lustres=[capacityGb=CAPACITYGB],[description=DESCRIPTION],
+          [filesystem=FILESYSTEM],
+          [name=NAME],[perUnitStorageThroughput=PERUNITSTORAGETHROUGHPUT]
+          --description=DESCRIPTION --filestores=[FILESTORES,...]
+          --flex-start-instances=[atmTags=ATMTAGS],[id=ID],
           [machineType=MACHINETYPE],[maxDuration=MAXDURATION],[zone=ZONE]
-          --filestores=[FILESTORES,...] --labels=[LABELS,...]
-          --lustres=[LUSTRES,...]
-          --on-demand-instances=[id=ID],[machineType=MACHINETYPE],[zone=ZONE]
-          --reserved-instances=[id=ID],
-          [machineType=MACHINETYPE],[reservation=RESERVATION]
+          --labels=[LABELS,...] --lustres=[LUSTRES,...]
+          --on-demand-instances=[atmTags=ATMTAGS],
+          [id=ID],[machineType=MACHINETYPE],[zone=ZONE]
+          --reserved-instances=[atmTags=ATMTAGS],[id=ID],
+          [reservation=RESERVATION],[reservationBlock=RESERVATIONBLOCK],
+          [reservationSubBlock=RESERVATIONSUBBLOCK]
+          --slurm-config=[accountingStorageEnforceFlags=ACCOUNTINGSTORAGEENFORCEFLAGS],
+          [healthCheckInterval=HEALTHCHECKINTERVAL],
+          [healthCheckNodeState=HEALTHCHECKNODESTATE],
+          [healthCheckProgram=HEALTHCHECKPROGRAM],
+          [preemptExemptTime=PREEMPTEXEMPTTIME],[preemptMode=PREEMPTMODE],
+          [preemptType=PREEMPTTYPE],[priorityType=PRIORITYTYPE],
+          [priorityWeightAge=PRIORITYWEIGHTAGE],
+          [priorityWeightAssoc=PRIORITYWEIGHTASSOC],
+          [priorityWeightFairshare=PRIORITYWEIGHTFAIRSHARE],
+          [priorityWeightJobSize=PRIORITYWEIGHTJOBSIZE],
+          [priorityWeightPartition=PRIORITYWEIGHTPARTITION],
+          [priorityWeightQos=PRIORITYWEIGHTQOS],
+          [priorityWeightTres=PRIORITYWEIGHTTRES],
+          [prologEpilogTimeout=PROLOGEPILOGTIMEOUT],[prologFlags=PROLOGFLAGS],
+          [requeueExitCodes=REQUEUEEXITCODES],
+          [requeueHoldExitCodes=REQUEUEHOLDEXITCODES]
           --slurm-default-partition=SLURM_DEFAULT_PARTITION
-          --spot-instances=[id=ID],[machineType=MACHINETYPE],[zone=ZONE]])
-        [--async] [GCLOUD_WIDE_FLAG ...]
+          --slurm-disable-health-check-program
+          --slurm-epilog-scripts=[SLURM_EPILOG_SCRIPTS,...]
+          --slurm-node-sets=[bootDisk=BOOTDISK],[computeId=COMPUTEID],
+          [container-resource-labels=CONTAINER-RESOURCE-LABELS],
+          [container-startup-script=CONTAINER-STARTUP-SCRIPT],[id=ID],
+          [labels=LABELS],[maxDynamicNodeCount=MAXDYNAMICNODECOUNT],
+          [serviceAccount=SERVICEACCOUNT],[startupScript=STARTUPSCRIPT],
+          [startupScriptTimeout=STARTUPSCRIPTTIMEOUT],
+          [staticNodeCount=STATICNODECOUNT]
+          --slurm-partitions=[exclusive=EXCLUSIVE],
+          [id=ID],[nodesetIds=NODESETIDS]
+          --slurm-prolog-scripts=[SLURM_PROLOG_SCRIPTS,...]
+          --slurm-task-epilog-scripts=[SLURM_TASK_EPILOG_SCRIPTS,...]
+          --slurm-task-prolog-scripts=[SLURM_TASK_PROLOG_SCRIPTS,...]
+          --spot-instances=[atmTags=ATMTAGS],[id=ID],[machineType=MACHINETYPE],
+          [terminationAction=TERMINATIONACTION],[zone=ZONE]]) [--async]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) gcloud alpha cluster-director clusters create facilitates the
@@ -50,17 +79,16 @@ DESCRIPTION
     Please refer to the examples below for more details.
 
 EXAMPLES
-    To create a cluster my-cluster in location us-central1-a with granular
-    flags, run the following example:
+    To create a cluster my-cluster in location us-central1 with granular flags,
+    run the following example:
 
         $ gcloud alpha cluster-director clusters create my-cluster \
-            --location us-central1-a \
-            --description "My cluster description" \
+            --location us-central1 --description "My cluster description" \
             --labels env=prod,client=gcloud-cli \
             --create-network name=network0 \
             --create-filestores \
-            name=locations/us-central1-a/instances/filestore0,\
-        tier=BASIC_HDD,capacityGb={filestoreSize},fileshare={fileshare} \
+            name=locations/us-central1-a/instances/filestore0,tier=ZONAL,\
+        capacityGb={filestoreSize},fileshare={fileshare} \
             --filestores locations/us-central1-a/instances/filestore1 \
             --create-buckets name=bucket0 --buckets bucket1 \
             --create-lustres \
@@ -76,17 +104,17 @@ EXAMPLES
             --slurm-partitions id=partition0,nodesetIds=[nodeset0] \
             --slurm-default-partition partition0 --format json
 
-    To create a cluster my-cluster in location us-central1-a with config in
-    JSON string format run the following example:
+    To create a cluster my-cluster in location us-central1 with config in JSON
+    string format run the following example:
 
         $ gcloud alpha cluster-director clusters create my-cluster \
-            --location=us-central1-a --config='{"key": "value"}'
+            --location=us-central1 --config='{"key": "value"}'
 
     Or create a JSON file my-cluster-config.json with the cluster specs and run
     the following file example:
 
         $ gcloud alpha cluster-director clusters create my-cluster \
-            --location=us-central1-a --config=my-cluster-config.json
+            --location=us-central1 --config=my-cluster-config.json
 
 POSITIONAL ARGUMENTS
      Cluster resource - Name of the cluster resource. Formats: cluster |
@@ -125,60 +153,9 @@ REQUIRED FLAGS
 
      Exactly one of these must be specified:
 
-       --config=[compute=COMPUTE],[computeResources=COMPUTERESOURCES],[description=DESCRIPTION],[labels=LABELS],[name=NAME],[networkResources=NETWORKRESOURCES],[networks=NETWORKS],[orchestrator=ORCHESTRATOR],[storageResources=STORAGERESOURCES],[storages=STORAGES]
+       --config=[computeResources=COMPUTERESOURCES],[description=DESCRIPTION],[labels=LABELS],[name=NAME],[networkResources=NETWORKRESOURCES],[orchestrator=ORCHESTRATOR],[storageResources=STORAGERESOURCES]
           Configuration of the cluster specs in the form of a JSON object. Sets
           config value.
-
-           compute
-              Sets compute value.
-
-               resourceRequests
-                  Sets resourceRequests value.
-
-                   disks
-                      Sets disks value.
-
-                       boot
-                          Required, sets boot value.
-
-                       sizeGb
-                          Sets sizeGb value.
-
-                       sourceImage
-                          Sets sourceImage value.
-
-                       type
-                          Required, sets type value.
-
-                   id
-                      Sets id value.
-
-                   machineType
-                      Sets machineType value.
-
-                   maxRunDuration
-                      Sets maxRunDuration value.
-
-                   provisioningModel
-                      Sets provisioningModel value.
-
-                   reservationAffinity
-                      Sets reservationAffinity value.
-
-                       key
-                          Sets key value.
-
-                       type
-                          Sets type value.
-
-                       values
-                          Sets values value.
-
-                   terminationAction
-                      Sets terminationAction value.
-
-                   zone
-                      Sets zone value.
 
            computeResources
               Sets computeResources value.
@@ -204,21 +181,6 @@ REQUIRED FLAGS
                                VALUE
                                   Sets VALUE value.
 
-                           bootDisk
-                              Sets bootDisk value.
-
-                               boot
-                                  Required, sets boot value.
-
-                               sizeGb
-                                  Sets sizeGb value.
-
-                               sourceImage
-                                  Sets sourceImage value.
-
-                               type
-                                  Required, sets type value.
-
                            machineType
                               Sets machineType value.
 
@@ -242,21 +204,6 @@ REQUIRED FLAGS
 
                                VALUE
                                   Sets VALUE value.
-
-                           bootDisk
-                              Sets bootDisk value.
-
-                               boot
-                                  Required, sets boot value.
-
-                               sizeGb
-                                  Sets sizeGb value.
-
-                               sourceImage
-                                  Sets sourceImage value.
-
-                               type
-                                  Required, sets type value.
 
                            machineType
                               Sets machineType value.
@@ -282,21 +229,6 @@ REQUIRED FLAGS
                                VALUE
                                   Sets VALUE value.
 
-                           bootDisk
-                              Sets bootDisk value.
-
-                               boot
-                                  Required, sets boot value.
-
-                               sizeGb
-                                  Sets sizeGb value.
-
-                               sourceImage
-                                  Sets sourceImage value.
-
-                               type
-                                  Required, sets type value.
-
                            machineType
                               Sets machineType value.
 
@@ -314,21 +246,6 @@ REQUIRED FLAGS
 
                                VALUE
                                   Sets VALUE value.
-
-                           bootDisk
-                              Sets bootDisk value.
-
-                               boot
-                                  Required, sets boot value.
-
-                               sizeGb
-                                  Sets sizeGb value.
-
-                               sourceImage
-                                  Sets sourceImage value.
-
-                               type
-                                  Required, sets type value.
 
                            machineType
                               Sets machineType value.
@@ -359,21 +276,6 @@ REQUIRED FLAGS
 
                                VALUE
                                   Sets VALUE value.
-
-                           bootDisk
-                              Sets bootDisk value.
-
-                               boot
-                                  Required, sets boot value.
-
-                               sizeGb
-                                  Sets sizeGb value.
-
-                               sourceImage
-                                  Sets sourceImage value.
-
-                               type
-                                  Required, sets type value.
 
                            machineType
                               Sets machineType value.
@@ -447,27 +349,6 @@ REQUIRED FLAGS
                            network
                               Sets network value.
 
-           networks
-              Sets networks value.
-
-               initializeParams
-                  Sets initializeParams value.
-
-                   description
-                      Sets description value.
-
-                   network
-                      Sets network value.
-
-               networkSource
-                  Sets networkSource value.
-
-                   network
-                      Sets network value.
-
-                   subnetwork
-                      Sets subnetwork value.
-
            orchestrator
               Sets orchestrator value.
 
@@ -479,6 +360,15 @@ REQUIRED FLAGS
 
                        accountingStorageEnforceFlags
                           Sets accountingStorageEnforceFlags value.
+
+                       healthCheckInterval
+                          Sets healthCheckInterval value.
+
+                       healthCheckNodeState
+                          Sets healthCheckNodeState value.
+
+                       healthCheckProgram
+                          Sets healthCheckProgram value.
 
                        preemptExemptTime
                           Sets preemptExemptTime value.
@@ -528,6 +418,9 @@ REQUIRED FLAGS
                    defaultPartition
                       Sets defaultPartition value.
 
+                   disableHealthCheckProgram
+                      Sets disableHealthCheckProgram value.
+
                    epilogBashScripts
                       Sets epilogBashScripts value.
 
@@ -548,21 +441,6 @@ REQUIRED FLAGS
 
                        count
                           Sets count value.
-
-                       disks
-                          Sets disks value.
-
-                           boot
-                              Required, sets boot value.
-
-                           sizeGb
-                              Sets sizeGb value.
-
-                           sourceImage
-                              Sets sourceImage value.
-
-                           type
-                              Required, sets type value.
 
                        enableOsLogin
                           Sets enableOsLogin value.
@@ -609,24 +487,6 @@ REQUIRED FLAGS
                    nodeSets
                       Sets nodeSets value.
 
-                       bootDisk
-                          Sets bootDisk value.
-
-                           boot
-                              Required, sets boot value.
-
-                           sizeGb
-                              Sets sizeGb value.
-
-                           sourceImage
-                              Sets sourceImage value.
-
-                           type
-                              Required, sets type value.
-
-                       canIpForward
-                          Sets canIpForward value.
-
                        computeId
                           Sets computeId value.
 
@@ -660,29 +520,11 @@ REQUIRED FLAGS
                        containerNodePool
                           Sets containerNodePool value.
 
-                       enableOsLogin
-                          Sets enableOsLogin value.
-
-                       enablePublicIps
-                          Sets enablePublicIps value.
-
                        id
                           Sets id value.
 
-                       labels
-                          Sets labels value.
-
-                           KEY
-                              Sets KEY value.
-
-                           VALUE
-                              Sets VALUE value.
-
                        maxDynamicNodeCount
                           Sets maxDynamicNodeCount value.
-
-                       resourceRequestId
-                          Sets resourceRequestId value.
 
                        serviceAccount
                           Sets serviceAccount value.
@@ -692,9 +534,6 @@ REQUIRED FLAGS
 
                            scopes
                               Sets scopes value.
-
-                       startupScript
-                          Sets startupScript value.
 
                        staticNodeCount
                           Sets staticNodeCount value.
@@ -825,115 +664,36 @@ REQUIRED FLAGS
                            perUnitStorageThroughput
                               Sets perUnitStorageThroughput value.
 
-           storages
-              Sets storages value.
-
-               id
-                  Sets id value.
-
-               initializeParams
-                  Sets initializeParams value.
-
-                   filestore
-                      Sets filestore value.
-
-                       description
-                          Sets description value.
-
-                       fileShares
-                          Sets fileShares value.
-
-                           capacityGb
-                              Sets capacityGb value.
-
-                           fileShare
-                              Sets fileShare value.
-
-                       filestore
-                          Sets filestore value.
-
-                       protocol
-                          Sets protocol value.
-
-                       tier
-                          Sets tier value.
-
-                   gcs
-                      Sets gcs value.
-
-                       autoclass
-                          Sets autoclass value.
-
-                           enabled
-                              Sets enabled value.
-
-                           terminalStorageClass
-                              Sets terminalStorageClass value.
-
-                       bucket
-                          Sets bucket value.
-
-                       hierarchicalNamespace
-                          Sets hierarchicalNamespace value.
-
-                           enabled
-                              Sets enabled value.
-
-                       storageClass
-                          Sets storageClass value.
-
-                   lustre
-                      Sets lustre value.
-
-                       capacityGb
-                          Sets capacityGb value.
-
-                       description
-                          Sets description value.
-
-                       filesystem
-                          Sets filesystem value.
-
-                       lustre
-                          Sets lustre value.
-
-               storageSource
-                  Sets storageSource value.
-
-                   bucket
-                      Sets bucket value.
-
-                   filestore
-                      Sets filestore value.
-
-                   lustre
-                      Sets lustre value.
-
           Shorthand Example:
 
-              --config=compute={resourceRequests=[{disks=[{boot=boolean,sizeGb=int,sourceImage=string,type=string}],id=string,machineType=string,maxRunDuration=int,provisioningModel=string,reservationAffinity={key=string,type=string,values},terminationAction=string,zone=string}]},computeResources={string={config={newDwsFlexInstances={atmTags={string=string},bootDisk={boot=boolean,sizeGb=int,sourceImage=string,type=string},machineType=string,maxDuration=string,terminationAction=string,zone=string},newFlexStartInstances={atmTags={string=string},bootDisk={boot=boolean,sizeGb=int,sourceImage=string,type=string},machineType=string,maxDuration=string,terminationAction=string,zone=string},newOnDemandInstances={atmTags={string=string},bootDisk={boot=boolean,sizeGb=int,sourceImage=string,type=string},machineType=string,zone=string},newReservedInstances={atmTags={string=string},bootDisk={boot=boolean,sizeGb=int,sourceImage=string,type=string},machineType=string,reservation=string,reservationBlock=string,reservationSubBlock=string,type=string,zone=string},newSpotInstances={atmTags={string=string},bootDisk={boot=boolean,sizeGb=int,sourceImage=string,type=string},machineType=string,terminationAction=string,zone=string}}}},description=string,labels={string=string},name=string,networkResources={string={config={existingComputeNetwork={network=string,subnetwork=string},existingNetwork={network=string,subnetwork=string},newComputeNetwork={description=string,network=string},newNetwork={description=string,network=string}}}},networks=[{initializeParams={description=string,network=string},networkSource={network=string,subnetwork=string}}],orchestrator={slurm={config={accountingStorageEnforceFlags,preemptExemptTime=string,preemptMode,preemptType=string,priorityType=string,priorityWeightAge=int,priorityWeightAssoc=int,priorityWeightFairshare=int,priorityWeightJobSize=int,priorityWeightPartition=int,priorityWeightQos=int,priorityWeightTres=string,prologEpilogTimeout=string,prologFlags,requeueExitCodes,requeueHoldExitCodes},defaultPartition=string,epilogBashScripts,loginNodes={bootDisk={image=string,sizeGb=int,type=string},count=int,disks=[{boot=boolean,sizeGb=int,sourceImage=string,type=string}],enableOsLogin=boolean,enablePublicIps=boolean,labels={string=string},machineType=string,serviceAccount={email=string,scopes},startupScript=string,storageConfigs=[{id=string,localMount=string}],zone=string},nodeSets=[{bootDisk={boot=boolean,sizeGb=int,sourceImage=string,type=string},canIpForward=boolean,computeId=string,computeInstance={bootDisk={image=string,sizeGb=int,type=string},labels={string=string},startupScript=string},containerNodePool,enableOsLogin=boolean,enablePublicIps=boolean,id=string,labels={string=string},maxDynamicNodeCount=int,resourceRequestId=string,serviceAccount={email=string,scopes},startupScript=string,staticNodeCount=int,storageConfigs=[{id=string,localMount=string}]}],partitions=[{exclusive=boolean,id=string,nodeSetIds=[string]}],prologBashScripts,taskEpilogBashScripts,taskPrologBashScripts}},storageResources={string={config={existingBucket={bucket=string},existingFilestore={filestore=string},existingLustre={lustre=string},newBucket={autoclass={enabled=boolean,terminalStorageClass=string},bucket=string,hierarchicalNamespace={enabled=boolean},storageClass=string},newFilestore={description=string,fileShares=[{capacityGb=int,fileShare=string}],filestore=string,protocol=string,tier=string},newLustre={capacityGb=int,description=string,filesystem=string,lustre=string,perUnitStorageThroughput=int}}}},storages=[{id=string,initializeParams={filestore={description=string,fileShares=[{capacityGb=int,fileShare=string}],filestore=string,protocol=string,tier=string},gcs={autoclass={enabled=boolean,terminalStorageClass=string},bucket=string,hierarchicalNamespace={enabled=boolean},storageClass=string},lustre={capacityGb=int,description=string,filesystem=string,lustre=string}},storageSource={bucket=string,filestore=string,lustre=string}}]
+              --config=computeResources={string={config={newDwsFlexInstances={atmTags={string=string},machineType=string,maxDuration=string,terminationAction=string,zone=string},newFlexStartInstances={atmTags={string=string},machineType=string,maxDuration=string,terminationAction=string,zone=string},newOnDemandInstances={atmTags={string=string},machineType=string,zone=string},newReservedInstances={atmTags={string=string},machineType=string,reservation=string,reservationBlock=string,reservationSubBlock=string,type=string,zone=string},newSpotInstances={atmTags={string=string},machineType=string,terminationAction=string,zone=string}}}},description=string,labels={string=string},name=string,networkResources={string={config={existingComputeNetwork={network=string,subnetwork=string},existingNetwork={network=string,subnetwork=string},newComputeNetwork={description=string,network=string},newNetwork={description=string,network=string}}}},orchestrator={slurm={config={accountingStorageEnforceFlags,healthCheckInterval=int,healthCheckNodeState=string,healthCheckProgram=string,preemptExemptTime=string,preemptMode,preemptType=string,priorityType=string,priorityWeightAge=int,priorityWeightAssoc=int,priorityWeightFairshare=int,priorityWeightJobSize=int,priorityWeightPartition=int,priorityWeightQos=int,priorityWeightTres=string,prologEpilogTimeout=string,prologFlags,requeueExitCodes,requeueHoldExitCodes},defaultPartition=string,disableHealthCheckProgram=boolean,epilogBashScripts,loginNodes={bootDisk={image=string,sizeGb=int,type=string},count=int,enableOsLogin=boolean,enablePublicIps=boolean,labels={string=string},machineType=string,serviceAccount={email=string,scopes},startupScript=string,storageConfigs=[{id=string,localMount=string}],zone=string},nodeSets=[{computeId=string,computeInstance={bootDisk={image=string,sizeGb=int,type=string},labels={string=string},startupScript=string},containerNodePool,id=string,maxDynamicNodeCount=int,serviceAccount={email=string,scopes},staticNodeCount=int,storageConfigs=[{id=string,localMount=string}]}],partitions=[{exclusive=boolean,id=string,nodeSetIds=[string]}],prologBashScripts,taskEpilogBashScripts,taskPrologBashScripts}},storageResources={string={config={existingBucket={bucket=string},existingFilestore={filestore=string},existingLustre={lustre=string},newBucket={autoclass={enabled=boolean,terminalStorageClass=string},bucket=string,hierarchicalNamespace={enabled=boolean},storageClass=string},newFilestore={description=string,fileShares=[{capacityGb=int,fileShare=string}],filestore=string,protocol=string,tier=string},newLustre={capacityGb=int,description=string,filesystem=string,lustre=string,perUnitStorageThroughput=int}}}}
 
           JSON Example:
 
-              --config='{"compute": {"resourceRequests": [{"disks": [{"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}], "id": "string", "machineType": "string", "maxRunDuration": int, "provisioningModel": "string", "reservationAffinity": {"key": "string", "type": "string", "values"}, "terminationAction": "string", "zone": "string"}]}, "computeResources": {"string": {"config": {"newDwsFlexInstances": {"atmTags": {"string": "string"}, "bootDisk": {"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}, "machineType": "string", "maxDuration": "string", "terminationAction": "string", "zone": "string"}, "newFlexStartInstances": {"atmTags": {"string": "string"}, "bootDisk": {"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}, "machineType": "string", "maxDuration": "string", "terminationAction": "string", "zone": "string"}, "newOnDemandInstances": {"atmTags": {"string": "string"}, "bootDisk": {"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}, "machineType": "string", "zone": "string"}, "newReservedInstances": {"atmTags": {"string": "string"}, "bootDisk": {"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}, "machineType": "string", "reservation": "string", "reservationBlock": "string", "reservationSubBlock": "string", "type": "string", "zone": "string"}, "newSpotInstances": {"atmTags": {"string": "string"}, "bootDisk": {"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}, "machineType": "string", "terminationAction": "string", "zone": "string"}}}}, "description": "string", "labels": {"string": "string"}, "name": "string", "networkResources": {"string": {"config": {"existingComputeNetwork": {"network": "string", "subnetwork": "string"}, "existingNetwork": {"network": "string", "subnetwork": "string"}, "newComputeNetwork": {"description": "string", "network": "string"}, "newNetwork": {"description": "string", "network": "string"}}}}, "networks": [{"initializeParams": {"description": "string", "network": "string"}, "networkSource": {"network": "string", "subnetwork": "string"}}], "orchestrator": {"slurm": {"config": {"accountingStorageEnforceFlags", "preemptExemptTime": "string", "preemptMode", "preemptType": "string", "priorityType": "string", "priorityWeightAge": int, "priorityWeightAssoc": int, "priorityWeightFairshare": int, "priorityWeightJobSize": int, "priorityWeightPartition": int, "priorityWeightQos": int, "priorityWeightTres": "string", "prologEpilogTimeout": "string", "prologFlags", "requeueExitCodes", "requeueHoldExitCodes"}, "defaultPartition": "string", "epilogBashScripts", "loginNodes": {"bootDisk": {"image": "string", "sizeGb": int, "type": "string"}, "count": int, "disks": [{"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}], "enableOsLogin": boolean, "enablePublicIps": boolean, "labels": {"string": "string"}, "machineType": "string", "serviceAccount": {"email": "string", "scopes"}, "startupScript": "string", "storageConfigs": [{"id": "string", "localMount": "string"}], "zone": "string"}, "nodeSets": [{"bootDisk": {"boot": boolean, "sizeGb": int, "sourceImage": "string", "type": "string"}, "canIpForward": boolean, "computeId": "string", "computeInstance": {"bootDisk": {"image": "string", "sizeGb": int, "type": "string"}, "labels": {"string": "string"}, "startupScript": "string"}, "containerNodePool": {}, "enableOsLogin": boolean, "enablePublicIps": boolean, "id": "string", "labels": {"string": "string"}, "maxDynamicNodeCount": int, "resourceRequestId": "string", "serviceAccount": {"email": "string", "scopes"}, "startupScript": "string", "staticNodeCount": int, "storageConfigs": [{"id": "string", "localMount": "string"}]}], "partitions": [{"exclusive": boolean, "id": "string", "nodeSetIds": ["string"]}], "prologBashScripts", "taskEpilogBashScripts", "taskPrologBashScripts"}}, "storageResources": {"string": {"config": {"existingBucket": {"bucket": "string"}, "existingFilestore": {"filestore": "string"}, "existingLustre": {"lustre": "string"}, "newBucket": {"autoclass": {"enabled": boolean, "terminalStorageClass": "string"}, "bucket": "string", "hierarchicalNamespace": {"enabled": boolean}, "storageClass": "string"}, "newFilestore": {"description": "string", "fileShares": [{"capacityGb": int, "fileShare": "string"}], "filestore": "string", "protocol": "string", "tier": "string"}, "newLustre": {"capacityGb": int, "description": "string", "filesystem": "string", "lustre": "string", "perUnitStorageThroughput": int}}}}, "storages": [{"id": "string", "initializeParams": {"filestore": {"description": "string", "fileShares": [{"capacityGb": int, "fileShare": "string"}], "filestore": "string", "protocol": "string", "tier": "string"}, "gcs": {"autoclass": {"enabled": boolean, "terminalStorageClass": "string"}, "bucket": "string", "hierarchicalNamespace": {"enabled": boolean}, "storageClass": "string"}, "lustre": {"capacityGb": int, "description": "string", "filesystem": "string", "lustre": "string"}}, "storageSource": {"bucket": "string", "filestore": "string", "lustre": "string"}}]}'
+              --config='{"computeResources": {"string": {"config": {"newDwsFlexInstances": {"atmTags": {"string": "string"}, "machineType": "string", "maxDuration": "string", "terminationAction": "string", "zone": "string"}, "newFlexStartInstances": {"atmTags": {"string": "string"}, "machineType": "string", "maxDuration": "string", "terminationAction": "string", "zone": "string"}, "newOnDemandInstances": {"atmTags": {"string": "string"}, "machineType": "string", "zone": "string"}, "newReservedInstances": {"atmTags": {"string": "string"}, "machineType": "string", "reservation": "string", "reservationBlock": "string", "reservationSubBlock": "string", "type": "string", "zone": "string"}, "newSpotInstances": {"atmTags": {"string": "string"}, "machineType": "string", "terminationAction": "string", "zone": "string"}}}}, "description": "string", "labels": {"string": "string"}, "name": "string", "networkResources": {"string": {"config": {"existingComputeNetwork": {"network": "string", "subnetwork": "string"}, "existingNetwork": {"network": "string", "subnetwork": "string"}, "newComputeNetwork": {"description": "string", "network": "string"}, "newNetwork": {"description": "string", "network": "string"}}}}, "orchestrator": {"slurm": {"config": {"accountingStorageEnforceFlags", "healthCheckInterval": int, "healthCheckNodeState": "string", "healthCheckProgram": "string", "preemptExemptTime": "string", "preemptMode", "preemptType": "string", "priorityType": "string", "priorityWeightAge": int, "priorityWeightAssoc": int, "priorityWeightFairshare": int, "priorityWeightJobSize": int, "priorityWeightPartition": int, "priorityWeightQos": int, "priorityWeightTres": "string", "prologEpilogTimeout": "string", "prologFlags", "requeueExitCodes", "requeueHoldExitCodes"}, "defaultPartition": "string", "disableHealthCheckProgram": boolean, "epilogBashScripts", "loginNodes": {"bootDisk": {"image": "string", "sizeGb": int, "type": "string"}, "count": int, "enableOsLogin": boolean, "enablePublicIps": boolean, "labels": {"string": "string"}, "machineType": "string", "serviceAccount": {"email": "string", "scopes"}, "startupScript": "string", "storageConfigs": [{"id": "string", "localMount": "string"}], "zone": "string"}, "nodeSets": [{"computeId": "string", "computeInstance": {"bootDisk": {"image": "string", "sizeGb": int, "type": "string"}, "labels": {"string": "string"}, "startupScript": "string"}, "containerNodePool": {}, "id": "string", "maxDynamicNodeCount": int, "serviceAccount": {"email": "string", "scopes"}, "staticNodeCount": int, "storageConfigs": [{"id": "string", "localMount": "string"}]}], "partitions": [{"exclusive": boolean, "id": "string", "nodeSetIds": ["string"]}], "prologBashScripts", "taskEpilogBashScripts", "taskPrologBashScripts"}}, "storageResources": {"string": {"config": {"existingBucket": {"bucket": "string"}, "existingFilestore": {"filestore": "string"}, "existingLustre": {"lustre": "string"}, "newBucket": {"autoclass": {"enabled": boolean, "terminalStorageClass": "string"}, "bucket": "string", "hierarchicalNamespace": {"enabled": boolean}, "storageClass": "string"}, "newFilestore": {"description": "string", "fileShares": [{"capacityGb": int, "fileShare": "string"}], "filestore": "string", "protocol": "string", "tier": "string"}, "newLustre": {"capacityGb": int, "description": "string", "filesystem": "string", "lustre": "string", "perUnitStorageThroughput": int}}}}}'
 
           File Example:
 
               --config=path_to_file.(yaml|json)
 
-       Flag Configurations to define cluster spec.
+       Or at least one of these can be specified:
 
-         --slurm-login-node=[bootDisk=BOOTDISK],[count=COUNT],[enableOSLogin=ENABLEOSLOGIN],[enablePublicIPs=ENABLEPUBLICIPS],[labels=LABELS],[machineType=MACHINETYPE],[startupScript=STARTUPSCRIPT],[zone=ZONE]
+         Flag Configurations to define cluster spec.
+
+         --slurm-login-node=[bootDisk=BOOTDISK],[count=COUNT],[enableOSLogin=ENABLEOSLOGIN],[enablePublicIPs=ENABLEPUBLICIPS],[labels=LABELS],[machineType=MACHINETYPE],[serviceAccount=SERVICEACCOUNT],[startupScript=STARTUPSCRIPT],[zone=ZONE]
             Parameters to define slurm cluster login node.
 
             For e.g. --slurm-login-node
             machineType={machineType},zone={zone},count={count},enableOSLogin=true,enablePublicIPs=true,startupScript="echo
-            hello",labels="{key1=value1,key2=value2}"
+            hello",labels="{key1=value1,key2=value2}",bootDisk={type=pd-standard,sizeGb=100}
+
+                If bootDisk is specified, sizeGb must be greater than 50.
 
             Defaults:
             ▫ count: 1
             ▫ enableOSLogin: true
             ▫ enablePublicIPs: true
+            ▫ bootDisk.sizeGb: 100
 
             Note:
             ▫ startupScript:
@@ -977,6 +737,15 @@ REQUIRED FLAGS
              machineType
                 Required, sets machineType value.
 
+             serviceAccount
+                Sets serviceAccount value.
+
+                 email
+                    Sets email value.
+
+                 scopes
+                    Sets scopes value.
+
              startupScript
                 Sets startupScript value.
 
@@ -985,11 +754,11 @@ REQUIRED FLAGS
 
             Shorthand Example:
 
-                --slurm-login-node=bootDisk={image=string,sizeGb=int,type=string},count=int,enableOSLogin=boolean,enablePublicIPs=boolean,labels={string=string},machineType=string,startupScript=string,zone=string
+                --slurm-login-node=bootDisk={image=string,sizeGb=int,type=string},count=int,enableOSLogin=boolean,enablePublicIPs=boolean,labels={string=string},machineType=string,serviceAccount={email=string,scopes},startupScript=string,zone=string
 
             JSON Example:
 
-                --slurm-login-node='{"bootDisk": {"image": "string", "sizeGb": int, "type": "string"}, "count": int, "enableOSLogin": boolean, "enablePublicIPs": boolean, "labels": {"string": "string"}, "machineType": "string", "startupScript": "string", "zone": "string"}'
+                --slurm-login-node='{"bootDisk": {"image": "string", "sizeGb": int, "type": "string"}, "count": int, "enableOSLogin": boolean, "enablePublicIPs": boolean, "labels": {"string": "string"}, "machineType": "string", "serviceAccount": {"email": "string", "scopes"}, "startupScript": "string", "zone": "string"}'
 
             File Example:
 
@@ -998,117 +767,16 @@ REQUIRED FLAGS
             This flag argument must be specified if any of the other arguments
             in this group are specified.
 
-         --slurm-node-sets=[bootDisk=BOOTDISK],[computeId=COMPUTEID],[id=ID],[labels=LABELS],[maxDynamicNodeCount=MAXDYNAMICNODECOUNT],[startupScript=STARTUPSCRIPT],[staticNodeCount=STATICNODECOUNT]
-            Parameters to define slurm cluster nodeset config.
-
-            For e.g. --slurm-node-sets
-            id={nodesetId},computeId={computeId},staticNodeCount={staticNodeCount},maxDynamicNodeCount={maxDynamicNodeCount},startupScript="echo
-            hello",labels="{key1=value1,key2=value2}"
-
-            Defaults:
-            ▫ staticNodeCount: 1
-
-            Note:
-            ▫ startupScript:
-              ◇ Either str or file_path
-              ◇ For file_path, only bash file format (.sh or .bash) is
-                supported.
-              ◇ For file_path, only absolute path is supported.
-
-              Required, sets slurm_node_sets value.
-
-             bootDisk
-                Sets bootDisk value.
-
-                 image
-                    Sets image value.
-
-                 sizeGb
-                    Required, sets sizeGb value.
-
-                 type
-                    Required, sets type value.
-
-             computeId
-                Required, sets computeId value.
-
-             id
-                Required, sets id value.
-
-             labels
-                Sets labels value.
-
-                 KEY
-                    Sets KEY value.
-
-                 VALUE
-                    Sets VALUE value.
-
-             maxDynamicNodeCount
-                Sets maxDynamicNodeCount value.
-
-             startupScript
-                Sets startupScript value.
-
-             staticNodeCount
-                Sets staticNodeCount value.
-
-            Shorthand Example:
-
-                --slurm-node-sets=bootDisk={image=string,sizeGb=int,type=string},computeId=string,id=string,labels={string=string},maxDynamicNodeCount=int,startupScript=string,staticNodeCount=int --slurm-node-sets=bootDisk={image=string,sizeGb=int,type=string},computeId=string,id=string,labels={string=string},maxDynamicNodeCount=int,startupScript=string,staticNodeCount=int
-
-            JSON Example:
-
-                --slurm-node-sets='[{"bootDisk": {"image": "string", "sizeGb": int, "type": "string"}, "computeId": "string", "id": "string", "labels": {"string": "string"}, "maxDynamicNodeCount": int, "startupScript": "string", "staticNodeCount": int}]'
-
-            File Example:
-
-                --slurm-node-sets=path_to_file.(yaml|json)
-
-            This flag argument must be specified if any of the other arguments
-            in this group are specified.
-
-         --slurm-partitions=[exclusive=EXCLUSIVE],[id=ID],[nodesetIds=NODESETIDS]
-            Parameters to define slurm cluster partitions.
-
-            For e.g. --slurm-partitions
-            id={partitionId},nodesetIds=[{nodesetId1},{nodesetId2}],exclusive=false.
-
-            Required, sets slurm_partitions value.
-
-             exclusive
-                Sets exclusive value.
-
-             id
-                Required, sets id value.
-
-             nodesetIds
-                Required, sets nodesetIds value.
-
-            Shorthand Example:
-
-                --slurm-partitions=exclusive=boolean,id=string,nodesetIds=[string] --slurm-partitions=exclusive=boolean,id=string,nodesetIds=[string]
-
-            JSON Example:
-
-                --slurm-partitions='[{"exclusive": boolean, "id": "string", "nodesetIds": ["string"]}]'
-
-            File Example:
-
-                --slurm-partitions=path_to_file.(yaml|json)
-
-            This flag argument must be specified if any of the other arguments
-            in this group are specified.
-
          --buckets=[BUCKETS,...]
             Reference of existing Google Cloud Storage bucket.
 
-            For e.g. --buckets {bucket-path}
+            For e.g. --buckets {existing-bucket-name eg. my-bucket}
 
-         --create-buckets=[enableAutoclass=ENABLEAUTOCLASS],[enableHNS=ENABLEHNS],[name=NAME],[storageClass=STORAGECLASS]
+         --create-buckets=[autoclassTerminalStorageClass=AUTOCLASSTERMINALSTORAGECLASS],[enableAutoclass=ENABLEAUTOCLASS],[enableHNS=ENABLEHNS],[name=NAME],[storageClass=STORAGECLASS]
             Parameters to create a Google Cloud Storage bucket.
 
-            For e.g. --create-buckets name={bucket-path}
+            For e.g. --create-buckets
+            name={bucket-path},storageClass=STANDARD,autoclassTerminalStorageClass=TERMINAL_STORAGE_CLASS_NEARLINE,enableHNS=true
 
             Supported storageClass values:
             ▫ STANDARD
@@ -1116,15 +784,21 @@ REQUIRED FLAGS
             ▫ COLDLINE
             ▫ ARCHIVE
 
+            Supported autoclassTerminalStorageClass values:
+            ▫ TERMINAL_STORAGE_CLASS_NEARLINE
+            ▫ TERMINAL_STORAGE_CLASS_ARCHIVE
+
             Defaults:
             ▫ storageClass: STANDARD
 
             Note:
             ▫ Either storageClass or enableAutoclass can be set.
-            ▫ if enableAutoclass is set, enableHNS should not be set.
             ▫ HNS: Hierarchical namespace.
 
             Sets create_buckets value.
+
+             autoclassTerminalStorageClass
+                Sets autoclassTerminalStorageClass value.
 
              enableAutoclass
                 Sets enableAutoclass value.
@@ -1140,11 +814,11 @@ REQUIRED FLAGS
 
             Shorthand Example:
 
-                --create-buckets=enableAutoclass=boolean,enableHNS=boolean,name=string,storageClass=string --create-buckets=enableAutoclass=boolean,enableHNS=boolean,name=string,storageClass=string
+                --create-buckets=autoclassTerminalStorageClass=string,enableAutoclass=boolean,enableHNS=boolean,name=string,storageClass=string --create-buckets=autoclassTerminalStorageClass=string,enableAutoclass=boolean,enableHNS=boolean,name=string,storageClass=string
 
             JSON Example:
 
-                --create-buckets='[{"enableAutoclass": boolean, "enableHNS": boolean, "name": "string", "storageClass": "string"}]'
+                --create-buckets='[{"autoclassTerminalStorageClass": "string", "enableAutoclass": boolean, "enableHNS": boolean, "name": "string", "storageClass": "string"}]'
 
             File Example:
 
@@ -1156,7 +830,14 @@ REQUIRED FLAGS
             For e.g. --create-filestores
             name=locations/{location}/instances/{filestore},tier=REGIONAL,capacityGb={filestoreSize},fileshare={fileshare}
 
-            Supported tier values:
+            capacityGb: Size of the filestore in GB. Must be between 1024 and
+            102400, and must meet scalability requirements described at
+            https://cloud.google.com/filestore/docs/service-tiers.
+
+            fileshare: The directory on a Filestore instance where all shared
+            files are stored. Must match the regex [a-z]([-a-z0-9]*[a-z0-9])?,
+            be 1-63 characters in length, and comply with RFC1035. Supported
+            tier values:
             ▫ ZONAL
             ▫ REGIONAL
 
@@ -1200,7 +881,7 @@ REQUIRED FLAGS
 
                 --create-filestores=path_to_file.(yaml|json)
 
-         --create-lustres=[capacityGb=CAPACITYGB],[description=DESCRIPTION],[filesystem=FILESYSTEM],[name=NAME]
+         --create-lustres=[capacityGb=CAPACITYGB],[description=DESCRIPTION],[filesystem=FILESYSTEM],[name=NAME],[perUnitStorageThroughput=PERUNITSTORAGETHROUGHPUT]
             Parameters to create a Lustre instance.
 
             For e.g. --create-lustres
@@ -1220,13 +901,16 @@ REQUIRED FLAGS
              name
                 Required, sets name value.
 
+             perUnitStorageThroughput
+                Sets perUnitStorageThroughput value.
+
             Shorthand Example:
 
-                --create-lustres=capacityGb=int,description=string,filesystem=string,name=string --create-lustres=capacityGb=int,description=string,filesystem=string,name=string
+                --create-lustres=capacityGb=int,description=string,filesystem=string,name=string,perUnitStorageThroughput=int --create-lustres=capacityGb=int,description=string,filesystem=string,name=string,perUnitStorageThroughput=int
 
             JSON Example:
 
-                --create-lustres='[{"capacityGb": int, "description": "string", "filesystem": "string", "name": "string"}]'
+                --create-lustres='[{"capacityGb": int, "description": "string", "filesystem": "string", "name": "string", "perUnitStorageThroughput": int}]'
 
             File Example:
 
@@ -1237,13 +921,27 @@ REQUIRED FLAGS
 
             For e.g. --description (ALPHA) Creates a Cluster Director resource.
 
-         --dws-flex-instances=[id=ID],[machineType=MACHINETYPE],[maxDuration=MAXDURATION],[zone=ZONE]
-            Parameters to define cluster DWS Flex instances.
+         --filestores=[FILESTORES,...]
+            Reference of existing filestore instance.
 
-            For e.g. --dws-flex-instances
+            For e.g. --filestores locations/{location}/instances/{filestore}
+
+         --flex-start-instances=[atmTags=ATMTAGS],[id=ID],[machineType=MACHINETYPE],[maxDuration=MAXDURATION],[zone=ZONE]
+            Parameters to define cluster Flex Start instances.
+
+            For e.g. --flex-start-instances
             id={computeId},zone={zone},machineType={machineType},maxDuration=10000s.
 
-            Sets dws_flex_instances value.
+            Sets flex_start_instances value.
+
+             atmTags
+                Sets atmTags value.
+
+                 KEY
+                    Sets KEY value.
+
+                 VALUE
+                    Sets VALUE value.
 
              id
                 Required, sets id value.
@@ -1259,20 +957,15 @@ REQUIRED FLAGS
 
             Shorthand Example:
 
-                --dws-flex-instances=id=string,machineType=string,maxDuration=string,zone=string --dws-flex-instances=id=string,machineType=string,maxDuration=string,zone=string
+                --flex-start-instances=atmTags={string=string},id=string,machineType=string,maxDuration=string,zone=string --flex-start-instances=atmTags={string=string},id=string,machineType=string,maxDuration=string,zone=string
 
             JSON Example:
 
-                --dws-flex-instances='[{"id": "string", "machineType": "string", "maxDuration": "string", "zone": "string"}]'
+                --flex-start-instances='[{"atmTags": {"string": "string"}, "id": "string", "machineType": "string", "maxDuration": "string", "zone": "string"}]'
 
             File Example:
 
-                --dws-flex-instances=path_to_file.(yaml|json)
-
-         --filestores=[FILESTORES,...]
-            Reference of existing filestore instance.
-
-            For e.g. --filestores locations/{location}/instances/{filestore}
+                --flex-start-instances=path_to_file.(yaml|json)
 
          --labels=[LABELS,...]
             Cluster labels as key value pairs.
@@ -1304,7 +997,7 @@ REQUIRED FLAGS
 
             For e.g. --lustres locations/{location}/instances/{lustre}
 
-         --on-demand-instances=[id=ID],[machineType=MACHINETYPE],[zone=ZONE]
+         --on-demand-instances=[atmTags=ATMTAGS],[id=ID],[machineType=MACHINETYPE],[zone=ZONE]
             Parameters to define cluster on demand instances.
 
             For e.g. --on-demand-instances
@@ -1312,6 +1005,15 @@ REQUIRED FLAGS
 
             Sets on_demand_instances value.
 
+             atmTags
+                Sets atmTags value.
+
+                 KEY
+                    Sets KEY value.
+
+                 VALUE
+                    Sets VALUE value.
+
              id
                 Required, sets id value.
 
@@ -1323,51 +1025,293 @@ REQUIRED FLAGS
 
             Shorthand Example:
 
-                --on-demand-instances=id=string,machineType=string,zone=string --on-demand-instances=id=string,machineType=string,zone=string
+                --on-demand-instances=atmTags={string=string},id=string,machineType=string,zone=string --on-demand-instances=atmTags={string=string},id=string,machineType=string,zone=string
 
             JSON Example:
 
-                --on-demand-instances='[{"id": "string", "machineType": "string", "zone": "string"}]'
+                --on-demand-instances='[{"atmTags": {"string": "string"}, "id": "string", "machineType": "string", "zone": "string"}]'
 
             File Example:
 
                 --on-demand-instances=path_to_file.(yaml|json)
 
-         --reserved-instances=[id=ID],[machineType=MACHINETYPE],[reservation=RESERVATION]
+         --reserved-instances=[atmTags=ATMTAGS],[id=ID],[reservation=RESERVATION],[reservationBlock=RESERVATIONBLOCK],[reservationSubBlock=RESERVATIONSUBBLOCK]
             Parameters to define cluster reserved instances.
 
             For e.g. --reserved-instances
-            id={computeId},reservation=zones/{zone}/reservations/{reservation},machineType={machineType}.
+            id={computeId},reservation=zones/{zone}/reservations/{reservation}.
 
             Sets reserved_instances value.
+
+             atmTags
+                Sets atmTags value.
+
+                 KEY
+                    Sets KEY value.
+
+                 VALUE
+                    Sets VALUE value.
 
              id
                 Required, sets id value.
 
-             machineType
-                Required, sets machineType value.
-
              reservation
                 Required, sets reservation value.
 
+             reservationBlock
+                Sets reservationBlock value.
+
+             reservationSubBlock
+                Sets reservationSubBlock value.
+
             Shorthand Example:
 
-                --reserved-instances=id=string,machineType=string,reservation=string --reserved-instances=id=string,machineType=string,reservation=string
+                --reserved-instances=atmTags={string=string},id=string,reservation=string,reservationBlock=string,reservationSubBlock=string --reserved-instances=atmTags={string=string},id=string,reservation=string,reservationBlock=string,reservationSubBlock=string
 
             JSON Example:
 
-                --reserved-instances='[{"id": "string", "machineType": "string", "reservation": "string"}]'
+                --reserved-instances='[{"atmTags": {"string": "string"}, "id": "string", "reservation": "string", "reservationBlock": "string", "reservationSubBlock": "string"}]'
 
             File Example:
 
                 --reserved-instances=path_to_file.(yaml|json)
+
+         --slurm-config=[accountingStorageEnforceFlags=ACCOUNTINGSTORAGEENFORCEFLAGS],[healthCheckInterval=HEALTHCHECKINTERVAL],[healthCheckNodeState=HEALTHCHECKNODESTATE],[healthCheckProgram=HEALTHCHECKPROGRAM],[preemptExemptTime=PREEMPTEXEMPTTIME],[preemptMode=PREEMPTMODE],[preemptType=PREEMPTTYPE],[priorityType=PRIORITYTYPE],[priorityWeightAge=PRIORITYWEIGHTAGE],[priorityWeightAssoc=PRIORITYWEIGHTASSOC],[priorityWeightFairshare=PRIORITYWEIGHTFAIRSHARE],[priorityWeightJobSize=PRIORITYWEIGHTJOBSIZE],[priorityWeightPartition=PRIORITYWEIGHTPARTITION],[priorityWeightQos=PRIORITYWEIGHTQOS],[priorityWeightTres=PRIORITYWEIGHTTRES],[prologEpilogTimeout=PROLOGEPILOGTIMEOUT],[prologFlags=PROLOGFLAGS],[requeueExitCodes=REQUEUEEXITCODES],[requeueHoldExitCodes=REQUEUEHOLDEXITCODES]
+            Parameters to define slurm cluster config.
+
+            For e.g. --slurm-config
+            healthCheckInterval=10,healthCheckNodeState=IDLE,healthCheckProgram=/usr/bin/true.
+
+            Sets slurm_config value.
+
+             accountingStorageEnforceFlags
+                Sets accountingStorageEnforceFlags value.
+
+             healthCheckInterval
+                Sets healthCheckInterval value.
+
+             healthCheckNodeState
+                Sets healthCheckNodeState value.
+
+             healthCheckProgram
+                Sets healthCheckProgram value.
+
+             preemptExemptTime
+                Sets preemptExemptTime value.
+
+             preemptMode
+                Sets preemptMode value.
+
+             preemptType
+                Sets preemptType value.
+
+             priorityType
+                Sets priorityType value.
+
+             priorityWeightAge
+                Sets priorityWeightAge value.
+
+             priorityWeightAssoc
+                Sets priorityWeightAssoc value.
+
+             priorityWeightFairshare
+                Sets priorityWeightFairshare value.
+
+             priorityWeightJobSize
+                Sets priorityWeightJobSize value.
+
+             priorityWeightPartition
+                Sets priorityWeightPartition value.
+
+             priorityWeightQos
+                Sets priorityWeightQos value.
+
+             priorityWeightTres
+                Sets priorityWeightTres value.
+
+             prologEpilogTimeout
+                Sets prologEpilogTimeout value.
+
+             prologFlags
+                Sets prologFlags value.
+
+             requeueExitCodes
+                Sets requeueExitCodes value.
+
+             requeueHoldExitCodes
+                Sets requeueHoldExitCodes value.
+
+            Shorthand Example:
+
+                --slurm-config={accountingStorageEnforceFlags,healthCheckInterval=int,healthCheckNodeState=string,healthCheckProgram=string,preemptExemptTime=string,preemptMode,preemptType=string,priorityType=string,priorityWeightAge=int,priorityWeightAssoc=int,priorityWeightFairshare=int,priorityWeightJobSize=int,priorityWeightPartition=int,priorityWeightQos=int,priorityWeightTres=string,prologEpilogTimeout=string,prologFlags,requeueExitCodes,requeueHoldExitCodes}
+
+            JSON Example:
+
+                --slurm-config='{"accountingStorageEnforceFlags", "healthCheckInterval": int, "healthCheckNodeState": "string", "healthCheckProgram": "string", "preemptExemptTime": "string", "preemptMode", "preemptType": "string", "priorityType": "string", "priorityWeightAge": int, "priorityWeightAssoc": int, "priorityWeightFairshare": int, "priorityWeightJobSize": int, "priorityWeightPartition": int, "priorityWeightQos": int, "priorityWeightTres": "string", "prologEpilogTimeout": "string", "prologFlags", "requeueExitCodes", "requeueHoldExitCodes"}'
+
+            File Example:
+
+                --slurm-config=path_to_file.(yaml|json)
 
          --slurm-default-partition=SLURM_DEFAULT_PARTITION
             Parameters to define slurm cluster default partition.
 
             For e.g. --slurm-default-partition {partitionId}
 
-         --spot-instances=[id=ID],[machineType=MACHINETYPE],[zone=ZONE]
+         --slurm-disable-health-check-program
+            If true, health checking is disabled, and health_check_interval,
+            health_check_node_state, and health_check_program should not be
+            passed in.
+
+            For e.g. --slurm-disable-health-check-program
+
+         --slurm-epilog-scripts=[SLURM_EPILOG_SCRIPTS,...]
+            Slurm epilog bash scripts.
+
+            For e.g. --slurm-epilog-scripts script1.sh,script2.sh
+
+         --slurm-node-sets=[bootDisk=BOOTDISK],[computeId=COMPUTEID],[container-resource-labels=CONTAINER-RESOURCE-LABELS],[container-startup-script=CONTAINER-STARTUP-SCRIPT],[id=ID],[labels=LABELS],[maxDynamicNodeCount=MAXDYNAMICNODECOUNT],[serviceAccount=SERVICEACCOUNT],[startupScript=STARTUPSCRIPT],[startupScriptTimeout=STARTUPSCRIPTTIMEOUT],[staticNodeCount=STATICNODECOUNT]
+            Parameters to define slurm cluster nodeset config.
+
+            For e.g. --slurm-node-sets
+            id={nodesetId},computeId={computeId},staticNodeCount={staticNodeCount},maxDynamicNodeCount={maxDynamicNodeCount},startupScript="echo
+            hello",labels="{key1=value1,key2=value2}"
+
+            To configure a node set backed by GKE, use
+            container-resource-labels or container-startup-script. For e.g.
+            --slurm-node-sets
+            id={nodesetId},container-resource-labels="key1=val1",container-startup-script="echo
+            hello"
+
+            Defaults:
+            ▫ staticNodeCount: 1
+
+            Note:
+            ▫ startupScript:
+              ◇ Either str or file_path
+              ◇ For file_path, only bash file format (.sh or .bash) is
+                supported.
+              ◇ For file_path, only absolute path is supported.
+
+              Sets slurm_node_sets value.
+
+             bootDisk
+                Sets bootDisk value.
+
+                 image
+                    Sets image value.
+
+                 sizeGb
+                    Required, sets sizeGb value.
+
+                 type
+                    Required, sets type value.
+
+             computeId
+                Sets computeId value.
+
+             container-resource-labels
+                Sets container-resource-labels value.
+
+                 KEY
+                    Sets KEY value.
+
+                 VALUE
+                    Sets VALUE value.
+
+             container-startup-script
+                Sets container-startup-script value.
+
+             id
+                Required, sets id value.
+
+             labels
+                Sets labels value.
+
+                 KEY
+                    Sets KEY value.
+
+                 VALUE
+                    Sets VALUE value.
+
+             maxDynamicNodeCount
+                Sets maxDynamicNodeCount value.
+
+             serviceAccount
+                Sets serviceAccount value.
+
+                 email
+                    Sets email value.
+
+                 scopes
+                    Sets scopes value.
+
+             startupScript
+                Sets startupScript value.
+
+             startupScriptTimeout
+                Sets startupScriptTimeout value.
+
+             staticNodeCount
+                Sets staticNodeCount value.
+
+            Shorthand Example:
+
+                --slurm-node-sets=bootDisk={image=string,sizeGb=int,type=string},computeId=string,container-resource-labels={string=string},container-startup-script=string,id=string,labels={string=string},maxDynamicNodeCount=int,serviceAccount={email=string,scopes},startupScript=string,startupScriptTimeout=string,staticNodeCount=int --slurm-node-sets=bootDisk={image=string,sizeGb=int,type=string},computeId=string,container-resource-labels={string=string},container-startup-script=string,id=string,labels={string=string},maxDynamicNodeCount=int,serviceAccount={email=string,scopes},startupScript=string,startupScriptTimeout=string,staticNodeCount=int
+
+            JSON Example:
+
+                --slurm-node-sets='[{"bootDisk": {"image": "string", "sizeGb": int, "type": "string"}, "computeId": "string", "container-resource-labels": {"string": "string"}, "container-startup-script": "string", "id": "string", "labels": {"string": "string"}, "maxDynamicNodeCount": int, "serviceAccount": {"email": "string", "scopes"}, "startupScript": "string", "startupScriptTimeout": "string", "staticNodeCount": int}]'
+
+            File Example:
+
+                --slurm-node-sets=path_to_file.(yaml|json)
+
+         --slurm-partitions=[exclusive=EXCLUSIVE],[id=ID],[nodesetIds=NODESETIDS]
+            Parameters to define slurm cluster partitions.
+
+            For e.g. --slurm-partitions
+            id={partitionId},nodesetIds=[{nodesetId1},{nodesetId2}],exclusive=false.
+
+            Sets slurm_partitions value.
+
+             exclusive
+                Sets exclusive value.
+
+             id
+                Required, sets id value.
+
+             nodesetIds
+                Required, sets nodesetIds value.
+
+            Shorthand Example:
+
+                --slurm-partitions=exclusive=boolean,id=string,nodesetIds=[string] --slurm-partitions=exclusive=boolean,id=string,nodesetIds=[string]
+
+            JSON Example:
+
+                --slurm-partitions='[{"exclusive": boolean, "id": "string", "nodesetIds": ["string"]}]'
+
+            File Example:
+
+                --slurm-partitions=path_to_file.(yaml|json)
+
+         --slurm-prolog-scripts=[SLURM_PROLOG_SCRIPTS,...]
+            Slurm prolog bash scripts.
+
+            For e.g. --slurm-prolog-scripts script1.sh,script2.sh
+
+         --slurm-task-epilog-scripts=[SLURM_TASK_EPILOG_SCRIPTS,...]
+            Slurm task epilog bash scripts.
+
+            For e.g. --slurm-task-epilog-scripts script1.sh,script2.sh
+
+         --slurm-task-prolog-scripts=[SLURM_TASK_PROLOG_SCRIPTS,...]
+            Slurm task prolog bash scripts.
+
+            For e.g. --slurm-task-prolog-scripts script1.sh,script2.sh
+
+         --spot-instances=[atmTags=ATMTAGS],[id=ID],[machineType=MACHINETYPE],[terminationAction=TERMINATIONACTION],[zone=ZONE]
             Parameters to define cluster spot instances.
 
             For e.g. --spot-instances
@@ -1375,22 +1319,34 @@ REQUIRED FLAGS
 
             Sets spot_instances value.
 
+             atmTags
+                Sets atmTags value.
+
+                 KEY
+                    Sets KEY value.
+
+                 VALUE
+                    Sets VALUE value.
+
              id
                 Required, sets id value.
 
              machineType
                 Required, sets machineType value.
 
+             terminationAction
+                Sets terminationAction value.
+
              zone
                 Required, sets zone value.
 
             Shorthand Example:
 
-                --spot-instances=id=string,machineType=string,zone=string --spot-instances=id=string,machineType=string,zone=string
+                --spot-instances=atmTags={string=string},id=string,machineType=string,terminationAction=string,zone=string --spot-instances=atmTags={string=string},id=string,machineType=string,terminationAction=string,zone=string
 
             JSON Example:
 
-                --spot-instances='[{"id": "string", "machineType": "string", "zone": "string"}]'
+                --spot-instances='[{"atmTags": {"string": "string"}, "id": "string", "machineType": "string", "terminationAction": "string", "zone": "string"}]'
 
             File Example:
 
@@ -1401,7 +1357,12 @@ REQUIRED FLAGS
          Exactly one of these must be specified:
 
            --create-network=[description=DESCRIPTION],[name=NAME]
-              Parameters to create a network.
+              Parameters to create a network. Name: Must match the regex
+              [a-z]([-a-z0-9]*[a-z0-9])?, be 1-63 characters in length, and
+              comply with RFC1035.
+
+              Description: A description of the network. Maximum of 2048
+              characters.
 
               For e.g. --create-network name={network},description=(ALPHA)
               Creates a Cluster Director resource..
@@ -1426,10 +1387,14 @@ REQUIRED FLAGS
 
                   --create-network=path_to_file.(yaml|json)
 
-           Use an existing network source for the cluster.
+           Or at least one of these can be specified:
+
+             Use an existing network source for the cluster.
 
              --network=NETWORK
-                Reference of existing network name.
+                Reference of existing network name. If the network is in a
+                different project (Shared VPC), specify the project ID using
+                --network-project.
 
                 For e.g. --network {network}
 
@@ -1437,12 +1402,19 @@ REQUIRED FLAGS
                 arguments in this group are specified.
 
              --subnet=SUBNET
-                Reference of existing subnetwork name.
+                Reference of existing subnetwork name. If the subnetwork is in
+                a different project (Shared VPC), specify the project ID using
+                --network-project.
 
                 For e.g. --subnet regions/{region}/subnetworks/{subnetwork}
 
                 This flag argument must be specified if any of the other
                 arguments in this group are specified.
+
+             --network-project=NETWORK_PROJECT
+                Project ID of the project containing the network and subnetwork
+                resources, if different from the cluster project (e.g. for
+                Shared VPC).
 
 OPTIONAL FLAGS
      --async

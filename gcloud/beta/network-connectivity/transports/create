@@ -1,36 +1,47 @@
 NAME
-    gcloud beta network-connectivity transports create - create a new Transport
+    gcloud beta network-connectivity transports create - create a transport
 
 SYNOPSIS
-    gcloud beta network-connectivity transports create
-        (TRANSPORT : --location=LOCATION) --advertised-routes=ADVERTISED_ROUTES
-        --bandwidth=BANDWIDTH --network=NETWORK --region=REGION
-        --remote-profile=REMOTE_PROFILE [--activation-key=ACTIVATION_KEY]
-        [--async] [--description=DESCRIPTION] [--[no-]enable-admin]
-        [--labels=[KEY=VALUE,...]] [--remote-account-id=REMOTE_ACCOUNT_ID]
-        [--stack-type=STACK_TYPE; default="IPV4_ONLY"] [GCLOUD_WIDE_FLAG ...]
+    gcloud beta network-connectivity transports create TRANSPORT
+        --network=NETWORK
+        (--activation-key=ACTIVATION_KEY | --bandwidth=BANDWIDTH
+          --remote-account-id=REMOTE_ACCOUNT_ID
+          --remote-profile=REMOTE_PROFILE)
+        [--advertised-routes=[CIDR_RANGE,...]] [--async]
+        [--description=DESCRIPTION] [--no-enable-admin]
+        [--labels=[KEY=VALUE,...]] [--region=REGION] [--stack-type=STACK_TYPE]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (BETA) Create a new Transport.
+    (BETA) Create a transport with the given name to a remote provider.
 
 EXAMPLES
-    To create a transport named mytransport, run:
+    To create a transport that generates a key to aws-us-east-1.
 
-        $ gcloud beta network-connectivity transports create my-cci-aws-1 \
-             --bandwidth 1G --profile aws-us-east-1 --network my-network \
-             --advertised-routes '10.128.0.0/9'
+        $ gcloud beta network-connectivity transports create my-cci-aws \
+            --bandwidth 1G --profile aws-us-east-1 --network default \
+            --advertised-routes '10.128.0.0/9'
+
+    To accept a key:
+
+        $ gcloud beta network-connectivity transports create my-cci-aws \
+            --activation-key ABC1234
 
 POSITIONAL ARGUMENTS
-     Transport resource - Name of the transport to create. The arguments in
-     this group can be used to specify the attributes of this resource. (NOTE)
-     Some attributes are not given arguments in this group but can be set in
-     other ways.
+     Transport resource - Name of the Transport to be created. This represents
+     a Cloud resource. (NOTE) Some attributes are not given arguments in this
+     group but can be set in other ways.
 
      To set the project attribute:
       ◆ provide the argument transport on the command line with a fully
         specified name;
       ◆ provide the argument --project on the command line;
       ◆ set the property core/project.
+
+     To set the region attribute:
+      ◆ provide the argument transport on the command line with a fully
+        specified name;
+      ◆ provide the argument --region on the command line.
 
      This must be specified.
 
@@ -40,53 +51,90 @@ POSITIONAL ARGUMENTS
           To set the transport attribute:
           ▸ provide the argument transport on the command line.
 
-          This positional argument must be specified if any of the other
-          arguments in this group are specified.
-
-       --location=LOCATION
-          The location Id.
-
-          To set the location attribute:
-          ▸ provide the argument transport on the command line with a fully
-            specified name;
-          ▸ provide the argument --location on the command line;
-          ▸ provide the argument --region on the command line.
-
 REQUIRED FLAGS
-     --advertised-routes=ADVERTISED_ROUTES
-        List of routes to advertise to the remote network.
+     Network resource - VPC that will be peered to the provider via the
+     Transport. This represents a Cloud resource. (NOTE) Some attributes are
+     not given arguments in this group but can be set in other ways.
 
-     --bandwidth=BANDWIDTH
-        Bandwidth of the transport to create.
+     To set the project attribute:
+      ◆ provide the argument --network on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
 
-     --network=NETWORK
-        Your VPC network that contains the peering to the Producer VPC, which
-        this spoke connects to the Hub. The peering must already exist and be
-        in the ACTIVE state.
+     This must be specified.
 
-     --region=REGION
-        A Google Cloud region. To see the names of regions, see Viewing a list
-        of available regions
-        (https://cloud.google.com/compute/docs/regions-zones/viewing-regions-zones#viewing_a_list_of_available_regions).
-        Use ``-`` to specify all regions.
+       --network=NETWORK
+          ID of the network or fully qualified identifier for the network.
 
-     --remote-profile=REMOTE_PROFILE
-        Profile of the transport to create.
+          To set the network attribute:
+          ▸ provide the argument --network on the command line.
+
+     Exactly one of these must be specified:
+
+       --activation-key=ACTIVATION_KEY
+          Key from the remote provider to establish a connection over the
+          Transport.
+
+       Or at least one of these can be specified:
+
+         These values must all be specified if Google is expected to generate
+         the key.
+
+         --bandwidth=BANDWIDTH
+            Bandwidth of the transport to create. Must be a supported bandwidth
+            on the remote profile. BANDWIDTH must be one of: 100g, 100m, 10g,
+            1g, 200m, 20g, 2g, 300m, 400m, 500m, 50g, 50m, 5g.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --remote-account-id=REMOTE_ACCOUNT_ID
+            Account ID in the remote provider to associate with the generated
+            key.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         RemoteTransportProfile resource - Remote transport profile
+         representing the provider and their location. This represents a Cloud
+         resource. (NOTE) Some attributes are not given arguments in this group
+         but can be set in other ways.
+
+         To set the project attribute:
+          ▫ provide the argument --remote-profile on the command line with a
+            fully specified name;
+          ▫ provide the argument --project on the command line;
+          ▫ set the property core/project.
+
+         To set the region attribute:
+          ▫ provide the argument --remote-profile on the command line with a
+            fully specified name;
+          ▫ provide the argument --region on the command line.
+
+         This must be specified.
+
+           --remote-profile=REMOTE_PROFILE
+              ID of the remoteTransportProfile or fully qualified identifier
+              for the remoteTransportProfile.
+
+              To set the remote_transport_profile attribute:
+              ◇ provide the argument --remote-profile on the command line.
 
 OPTIONAL FLAGS
-     --activation-key=ACTIVATION_KEY
-        Key used for establishing a connection with the remote transport.
+     --advertised-routes=[CIDR_RANGE,...]
+        List of routes to advertise from the VPC network toward the provider.
 
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
 
      --description=DESCRIPTION
-        Description of the transport to create.
+        Description of the transport.
 
-     --[no-]enable-admin
-        Administrative state of the underlying connectivity. Use --enable-admin
-        to enable and --no-enable-admin to disable.
+     --enable-admin
+        Administrative state of the underlying connectivity. Enabled by
+        default, use --no-enable-admin to disable.
 
      --labels=[KEY=VALUE,...]
         List of label KEY=VALUE pairs to add.
@@ -96,12 +144,14 @@ OPTIONAL FLAGS
         contain only hyphens (-), underscores (_), lowercase characters, and
         numbers.
 
-     --remote-account-id=REMOTE_ACCOUNT_ID
-        The user supplied account id for the CSP associated with the remote
-        profile.
+     --region=REGION
+        For resources [transport, remote-profile], provides fallback value for
+        resource region attribute. When the resource's full URI path is not
+        provided, region will fallback to this flag value.
 
-     --stack-type=STACK_TYPE; default="IPV4_ONLY"
-        IP version stack for the established connectivity.
+     --stack-type=STACK_TYPE
+        IP version of the routes to be exchanged. STACK_TYPE must be one of:
+        ipv4-ipv6, ipv4-only.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
@@ -112,8 +162,8 @@ GCLOUD WIDE FLAGS
     Run $ gcloud help for details.
 
 API REFERENCE
-    This command uses the networkconnectivity/v1 API. The full documentation
-    for this API can be found at:
+    This command uses the networkconnectivity/v1beta API. The full
+    documentation for this API can be found at:
     https://cloud.google.com/network-connectivity/docs/reference/networkconnectivity/rest
 
 NOTES

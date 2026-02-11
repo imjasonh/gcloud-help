@@ -5,10 +5,22 @@ SYNOPSIS
     gcloud dataflow yaml run JOB_NAME
         (--yaml-pipeline=YAML_PIPELINE
           | --yaml-pipeline-file=YAML_PIPELINE_FILE)
-        [--jinja-variables=JSON_OBJECT] [--network=NETWORK]
+        [--additional-experiments=[ADDITIONAL_EXPERIMENTS,...]]
+        [--additional-pipeline-options=[ADDITIONAL_PIPELINE_OPTIONS,...]]
+        [--additional-user-labels=[ADDITIONAL_USER_LABELS,...]]
+        [--dataflow-kms-key=DATAFLOW_KMS_KEY] [--disable-public-ips]
+        [--enable-streaming-engine] [--jinja-variables=JSON_OBJECT]
+        [--launcher-machine-type=LAUNCHER_MACHINE_TYPE]
+        [--max-workers=MAX_WORKERS] [--network=NETWORK]
+        [--num-workers=NUM_WORKERS]
         [--pipeline-options=[OPTIONS=VALUE;OPTION=VALUE,...]]
-        [--region=REGION_ID] [--subnetwork=SUBNETWORK]
+        [--region=REGION_ID] [--service-account-email=SERVICE_ACCOUNT_EMAIL]
+        [--staging-location=STAGING_LOCATION] [--subnetwork=SUBNETWORK]
+        [--temp-location=TEMP_LOCATION]
         [--template-file-gcs-location=TEMPLATE_FILE_GCS_LOCATION]
+        [--worker-machine-type=WORKER_MACHINE_TYPE]
+        [[--[no-]update
+          : --transform-name-mappings=[TRANSFORM_NAME_MAPPINGS,...]]]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -35,26 +47,89 @@ REQUIRED FLAGS
           file or a URL beginning with 'gs://'.)
 
 OPTIONAL FLAGS
+     --additional-experiments=[ADDITIONAL_EXPERIMENTS,...]
+        Additional experiments to pass to the job. Example:
+        --additional-experiments=experiment1,experiment2=value2
+
+     --additional-pipeline-options=[ADDITIONAL_PIPELINE_OPTIONS,...]
+        Additional pipeline options to pass to the job. Example:
+        --additional-pipeline-options=option1=value1,option2=value2 For a list
+        of available options, see the Dataflow reference:
+        https://cloud.google.com/dataflow/docs/reference/pipeline-options
+
+     --additional-user-labels=[ADDITIONAL_USER_LABELS,...]
+        Additional user labels to pass to the job. Example:
+        --additional-user-labels='key1=value1,key2=value2'
+
+     --dataflow-kms-key=DATAFLOW_KMS_KEY
+        Cloud KMS key to protect the job resources.
+
+     --disable-public-ips
+        If specified, Cloud Dataflow workers will not use public IP addresses.
+        Overrides the default dataflow/disable_public_ips property value for
+        this command invocation.
+
+     --enable-streaming-engine
+        Enable Streaming Engine for the streaming job. Overrides the default
+        dataflow/enable_streaming_engine property value for this command
+        invocation.
+
      --jinja-variables=JSON_OBJECT
         Jinja2 variables to be used in reifying the yaml.
+
+     --launcher-machine-type=LAUNCHER_MACHINE_TYPE
+        The machine type to use for launching the job. The default is
+        n1-standard-1.
+
+     --max-workers=MAX_WORKERS
+        Maximum number of workers to run.
 
      --network=NETWORK
         Compute Engine network for launching worker instances to run the
         pipeline. If not set, the default network is used.
 
+     --num-workers=NUM_WORKERS
+        Initial number of workers to use.
+
      --pipeline-options=[OPTIONS=VALUE;OPTION=VALUE,...]
-        Pipeline options to pass to the job.
+        (DEPRECATED) Pipeline options to pass to the job.
+
+        The --pipeline-options flag is deprecated. Pipeline options should be
+        passed using --additional-pipeline-options flag.
 
      --region=REGION_ID
         Region ID of the job's regional endpoint. Defaults to 'us-central1'.
+
+     --service-account-email=SERVICE_ACCOUNT_EMAIL
+        Service account to run the workers as.
+
+     --staging-location=STAGING_LOCATION
+        Google Cloud Storage location to stage local files. If not set,
+        defaults to the value for --temp-location.(Must be a URL beginning with
+        'gs://'.)
 
      --subnetwork=SUBNETWORK
         Compute Engine subnetwork for launching worker instances to run the
         pipeline. If not set, the default subnetwork is used.
 
+     --temp-location=TEMP_LOCATION
+        Google Cloud Storage location to stage temporary files. If not set,
+        defaults to the value for --staging-location.(Must be a URL beginning
+        with 'gs://'.)
+
      --template-file-gcs-location=TEMPLATE_FILE_GCS_LOCATION
         Google Cloud Storage location of the YAML template to run. (Must be a
         URL beginning with 'gs://'.)
+
+     --worker-machine-type=WORKER_MACHINE_TYPE
+        Type of machine to use for workers. Defaults to server-specified.
+
+     --[no-]update
+        Specify this flag to update a streaming job. Use --update to enable and
+        --no-update to disable.
+
+     --transform-name-mappings=[TRANSFORM_NAME_MAPPINGS,...]
+        Transform name mappings for the streaming update job.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

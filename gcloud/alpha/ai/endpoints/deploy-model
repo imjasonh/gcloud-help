@@ -99,14 +99,18 @@ OPTIONAL FLAGS
         entry is allowed per metric.
 
          METRIC-NAME
-            Resource metric name. Choices are 'cpu-usage', 'gpu-duty-cycle',
-            'request-counts-per-minute'.
+            Resource metric name. Choices are 'cpu-usage',
+            'dcgm-fi-dev-gpu-util', 'gpu-duty-cycle',
+            'request-counts-per-minute', 'vllm-gpu-cache-usage-perc',
+            'vllm-num-requests-waiting'.
 
          TARGET
-            Target value for the given metric. For cpu-usage and
-            gpu-duty-cycle, the target is the target resource utilization in
-            percentage (1% - 100%). For request-counts-per-minute, the target
-            is the number of requests per minute per replica.
+            Target value for the given metric. For cpu-usage, gpu-duty-cycle,
+            dcgm-fi-dev-gpu-util, and vllm-gpu-cache-usage-perc, the target is
+            the target resource utilization in percentage (1% - 100%). For
+            request-counts-per-minute, the target is the number of requests per
+            minute per replica. For vllm-num-requests-waiting, the target is
+            the number of pending requests allowed on the replica.
 
             For example, to set target CPU usage to 70% and target requests to
             600 per minute per replica:
@@ -209,27 +213,26 @@ OPTIONAL FLAGS
       ◆ provide the argument --project on the command line;
       ◆ set the property core/project.
 
-       --shared-resources=SHARED_RESOURCES
-          ID of the deployment_resource_pool or fully qualified identifier for
-          the deployment_resource_pool.
+     --shared-resources=SHARED_RESOURCES
+        ID of the deployment_resource_pool or fully qualified identifier for
+        the deployment_resource_pool.
 
-          To set the name attribute:
-          ▸ provide the argument --shared-resources on the command line.
+        To set the name attribute:
+        ◆ provide the argument --shared-resources on the command line.
 
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
+        This flag argument must be specified if any of the other arguments in
+        this group are specified.
 
-       --shared-resources-region=SHARED_RESOURCES_REGION
-          Cloud region for the deployment_resource_pool.
+     --shared-resources-region=SHARED_RESOURCES_REGION
+        Cloud region for the deployment_resource_pool.
 
-          To set the region attribute:
-          ▸ provide the argument --shared-resources on the command line with
-            a fully specified name;
-          ▸ provide the argument --shared-resources-region on the command
-            line;
-          ▸ provide the argument --region on the command line;
-          ▸ set the property ai/region;
-          ▸ choose one from the prompted list of available regions.
+        To set the region attribute:
+        ◆ provide the argument --shared-resources on the command line with a
+          fully specified name;
+        ◆ provide the argument --shared-resources-region on the command line;
+        ◆ provide the argument --region on the command line;
+        ◆ set the property ai/region;
+        ◆ choose one from the prompted list of available regions.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

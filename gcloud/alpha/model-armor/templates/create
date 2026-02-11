@@ -57,118 +57,117 @@ REQUIRED FLAGS
 
        Malicious URI filter settings.
 
-         --malicious-uri-filter-settings-enforcement=MALICIOUS_URI_FILTER_SETTINGS_ENFORCEMENT
-            Tells whether the Malicious URI filter is enabled or disabled.
-            MALICIOUS_URI_FILTER_SETTINGS_ENFORCEMENT must be one of:
+       --malicious-uri-filter-settings-enforcement=MALICIOUS_URI_FILTER_SETTINGS_ENFORCEMENT
+          Tells whether the Malicious URI filter is enabled or disabled.
+          MALICIOUS_URI_FILTER_SETTINGS_ENFORCEMENT must be one of:
+
+           disabled
+              Disabled
+           enabled
+              Enabled
+
+       Responsible AI Filter settings.
+
+       --rai-settings-filters=[confidenceLevel=CONFIDENCELEVEL],[filterType=FILTERTYPE]
+          Required, List of Responsible AI filters enabled for template.
+
+           confidenceLevel
+              Confidence level for this RAI filter. During data sanitization,
+              if data is classified under this filter with a confidence level
+              equal to or greater than the specified level, a positive match is
+              reported. If the confidence level is unspecified (i.e., 0), the
+              system will use a reasonable default level based on the
+              filter_type.
+
+           filterType
+              Type of responsible AI filter.
+
+          Shorthand Example:
+
+              --rai-settings-filters=confidenceLevel=string,filterType=string --rai-settings-filters=confidenceLevel=string,filterType=string
+
+          JSON Example:
+
+              --rai-settings-filters='[{"confidenceLevel": "string", "filterType": "string"}]'
+
+          File Example:
+
+              --rai-settings-filters=path_to_file.(yaml|json)
+
+       Sensitive Data Protection settings.
+
+       Arguments for the sdp configuration.
+
+       At most one of these can be specified:
+
+         Sensitive Data Protection basic configuration.
+
+         --basic-config-filter-enforcement=BASIC_CONFIG_FILTER_ENFORCEMENT
+            Tells whether the Sensitive Data Protection basic config is enabled
+            or disabled. BASIC_CONFIG_FILTER_ENFORCEMENT must be one of:
 
              disabled
                 Disabled
              enabled
                 Enabled
 
-       Responsible AI Filter settings.
+         Sensitive Data Protection Advanced configuration.
 
-         --rai-settings-filters=[confidenceLevel=CONFIDENCELEVEL],[filterType=FILTERTYPE]
-            Required, List of Responsible AI filters enabled for template.
+         --advanced-config-deidentify-template=ADVANCED_CONFIG_DEIDENTIFY_TEMPLATE
+            Optional Sensitive Data Protection Deidentify template resource
+            name.
 
-             confidenceLevel
-                Confidence level for this RAI filter. During data sanitization,
-                if data is classified under this filter with a confidence level
-                equal to or greater than the specified level, a positive match
-                is reported. If the confidence level is unspecified (i.e., 0),
-                the system will use a reasonable default level based on the
-                filter_type.
+            If provided then DeidentifyContent action is performed during
+            Sanitization using this template and inspect template. The
+            De-identified data will be returned in SdpDeidentifyResult. Note
+            that all info-types present in the deidentify template must be
+            present in inspect template.
 
-             filterType
-                Type of responsible AI filter.
+            e.g.
+            organizations/{organization}/deidentifyTemplates/{deidentify_template},
+            projects/{project}/deidentifyTemplates/{deidentify_template}
+            organizations/{organization}/locations/{location}/deidentifyTemplates/{deidentify_template}
+            projects/{project}/locations/{location}/deidentifyTemplates/{deidentify_template}
 
-            Shorthand Example:
+         --advanced-config-inspect-template=ADVANCED_CONFIG_INSPECT_TEMPLATE
+            Sensitive Data Protection inspect template resource name
 
-                --rai-settings-filters=confidenceLevel=string,filterType=string --rai-settings-filters=confidenceLevel=string,filterType=string
-
-            JSON Example:
-
-                --rai-settings-filters='[{"confidenceLevel": "string", "filterType": "string"}]'
-
-            File Example:
-
-                --rai-settings-filters=path_to_file.(yaml|json)
-
-       Sensitive Data Protection settings.
-
-         Arguments for the sdp configuration.
-
-         At most one of these can be specified:
-
-           Sensitive Data Protection basic configuration.
-
-             --basic-config-filter-enforcement=BASIC_CONFIG_FILTER_ENFORCEMENT
-                Tells whether the Sensitive Data Protection basic config is
-                enabled or disabled. BASIC_CONFIG_FILTER_ENFORCEMENT must be
-                one of:
-
-                 disabled
-                    Disabled
-                 enabled
-                    Enabled
-
-           Sensitive Data Protection Advanced configuration.
-
-             --advanced-config-deidentify-template=ADVANCED_CONFIG_DEIDENTIFY_TEMPLATE
-                Optional Sensitive Data Protection Deidentify template resource
-                name.
-
-                If provided then DeidentifyContent action is performed during
-                Sanitization using this template and inspect template. The
-                De-identified data will be returned in SdpDeidentifyResult.
-                Note that all info-types present in the deidentify template
-                must be present in inspect template.
-
-                e.g.
-                organizations/{organization}/deidentifyTemplates/{deidentify_template},
-                projects/{project}/deidentifyTemplates/{deidentify_template}
-                organizations/{organization}/locations/{location}/deidentifyTemplates/{deidentify_template}
-                projects/{project}/locations/{location}/deidentifyTemplates/{deidentify_template}
-
-             --advanced-config-inspect-template=ADVANCED_CONFIG_INSPECT_TEMPLATE
-                Sensitive Data Protection inspect template resource name
-
-                If only inspect template is provided (de-identify template not
-                provided), then Sensitive Data Protection InspectContent action
-                is performed during Sanitization. All Sensitive Data Protection
-                findings identified during inspection will be returned as
-                SdpFinding in SdpInsepctionResult e.g.
-                organizations/{organization}/inspectTemplates/{inspect_template},
-                projects/{project}/inspectTemplates/{inspect_template}
-                organizations/{organization}/locations/{location}/inspectTemplates/{inspect_template}
-                projects/{project}/locations/{location}/inspectTemplates/{inspect_template}
+            If only inspect template is provided (de-identify template not
+            provided), then Sensitive Data Protection InspectContent action is
+            performed during Sanitization. All Sensitive Data Protection
+            findings identified during inspection will be returned as
+            SdpFinding in SdpInsepctionResult e.g.
+            organizations/{organization}/inspectTemplates/{inspect_template},
+            projects/{project}/inspectTemplates/{inspect_template}
+            organizations/{organization}/locations/{location}/inspectTemplates/{inspect_template}
+            projects/{project}/locations/{location}/inspectTemplates/{inspect_template}
 
        Prompt injection and Jailbreak Filter settings.
 
-         --pi-and-jailbreak-filter-settings-confidence-level=PI_AND_JAILBREAK_FILTER_SETTINGS_CONFIDENCE_LEVEL
-            Confidence level for this filter. Confidence level is used to
-            determine the threshold for the filter. If detection confidence is
-            equal to or greater than the specified level, a positive match is
-            reported. Confidence level will only be used if the filter is
-            enabled. PI_AND_JAILBREAK_FILTER_SETTINGS_CONFIDENCE_LEVEL must be
-            one of:
+       --pi-and-jailbreak-filter-settings-confidence-level=PI_AND_JAILBREAK_FILTER_SETTINGS_CONFIDENCE_LEVEL
+          Confidence level for this filter. Confidence level is used to
+          determine the threshold for the filter. If detection confidence is
+          equal to or greater than the specified level, a positive match is
+          reported. Confidence level will only be used if the filter is
+          enabled. PI_AND_JAILBREAK_FILTER_SETTINGS_CONFIDENCE_LEVEL must be
+          one of:
 
-             high
-                Low chance of false positives.
-             low-and-above
-                Highest chance of a false positive.
-             medium-and-above
-                Some chance of false positives.
+           high
+              Low chance of false positives.
+           low-and-above
+              Highest chance of a false positive.
+           medium-and-above
+              Some chance of false positives.
 
-         --pi-and-jailbreak-filter-settings-enforcement=PI_AND_JAILBREAK_FILTER_SETTINGS_ENFORCEMENT
-            Tells whether Prompt injection and Jailbreak filter is enabled or
-            disabled. PI_AND_JAILBREAK_FILTER_SETTINGS_ENFORCEMENT must be one
-            of:
+       --pi-and-jailbreak-filter-settings-enforcement=PI_AND_JAILBREAK_FILTER_SETTINGS_ENFORCEMENT
+          Tells whether Prompt injection and Jailbreak filter is enabled or
+          disabled. PI_AND_JAILBREAK_FILTER_SETTINGS_ENFORCEMENT must be one
+          of:
 
-             disabled
-                Enabled
-             enabled
-                Enabled
+           disabled
+              Enabled
+           enabled
+              Enabled
 
 OPTIONAL FLAGS
      --labels=[LABELS,...]
@@ -211,31 +210,31 @@ OPTIONAL FLAGS
 
      Message describing TemplateMetadata
 
-       --template-metadata-custom-llm-response-safety-error-code=TEMPLATE_METADATA_CUSTOM_LLM_RESPONSE_SAFETY_ERROR_CODE
-          Indicates the custom error code set by the user to be returned to the
-          end user if the LLM response trips Model Armor filters.
+     --template-metadata-custom-llm-response-safety-error-code=TEMPLATE_METADATA_CUSTOM_LLM_RESPONSE_SAFETY_ERROR_CODE
+        Indicates the custom error code set by the user to be returned to the
+        end user if the LLM response trips Model Armor filters.
 
-       --template-metadata-custom-llm-response-safety-error-message=TEMPLATE_METADATA_CUSTOM_LLM_RESPONSE_SAFETY_ERROR_MESSAGE
-          Indicates the custom error message set by the user to be returned to
-          the end user if the LLM response trips Model Armor filters.
+     --template-metadata-custom-llm-response-safety-error-message=TEMPLATE_METADATA_CUSTOM_LLM_RESPONSE_SAFETY_ERROR_MESSAGE
+        Indicates the custom error message set by the user to be returned to
+        the end user if the LLM response trips Model Armor filters.
 
-       --template-metadata-custom-prompt-safety-error-code=TEMPLATE_METADATA_CUSTOM_PROMPT_SAFETY_ERROR_CODE
-          Indicates the custom error code set by the user to be returned to the
-          end user by the service extension if the prompt trips Model Armor
-          filters.
+     --template-metadata-custom-prompt-safety-error-code=TEMPLATE_METADATA_CUSTOM_PROMPT_SAFETY_ERROR_CODE
+        Indicates the custom error code set by the user to be returned to the
+        end user by the service extension if the prompt trips Model Armor
+        filters.
 
-       --template-metadata-custom-prompt-safety-error-message=TEMPLATE_METADATA_CUSTOM_PROMPT_SAFETY_ERROR_MESSAGE
-          Indicates the custom error message set by the user to be returned to
-          the end user if the prompt trips Model Armor filters.
+     --template-metadata-custom-prompt-safety-error-message=TEMPLATE_METADATA_CUSTOM_PROMPT_SAFETY_ERROR_MESSAGE
+        Indicates the custom error message set by the user to be returned to
+        the end user if the prompt trips Model Armor filters.
 
-       --template-metadata-ignore-partial-invocation-failures
-          If true, partial detector failures should be ignored.
+     --template-metadata-ignore-partial-invocation-failures
+        If true, partial detector failures should be ignored.
 
-       --template-metadata-log-operations
-          If true, log template crud operations.
+     --template-metadata-log-operations
+        If true, log template crud operations.
 
-       --template-metadata-log-sanitize-operations
-          If true, log sanitize operations.
+     --template-metadata-log-sanitize-operations
+        If true, log sanitize operations.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

@@ -345,9 +345,11 @@ FLAGS
           List of key-value pairs to set as build environment variables. All
           existing build environment variables will be removed first.
 
-       Only --update-build-env-vars and --remove-build-env-vars can be used
-       together. If both are specified, --remove-build-env-vars will be applied
-       first.
+       Or at least one of these can be specified:
+
+         Only --update-build-env-vars and --remove-build-env-vars can be used
+         together. If both are specified, --remove-build-env-vars will be
+         applied first.
 
          --remove-build-env-vars=[KEY,...]
             List of build environment variables to be removed.
@@ -419,8 +421,10 @@ FLAGS
           List of key-value pairs to set as environment variables. All existing
           environment variables will be removed first.
 
-       Only --update-env-vars and --remove-env-vars can be used together. If
-       both are specified, --remove-env-vars will be applied first.
+       Or at least one of these can be specified:
+
+         Only --update-env-vars and --remove-env-vars can be used together. If
+         both are specified, --remove-env-vars will be applied first.
 
          --remove-env-vars=[KEY,...]
             List of environment variables to be removed.
@@ -499,7 +503,9 @@ FLAGS
           Disconnect this Cloud Function from the Direct VPC network it is
           connected to.
 
-       Direct VPC egress setting flags group.
+       Or at least one of these can be specified:
+
+         Direct VPC egress setting flags group.
 
          --network=NETWORK
             The VPC network that the Cloud Function will be able to send
@@ -581,8 +587,10 @@ FLAGS
           We recommend referencing the latest version when using secret volumes
           so that the secret's value changes are reflected immediately.
 
-       Only --update-secrets and --remove-secrets can be used together. If both
-       are specified, then --remove-secrets will be applied first.
+       Or at least one of these can be specified:
+
+         Only --update-secrets and --remove-secrets can be used together. If
+         both are specified, then --remove-secrets will be applied first.
 
          --remove-secrets=[SECRET_ENV_VAR,/secret_path,/mount_path:/secret_file_path,...]
             List of secret environment variable names and secret paths to
@@ -608,26 +616,29 @@ FLAGS
        --clear-vpc-connector
           Clears the VPC connector field.
 
-       Connector resource - The VPC Access connector that the function can
-       connect to. It can be either the fully-qualified URI, or the short name
-       of the VPC Access connector resource. If the short name is used, the
-       connector must belong to the same project. The format of this field is
-       either projects/${PROJECT}/locations/${LOCATION}/connectors/${CONNECTOR}
-       or ${CONNECTOR}, where ${CONNECTOR} is the short name of the VPC Access
-       connector. This represents a Cloud resource. (NOTE) Some attributes are
-       not given arguments in this group but can be set in other ways.
+       Or at least one of these can be specified:
 
-       To set the project attribute:
-        ▸ provide the argument --vpc-connector on the command line with a
-          fully specified name;
-        ▸ provide the argument --project on the command line;
-        ▸ set the property core/project.
+         Connector resource - The VPC Access connector that the function can
+         connect to. It can be either the fully-qualified URI, or the short
+         name of the VPC Access connector resource. If the short name is used,
+         the connector must belong to the same project. The format of this
+         field is either
+         projects/${PROJECT}/locations/${LOCATION}/connectors/${CONNECTOR} or
+         ${CONNECTOR}, where ${CONNECTOR} is the short name of the VPC Access
+         connector. This represents a Cloud resource. (NOTE) Some attributes
+         are not given arguments in this group but can be set in other ways.
 
-       To set the region attribute:
-        ▸ provide the argument --vpc-connector on the command line with a
-          fully specified name;
-        ▸ provide the argument --region on the command line;
-        ▸ set the property functions/region.
+         To set the project attribute:
+          ▫ provide the argument --vpc-connector on the command line with a
+            fully specified name;
+          ▫ provide the argument --project on the command line;
+          ▫ set the property core/project.
+
+         To set the region attribute:
+          ▫ provide the argument --vpc-connector on the command line with a
+            fully specified name;
+          ▫ provide the argument --region on the command line;
+          ▫ set the property functions/region.
 
          --vpc-connector=VPC_CONNECTOR
             ID of the connector or fully qualified identifier for the
@@ -698,37 +709,41 @@ FLAGS
           final element TOPIC_ID. The PROJECT_ID will be read from the active
           configuration.
 
-       --trigger-event=EVENT_TYPE
-          Specifies which action should trigger the function. For a list of
-          acceptable values, call gcloud functions event-types list.
+       Or at least one of these can be specified:
 
-       --trigger-resource=RESOURCE
-          Specifies which resource from --trigger-event is being observed. E.g.
-          if --trigger-event is
-          providers/cloud.storage/eventTypes/object.change, --trigger-resource
-          must be a bucket name. For a list of expected resources, call gcloud
-          functions event-types list.
+         --trigger-event=EVENT_TYPE
+            Specifies which action should trigger the function. For a list of
+            acceptable values, call gcloud functions event-types list.
 
-       --trigger-event-filters=[ATTRIBUTE=VALUE,...]
-          The Eventarc matching criteria for the trigger. The criteria can be
-          specified either as a single comma-separated argument or as multiple
-          arguments. The filters must include the type attribute, as well as
-          any other attributes that are expected for the chosen type.
+         --trigger-resource=RESOURCE
+            Specifies which resource from --trigger-event is being observed.
+            E.g. if --trigger-event is
+            providers/cloud.storage/eventTypes/object.change,
+            --trigger-resource must be a bucket name. For a list of expected
+            resources, call gcloud functions event-types list.
 
-       --trigger-event-filters-path-pattern=[ATTRIBUTE=PATH_PATTERN,...]
-          The Eventarc matching criteria for the trigger in path pattern
-          format. The criteria can be specified as a single comma-separated
-          argument or as multiple arguments.
+       Or at least one of these can be specified:
 
-          The provided attribute/value pair will be used with the
-          match-path-pattern operator to configure the trigger, see
-          https://cloud.google.com/eventarc/docs/reference/rest/v1/projects.locations.triggers#eventfilter
-          and https://cloud.google.com/eventarc/docs/path-patterns for more
-          details about on how to construct path patterns.
+         --trigger-event-filters=[ATTRIBUTE=VALUE,...]
+            The Eventarc matching criteria for the trigger. The criteria can be
+            specified either as a single comma-separated argument or as
+            multiple arguments. The filters must include the type attribute, as
+            well as any other attributes that are expected for the chosen type.
 
-          For example, to filter on events for Compute Engine VMs in a given
-          zone:
-          --trigger-event-filters-path-pattern=resourceName='/projects/*/zones/us-central1-a/instances/*'
+         --trigger-event-filters-path-pattern=[ATTRIBUTE=PATH_PATTERN,...]
+            The Eventarc matching criteria for the trigger in path pattern
+            format. The criteria can be specified as a single comma-separated
+            argument or as multiple arguments.
+
+            The provided attribute/value pair will be used with the
+            match-path-pattern operator to configure the trigger, see
+            https://cloud.google.com/eventarc/docs/reference/rest/v1/projects.locations.triggers#eventfilter
+            and https://cloud.google.com/eventarc/docs/path-patterns for more
+            details about on how to construct path patterns.
+
+            For example, to filter on events for Compute Engine VMs in a given
+            zone:
+            --trigger-event-filters-path-pattern=resourceName='/projects/*/zones/us-central1-a/instances/*'
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

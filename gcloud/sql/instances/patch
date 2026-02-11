@@ -54,6 +54,7 @@ SYNOPSIS
         [--remove-deny-maintenance-period] [--replication=REPLICATION]
         [--[no-]require-ssl] [--[no-]retain-backups-on-delete]
         [--server-ca-mode=SERVER_CA_MODE] [--server-ca-pool=SERVER_CA_POOL]
+        [--server-certificate-rotation-mode=SERVER_CERTIFICATE_ROTATION_MODE]
         [--simulate-maintenance-event] [--ssl-mode=SSL_MODE]
         [--[no-]storage-auto-increase]
         [--storage-provisioned-iops=STORAGE_PROVISIONED_IOPS]
@@ -489,6 +490,19 @@ FLAGS
      --server-ca-pool=SERVER_CA_POOL
         Set the server CA pool of the instance.
 
+     --server-certificate-rotation-mode=SERVER_CERTIFICATE_ROTATION_MODE
+        Set the server certificate rotation mode of the instance.
+        SERVER_CERTIFICATE_ROTATION_MODE must be one of:
+
+         AUTOMATIC_ROTATION_DURING_MAINTENANCE
+            Automatic server certificate rotation during Cloud SQL scheduled
+            maintenance or self-service maintenance updates. Requires
+            server_ca_mode to be GOOGLE_MANAGED_CAS_CA or
+            CUSTOMER_MANAGED_CAS_CA.
+         NO_AUTOMATIC_ROTATION
+            No automatic server certificate rotation. Server certificates must
+            be rotated manually.
+
      --simulate-maintenance-event
         Simulate a maintenance event without changing the version. Only
         applicable to instances that support near-zero downtime planned
@@ -697,80 +711,83 @@ FLAGS
           Flag --gce-zone is deprecated and will be removed by release 255.0.0.
           Use --zone instead.
 
-       --secondary-zone=SECONDARY_ZONE
-          Preferred secondary Compute Engine zone (e.g. us-central1-a,
-          us-central1-b, etc.).
+       Or at least one of these can be specified:
 
-       --zone=ZONE
-          Preferred Compute Engine zone (e.g. us-central1-a, us-central1-b,
-          etc.). WARNING: Instance may be restarted.
+         --secondary-zone=SECONDARY_ZONE
+            Preferred secondary Compute Engine zone (e.g. us-central1-a,
+            us-central1-b, etc.).
+
+         --zone=ZONE
+            Preferred Compute Engine zone (e.g. us-central1-a, us-central1-b,
+            etc.). WARNING: Instance may be restarted.
 
      Options for configuring read pool auto scale.
 
-       --[no-]auto-scale-disable-scale-in
-          Disables automatic read pool scale-in. When disabled, read pool auto
-          scaling only supports increasing the read pool node count. By
-          default, both automatic read pool scale-in and scale-out are enabled.
-          Use --auto-scale-disable-scale-in to enable and
-          --no-auto-scale-disable-scale-in to disable.
+     --[no-]auto-scale-disable-scale-in
+        Disables automatic read pool scale-in. When disabled, read pool auto
+        scaling only supports increasing the read pool node count. By default,
+        both automatic read pool scale-in and scale-out are enabled. Use
+        --auto-scale-disable-scale-in to enable and
+        --no-auto-scale-disable-scale-in to disable.
 
-       --[no-]auto-scale-enabled
-          Enables read pool auto scaling. Supports automatically increasing and
-          decreasing the read pool's node count based on need. Use
-          --auto-scale-enabled to enable and --no-auto-scale-enabled to
-          disable.
+     --[no-]auto-scale-enabled
+        Enables read pool auto scaling. Supports automatically increasing and
+        decreasing the read pool's node count based on need. Use
+        --auto-scale-enabled to enable and --no-auto-scale-enabled to disable.
 
-       --auto-scale-in-cooldown-seconds=AUTO_SCALE_IN_COOLDOWN_SECONDS
-          The cooldown period for automatic read pool scale-in. Minimum time
-          between scale-in events. Must be an integer value. For example, if
-          the value is 60, then a scale-in event will not be triggered within
-          60 seconds of the last scale-in event.
+     --auto-scale-in-cooldown-seconds=AUTO_SCALE_IN_COOLDOWN_SECONDS
+        The cooldown period for automatic read pool scale-in. Minimum time
+        between scale-in events. Must be an integer value. For example, if the
+        value is 60, then a scale-in event will not be triggered within 60
+        seconds of the last scale-in event.
 
-       --auto-scale-max-node-count=AUTO_SCALE_MAX_NODE_COUNT
-          Maximum number of read pool nodes to be maintained.
+     --auto-scale-max-node-count=AUTO_SCALE_MAX_NODE_COUNT
+        Maximum number of read pool nodes to be maintained.
 
-       --auto-scale-min-node-count=AUTO_SCALE_MIN_NODE_COUNT
-          Minimum number of read pool nodes to be maintained.
+     --auto-scale-min-node-count=AUTO_SCALE_MIN_NODE_COUNT
+        Minimum number of read pool nodes to be maintained.
 
-       --auto-scale-out-cooldown-seconds=AUTO_SCALE_OUT_COOLDOWN_SECONDS
-          The cooldown period for automatic read pool scale-out. Minimum time
-          between scale-out events. Must be an integer value. For example, if
-          the value is 60, then a scale-out event will not be triggered within
-          60 seconds of the last scale-out event.
+     --auto-scale-out-cooldown-seconds=AUTO_SCALE_OUT_COOLDOWN_SECONDS
+        The cooldown period for automatic read pool scale-out. Minimum time
+        between scale-out events. Must be an integer value. For example, if the
+        value is 60, then a scale-out event will not be triggered within 60
+        seconds of the last scale-out event.
 
-       --auto-scale-target-metrics=[METRIC=VALUE,...]
-          Target metrics for read pool auto scaling. Options are:
-          AVERAGE_CPU_UTILIZATION and AVERAGE_DB_CONNECTIONS. Example:
-          --auto-scale-target-metrics=AVERAGE_CPU_UTILIZATION=0.8
+     --auto-scale-target-metrics=[METRIC=VALUE,...]
+        Target metrics for read pool auto scaling. Options are:
+        AVERAGE_CPU_UTILIZATION and AVERAGE_DB_CONNECTIONS. Example:
+        --auto-scale-target-metrics=AVERAGE_CPU_UTILIZATION=0.8
 
      At most one of these can be specified:
 
        --no-backup
           Specified if daily backup should be disabled.
 
-       --backup-location=BACKUP_LOCATION
-          Choose where to store your backups. Backups are stored in the closest
-          multi-region location to you by default. Only customize if needed.
-          Specify empty string to revert to default.
+       Or at least one of these can be specified:
 
-       --backup-start-time=BACKUP_START_TIME
-          Start time of daily backups, specified in the HH:MM format, in the
-          UTC timezone.
+         --backup-location=BACKUP_LOCATION
+            Choose where to store your backups. Backups are stored in the
+            closest multi-region location to you by default. Only customize if
+            needed. Specify empty string to revert to default.
 
-       --retained-backups-count=RETAINED_BACKUPS_COUNT
-          How many backups to keep. The valid range is between 1 and 365.
-          Default value is 7 for Enterprise edition instances. For
-          Enterprise_Plus, default value is 15. Applicable only if --no-backups
-          is not specified.
+         --backup-start-time=BACKUP_START_TIME
+            Start time of daily backups, specified in the HH:MM format, in the
+            UTC timezone.
 
-       --retained-transaction-log-days=RETAINED_TRANSACTION_LOG_DAYS
-          How many days of transaction logs to keep. The valid range is between
-          1 and 35. Only use this option when point-in-time recovery is
-          enabled. If logs are stored on disk, storage size for transaction
-          logs could increase when the number of days for log retention
-          increases. For Enterprise, default and max retention values are 7 and
-          7 respectively. For Enterprise_Plus, default and max retention values
-          are 14 and 35.
+         --retained-backups-count=RETAINED_BACKUPS_COUNT
+            How many backups to keep. The valid range is between 1 and 365.
+            Default value is 7 for Enterprise edition instances. For
+            Enterprise_Plus, default value is 15. Applicable only if
+            --no-backups is not specified.
+
+         --retained-transaction-log-days=RETAINED_TRANSACTION_LOG_DAYS
+            How many days of transaction logs to keep. The valid range is
+            between 1 and 35. Only use this option when point-in-time recovery
+            is enabled. If logs are stored on disk, storage size for
+            transaction logs could increase when the number of days for log
+            retention increases. For Enterprise, default and max retention
+            values are 7 and 7 respectively. For Enterprise_Plus, default and
+            max retention values are 14 and 35.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

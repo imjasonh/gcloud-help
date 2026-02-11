@@ -1,27 +1,29 @@
 NAME
-    gcloud alpha zone-management identity-providers create - create identity
-        provider
+    gcloud alpha zone-management identity-providers create - creates an
+        identity provider for a Google Destributed Cloud zone
 
 SYNOPSIS
     gcloud alpha zone-management identity-providers create
         (IDENTITY_PROVIDER : --location=LOCATION --organization=ORGANIZATION)
-        --config=CONFIG [GCLOUD_WIDE_FLAG ...]
+        --zone=ZONE (--oidc-config=OIDC_CONFIG | --saml-config=SAML_CONFIG)
+        [--async] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) Creates an identity provider.
+    (ALPHA) Creates an identity provider for a Google Destributed Cloud zone.
 
 EXAMPLES
-    To create an identity provider called test-identity-provider in
-    organization test-org, location us-central1 with the contents of
-    test-config.json:
+    To create an OIDC identity provider called sample-identity-provider in
+    organization sample-org, location us-central1 with the contents of
+    test-config.json on zone us-central1-edge-sample-zone:
 
         $ gcloud alpha zone-management identity-providers create \
-            test-identity-provider --location=us-central1 \
-            --organization=test-org --config=test-config.json
+            sample-identity-provider --location=us-central1 \
+            --organization=sample-org --oidc-config=test-config.json \
+            --zone=us-central1-edge-sample-zone
 
 POSITIONAL ARGUMENTS
-     IdentityProvider resource - Identity Provider to create. The arguments in
-     this group can be used to specify the attributes of this resource.
+     IdentityProvider resource - Identity Provider The arguments in this group
+     can be used to specify the attributes of this resource.
 
      This must be specified.
 
@@ -36,7 +38,7 @@ POSITIONAL ARGUMENTS
           arguments in this group are specified.
 
        --location=LOCATION
-          The global location name.
+          The location name.
 
           To set the location attribute:
           ▸ provide the argument identity_provider on the command line with a
@@ -52,8 +54,21 @@ POSITIONAL ARGUMENTS
           ▸ provide the argument --organization on the command line.
 
 REQUIRED FLAGS
-     --config=CONFIG
-        The identity provider configuration file.
+     --zone=ZONE
+        Google Distributed Cloud zone name.
+
+     Exactly one of these must be specified:
+
+       --oidc-config=OIDC_CONFIG
+          OIDC Identity Provider configuration file.
+
+       --saml-config=SAML_CONFIG
+          SAML Identity Provider configuration file.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

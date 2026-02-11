@@ -1,0 +1,114 @@
+NAME
+    gcloud beta vector-search collections data-objects batch-search - batch
+        search data objects from a Vector Search collection
+
+SYNOPSIS
+    gcloud beta vector-search collections data-objects batch-search
+        --collection=COLLECTION --location=LOCATION
+        --searches-from-file=SEARCHES_FROM_FILE
+        [[(--rrf-weights=[WEIGHT,...]
+          | [--vertex-ranker-model=VERTEX_RANKER_MODEL
+          --vertex-ranker-query=VERTEX_RANKER_QUERY
+          : --vertex-ranker-content-template=VERTEX_RANKER_CONTENT_TEMPLATE
+          --vertex-ranker-title-template=VERTEX_RANKER_TITLE_TEMPLATE])
+          : --combine-output-data-fields=[DATA_OUTPUT_FIELD,...]
+          --combine-output-metadata-fields=[METADATA_OUTPUT_FIELD,...]
+          --combine-output-vector-fields=[VECTOR_OUTPUT_FIELD,...]
+          --combine-top-k=COMBINE_TOP_K]] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Batch search data objects from a Vector Search collection. Searches
+    can be specified in a JSON file via --searches-from-file.
+
+EXAMPLES
+    To batch search data objects from collection my-collection in location
+    us-central1 using searches defined in searches.json, run:
+
+        $ gcloud beta vector-search collections data-objects batch-search \
+            --collection=my-collection --location=us-central1 \
+            --searches-from-file=searches.json
+
+    Example searches.json: [        {
+          "semanticSearch": {
+            "searchText": "sci-fi movie",
+            "searchField": "vector1",
+            "topK": 10
+          }
+        },
+        {
+          "vectorSearch": {
+            "searchField": "vector2",
+            "topK": 5,
+            "vector": { "values": [0.1, 0.2, 0.3] }
+          }
+        }
+    ]
+
+REQUIRED FLAGS
+     --collection=COLLECTION
+        The collection to batch search data objects from.
+
+     --location=LOCATION
+        Location of the collection.
+
+     --searches-from-file=SEARCHES_FROM_FILE
+        Path to a JSON file containing a list of searches. Each element in list
+        should be a JSON object representing a Search message, e.g.,
+        {"semanticSearch": {"searchText": "...", "searchField": "..."}}. Keys
+        must be camelCase as in API definition.
+
+OPTIONAL FLAGS
+     Combine Results Options
+
+     --combine-output-data-fields=[DATA_OUTPUT_FIELD,...]
+        List of data fields to include in combined output.
+
+     --combine-output-metadata-fields=[METADATA_OUTPUT_FIELD,...]
+        List of metadata fields to include in combined output.
+
+     --combine-output-vector-fields=[VECTOR_OUTPUT_FIELD,...]
+        List of vector fields to include in combined output.
+
+     --combine-top-k=COMBINE_TOP_K
+        Top K results to return when combining results.
+
+     Ranker
+
+     Exactly one of these must be specified:
+
+       RRF Ranker
+
+       --rrf-weights=[WEIGHT,...]
+          RRF weights for combining results.
+
+       Vertex Ranker
+
+       --vertex-ranker-model=VERTEX_RANKER_MODEL
+          Vertex ranker model
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --vertex-ranker-query=VERTEX_RANKER_QUERY
+          Vertex ranker query
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --vertex-ranker-content-template=VERTEX_RANKER_CONTENT_TEMPLATE
+          Vertex ranker content template
+
+       --vertex-ranker-title-template=VERTEX_RANKER_TITLE_TEMPLATE
+          Vertex ranker title template
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice.
+

@@ -15,10 +15,12 @@ SYNOPSIS
         [--logging-metadata=LOGGING_METADATA]
         [--logging-metadata-fields=[METADATA_FIELD,...]] [--region=REGION]
         [--stack-type=STACK_TYPE]
-        [--add-secondary-ranges=PROPERTY=VALUE,[...] | --[no-]enable-flow-logs
+        [--add-secondary-ranges=PROPERTY=VALUE,[...]
+          | --[no-]allow-cidr-routes-overlap | --[no-]enable-flow-logs
           | --[no-]enable-private-ip-google-access
           | --private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE
-          | --purpose=PURPOSE | --remove-secondary-ranges=PROPERTY=VALUE,[...]
+          | --purpose=PURPOSE
+          | --remove-secondary-ranges=RANGE_NAME,[RANGE_NAME,...]
           | --role=ROLE] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -164,6 +166,11 @@ FLAGS
           ▸ RANGE_NAME - Name of the secondary range.
           ▸ RANGE - IP range in CIDR format.
 
+       --[no-]allow-cidr-routes-overlap
+          Allow/disallow this subnetwork's IP address ranges to conflict with
+          existing custom routes. Use --allow-cidr-routes-overlap to enable and
+          --no-allow-cidr-routes-overlap to disable.
+
        --[no-]enable-flow-logs
           Enable/disable VPC Flow Logs for this subnet. If the subnet does not
           support VPC Flow Logs, this flag has no effect. For more information,
@@ -193,7 +200,7 @@ FLAGS
               INTERNAL_HTTPS_LOAD_BALANCER subnets can be changed to
               REGIONAL_MANAGED_PROXY.
 
-       --remove-secondary-ranges=PROPERTY=VALUE,[...]
+       --remove-secondary-ranges=RANGE_NAME,[RANGE_NAME,...]
           Removes secondary ranges from the subnetwork.
 
           For example, --remove-secondary-ranges range2,range3 removes the

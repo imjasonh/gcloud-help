@@ -304,7 +304,16 @@ FLAGS
         using either a node-pool upgrade or node-pool creation.
 
      --enable-image-streaming
-        Specifies whether to enable image streaming on node pool.
+        Enable Image Streaming for the node pool, allowing nodes to stream
+        container image data from Artifact Registry on demand to reduce
+        container start times. This setting overrides the cluster-level Image
+        Streaming default for this specific node pool.
+
+        See Image Streaming documentation
+        (https://cloud.google.com/kubernetes-engine/docs/how-to/image-streaming)
+        for full requirements (including version, API enablement and Artifact
+        Registry usage). To disable Image Streaming for the node pool, use
+        --no-enable-image-streaming.
 
      --enable-insecure-kubelet-readonly-port
         Enables the Kubelet's insecure read only port.
@@ -705,15 +714,29 @@ FLAGS
         The only supported type is 'gvisor'.
 
      --secondary-boot-disk=[disk-image=DISK_IMAGE,[mode=MODE],...]
-        Attaches secondary boot disks to all nodes.
+        Attaches secondary boot disks to all nodes in the node pool. Secondary
+        Boot Disks (SBD) can accelerate container startup times by preloading
+        container images or data onto disks attached to the nodes. Learn more
+        about Using Secondary Boot Disks
+        (https://cloud.google.com/kubernetes-engine/docs/how-to/data-container-image-preloading)
+        for full requirements (including version, API enablement and source
+        disk images).
+
+        The value for this flag is a list of key=value pairs. Available keys
+        are:
 
          disk-image
             (Required) The full resource path to the source disk image to
-            create the secondary boot disks from.
+            create the secondary boot disks from (e.g.,
+            projects/my-project/global/images/my-disk-image).
 
          mode
-            (Optional) The configuration mode for the secondary boot disks. The
-            default value is "CONTAINER_IMAGE_CACHE".
+            (Optional) The mode of the secondary boot disk. Supported values
+            are:
+            ▸ CONTAINER_IMAGE_CACHE: The disk is used to cache container
+              images. This is the default if not specified.
+            ▸ DATA: The disk is used to preload arbitrary data, accessible
+              via hostPath volume mounts.
 
      --shielded-integrity-monitoring
         Enables monitoring and attestation of the boot integrity of the
@@ -805,58 +828,74 @@ FLAGS
                 bootDiskProfile:
                   swapSizeGib: 8
               cgroupMode: 'CGROUP_MODE_V2'
+              nodeKernelModuleLoading:
+                policy: 'ENFORCE_SIGNED_MODULES'
 
         List of supported kubelet configs in 'kubeletConfig'.
 
-          KEY                                   VALUE
-          cpuManagerPolicy                      either 'static' or 'none'
-          cpuCFSQuota                           true or false (enabled by
-                                                default)
-          cpuCFSQuotaPeriod                     interval (e.g., '100ms'. The
-                                                value must be between 1ms and 1
-                                                second, inclusive.)
-          memoryManager                         specify memory manager policy
-          topologyManager                       specify topology manager policy
-                                                and scope
-          podPidsLimit                          integer (The value must be
-                                                greater than or equal to 1024
-                                                and less than 4194304.)
-          containerLogMaxSize                   positive number plus unit suffix
-                                                (e.g., '100Mi', '0.2Gi'. The
-                                                value must be between 10Mi and
-                                                500Mi, inclusive.)
-          containerLogMaxFiles                  integer (The value must be
-                                                between [2, 10].)
-          imageGcLowThresholdPercent            integer (The value must be
-                                                between [10, 85], and lower than
-                                                imageGcHighThresholdPercent.)
-          imageGcHighThresholdPercent           integer (The value must be
-                                                between [10, 85], and greater
-                                                than
-                                                imageGcLowThresholdPercent.)
-          imageMinimumGcAge                     interval (e.g., '100s', '1m'.
-                                                The value must be less than
-                                                '2m'.)
-          imageMaximumGcAge                     interval (e.g., '100s', '1m'.
-                                                The value must be greater than
-                                                imageMinimumGcAge.)
-          evictionSoft                          specify eviction soft thresholds
-          evictionSoftGracePeriod               specify eviction soft grace
-                                                period
-          evictionMinimumReclaim                specify eviction minimum reclaim
-                                                thresholds
-          evictionMaxPodGracePeriodSeconds      integer (Max grace period for
-                                                pod termination during eviction,
-                                                in seconds. The value must be
-                                                between [0, 300].)
-          allowedUnsafeSysctls                  list of sysctls (Allowlisted
-                                                groups: 'kernel.shm*',
-                                                'kernel.msg*', 'kernel.sem',
-                                                'fs.mqueue.*', and 'net.*', and
-                                                sysctls under the groups.)
-          singleProcessOomKill                  true or false
-          maxParallelImagePulls                 integer (The value must be
-                                                between [2, 5].)
+          KEY                                     VALUE
+          cpuManagerPolicy                        either 'static' or 'none'
+          cpuCFSQuota                             true or false (enabled by
+                                                  default)
+          cpuCFSQuotaPeriod                       interval (e.g., '100ms'. The
+                                                  value must be between 1ms and
+                                                  1 second, inclusive.)
+          memoryManager                           specify memory manager policy
+          topologyManager                         specify topology manager
+                                                  policy and scope
+          podPidsLimit                            integer (The value must be
+                                                  greater than or equal to 1024
+                                                  and less than 4194304.)
+          containerLogMaxSize                     positive number plus unit
+                                                  suffix (e.g., '100Mi',
+                                                  '0.2Gi'. The value must be
+                                                  between 10Mi and 500Mi,
+                                                  inclusive.)
+          containerLogMaxFiles                    integer (The value must be
+                                                  between [2, 10].)
+          imageGcLowThresholdPercent              integer (The value must be
+                                                  between [10, 85], and lower
+                                                  than
+                                                  imageGcHighThresholdPercent.)
+          imageGcHighThresholdPercent             integer (The value must be
+                                                  between [10, 85], and greater
+                                                  than
+                                                  imageGcLowThresholdPercent.)
+          imageMinimumGcAge                       interval (e.g., '100s', '1m'.
+                                                  The value must be less than
+                                                  '2m'.)
+          imageMaximumGcAge                       interval (e.g., '100s', '1m'.
+                                                  The value must be greater than
+                                                  imageMinimumGcAge.)
+          evictionSoft                            specify eviction soft
+                                                  thresholds
+          evictionSoftGracePeriod                 specify eviction soft grace
+                                                  period
+          evictionMinimumReclaim                  specify eviction minimum
+                                                  reclaim thresholds
+          evictionMaxPodGracePeriodSeconds        integer (Max grace period for
+                                                  pod termination during
+                                                  eviction, in seconds. The
+                                                  value must be between [0,
+                                                  300].)
+          shutdownGracePeriodSeconds              integer (Grace period for pods
+                                                  terminating on node shutdown,
+                                                  in seconds. Allowed values: 0,
+                                                  30, 120.)
+          shutdownGracePeriodCriticalPodsSeconds  integer (Grace period for
+                                                  critical pods terminating on
+                                                  node shutdown, in seconds. The
+                                                  value must be between [0, 120]
+                                                  and less than
+                                                  shutdownGracePeriodSeconds.)
+          allowedUnsafeSysctls                    list of sysctls (Allowlisted
+                                                  groups: 'kernel.shm*',
+                                                  'kernel.msg*', 'kernel.sem',
+                                                  'fs.mqueue.*', and 'net.*',
+                                                  and sysctls under the groups.)
+          singleProcessOomKill                    true or false
+          maxParallelImagePulls                   integer (The value must be
+                                                  between [2, 5].)
 
         List of supported keys in memoryManager in 'kubeletConfig'.
 
@@ -1129,6 +1168,13 @@ FLAGS
           KEY                                         VALUE
           diskCount                                   integer
 
+        List of supported keys in 'nodeKernelModuleLoading'.
+
+          KEY                                         VALUE
+          policy                                      ENFORCE_SIGNED_MODULES,
+                                                      DO_NOT_ENFORCE_SIGNED_MODU
+                                                      LES, POLICY_UNSPECIFIED
+
         The upper limit for total allocated hugepage size differs based upon
         machine size.
 
@@ -1188,6 +1234,20 @@ FLAGS
           will never enter direct reclaim or compaction.
         ◆ TRANSPARENT_HUGEPAGE_DEFRAG_UNSPECIFIED: Default value. GKE will
           not modify the kernel configuration.
+
+        Supported values for 'policy' under 'nodeKernelModuleLoading'.
+
+        ◆ POLICY_UNSPECIFIED: Default behavior. GKE selects the image based
+          on node type. For CPU and TPU nodes, the image will not allow loading
+          external kernel modules. For GPU nodes, the image will allow loading
+          any module, whether it is signed or not.
+        ◆ ENFORCE_SIGNED_MODULES: Enforced signature verification: Node pools
+          will use a Container-Optimized OS image configured to allow loading
+          of Google-signed external kernel modules. Loadpin is enabled but
+          configured to exclude modules, and kernel module signature checking
+          is enforced.
+        ◆ DO_NOT_ENFORCE_SIGNED_MODULES: Do not enforce kernel module
+          signature enforcement. Mirrors existing DEFAULT behavior.
 
         Note, updating the system configuration of an existing node pool
         requires recreation of the nodes which which might cause a disruption.
@@ -1298,61 +1358,60 @@ FLAGS
 
      Cluster autoscaling
 
-       --enable-autoscaling
-          Enables autoscaling for a node pool.
+     --enable-autoscaling
+        Enables autoscaling for a node pool.
 
-          Enables autoscaling in the node pool specified by --node-pool or the
-          default node pool if --node-pool is not provided. If not already,
-          --max-nodes or --total-max-nodes must also be set.
+        Enables autoscaling in the node pool specified by --node-pool or the
+        default node pool if --node-pool is not provided. If not already,
+        --max-nodes or --total-max-nodes must also be set.
 
-       --location-policy=LOCATION_POLICY
-          Location policy specifies the algorithm used when scaling-up the node
-          pool.
+     --location-policy=LOCATION_POLICY
+        Location policy specifies the algorithm used when scaling-up the node
+        pool.
 
-          ▸ BALANCED - Is a best effort policy that aims to balance the sizes
-            of available zones.
-          ▸ ANY - Instructs the cluster autoscaler to prioritize utilization
-            of unused reservations, and reduces preemption risk for Spot VMs.
+        ◆ BALANCED - Is a best effort policy that aims to balance the sizes
+          of available zones.
+        ◆ ANY - Instructs the cluster autoscaler to prioritize utilization of
+          unused reservations, and reduces preemption risk for Spot VMs.
 
-          LOCATION_POLICY must be one of: BALANCED, ANY.
+        LOCATION_POLICY must be one of: BALANCED, ANY.
 
-       --max-nodes=MAX_NODES
-          Maximum number of nodes per zone in the node pool.
+     --max-nodes=MAX_NODES
+        Maximum number of nodes per zone in the node pool.
 
-          Maximum number of nodes per zone to which the node pool specified by
-          --node-pool (or default node pool if unspecified) can scale. Ignored
-          unless --enable-autoscaling is also specified.
+        Maximum number of nodes per zone to which the node pool specified by
+        --node-pool (or default node pool if unspecified) can scale. Ignored
+        unless --enable-autoscaling is also specified.
 
-       --min-nodes=MIN_NODES
-          Minimum number of nodes per zone in the node pool.
+     --min-nodes=MIN_NODES
+        Minimum number of nodes per zone in the node pool.
 
-          Minimum number of nodes per zone to which the node pool specified by
-          --node-pool (or default node pool if unspecified) can scale. Ignored
-          unless --enable-autoscaling is also specified.
+        Minimum number of nodes per zone to which the node pool specified by
+        --node-pool (or default node pool if unspecified) can scale. Ignored
+        unless --enable-autoscaling is also specified.
 
-       --total-max-nodes=TOTAL_MAX_NODES
-          Maximum number of all nodes in the node pool.
+     --total-max-nodes=TOTAL_MAX_NODES
+        Maximum number of all nodes in the node pool.
 
-          Maximum number of all nodes to which the node pool specified by
-          --node-pool (or default node pool if unspecified) can scale. Ignored
-          unless --enable-autoscaling is also specified.
+        Maximum number of all nodes to which the node pool specified by
+        --node-pool (or default node pool if unspecified) can scale. Ignored
+        unless --enable-autoscaling is also specified.
 
-       --total-min-nodes=TOTAL_MIN_NODES
-          Minimum number of all nodes in the node pool.
+     --total-min-nodes=TOTAL_MIN_NODES
+        Minimum number of all nodes in the node pool.
 
-          Minimum number of all nodes to which the node pool specified by
-          --node-pool (or default node pool if unspecified) can scale. Ignored
-          unless --enable-autoscaling is also specified.
+        Minimum number of all nodes to which the node pool specified by
+        --node-pool (or default node pool if unspecified) can scale. Ignored
+        unless --enable-autoscaling is also specified.
 
      Specifies minimum number of nodes to be created when best effort
      provisioning enabled.
 
-       --enable-best-effort-provision
-          Enable best effort provision for nodes
+     --enable-best-effort-provision
+        Enable best effort provision for nodes
 
-       --min-provision-nodes=MIN_PROVISION_NODES
-          Specifies the minimum number of nodes to be provisioned during
-          creation
+     --min-provision-nodes=MIN_PROVISION_NODES
+        Specifies the minimum number of nodes to be provisioned during creation
 
      At most one of these can be specified:
 
@@ -1426,108 +1485,108 @@ FLAGS
 
      Node drain settings
 
-       --node-drain-grace-period-seconds=NODE_DRAIN_GRACE_PERIOD_SECONDS
-          The grace period in seconds for nodes to drain before being
-          forcefully removed.
+     --node-drain-grace-period-seconds=NODE_DRAIN_GRACE_PERIOD_SECONDS
+        The grace period in seconds for nodes to drain before being forcefully
+        removed.
 
-       --node-drain-pdb-timeout-seconds=NODE_DRAIN_PDB_TIMEOUT_SECONDS
-          The timeout in seconds for the node pool to be drained.
+     --node-drain-pdb-timeout-seconds=NODE_DRAIN_PDB_TIMEOUT_SECONDS
+        The timeout in seconds for the node pool to be drained.
 
-       --respect-pdb-during-node-pool-deletion
-          Whether to respect PDBs when deleting nodes in the node pool.
+     --respect-pdb-during-node-pool-deletion
+        Whether to respect PDBs when deleting nodes in the node pool.
 
      Specifies the reservation for the node pool.
 
-       --reservation=RESERVATION
-          The name of the reservation, required when
-          --reservation-affinity=specific.
+     --reservation=RESERVATION
+        The name of the reservation, required when
+        --reservation-affinity=specific.
 
-       --reservation-affinity=RESERVATION_AFFINITY
-          The type of the reservation for the node pool. RESERVATION_AFFINITY
-          must be one of: any, none, specific.
+     --reservation-affinity=RESERVATION_AFFINITY
+        The type of the reservation for the node pool. RESERVATION_AFFINITY
+        must be one of: any, none, specific.
 
      Options to specify the node identity.
 
-       Scopes options.
+     Scopes options.
 
-         --scopes=[SCOPE,...]; default="gke-default"
-            Specifies scopes for the node instances.
+     --scopes=[SCOPE,...]; default="gke-default"
+        Specifies scopes for the node instances.
 
-            Examples:
+        Examples:
 
-                $ gcloud container node-pools create node-pool-1 \
-                    --cluster=example-cluster \
-                    --scopes=https://www.googleapis.com/auth/devstorage.read_only
+            $ gcloud container node-pools create node-pool-1 \
+                --cluster=example-cluster \
+                --scopes=https://www.googleapis.com/auth/devstorage.read_only
 
-                $ gcloud container node-pools create node-pool-1 \
-                    --cluster=example-cluster \
-                    --scopes=bigquery,storage-rw,compute-ro
+            $ gcloud container node-pools create node-pool-1 \
+                --cluster=example-cluster \
+                --scopes=bigquery,storage-rw,compute-ro
 
-            Multiple scopes can be specified, separated by commas. Various
-            scopes are automatically added based on feature usage. Such scopes
-            are not added if an equivalent scope already exists.
+        Multiple scopes can be specified, separated by commas. Various scopes
+        are automatically added based on feature usage. Such scopes are not
+        added if an equivalent scope already exists.
 
-            ▫ monitoring-write: always added to ensure metrics can be written
-            ▫ logging-write: added if Cloud Logging is enabled
-              (--enable-cloud-logging/--logging)
-            ▫ monitoring: added if Cloud Monitoring is enabled
-              (--enable-cloud-monitoring/--monitoring)
-            ▫ gke-default: added for Autopilot clusters that use the default
-              service account
-            ▫ cloud-platform: added for Autopilot clusters that use any other
-              service account
+        ◆ monitoring-write: always added to ensure metrics can be written
+        ◆ logging-write: added if Cloud Logging is enabled
+          (--enable-cloud-logging/--logging)
+        ◆ monitoring: added if Cloud Monitoring is enabled
+          (--enable-cloud-monitoring/--monitoring)
+        ◆ gke-default: added for Autopilot clusters that use the default
+          service account
+        ◆ cloud-platform: added for Autopilot clusters that use any other
+          service account
 
-            SCOPE can be either the full URI of the scope or an alias. Default
-            scopes are assigned to all instances. Available aliases are:
+        SCOPE can be either the full URI of the scope or an alias. Default
+        scopes are assigned to all instances. Available aliases are:
 
-              Alias                  URI
-              bigquery               https://www.googleapis.com/auth/bigquery
-              cloud-platform         https://www.googleapis.com/auth/cloud-platform
-              cloud-source-repos     https://www.googleapis.com/auth/source.full_control
-              cloud-source-repos-ro  https://www.googleapis.com/auth/source.read_only
-              compute-ro             https://www.googleapis.com/auth/compute.readonly
-              compute-rw             https://www.googleapis.com/auth/compute
-              datastore              https://www.googleapis.com/auth/datastore
-              default                https://www.googleapis.com/auth/devstorage.read_only
-                                     https://www.googleapis.com/auth/logging.write
-                                     https://www.googleapis.com/auth/monitoring.write
-                                     https://www.googleapis.com/auth/pubsub
-                                     https://www.googleapis.com/auth/service.management.readonly
-                                     https://www.googleapis.com/auth/servicecontrol
-                                     https://www.googleapis.com/auth/trace.append
-              gke-default            https://www.googleapis.com/auth/devstorage.read_only
-                                     https://www.googleapis.com/auth/logging.write
-                                     https://www.googleapis.com/auth/monitoring
-                                     https://www.googleapis.com/auth/service.management.readonly
-                                     https://www.googleapis.com/auth/servicecontrol
-                                     https://www.googleapis.com/auth/trace.append
-              logging-write          https://www.googleapis.com/auth/logging.write
-              monitoring             https://www.googleapis.com/auth/monitoring
-              monitoring-read        https://www.googleapis.com/auth/monitoring.read
-              monitoring-write       https://www.googleapis.com/auth/monitoring.write
-              pubsub                 https://www.googleapis.com/auth/pubsub
-              service-control        https://www.googleapis.com/auth/servicecontrol
-              service-management     https://www.googleapis.com/auth/service.management.readonly
-              sql (deprecated)       https://www.googleapis.com/auth/sqlservice
-              sql-admin              https://www.googleapis.com/auth/sqlservice.admin
-              storage-full           https://www.googleapis.com/auth/devstorage.full_control
-              storage-ro             https://www.googleapis.com/auth/devstorage.read_only
-              storage-rw             https://www.googleapis.com/auth/devstorage.read_write
-              taskqueue              https://www.googleapis.com/auth/taskqueue
-              trace                  https://www.googleapis.com/auth/trace.append
-              userinfo-email         https://www.googleapis.com/auth/userinfo.email
+          Alias                  URI
+          bigquery               https://www.googleapis.com/auth/bigquery
+          cloud-platform         https://www.googleapis.com/auth/cloud-platform
+          cloud-source-repos     https://www.googleapis.com/auth/source.full_control
+          cloud-source-repos-ro  https://www.googleapis.com/auth/source.read_only
+          compute-ro             https://www.googleapis.com/auth/compute.readonly
+          compute-rw             https://www.googleapis.com/auth/compute
+          datastore              https://www.googleapis.com/auth/datastore
+          default                https://www.googleapis.com/auth/devstorage.read_only
+                                 https://www.googleapis.com/auth/logging.write
+                                 https://www.googleapis.com/auth/monitoring.write
+                                 https://www.googleapis.com/auth/pubsub
+                                 https://www.googleapis.com/auth/service.management.readonly
+                                 https://www.googleapis.com/auth/servicecontrol
+                                 https://www.googleapis.com/auth/trace.append
+          gke-default            https://www.googleapis.com/auth/devstorage.read_only
+                                 https://www.googleapis.com/auth/logging.write
+                                 https://www.googleapis.com/auth/monitoring
+                                 https://www.googleapis.com/auth/service.management.readonly
+                                 https://www.googleapis.com/auth/servicecontrol
+                                 https://www.googleapis.com/auth/trace.append
+          logging-write          https://www.googleapis.com/auth/logging.write
+          monitoring             https://www.googleapis.com/auth/monitoring
+          monitoring-read        https://www.googleapis.com/auth/monitoring.read
+          monitoring-write       https://www.googleapis.com/auth/monitoring.write
+          pubsub                 https://www.googleapis.com/auth/pubsub
+          service-control        https://www.googleapis.com/auth/servicecontrol
+          service-management     https://www.googleapis.com/auth/service.management.readonly
+          sql (deprecated)       https://www.googleapis.com/auth/sqlservice
+          sql-admin              https://www.googleapis.com/auth/sqlservice.admin
+          storage-full           https://www.googleapis.com/auth/devstorage.full_control
+          storage-ro             https://www.googleapis.com/auth/devstorage.read_only
+          storage-rw             https://www.googleapis.com/auth/devstorage.read_write
+          taskqueue              https://www.googleapis.com/auth/taskqueue
+          trace                  https://www.googleapis.com/auth/trace.append
+          userinfo-email         https://www.googleapis.com/auth/userinfo.email
 
-            DEPRECATION WARNING: https://www.googleapis.com/auth/sqlservice
-            account scope and sql alias do not provide SQL instance management
-            capabilities and have been deprecated. Please, use
-            https://www.googleapis.com/auth/sqlservice.admin or sql-admin to
-            manage your Google SQL Service instances.
+        DEPRECATION WARNING: https://www.googleapis.com/auth/sqlservice account
+        scope and sql alias do not provide SQL instance management capabilities
+        and have been deprecated. Please, use
+        https://www.googleapis.com/auth/sqlservice.admin or sql-admin to manage
+        your Google SQL Service instances.
 
-       --service-account=SERVICE_ACCOUNT
-          The Google Cloud Platform Service Account to be used by the node VMs.
-          If a service account is specified, the cloud-platform and
-          userinfo.email scopes are used. If no Service Account is specified,
-          the project default service account is used.
+     --service-account=SERVICE_ACCOUNT
+        The Google Cloud Platform Service Account to be used by the node VMs.
+        If a service account is specified, the cloud-platform and
+        userinfo.email scopes are used. If no Service Account is specified, the
+        project default service account is used.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

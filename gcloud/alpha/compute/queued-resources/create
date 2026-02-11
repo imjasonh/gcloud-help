@@ -67,9 +67,6 @@ SYNOPSIS
         [--image-project=IMAGE_PROJECT
           --source-snapshot-region=SOURCE_SNAPSHOT_REGION --image=IMAGE
           | --image-family=IMAGE_FAMILY | --source-snapshot=SOURCE_SNAPSHOT]
-        [--instance-selection=name=NAME[,
-          rank=RANK][,machine-type=MACHINE_TYPE]...[,disk=DISK_JSON]...
-          | --instance-selection-machine-types=[MACHINE_TYPE,...]]
         [--maintenance-policy=MAINTENANCE_POLICY
           | --on-host-maintenance=MAINTENANCE_POLICY]
         [--public-dns | --no-public-dns]
@@ -945,40 +942,39 @@ OPTIONAL FLAGS
      The arguments in this group can be used to specify the attributes of this
      resource.
 
-       --boot-disk-kms-key=BOOT_DISK_KMS_KEY
-          ID of the key or fully qualified identifier for the key.
+     --boot-disk-kms-key=BOOT_DISK_KMS_KEY
+        ID of the key or fully qualified identifier for the key.
 
-          To set the kms-key attribute:
-          ▸ provide the argument --boot-disk-kms-key on the command line.
+        To set the kms-key attribute:
+        ◆ provide the argument --boot-disk-kms-key on the command line.
 
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
+        This flag argument must be specified if any of the other arguments in
+        this group are specified.
 
-       --boot-disk-kms-keyring=BOOT_DISK_KMS_KEYRING
-          The KMS keyring of the key.
+     --boot-disk-kms-keyring=BOOT_DISK_KMS_KEYRING
+        The KMS keyring of the key.
 
-          To set the kms-keyring attribute:
-          ▸ provide the argument --boot-disk-kms-key on the command line with
-            a fully specified name;
-          ▸ provide the argument --boot-disk-kms-keyring on the command line.
+        To set the kms-keyring attribute:
+        ◆ provide the argument --boot-disk-kms-key on the command line with a
+          fully specified name;
+        ◆ provide the argument --boot-disk-kms-keyring on the command line.
 
-       --boot-disk-kms-location=BOOT_DISK_KMS_LOCATION
-          The Google Cloud location for the key.
+     --boot-disk-kms-location=BOOT_DISK_KMS_LOCATION
+        The Google Cloud location for the key.
 
-          To set the kms-location attribute:
-          ▸ provide the argument --boot-disk-kms-key on the command line with
-            a fully specified name;
-          ▸ provide the argument --boot-disk-kms-location on the command
-            line.
+        To set the kms-location attribute:
+        ◆ provide the argument --boot-disk-kms-key on the command line with a
+          fully specified name;
+        ◆ provide the argument --boot-disk-kms-location on the command line.
 
-       --boot-disk-kms-project=BOOT_DISK_KMS_PROJECT
-          The Google Cloud project for the key.
+     --boot-disk-kms-project=BOOT_DISK_KMS_PROJECT
+        The Google Cloud project for the key.
 
-          To set the kms-project attribute:
-          ▸ provide the argument --boot-disk-kms-key on the command line with
-            a fully specified name;
-          ▸ provide the argument --boot-disk-kms-project on the command line;
-          ▸ set the property core/project.
+        To set the kms-project attribute:
+        ◆ provide the argument --boot-disk-kms-key on the command line with a
+          fully specified name;
+        ◆ provide the argument --boot-disk-kms-project on the command line;
+        ◆ set the property core/project.
 
      At most one of these can be specified:
 
@@ -1009,32 +1005,31 @@ OPTIONAL FLAGS
 
      Custom machine type extensions.
 
-       --custom-cpu=CUSTOM_CPU
-          A whole number value specifying the number of cores that are needed
-          in the custom machine type.
+     --custom-cpu=CUSTOM_CPU
+        A whole number value specifying the number of cores that are needed in
+        the custom machine type.
 
-          For some machine types, shared-core values can also be used. For
-          example, for E2 machine types, you can specify micro, small, or
-          medium.
+        For some machine types, shared-core values can also be used. For
+        example, for E2 machine types, you can specify micro, small, or medium.
 
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
+        This flag argument must be specified if any of the other arguments in
+        this group are specified.
 
-       --custom-memory=CUSTOM_MEMORY
-          A whole number value indicating how much memory is desired in the
-          custom machine type. A size unit should be provided (eg. 3072MB or
-          9GB) - if no units are specified, GB is assumed.
+     --custom-memory=CUSTOM_MEMORY
+        A whole number value indicating how much memory is desired in the
+        custom machine type. A size unit should be provided (eg. 3072MB or 9GB)
+        - if no units are specified, GB is assumed.
 
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
+        This flag argument must be specified if any of the other arguments in
+        this group are specified.
 
-       --custom-extensions
-          Use the extended custom machine type.
+     --custom-extensions
+        Use the extended custom machine type.
 
-       --custom-vm-type=CUSTOM_VM_TYPE
-          Specifies a custom machine type. The default is n1. For more
-          information about custom machine types, see:
-          https://cloud.google.com/compute/docs/general-purpose-machines#custom_machine_types
+     --custom-vm-type=CUSTOM_VM_TYPE
+        Specifies a custom machine type. The default is n1. For more
+        information about custom machine types, see:
+        https://cloud.google.com/compute/docs/general-purpose-machines#custom_machine_types
 
      --image-project=IMAGE_PROJECT
         The Google Cloud project against which all image and image family
@@ -1087,27 +1082,6 @@ OPTIONAL FLAGS
           ▸ https://compute.googleapis.com/compute/v1/projects/myproject/global/snapshots/snapshot
           ▸ snapshot
 
-     At most one of these can be specified:
-
-       --instance-selection=name=NAME[,rank=RANK][,machine-type=MACHINE_TYPE]...[,disk=DISK_JSON]...
-          \ Specifies a list of machine types to consider for instance
-          creation. The bulk create operation will attempt to create instances
-          from this list based on capacity availability. This flag is only
-          valid when a region is specified.
-
-              Keys for each instance selection:
-
-              name: (Required) A unique name for this instance selection group.
-              machine-type: (Required) Repeatable. Specifies a machine type to include in this group (e.g., machine-type=n1-standard-1).
-              rank: (Optional) An integer representing the priority. Lower ranks are preferred. Defaults to 0.
-              disk: (Optional) Repeatable. A JSON string defining a disk to attach or override, conforming to the Compute Engine AttachedDisk API structure. Example: disk='{"deviceName": "boot-disk", "boot": true, "initializeParams": {"sourceImage": "IMAGE_URL"}}'
-
-       --instance-selection-machine-types=[MACHINE_TYPE,...]
-          \ Specifies a list of machine types to consider for instance
-          creation. The bulk create operation will attempt to create instances
-          from this list based on capacity availability. This flag is only
-          valid when a region is specified.
-
      Maintenance Behavior.
 
      At most one of these can be specified:
@@ -1151,29 +1125,29 @@ OPTIONAL FLAGS
 
      Specifies the reservation for the instance.
 
-       --reservation=RESERVATION
-          The name of the reservation, required when --reservation-affinity is
-          one of: specific, specific-then-any-reservation or
-          specific-then-no-reservation.
+     --reservation=RESERVATION
+        The name of the reservation, required when --reservation-affinity is
+        one of: specific, specific-then-any-reservation or
+        specific-then-no-reservation.
 
-       --reservation-affinity=RESERVATION_AFFINITY; default="any"
-          The type of reservation for the instance. RESERVATION_AFFINITY must
-          be one of:
+     --reservation-affinity=RESERVATION_AFFINITY; default="any"
+        The type of reservation for the instance. RESERVATION_AFFINITY must be
+        one of:
 
-           any
-              Consume any available, matching reservation.
-           none
-              Do not consume from any reserved capacity.
-           specific
-              Must consume from a specific reservation.
-           specific-then-any-reservation
-              Prefer to consume from a specific reservation, but still consume
-              any available matching reservation if the specified reservation
-              is not available or exhausted.
-           specific-then-no-reservation
-              Prefer to consume from a specific reservation, but still consume
-              from the on-demand pool if the specified reservation is not
-              available or exhausted.
+         any
+            Consume any available, matching reservation.
+         none
+            Do not consume from any reserved capacity.
+         specific
+            Must consume from a specific reservation.
+         specific-then-any-reservation
+            Prefer to consume from a specific reservation, but still consume
+            any available matching reservation if the specified reservation is
+            not available or exhausted.
+         specific-then-no-reservation
+            Prefer to consume from a specific reservation, but still consume
+            from the on-demand pool if the specified reservation is not
+            available or exhausted.
 
      At most one of these can be specified:
 

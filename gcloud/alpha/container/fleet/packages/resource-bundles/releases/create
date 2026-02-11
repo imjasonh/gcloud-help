@@ -5,31 +5,29 @@ NAME
 SYNOPSIS
     gcloud alpha container fleet packages resource-bundles releases create
         --resource-bundle=RESOURCE_BUNDLE --source=SOURCE --version=VERSION
-        [--lifecycle=LIFECYCLE] [--location=LOCATION]
-        [--variants-pattern=VARIANTS_PATTERN; default="*"]
-        [GCLOUD_WIDE_FLAG ...]
+        [--lifecycle=LIFECYCLE] [--location=LOCATION] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Create Package Rollouts Release.
 
 EXAMPLES
-    To create Release v1.0.0 for Resource Bundle my-bundle in us-central1, run:
+    To create Release v1.0.0 for Resource Bundle my-bundle, run:
 
         $ gcloud alpha container fleet packages resource-bundles releases \
             create --version=v1.0.0 --resource-bundle=my-bundle \
-            --source=manifest.yaml
+            --source=<SOURCE_PATH>
 
-    To create a Release with multiple variants in one directory, run:
-
-        $ gcloud alpha container fleet packages resource-bundles releases \
-            create --version=v1.0.0 --resource-bundle=my-bundle \
-            --source=/manifests/ --variants-pattern=manifest-*.yaml
-
-    To create a Release with multiple variants across multiple directories, ex:
-
-        $ gcloud alpha container fleet packages resource-bundles releases \
-            create --version=v1.0.0 --resource-bundle=my-bundle \
-            --source=/manifests/ --variants-pattern=dir-*/
+    SOURCE_PATH could be a one of the following:
+      ▪ A glob pattern for manifest files, e.g. /manifests-dir/*.yaml. This
+        will create a Variant for each matching file, inferring the Variant
+        name from the file name, e.g. manifest-1.yaml will be used to create
+        manifest-1 Variant.
+      ▪ A glob pattern for directories of manifest files, e.g.
+        /manifests-dirs/*. This will create a Variant for each matching
+        directory, inferring the Variant name from the directory name, e.g.
+        /manifests-dirs/manifest-1 will be used to create manifest-1 Variant.
+        All YAML files under /manifests-dirs/manifest-1/ folder and its
+        subfolders will be used to create the Variant.
 
 REQUIRED FLAGS
      --resource-bundle=RESOURCE_BUNDLE
@@ -37,9 +35,8 @@ REQUIRED FLAGS
 
      --source=SOURCE
         Source file or directory to create the Release from. e.g.
-        --source=manifest.yaml, --source=/manifests-dir/ Can optionally be
-        paired with the --variants-pattern arg to create multiple variants of a
-        Release.
+        --source=manifest.yaml, --source=/manifests-dir/,
+        --source=/manifests-dir/*.yaml
 
      --version=VERSION
         Version of the Release to create.
@@ -50,12 +47,6 @@ OPTIONAL FLAGS
 
      --location=LOCATION
         Google Cloud zone or region.
-
-     --variants-pattern=VARIANTS_PATTERN; default="*"
-        Glob pattern to Variants of the Release, to be paired with the --source
-        arg. ex: --source=/manifests-dir/ --variants-pattern=**,
-        --source=/manifests-dir/ --variants-pattern=us-*.yaml,
-        --source=/manifests/dir/ --variants-pattern=*/*.yaml
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

@@ -21,7 +21,7 @@ SYNOPSIS
           | [--mysql-hostname=MYSQL_HOSTNAME --mysql-port=MYSQL_PORT
           --mysql-username=MYSQL_USERNAME (--mysql-password=MYSQL_PASSWORD
           | --mysql-prompt-for-password
-          | --mysql-secret-manager-stored-password=MYSQL_SECRET_MANAGER_STORED_PASSWORD) : --ca-certificate=CA_CERTIFICATE --client-certificate=CLIENT_CERTIFICATE --client-key=CLIENT_KEY] | [--postgresql-database=POSTGRESQL_DATABASE --postgresql-hostname=POSTGRESQL_HOSTNAME --postgresql-port=POSTGRESQL_PORT --postgresql-username=POSTGRESQL_USERNAME (--postgresql-password=POSTGRESQL_PASSWORD | --postgresql-prompt-for-password | --postgresql-secret-manager-stored-password=POSTGRESQL_SECRET_MANAGER_STORED_PASSWORD) : [--postgresql-ca-certificate=POSTGRESQL_CA_CERTIFICATE : --postgresql-server-certificate-hostname=POSTGRESQL_SERVER_CERTIFICATE_HOSTNAME --postgresql-client-certificate=POSTGRESQL_CLIENT_CERTIFICATE --postgresql-client-key=POSTGRESQL_CLIENT_KEY]] | --salesforce-domain=SALESFORCE_DOMAIN (--salesforce-oauth2-client-id=SALESFORCE_OAUTH2_CLIENT_ID (--salesforce-oauth2-client-secret=SALESFORCE_OAUTH2_CLIENT_SECRET | --salesforce-prompt-for-oauth2-client-secret | --salesforce-secret-manager-stored-oauth2-client-secret=SALESFORCE_SECRET_MANAGER_STORED_OAUTH2_CLIENT_SECRET) | --salesforce-username=SALESFORCE_USERNAME (--salesforce-password=SALESFORCE_PASSWORD | --salesforce-prompt-for-password | --salesforce-secret-manager-stored-password=SALESFORCE_SECRET_MANAGER_STORED_PASSWORD) (--salesforce-prompt-for-security-token | --salesforce-secret-manager-stored-security-token=SALESFORCE_SECRET_MANAGER_STORED_SECURITY_TOKEN | --salesforce-security-token=SALESFORCE_SECURITY_TOKEN)) | --sqlserver-database=SQLSERVER_DATABASE --sqlserver-hostname=SQLSERVER_HOSTNAME --sqlserver-port=SQLSERVER_PORT --sqlserver-username=SQLSERVER_USERNAME (--sqlserver-password=SQLSERVER_PASSWORD | --sqlserver-prompt-for-password | --sqlserver-secret-manager-stored-password=SQLSERVER_SECRET_MANAGER_STORED_PASSWORD)]
+          | --mysql-secret-manager-stored-password=MYSQL_SECRET_MANAGER_STORED_PASSWORD) : --ca-certificate=CA_CERTIFICATE --client-certificate=CLIENT_CERTIFICATE --client-key=CLIENT_KEY] | [--postgresql-database=POSTGRESQL_DATABASE --postgresql-hostname=POSTGRESQL_HOSTNAME --postgresql-port=POSTGRESQL_PORT --postgresql-username=POSTGRESQL_USERNAME (--postgresql-password=POSTGRESQL_PASSWORD | --postgresql-prompt-for-password | --postgresql-secret-manager-stored-password=POSTGRESQL_SECRET_MANAGER_STORED_PASSWORD) : [--postgresql-ca-certificate=POSTGRESQL_CA_CERTIFICATE : --postgresql-server-certificate-hostname=POSTGRESQL_SERVER_CERTIFICATE_HOSTNAME --postgresql-client-certificate=POSTGRESQL_CLIENT_CERTIFICATE --postgresql-client-key=POSTGRESQL_CLIENT_KEY]] | --salesforce-domain=SALESFORCE_DOMAIN (--salesforce-oauth2-client-id=SALESFORCE_OAUTH2_CLIENT_ID (--salesforce-oauth2-client-secret=SALESFORCE_OAUTH2_CLIENT_SECRET | --salesforce-prompt-for-oauth2-client-secret | --salesforce-secret-manager-stored-oauth2-client-secret=SALESFORCE_SECRET_MANAGER_STORED_OAUTH2_CLIENT_SECRET) | --salesforce-username=SALESFORCE_USERNAME (--salesforce-password=SALESFORCE_PASSWORD | --salesforce-prompt-for-password | --salesforce-secret-manager-stored-password=SALESFORCE_SECRET_MANAGER_STORED_PASSWORD) (--salesforce-prompt-for-security-token | --salesforce-secret-manager-stored-security-token=SALESFORCE_SECRET_MANAGER_STORED_SECURITY_TOKEN | --salesforce-security-token=SALESFORCE_SECURITY_TOKEN)) | [--spanner-database=SPANNER_DATABASE : --spanner-host=SPANNER_HOST] | --sqlserver-database=SQLSERVER_DATABASE --sqlserver-hostname=SQLSERVER_HOSTNAME --sqlserver-port=SQLSERVER_PORT --sqlserver-username=SQLSERVER_USERNAME (--sqlserver-password=SQLSERVER_PASSWORD | --sqlserver-prompt-for-password | --sqlserver-secret-manager-stored-password=SQLSERVER_SECRET_MANAGER_STORED_PASSWORD)]
         [--no-connectivity | --private-connection-name=PRIVATE_CONNECTION_NAME
           | --static-ip-connectivity
           | [--forward-ssh-hostname=FORWARD_SSH_HOSTNAME
@@ -403,6 +403,17 @@ OPTIONAL FLAGS
               Security token for the user that Datastream will be using to
               connect to Salesforce.
 
+       --spanner-database=SPANNER_DATABASE
+          The full project and resource path for Spanner database. Format:
+          projects/{project}/instances/{instance}/databases/{database}.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --spanner-host=SPANNER_HOST
+          The regional Spanner endpoint. Format:
+          https://spanner.{region}.rep.googleapis.com.
+
        --sqlserver-database=SQLSERVER_DATABASE
           Database service for the SQL Server connection.
 
@@ -446,20 +457,22 @@ OPTIONAL FLAGS
        --no-connectivity
           no connectivity
 
-       Private connection resource - Resource ID of the private connection.
-       This represents a Cloud resource. (NOTE) Some attributes are not given
-       arguments in this group but can be set in other ways.
+       Or at least one of these can be specified:
 
-       To set the project attribute:
-        ▸ provide the argument --private-connection-name on the command line
-          with a fully specified name;
-        ▸ provide the argument --project on the command line;
-        ▸ set the property core/project.
+         Private connection resource - Resource ID of the private connection.
+         This represents a Cloud resource. (NOTE) Some attributes are not given
+         arguments in this group but can be set in other ways.
 
-       To set the location attribute:
-        ▸ provide the argument --private-connection-name on the command line
-          with a fully specified name;
-        ▸ provide the argument --location on the command line.
+         To set the project attribute:
+          ▫ provide the argument --private-connection-name on the command
+            line with a fully specified name;
+          ▫ provide the argument --project on the command line;
+          ▫ set the property core/project.
+
+         To set the location attribute:
+          ▫ provide the argument --private-connection-name on the command
+            line with a fully specified name;
+          ▫ provide the argument --location on the command line.
 
          --private-connection-name=PRIVATE_CONNECTION_NAME
             ID of the private_connection or fully qualified identifier for the
@@ -472,28 +485,30 @@ OPTIONAL FLAGS
        --static-ip-connectivity
           use static ip connectivity
 
-       --forward-ssh-hostname=FORWARD_SSH_HOSTNAME
-          Hostname for the SSH tunnel.
+       Or at least one of these can be specified:
 
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
+         --forward-ssh-hostname=FORWARD_SSH_HOSTNAME
+            Hostname for the SSH tunnel.
 
-       --forward-ssh-username=FORWARD_SSH_USERNAME
-          Username for the SSH tunnel.
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
 
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
+         --forward-ssh-username=FORWARD_SSH_USERNAME
+            Username for the SSH tunnel.
 
-       --forward-ssh-port=FORWARD_SSH_PORT; default=22
-          Port for the SSH tunnel, default value is 22.
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
 
-       Exactly one of these must be specified:
+         --forward-ssh-port=FORWARD_SSH_PORT; default=22
+            Port for the SSH tunnel, default value is 22.
 
-         --forward-ssh-password=FORWARD_SSH_PASSWORD
-            SSH password.
+         Exactly one of these must be specified:
 
-         --forward-ssh-private-key=FORWARD_SSH_PRIVATE_KEY
-            SSH private key..
+           --forward-ssh-password=FORWARD_SSH_PASSWORD
+              SSH password.
+
+           --forward-ssh-private-key=FORWARD_SSH_PRIVATE_KEY
+              SSH private key..
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

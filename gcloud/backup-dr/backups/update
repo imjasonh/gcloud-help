@@ -4,9 +4,11 @@ NAME
 SYNOPSIS
     gcloud backup-dr backups update
         (BACKUP : --backup-vault=BACKUP_VAULT
-          --data-source=DATA_SOURCE --location=LOCATION)
-        (--enforced-retention-end-time=ENFORCED_RETENTION_END_TIME
-          --expire-time=EXPIRE_TIME) [--async] [GCLOUD_WIDE_FLAG ...]
+          --data-source=DATA_SOURCE --location=LOCATION) [--async]
+        [--clear-labels | --remove-labels=KEY,[KEY,...]
+          | --update-labels=[KEY=VALUE,...]]
+        [--enforced-retention-end-time=ENFORCED_RETENTION_END_TIME
+          --expire-time=EXPIRE_TIME] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Update the specified Backup.
@@ -20,6 +22,22 @@ EXAMPLES
             --backup-vault=sample-vault --data-source=sample-ds \
             --project=sample-project --location=us-central1 \
             --enforced-retention-end-time="2025-02-14T01:10:20Z"
+
+    To update the labels on a backup named my-backup in the test-bv vault and
+    us-central1 location, run:
+
+        $ gcloud backup-dr backups update my-backup --backup-vault=test-bv \
+          --location=us-central1 --update-labels=env=prod,team=storage
+
+    To remove the env label from the same backup, run:
+
+        $ gcloud backup-dr backups update my-backup --backup-vault=test-bv \
+          --location=us-central1 --remove-labels=env
+
+    To clear all labels from the backup, run:
+
+        $ gcloud backup-dr backups update my-backup --backup-vault=test-bv \
+          --location=us-central1 --clear-labels
 
 POSITIONAL ARGUMENTS
      Backup resource - Name of the backup to update. The arguments in this
@@ -68,31 +86,50 @@ POSITIONAL ARGUMENTS
             specified name;
           ▸ provide the argument --location on the command line.
 
-REQUIRED FLAGS
-     Update Backup Flags
-
-     At least one of these must be specified:
-
-       --enforced-retention-end-time=ENFORCED_RETENTION_END_TIME
-          Backups cannot be deleted until this time or later. This period can
-          be extended, but not shortened. It should be specified in the format
-          of "YYYY-MM-DD".
-
-          ▸ For backup configured with a backup appliance, there are
-            additional restrictions: 1. Enforced retention cannot be extended
-            past the expiry time. 2. Enforced retention can only be updated for
-            finalized backups.
-
-       --expire-time=EXPIRE_TIME
-          The date when this backup is automatically expired. This date can be
-          extended, but not shortened. It should be specified in the format of
-          "YYYY-MM-DD".
-
-OPTIONAL FLAGS
+FLAGS
      --async
         Return immediately, without waiting for the operation in progress to
         complete. The default is True. Enabled by default, use --no-async to
         disable.
+
+     At most one of these can be specified:
+
+       --clear-labels
+          Remove all labels from the backup.
+
+          If the backup has no labels, this operation is a no-op.
+
+       --remove-labels=KEY,[KEY,...]
+          A list of label keys to remove from the backup.
+
+          If a label does not exist, it is silently ignored.
+
+       --update-labels=[KEY=VALUE,...]
+          A list of labels to apply to the backup.
+
+          Keys must start with a lowercase letter and contain only lowercase
+          letters, numbers, and hyphens, and must be between 1 and 63
+          characters long. Values must contain only lowercase letters, numbers,
+          and hyphens, and must be between 0 and 63 characters long.
+
+          For example: --update-labels=env=prod,team=storage
+
+     Update Backup Flags
+
+     --enforced-retention-end-time=ENFORCED_RETENTION_END_TIME
+        Backups cannot be deleted until this time or later. This period can be
+        extended, but not shortened. It should be specified in the format of
+        "YYYY-MM-DD".
+
+        ◆ For backup configured with a backup appliance, there are additional
+          restrictions: 1. Enforced retention cannot be extended past the
+          expiry time. 2. Enforced retention can only be updated for finalized
+          backups.
+
+     --expire-time=EXPIRE_TIME
+        The date when this backup is automatically expired. This date can be
+        extended, but not shortened. It should be specified in the format of
+        "YYYY-MM-DD".
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

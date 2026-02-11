@@ -8,11 +8,11 @@ SYNOPSIS
           --data-source=DATA_SOURCE --location=LOCATION) --name=NAME
         --target-project=TARGET_PROJECT --target-zone=TARGET_ZONE
         [--accelerator=[count=COUNT],[type=TYPE]] [--async]
-        [--[no-]can-ip-forward] [--confidential-compute]
-        [--create-disk=[PROPERTY=VALUE,...]] [--[no-]deletion-protection]
-        [--description=DESCRIPTION] [--[no-]enable-display-device]
-        [--[no-]enable-uefi-networking] [--hostname=HOSTNAME]
-        [--instance-kms-key=INSTANCE_KMS_KEY]
+        [--[no-]can-ip-forward] [--clear-encryption-key]
+        [--confidential-compute] [--create-disk=[PROPERTY=VALUE,...]]
+        [--[no-]deletion-protection] [--description=DESCRIPTION]
+        [--[no-]enable-display-device] [--[no-]enable-uefi-networking]
+        [--hostname=HOSTNAME] [--instance-kms-key=INSTANCE_KMS_KEY]
         [--instance-termination-action=INSTANCE_TERMINATION_ACTION]
         [--key-revocation-action-type=POLICY] [--labels=[KEY=VALUE,...]]
         [--local-ssd-recovery-timeout=LOCAL_SSD_RECOVERY_TIMEOUT]
@@ -126,6 +126,10 @@ OPTIONAL FLAGS
         with non-matching destination or source IP addresses. Use
         --can-ip-forward to enable and --no-can-ip-forward to disable.
 
+     --clear-encryption-key
+        Clears the CMEK encryption of the restored disks and defaults to GMEK
+        unless the kms-key is specified in the --create-disk flag.
+
      --confidential-compute
         The restored instance boots with Confidential Computing enabled.
         Confidential Computing is based on Secure Encrypted Virtualization
@@ -143,6 +147,13 @@ OPTIONAL FLAGS
         must be the same as the instance zone.
 
         device-name: Device name of the disk from the source instance.
+
+        kms-key: The Cloud KMS key resource name to be used for encryption. If
+        supplied, it will encrypt the disk with the given key, if not supplied,
+        the restored disk will use the encryption of the disk from the source
+        instance. The device-name field must be provided for kms-key to take
+        effect. Format:
+        'projects/{project}/locations/{location}/keyRings/{ring}/cryptoKeys/{key}'
 
      --[no-]deletion-protection
         Enables deletion protection for the restored instance. Use
@@ -370,20 +381,20 @@ OPTIONAL FLAGS
 
      Specifies the reservation for the instance.
 
-       --reservation=RESERVATION
-          The name of the reservation, required when
-          --reservation-affinity=specific.
+     --reservation=RESERVATION
+        The name of the reservation, required when
+        --reservation-affinity=specific.
 
-       --reservation-affinity=RESERVATION_AFFINITY
-          Specifies the reservation affinity of the instance.
-          RESERVATION_AFFINITY must be one of:
+     --reservation-affinity=RESERVATION_AFFINITY
+        Specifies the reservation affinity of the instance.
+        RESERVATION_AFFINITY must be one of:
 
-           any
-              Consume any available, matching reservation.
-           none
-              Do not consume from any reserved capacity.
-           specific
-              Must consume from a specific reservation.
+         any
+            Consume any available, matching reservation.
+         none
+            Do not consume from any reserved capacity.
+         specific
+            Must consume from a specific reservation.
 
      At most one of these can be specified:
 

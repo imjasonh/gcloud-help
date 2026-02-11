@@ -5,6 +5,7 @@ NAME
 SYNOPSIS
     gcloud alpha container clusters update NAME
         (--anonymous-authentication-config=ANONYMOUS_AUTHENTICATION_CONFIG
+          | --autopilot-general-profile=AUTOPILOT_GENERAL_PROFILE
           | --autopilot-workload-policies=WORKLOAD_POLICIES
           | --autoprovisioning-cgroup-mode=AUTOPROVISIONING_CGROUP_MODE
           | --autoprovisioning-enable-insecure-kubelet-readonly-port
@@ -169,6 +170,12 @@ REQUIRED FLAGS
               'LIMITED' restricts anonymous access to the cluster. Only calls
               to the health check endpoints are allowed anonymously, all other
               calls will be rejected.
+
+       --autopilot-general-profile=AUTOPILOT_GENERAL_PROFILE
+          Sets the Autopilot general profile for the cluster; possible values
+          are none and no-performance. If none is used, the cluster will use
+          the Autopilot default configuration. AUTOPILOT_GENERAL_PROFILE must
+          be one of: none, no-performance.
 
        --autopilot-workload-policies=WORKLOAD_POLICIES
           Add Autopilot workload policies to the cluster.
@@ -419,7 +426,16 @@ REQUIRED FLAGS
           flag --no-enable-identity-service.
 
        --enable-image-streaming
-          Specifies whether to enable image streaming on cluster.
+          Enable Image Streaming for the cluster, allowing nodes to stream
+          container image data from Artifact Registry on demand to reduce
+          container start times. This flag sets the default for new node pools.
+          It is enabled by default on Autopilot clusters.
+
+          See Image Streaming documentation
+          (https://cloud.google.com/kubernetes-engine/docs/how-to/image-streaming)
+          for full requirements (including version, API enablement and Artifact
+          Registry usage). To disable Image Streaming for the cluster, use
+          --no-enable-image-streaming.
 
        --enable-insecure-kubelet-readonly-port
           Enables the Kubelet's insecure read only port.
@@ -543,9 +559,9 @@ REQUIRED FLAGS
           and
           https://cloud.google.com/kubernetes-engine/docs/how-to/configure-metrics.
 
-       Flags for vertical pod autoscaling:
+       Or at most one of these can be specified:
 
-       At most one of these can be specified:
+         Flags for vertical pod autoscaling:
 
          --enable-vertical-pod-autoscaling
             Enable vertical pod autoscaling for a cluster.
@@ -892,53 +908,57 @@ REQUIRED FLAGS
           WORKLOAD_VULNERABILITY_SCANNING must be one of: disabled, standard,
           enterprise.
 
-       --additional-ip-ranges=[subnetwork=NAME,pod-ipv4-range=NAME,...]
-          Add additional subnetworks named "my-subnet" with pod ipv4 range
-          named "my-range" to the cluster.
+       Or at least one of these can be specified:
 
-          Examples:
+         --additional-ip-ranges=[subnetwork=NAME,pod-ipv4-range=NAME,...]
+            Add additional subnetworks named "my-subnet" with pod ipv4 range
+            named "my-range" to the cluster.
 
-              $ gcloud alpha container clusters update example-cluster \
-                  --additional-ip-ranges=subnetwork=my-subnet,\
-              pod-ipv4-range=my-range
+            Examples:
 
-       --remove-additional-ip-ranges=[subnetwork=NAME,pod-ipv4-range=NAME,...]
-          Additional subnetworks to be removed from the cluster.
+                $ gcloud alpha container clusters update example-cluster \
+                    --additional-ip-ranges=subnetwork=my-subnet,\
+                pod-ipv4-range=my-range
 
-          Examples:
+         --remove-additional-ip-ranges=[subnetwork=NAME,pod-ipv4-range=NAME,...]
+            Additional subnetworks to be removed from the cluster.
 
-          Remove pod range named "my-range" under additional subnetwork named
-          "my-subnet" from the cluster.
+            Examples:
 
-              $ gcloud alpha container clusters update example-cluster \
-                  --remove-additional-ip-ranges=subnetwork=my-subnet,\
-              pod-ipv4-range=my-range
+            Remove pod range named "my-range" under additional subnetwork named
+            "my-subnet" from the cluster.
 
-          Remove additional subnetwork named "my-subnet", including all the pod
-          ipv4 ranges under the subnetwork.
+                $ gcloud alpha container clusters update example-cluster \
+                    --remove-additional-ip-ranges=subnetwork=my-subnet,\
+                pod-ipv4-range=my-range
 
-              $ gcloud alpha container clusters update example-cluster \
-                  --remove-additional-ip-ranges=subnetwork=my-subnet
+            Remove additional subnetwork named "my-subnet", including all the
+            pod ipv4 ranges under the subnetwork.
 
-       --additional-pod-ipv4-ranges=NAME,[NAME,...]
-          Additional IP address ranges(by name) for pods that need to be added
-          to the cluster.
+                $ gcloud alpha container clusters update example-cluster \
+                    --remove-additional-ip-ranges=subnetwork=my-subnet
 
-          Examples:
+       Or at least one of these can be specified:
 
-              $ gcloud alpha container clusters update example-cluster \
-                  --additional-pod-ipv4-ranges=range1,range2
+         --additional-pod-ipv4-ranges=NAME,[NAME,...]
+            Additional IP address ranges(by name) for pods that need to be
+            added to the cluster.
 
-       --remove-additional-pod-ipv4-ranges=NAME,[NAME,...]
-          Previously added additional pod ranges(by name) for pods that are to
-          be removed from the cluster.
+            Examples:
 
-          Examples:
+                $ gcloud alpha container clusters update example-cluster \
+                    --additional-pod-ipv4-ranges=range1,range2
 
-              $ gcloud alpha container clusters update example-cluster \
-                  --remove-additional-pod-ipv4-ranges=range1,range2
+         --remove-additional-pod-ipv4-ranges=NAME,[NAME,...]
+            Previously added additional pod ranges(by name) for pods that are
+            to be removed from the cluster.
 
-       At most one of these can be specified:
+            Examples:
+
+                $ gcloud alpha container clusters update example-cluster \
+                    --remove-additional-pod-ipv4-ranges=range1,range2
+
+       Or at most one of these can be specified:
 
          --additional-zones=[ZONE,...]
             (DEPRECATED) The set of additional zones in which the cluster's
@@ -987,70 +1007,74 @@ REQUIRED FLAGS
                     --location us-central1-a \
                     --node-locations us-central1-a,us-central1-b
 
-       --auto-monitoring-scope=AUTO_MONITORING_SCOPE
-          Enables Auto-Monitoring for a specific scope within the cluster. ALL:
-          Enables Auto-Monitoring for all supported workloads within the
-          cluster. NONE: Disables Auto-Monitoring. AUTO_MONITORING_SCOPE must
-          be one of: ALL, NONE.
+       Or at least one of these can be specified:
 
-       --logging=[COMPONENT,...]
-          Set the components that have logging enabled. Valid component values
-          are: SYSTEM, WORKLOAD, API_SERVER, CONTROLLER_MANAGER, SCHEDULER,
-          NONE
+         --auto-monitoring-scope=AUTO_MONITORING_SCOPE
+            Enables Auto-Monitoring for a specific scope within the cluster.
+            ALL: Enables Auto-Monitoring for all supported workloads within the
+            cluster. NONE: Disables Auto-Monitoring. AUTO_MONITORING_SCOPE must
+            be one of: ALL, NONE.
 
-          For more information, see
-          https://cloud.google.com/kubernetes-engine/docs/concepts/about-logs#available-logs
+         --logging=[COMPONENT,...]
+            Set the components that have logging enabled. Valid component
+            values are: SYSTEM, WORKLOAD, API_SERVER, CONTROLLER_MANAGER,
+            SCHEDULER, NONE
 
-          Examples:
+            For more information, see
+            https://cloud.google.com/kubernetes-engine/docs/concepts/about-logs#available-logs
 
-              $ gcloud alpha container clusters update --logging=SYSTEM
-              $ gcloud alpha container clusters update \
-                  --logging=SYSTEM,API_SERVER,WORKLOAD
-              $ gcloud alpha container clusters update --logging=NONE
+            Examples:
 
-       --managed-otel-scope=MANAGED_OTEL_SCOPE
-          Specifies the scope of Managed OpenTelemetry within the cluster.
+                $ gcloud alpha container clusters update --logging=SYSTEM
+                $ gcloud alpha container clusters update \
+                    --logging=SYSTEM,API_SERVER,WORKLOAD
+                $ gcloud alpha container clusters update --logging=NONE
 
-          COLLECTION_AND_INSTRUMENTATION_COMPONENTS: Enables GKE Managed
-          OpenTelemetry Collector and other Instrumentations components like
-          Instrumentation CRD within the cluster. NONE: Disables the GKE
-          Managed OpenTelemetry.
+         --managed-otel-scope=MANAGED_OTEL_SCOPE
+            Specifies the scope of Managed OpenTelemetry within the cluster.
 
-          MANAGED_OTEL_SCOPE must be one of:
-          COLLECTION_AND_INSTRUMENTATION_COMPONENTS, NONE.
+            COLLECTION_AND_INSTRUMENTATION_COMPONENTS: Enables GKE Managed
+            OpenTelemetry Collector and other Instrumentations components like
+            Instrumentation CRD within the cluster. NONE: Disables the GKE
+            Managed OpenTelemetry.
 
-       --monitoring=[COMPONENT,...]
-          Set the components that have monitoring enabled. Valid component
-          values are: SYSTEM, WORKLOAD (Deprecated), NONE, API_SERVER,
-          CONTROLLER_MANAGER, SCHEDULER, DAEMONSET, DEPLOYMENT, HPA, POD,
-          STATEFULSET, STORAGE, CADVISOR, KUBELET, DCGM, JOBSET
+            MANAGED_OTEL_SCOPE must be one of:
+            COLLECTION_AND_INSTRUMENTATION_COMPONENTS, NONE.
 
-          For more information, see
-          https://cloud.google.com/kubernetes-engine/docs/how-to/configure-metrics#available-metrics
+         --monitoring=[COMPONENT,...]
+            Set the components that have monitoring enabled. Valid component
+            values are: SYSTEM, WORKLOAD (Deprecated), NONE, API_SERVER,
+            CONTROLLER_MANAGER, SCHEDULER, DAEMONSET, DEPLOYMENT, HPA, POD,
+            STATEFULSET, STORAGE, CADVISOR, KUBELET, DCGM, JOBSET
 
-          Examples:
+            For more information, see
+            https://cloud.google.com/kubernetes-engine/docs/how-to/configure-metrics#available-metrics
 
-              $ gcloud alpha container clusters update \
-                  --monitoring=SYSTEM,API_SERVER,POD
-              $ gcloud alpha container clusters update --monitoring=NONE
+            Examples:
 
-       At most one of these can be specified:
+                $ gcloud alpha container clusters update \
+                    --monitoring=SYSTEM,API_SERVER,POD
+                $ gcloud alpha container clusters update --monitoring=NONE
 
-         --disable-managed-prometheus
-            Disable managed collection for Managed Service for Prometheus.
+         At most one of these can be specified:
 
-         --enable-managed-prometheus
-            Enables managed collection for Managed Service for Prometheus in
-            the cluster.
+           --disable-managed-prometheus
+              Disable managed collection for Managed Service for Prometheus.
 
-            See
-            https://cloud.google.com/stackdriver/docs/managed-prometheus/setup-managed#enable-mgdcoll-gke
-            for more info.
+           --enable-managed-prometheus
+              Enables managed collection for Managed Service for Prometheus in
+              the cluster.
 
-            Enabled by default for cluster versions 1.27 or greater, use
-            --no-enable-managed-prometheus to disable.
+              See
+              https://cloud.google.com/stackdriver/docs/managed-prometheus/setup-managed#enable-mgdcoll-gke
+              for more info.
 
-       Flags for Binary Authorization:
+              Enabled by default for cluster versions 1.27 or greater, use
+              --no-enable-managed-prometheus to disable.
+
+       Or at least one of these can be specified:
+
+         Flags for Binary Authorization:
 
          --binauthz-policy-bindings=[name=BINAUTHZ_POLICY,enforcement-mode=ENFORCEMENT_MODE,...]
             Binds a Binary Authorization policy to the cluster.
@@ -1081,39 +1105,42 @@ REQUIRED FLAGS
               The --enable-binauthz flag is deprecated. Please use
               --binauthz-evaluation-mode instead.
 
-       --clear-fleet-project
-          Remove the cluster from current fleet host project. Example: $ gcloud
-          alpha container clusters update --clear-fleet-project
+       Or at least one of these can be specified:
 
-       --enable-fleet
-          Set cluster project as the fleet host project. This will register the
-          cluster to the same project. To register the cluster to a fleet in a
-          different project, please use --fleet-project=FLEET_HOST_PROJECT.
-          Example: $ gcloud alpha container clusters update --enable-fleet
+         --clear-fleet-project
+            Remove the cluster from current fleet host project. Example: $
+            gcloud alpha container clusters update --clear-fleet-project
 
-       --fleet-project=PROJECT_ID_OR_NUMBER
-          Sets fleet host project for the cluster. If specified, the current
-          cluster will be registered as a fleet membership under the fleet host
-          project.
+         --enable-fleet
+            Set cluster project as the fleet host project. This will register
+            the cluster to the same project. To register the cluster to a fleet
+            in a different project, please use
+            --fleet-project=FLEET_HOST_PROJECT. Example: $ gcloud alpha
+            container clusters update --enable-fleet
 
-          Example: $ gcloud alpha container clusters update
-          --fleet-project=my-project
+         --fleet-project=PROJECT_ID_OR_NUMBER
+            Sets fleet host project for the cluster. If specified, the current
+            cluster will be registered as a fleet membership under the fleet
+            host project.
 
-       --membership-type=MEMBERSHIP_TYPE
-          Specify a membership type for the cluster's fleet membership.
-          Example: $ gcloud alpha container clusters update \
-          --membership-type=LIGHTWEIGHT. MEMBERSHIP_TYPE must be (only \ one
-          value is supported):
+            Example: $ gcloud alpha container clusters update
+            --fleet-project=my-project
 
-           LIGHTWEIGHT
-              Fleet membership representing this cluster will be lightweight.
+         --membership-type=MEMBERSHIP_TYPE
+            Specify a membership type for the cluster's fleet membership.
+            Example: $ gcloud alpha container clusters update \
+            --membership-type=LIGHTWEIGHT. MEMBERSHIP_TYPE must be (only \ one
+            value is supported):
 
-       --unset-membership-type
-          Set the membership type for the cluster's fleet membership to empty.
-          Example: $ gcloud alpha container clusters update
-          --unset-membership-type
+             LIGHTWEIGHT
+                Fleet membership representing this cluster will be lightweight.
 
-       At most one of these can be specified:
+         --unset-membership-type
+            Set the membership type for the cluster's fleet membership to
+            empty. Example: $ gcloud alpha container clusters update
+            --unset-membership-type
+
+       Or at most one of these can be specified:
 
          --clear-maintenance-window
             If set, remove the maintenance window that was set with
@@ -1124,18 +1151,20 @@ REQUIRED FLAGS
             a name, one was auto-generated. Get it with $ gcloud container
             clusters describe.
 
-         Sets a period of time in which maintenance should not occur. This is
-         compatible with both daily and recurring maintenance windows. If
-         --add-maintenance-exclusion-scope is not specified, the exclusion will
-         exclude all upgrades.
+         Or at least one of these can be specified:
 
-         Examples:
+           Sets a period of time in which maintenance should not occur. This is
+           compatible with both daily and recurring maintenance windows. If
+           --add-maintenance-exclusion-scope is not specified, the exclusion
+           will exclude all upgrades.
 
-             $ gcloud alpha container clusters update example-cluster   \
-                 --add-maintenance-exclusion-name=holidays-2000   \
-                 --add-maintenance-exclusion-start=2000-11-20T00:00:00   \
-                 --add-maintenance-exclusion-end=2000-12-31T23:59:59   \
-                 --add-maintenance-exclusion-scope=no_upgrades
+           Examples:
+
+               $ gcloud alpha container clusters update example-cluster   \
+                   --add-maintenance-exclusion-name=holidays-2000   \
+                   --add-maintenance-exclusion-start=2000-11-20T00:00:00   \
+                   --add-maintenance-exclusion-end=2000-12-31T23:59:59   \
+                   --add-maintenance-exclusion-scope=no_upgrades
 
            --add-maintenance-exclusion-name=NAME
               A descriptor for the exclusion that can be used to remove it. If
@@ -1163,25 +1192,27 @@ REQUIRED FLAGS
                 End time of the exclusion window is the end of the cluster's
                 support.
 
-         Set a flexible maintenance window by specifying a window that recurs
-         per an RFC 5545 RRULE. Non-emergency maintenance will occur in the
-         recurring windows.
+         Or at least one of these can be specified:
 
-         Examples:
+           Set a flexible maintenance window by specifying a window that recurs
+           per an RFC 5545 RRULE. Non-emergency maintenance will occur in the
+           recurring windows.
 
-         For a 9-5 Mon-Wed UTC-4 maintenance window:
+           Examples:
 
-             $ gcloud alpha container clusters update example-cluster \
-                 --maintenance-window-start=2000-01-01T09:00:00-04:00 \
-                 --maintenance-window-end=2000-01-01T17:00:00-04:00 \
-                 --maintenance-window-recurrence='FREQ=WEEKLY;BYDAY=MO,TU,WE'
+           For a 9-5 Mon-Wed UTC-4 maintenance window:
 
-         For a daily window from 22:00 - 04:00 UTC:
+               $ gcloud alpha container clusters update example-cluster \
+                   --maintenance-window-start=2000-01-01T09:00:00-04:00 \
+                   --maintenance-window-end=2000-01-01T17:00:00-04:00 \
+                   --maintenance-window-recurrence='FREQ=WEEKLY;BYDAY=MO,TU,WE'
 
-             $ gcloud alpha container clusters update example-cluster \
-                 --maintenance-window-start=2000-01-01T22:00:00Z \
-                 --maintenance-window-end=2000-01-02T04:00:00Z \
-                 --maintenance-window-recurrence=FREQ=DAILY
+           For a daily window from 22:00 - 04:00 UTC:
+
+               $ gcloud alpha container clusters update example-cluster \
+                   --maintenance-window-start=2000-01-01T22:00:00Z \
+                   --maintenance-window-end=2000-01-02T04:00:00Z \
+                   --maintenance-window-recurrence=FREQ=DAILY
 
            --maintenance-window-end=TIME_STAMP
               The end time for calculating the duration of the maintenance
@@ -1216,50 +1247,55 @@ REQUIRED FLAGS
               This flag argument must be specified if any of the other
               arguments in this group are specified.
 
-       Exports cluster's usage of cloud resources
+       Or at most one of these can be specified:
 
-       At most one of these can be specified:
+         Exports cluster's usage of cloud resources
 
          --clear-resource-usage-bigquery-dataset
             Disables exporting cluster resource usage to BigQuery.
 
-         --enable-network-egress-metering
-            Enable network egress metering on this cluster.
+         Or at least one of these can be specified:
 
-            When enabled, a DaemonSet is deployed into the cluster. Each
-            DaemonSet pod meters network egress traffic by collecting data from
-            the conntrack table, and exports the metered metrics to the
-            specified destination.
+           --enable-network-egress-metering
+              Enable network egress metering on this cluster.
 
-            Network egress metering is disabled if this flag is omitted, or
-            when --no-enable-network-egress-metering is set.
+              When enabled, a DaemonSet is deployed into the cluster. Each
+              DaemonSet pod meters network egress traffic by collecting data
+              from the conntrack table, and exports the metered metrics to the
+              specified destination.
 
-         --enable-resource-consumption-metering
-            Enable resource consumption metering on this cluster.
+              Network egress metering is disabled if this flag is omitted, or
+              when --no-enable-network-egress-metering is set.
 
-            When enabled, a table will be created in the specified BigQuery
-            dataset to store resource consumption data. The resulting table can
-            be joined with the resource usage table or with BigQuery billing
-            export.
+           --enable-resource-consumption-metering
+              Enable resource consumption metering on this cluster.
 
-            To disable resource consumption metering, set
-            --no-enable-resource-consumption- metering. If this flag is
-            omitted, then resource consumption metering will remain enabled or
-            disabled depending on what is already configured for this cluster.
+              When enabled, a table will be created in the specified BigQuery
+              dataset to store resource consumption data. The resulting table
+              can be joined with the resource usage table or with BigQuery
+              billing export.
 
-         --resource-usage-bigquery-dataset=RESOURCE_USAGE_BIGQUERY_DATASET
-            The name of the BigQuery dataset to which the cluster's usage of
-            cloud resources is exported. A table will be created in the
-            specified dataset to store cluster resource usage. The resulting
-            table can be joined with BigQuery Billing Export to produce a
-            fine-grained cost breakdown.
+              To disable resource consumption metering, set
+              --no-enable-resource-consumption- metering. If this flag is
+              omitted, then resource consumption metering will remain enabled
+              or disabled depending on what is already configured for this
+              cluster.
 
-            Examples:
+           --resource-usage-bigquery-dataset=RESOURCE_USAGE_BIGQUERY_DATASET
+              The name of the BigQuery dataset to which the cluster's usage of
+              cloud resources is exported. A table will be created in the
+              specified dataset to store cluster resource usage. The resulting
+              table can be joined with BigQuery Billing Export to produce a
+              fine-grained cost breakdown.
 
-                $ gcloud alpha container clusters update example-cluster \
-                    --resource-usage-bigquery-dataset=example_bigquery_dataset_name
+              Examples:
 
-       ClusterDNS
+                  $ gcloud alpha container clusters update example-cluster \
+                      --resource-usage-bigquery-dataset=example_bigquery_dataset_name
+
+       Or at least one of these can be specified:
+
+         ClusterDNS
 
          --cluster-dns=CLUSTER_DNS
             DNS provider to use for this cluster. CLUSTER_DNS must be one of:
@@ -1297,55 +1333,57 @@ REQUIRED FLAGS
            --disable-additive-vpc-scope
               Disables Additive VPC Scope.
 
-       At most one of these can be specified:
+       Or at least one of these can be specified:
 
-         --dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE
-            (REMOVED) Select Advanced Datapath Observability mode for the
-            cluster. Defaults to DISABLED.
+         At most one of these can be specified:
 
-            Advanced Datapath Observability allows for a real-time view into
-            pod-to-pod traffic within your cluster.
+           --dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE
+              (REMOVED) Select Advanced Datapath Observability mode for the
+              cluster. Defaults to DISABLED.
 
-            Examples:
+              Advanced Datapath Observability allows for a real-time view into
+              pod-to-pod traffic within your cluster.
 
-                $ gcloud alpha container clusters update \
-                    --dataplane-v2-observability-mode=DISABLED
+              Examples:
 
-                $ gcloud alpha container clusters update \
-                    --dataplane-v2-observability-mode=INTERNAL_VPC_LB
+                  $ gcloud alpha container clusters update \
+                      --dataplane-v2-observability-mode=DISABLED
 
-                $ gcloud alpha container clusters update \
-                    --dataplane-v2-observability-mode=EXTERNAL_LB
+                  $ gcloud alpha container clusters update \
+                      --dataplane-v2-observability-mode=INTERNAL_VPC_LB
 
-            Flag --dataplane-v2-observability-mode has been removed.
+                  $ gcloud alpha container clusters update \
+                      --dataplane-v2-observability-mode=EXTERNAL_LB
 
-            DATAPLANE_V2_OBSERVABILITY_MODE must be one of:
+              Flag --dataplane-v2-observability-mode has been removed.
 
-             DISABLED
-                Disables Advanced Datapath Observability.
-             EXTERNAL_LB
-                Makes Advanced Datapath Observability available to the external
-                network.
-             INTERNAL_VPC_LB
-                Makes Advanced Datapath Observability available from the VPC
-                network.
+              DATAPLANE_V2_OBSERVABILITY_MODE must be one of:
 
-         --disable-dataplane-v2-flow-observability
-            Disables Advanced Datapath Observability.
+               DISABLED
+                  Disables Advanced Datapath Observability.
+               EXTERNAL_LB
+                  Makes Advanced Datapath Observability available to the
+                  external network.
+               INTERNAL_VPC_LB
+                  Makes Advanced Datapath Observability available from the VPC
+                  network.
 
-         --enable-dataplane-v2-flow-observability
-            Enables Advanced Datapath Observability which allows for a
-            real-time view into pod-to-pod traffic within your cluster.
+           --disable-dataplane-v2-flow-observability
+              Disables Advanced Datapath Observability.
 
-       At most one of these can be specified:
+           --enable-dataplane-v2-flow-observability
+              Enables Advanced Datapath Observability which allows for a
+              real-time view into pod-to-pod traffic within your cluster.
 
-         --disable-dataplane-v2-metrics
-            Stops exposing advanced datapath flow metrics on node port.
+         At most one of these can be specified:
 
-         --enable-dataplane-v2-metrics
-            Exposes advanced datapath flow metrics on node port.
+           --disable-dataplane-v2-metrics
+              Stops exposing advanced datapath flow metrics on node port.
 
-       At most one of these can be specified:
+           --enable-dataplane-v2-metrics
+              Exposes advanced datapath flow metrics on node port.
+
+       Or at most one of these can be specified:
 
          --disable-auto-ipam
             Disable the Auto IP Address Management (Auto IPAM) feature for the
@@ -1355,7 +1393,7 @@ REQUIRED FLAGS
             Enable the Auto IP Address Management (Auto IPAM) feature for the
             cluster.
 
-       At most one of these can be specified:
+       Or at most one of these can be specified:
 
          --disable-l4-lb-firewall-reconciliation
             Disable reconciliation on the cluster for L4 Load Balancer VPC
@@ -1366,7 +1404,7 @@ REQUIRED FLAGS
             firewalls targeting ingress traffic. L4 LB VPC firewall
             reconciliation is enabled by default.
 
-       At most one of these can be specified:
+       Or at most one of these can be specified:
 
          --disable-pod-snapshots
             Disable the Pod Snapshot feature on the cluster.
@@ -1374,42 +1412,45 @@ REQUIRED FLAGS
          --enable-pod-snapshots
             Enable the Pod Snapshot feature on the cluster.
 
-       --enable-authorized-networks-on-private-endpoint
-          Enable enforcement of --master-authorized-networks CIDR ranges for
-          traffic reaching cluster's control plane via private IP.
+       Or at least one of these can be specified:
 
-       --enable-dns-access
-          Enable access to the cluster's control plane over DNS-based endpoint.
+         --enable-authorized-networks-on-private-endpoint
+            Enable enforcement of --master-authorized-networks CIDR ranges for
+            traffic reaching cluster's control plane via private IP.
 
-          DNS-based control plane access is recommended.
+         --enable-dns-access
+            Enable access to the cluster's control plane over DNS-based
+            endpoint.
 
-       --enable-google-cloud-access
-          When you enable Google Cloud Access, any public IP addresses owned by
-          Google Cloud can reach the public control plane endpoint of your
-          cluster.
+            DNS-based control plane access is recommended.
 
-       --enable-ip-access
-          Enable access to the cluster's control plane over private IP and
-          public IP if --enable-private-endpoint is not enabled.
+         --enable-google-cloud-access
+            When you enable Google Cloud Access, any public IP addresses owned
+            by Google Cloud can reach the public control plane endpoint of your
+            cluster.
 
-       --enable-k8s-certs-via-dns
-          Enable K8s client certificates Authentication to the cluster's
-          control plane over DNS-based endpoint.
+         --enable-ip-access
+            Enable access to the cluster's control plane over private IP and
+            public IP if --enable-private-endpoint is not enabled.
 
-       --enable-k8s-tokens-via-dns
-          Enable K8s Service Account tokens Authentication to the cluster's
-          control plane over DNS-based endpoint.
+         --enable-k8s-certs-via-dns
+            Enable K8s client certificates Authentication to the cluster's
+            control plane over DNS-based endpoint.
 
-       --enable-master-global-access
-          Use with private clusters to allow access to the master's private
-          endpoint from any Google Cloud region or on-premises environment
-          regardless of the private cluster's region.
+         --enable-k8s-tokens-via-dns
+            Enable K8s Service Account tokens Authentication to the cluster's
+            control plane over DNS-based endpoint.
 
-       --enable-private-endpoint
-          Enables cluster's control plane to be accessible using private IP
-          address only.
+         --enable-master-global-access
+            Use with private clusters to allow access to the master's private
+            endpoint from any Google Cloud region or on-premises environment
+            regardless of the private cluster's region.
 
-       Master Authorized Networks
+         --enable-private-endpoint
+            Enables cluster's control plane to be accessible using private IP
+            address only.
+
+         Master Authorized Networks
 
          --enable-master-authorized-networks
             Allow only specified set of CIDR blocks (specified by the
@@ -1433,7 +1474,9 @@ REQUIRED FLAGS
             be specified unless --enable-master-authorized-networks is also
             specified.
 
-       Node autoprovisioning
+       Or at least one of these can be specified:
+
+         Node autoprovisioning
 
          --enable-autoprovisioning
             Enables node autoprovisioning for a cluster.
@@ -1516,7 +1559,9 @@ REQUIRED FLAGS
               Use a full or relative path to a local file containing the value
               of autoprovisioning_config_file.
 
-           Flags to configure autoprovisioned nodes
+           Or at least one of these can be specified:
+
+             Flags to configure autoprovisioned nodes
 
              --autoprovisioning-image-type=AUTOPROVISIONING_IMAGE_TYPE
                 Node Autoprovisioning will create new nodes with the specified
@@ -1561,151 +1606,160 @@ REQUIRED FLAGS
 
              Flags to specify upgrade settings for autoprovisioned nodes:
 
-               --autoprovisioning-max-surge-upgrade=AUTOPROVISIONING_MAX_SURGE_UPGRADE
-                  Number of extra (surge) nodes to be created on each upgrade
-                  of an autoprovisioned node pool.
+             --autoprovisioning-max-surge-upgrade=AUTOPROVISIONING_MAX_SURGE_UPGRADE
+                Number of extra (surge) nodes to be created on each upgrade of
+                an autoprovisioned node pool.
 
-               --autoprovisioning-max-unavailable-upgrade=AUTOPROVISIONING_MAX_UNAVAILABLE_UPGRADE
-                  Number of nodes that can be unavailable at the same time on
-                  each upgrade of an autoprovisioned node pool.
+             --autoprovisioning-max-unavailable-upgrade=AUTOPROVISIONING_MAX_UNAVAILABLE_UPGRADE
+                Number of nodes that can be unavailable at the same time on
+                each upgrade of an autoprovisioned node pool.
 
-               --autoprovisioning-node-pool-soak-duration=AUTOPROVISIONING_NODE_POOL_SOAK_DURATION
-                  Time in seconds to be spent waiting during blue-green upgrade
-                  before deleting the blue pool and completing the update. This
-                  argument should be used in conjunction with
-                  --enable-autoprovisioning-blue-green-upgrade to take effect.
+             --autoprovisioning-node-pool-soak-duration=AUTOPROVISIONING_NODE_POOL_SOAK_DURATION
+                Time in seconds to be spent waiting during blue-green upgrade
+                before deleting the blue pool and completing the update. This
+                argument should be used in conjunction with
+                --enable-autoprovisioning-blue-green-upgrade to take effect.
 
-               --autoprovisioning-standard-rollout-policy=[batch-node-count=BATCH_NODE_COUNT,batch-percent=BATCH_NODE_PERCENTAGE,batch-soak-duration=BATCH_SOAK_DURATION,...]
-                  Standard rollout policy options for blue-green upgrade. This
-                  argument should be used in conjunction with
-                  --enable-autoprovisioning-blue-green-upgrade to take effect.
+             --autoprovisioning-standard-rollout-policy=[batch-node-count=BATCH_NODE_COUNT,batch-percent=BATCH_NODE_PERCENTAGE,batch-soak-duration=BATCH_SOAK_DURATION,...]
+                Standard rollout policy options for blue-green upgrade. This
+                argument should be used in conjunction with
+                --enable-autoprovisioning-blue-green-upgrade to take effect.
 
-                  Batch sizes are specified by one of, batch-node-count or
-                  batch-percent. The duration between batches is specified by
-                  batch-soak-duration.
+                Batch sizes are specified by one of, batch-node-count or
+                batch-percent. The duration between batches is specified by
+                batch-soak-duration.
 
-                  Example:
-                  --standard-rollout-policy=batch-node-count=3,batch-soak-duration=60s
-                  --standard-rollout-policy=batch-percent=0.05,batch-soak-duration=180s
+                Example:
+                --standard-rollout-policy=batch-node-count=3,batch-soak-duration=60s
+                --standard-rollout-policy=batch-percent=0.05,batch-soak-duration=180s
 
-               Flag group to choose the top level upgrade option:
+             Flag group to choose the top level upgrade option:
 
-               At most one of these can be specified:
+             At most one of these can be specified:
 
-                 --enable-autoprovisioning-blue-green-upgrade
-                    Whether to use blue-green upgrade for the autoprovisioned
-                    node pool.
+               --enable-autoprovisioning-blue-green-upgrade
+                  Whether to use blue-green upgrade for the autoprovisioned
+                  node pool.
 
-                 --enable-autoprovisioning-surge-upgrade
-                    Whether to use surge upgrade for the autoprovisioned node
-                    pool.
+               --enable-autoprovisioning-surge-upgrade
+                  Whether to use surge upgrade for the autoprovisioned node
+                  pool.
 
              Flags to specify identity for autoprovisioned nodes:
 
-               --autoprovisioning-scopes=[SCOPE,...]
-                  The scopes to be used by node instances in autoprovisioned
-                  node pools. Multiple scopes can be specified, separated by
-                  commas. For information on defaults, look at:
-                  https://cloud.google.com/sdk/gcloud/reference/container/clusters/create#--scopes
+             --autoprovisioning-scopes=[SCOPE,...]
+                The scopes to be used by node instances in autoprovisioned node
+                pools. Multiple scopes can be specified, separated by commas.
+                For information on defaults, look at:
+                https://cloud.google.com/sdk/gcloud/reference/container/clusters/create#--scopes
 
-               --autoprovisioning-service-account=AUTOPROVISIONING_SERVICE_ACCOUNT
-                  The Google Cloud Platform Service Account to be used by node
-                  VMs in autoprovisioned node pools. If not specified, the
-                  project default service account is used.
+             --autoprovisioning-service-account=AUTOPROVISIONING_SERVICE_ACCOUNT
+                The Google Cloud Platform Service Account to be used by node
+                VMs in autoprovisioned node pools. If not specified, the
+                project default service account is used.
 
              Flags to specify node management settings for autoprovisioned
              nodes:
 
-               --enable-autoprovisioning-autorepair
-                  Enable node autorepair for autoprovisioned node pools. Use
-                  --no-enable-autoprovisioning-autorepair to disable.
+             --enable-autoprovisioning-autorepair
+                Enable node autorepair for autoprovisioned node pools. Use
+                --no-enable-autoprovisioning-autorepair to disable.
 
-                  This flag argument must be specified if any of the other
-                  arguments in this group are specified.
+                This flag argument must be specified if any of the other
+                arguments in this group are specified.
 
-               --enable-autoprovisioning-autoupgrade
-                  Enable node autoupgrade for autoprovisioned node pools. Use
-                  --no-enable-autoprovisioning-autoupgrade to disable.
+             --enable-autoprovisioning-autoupgrade
+                Enable node autoupgrade for autoprovisioned node pools. Use
+                --no-enable-autoprovisioning-autoupgrade to disable.
 
-                  This flag argument must be specified if any of the other
-                  arguments in this group are specified.
+                This flag argument must be specified if any of the other
+                arguments in this group are specified.
 
              Arguments to set limits on accelerators:
 
-               --max-accelerator=[type=TYPE,count=COUNT,...]
-                  Sets maximum limit for a single type of accelerators (e.g.
-                  GPUs) in cluster.
+             --max-accelerator=[type=TYPE,count=COUNT,...]
+                Sets maximum limit for a single type of accelerators (e.g.
+                GPUs) in cluster.
 
-                   type
-                      (Required) The specific type (e.g. nvidia-tesla-t4 for
-                      NVIDIA T4) of accelerator for which the limit is set. Use
-                      gcloud compute accelerator-types list to learn about all
-                      available accelerator types.
+                 type
+                    (Required) The specific type (e.g. nvidia-tesla-t4 for
+                    NVIDIA T4) of accelerator for which the limit is set. Use
+                    gcloud compute accelerator-types list to learn about all
+                    available accelerator types.
 
-                   count
-                      (Required) The maximum number of accelerators to which
-                      the cluster can be scaled.
+                 count
+                    (Required) The maximum number of accelerators to which the
+                    cluster can be scaled.
 
-                      This flag argument must be specified if any of the other
-                      arguments in this group are specified.
+                    This flag argument must be specified if any of the other
+                    arguments in this group are specified.
 
-               --min-accelerator=[type=TYPE,count=COUNT,...]
-                  Sets minimum limit for a single type of accelerators (e.g.
-                  GPUs) in cluster. Defaults to 0 for all accelerator types if
-                  it isn't set.
+             --min-accelerator=[type=TYPE,count=COUNT,...]
+                Sets minimum limit for a single type of accelerators (e.g.
+                GPUs) in cluster. Defaults to 0 for all accelerator types if it
+                isn't set.
 
-                   type
-                      (Required) The specific type (e.g. nvidia-tesla-t4 for
-                      NVIDIA T4) of accelerator for which the limit is set. Use
-                      gcloud compute accelerator-types list to learn about all
-                      available accelerator types.
+                 type
+                    (Required) The specific type (e.g. nvidia-tesla-t4 for
+                    NVIDIA T4) of accelerator for which the limit is set. Use
+                    gcloud compute accelerator-types list to learn about all
+                    available accelerator types.
 
-                   count
-                      (Required) The minimum number of accelerators to which
-                      the cluster can be scaled.
+                 count
+                    (Required) The minimum number of accelerators to which the
+                    cluster can be scaled.
 
-       --enable-insecure-binding-system-authenticated
-          Allow using system:authenticated as a subject in ClusterRoleBindings
-          and RoleBindings. Allowing bindings that reference
-          system:authenticated is a security risk and is not recommended.
+       Or at least one of these can be specified:
 
-          To disallow binding system:authenticated in a cluster, explicitly set
-          the --no-enable-insecure-binding-system-authenticated flag instead.
+         --enable-insecure-binding-system-authenticated
+            Allow using system:authenticated as a subject in
+            ClusterRoleBindings and RoleBindings. Allowing bindings that
+            reference system:authenticated is a security risk and is not
+            recommended.
 
-       --enable-insecure-binding-system-unauthenticated
-          Allow using system:unauthenticated and system:anonymous as subjects
-          in ClusterRoleBindings and RoleBindings. Allowing bindings that
-          reference system:unauthenticated and system:anonymous are a security
-          risk and is not recommended.
+            To disallow binding system:authenticated in a cluster, explicitly
+            set the --no-enable-insecure-binding-system-authenticated flag
+            instead.
 
-          To disallow binding system:authenticated in a cluster, explicitly set
-          the --no-enable-insecure-binding-system-unauthenticated flag instead.
+         --enable-insecure-binding-system-unauthenticated
+            Allow using system:unauthenticated and system:anonymous as subjects
+            in ClusterRoleBindings and RoleBindings. Allowing bindings that
+            reference system:unauthenticated and system:anonymous are a
+            security risk and is not recommended.
 
-       --logging-service=LOGGING_SERVICE
-          (DEPRECATED) Logging service to use for the cluster. Options are:
-          "logging.googleapis.com/kubernetes" (the Google Cloud Logging service
-          with Kubernetes-native resource model enabled),
-          "logging.googleapis.com" (the Google Cloud Logging service), "none"
-          (logs will not be exported from the cluster)
+            To disallow binding system:authenticated in a cluster, explicitly
+            set the --no-enable-insecure-binding-system-unauthenticated flag
+            instead.
 
-          The --logging-service flag is deprecated and will be removed in an
-          upcoming release. Please use --logging instead. For more information,
-          please read:
-          https://cloud.google.com/kubernetes-engine/docs/concepts/about-logs.
+       Or at least one of these can be specified:
 
-       --monitoring-service=MONITORING_SERVICE
-          (DEPRECATED) Monitoring service to use for the cluster. Options are:
-          "monitoring.googleapis.com/kubernetes" (the Google Cloud Monitoring
-          service with Kubernetes-native resource model enabled),
-          "monitoring.googleapis.com" (the Google Cloud Monitoring service),
-          "none" (no metrics will be exported from the cluster)
+         --logging-service=LOGGING_SERVICE
+            (DEPRECATED) Logging service to use for the cluster. Options are:
+            "logging.googleapis.com/kubernetes" (the Google Cloud Logging
+            service with Kubernetes-native resource model enabled),
+            "logging.googleapis.com" (the Google Cloud Logging service), "none"
+            (logs will not be exported from the cluster)
 
-          The --monitoring-service flag is deprecated and will be removed in an
-          upcoming release. Please use --monitoring instead. For more
-          information, please read:
-          https://cloud.google.com/kubernetes-engine/docs/how-to/configure-metrics.
+            The --logging-service flag is deprecated and will be removed in an
+            upcoming release. Please use --logging instead. For more
+            information, please read:
+            https://cloud.google.com/kubernetes-engine/docs/concepts/about-logs.
 
-       Flags for Secret Manager configuration:
+         --monitoring-service=MONITORING_SERVICE
+            (DEPRECATED) Monitoring service to use for the cluster. Options
+            are: "monitoring.googleapis.com/kubernetes" (the Google Cloud
+            Monitoring service with Kubernetes-native resource model enabled),
+            "monitoring.googleapis.com" (the Google Cloud Monitoring service),
+            "none" (no metrics will be exported from the cluster)
+
+            The --monitoring-service flag is deprecated and will be removed in
+            an upcoming release. Please use --monitoring instead. For more
+            information, please read:
+            https://cloud.google.com/kubernetes-engine/docs/how-to/configure-metrics.
+
+       Or at least one of these can be specified:
+
+         Flags for Secret Manager configuration:
 
          --[no-]enable-secret-manager
             Enables the Secret Manager CSI driver provider component. See
@@ -1724,7 +1778,9 @@ REQUIRED FLAGS
             driver provider component. If you don't specify a time interval for
             the rotation, it will default to a rotation period of two minutes.
 
-       Flags for Secret Sync configuration:
+       Or at least one of these can be specified:
+
+         Flags for Secret Sync configuration:
 
          --[no-]enable-secret-sync
             Enables the Secret Sync component. See
@@ -1740,7 +1796,9 @@ REQUIRED FLAGS
          --secret-sync-rotation-interval=SECRET_SYNC_ROTATION_INTERVAL
             Set the rotation period for secrets in the Secret Sync component.
 
-       Basic auth
+       Or at least one of these can be specified:
+
+         Basic auth
 
          --password=PASSWORD
             The password to use for cluster auth. Defaults to a
@@ -1820,44 +1878,44 @@ OPTIONAL FLAGS
 
      Cluster autoscaling
 
-       --location-policy=LOCATION_POLICY
-          Location policy specifies the algorithm used when scaling-up the node
-          pool.
+     --location-policy=LOCATION_POLICY
+        Location policy specifies the algorithm used when scaling-up the node
+        pool.
 
-          ▸ BALANCED - Is a best effort policy that aims to balance the sizes
-            of available zones.
-          ▸ ANY - Instructs the cluster autoscaler to prioritize utilization
-            of unused reservations, and reduces preemption risk for Spot VMs.
+        ◆ BALANCED - Is a best effort policy that aims to balance the sizes
+          of available zones.
+        ◆ ANY - Instructs the cluster autoscaler to prioritize utilization of
+          unused reservations, and reduces preemption risk for Spot VMs.
 
-          LOCATION_POLICY must be one of: BALANCED, ANY.
+        LOCATION_POLICY must be one of: BALANCED, ANY.
 
-       --max-nodes=MAX_NODES
-          Maximum number of nodes per zone in the node pool.
+     --max-nodes=MAX_NODES
+        Maximum number of nodes per zone in the node pool.
 
-          Maximum number of nodes per zone to which the node pool specified by
-          --node-pool (or default node pool if unspecified) can scale. Ignored
-          unless --enable-autoscaling is also specified.
+        Maximum number of nodes per zone to which the node pool specified by
+        --node-pool (or default node pool if unspecified) can scale. Ignored
+        unless --enable-autoscaling is also specified.
 
-       --min-nodes=MIN_NODES
-          Minimum number of nodes per zone in the node pool.
+     --min-nodes=MIN_NODES
+        Minimum number of nodes per zone in the node pool.
 
-          Minimum number of nodes per zone to which the node pool specified by
-          --node-pool (or default node pool if unspecified) can scale. Ignored
-          unless --enable-autoscaling is also specified.
+        Minimum number of nodes per zone to which the node pool specified by
+        --node-pool (or default node pool if unspecified) can scale. Ignored
+        unless --enable-autoscaling is also specified.
 
-       --total-max-nodes=TOTAL_MAX_NODES
-          Maximum number of all nodes in the node pool.
+     --total-max-nodes=TOTAL_MAX_NODES
+        Maximum number of all nodes in the node pool.
 
-          Maximum number of all nodes to which the node pool specified by
-          --node-pool (or default node pool if unspecified) can scale. Ignored
-          unless --enable-autoscaling is also specified.
+        Maximum number of all nodes to which the node pool specified by
+        --node-pool (or default node pool if unspecified) can scale. Ignored
+        unless --enable-autoscaling is also specified.
 
-       --total-min-nodes=TOTAL_MIN_NODES
-          Minimum number of all nodes in the node pool.
+     --total-min-nodes=TOTAL_MIN_NODES
+        Minimum number of all nodes in the node pool.
 
-          Minimum number of all nodes to which the node pool specified by
-          --node-pool (or default node pool if unspecified) can scale. Ignored
-          unless --enable-autoscaling is also specified.
+        Minimum number of all nodes to which the node pool specified by
+        --node-pool (or default node pool if unspecified) can scale. Ignored
+        unless --enable-autoscaling is also specified.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

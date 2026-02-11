@@ -16,7 +16,7 @@ SYNOPSIS
           --schedule-repeats-every=SCHEDULE_REPEATS_EVERY
           --schedule-repeats-until=SCHEDULE_REPEATS_UNTIL]
         [--include-prefixes=[INCLUDED_PREFIXES,...]
-          --exclude-prefixes=[EXCLUDED_PREFIXES,...] --match-glob=MATCH_GLOB
+          --exclude-prefixes=[EXCLUDED_PREFIXES,...]
           --include-modified-before-absolute=INCLUDE_MODIFIED_BEFORE_ABSOLUTE
           --include-modified-after-absolute=INCLUDE_MODIFIED_AFTER_ABSOLUTE
           --include-modified-before-relative=INCLUDE_MODIFIED_BEFORE_RELATIVE
@@ -124,60 +124,60 @@ POSITIONAL ARGUMENTS
 FLAGS
      JOB INFORMATION
 
-       --name=NAME
-          A unique identifier for the job. Referring to your source and
-          destination is recommended. If left blank, the name is auto-generated
-          upon submission of the job.
+     --name=NAME
+        A unique identifier for the job. Referring to your source and
+        destination is recommended. If left blank, the name is auto-generated
+        upon submission of the job.
 
-       --description=DESCRIPTION
-          An optional description to help identify the job using details that
-          don't fit in its name.
+     --description=DESCRIPTION
+        An optional description to help identify the job using details that
+        don't fit in its name.
 
-       --source-creds-file=SOURCE_CREDS_FILE
-          Path to a local file on your machine that includes credentials for an
-          Amazon S3 or Azure Blob Storage source (not required for Google Cloud
-          Storage sources). If not specified for an S3 source, gcloud will
-          check your system for an AWS config file. However, this flag must be
-          specified to use AWS's "role_arn" auth service. For formatting, see:
+     --source-creds-file=SOURCE_CREDS_FILE
+        Path to a local file on your machine that includes credentials for an
+        Amazon S3 or Azure Blob Storage source (not required for Google Cloud
+        Storage sources). If not specified for an S3 source, gcloud will check
+        your system for an AWS config file. However, this flag must be
+        specified to use AWS's "role_arn" auth service. For formatting, see:
 
-          S3:
-          https://cloud.google.com/storage-transfer/docs/reference/rest/v1/TransferSpec#AwsAccessKey
-          Note: Be sure to put quotations around the JSON value strings.
+        S3:
+        https://cloud.google.com/storage-transfer/docs/reference/rest/v1/TransferSpec#AwsAccessKey
+        Note: Be sure to put quotations around the JSON value strings.
 
-          Azure:
-          https://cloud.google.com/storage-transfer/docs/reference/rest/v1/TransferSpec#AzureCredentials
+        Azure:
+        https://cloud.google.com/storage-transfer/docs/reference/rest/v1/TransferSpec#AzureCredentials
 
-       --source-agent-pool=SOURCE_AGENT_POOL
-          If using a POSIX filesystem source, specify the ID of the agent pool
-          associated with source filesystem.
+     --source-agent-pool=SOURCE_AGENT_POOL
+        If using a POSIX filesystem source, specify the ID of the agent pool
+        associated with source filesystem.
 
-       --destination-agent-pool=DESTINATION_AGENT_POOL
-          If using a POSIX filesystem destination, specify the ID of the agent
-          pool associated with destination filesystem.
+     --destination-agent-pool=DESTINATION_AGENT_POOL
+        If using a POSIX filesystem destination, specify the ID of the agent
+        pool associated with destination filesystem.
 
-       --intermediate-storage-path=INTERMEDIATE_STORAGE_PATH
-          If transferring between filesystems, specify the path to a folder in
-          a Google Cloud Storage bucket (gs://example-bucket/example-folder) to
-          use as intermediary storage. Recommended: Use an empty folder
-          reserved for this transfer job to ensure transferred data doesn't
-          interact with any of your existing Cloud Storage data.
+     --intermediate-storage-path=INTERMEDIATE_STORAGE_PATH
+        If transferring between filesystems, specify the path to a folder in a
+        Google Cloud Storage bucket (gs://example-bucket/example-folder) to use
+        as intermediary storage. Recommended: Use an empty folder reserved for
+        this transfer job to ensure transferred data doesn't interact with any
+        of your existing Cloud Storage data.
 
-       --manifest-file=MANIFEST_FILE
-          Path to a .csv file containing a list of files to transfer from your
-          source. For manifest files in Cloud Storage, specify the absolute
-          path (e.g., gs://mybucket/manifest.csv). For manifest files stored in
-          a source or destination POSIX file system, provide the relative path
-          (e.g., source://path/to/manfest.csv or
-          destination://path/to/manifest.csv). For manifest file formatting,
-          see https://cloud.google.com/storage-transfer/docs/manifest.
+     --manifest-file=MANIFEST_FILE
+        Path to a .csv file containing a list of files to transfer from your
+        source. For manifest files in Cloud Storage, specify the absolute path
+        (e.g., gs://mybucket/manifest.csv). For manifest files stored in a
+        source or destination POSIX file system, provide the relative path
+        (e.g., source://path/to/manfest.csv or
+        destination://path/to/manifest.csv). For manifest file formatting, see
+        https://cloud.google.com/storage-transfer/docs/manifest.
 
      REPLICATION OPTIONS
 
-       --replication
-          Enable replication to automatically copy all new and existing objects
-          from the source to the destination. Note: Objects deleted from the
-          source bucket will not be deleted from the destination bucket. Please
-          note that it is an event-driven transfer.
+     --replication
+        Enable replication to automatically copy all new and existing objects
+        from the source to the destination. Note: Objects deleted from the
+        source bucket will not be deleted from the destination bucket. Please
+        note that it is an event-driven transfer.
 
      EVENT STREAM
 
@@ -187,27 +187,25 @@ FLAGS
      Google Cloud Storage and Amazon S3. For formatting information, see
      https://cloud.google.com/sdk/gcloud/reference/topic/datetimes.
 
-       --event-stream-name=EVENT_STREAM_NAME
-          Specify an event stream that Storage Transfer Service can use to
-          listen for when objects are created or updated. For Google Cloud
-          Storage sources, specify a Cloud Pub/Sub subscription, using format
-          "projects/yourproject/subscriptions/yoursubscription". For Amazon S3
-          sources, specify the Amazon Resource Name (ARN) of an Amazon Simple
-          Queue Service (SQS) queue using format
-          "arn:aws:sqs:region:account_id:queue_name".
+     --event-stream-name=EVENT_STREAM_NAME
+        Specify an event stream that Storage Transfer Service can use to listen
+        for when objects are created or updated. For Google Cloud Storage
+        sources, specify a Cloud Pub/Sub subscription, using format
+        "projects/yourproject/subscriptions/yoursubscription". For Amazon S3
+        sources, specify the Amazon Resource Name (ARN) of an Amazon Simple
+        Queue Service (SQS) queue using format
+        "arn:aws:sqs:region:account_id:queue_name".
 
-       --event-stream-starts=EVENT_STREAM_STARTS
-          Set when to start listening for events UTC using the
-          %Y-%m-%dT%H:%M:%S%z datetime format (e.g.,
-          2020-04-12T06:42:12+04:00). If not set, the job will start running
-          and listening for events upon the successful submission of the create
-          job command.
+     --event-stream-starts=EVENT_STREAM_STARTS
+        Set when to start listening for events UTC using the
+        %Y-%m-%dT%H:%M:%S%z datetime format (e.g., 2020-04-12T06:42:12+04:00).
+        If not set, the job will start running and listening for events upon
+        the successful submission of the create job command.
 
-       --event-stream-expires=EVENT_STREAM_EXPIRES
-          Set when to stop listening for events UTC using the
-          %Y-%m-%dT%H:%M:%S%z datetime format (e.g.,
-          2020-04-12T06:42:12+04:00). If not set, the job will continue running
-          and listening for events indefinitely.
+     --event-stream-expires=EVENT_STREAM_EXPIRES
+        Set when to stop listening for events UTC using the %Y-%m-%dT%H:%M:%S%z
+        datetime format (e.g., 2020-04-12T06:42:12+04:00). If not set, the job
+        will continue running and listening for events indefinitely.
 
      SCHEDULE
 
@@ -215,30 +213,29 @@ FLAGS
      formatting information, see
      https://cloud.google.com/sdk/gcloud/reference/topic/datetimes.
 
-       --do-not-run
-          Disable default Transfer Service behavior of running job upon
-          creation if no schedule is set. If this flag is specified, the job
-          won't run until an operation is manually started or a schedule is
-          added.
+     --do-not-run
+        Disable default Transfer Service behavior of running job upon creation
+        if no schedule is set. If this flag is specified, the job won't run
+        until an operation is manually started or a schedule is added.
 
-       --schedule-starts=SCHEDULE_STARTS
-          Set when the job will start using the %Y-%m-%dT%H:%M:%S%z datetime
-          format (e.g., 2020-04-12T06:42:12+04:00). If not set, the job will
-          run upon the successful submission of the create job command unless
-          the --do-not-run flag is included.
+     --schedule-starts=SCHEDULE_STARTS
+        Set when the job will start using the %Y-%m-%dT%H:%M:%S%z datetime
+        format (e.g., 2020-04-12T06:42:12+04:00). If not set, the job will run
+        upon the successful submission of the create job command unless the
+        --do-not-run flag is included.
 
-       --schedule-repeats-every=SCHEDULE_REPEATS_EVERY
-          Set the frequency of the job using the absolute duration format
-          (e.g., 1 month is p1m; 1 hour 30 minutes is 1h30m). If not set, the
-          job will run once.
+     --schedule-repeats-every=SCHEDULE_REPEATS_EVERY
+        Set the frequency of the job using the absolute duration format (e.g.,
+        1 month is p1m; 1 hour 30 minutes is 1h30m). If not set, the job will
+        run once.
 
-       --schedule-repeats-until=SCHEDULE_REPEATS_UNTIL
-          Set when the job will stop recurring using the %Y-%m-%dT%H:%M:%S%z
-          datetime format (e.g., 2020-04-12T06:42:12+04:00). If specified, you
-          must also include a value for the --schedule-repeats-every flag. If
-          not specified, the job will continue to repeat as specified in its
-          repeat-every field unless the job is manually disabled or you add
-          this field later.
+     --schedule-repeats-until=SCHEDULE_REPEATS_UNTIL
+        Set when the job will stop recurring using the %Y-%m-%dT%H:%M:%S%z
+        datetime format (e.g., 2020-04-12T06:42:12+04:00). If specified, you
+        must also include a value for the --schedule-repeats-every flag. If not
+        specified, the job will continue to repeat as specified in its
+        repeat-every field unless the job is manually disabled or you add this
+        field later.
 
      OBJECT CONDITIONS
 
@@ -250,123 +247,117 @@ FLAGS
      an object has an 'exclude' prefix, it will be excluded even if it matches
      other conditions.
 
-       --include-prefixes=[INCLUDED_PREFIXES,...]
-          Include only objects that start with the specified prefix(es).
-          Separate multiple prefixes with commas, omitting spaces after the
-          commas (e.g., --include-prefixes=foo,bar).
+     --include-prefixes=[INCLUDED_PREFIXES,...]
+        Include only objects that start with the specified prefix(es). Separate
+        multiple prefixes with commas, omitting spaces after the commas (e.g.,
+        --include-prefixes=foo,bar).
 
-       --exclude-prefixes=[EXCLUDED_PREFIXES,...]
-          Exclude any objects that start with the prefix(es) entered. Separate
-          multiple prefixes with commas, omitting spaces after the commas
-          (e.g., --exclude-prefixes=foo,bar).
+     --exclude-prefixes=[EXCLUDED_PREFIXES,...]
+        Exclude any objects that start with the prefix(es) entered. Separate
+        multiple prefixes with commas, omitting spaces after the commas (e.g.,
+        --exclude-prefixes=foo,bar).
 
-       --match-glob=MATCH_GLOB
-          Include only objects that match the specified glob pattern. For more
-          information about glob patterns, see
-          https://docs.cloud.google.com/storage-transfer/docs/filter-by-glob-pattern
+     --include-modified-before-absolute=INCLUDE_MODIFIED_BEFORE_ABSOLUTE
+        Include objects last modified before an absolute date/time. Ex. by
+        specifying '2020-01-01', the transfer would include objects last
+        modified before January 1, 2020. Use the %Y-%m-%dT%H:%M:%S%z datetime
+        format.
 
-       --include-modified-before-absolute=INCLUDE_MODIFIED_BEFORE_ABSOLUTE
-          Include objects last modified before an absolute date/time. Ex. by
-          specifying '2020-01-01', the transfer would include objects last
-          modified before January 1, 2020. Use the %Y-%m-%dT%H:%M:%S%z datetime
-          format.
+     --include-modified-after-absolute=INCLUDE_MODIFIED_AFTER_ABSOLUTE
+        Include objects last modified after an absolute date/time. Ex. by
+        specifying '2020-01-01', the transfer would include objects last
+        modified after January 1, 2020. Use the %Y-%m-%dT%H:%M:%S%z datetime
+        format.
 
-       --include-modified-after-absolute=INCLUDE_MODIFIED_AFTER_ABSOLUTE
-          Include objects last modified after an absolute date/time. Ex. by
-          specifying '2020-01-01', the transfer would include objects last
-          modified after January 1, 2020. Use the %Y-%m-%dT%H:%M:%S%z datetime
-          format.
+     --include-modified-before-relative=INCLUDE_MODIFIED_BEFORE_RELATIVE
+        Include objects that were modified before a relative date/time in the
+        past. Ex. by specifying a duration of '10d', the transfer would include
+        objects last modified more than 10 days before its start time. Use the
+        absolute duration format (ex. 1m for 1 month; 1h30m for 1 hour 30
+        minutes).
 
-       --include-modified-before-relative=INCLUDE_MODIFIED_BEFORE_RELATIVE
-          Include objects that were modified before a relative date/time in the
-          past. Ex. by specifying a duration of '10d', the transfer would
-          include objects last modified more than 10 days before its start
-          time. Use the absolute duration format (ex. 1m for 1 month; 1h30m for
-          1 hour 30 minutes).
-
-       --include-modified-after-relative=INCLUDE_MODIFIED_AFTER_RELATIVE
-          Include objects that were modified after a relative date/time in the
-          past. Ex. by specifying a duration of '10d', the transfer would
-          include objects last modified less than 10 days before its start
-          time. Use the absolute duration format (ex. 1m for 1 month; 1h30m for
-          1 hour 30 minutes).
+     --include-modified-after-relative=INCLUDE_MODIFIED_AFTER_RELATIVE
+        Include objects that were modified after a relative date/time in the
+        past. Ex. by specifying a duration of '10d', the transfer would include
+        objects last modified less than 10 days before its start time. Use the
+        absolute duration format (ex. 1m for 1 month; 1h30m for 1 hour 30
+        minutes).
 
      TRANSFER OPTIONS
 
-       --overwrite-when=OVERWRITE_WHEN
-          Determine when destination objects are overwritten by source objects.
-          Options include:
-          ▸ 'different' - Overwrites files with the same name if the contents
-            are different (e.g., if etags or checksums don't match)
-          ▸ 'always' - Overwrite destination file whenever source file has
-            the same name -- even if they're identical
-          ▸ 'never' - Never overwrite destination file when source file has
-            the same name
+     --overwrite-when=OVERWRITE_WHEN
+        Determine when destination objects are overwritten by source objects.
+        Options include:
+        ◆ 'different' - Overwrites files with the same name if the contents
+          are different (e.g., if etags or checksums don't match)
+        ◆ 'always' - Overwrite destination file whenever source file has the
+          same name -- even if they're identical
+        ◆ 'never' - Never overwrite destination file when source file has the
+          same name
 
-          OVERWRITE_WHEN must be one of: always, different, never.
+        OVERWRITE_WHEN must be one of: always, different, never.
 
-       --delete-from=DELETE_FROM
-          By default, transfer jobs won't delete any data from your source or
-          destination. These options enable you to delete data if needed for
-          your use case. Options include:
-          ▸ 'destination-if-unique' - Delete files from destination if
-            they're not also at source. Use to sync destination to source
-            (i.e., make destination match source exactly)
-          ▸ 'source-after-transfer' - Delete files from source after they're
-            transferred
+     --delete-from=DELETE_FROM
+        By default, transfer jobs won't delete any data from your source or
+        destination. These options enable you to delete data if needed for your
+        use case. Options include:
+        ◆ 'destination-if-unique' - Delete files from destination if they're
+          not also at source. Use to sync destination to source (i.e., make
+          destination match source exactly)
+        ◆ 'source-after-transfer' - Delete files from source after they're
+          transferred
 
-          DELETE_FROM must be one of: destination-if-unique,
-          source-after-transfer.
+        DELETE_FROM must be one of: destination-if-unique,
+        source-after-transfer.
 
-       --preserve-metadata=[METADATA_FIELDS,...]
-          Specify object metadata values that can optionally be preserved.
-          Example: --preserve-metadata=storage-class,uid
+     --preserve-metadata=[METADATA_FIELDS,...]
+        Specify object metadata values that can optionally be preserved.
+        Example: --preserve-metadata=storage-class,uid
 
-          For more info, see:
-          https://cloud.google.com/storage-transfer/docs/metadata-preservation.
+        For more info, see:
+        https://cloud.google.com/storage-transfer/docs/metadata-preservation.
 
-          METADATA_FIELDS must be one of: acl, gid, kms-key, mode,
-          storage-class, symlink, temporary-hold, time-created, uid.
+        METADATA_FIELDS must be one of: acl, gid, kms-key, mode, storage-class,
+        symlink, temporary-hold, time-created, uid.
 
-       --custom-storage-class=CUSTOM_STORAGE_CLASS
-          Specifies the storage class to set on objects being transferred to
-          Cloud Storage buckets. If unspecified, the objects' storage class is
-          set to the destination bucket default. Valid values are:
+     --custom-storage-class=CUSTOM_STORAGE_CLASS
+        Specifies the storage class to set on objects being transferred to
+        Cloud Storage buckets. If unspecified, the objects' storage class is
+        set to the destination bucket default. Valid values are:
 
-          ▸ Any of the values listed in the Cloud Storage documentation:
-            Available storage classes
-            (https://cloud.google.com/storage/docs/storage-classes#classes).
-          ▸ preserve - Preserves each object's original storage class. Only
-            supported for transfers between Cloud Storage buckets.
+        ◆ Any of the values listed in the Cloud Storage documentation:
+          Available storage classes
+          (https://cloud.google.com/storage/docs/storage-classes#classes).
+        ◆ preserve - Preserves each object's original storage class. Only
+          supported for transfers between Cloud Storage buckets.
 
-          Custom storage class settings are ignored if the destination bucket
-          is Autoclass-enabled
-          (https://cloud.google.com/storage/docs/autoclass). Objects
-          transferred into Autoclass-enabled buckets are initially set to the
-          STANDARD storage class.
+        Custom storage class settings are ignored if the destination bucket is
+        Autoclass-enabled (https://cloud.google.com/storage/docs/autoclass).
+        Objects transferred into Autoclass-enabled buckets are initially set to
+        the STANDARD storage class.
 
      NOTIFICATION CONFIG
 
      A configuration for receiving notifications oftransfer operation status
      changes via Cloud Pub/Sub.
 
-       --notification-pubsub-topic=NOTIFICATION_PUBSUB_TOPIC
-          Pub/Sub topic used for notifications.
+     --notification-pubsub-topic=NOTIFICATION_PUBSUB_TOPIC
+        Pub/Sub topic used for notifications.
 
-       --notification-event-types=[EVENT_TYPES,...]
-          Define which change of transfer operation status will trigger Pub/Sub
-          notifications. Choices include 'success', 'failed', 'aborted'. To
-          trigger notifications for all three status changes, you can leave
-          this flag unspecified as long as you've specified a topic for the
-          --notification-pubsub-topic flag. EVENT_TYPES must be one of:
-          success, failed, aborted.
+     --notification-event-types=[EVENT_TYPES,...]
+        Define which change of transfer operation status will trigger Pub/Sub
+        notifications. Choices include 'success', 'failed', 'aborted'. To
+        trigger notifications for all three status changes, you can leave this
+        flag unspecified as long as you've specified a topic for the
+        --notification-pubsub-topic flag. EVENT_TYPES must be one of: success,
+        failed, aborted.
 
-       --notification-payload-format=NOTIFICATION_PAYLOAD_FORMAT
-          If 'none', no transfer operation details are included with
-          notifications. If 'json', a json representation of the relevant
-          transfer operation is included in notification messages (e.g., to see
-          errors after an operation fails). NOTIFICATION_PAYLOAD_FORMAT must be
-          one of: json, none.
+     --notification-payload-format=NOTIFICATION_PAYLOAD_FORMAT
+        If 'none', no transfer operation details are included with
+        notifications. If 'json', a json representation of the relevant
+        transfer operation is included in notification messages (e.g., to see
+        errors after an operation fails). NOTIFICATION_PAYLOAD_FORMAT must be
+        one of: json, none.
 
      LOGGING CONFIG
 
@@ -374,82 +365,82 @@ FLAGS
      are generated for this job. Logs can be viewed by running the following
      command: gcloud logging read "resource.type=storage_transfer_job"
 
-       --[no-]enable-posix-transfer-logs
-          Sets whether to generate logs for transfers with a POSIX filesystem
-          source. This setting will later be merged with other log
-          configurations. Use --enable-posix-transfer-logs to enable and
-          --no-enable-posix-transfer-logs to disable.
+     --[no-]enable-posix-transfer-logs
+        Sets whether to generate logs for transfers with a POSIX filesystem
+        source. This setting will later be merged with other log
+        configurations. Use --enable-posix-transfer-logs to enable and
+        --no-enable-posix-transfer-logs to disable.
 
-       --log-actions=[LOG_ACTIONS,...]
-          Define the transfer operation actions to report in logs. Separate
-          multiple actions with commas, omitting spaces after the commas (e.g.,
-          --log-actions=find,copy). LOG_ACTIONS must be one of: copy, delete,
-          find.
+     --log-actions=[LOG_ACTIONS,...]
+        Define the transfer operation actions to report in logs. Separate
+        multiple actions with commas, omitting spaces after the commas (e.g.,
+        --log-actions=find,copy). LOG_ACTIONS must be one of: copy, delete,
+        find.
 
-       --log-action-states=[LOG_ACTION_STATES,...]
-          The states in which the actions specified in --log-actions are
-          logged. Separate multiple states with a comma, omitting the space
-          after the comma (e.g., --log-action-states=succeeded,failed).
-          LOG_ACTION_STATES must be one of: failed, skipped, succeeded.
+     --log-action-states=[LOG_ACTION_STATES,...]
+        The states in which the actions specified in --log-actions are logged.
+        Separate multiple states with a comma, omitting the space after the
+        comma (e.g., --log-action-states=succeeded,failed). LOG_ACTION_STATES
+        must be one of: failed, skipped, succeeded.
 
      ADDITIONAL OPTIONS
 
-       --source-endpoint=SOURCE_ENDPOINT
-          For transfers from S3-compatible sources, specify your storage
-          system's endpoint. Check with your provider for formatting (ex.
-          s3.us-east-1.amazonaws.com for Amazon S3).
+     --source-endpoint=SOURCE_ENDPOINT
+        For transfers from S3-compatible sources, specify your storage system's
+        endpoint. Check with your provider for formatting (ex.
+        s3.us-east-1.amazonaws.com for Amazon S3).
 
-       --source-signing-region=SOURCE_SIGNING_REGION
-          For transfers from S3-compatible sources, specify a region for
-          signing requests. You can leave this unspecified if your storage
-          provider doesn't require a signing region.
+     --source-signing-region=SOURCE_SIGNING_REGION
+        For transfers from S3-compatible sources, specify a region for signing
+        requests. You can leave this unspecified if your storage provider
+        doesn't require a signing region.
 
-       --source-auth-method=SOURCE_AUTH_METHOD
-          For transfers from S3-compatible sources, choose a process for adding
-          authentication information to S3 API requests. Refer to AWS's SigV4
-          (https://docs.aws.amazon.com/general/latest/gr/signature-version-4.html)
-          and SigV2
-          (https://docs.aws.amazon.com/general/latest/gr/signature-version-2.html)
-          documentation for more information. SOURCE_AUTH_METHOD must be one
-          of: AWS_SIGNATURE_V2, AWS_SIGNATURE_V4.
+     --source-auth-method=SOURCE_AUTH_METHOD
+        For transfers from S3-compatible sources, choose a process for adding
+        authentication information to S3 API requests. Refer to AWS's SigV4
+        (https://docs.aws.amazon.com/general/latest/gr/signature-version-4.html)
+        and SigV2
+        (https://docs.aws.amazon.com/general/latest/gr/signature-version-2.html)
+        documentation for more information. SOURCE_AUTH_METHOD must be one of:
+        AWS_SIGNATURE_V2, AWS_SIGNATURE_V4.
 
-       --source-list-api=SOURCE_LIST_API
-          For transfers from S3-compatible sources, choose the version of the
-          S3 listing API for returning objects from the bucket. Refer to AWS's
-          ListObjectsV2
-          (https://docs.aws.amazon.com/AmazonS3/latest/API/API_ListObjectsV2.html)
-          and ListObjects
-          (https://docs.aws.amazon.com/AmazonS3/latest/API/API_ListObjects.html)
-          documentation for more information. SOURCE_LIST_API must be one of:
-          LIST_OBJECTS, LIST_OBJECTS_V2.
+     --source-list-api=SOURCE_LIST_API
+        For transfers from S3-compatible sources, choose the version of the S3
+        listing API for returning objects from the bucket. Refer to AWS's
+        ListObjectsV2
+        (https://docs.aws.amazon.com/AmazonS3/latest/API/API_ListObjectsV2.html)
+        and ListObjects
+        (https://docs.aws.amazon.com/AmazonS3/latest/API/API_ListObjects.html)
+        documentation for more information. SOURCE_LIST_API must be one of:
+        LIST_OBJECTS, LIST_OBJECTS_V2.
 
-       --source-network-protocol=SOURCE_NETWORK_PROTOCOL
-          For transfers from S3-compatible sources, choose the network protocol
-          agents should use for this job. SOURCE_NETWORK_PROTOCOL must be one
-          of: HTTP, HTTPS.
+     --source-network-protocol=SOURCE_NETWORK_PROTOCOL
+        For transfers from S3-compatible sources, choose the network protocol
+        agents should use for this job. SOURCE_NETWORK_PROTOCOL must be one of:
+        HTTP, HTTPS.
 
-       --source-request-model=SOURCE_REQUEST_MODEL
-          For transfers from S3-compatible sources, choose which addressing
-          style to use. Determines if the bucket name is in the hostname or
-          part of the URL. For example,
-          https://s3.region.amazonaws.com/bucket-name/key-name for path style
-          and Ex. https://bucket-name.s3.region.amazonaws.com/key-name for
-          virtual-hosted style. SOURCE_REQUEST_MODEL must be one of:
-          PATH_STYLE, VIRTUAL_HOSTED_STYLE.
+     --source-request-model=SOURCE_REQUEST_MODEL
+        For transfers from S3-compatible sources, choose which addressing style
+        to use. Determines if the bucket name is in the hostname or part of the
+        URL. For example, https://s3.region.amazonaws.com/bucket-name/key-name
+        for path style and Ex.
+        https://bucket-name.s3.region.amazonaws.com/key-name for virtual-hosted
+        style. SOURCE_REQUEST_MODEL must be one of: PATH_STYLE,
+        VIRTUAL_HOSTED_STYLE.
 
-       --s3-cloudfront-domain=S3_CLOUDFRONT_DOMAIN
-          For transfers from S3, optionally route egress traffic through a
-          CloudFront instance. Supply the endpoint of the CloudFront instance:
-          https://example.cloudfront.net. See documentation
-          (https://cloud.google.com/storage-transfer/docs/s3-cloudfront) for
-          more information.
+     --s3-cloudfront-domain=S3_CLOUDFRONT_DOMAIN
+        For transfers from S3, optionally route egress traffic through a
+        CloudFront instance. Supply the endpoint of the CloudFront instance:
+        https://example.cloudfront.net. See documentation
+        (https://cloud.google.com/storage-transfer/docs/s3-cloudfront) for more
+        information.
 
      EXECUTION OPTIONS
 
-       --no-async
-          For jobs set to run upon creation, this flag blocks other tasks in
-          your terminal until the job's initial, immediate transfer operation
-          has completed. If not included, tasks will run asynchronously.
+     --no-async
+        For jobs set to run upon creation, this flag blocks other tasks in your
+        terminal until the job's initial, immediate transfer operation has
+        completed. If not included, tasks will run asynchronously.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

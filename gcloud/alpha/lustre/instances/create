@@ -2,12 +2,13 @@ NAME
     gcloud alpha lustre instances create - creates a Managed Lustre instance
 
 SYNOPSIS
-    gcloud alpha lustre instances create (INSTANCE : --location=LOCATION)
-        --capacity-gib=CAPACITY_GIB --filesystem=FILESYSTEM --network=NETWORK
-        --per-unit-storage-throughput=PER_UNIT_STORAGE_THROUGHPUT [--async]
+    gcloud alpha lustre instances create INSTANCE --capacity-gib=CAPACITY_GIB
+        --filesystem=FILESYSTEM --network=NETWORK [--async]
         [--description=DESCRIPTION] [--gke-support-enabled] [--kms-key=KMS_KEY]
-        [--labels=[LABELS,...]] [--placement-policy=PLACEMENT_POLICY]
-        [--request-id=REQUEST_ID]
+        [--labels=[LABELS,...]] [--location=LOCATION]
+        [--per-unit-storage-throughput=PER_UNIT_STORAGE_THROUGHPUT]
+        [--placement-policy=PLACEMENT_POLICY] [--request-id=REQUEST_ID]
+        [--source-backup=SOURCE_BACKUP]
         [[--default-squash-mode=DEFAULT_SQUASH_MODE
           : --access-rules=[accessMode=ACCESSMODE],
           [ipAddressRanges=IPADDRESSRANGES],
@@ -29,16 +30,20 @@ EXAMPLES
             --filesystem=lustrefs --per-unit-storage-throughput=1000
 
 POSITIONAL ARGUMENTS
-     Instance resource - Identifier. The name of the instance. The arguments in
-     this group can be used to specify the attributes of this resource. (NOTE)
-     Some attributes are not given arguments in this group but can be set in
-     other ways.
+     Instance resource - Identifier. The name of the instance. This represents
+     a Cloud resource. (NOTE) Some attributes are not given arguments in this
+     group but can be set in other ways.
 
      To set the project attribute:
       ◆ provide the argument instance on the command line with a fully
         specified name;
       ◆ provide the argument --project on the command line;
       ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument instance on the command line with a fully
+        specified name;
+      ◆ provide the argument --location on the command line.
 
      This must be specified.
 
@@ -48,21 +53,10 @@ POSITIONAL ARGUMENTS
           To set the instance attribute:
           ▸ provide the argument instance on the command line.
 
-          This positional argument must be specified if any of the other
-          arguments in this group are specified.
-
-       --location=LOCATION
-          The location id of the instance resource.
-
-          To set the location attribute:
-          ▸ provide the argument instance on the command line with a fully
-            specified name;
-          ▸ provide the argument --location on the command line.
-
 REQUIRED FLAGS
      --capacity-gib=CAPACITY_GIB
         The storage capacity of the instance in gibibytes (GiB). Allowed values
-        are from 18000 to 7632000, depending on the perUnitStorageThroughput.
+        are from 9000 to 7632000, depending on the perUnitStorageThroughput.
         See Performance tiers and maximum storage capacities
         (https://cloud.google.com/managed-lustre/docs/create-instance#performance-tiers)
         for specific minimums, maximums, and step sizes for each performance
@@ -92,12 +86,6 @@ REQUIRED FLAGS
 
           To set the network attribute:
           ▸ provide the argument --network on the command line.
-
-     --per-unit-storage-throughput=PER_UNIT_STORAGE_THROUGHPUT
-        The throughput of the instance in MBps per TiB. Valid values are 125,
-        250, 500, 1000. See Performance tiers and maximum storage capacities
-        (https://cloud.google.com/managed-lustre/docs/create-instance#performance-tiers)
-        for more information.
 
 OPTIONAL FLAGS
      --async
@@ -142,6 +130,17 @@ OPTIONAL FLAGS
 
             --labels=path_to_file.(yaml|json)
 
+     --location=LOCATION
+        For resources [instance, source-backup], provides fallback value for
+        resource location attribute. When the resource's full URI path is not
+        provided, location will fallback to this flag value.
+
+     --per-unit-storage-throughput=PER_UNIT_STORAGE_THROUGHPUT
+        The throughput of the instance in MBps per TiB. Valid values are 125,
+        250, 500, 1000. See Performance tiers and maximum storage capacities
+        (https://cloud.google.com/managed-lustre/docs/create-instance#performance-tiers)
+        for more information.
+
      --placement-policy=PLACEMENT_POLICY
         The placement policy name for the instance in the format of
         projects/{project}/locations/{location}/resourcePolicies/{resource_policy}
@@ -161,112 +160,135 @@ OPTIONAL FLAGS
         The request ID must be a valid UUID with the exception that zero UUID
         is not supported (00000000-0000-0000-0000-000000000000).
 
+     Arguments for the source backup.
+
+     Backup resource - The source backup used to create the instance. Only set
+     this field if the instance is being created from a backup. Format:
+     projects/{project}/locations/{location}/backups/{backup} This represents a
+     Cloud resource. (NOTE) Some attributes are not given arguments in this
+     group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument --source-backup on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument --source-backup on the command line with a fully
+        specified name;
+      ◆ provide the argument --location on the command line.
+
+     --source-backup=SOURCE_BACKUP
+        ID of the backup or fully qualified identifier for the backup.
+
+        To set the backup attribute:
+        ◆ provide the argument --source-backup on the command line.
+
      IP-based access rules for the Managed Lustre instance. These options
      define the root user squash configuration.
 
-       --default-squash-mode=DEFAULT_SQUASH_MODE
-          The squash mode for the default access rule. DEFAULT_SQUASH_MODE must
-          be one of:
+     --default-squash-mode=DEFAULT_SQUASH_MODE
+        The squash mode for the default access rule. DEFAULT_SQUASH_MODE must
+        be one of:
 
-           no-squash
-              Squash is disabled.
+         no-squash
+            Squash is disabled.
 
-              If set inside an
-              [AccessRule][google.cloud.lustre.v1alpha.AccessRulesOptions.AccessRule],
-              root users matching the [ip_ranges][AccessRule.ip_ranges] are not
-              squashed.
+            If set inside an
+            [AccessRule][google.cloud.lustre.v1alpha.AccessRulesOptions.AccessRule],
+            root users matching the [ip_ranges][AccessRule.ip_ranges] are not
+            squashed.
 
-              If set as the
-              [default_squash_mode][google.cloud.lustre.v1alpha.AccessRulesOptions.default_squash_mode],
-              root squash is disabled for this instance.
+            If set as the
+            [default_squash_mode][google.cloud.lustre.v1alpha.AccessRulesOptions.default_squash_mode],
+            root squash is disabled for this instance.
 
-              If the default squash mode is NO_SQUASH, do not set the
-              [default_squash_uid][google.cloud.lustre.v1alpha.AccessRulesOptions.default_squash_uid]
-              or
-              [default_squash_gid][google.cloud.lustre.v1alpha.AccessRulesOptions.default_squash_gid],
-              or an invalid argument error is returned.
-           root-squash
-              Root user squash is enabled.
+            If the default squash mode is NO_SQUASH, do not set the
+            [default_squash_uid][google.cloud.lustre.v1alpha.AccessRulesOptions.default_squash_uid]
+            or
+            [default_squash_gid][google.cloud.lustre.v1alpha.AccessRulesOptions.default_squash_gid],
+            or an invalid argument error is returned.
+         root-squash
+            Root user squash is enabled.
 
-              Not supported inside an
-              [AccessRule][google.cloud.lustre.v1alpha.AccessRulesOptions.AccessRule].
+            Not supported inside an
+            [AccessRule][google.cloud.lustre.v1alpha.AccessRulesOptions.AccessRule].
 
-              If set as the
-              [default_squash_mode][google.cloud.lustre.v1alpha.AccessRulesOptions.default_squash_mode],
-              root users not matching any of the
-              [access_rules][google.cloud.lustre.v1alpha.AccessRulesOptions.access_rules]
-              are squashed to the
-              [default_squash_uid][google.cloud.lustre.v1alpha.AccessRulesOptions.default_squash_uid]
-              and
-              [default_squash_gid][google.cloud.lustre.v1alpha.AccessRulesOptions.default_squash_gid].
+            If set as the
+            [default_squash_mode][google.cloud.lustre.v1alpha.AccessRulesOptions.default_squash_mode],
+            root users not matching any of the
+            [access_rules][google.cloud.lustre.v1alpha.AccessRulesOptions.access_rules]
+            are squashed to the
+            [default_squash_uid][google.cloud.lustre.v1alpha.AccessRulesOptions.default_squash_uid]
+            and
+            [default_squash_gid][google.cloud.lustre.v1alpha.AccessRulesOptions.default_squash_gid].
 
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
+        This flag argument must be specified if any of the other arguments in
+        this group are specified.
 
-       --access-rules=[accessMode=ACCESSMODE],[ipAddressRanges=IPADDRESSRANGES],[mountableSubdirectories=MOUNTABLESUBDIRECTORIES],[name=NAME],[squashGid=SQUASHGID],[squashMode=SQUASHMODE],[squashUid=SQUASHUID]
-          The access rules for the instance.
+     --access-rules=[accessMode=ACCESSMODE],[ipAddressRanges=IPADDRESSRANGES],[mountableSubdirectories=MOUNTABLESUBDIRECTORIES],[name=NAME],[squashGid=SQUASHGID],[squashMode=SQUASHMODE],[squashUid=SQUASHUID]
+        The access rules for the instance.
 
-           accessMode
-              The access mode for the access rule nodemap. Default is
-              [READ_WRITE][google.cloud.lustre.v1alpha.AccessRulesOptions.AccessRule.AccessMode.READ_WRITE].
+         accessMode
+            The access mode for the access rule nodemap. Default is
+            [READ_WRITE][google.cloud.lustre.v1alpha.AccessRulesOptions.AccessRule.AccessMode.READ_WRITE].
 
-           ipAddressRanges
-              The IP address ranges to which to apply this access rule. Accepts
-              non-overlapping CIDR ranges (e.g., 192.168.1.0/24) and IP
-              addresses (e.g., 192.168.1.0).
+         ipAddressRanges
+            The IP address ranges to which to apply this access rule. Accepts
+            non-overlapping CIDR ranges (e.g., 192.168.1.0/24) and IP addresses
+            (e.g., 192.168.1.0).
 
-           mountableSubdirectories
-              The list of non-root directories that can be mounted from clients
-              in this NID range subset. Currently, there can be only a single
-              directory at most. If no directory is mentioned, then the root
-              directory will be accessible.
+         mountableSubdirectories
+            The list of non-root directories that can be mounted from clients
+            in this NID range subset. Currently, there can be only a single
+            directory at most. If no directory is mentioned, then the root
+            directory will be accessible.
 
-           name
-              The name of the access rule policy group. Must be 16 characters
-              or less and include only alphanumeric characters or ''.
+         name
+            The name of the access rule policy group. Must be 16 characters or
+            less and include only alphanumeric characters or ''.
 
-           squashGid
-              Squash GID for the access rule. If the squash mode for this rule
-              is
-              [ROOT_SQUASH][google.cloud.lustre.v1alpha.AccessRulesOptions.SquashMode.ROOT_SQUASH],
-              root users matching the
-              [ip_address_ranges][google.cloud.lustre.v1alpha.AccessRulesOptions.AccessRule.ip_address_ranges]
-              are squashed to this GID. Defaults to 0 (no root squash).
+         squashGid
+            Squash GID for the access rule. If the squash mode for this rule is
+            [ROOT_SQUASH][google.cloud.lustre.v1alpha.AccessRulesOptions.SquashMode.ROOT_SQUASH],
+            root users matching the
+            [ip_address_ranges][google.cloud.lustre.v1alpha.AccessRulesOptions.AccessRule.ip_address_ranges]
+            are squashed to this GID. Defaults to 0 (no root squash).
 
-           squashMode
-              Squash mode for the access rule.
+         squashMode
+            Squash mode for the access rule.
 
-           squashUid
-              Squash UID for the access rule. If the squash mode for this rule
-              is
-              [ROOT_SQUASH][google.cloud.lustre.v1alpha.AccessRulesOptions.SquashMode.ROOT_SQUASH],
-              root users matching the
-              [ip_address_ranges][google.cloud.lustre.v1alpha.AccessRulesOptions.AccessRule.ip_address_ranges]
-              are squashed to this UID. Defaults to 0 (no root squash).
+         squashUid
+            Squash UID for the access rule. If the squash mode for this rule is
+            [ROOT_SQUASH][google.cloud.lustre.v1alpha.AccessRulesOptions.SquashMode.ROOT_SQUASH],
+            root users matching the
+            [ip_address_ranges][google.cloud.lustre.v1alpha.AccessRulesOptions.AccessRule.ip_address_ranges]
+            are squashed to this UID. Defaults to 0 (no root squash).
 
-          Shorthand Example:
+        Shorthand Example:
 
-              --access-rules=accessMode=string,ipAddressRanges=[string],mountableSubdirectories=[string],name=string,squashGid=int,squashMode=string,squashUid=int --access-rules=accessMode=string,ipAddressRanges=[string],mountableSubdirectories=[string],name=string,squashGid=int,squashMode=string,squashUid=int
+            --access-rules=accessMode=string,ipAddressRanges=[string],mountableSubdirectories=[string],name=string,squashGid=int,squashMode=string,squashUid=int --access-rules=accessMode=string,ipAddressRanges=[string],mountableSubdirectories=[string],name=string,squashGid=int,squashMode=string,squashUid=int
 
-          JSON Example:
+        JSON Example:
 
-              --access-rules='[{"accessMode": "string", "ipAddressRanges": ["string"], "mountableSubdirectories": ["string"], "name": "string", "squashGid": int, "squashMode": "string", "squashUid": int}]'
+            --access-rules='[{"accessMode": "string", "ipAddressRanges": ["string"], "mountableSubdirectories": ["string"], "name": "string", "squashGid": int, "squashMode": "string", "squashUid": int}]'
 
-          File Example:
+        File Example:
 
-              --access-rules=path_to_file.(yaml|json)
+            --access-rules=path_to_file.(yaml|json)
 
-       --default-squash-gid=DEFAULT_SQUASH_GID
-          The user squash GID for the default access rule. This user squash GID
-          applies to all root users connecting from clients that are not
-          matched by any of the access rules. If not set, the default is 0 (no
-          GID squash).
+     --default-squash-gid=DEFAULT_SQUASH_GID
+        The user squash GID for the default access rule. This user squash GID
+        applies to all root users connecting from clients that are not matched
+        by any of the access rules. If not set, the default is 0 (no GID
+        squash).
 
-       --default-squash-uid=DEFAULT_SQUASH_UID
-          The user squash UID for the default access rule. This user squash UID
-          applies to all root users connecting from clients that are not
-          matched by any of the access rules. If not set, the default is 0 (no
-          UID squash).
+     --default-squash-uid=DEFAULT_SQUASH_UID
+        The user squash UID for the default access rule. This user squash UID
+        applies to all root users connecting from clients that are not matched
+        by any of the access rules. If not set, the default is 0 (no UID
+        squash).
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
@@ -278,7 +300,7 @@ GCLOUD WIDE FLAGS
 
 API REFERENCE
     This command uses the lustre/v1alpha API. The full documentation for this
-    API can be found at: https://cloud.google.com/managed-lustre/
+    API can be found at: https://cloud.google.com/managed-lustre/docs
 
 NOTES
     This command is currently in alpha and might change without notice. If this

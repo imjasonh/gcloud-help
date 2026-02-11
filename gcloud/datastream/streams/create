@@ -10,6 +10,7 @@ SYNOPSIS
           | --oracle-excluded-objects=ORACLE_EXCLUDED_OBJECTS
           | --postgresql-excluded-objects=POSTGRESQL_EXCLUDED_OBJECTS
           | --salesforce-excluded-objects=SALESFORCE_EXCLUDED_OBJECTS
+          | --spanner-excluded-objects=SPANNER_EXCLUDED_OBJECTS
           | --sqlserver-excluded-objects=SQLSERVER_EXCLUDED_OBJECTS)
         (--destination=DESTINATION
           (--bigquery-destination-config=BIGQUERY_DESTINATION_CONFIG
@@ -19,6 +20,7 @@ SYNOPSIS
           | --oracle-source-config=ORACLE_SOURCE_CONFIG
           | --postgresql-source-config=POSTGRESQL_SOURCE_CONFIG
           | --salesforce-source-config=SALESFORCE_SOURCE_CONFIG
+          | --spanner-source-config=SPANNER_SOURCE_CONFIG
           | --sqlserver-source-config=SQLSERVER_SOURCE_CONFIG))
         [--labels=[KEY=VALUE,...]] [--rule-sets=RULE_SETS]
         [--force | --validate-only] [GCLOUD_WIDE_FLAG ...]
@@ -116,150 +118,183 @@ REQUIRED FLAGS
           Do not automatically backfill any objects. This flag is equivalent to
           selecting the Manual backfill type in the Google Cloud console.
 
-       --backfill-all
-          Automatically backfill objects included in the stream source
-          configuration. Specific objects can be excluded. This flag is
-          equivalent to selecting the Automatic backfill type in the Google
-          Cloud console.
+       Or at least one of these can be specified:
 
-       At most one of these can be specified:
+         --backfill-all
+            Automatically backfill objects included in the stream source
+            configuration. Specific objects can be excluded. This flag is
+            equivalent to selecting the Automatic backfill type in the Google
+            Cloud console.
 
-         --mongodb-excluded-objects=MONGODB_EXCLUDED_OBJECTS
-            Path to a YAML (or JSON) file containing the MongoDB data sources
-            to avoid backfilling.
+         At most one of these can be specified:
 
-            The JSON file is formatted as follows, with camelCase field naming:
+           --mongodb-excluded-objects=MONGODB_EXCLUDED_OBJECTS
+              Path to a YAML (or JSON) file containing the MongoDB data sources
+              to avoid backfilling.
 
-                  {
-                    "databases": [
-                      {
-                        "database":"sample_database",
-                        "collections": [
-                          {
-                            "collection": "sample_collection",
-                            "fields": [
-                              {
-                                "field": "sample_field",
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
+              The JSON file is formatted as follows, with camelCase field
+              naming:
 
-         --mysql-excluded-objects=MYSQL_EXCLUDED_OBJECTS
-            Path to a YAML (or JSON) file containing the MySQL data sources to
-            avoid backfilling.
-
-            The JSON file is formatted as follows, with camelCase field naming:
-
-                  {
-                    "mysqlDatabases": [
-                      {
-                        "database":"sample_database",
-                        "mysqlTables": [
-                          {
-                            "table": "sample_table",
-                            "mysqlColumns": [
-                              {
-                                "column": "sample_column",
-                              }
+                    {
+                      "databases": [
+                        {
+                          "database":"sample_database",
+                          "collections": [
+                            {
+                              "collection": "sample_collection",
+                              "fields": [
+                                {
+                                  "field": "sample_field",
+                                }
                               ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
+                            }
+                          ]
+                        }
+                      ]
+                    }
 
-         --oracle-excluded-objects=ORACLE_EXCLUDED_OBJECTS
-            Path to a YAML (or JSON) file containing the Oracle data sources to
-            avoid backfilling.
+           --mysql-excluded-objects=MYSQL_EXCLUDED_OBJECTS
+              Path to a YAML (or JSON) file containing the MySQL data sources
+              to avoid backfilling.
 
-            The JSON file is formatted as follows, with camelCase field naming:
+              The JSON file is formatted as follows, with camelCase field
+              naming:
 
-                  {
-                    "oracleSchemas": [
-                      {
-                        "schema": "SAMPLE",
-                        "oracleTables": [
-                          {
-                            "table": "SAMPLE_TABLE",
-                            "oracleColumns": [
-                              {
-                                "column": "COL",
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
+                    {
+                      "mysqlDatabases": [
+                        {
+                          "database":"sample_database",
+                          "mysqlTables": [
+                            {
+                              "table": "sample_table",
+                              "mysqlColumns": [
+                                {
+                                  "column": "sample_column",
+                                }
+                                ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
 
-         --postgresql-excluded-objects=POSTGRESQL_EXCLUDED_OBJECTS
-            Path to a YAML (or JSON) file containing the PostgreSQL data
-            sources to avoid backfilling.
+           --oracle-excluded-objects=ORACLE_EXCLUDED_OBJECTS
+              Path to a YAML (or JSON) file containing the Oracle data sources
+              to avoid backfilling.
 
-            The JSON file is formatted as follows, with camelCase field naming:
+              The JSON file is formatted as follows, with camelCase field
+              naming:
 
-                  {
-                    "postgresqlSchemas": [
-                      {
-                        "schema": "SAMPLE",
-                        "postgresqlTables": [
-                          {
-                            "table": "SAMPLE_TABLE",
-                            "postgresqlColumns": [
-                              {
-                                "column": "COL",
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
+                    {
+                      "oracleSchemas": [
+                        {
+                          "schema": "SAMPLE",
+                          "oracleTables": [
+                            {
+                              "table": "SAMPLE_TABLE",
+                              "oracleColumns": [
+                                {
+                                  "column": "COL",
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
 
-         --salesforce-excluded-objects=SALESFORCE_EXCLUDED_OBJECTS
-            Path to a YAML (or JSON) file containing the Salesforce data
-            sources to avoid backfilling.
+           --postgresql-excluded-objects=POSTGRESQL_EXCLUDED_OBJECTS
+              Path to a YAML (or JSON) file containing the PostgreSQL data
+              sources to avoid backfilling.
 
-            The JSON file is formatted as follows, with camelCase field naming:
+              The JSON file is formatted as follows, with camelCase field
+              naming:
 
-                  {
-                    "objects": [
-                      {
-                        "objectName": "SAMPLE",
-                      },
-                      {
-                        "objectName": "SAMPLE2",
-                      }
-                    ]
-                  }
+                    {
+                      "postgresqlSchemas": [
+                        {
+                          "schema": "SAMPLE",
+                          "postgresqlTables": [
+                            {
+                              "table": "SAMPLE_TABLE",
+                              "postgresqlColumns": [
+                                {
+                                  "column": "COL",
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
 
-         --sqlserver-excluded-objects=SQLSERVER_EXCLUDED_OBJECTS
-            Path to a YAML (or JSON) file containing the SQL Server data
-            sources to avoid backfilling.
+           --salesforce-excluded-objects=SALESFORCE_EXCLUDED_OBJECTS
+              Path to a YAML (or JSON) file containing the Salesforce data
+              sources to avoid backfilling.
 
-            The JSON file is formatted as follows, with camelCase field naming:
+              The JSON file is formatted as follows, with camelCase field
+              naming:
 
-                  {
-                    "schemas": [
-                      {
-                        "schema": "SAMPLE",
-                        "tables": [
-                          {
-                            "table": "SAMPLE_TABLE",
-                            "columns": [
-                              {
-                                "column": "COL",
-                              }
-                            ]
-                          }
-                        ]
-                      }
-                    ]
-                  }
+                    {
+                      "objects": [
+                        {
+                          "objectName": "SAMPLE",
+                        },
+                        {
+                          "objectName": "SAMPLE2",
+                        }
+                      ]
+                    }
+
+           --spanner-excluded-objects=SPANNER_EXCLUDED_OBJECTS
+              Path to a YAML (or JSON) file containing the Spanner data sources
+              to avoid backfilling.
+
+              The JSON file is formatted as follows, with camelCase field
+              naming:
+
+                    {
+                      "schemas": [
+                        {
+                          "schema": "SAMPLE_SCHEMA",
+                          "tables": [
+                            {
+                              "table": "SAMPLE_TABLE",
+                              "columns": [
+                                {
+                                  "column": "SAMPLE_COLUMN",
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+
+           --sqlserver-excluded-objects=SQLSERVER_EXCLUDED_OBJECTS
+              Path to a YAML (or JSON) file containing the SQL Server data
+              sources to avoid backfilling.
+
+              The JSON file is formatted as follows, with camelCase field
+              naming:
+
+                    {
+                      "schemas": [
+                        {
+                          "schema": "SAMPLE",
+                          "tables": [
+                            {
+                              "table": "SAMPLE_TABLE",
+                              "columns": [
+                                {
+                                  "column": "COL",
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
 
      This must be specified.
 
@@ -519,6 +554,39 @@ REQUIRED FLAGS
                         }
                       ]
                     }
+                  }
+
+         --spanner-source-config=SPANNER_SOURCE_CONFIG
+            Path to a YAML (or JSON) file containing the configuration for
+            Spanner Source Config.
+
+            The JSON file is formatted as follows, with camelCase field naming:
+
+                  "changeStreamName": "SAMPLE_CHANGE_STREAM_NAME",
+                  {
+                    "includeObjects": {},
+                    "excludeObjects": {
+                      "schemas": [
+                        {
+                          "schema": "SAMPLE",
+                          "tables": [
+                            {
+                              "table": "SAMPLE_TABLE",
+                              "columns": [
+                                {
+                                  "column": "COL",
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "maxConcurrentCdcTasks": 1000,
+                    "maxConcurrentBackfillTasks": 10,
+                    "backfillDataBoostEnabled": false,
+                    "fgacRole": "SAMPLE_FGAC_ROLE",
+                    "spannerRpcPriority": "MEDIUM"
                   }
 
          --sqlserver-source-config=SQLSERVER_SOURCE_CONFIG

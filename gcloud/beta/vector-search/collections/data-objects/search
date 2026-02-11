@@ -1,0 +1,171 @@
+NAME
+    gcloud beta vector-search collections data-objects search - search data
+        objects from a Vector Search collection
+
+SYNOPSIS
+    gcloud beta vector-search collections data-objects search
+        --collection=COLLECTION --location=LOCATION
+        (--semantic-search-field=SEMANTIC_SEARCH_FIELD
+          --semantic-search-text=SEMANTIC_SEARCH_TEXT
+          --semantic-task-type=SEMANTIC_TASK_TYPE
+          | --text-search-data-fields=[DATA_FIELD_NAME,...]
+          --text-search-text=TEXT_SEARCH_TEXT
+          | [--vector-from-file=VECTOR_FROM_FILE
+          --vector-search-field=VECTOR_SEARCH_FIELD
+          : --distance-metric=DISTANCE_METRIC]) [--json-filter=JSON_FILTER]
+        [--top-k=TOP_K]
+        [--output-data-fields=[DATA_OUTPUT_FIELD,...]
+          --output-metadata-fields=[METADATA_OUTPUT_FIELD,...]
+          --output-vector-fields=[VECTOR_OUTPUT_FIELD,...]]
+        [--use-index=USE_INDEX | --use-knn] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Search data objects from a Vector Search collection.
+
+EXAMPLES
+    To search data objects from collection my-collection in location
+    us-central1 using text search and return 10 results, run:
+
+        $ gcloud beta vector-search collections data-objects search \
+            --collection=my-collection --location=us-central1 \
+            --text-search-text="test" \
+            --text-search-data-fields="text_field" --top-k=10
+
+REQUIRED FLAGS
+     --collection=COLLECTION
+        The collection to search data objects from.
+
+     --location=LOCATION
+        Location of the collection.
+
+     Search type
+
+     Exactly one of these must be specified:
+
+       Semantic Search
+
+       --semantic-search-field=SEMANTIC_SEARCH_FIELD
+          The vector field to search.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --semantic-search-text=SEMANTIC_SEARCH_TEXT
+          The query text for semantic search.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --semantic-task-type=SEMANTIC_TASK_TYPE
+          The task type of the query embedding for semantic search.
+          SEMANTIC_TASK_TYPE must be one of:
+
+           classification
+              Specifies that the given text will be classified.
+           clustering
+              Specifies that the embeddings will be used for clustering.
+           code-retrieval-query
+              Specifies that the embeddings will be used for code retrieval.
+           fact-verification
+              Specifies that the embeddings will be used for fact verification.
+           question-answering
+              Specifies that the embeddings will be used for question
+              answering.
+           retrieval-document
+              Specifies the given text is a document from the corpus being
+              searched.
+           retrieval-query
+              Specifies the given text is a query in a search/retrieval
+              setting.
+           semantic-similarity
+              Specifies the given text will be used for STS.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       Text Search
+
+       --text-search-data-fields=[DATA_FIELD_NAME,...]
+          The data field names to search.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --text-search-text=TEXT_SEARCH_TEXT
+          The query text for text search.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       Vector Search
+
+       --vector-from-file=VECTOR_FROM_FILE
+          Path to a JSON file containing dense or sparse vector to search with.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --vector-search-field=VECTOR_SEARCH_FIELD
+          The vector field to search.
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --distance-metric=DISTANCE_METRIC
+          The distance metric to use for the KNN search. If not specified,
+          dot-product will be used as the default. DISTANCE_METRIC must be one
+          of:
+
+           cosine-distance
+              Cosine distance metric.
+           dot-product
+              Dot product distance metric.
+
+OPTIONAL FLAGS
+     --json-filter=JSON_FILTER
+        A filter expression in JSON format to apply to the search, e.g.
+        '{"genre": {"$eq": "sci-fi"}}'.
+
+     --top-k=TOP_K
+        The number of nearest neighbors to return. Default is 10.
+
+     Output fields
+
+     --output-data-fields=[DATA_OUTPUT_FIELD,...]
+        List of data fields to include in the output. Use * to include all data
+        fields.
+
+     --output-metadata-fields=[METADATA_OUTPUT_FIELD,...]
+        List of metadata fields to include in the output. Use * to include all
+        metadata fields.
+
+     --output-vector-fields=[VECTOR_OUTPUT_FIELD,...]
+        List of vector fields to include in the output. Use * to include all
+        vector fields.
+
+     Search Hint
+
+     At most one of these can be specified:
+
+       --use-index=USE_INDEX
+          The resource name of the index to use for the search.
+
+          This flag is compatible only with Semantic Search and Vector Search.
+
+       --use-knn
+          If set to true, the search will use the system's default K-Nearest
+          Neighbor (KNN) index engine.
+
+              This flag is compatible only with Semantic Search and Vector Search.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice.
+

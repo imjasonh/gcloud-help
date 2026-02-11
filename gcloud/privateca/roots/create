@@ -141,11 +141,11 @@ FLAGS
         specified name;
       ◆ provide the argument --pool on the command line.
 
-       --from-ca=FROM_CA
-          ID of the source CA or fully qualified identifier for the source CA.
+     --from-ca=FROM_CA
+        ID of the source CA or fully qualified identifier for the source CA.
 
-          To set the certificate_authority attribute:
-          ▸ provide the argument --from-ca on the command line.
+        To set the certificate_authority attribute:
+        ◆ provide the argument --from-ca on the command line.
 
      --ip-san=[IP_SAN,...]
         One or more comma-separated IP Subject Alternative Names.
@@ -186,9 +186,11 @@ FLAGS
           rsa-pkcs1-2048-sha256, rsa-pkcs1-3072-sha256, rsa-pkcs1-4096-sha256,
           rsa-pss-2048-sha256, rsa-pss-3072-sha256, rsa-pss-4096-sha256.
 
-       Key version resource - An existing KMS key version to back this CA. The
-       arguments in this group can be used to specify the attributes of this
-       resource.
+       Or at least one of these can be specified:
+
+         Key version resource - An existing KMS key version to back this CA.
+         The arguments in this group can be used to specify the attributes of
+         this resource.
 
          --kms-key-version=KMS_KEY_VERSION
             ID of the key version or fully qualified identifier for the key
@@ -252,32 +254,35 @@ FLAGS
           For more information, see
           https://cloud.google.com/certificate-authority-service/docs/certificate-profile.
 
-       --extended-key-usages=[EXTENDED_KEY_USAGES,...]
-          The list of extended key usages for this CA. This can only be
-          provided if --use-preset-profile is not provided. EXTENDED_KEY_USAGES
-          must be one of: server_auth, client_auth, code_signing,
-          email_protection, time_stamping, ocsp_signing.
+       Or at least one of these can be specified:
 
-       --key-usages=[KEY_USAGES,...]
-          The list of key usages for this CA. This can only be provided if
-          --use-preset-profile is not provided. KEY_USAGES must be one of:
-          digital_signature, content_commitment, key_encipherment,
-          data_encipherment, key_agreement, cert_sign, crl_sign, encipher_only,
-          decipher_only.
+         --extended-key-usages=[EXTENDED_KEY_USAGES,...]
+            The list of extended key usages for this CA. This can only be
+            provided if --use-preset-profile is not provided.
+            EXTENDED_KEY_USAGES must be one of: server_auth, client_auth,
+            code_signing, email_protection, time_stamping, ocsp_signing.
 
-       At most one of these can be specified:
+         --key-usages=[KEY_USAGES,...]
+            The list of key usages for this CA. This can only be provided if
+            --use-preset-profile is not provided. KEY_USAGES must be one of:
+            digital_signature, content_commitment, key_encipherment,
+            data_encipherment, key_agreement, cert_sign, crl_sign,
+            encipher_only, decipher_only.
 
-         --max-chain-length=MAX_CHAIN_LENGTH
-            Maximum depth of subordinate CAs allowed under this CA for a CA
-            certificate. This can only be provided if neither
-            --use-preset-profile nor --unconstrained-chain-length are provided.
+         At most one of these can be specified:
 
-         --unconstrained-chain-length
-            If set, allows an unbounded number of subordinate CAs under this
-            newly issued CA certificate. This can only be provided if neither
-            --use-preset-profile nor --max-chain-length are provided.
+           --max-chain-length=MAX_CHAIN_LENGTH
+              Maximum depth of subordinate CAs allowed under this CA for a CA
+              certificate. This can only be provided if neither
+              --use-preset-profile nor --unconstrained-chain-length are
+              provided.
 
-       The x509 name constraints configurations
+           --unconstrained-chain-length
+              If set, allows an unbounded number of subordinate CAs under this
+              newly issued CA certificate. This can only be provided if neither
+              --use-preset-profile nor --max-chain-length are provided.
+
+         The x509 name constraints configurations
 
          --name-constraints-critical
             Indicates whether or not name constraints are marked as critical.

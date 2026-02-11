@@ -78,11 +78,11 @@ FLAGS
         specified name;
       ◆ provide the argument --location on the command line.
 
-       --saas=SAAS
-          ID of the saas or fully qualified identifier for the saas.
+     --saas=SAAS
+        ID of the saas or fully qualified identifier for the saas.
 
-          To set the saas attribute:
-          ▸ provide the argument --saas on the command line.
+        To set the saas attribute:
+        ◆ provide the argument --saas on the command line.
 
      Update default_release.
 
@@ -112,11 +112,11 @@ FLAGS
           fully specified name;
         ▸ provide the argument --location on the command line.
 
-         --default-release=DEFAULT_RELEASE
-            ID of the release or fully qualified identifier for the release.
+       --default-release=DEFAULT_RELEASE
+          ID of the release or fully qualified identifier for the release.
 
-            To set the release attribute:
-            ▫ provide the argument --default-release on the command line.
+          To set the release attribute:
+          ▸ provide the argument --default-release on the command line.
 
      Update dependencies.
 
@@ -145,38 +145,12 @@ FLAGS
 
               --dependencies=path_to_file.(yaml|json)
 
-       --add-dependencies=[alias=ALIAS],[unitKind=UNITKIND]
-          Add new value to dependencies list. List of other unit kinds that
-          this release will depend on. Dependencies will be automatically
-          provisioned if not found. Maximum 10.
+       Or at least one of these can be specified:
 
-           alias
-              An alias for the dependency. Used for input variable mapping.
-
-           unitKind
-              The unit kind of the dependency.
-
-          Shorthand Example:
-
-              --add-dependencies=alias=string,unitKind=string --add-dependencies=alias=string,unitKind=string
-
-          JSON Example:
-
-              --add-dependencies='[{"alias": "string", "unitKind": "string"}]'
-
-          File Example:
-
-              --add-dependencies=path_to_file.(yaml|json)
-
-       At most one of these can be specified:
-
-         --clear-dependencies
-            Clear dependencies value and set to empty list.
-
-         --remove-dependencies=[alias=ALIAS],[unitKind=UNITKIND]
-            Remove existing value from dependencies list. List of other unit
-            kinds that this release will depend on. Dependencies will be
-            automatically provisioned if not found. Maximum 10.
+         --add-dependencies=[alias=ALIAS],[unitKind=UNITKIND]
+            Add new value to dependencies list. List of other unit kinds that
+            this release will depend on. Dependencies will be automatically
+            provisioned if not found. Maximum 10.
 
              alias
                 An alias for the dependency. Used for input variable mapping.
@@ -186,15 +160,43 @@ FLAGS
 
             Shorthand Example:
 
-                --remove-dependencies=alias=string,unitKind=string --remove-dependencies=alias=string,unitKind=string
+                --add-dependencies=alias=string,unitKind=string --add-dependencies=alias=string,unitKind=string
 
             JSON Example:
 
-                --remove-dependencies='[{"alias": "string", "unitKind": "string"}]'
+                --add-dependencies='[{"alias": "string", "unitKind": "string"}]'
 
             File Example:
 
-                --remove-dependencies=path_to_file.(yaml|json)
+                --add-dependencies=path_to_file.(yaml|json)
+
+         At most one of these can be specified:
+
+           --clear-dependencies
+              Clear dependencies value and set to empty list.
+
+           --remove-dependencies=[alias=ALIAS],[unitKind=UNITKIND]
+              Remove existing value from dependencies list. List of other unit
+              kinds that this release will depend on. Dependencies will be
+              automatically provisioned if not found. Maximum 10.
+
+               alias
+                  An alias for the dependency. Used for input variable mapping.
+
+               unitKind
+                  The unit kind of the dependency.
+
+              Shorthand Example:
+
+                  --remove-dependencies=alias=string,unitKind=string --remove-dependencies=alias=string,unitKind=string
+
+              JSON Example:
+
+                  --remove-dependencies='[{"alias": "string", "unitKind": "string"}]'
+
+              File Example:
+
+                  --remove-dependencies=path_to_file.(yaml|json)
 
      Update input_variable_mappings.
 
@@ -245,58 +247,10 @@ FLAGS
 
               --input-variable-mappings=path_to_file.(yaml|json)
 
-       --add-input-variable-mappings=[from=FROM],[to=TO],[variable=VARIABLE]
-          Add new value to input_variable_mappings list. List of inputVariables
-          for this release that will either be retrieved from a dependency's
-          outputVariables, or will be passed on to a dependency's
-          inputVariables. Maximum 100.
+       Or at least one of these can be specified:
 
-           from
-              Output variables which will get their values from dependencies.
-
-               dependency
-                  Alias of the dependency that the outputVariable will pass its
-                  value to.
-
-               outputVariable
-                  Name of the outputVariable on the dependency.
-
-           to
-              Input variables whose values will be passed on to dependencies.
-
-               dependency
-                  Alias of the dependency that the inputVariable will pass its
-                  value to.
-
-               ignoreForLookup
-                  Tells SaaS Runtime if this mapping should be used during
-                  lookup or not.
-
-               inputVariable
-                  Name of the inputVariable on the dependency.
-
-           variable
-              name of the variable.
-
-          Shorthand Example:
-
-              --add-input-variable-mappings=from={dependency=string,outputVariable=string},to={dependency=string,ignoreForLookup=boolean,inputVariable=string},variable=string --add-input-variable-mappings=from={dependency=string,outputVariable=string},to={dependency=string,ignoreForLookup=boolean,inputVariable=string},variable=string
-
-          JSON Example:
-
-              --add-input-variable-mappings='[{"from": {"dependency": "string", "outputVariable": "string"}, "to": {"dependency": "string", "ignoreForLookup": boolean, "inputVariable": "string"}, "variable": "string"}]'
-
-          File Example:
-
-              --add-input-variable-mappings=path_to_file.(yaml|json)
-
-       At most one of these can be specified:
-
-         --clear-input-variable-mappings
-            Clear input_variable_mappings value and set to empty list.
-
-         --remove-input-variable-mappings=[from=FROM],[to=TO],[variable=VARIABLE]
-            Remove existing value from input_variable_mappings list. List of
+         --add-input-variable-mappings=[from=FROM],[to=TO],[variable=VARIABLE]
+            Add new value to input_variable_mappings list. List of
             inputVariables for this release that will either be retrieved from
             a dependency's outputVariables, or will be passed on to a
             dependency's inputVariables. Maximum 100.
@@ -330,15 +284,67 @@ FLAGS
 
             Shorthand Example:
 
-                --remove-input-variable-mappings=from={dependency=string,outputVariable=string},to={dependency=string,ignoreForLookup=boolean,inputVariable=string},variable=string --remove-input-variable-mappings=from={dependency=string,outputVariable=string},to={dependency=string,ignoreForLookup=boolean,inputVariable=string},variable=string
+                --add-input-variable-mappings=from={dependency=string,outputVariable=string},to={dependency=string,ignoreForLookup=boolean,inputVariable=string},variable=string --add-input-variable-mappings=from={dependency=string,outputVariable=string},to={dependency=string,ignoreForLookup=boolean,inputVariable=string},variable=string
 
             JSON Example:
 
-                --remove-input-variable-mappings='[{"from": {"dependency": "string", "outputVariable": "string"}, "to": {"dependency": "string", "ignoreForLookup": boolean, "inputVariable": "string"}, "variable": "string"}]'
+                --add-input-variable-mappings='[{"from": {"dependency": "string", "outputVariable": "string"}, "to": {"dependency": "string", "ignoreForLookup": boolean, "inputVariable": "string"}, "variable": "string"}]'
 
             File Example:
 
-                --remove-input-variable-mappings=path_to_file.(yaml|json)
+                --add-input-variable-mappings=path_to_file.(yaml|json)
+
+         At most one of these can be specified:
+
+           --clear-input-variable-mappings
+              Clear input_variable_mappings value and set to empty list.
+
+           --remove-input-variable-mappings=[from=FROM],[to=TO],[variable=VARIABLE]
+              Remove existing value from input_variable_mappings list. List of
+              inputVariables for this release that will either be retrieved
+              from a dependency's outputVariables, or will be passed on to a
+              dependency's inputVariables. Maximum 100.
+
+               from
+                  Output variables which will get their values from
+                  dependencies.
+
+                   dependency
+                      Alias of the dependency that the outputVariable will pass
+                      its value to.
+
+                   outputVariable
+                      Name of the outputVariable on the dependency.
+
+               to
+                  Input variables whose values will be passed on to
+                  dependencies.
+
+                   dependency
+                      Alias of the dependency that the inputVariable will pass
+                      its value to.
+
+                   ignoreForLookup
+                      Tells SaaS Runtime if this mapping should be used during
+                      lookup or not.
+
+                   inputVariable
+                      Name of the inputVariable on the dependency.
+
+               variable
+                  name of the variable.
+
+              Shorthand Example:
+
+                  --remove-input-variable-mappings=from={dependency=string,outputVariable=string},to={dependency=string,ignoreForLookup=boolean,inputVariable=string},variable=string --remove-input-variable-mappings=from={dependency=string,outputVariable=string},to={dependency=string,ignoreForLookup=boolean,inputVariable=string},variable=string
+
+              JSON Example:
+
+                  --remove-input-variable-mappings='[{"from": {"dependency": "string", "outputVariable": "string"}, "to": {"dependency": "string", "ignoreForLookup": boolean, "inputVariable": "string"}, "variable": "string"}]'
+
+              File Example:
+
+                  --remove-input-variable-mappings=path_to_file.(yaml|json)
 
      Update labels.
 
@@ -368,50 +374,53 @@ FLAGS
 
               --labels=path_to_file.(yaml|json)
 
-       --update-labels=[UPDATE_LABELS,...]
-          Update labels value or add key value pair. The labels on the
-          resource, which can be used for categorization. similar to Kubernetes
-          resource labels.
+       Or at least one of these can be specified:
 
-           KEY
-              Keys must start with a lowercase character and contain only
-              hyphens (-), underscores (_), lowercase characters, and numbers.
+         --update-labels=[UPDATE_LABELS,...]
+            Update labels value or add key value pair. The labels on the
+            resource, which can be used for categorization. similar to
+            Kubernetes resource labels.
 
-           VALUE
-              Values must contain only hyphens (-), underscores (_), lowercase
-              characters, and numbers.
+             KEY
+                Keys must start with a lowercase character and contain only
+                hyphens (-), underscores (_), lowercase characters, and
+                numbers.
 
-          Shorthand Example:
-
-              --update-labels=string=string
-
-          JSON Example:
-
-              --update-labels='{"string": "string"}'
-
-          File Example:
-
-              --update-labels=path_to_file.(yaml|json)
-
-       At most one of these can be specified:
-
-         --clear-labels
-            Clear labels value and set to empty map.
-
-         --remove-labels=REMOVE_LABELS
-            Remove existing value from map labels. Sets remove_labels value.
+             VALUE
+                Values must contain only hyphens (-), underscores (_),
+                lowercase characters, and numbers.
 
             Shorthand Example:
 
-                --remove-labels=string,string
+                --update-labels=string=string
 
             JSON Example:
 
-                --remove-labels=["string"]
+                --update-labels='{"string": "string"}'
 
             File Example:
 
-                --remove-labels=path_to_file.(yaml|json)
+                --update-labels=path_to_file.(yaml|json)
+
+         At most one of these can be specified:
+
+           --clear-labels
+              Clear labels value and set to empty map.
+
+           --remove-labels=REMOVE_LABELS
+              Remove existing value from map labels. Sets remove_labels value.
+
+              Shorthand Example:
+
+                  --remove-labels=string,string
+
+              JSON Example:
+
+                  --remove-labels=["string"]
+
+              File Example:
+
+                  --remove-labels=path_to_file.(yaml|json)
 
      Update output_variable_mappings.
 
@@ -461,57 +470,10 @@ FLAGS
 
               --output-variable-mappings=path_to_file.(yaml|json)
 
-       --add-output-variable-mappings=[from=FROM],[to=TO],[variable=VARIABLE]
-          Add new value to output_variable_mappings list. List of
-          outputVariables for this unit kind will be passed to this unit's
-          outputVariables. Maximum 100.
+       Or at least one of these can be specified:
 
-           from
-              Output variables which will get their values from dependencies.
-
-               dependency
-                  Alias of the dependency that the outputVariable will pass its
-                  value to.
-
-               outputVariable
-                  Name of the outputVariable on the dependency.
-
-           to
-              Input variables whose values will be passed on to dependencies.
-
-               dependency
-                  Alias of the dependency that the inputVariable will pass its
-                  value to.
-
-               ignoreForLookup
-                  Tells SaaS Runtime if this mapping should be used during
-                  lookup or not.
-
-               inputVariable
-                  Name of the inputVariable on the dependency.
-
-           variable
-              name of the variable.
-
-          Shorthand Example:
-
-              --add-output-variable-mappings=from={dependency=string,outputVariable=string},to={dependency=string,ignoreForLookup=boolean,inputVariable=string},variable=string --add-output-variable-mappings=from={dependency=string,outputVariable=string},to={dependency=string,ignoreForLookup=boolean,inputVariable=string},variable=string
-
-          JSON Example:
-
-              --add-output-variable-mappings='[{"from": {"dependency": "string", "outputVariable": "string"}, "to": {"dependency": "string", "ignoreForLookup": boolean, "inputVariable": "string"}, "variable": "string"}]'
-
-          File Example:
-
-              --add-output-variable-mappings=path_to_file.(yaml|json)
-
-       At most one of these can be specified:
-
-         --clear-output-variable-mappings
-            Clear output_variable_mappings value and set to empty list.
-
-         --remove-output-variable-mappings=[from=FROM],[to=TO],[variable=VARIABLE]
-            Remove existing value from output_variable_mappings list. List of
+         --add-output-variable-mappings=[from=FROM],[to=TO],[variable=VARIABLE]
+            Add new value to output_variable_mappings list. List of
             outputVariables for this unit kind will be passed to this unit's
             outputVariables. Maximum 100.
 
@@ -544,15 +506,66 @@ FLAGS
 
             Shorthand Example:
 
-                --remove-output-variable-mappings=from={dependency=string,outputVariable=string},to={dependency=string,ignoreForLookup=boolean,inputVariable=string},variable=string --remove-output-variable-mappings=from={dependency=string,outputVariable=string},to={dependency=string,ignoreForLookup=boolean,inputVariable=string},variable=string
+                --add-output-variable-mappings=from={dependency=string,outputVariable=string},to={dependency=string,ignoreForLookup=boolean,inputVariable=string},variable=string --add-output-variable-mappings=from={dependency=string,outputVariable=string},to={dependency=string,ignoreForLookup=boolean,inputVariable=string},variable=string
 
             JSON Example:
 
-                --remove-output-variable-mappings='[{"from": {"dependency": "string", "outputVariable": "string"}, "to": {"dependency": "string", "ignoreForLookup": boolean, "inputVariable": "string"}, "variable": "string"}]'
+                --add-output-variable-mappings='[{"from": {"dependency": "string", "outputVariable": "string"}, "to": {"dependency": "string", "ignoreForLookup": boolean, "inputVariable": "string"}, "variable": "string"}]'
 
             File Example:
 
-                --remove-output-variable-mappings=path_to_file.(yaml|json)
+                --add-output-variable-mappings=path_to_file.(yaml|json)
+
+         At most one of these can be specified:
+
+           --clear-output-variable-mappings
+              Clear output_variable_mappings value and set to empty list.
+
+           --remove-output-variable-mappings=[from=FROM],[to=TO],[variable=VARIABLE]
+              Remove existing value from output_variable_mappings list. List of
+              outputVariables for this unit kind will be passed to this unit's
+              outputVariables. Maximum 100.
+
+               from
+                  Output variables which will get their values from
+                  dependencies.
+
+                   dependency
+                      Alias of the dependency that the outputVariable will pass
+                      its value to.
+
+                   outputVariable
+                      Name of the outputVariable on the dependency.
+
+               to
+                  Input variables whose values will be passed on to
+                  dependencies.
+
+                   dependency
+                      Alias of the dependency that the inputVariable will pass
+                      its value to.
+
+                   ignoreForLookup
+                      Tells SaaS Runtime if this mapping should be used during
+                      lookup or not.
+
+                   inputVariable
+                      Name of the inputVariable on the dependency.
+
+               variable
+                  name of the variable.
+
+              Shorthand Example:
+
+                  --remove-output-variable-mappings=from={dependency=string,outputVariable=string},to={dependency=string,ignoreForLookup=boolean,inputVariable=string},variable=string --remove-output-variable-mappings=from={dependency=string,outputVariable=string},to={dependency=string,ignoreForLookup=boolean,inputVariable=string},variable=string
+
+              JSON Example:
+
+                  --remove-output-variable-mappings='[{"from": {"dependency": "string", "outputVariable": "string"}, "to": {"dependency": "string", "ignoreForLookup": boolean, "inputVariable": "string"}, "variable": "string"}]'
+
+              File Example:
+
+                  --remove-output-variable-mappings=path_to_file.(yaml|json)
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

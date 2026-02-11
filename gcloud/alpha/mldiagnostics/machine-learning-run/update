@@ -1,0 +1,279 @@
+NAME
+    gcloud alpha mldiagnostics machine-learning-run update - update a machine
+        learning run
+
+SYNOPSIS
+    gcloud alpha mldiagnostics machine-learning-run update
+        (MACHINE_LEARNING_RUN : --location=LOCATION) --etag=ETAG [--async]
+        [--display-name=DISPLAY_NAME] [--gcs-path=GCS_PATH]
+        [--labels=[LABELS,...]] [--orchestrator=ORCHESTRATOR; default="gke"]
+        [--run-group=RUN_GROUP] [--run-phase=RUN_PHASE; default="active"]
+        [--tools=[xprof=XPROF]; default="xprof"]
+        [--configs-hardware=[CONFIGS_HARDWARE,...]
+          --configs-software=[CONFIGS_SOFTWARE,...]
+          --configs-user=[CONFIGS_USER,...]]
+        [--gke-cluster-name=GKE_CLUSTER_NAME --gke-kind=GKE_KIND
+          --gke-namespace=GKE_NAMESPACE --gke-workload-name=GKE_WORKLOAD_NAME]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Update a machine learning run.
+
+EXAMPLES
+    To update the machine learning run, run:
+
+        $ gcloud alpha mldiagnostics machine-learning-run update my-run \
+          --location=us-central1 --gcs-path=gs://my-bucket/my-run \
+          --gke-cluster-name=projects/my-project/locations/us-central1/\
+        clusters/my-cluster --gke-workload-name=my-workload --gke-kind=Job \
+            --gke-namespace=default
+
+POSITIONAL ARGUMENTS
+     Machine learning run resource - Identifier. The name of the Machine
+     Learning run. The arguments in this group can be used to specify the
+     attributes of this resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument machine_learning_run on the command line with a
+        fully specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       MACHINE_LEARNING_RUN
+          ID of the machine_learning_run or fully qualified identifier for the
+          machine_learning_run.
+
+          To set the machine_learning_run attribute:
+          ▸ provide the argument machine_learning_run on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          The location id of the machine_learning_run resource.
+
+          To set the location attribute:
+          ▸ provide the argument machine_learning_run on the command line
+            with a fully specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property compute/region.
+
+REQUIRED FLAGS
+     --etag=ETAG
+        ETag for the run. It must be provided for update/delete operations and
+        must match the server's etag.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --display-name=DISPLAY_NAME
+        Display name for the run.
+
+     Represents information about the artifacts of the Machine Learning Run.
+
+     --gcs-path=GCS_PATH
+        The Cloud Storage path where the artifacts of the run are stored.
+        Example: gs://my-bucket/my-run-directory.
+
+     --labels=[LABELS,...]
+        Any custom labels for this run Example: type:workload, type:simulation
+        etc.
+
+         KEY
+            Keys must start with a lowercase character and contain only hyphens
+            (-), underscores (_), lowercase characters, and numbers.
+
+         VALUE
+            Values must contain only hyphens (-), underscores (_), lowercase
+            characters, and numbers.
+
+        Shorthand Example:
+
+            --labels=string=string
+
+        JSON Example:
+
+            --labels='{"string": "string"}'
+
+        File Example:
+
+            --labels=path_to_file.(yaml|json)
+
+     --orchestrator=ORCHESTRATOR; default="gke"
+        The orchestrator used for the run. If not specified, gke will be used
+        by default. ORCHESTRATOR must be one of:
+
+         gce
+            Google Compute Engine orchestrator.
+         gke
+            Google Kubernetes Engine orchestrator.
+         slurm
+            Slurm cluster orchestrator.
+
+     --run-group=RUN_GROUP
+        Allows grouping of similar runs.
+        ◆ Helps improve UI rendering performance.
+        ◆ Allows comparing similar runs via fast filters.
+
+     --run-phase=RUN_PHASE; default="active"
+        RunPhase defines the phase of the run. This should be used only if non
+        standard machine learning run needs to be updated. If not specified,
+        run phase will be set to active by default. RUN_PHASE must be one of:
+
+         active
+            Run is active.
+         completed
+            Run is completed.
+         failed
+            Run is failed.
+
+     --tools=[xprof=XPROF]; default="xprof"
+        List of tools enabled for this run. This is a repeated argument, and
+        each instance configures one tool. If no tools are specified, XProf
+        will be used by default by the service.
+
+        To enable XProf without a specific session ID: --tools=xprof To enable
+        XProf with a specific session ID: --tools=xprof:sessionId=my-session-id
+        To enable multiple tools, repeat the argument:
+        --tools=xprof:sessionId=123 --tools=nsys.
+
+         xprof
+            Configuration for the XProf tool.
+
+             sessionId
+                The session ID for XProf. Example: my-session-id.
+
+        Shorthand Example:
+
+            --tools=xprof={sessionId=string} --tools=xprof={sessionId=string}
+
+        JSON Example:
+
+            --tools='[{"xprof": {"sessionId": "string"}}]'
+
+        File Example:
+
+            --tools=path_to_file.(yaml|json)
+
+     Configuration for a Machine Learning run.
+
+     --configs-hardware=[CONFIGS_HARDWARE,...]
+        Hardware configs.
+
+         KEY
+            Sets KEY value.
+
+         VALUE
+            Sets VALUE value.
+
+        Shorthand Example:
+
+            --configs-hardware=string=string
+
+        JSON Example:
+
+            --configs-hardware='{"string": "string"}'
+
+        File Example:
+
+            --configs-hardware=path_to_file.(yaml|json)
+
+     --configs-software=[CONFIGS_SOFTWARE,...]
+        Software configs.
+
+         KEY
+            Sets KEY value.
+
+         VALUE
+            Sets VALUE value.
+
+        Shorthand Example:
+
+            --configs-software=string=string
+
+        JSON Example:
+
+            --configs-software='{"string": "string"}'
+
+        File Example:
+
+            --configs-software=path_to_file.(yaml|json)
+
+     --configs-user=[CONFIGS_USER,...]
+        User defined configs.
+
+         KEY
+            Sets KEY value.
+
+         VALUE
+            Sets VALUE value.
+
+        Shorthand Example:
+
+            --configs-user=string=string
+
+        JSON Example:
+
+            --configs-user='{"string": "string"}'
+
+        File Example:
+
+            --configs-user=path_to_file.(yaml|json)
+
+     Workload details associated for the Machine Learning Run. Workload have
+     different metadata based on the orchestrator like GKE cluster, Slurm
+     cluster, Google Compute Engine instance etc.
+
+     Arguments for the metadata.
+
+     Workload details for the GKE orchestrator.
+
+     --gke-cluster-name=GKE_CLUSTER_NAME
+        The cluster of the workload. Example - /projects/<project
+        id>/locations/<location>/clusters/<cluster name>
+
+        This flag argument must be specified if any of the other arguments in
+        this group are specified.
+
+     --gke-kind=GKE_KIND
+        The kind of the workload. Example - JobSet
+
+        This flag argument must be specified if any of the other arguments in
+        this group are specified.
+
+     --gke-namespace=GKE_NAMESPACE
+        The namespace of the workload. Example - default
+
+        This flag argument must be specified if any of the other arguments in
+        this group are specified.
+
+     --gke-workload-name=GKE_WORKLOAD_NAME
+        The identifier of the workload. Example - jobset-abcd
+
+        This flag argument must be specified if any of the other arguments in
+        this group are specified.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the hypercomputecluster/v1alpha API. The full
+    documentation for this API can be found at:
+    https://docs.cloud.google.com/cluster-director/docs
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

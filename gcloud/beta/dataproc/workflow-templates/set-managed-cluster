@@ -43,7 +43,8 @@ SYNOPSIS
         [--worker-boot-disk-size=WORKER_BOOT_DISK_SIZE]
         [--worker-boot-disk-type=WORKER_BOOT_DISK_TYPE]
         [--worker-local-ssd-interface=WORKER_LOCAL_SSD_INTERFACE]
-        [--worker-min-cpu-platform=PLATFORM] [--zone=ZONE, -z ZONE]
+        [--worker-min-cpu-platform=PLATFORM]
+        [--auto-zone-exclude-zones=[ZONE,...] | --zone=ZONE, -z ZONE]
         [--dataproc-metastore=DATAPROC_METASTORE | --bigquery-metastore
           --bigquery-metastore-database-location=BIGQUERY_METASTORE_DATABASE_LOCATION --bigquery-metastore-project-id=BIGQUERY_METASTORE_PROJECT_ID]
         [--image=IMAGE | --image-version=VERSION]
@@ -413,11 +414,21 @@ FLAGS
         which contains the list of available CPU platforms in the zone (see
         Availability of CPU platforms for more information).
 
-     --zone=ZONE, -z ZONE
-        The compute zone (e.g. us-central1-a) for the cluster. If empty and
-        --region is set to a value other than global, the server will pick a
-        zone in the region. Overrides the default compute/zone property value
-        for this command invocation.
+     At most one of these can be specified:
+
+       --auto-zone-exclude-zones=[ZONE,...]
+          A comma-separated list of compute zones (such as us-central1-a) to
+          exclude when Dataproc Auto Zone placement
+          (https://docs.cloud.google.com/dataproc/docs/concepts/configuring-clusters/auto-zone)
+          picks the zone for the cluster.
+
+       --zone=ZONE, -z ZONE
+          The compute zone (such as us-central1-a) for the cluster. If empty
+          and --region is set to a value other than global, Dataproc Auto Zone
+          placement
+          (https://docs.cloud.google.com/dataproc/docs/concepts/configuring-clusters/auto-zone)
+          will pick a zone in the region. Overrides the default compute/zone
+          property value for this command invocation.
 
      At most one of these can be specified:
 
@@ -426,7 +437,9 @@ FLAGS
           external metastore in the format:
           "projects/{project-id}/locations/{region}/services/{service-name}".
 
-       BQMS flags
+       Or at least one of these can be specified:
+
+         BQMS flags
 
          --bigquery-metastore
             Indicates that BigQuery metastore is to be used.
@@ -533,19 +546,21 @@ FLAGS
                 # the uppercased domain name of the cluster will be used.
                 realm: REALM.NAME
 
-       --enable-kerberos
-          Enable Kerberos on the cluster.
+       Or at least one of these can be specified:
 
-       --kerberos-root-principal-password-uri=KERBEROS_ROOT_PRINCIPAL_PASSWORD_URI
-          Google Cloud Storage URI of a KMS encrypted file containing the root
-          principal password. Must be a Cloud Storage URL beginning with
-          'gs://'.
+         --enable-kerberos
+            Enable Kerberos on the cluster.
 
-       Key resource - The Cloud KMS (Key Management Service) cryptokey that
-       will be used to protect the password. The 'Compute Engine Service Agent'
-       service account must hold permission 'Cloud KMS CryptoKey
-       Encrypter/Decrypter'. The arguments in this group can be used to specify
-       the attributes of this resource.
+         --kerberos-root-principal-password-uri=KERBEROS_ROOT_PRINCIPAL_PASSWORD_URI
+            Google Cloud Storage URI of a KMS encrypted file containing the
+            root principal password. Must be a Cloud Storage URL beginning with
+            'gs://'.
+
+         Key resource - The Cloud KMS (Key Management Service) cryptokey that
+         will be used to protect the password. The 'Compute Engine Service
+         Agent' service account must hold permission 'Cloud KMS CryptoKey
+         Encrypter/Decrypter'. The arguments in this group can be used to
+         specify the attributes of this resource.
 
          --kerberos-kms-key=KERBEROS_KMS_KEY
             ID of the key or fully qualified identifier for the key.
@@ -590,165 +605,164 @@ FLAGS
      The arguments in this group can be used to specify the attributes of this
      resource.
 
-       --kms-key=KMS_KEY
-          ID of the key or fully qualified identifier for the key.
+     --kms-key=KMS_KEY
+        ID of the key or fully qualified identifier for the key.
 
-          To set the kms-key attribute:
-          ▸ provide the argument --kms-key on the command line.
+        To set the kms-key attribute:
+        ◆ provide the argument --kms-key on the command line.
 
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
+        This flag argument must be specified if any of the other arguments in
+        this group are specified.
 
-       --kms-keyring=KMS_KEYRING
-          The KMS keyring of the key.
+     --kms-keyring=KMS_KEYRING
+        The KMS keyring of the key.
 
-          To set the kms-keyring attribute:
-          ▸ provide the argument --kms-key on the command line with a fully
-            specified name;
-          ▸ provide the argument --kms-keyring on the command line.
+        To set the kms-keyring attribute:
+        ◆ provide the argument --kms-key on the command line with a fully
+          specified name;
+        ◆ provide the argument --kms-keyring on the command line.
 
-       --kms-location=KMS_LOCATION
-          The Google Cloud location for the key.
+     --kms-location=KMS_LOCATION
+        The Google Cloud location for the key.
 
-          To set the kms-location attribute:
-          ▸ provide the argument --kms-key on the command line with a fully
-            specified name;
-          ▸ provide the argument --kms-location on the command line.
+        To set the kms-location attribute:
+        ◆ provide the argument --kms-key on the command line with a fully
+          specified name;
+        ◆ provide the argument --kms-location on the command line.
 
-       --kms-project=KMS_PROJECT
-          The Google Cloud project for the key.
+     --kms-project=KMS_PROJECT
+        The Google Cloud project for the key.
 
-          To set the kms-project attribute:
-          ▸ provide the argument --kms-key on the command line with a fully
-            specified name;
-          ▸ provide the argument --kms-project on the command line;
-          ▸ set the property core/project.
+        To set the kms-project attribute:
+        ◆ provide the argument --kms-key on the command line with a fully
+          specified name;
+        ◆ provide the argument --kms-project on the command line;
+        ◆ set the property core/project.
 
      Compute Engine options for Dataproc clusters.
 
-       --metadata=KEY=VALUE,[KEY=VALUE,...]
-          Metadata to be made available to the guest operating system running
-          on the instances
+     --metadata=KEY=VALUE,[KEY=VALUE,...]
+        Metadata to be made available to the guest operating system running on
+        the instances
 
-       --resource-manager-tags=KEY=VALUE,[KEY=VALUE,...]
-          Specifies a list of resource manager tags to apply to each cluster
-          node (master and worker nodes).
+     --resource-manager-tags=KEY=VALUE,[KEY=VALUE,...]
+        Specifies a list of resource manager tags to apply to each cluster node
+        (master and worker nodes).
 
-       --scopes=SCOPE,[SCOPE,...]
-          Specifies scopes for the node instances. Multiple SCOPEs can be
-          specified, separated by commas. Examples:
+     --scopes=SCOPE,[SCOPE,...]
+        Specifies scopes for the node instances. Multiple SCOPEs can be
+        specified, separated by commas. Examples:
 
-              $ gcloud beta dataproc workflow-templates set-managed-cluster \
-                  example-cluster \
-                  --scopes https://www.googleapis.com/auth/bigtable.admin
+            $ gcloud beta dataproc workflow-templates set-managed-cluster \
+                example-cluster \
+                --scopes https://www.googleapis.com/auth/bigtable.admin
 
-              $ gcloud beta dataproc workflow-templates set-managed-cluster \
-                  example-cluster --scopes sqlservice,bigquery
+            $ gcloud beta dataproc workflow-templates set-managed-cluster \
+                example-cluster --scopes sqlservice,bigquery
 
-          The following minimum scopes are necessary for the cluster to
-          function properly and are always added, even if not explicitly
-          specified:
+        The following minimum scopes are necessary for the cluster to function
+        properly and are always added, even if not explicitly specified:
 
-              https://www.googleapis.com/auth/devstorage.read_write
-              https://www.googleapis.com/auth/logging.write
+            https://www.googleapis.com/auth/devstorage.read_write
+            https://www.googleapis.com/auth/logging.write
 
-          If the --scopes flag is not specified, the following default scopes
-          are also included:
+        If the --scopes flag is not specified, the following default scopes are
+        also included:
 
-              https://www.googleapis.com/auth/bigquery
-              https://www.googleapis.com/auth/bigtable.admin.table
-              https://www.googleapis.com/auth/bigtable.data
-              https://www.googleapis.com/auth/devstorage.full_control
+            https://www.googleapis.com/auth/bigquery
+            https://www.googleapis.com/auth/bigtable.admin.table
+            https://www.googleapis.com/auth/bigtable.data
+            https://www.googleapis.com/auth/devstorage.full_control
 
-          If you want to enable all scopes use the 'cloud-platform' scope.
+        If you want to enable all scopes use the 'cloud-platform' scope.
 
-          SCOPE can be either the full URI of the scope or an alias. Default
-          scopes are assigned to all instances. Available aliases are:
+        SCOPE can be either the full URI of the scope or an alias. Default
+        scopes are assigned to all instances. Available aliases are:
 
-            Alias                  URI
-            bigquery               https://www.googleapis.com/auth/bigquery
-            cloud-platform         https://www.googleapis.com/auth/cloud-platform
-            cloud-source-repos     https://www.googleapis.com/auth/source.full_control
-            cloud-source-repos-ro  https://www.googleapis.com/auth/source.read_only
-            compute-ro             https://www.googleapis.com/auth/compute.readonly
-            compute-rw             https://www.googleapis.com/auth/compute
-            datastore              https://www.googleapis.com/auth/datastore
-            default                https://www.googleapis.com/auth/devstorage.read_only
-                                   https://www.googleapis.com/auth/logging.write
-                                   https://www.googleapis.com/auth/monitoring.write
-                                   https://www.googleapis.com/auth/pubsub
-                                   https://www.googleapis.com/auth/service.management.readonly
-                                   https://www.googleapis.com/auth/servicecontrol
-                                   https://www.googleapis.com/auth/trace.append
-            gke-default            https://www.googleapis.com/auth/devstorage.read_only
-                                   https://www.googleapis.com/auth/logging.write
-                                   https://www.googleapis.com/auth/monitoring
-                                   https://www.googleapis.com/auth/service.management.readonly
-                                   https://www.googleapis.com/auth/servicecontrol
-                                   https://www.googleapis.com/auth/trace.append
-            logging-write          https://www.googleapis.com/auth/logging.write
-            monitoring             https://www.googleapis.com/auth/monitoring
-            monitoring-read        https://www.googleapis.com/auth/monitoring.read
-            monitoring-write       https://www.googleapis.com/auth/monitoring.write
-            pubsub                 https://www.googleapis.com/auth/pubsub
-            service-control        https://www.googleapis.com/auth/servicecontrol
-            service-management     https://www.googleapis.com/auth/service.management.readonly
-            sql (deprecated)       https://www.googleapis.com/auth/sqlservice
-            sql-admin              https://www.googleapis.com/auth/sqlservice.admin
-            storage-full           https://www.googleapis.com/auth/devstorage.full_control
-            storage-ro             https://www.googleapis.com/auth/devstorage.read_only
-            storage-rw             https://www.googleapis.com/auth/devstorage.read_write
-            taskqueue              https://www.googleapis.com/auth/taskqueue
-            trace                  https://www.googleapis.com/auth/trace.append
-            userinfo-email         https://www.googleapis.com/auth/userinfo.email
+          Alias                  URI
+          bigquery               https://www.googleapis.com/auth/bigquery
+          cloud-platform         https://www.googleapis.com/auth/cloud-platform
+          cloud-source-repos     https://www.googleapis.com/auth/source.full_control
+          cloud-source-repos-ro  https://www.googleapis.com/auth/source.read_only
+          compute-ro             https://www.googleapis.com/auth/compute.readonly
+          compute-rw             https://www.googleapis.com/auth/compute
+          datastore              https://www.googleapis.com/auth/datastore
+          default                https://www.googleapis.com/auth/devstorage.read_only
+                                 https://www.googleapis.com/auth/logging.write
+                                 https://www.googleapis.com/auth/monitoring.write
+                                 https://www.googleapis.com/auth/pubsub
+                                 https://www.googleapis.com/auth/service.management.readonly
+                                 https://www.googleapis.com/auth/servicecontrol
+                                 https://www.googleapis.com/auth/trace.append
+          gke-default            https://www.googleapis.com/auth/devstorage.read_only
+                                 https://www.googleapis.com/auth/logging.write
+                                 https://www.googleapis.com/auth/monitoring
+                                 https://www.googleapis.com/auth/service.management.readonly
+                                 https://www.googleapis.com/auth/servicecontrol
+                                 https://www.googleapis.com/auth/trace.append
+          logging-write          https://www.googleapis.com/auth/logging.write
+          monitoring             https://www.googleapis.com/auth/monitoring
+          monitoring-read        https://www.googleapis.com/auth/monitoring.read
+          monitoring-write       https://www.googleapis.com/auth/monitoring.write
+          pubsub                 https://www.googleapis.com/auth/pubsub
+          service-control        https://www.googleapis.com/auth/servicecontrol
+          service-management     https://www.googleapis.com/auth/service.management.readonly
+          sql (deprecated)       https://www.googleapis.com/auth/sqlservice
+          sql-admin              https://www.googleapis.com/auth/sqlservice.admin
+          storage-full           https://www.googleapis.com/auth/devstorage.full_control
+          storage-ro             https://www.googleapis.com/auth/devstorage.read_only
+          storage-rw             https://www.googleapis.com/auth/devstorage.read_write
+          taskqueue              https://www.googleapis.com/auth/taskqueue
+          trace                  https://www.googleapis.com/auth/trace.append
+          userinfo-email         https://www.googleapis.com/auth/userinfo.email
 
-          DEPRECATION WARNING: https://www.googleapis.com/auth/sqlservice
-          account scope and sql alias do not provide SQL instance management
-          capabilities and have been deprecated. Please, use
-          https://www.googleapis.com/auth/sqlservice.admin or sql-admin to
-          manage your Google SQL Service instances.
+        DEPRECATION WARNING: https://www.googleapis.com/auth/sqlservice account
+        scope and sql alias do not provide SQL instance management capabilities
+        and have been deprecated. Please, use
+        https://www.googleapis.com/auth/sqlservice.admin or sql-admin to manage
+        your Google SQL Service instances.
 
-       --service-account=SERVICE_ACCOUNT
-          The Google Cloud IAM service account to be authenticated as.
+     --service-account=SERVICE_ACCOUNT
+        The Google Cloud IAM service account to be authenticated as.
 
-       --tags=TAG,[TAG,...]
-          Specifies a list of tags to apply to the instance. These tags allow
-          network firewall rules and routes to be applied to specified VM
-          instances. See gcloud compute firewall-rules create(1) for more
-          details.
+     --tags=TAG,[TAG,...]
+        Specifies a list of tags to apply to the instance. These tags allow
+        network firewall rules and routes to be applied to specified VM
+        instances. See gcloud compute firewall-rules create(1) for more
+        details.
 
-          To read more about configuring network tags, read this guide:
-          https://cloud.google.com/vpc/docs/add-remove-network-tags
+        To read more about configuring network tags, read this guide:
+        https://cloud.google.com/vpc/docs/add-remove-network-tags
 
-          To list instances with their respective status and tags, run:
+        To list instances with their respective status and tags, run:
 
-              $ gcloud compute instances list \
-                  --format='table(name,status,tags.list())'
+            $ gcloud compute instances list \
+                --format='table(name,status,tags.list())'
 
-          To list instances tagged with a specific tag, tag1, run:
+        To list instances tagged with a specific tag, tag1, run:
 
-              $ gcloud compute instances list --filter='tags:tag1'
+            $ gcloud compute instances list --filter='tags:tag1'
 
-       At most one of these can be specified:
+     At most one of these can be specified:
 
-         --network=NETWORK
-            The Compute Engine network that the VM instances of the cluster
-            will be part of. This is mutually exclusive with --subnet. If
-            neither is specified, this defaults to the "default" network.
+       --network=NETWORK
+          The Compute Engine network that the VM instances of the cluster will
+          be part of. This is mutually exclusive with --subnet. If neither is
+          specified, this defaults to the "default" network.
 
-         --subnet=SUBNET
-            Specifies the subnet that the cluster will be part of. This is
-            mutally exclusive with --network.
+       --subnet=SUBNET
+          Specifies the subnet that the cluster will be part of. This is
+          mutally exclusive with --network.
 
-       Specifies the reservation for the instance.
+     Specifies the reservation for the instance.
 
-         --reservation=RESERVATION
-            The name of the reservation, required when
-            --reservation-affinity=specific.
+     --reservation=RESERVATION
+        The name of the reservation, required when
+        --reservation-affinity=specific.
 
-         --reservation-affinity=RESERVATION_AFFINITY; default="any"
-            The type of reservation for the instance. RESERVATION_AFFINITY must
-            be one of: any, none, specific.
+     --reservation-affinity=RESERVATION_AFFINITY; default="any"
+        The type of reservation for the instance. RESERVATION_AFFINITY must be
+        one of: any, none, specific.
 
      At most one of these can be specified:
 
@@ -784,7 +798,9 @@ FLAGS
           have any separate worker nodes. If this flag is not specified, a
           cluster with separate workers is created.
 
-       Multi-node cluster flags
+       Or at least one of these can be specified:
+
+         Multi-node cluster flags
 
          --min-num-workers=MIN_NUM_WORKERS
             Minimum number of primary worker nodes to provision for cluster

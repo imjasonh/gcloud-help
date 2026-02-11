@@ -5,7 +5,7 @@ SYNOPSIS
     gcloud alpha dataplex entry-links create
         (ENTRY_LINK : --entry-group=ENTRY_GROUP --location=LOCATION)
         --entry-link-type=ENTRY_LINK_TYPE --entry-references=ENTRY_REFERENCES
-        [GCLOUD_WIDE_FLAG ...]
+        [--aspects=YAML_OR_JSON_FILE] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Create a Dataplex Entry Link.
@@ -89,6 +89,31 @@ REQUIRED FLAGS
         type: SOURCE path: my_path - name:
         projects/test-project/locations/us-central1/entryGroups/my-entry-group/entries/my-entry-2
         type: TARGET
+
+OPTIONAL FLAGS
+     --aspects=YAML_OR_JSON_FILE
+        Path to a YAML or JSON file containing Aspects to add or update for the
+        EntryLink.
+
+        When this flag is specified, only Aspects referenced in the file are
+        going to be added or updated. This does not remove other Aspects from
+        the EntryLink.
+
+        The file content must be a map where keys are in the format
+        ASPECT_TYPE. Paths are not allowed in the keys for EntryLink aspects.
+
+        Values in the map represent the Aspect's content, which must conform to
+        the template defined for the given ASPECT_TYPE. Each Aspect is fully
+        replaced.
+
+        ASPECT_TYPE must be in the format PROJECT_ID.LOCATION.ASPECT_TYPE_ID.
+
+        Example YAML format:
+
+              project-id1.us-central1.my-aspect-type1:
+                data:
+                  aspectField1: someValue
+                  aspectField2: someOtherValue
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

@@ -3,6 +3,8 @@ NAME
 
 SYNOPSIS
     gcloud sql instances clone SOURCE DESTINATION [--async]
+        [--destination-network=DESTINATION_NETWORK]
+        [--destination-project=DESTINATION_PROJECT]
         [--preferred-secondary-zone=PREFERRED_SECONDARY_ZONE]
         [--preferred-zone=PREFERRED_ZONE]
         [--source-instance-deletion-time=SOURCE_INSTANCE_DELETION_TIME]
@@ -29,6 +31,9 @@ DESCRIPTION
     For SQL Server: The point in time, if specified, defines a past state of
     the instance to clone. If not specified, the current state of the instance
     is cloned.
+
+    Note: The flags --destination-project and --destination-network are
+    currently for allowlisted customers only.
 
 EXAMPLES
     To clone an instance from its current state (most recent binary log
@@ -75,6 +80,18 @@ FLAGS
         Return immediately, without waiting for the operation in progress to
         complete.
 
+     --destination-network=DESTINATION_NETWORK
+        The fully qualified URI of the VPC network to which the cloned instance
+        will be connected via Private Services Access for private IP. For
+        example: projects/my-network-project/global/networks/my-network. This
+        field is required only for cross-project cloning.
+
+     --destination-project=DESTINATION_PROJECT
+        The project ID of the destination project where the cloned instance
+        will be created. To perform a cross-project clone, this field is
+        required. If not specified, the clone is created in the same project as
+        the source instance.
+
      --preferred-secondary-zone=PREFERRED_SECONDARY_ZONE
         The preferred secondary zone for the cloned regional instance. If you
         specify a value for this flag, then the destination instance uses the
@@ -94,25 +111,25 @@ FLAGS
 
        Binary log coordinates for point-in-time recovery.
 
-         --bin-log-file-name=BIN_LOG_FILE_NAME
-            The name of the binary log file. Enable point-in-time recovery on
-            the source instance to create a binary log file. If specified with
-            <--bin-log-position> to form a valid binary log coordinate, it
-            defines an earlier point in time to clone a source instance from.
-            For example, mysql-bin.000001.
+       --bin-log-file-name=BIN_LOG_FILE_NAME
+          The name of the binary log file. Enable point-in-time recovery on the
+          source instance to create a binary log file. If specified with
+          <--bin-log-position> to form a valid binary log coordinate, it
+          defines an earlier point in time to clone a source instance from. For
+          example, mysql-bin.000001.
 
-            This flag argument must be specified if any of the other arguments
-            in this group are specified.
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
 
-         --bin-log-position=BIN_LOG_POSITION
-            Represents the state of an instance at any given point in time
-            inside a binary log file. If specified along with
-            <--bin-log-file-name> to form a valid binary log coordinate, it
-            defines an earlier point in time to clone a source instance from.
-            For example, 123 (a numeric value).
+       --bin-log-position=BIN_LOG_POSITION
+          Represents the state of an instance at any given point in time inside
+          a binary log file. If specified along with <--bin-log-file-name> to
+          form a valid binary log coordinate, it defines an earlier point in
+          time to clone a source instance from. For example, 123 (a numeric
+          value).
 
-            This flag argument must be specified if any of the other arguments
-            in this group are specified.
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
 
        --point-in-time=POINT_IN_TIME
           Represents the state of an instance at any given point in time inside
