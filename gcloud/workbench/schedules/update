@@ -1,0 +1,112 @@
+NAME
+    gcloud workbench schedules update - update a schedule
+
+SYNOPSIS
+    gcloud workbench schedules update (SCHEDULE : --region=REGION)
+        (--cron-schedule=CRON_SCHEDULE --display-name=DISPLAY_NAME
+          --enable-queueing --end-time=END_TIME
+          --max-concurrent-runs=MAX_CONCURRENT_RUNS
+          --max-runs=MAX_RUNS --start-time=START_TIME) [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Update a Workbench notebook execution schedule.
+
+EXAMPLES
+    To update the cron schedule and max runs of a schedule with id my-schedule,
+    in region us-central1, run:
+
+        $ gcloud workbench schedules update my-schedule \
+            --region=us-central1 \
+            --cron-schedule='TZ=America/Los_Angeles 0 0 * * 0' --max-runs=2
+
+POSITIONAL ARGUMENTS
+     Schedule resource - Unique, system-generated resource name of the schedule
+     to update. The arguments in this group can be used to specify the
+     attributes of this resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument schedule on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       SCHEDULE
+          ID of the schedule or fully qualified identifier for the schedule.
+
+          To set the name attribute:
+          ▸ provide the argument schedule on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --region=REGION
+          Cloud region for the schedule.
+
+          To set the region attribute:
+          ▸ provide the argument schedule on the command line with a fully
+            specified name;
+          ▸ provide the argument --region on the command line;
+          ▸ set the property colab/region.
+
+REQUIRED FLAGS
+     Configuration of the schedule.
+
+     At least one of these must be specified:
+
+       --cron-schedule=CRON_SCHEDULE
+          Cron schedule (https://en.wikipedia.org/wiki/Cron) to launch
+          scheduled runs. To explicitly set a timezone to the cron tab, apply a
+          prefix in the cron tab: "CRON_TZ=${IANA_TIME_ZONE}" or
+          "TZ=${IANA_TIME_ZONE}". The ${IANA_TIME_ZONE} may only be a valid
+          string from IANA time zone database. For example,
+          "CRON_TZ=America/New_York 1 * * * ", or "TZ=America/New_York 1 * * *
+          ".
+
+       --display-name=DISPLAY_NAME
+          The display name of the schedule.
+
+       --enable-queueing
+          Enables new scheduled runs to be queued when max_concurrent_runs
+          limit is reached. If set to true, new runs will be queued instead of
+          skipped.
+
+       --end-time=END_TIME
+          Timestamp after which no new runs can be scheduled. If specified, the
+          schedule will be completed when either end_time is reached or when
+          scheduled_run_count >= max_run_count. If neither end time nor
+          max_run_count is specified, new runs will keep getting scheduled
+          until this Schedule is paused or deleted. Must be in the RFC 3339
+          (https://www.rfc-editor.org/rfc/rfc3339.txt) format. E.g.
+          "2026-01-01T00:00:00Z" or "2026-01-01T00:00:00-05:00"
+
+       --max-concurrent-runs=MAX_CONCURRENT_RUNS
+          Maximum number of runs that can be started concurrently for this
+          Schedule. This is the limit for starting the scheduled requests and
+          not the execution of the notebook execution jobs created by the
+          requests.
+
+       --max-runs=MAX_RUNS
+          The max runs for the schedule.
+
+       --start-time=START_TIME
+          The timestamp after which the first run can be scheduled. Defaults to
+          the schedule creation time. Must be in the RFC 3339
+          (https://www.rfc-editor.org/rfc/rfc3339.txt) format. E.g.
+          "2026-01-01T00:00:00Z" or "2026-01-01T00:00:00-05:00"
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This variant is also available:
+
+        $ gcloud beta workbench schedules update
+

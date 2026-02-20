@@ -14,18 +14,31 @@ DESCRIPTION
     locations where Backup and DR is available.
 
 EXAMPLES
-    To create a new backup plan sample-backup-plan in project sample-project,
-    at location us-central1, with resource-type
-    compute.<UNIVERSE_DOMAIN>.com/Instance and backup-vault backup-vault with 2
+    To create a new backup plan sample-backup-plan for Compute Engine instances
+    in project sample-project, at location us-central1, with resource-type
+    compute.<UNIVERSE_DOMAIN>/Instance and backup-vault backup-vault with 2
     backup-rules:
 
     run:
 
         $ gcloud backup-dr backup-plans create sample-backup-plan \
             --project=sample-project --location=us-central1 \
-            --resource-type 'compute.<UNIVERSE_DOMAIN>.com/Instance' \
+            --resource-type 'compute.<UNIVERSE_DOMAIN>/Instance' \
             --backup-vault <BACKUP-VAULT> --backup-rule <BACKUP-RULE> \
             --backup-rule <BACKUP-RULE>
+
+    To create a new backup plan sample-filestore-backup-plan for Filestore
+    instances in project sample-project, at location us-central1, with
+    resource-type file.<UNIVERSE_DOMAIN>/Instance and backup-vault backup-vault
+    with 1 backup-rule:
+
+    run:
+
+        $ gcloud backup-dr backup-plans create \
+            sample-filestore-backup-plan --project=sample-project \
+            --location=us-central1 \
+            --resource-type 'file.<UNIVERSE_DOMAIN>/Instance' \
+            --backup-vault <BACKUP-VAULT> --backup-rule <BACKUP-RULE>
 
     Backup Rule Examples:
 
@@ -132,8 +145,11 @@ REQUIRED FLAGS
           ▸ provide the argument --backup-vault on the command line.
 
      --resource-type=RESOURCE_TYPE
-        Type of resource to which the backup plan should be applied. E.g.,
-        compute.<UNIVERSE_DOMAIN>.com/Instance
+        Type of resource to which the backup plan should be applied.
+
+        For example:
+        ◆ compute.<UNIVERSE_DOMAIN>/Instance for Compute Engine instances.
+        ◆ file.<UNIVERSE_DOMAIN>/Instance for Filestore instances.
 
 OPTIONAL FLAGS
      --async

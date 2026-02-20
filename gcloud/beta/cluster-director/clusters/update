@@ -1,0 +1,1181 @@
+NAME
+    gcloud beta cluster-director clusters update - updates a Cluster Director
+        resource
+
+SYNOPSIS
+    gcloud beta cluster-director clusters update
+        (CLUSTER : --location=LOCATION)
+        (--add-filestore-instances=[ADD_FILESTORE_INSTANCES,...]
+          --add-flex-start-instances=[id=ID],
+          [machineType=MACHINETYPE],[maxDuration=MAXDURATION],[zone=ZONE]
+          --add-labels=[ADD_LABELS,...]
+          --add-lustre-instances=[ADD_LUSTRE_INSTANCES,...]
+          --add-new-filestore-instances=[capacityGb=CAPACITYGB],
+          [description=DESCRIPTION],
+          [fileshare=FILESHARE],[name=NAME],[protocol=PROTOCOL],[tier=TIER]
+          --add-new-lustre-instances=[capacityGb=CAPACITYGB],
+          [description=DESCRIPTION],[filesystem=FILESYSTEM],
+          [name=NAME],[perUnitStorageThroughput=PERUNITSTORAGETHROUGHPUT]
+          --add-new-storage-buckets=[enableAutoclass=ENABLEAUTOCLASS],
+          [enableHNS=ENABLEHNS],[name=NAME],[storageClass=STORAGECLASS]
+          --add-on-demand-instances=[id=ID],
+          [machineType=MACHINETYPE],[zone=ZONE]
+          --add-reserved-instances=[id=ID],[reservation=RESERVATION]
+          --add-slurm-epilog-scripts=[ADD_SLURM_EPILOG_SCRIPTS,...]
+          --add-slurm-node-sets=[computeId=COMPUTEID],
+          [computeInstance=COMPUTEINSTANCE],[id=ID],
+          [maxDynamicNodeCount=MAXDYNAMICNODECOUNT],
+          [staticNodeCount=STATICNODECOUNT]
+          --add-slurm-partitions=[id=ID],[nodesetIds=NODESETIDS]
+          --add-slurm-prolog-scripts=[ADD_SLURM_PROLOG_SCRIPTS,...]
+          --add-spot-instances=[id=ID],[machineType=MACHINETYPE],
+          [terminationAction=TERMINATIONACTION],[zone=ZONE]
+          --add-storage-buckets=[ADD_STORAGE_BUCKETS,...]
+          --description=DESCRIPTION
+          --remove-filestore-instances=[REMOVE_FILESTORE_INSTANCES,...]
+          --remove-flex-start-instances=[REMOVE_FLEX_START_INSTANCES,...]
+          --remove-labels=[REMOVE_LABELS,...]
+          --remove-lustre-instances=[REMOVE_LUSTRE_INSTANCES,...]
+          --remove-on-demand-instances=[REMOVE_ON_DEMAND_INSTANCES,...]
+          --remove-reserved-instances=[REMOVE_RESERVED_INSTANCES,...]
+          --remove-slurm-epilog-scripts=[REMOVE_SLURM_EPILOG_SCRIPTS,...]
+          --remove-slurm-node-sets=[REMOVE_SLURM_NODE_SETS,...]
+          --remove-slurm-partitions=[REMOVE_SLURM_PARTITIONS,...]
+          --remove-slurm-prolog-scripts=[REMOVE_SLURM_PROLOG_SCRIPTS,...]
+          --remove-spot-instances=[REMOVE_SPOT_INSTANCES,...]
+          --remove-storage-buckets=[REMOVE_STORAGE_BUCKETS,...]
+          --slurm-default-partition=SLURM_DEFAULT_PARTITION
+          --update-slurm-login-node=[bootDisk=BOOTDISK],
+          [count=COUNT],[startupScript=STARTUPSCRIPT]
+          --update-slurm-node-sets=[computeId=COMPUTEID],
+          [computeInstance=COMPUTEINSTANCE],[id=ID],
+          [maxDynamicNodeCount=MAXDYNAMICNODECOUNT],
+          [staticNodeCount=STATICNODECOUNT]
+          --update-slurm-partitions=[id=ID],[nodesetIds=NODESETIDS]
+          | --config=[computeResources=COMPUTERESOURCES],
+          [description=DESCRIPTION],[labels=LABELS],[name=NAME],
+          [networkResources=NETWORKRESOURCES],
+          [orchestrator=ORCHESTRATOR],[storageResources=STORAGERESOURCES]
+          --update-mask=UPDATE_MASK) [--async] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) gcloud beta cluster-director clusters update facilitates the
+    updation of a cluster resource.
+
+    There are following ways to update a cluster:
+      ▪ [Preferred] Use granular flags to update cluster specs, based on
+        read-modify-update pattern.
+        ◆ Read the existing cluster specs through get cluster request.
+        ◆ Modify the cluster specs through granular flags.
+        ◆ Update the cluster specs through patch cluster request.
+      ▪ Use --config with cluster specs and --update-mask flags, both in JSON
+        format.
+        ◆ Map and repeated fields update requires existing and new values.
+        ◆ For e.g. if we want to update a cluster to add a new nodeset, then
+          we will use the update_mask "orchestrator.slurm.node_sets", and the
+          patch cluster must include all the existing nodesets as well as the
+          new one.
+
+    Please refer to the examples below for more details.
+
+EXAMPLES
+    To update a cluster my-cluster in location us-central1-a with granular
+    flags, run the following example:
+
+    Add labels, compute instances, slurm node sets, slurm partitions and update
+    description and default partition:
+
+        $ gcloud beta cluster-director clusters update my-cluster \
+            --location us-central1-a \
+            --description "My updated cluster description" \
+            --add-labels env=prod,client=gcloud-cli \
+            --add-on-demand-instances \
+            id=compute1,zone=us-central1-a,machineType=n2-standard-2 \
+            --add-reserved-instances \
+            id=compute2,reservation=zones/us-central1-a/reservations/\
+        {reservation} \
+            --add-spot-instances \
+            id=compute3,zone=us-central1-a,machineType=n2-standard-2 \
+            --add-dws-flex-instances \
+            id=compute4,zone=us-central1-a,machineType=a4-highgpu-8g,\
+        maxDuration=10000s \
+            --add-new-lustre-instances \
+            lustre=locations/us-central1-a/instances/lustre1,\
+        capacityGb=1024,filesystem=lustre1 \
+            --add-lustre-instances \
+            locations/us-central1-a/instances/lustre0 \
+            --add-slurm-node-sets id=nodeset1,computeId=compute1 \
+            --add-slurm-node-sets id=nodeset2,computeId=compute2 \
+            --add-slurm-node-sets id=nodeset3,computeId=compute3 \
+            --add-slurm-node-sets id=nodeset4,computeId=compute4 \
+            --add-slurm-partitions id=partition1,nodesetIds=[nodeset1] \
+            --add-slurm-partitions \
+            id=partition2,nodesetIds=[nodeset2,nodeset3,nodeset4] \
+            --slurm-default-partition partition1
+
+    Update slurm node sets and slurm partitions:
+
+        $ gcloud beta cluster-director clusters update my-cluster \
+            --location us-central1-a \
+            --update-slurm-node-sets \
+            id=nodeset1,staticNodeCount=2,maxDynamicNodeCount=10 \
+            --update-slurm-partitions \
+            id=partition1,nodesetIds=[nodeset0],exclusive=true
+
+    Remove slurm node sets, slurm partitions and compute instances and update
+    default partition:
+
+        $ gcloud beta cluster-director clusters update my-cluster \
+            --location us-central1-a --slurm-default-partition partition0 \
+            --remove-labels env,client \
+            --remove-lustre-instances \
+            locations/us-central1-a/instances/lustre0 \
+            --remove-slurm-partitions partition1 \
+            --remove-slurm-partitions partition2 \
+            --remove-slurm-node-sets nodeset1 \
+            --remove-slurm-node-sets nodeset2 \
+            --remove-slurm-node-sets nodeset3 \
+            --remove-slurm-node-sets nodeset4 \
+            --remove-on-demand-instances compute1 \
+            --remove-reserved-instances compute2 \
+            --remove-spot-instances compute3 \
+            --remove-dws-flex-instances compute4
+
+    Add and remove slurm prolog/epilog scripts:
+
+        $ gcloud beta cluster-director clusters update my-cluster \
+            --location us-central1-a --add-slurm-prolog-scripts script1.sh \
+            --remove-slurm-epilog-scripts script2.sh
+
+    Or cluster my-cluster in location us-central1-a with config JSON run the
+    following JSON example:
+
+        $ gcloud beta cluster-director clusters update my-cluster \
+            --location=us-central1-a --update-mask=labels \
+            --config='{"key": "value"}'
+
+    Or create a JSON file my-cluster-config.json with the cluster specs and run
+    the following file example:
+
+        $ gcloud beta cluster-director clusters update my-cluster \
+            --location=us-central1-a --update-mask=labels \
+            --config-from-file=my-cluster-config.json
+
+    Or create a JSON file with the update mask and run the following file
+    example:
+
+        $ gcloud beta cluster-director clusters update my-cluster \
+            --location=us-central1-a \
+            --update-mask-from-file=my-update-mask.json \
+            --config-from-file=my-cluster-config.json
+
+POSITIONAL ARGUMENTS
+     Cluster resource - Name of the cluster resource. Formats: cluster |
+     projects/{project}/locations/{locations}/clusters/{cluster} The arguments
+     in this group can be used to specify the attributes of this resource.
+     (NOTE) Some attributes are not given arguments in this group but can be
+     set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument cluster on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       CLUSTER
+          ID of the cluster or fully qualified identifier for the cluster.
+
+          To set the cluster attribute:
+          ▸ provide the argument cluster on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          The location id of the cluster resource.
+
+          To set the location attribute:
+          ▸ provide the argument cluster on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line.
+
+REQUIRED FLAGS
+     Cluster configuration for provisioning with updates.
+
+     Exactly one of these must be specified:
+
+       Flag Configurations to define cluster updates.
+
+       --add-filestore-instances=[ADD_FILESTORE_INSTANCES,...]
+          Reference of existing filestore instance.
+
+          For e.g. --add-filestore-instances
+          locations/{location}/instances/{filestore}
+
+       --add-flex-start-instances=[id=ID],[machineType=MACHINETYPE],[maxDuration=MAXDURATION],[zone=ZONE]
+          Parameters to define cluster Flex Start instances.
+
+          For e.g. --add-flex-start-instances
+          id={computeId},zone={zone},machineType={machineType},maxDuration=10000s.
+
+          Sets add_flex_start_instances value.
+
+           id
+              Required, sets id value.
+
+           machineType
+              Required, sets machineType value.
+
+           maxDuration
+              Required, sets maxDuration value.
+
+           zone
+              Required, sets zone value.
+
+          Shorthand Example:
+
+              --add-flex-start-instances=id=string,machineType=string,maxDuration=string,zone=string --add-flex-start-instances=id=string,machineType=string,maxDuration=string,zone=string
+
+          JSON Example:
+
+              --add-flex-start-instances='[{"id": "string", "machineType": "string", "maxDuration": "string", "zone": "string"}]'
+
+          File Example:
+
+              --add-flex-start-instances=path_to_file.(yaml|json)
+
+       --add-labels=[ADD_LABELS,...]
+          Cluster labels as key value pairs.
+
+          For e.g. --add-labels key1=value1,key2=value2.
+
+          Sets add_labels value.
+
+           KEY
+              Sets KEY value.
+
+           VALUE
+              Sets VALUE value.
+
+          Shorthand Example:
+
+              --add-labels={string=string}
+
+          JSON Example:
+
+              --add-labels='{"string": "string"}'
+
+          File Example:
+
+              --add-labels=path_to_file.(yaml|json)
+
+       --add-lustre-instances=[ADD_LUSTRE_INSTANCES,...]
+          Reference of existing Lustre instance.
+
+          For e.g. --add-lustre-instances
+          locations/{location}/instances/{lustre}
+
+       --add-new-filestore-instances=[capacityGb=CAPACITYGB],[description=DESCRIPTION],[fileshare=FILESHARE],[name=NAME],[protocol=PROTOCOL],[tier=TIER]
+          Parameters to create a filestore instance.
+
+          For e.g. --create-filestores
+          name=locations/{location}/instances/{filestore},tier=REGIONAL,capacityGb={filestoreSize},fileshare={fileshare}
+
+          capacityGb: Size of the filestore in GB. Must be between 1024 and
+          102400, and must meet scalability requirements described at
+          https://cloud.google.com/filestore/docs/service-tiers.
+
+          fileshare: The directory on a Filestore instance where all shared
+          files are stored. Must match the regex [a-z]([-a-z0-9]*[a-z0-9])?, be
+          1-63 characters in length, and comply with RFC1035. Supported tier
+          values:
+          ▸ ZONAL
+          ▸ REGIONAL
+
+          Supported protocol values:
+          ▸ NFSV3
+          ▸ NFSV41
+          ▸ If not specified, defaults to NFSV3
+
+          Defaults:
+          ▸ protocol: NFSV3.
+
+          Sets add_new_filestore_instances value.
+
+           capacityGb
+              Required, sets capacityGb value.
+
+           description
+              Sets description value.
+
+           fileshare
+              Required, sets fileshare value.
+
+           name
+              Required, sets name value.
+
+           protocol
+              Sets protocol value.
+
+           tier
+              Required, sets tier value.
+
+          Shorthand Example:
+
+              --add-new-filestore-instances=capacityGb=int,description=string,fileshare=string,name=string,protocol=string,tier=string --add-new-filestore-instances=capacityGb=int,description=string,fileshare=string,name=string,protocol=string,tier=string
+
+          JSON Example:
+
+              --add-new-filestore-instances='[{"capacityGb": int, "description": "string", "fileshare": "string", "name": "string", "protocol": "string", "tier": "string"}]'
+
+          File Example:
+
+              --add-new-filestore-instances=path_to_file.(yaml|json)
+
+       --add-new-lustre-instances=[capacityGb=CAPACITYGB],[description=DESCRIPTION],[filesystem=FILESYSTEM],[name=NAME],[perUnitStorageThroughput=PERUNITSTORAGETHROUGHPUT]
+          Parameters to create a Lustre instance.
+
+          For e.g. --add-new-lustre-instances
+          name=locations/{location}/instances/{lustre},capacityGb={lustreSize},filesystem={filesystem},perUnitStorageThroughput=1000
+
+          Values for perUnitStorageThroughput: 125, 250, 500, 1000.
+
+          Sets add_new_lustre_instances value.
+
+           capacityGb
+              Required, sets capacityGb value.
+
+           description
+              Sets description value.
+
+           filesystem
+              Required, sets filesystem value.
+
+           name
+              Required, sets name value.
+
+           perUnitStorageThroughput
+              Sets perUnitStorageThroughput value.
+
+          Shorthand Example:
+
+              --add-new-lustre-instances=capacityGb=int,description=string,filesystem=string,name=string,perUnitStorageThroughput=int --add-new-lustre-instances=capacityGb=int,description=string,filesystem=string,name=string,perUnitStorageThroughput=int
+
+          JSON Example:
+
+              --add-new-lustre-instances='[{"capacityGb": int, "description": "string", "filesystem": "string", "name": "string", "perUnitStorageThroughput": int}]'
+
+          File Example:
+
+              --add-new-lustre-instances=path_to_file.(yaml|json)
+
+       --add-new-storage-buckets=[enableAutoclass=ENABLEAUTOCLASS],[enableHNS=ENABLEHNS],[name=NAME],[storageClass=STORAGECLASS]
+          Parameters to create a Google Cloud Storage bucket.
+
+          For e.g. --add-new-storage-buckets
+          name={bucket-path},storageClass=STANDARD,enableHNS=true
+
+          Supported storageClass values:
+          ▸ STANDARD
+          ▸ NEARLINE
+          ▸ COLDLINE
+          ▸ ARCHIVE
+
+          Defaults:
+          ▸ storageClass: STANDARD
+
+          Note:
+          ▸ Either storageClass or enableAutoclass can be set.
+          ▸ HNS: Hierarchical namespace.
+
+          Sets add_new_storage_buckets value.
+
+           enableAutoclass
+              Sets enableAutoclass value.
+
+           enableHNS
+              Sets enableHNS value.
+
+           name
+              Required, sets name value.
+
+           storageClass
+              Sets storageClass value.
+
+          Shorthand Example:
+
+              --add-new-storage-buckets=enableAutoclass=boolean,enableHNS=boolean,name=string,storageClass=string --add-new-storage-buckets=enableAutoclass=boolean,enableHNS=boolean,name=string,storageClass=string
+
+          JSON Example:
+
+              --add-new-storage-buckets='[{"enableAutoclass": boolean, "enableHNS": boolean, "name": "string", "storageClass": "string"}]'
+
+          File Example:
+
+              --add-new-storage-buckets=path_to_file.(yaml|json)
+
+       --add-on-demand-instances=[id=ID],[machineType=MACHINETYPE],[zone=ZONE]
+          Parameters to define cluster on demand instances.
+
+          For e.g. --add-on-demand-instances
+          id={computeId},zone={zone},machineType={machineType}.
+
+          Sets add_on_demand_instances value.
+
+           id
+              Required, sets id value.
+
+           machineType
+              Required, sets machineType value.
+
+           zone
+              Required, sets zone value.
+
+          Shorthand Example:
+
+              --add-on-demand-instances=id=string,machineType=string,zone=string --add-on-demand-instances=id=string,machineType=string,zone=string
+
+          JSON Example:
+
+              --add-on-demand-instances='[{"id": "string", "machineType": "string", "zone": "string"}]'
+
+          File Example:
+
+              --add-on-demand-instances=path_to_file.(yaml|json)
+
+       --add-reserved-instances=[id=ID],[reservation=RESERVATION]
+          Parameters to define cluster reserved instances.
+
+          For e.g. --add-reserved-instances
+          id={computeId},reservation=zones/{zone}/reservations/{reservation}.
+
+          Sets add_reserved_instances value.
+
+           id
+              Required, sets id value.
+
+           reservation
+              Sets reservation value.
+
+          Shorthand Example:
+
+              --add-reserved-instances=id=string,reservation=string --add-reserved-instances=id=string,reservation=string
+
+          JSON Example:
+
+              --add-reserved-instances='[{"id": "string", "reservation": "string"}]'
+
+          File Example:
+
+              --add-reserved-instances=path_to_file.(yaml|json)
+
+       --add-slurm-epilog-scripts=[ADD_SLURM_EPILOG_SCRIPTS,...]
+          Slurm epilog bash scripts.
+
+          For e.g. --add-slurm-epilog-scripts script1.sh,script2.sh
+
+       --add-slurm-node-sets=[computeId=COMPUTEID],[computeInstance=COMPUTEINSTANCE],[id=ID],[maxDynamicNodeCount=MAXDYNAMICNODECOUNT],[staticNodeCount=STATICNODECOUNT]
+          Parameters to define slurm cluster nodeset config.
+
+          For e.g. --add-slurm-node-sets
+          id={nodesetId},computeId={computeId},staticNodeCount={staticNodeCount},maxDynamicNodeCount={maxDynamicNodeCount},computeInstance=[startupScript="echo
+          hello",labels="key1=value1,key2=value2"]
+
+          Defaults:
+          ▸ staticNodeCount: 1
+
+          Note:
+          ▸ startupScript:
+            ▫ Either str or file_path
+            ▫ For file_path, only bash file format (.sh or .bash) is
+              supported.
+            ▫ For file_path, only absolute path is supported.
+
+            Sets add_slurm_node_sets value.
+
+           computeId
+              Sets computeId value.
+
+           computeInstance
+              Sets computeInstance value.
+
+               bootDisk
+                  Sets bootDisk value.
+
+                   sizeGb
+                      Required, sets sizeGb value.
+
+                   type
+                      Required, sets type value.
+
+               labels
+                  Sets labels value.
+
+                   KEY
+                      Sets KEY value.
+
+                   VALUE
+                      Sets VALUE value.
+
+               startupScript
+                  Sets startupScript value.
+
+           id
+              Required, sets id value.
+
+           maxDynamicNodeCount
+              Sets maxDynamicNodeCount value.
+
+           staticNodeCount
+              Sets staticNodeCount value.
+
+          Shorthand Example:
+
+              --add-slurm-node-sets=computeId=string,computeInstance={bootDisk={sizeGb=int,type=string},labels={string=string},startupScript=string},id=string,maxDynamicNodeCount=int,staticNodeCount=int --add-slurm-node-sets=computeId=string,computeInstance={bootDisk={sizeGb=int,type=string},labels={string=string},startupScript=string},id=string,maxDynamicNodeCount=int,staticNodeCount=int
+
+          JSON Example:
+
+              --add-slurm-node-sets='[{"computeId": "string", "computeInstance": {"bootDisk": {"sizeGb": int, "type": "string"}, "labels": {"string": "string"}, "startupScript": "string"}, "id": "string", "maxDynamicNodeCount": int, "staticNodeCount": int}]'
+
+          File Example:
+
+              --add-slurm-node-sets=path_to_file.(yaml|json)
+
+       --add-slurm-partitions=[id=ID],[nodesetIds=NODESETIDS]
+          Parameters to define slurm cluster partitions.
+
+          For e.g. --add-slurm-partitions id=p1,nodesetIds=[ns1,ns2].
+
+          Sets add_slurm_partitions value.
+
+           id
+              Required, sets id value.
+
+           nodesetIds
+              Required, sets nodesetIds value.
+
+          Shorthand Example:
+
+              --add-slurm-partitions=id=string,nodesetIds=[string] --add-slurm-partitions=id=string,nodesetIds=[string]
+
+          JSON Example:
+
+              --add-slurm-partitions='[{"id": "string", "nodesetIds": ["string"]}]'
+
+          File Example:
+
+              --add-slurm-partitions=path_to_file.(yaml|json)
+
+       --add-slurm-prolog-scripts=[ADD_SLURM_PROLOG_SCRIPTS,...]
+          Slurm prolog bash scripts.
+
+          For e.g. --add-slurm-prolog-scripts script1.sh,script2.sh
+
+       --add-spot-instances=[id=ID],[machineType=MACHINETYPE],[terminationAction=TERMINATIONACTION],[zone=ZONE]
+          Parameters to define cluster spot instances.
+
+          For e.g. --add-spot-instances
+          id={computeId},zone={zone},machineType={machineType}.
+
+          Sets add_spot_instances value.
+
+           id
+              Required, sets id value.
+
+           machineType
+              Required, sets machineType value.
+
+           terminationAction
+              Sets terminationAction value.
+
+           zone
+              Required, sets zone value.
+
+          Shorthand Example:
+
+              --add-spot-instances=id=string,machineType=string,terminationAction=string,zone=string --add-spot-instances=id=string,machineType=string,terminationAction=string,zone=string
+
+          JSON Example:
+
+              --add-spot-instances='[{"id": "string", "machineType": "string", "terminationAction": "string", "zone": "string"}]'
+
+          File Example:
+
+              --add-spot-instances=path_to_file.(yaml|json)
+
+       --add-storage-buckets=[ADD_STORAGE_BUCKETS,...]
+          Reference of existing Google Cloud Storage bucket.
+
+          For e.g. --add-storage-buckets {existing-bucket-name eg. my-bucket}
+
+       --description=DESCRIPTION
+          Description of the cluster.
+
+          For e.g. --description (BETA) Updates a Cluster Director resource.
+
+       --remove-filestore-instances=[REMOVE_FILESTORE_INSTANCES,...]
+          Parameters to remove filestore instance config by filestore name.
+
+          For e.g. --remove-filestore-instances
+          locations/{location}/instances/{filestore1},locations/{location}/instances/{filestore2},...
+
+       --remove-flex-start-instances=[REMOVE_FLEX_START_INSTANCES,...]
+          Parameters to remove Flex Start instance config by compute id.
+
+          For e.g. --remove-flex-start-instances {computeId1},{computeId2},...
+
+       --remove-labels=[REMOVE_LABELS,...]
+          Parameters to remove cluster label by key.
+
+          For e.g. --remove-labels {key1},{key2},...
+
+       --remove-lustre-instances=[REMOVE_LUSTRE_INSTANCES,...]
+          Parameters to remove lustre instance config by lustre name.
+
+          For e.g. --remove-lustre-instances
+          locations/{location}/instances/{lustre1},locations/{location}/instances/{lustre2},...
+
+       --remove-on-demand-instances=[REMOVE_ON_DEMAND_INSTANCES,...]
+          Parameters to remove on demand instances config by compute id.
+
+          For e.g. --remove-on-demand-instances {computeId1},{computeId2},...
+
+       --remove-reserved-instances=[REMOVE_RESERVED_INSTANCES,...]
+          Parameters to remove reserved instance config by compute id.
+
+          For e.g. --remove-reserved-instances {computeId1},{computeId2},...
+
+       --remove-slurm-epilog-scripts=[REMOVE_SLURM_EPILOG_SCRIPTS,...]
+          Scripts to remove from Slurm epilog bash scripts.
+
+          For e.g. --remove-slurm-epilog-scripts script1.sh,script2.sh
+
+       --remove-slurm-node-sets=[REMOVE_SLURM_NODE_SETS,...]
+          Parameters to remove slurm nodeset config by nodeset id.
+
+          For e.g. --remove-slurm-node-sets {nodesetId1},{nodesetId2},...
+
+       --remove-slurm-partitions=[REMOVE_SLURM_PARTITIONS,...]
+          Parameters to remove slurm partition config by partition id.
+
+          For e.g. --remove-slurm-partitions p1,p2,...
+
+       --remove-slurm-prolog-scripts=[REMOVE_SLURM_PROLOG_SCRIPTS,...]
+          Scripts to remove from Slurm prolog bash scripts.
+
+          For e.g. --remove-slurm-prolog-scripts script1.sh,script2.sh
+
+       --remove-spot-instances=[REMOVE_SPOT_INSTANCES,...]
+          Parameters to remove spot instance config by compute id.
+
+          For e.g. --remove-spot-instances {computeId1},{computeId2},...
+
+       --remove-storage-buckets=[REMOVE_STORAGE_BUCKETS,...]
+          Parameters to remove Google Cloud Storage bucket by bucket name.
+
+          For e.g. --remove-storage-buckets {bucket1},{bucket2},...
+
+       --slurm-default-partition=SLURM_DEFAULT_PARTITION
+          Parameters to define slurm cluster default partition.
+
+          For e.g. --slurm-default-partition {partitionId}
+
+       --update-slurm-login-node=[bootDisk=BOOTDISK],[count=COUNT],[startupScript=STARTUPSCRIPT]
+          Parameters to update slurm cluster login node. Only bootDisk, count
+          and startupScript can be updated.
+
+          For e.g. --update-slurm-login-node count=2,startupScript="echo
+          hello".
+
+          Sets update_slurm_login_node value.
+
+           bootDisk
+              Sets bootDisk value.
+
+               sizeGb
+                  Required, sets sizeGb value.
+
+               type
+                  Required, sets type value.
+
+           count
+              Sets count value.
+
+           startupScript
+              Sets startupScript value.
+
+          Shorthand Example:
+
+              --update-slurm-login-node=bootDisk={sizeGb=int,type=string},count=int,startupScript=string
+
+          JSON Example:
+
+              --update-slurm-login-node='{"bootDisk": {"sizeGb": int, "type": "string"}, "count": int, "startupScript": "string"}'
+
+          File Example:
+
+              --update-slurm-login-node=path_to_file.(yaml|json)
+
+       --update-slurm-node-sets=[computeId=COMPUTEID],[computeInstance=COMPUTEINSTANCE],[id=ID],[maxDynamicNodeCount=MAXDYNAMICNODECOUNT],[staticNodeCount=STATICNODECOUNT]
+          Parameters to define and update slurm cluster nodeset config.
+
+          For e.g. --update-slurm-node-sets
+          id={nodesetId},staticNodeCount={staticNodeCount},maxDynamicNodeCount={maxDynamicNodeCount},computeInstance=[startupScript="echo
+          hello"].
+
+          Sets update_slurm_node_sets value.
+
+           computeId
+              Sets computeId value.
+
+           computeInstance
+              Sets computeInstance value.
+
+               bootDisk
+                  Sets bootDisk value.
+
+                   sizeGb
+                      Required, sets sizeGb value.
+
+                   type
+                      Required, sets type value.
+
+               labels
+                  Sets labels value.
+
+                   KEY
+                      Sets KEY value.
+
+                   VALUE
+                      Sets VALUE value.
+
+               startupScript
+                  Sets startupScript value.
+
+           id
+              Required, sets id value.
+
+           maxDynamicNodeCount
+              Sets maxDynamicNodeCount value.
+
+           staticNodeCount
+              Sets staticNodeCount value.
+
+          Shorthand Example:
+
+              --update-slurm-node-sets=computeId=string,computeInstance={bootDisk={sizeGb=int,type=string},labels={string=string},startupScript=string},id=string,maxDynamicNodeCount=int,staticNodeCount=int --update-slurm-node-sets=computeId=string,computeInstance={bootDisk={sizeGb=int,type=string},labels={string=string},startupScript=string},id=string,maxDynamicNodeCount=int,staticNodeCount=int
+
+          JSON Example:
+
+              --update-slurm-node-sets='[{"computeId": "string", "computeInstance": {"bootDisk": {"sizeGb": int, "type": "string"}, "labels": {"string": "string"}, "startupScript": "string"}, "id": "string", "maxDynamicNodeCount": int, "staticNodeCount": int}]'
+
+          File Example:
+
+              --update-slurm-node-sets=path_to_file.(yaml|json)
+
+       --update-slurm-partitions=[id=ID],[nodesetIds=NODESETIDS]
+          Parameters to define and update slurm cluster partition config.
+
+          For e.g. --update-slurm-partitions id=p1,nodesetIds=[ns1,ns2].
+
+          Sets update_slurm_partitions value.
+
+           id
+              Required, sets id value.
+
+           nodesetIds
+              Sets nodesetIds value.
+
+          Shorthand Example:
+
+              --update-slurm-partitions=id=string,nodesetIds=[string] --update-slurm-partitions=id=string,nodesetIds=[string]
+
+          JSON Example:
+
+              --update-slurm-partitions='[{"id": "string", "nodesetIds": ["string"]}]'
+
+          File Example:
+
+              --update-slurm-partitions=path_to_file.(yaml|json)
+
+       Cluster configuration for updates.
+
+       --config=[computeResources=COMPUTERESOURCES],[description=DESCRIPTION],[labels=LABELS],[name=NAME],[networkResources=NETWORKRESOURCES],[orchestrator=ORCHESTRATOR],[storageResources=STORAGERESOURCES]
+          Configuration of the cluster specs in the form of a JSON object.
+          Required, sets config value.
+
+           computeResources
+              Sets computeResources value.
+
+               KEY
+                  Sets KEY value.
+
+               VALUE
+                  Sets VALUE value.
+
+                   config
+                      Sets config value.
+
+                       newDwsFlexInstances
+                          Sets newDwsFlexInstances value.
+
+                           machineType
+                              Sets machineType value.
+
+                           maxDuration
+                              Sets maxDuration value.
+
+                           zone
+                              Sets zone value.
+
+                       newFlexStartInstances
+                          Sets newFlexStartInstances value.
+
+                           machineType
+                              Sets machineType value.
+
+                           maxDuration
+                              Sets maxDuration value.
+
+                           zone
+                              Sets zone value.
+
+                       newOnDemandInstances
+                          Sets newOnDemandInstances value.
+
+                           machineType
+                              Sets machineType value.
+
+                           zone
+                              Sets zone value.
+
+                       newReservedInstances
+                          Sets newReservedInstances value.
+
+                           reservation
+                              Sets reservation value.
+
+                       newSpotInstances
+                          Sets newSpotInstances value.
+
+                           machineType
+                              Sets machineType value.
+
+                           terminationAction
+                              Sets terminationAction value.
+
+                           zone
+                              Sets zone value.
+
+           description
+              Sets description value.
+
+           labels
+              Sets labels value.
+
+               KEY
+                  Sets KEY value.
+
+               VALUE
+                  Sets VALUE value.
+
+           name
+              Sets name value.
+
+           networkResources
+              Sets networkResources value.
+
+               KEY
+                  Sets KEY value.
+
+               VALUE
+                  Sets VALUE value.
+
+                   config
+                      Sets config value.
+
+                       existingComputeNetwork
+                          Sets existingComputeNetwork value.
+
+                           network
+                              Sets network value.
+
+                           subnetwork
+                              Sets subnetwork value.
+
+                       existingNetwork
+                          Sets existingNetwork value.
+
+                           network
+                              Sets network value.
+
+                           subnetwork
+                              Sets subnetwork value.
+
+                       newComputeNetwork
+                          Sets newComputeNetwork value.
+
+                           description
+                              Sets description value.
+
+                           network
+                              Sets network value.
+
+                       newNetwork
+                          Sets newNetwork value.
+
+                           description
+                              Sets description value.
+
+                           network
+                              Sets network value.
+
+           orchestrator
+              Sets orchestrator value.
+
+               slurm
+                  Sets slurm value.
+
+                   defaultPartition
+                      Sets defaultPartition value.
+
+                   epilogBashScripts
+                      Sets epilogBashScripts value.
+
+                   loginNodes
+                      Sets loginNodes value.
+
+                       bootDisk
+                          Sets bootDisk value.
+
+                           sizeGb
+                              Required, sets sizeGb value.
+
+                           type
+                              Required, sets type value.
+
+                       count
+                          Sets count value.
+
+                       enableOSLogin
+                          Sets enableOSLogin value.
+
+                       enablePublicIPs
+                          Sets enablePublicIPs value.
+
+                       labels
+                          Sets labels value.
+
+                           KEY
+                              Sets KEY value.
+
+                           VALUE
+                              Sets VALUE value.
+
+                       machineType
+                          Required, sets machineType value.
+
+                       startupScript
+                          Sets startupScript value.
+
+                       zone
+                          Required, sets zone value.
+
+                   nodeSets
+                      Sets nodeSets value.
+
+                       computeId
+                          Sets computeId value.
+
+                       computeInstance
+                          Sets computeInstance value.
+
+                           bootDisk
+                              Sets bootDisk value.
+
+                               sizeGb
+                                  Required, sets sizeGb value.
+
+                               type
+                                  Required, sets type value.
+
+                           labels
+                              Sets labels value.
+
+                               KEY
+                                  Sets KEY value.
+
+                               VALUE
+                                  Sets VALUE value.
+
+                           startupScript
+                              Sets startupScript value.
+
+                       id
+                          Required, sets id value.
+
+                       maxDynamicNodeCount
+                          Sets maxDynamicNodeCount value.
+
+                       staticNodeCount
+                          Sets staticNodeCount value.
+
+                   partitions
+                      Sets partitions value.
+
+                       id
+                          Required, sets id value.
+
+                       nodesetIds
+                          Required, sets nodesetIds value.
+
+                   prologBashScripts
+                      Sets prologBashScripts value.
+
+           storageResources
+              Sets storageResources value.
+
+               KEY
+                  Sets KEY value.
+
+               VALUE
+                  Sets VALUE value.
+
+                   config
+                      Sets config value.
+
+                       existingBucket
+                          Sets existingBucket value.
+
+                           bucket
+                              Sets bucket value.
+
+                       existingFilestore
+                          Sets existingFilestore value.
+
+                           filestore
+                              Sets filestore value.
+
+                       existingLustre
+                          Sets existingLustre value.
+
+                           lustre
+                              Sets lustre value.
+
+                       newBucket
+                          Sets newBucket value.
+
+                           autoclass
+                              Sets autoclass value.
+
+                               enabled
+                                  Sets enabled value.
+
+                           bucket
+                              Sets bucket value.
+
+                           hierarchicalNamespace
+                              Sets hierarchicalNamespace value.
+
+                               enabled
+                                  Sets enabled value.
+
+                           storageClass
+                              Sets storageClass value.
+
+                       newFilestore
+                          Sets newFilestore value.
+
+                           description
+                              Sets description value.
+
+                           fileShares
+                              Sets fileShares value.
+
+                               capacityGb
+                                  Sets capacityGb value.
+
+                               fileShare
+                                  Sets fileShare value.
+
+                           filestore
+                              Sets filestore value.
+
+                           protocol
+                              Sets protocol value.
+
+                           tier
+                              Sets tier value.
+
+                       newLustre
+                          Sets newLustre value.
+
+                           capacityGb
+                              Sets capacityGb value.
+
+                           description
+                              Sets description value.
+
+                           filesystem
+                              Sets filesystem value.
+
+                           lustre
+                              Sets lustre value.
+
+                           perUnitStorageThroughput
+                              Sets perUnitStorageThroughput value.
+
+          Shorthand Example:
+
+              --config=computeResources={string={config={newDwsFlexInstances={machineType=string,maxDuration=string,zone=string},newFlexStartInstances={machineType=string,maxDuration=string,zone=string},newOnDemandInstances={machineType=string,zone=string},newReservedInstances={reservation=string},newSpotInstances={machineType=string,terminationAction=string,zone=string}}}},description=string,labels={string=string},name=string,networkResources={string={config={existingComputeNetwork={network=string,subnetwork=string},existingNetwork={network=string,subnetwork=string},newComputeNetwork={description=string,network=string},newNetwork={description=string,network=string}}}},orchestrator={slurm={defaultPartition=string,epilogBashScripts,loginNodes={bootDisk={sizeGb=int,type=string},count=int,enableOSLogin=boolean,enablePublicIPs=boolean,labels={string=string},machineType=string,startupScript=string,zone=string},nodeSets=[{computeId=string,computeInstance={bootDisk={sizeGb=int,type=string},labels={string=string},startupScript=string},id=string,maxDynamicNodeCount=int,staticNodeCount=int}],partitions=[{id=string,nodesetIds=[string]}],prologBashScripts}},storageResources={string={config={existingBucket={bucket=string},existingFilestore={filestore=string},existingLustre={lustre=string},newBucket={autoclass={enabled=boolean},bucket=string,hierarchicalNamespace={enabled=boolean},storageClass=string},newFilestore={description=string,fileShares=[{capacityGb=int,fileShare=string}],filestore=string,protocol=string,tier=string},newLustre={capacityGb=int,description=string,filesystem=string,lustre=string,perUnitStorageThroughput=int}}}}
+
+          JSON Example:
+
+              --config='{"computeResources": {"string": {"config": {"newDwsFlexInstances": {"machineType": "string", "maxDuration": "string", "zone": "string"}, "newFlexStartInstances": {"machineType": "string", "maxDuration": "string", "zone": "string"}, "newOnDemandInstances": {"machineType": "string", "zone": "string"}, "newReservedInstances": {"reservation": "string"}, "newSpotInstances": {"machineType": "string", "terminationAction": "string", "zone": "string"}}}}, "description": "string", "labels": {"string": "string"}, "name": "string", "networkResources": {"string": {"config": {"existingComputeNetwork": {"network": "string", "subnetwork": "string"}, "existingNetwork": {"network": "string", "subnetwork": "string"}, "newComputeNetwork": {"description": "string", "network": "string"}, "newNetwork": {"description": "string", "network": "string"}}}}, "orchestrator": {"slurm": {"defaultPartition": "string", "epilogBashScripts", "loginNodes": {"bootDisk": {"sizeGb": int, "type": "string"}, "count": int, "enableOSLogin": boolean, "enablePublicIPs": boolean, "labels": {"string": "string"}, "machineType": "string", "startupScript": "string", "zone": "string"}, "nodeSets": [{"computeId": "string", "computeInstance": {"bootDisk": {"sizeGb": int, "type": "string"}, "labels": {"string": "string"}, "startupScript": "string"}, "id": "string", "maxDynamicNodeCount": int, "staticNodeCount": int}], "partitions": [{"id": "string", "nodesetIds": ["string"]}], "prologBashScripts"}}, "storageResources": {"string": {"config": {"existingBucket": {"bucket": "string"}, "existingFilestore": {"filestore": "string"}, "existingLustre": {"lustre": "string"}, "newBucket": {"autoclass": {"enabled": boolean}, "bucket": "string", "hierarchicalNamespace": {"enabled": boolean}, "storageClass": "string"}, "newFilestore": {"description": "string", "fileShares": [{"capacityGb": int, "fileShare": "string"}], "filestore": "string", "protocol": "string", "tier": "string"}, "newLustre": {"capacityGb": int, "description": "string", "filesystem": "string", "lustre": "string", "perUnitStorageThroughput": int}}}}}'
+
+          File Example:
+
+              --config=path_to_file.(yaml|json)
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+       --update-mask=UPDATE_MASK
+          Update mask to specify the fields to update.
+
+          For e.g. --update-mask "description,labels".
+
+          Required, sets update_mask value.
+
+          Input Example:
+
+              --update-mask=string
+
+          File Example:
+
+              --update-mask=path_to_file.(yaml|json)
+
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud alpha cluster-director clusters update
+

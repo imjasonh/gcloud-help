@@ -8,8 +8,9 @@ SYNOPSIS
         [--default-action-on-vm-failure=ACTION_ON_VM_FAILURE]
         [--description=DESCRIPTION] [--[no-]force-update-on-repair]
         [--instance-redistribution-type=TYPE]
-        [--instance-selection=name=NAME,
-          machine-type=MACHINE_TYPE[,machine-type=MACHINE_TYPE...][,rank=RANK]]
+        [--instance-selection=name=NAME,machine-type=MACHINE_TYPE[,
+          machine-type=MACHINE_TYPE...][,
+          rank=RANK][,min-cpu-platform=MIN_CPU_PLATFORM]]
         [--instance-selection-machine-types=[MACHINE_TYPE,...]]
         [--list-managed-instances-results=MODE]
         [--on-repair-allow-changing-zone=ON_REPAIR_ALLOW_CHANGING_ZONE]
@@ -26,7 +27,7 @@ SYNOPSIS
         [--stateful-internal-ip=[enabled],
           [auto-delete=AUTO-DELETE],[interface-name=INTERFACE-NAME]]
         [--stopped-size=STOPPED_SIZE] [--suspended-size=SUSPENDED_SIZE]
-        [--target-distribution-shape=SHAPE]
+        [--target-distribution-shape=SHAPE] [--template=TEMPLATE]
         [--clear-autohealing
           | --initial-delay=INITIAL_DELAY --health-check=HEALTH_CHECK
           | --http-health-check=HTTP_HEALTH_CHECK
@@ -132,9 +133,10 @@ FLAGS
             The managed instance group proactively redistributes instances to
             meet its target distribution.
 
-     --instance-selection=name=NAME,machine-type=MACHINE_TYPE[,machine-type=MACHINE_TYPE...][,rank=RANK]
-        Named selection of machine types with an optional rank. For example,
-        --instance-selection="name=instance-selection-1,machine-type=e2-standard-8,machine-type=t2d-standard-8,rank=0"
+     --instance-selection=name=NAME,machine-type=MACHINE_TYPE[,machine-type=MACHINE_TYPE...][,rank=RANK][,min-cpu-platform=MIN_CPU_PLATFORM]
+        Named selection of machine types with an optional rank and minimum CPU
+        platform. For example,
+        --instance-selection="name=instance-selection-1,machine-type=e2-standard-8,machine-type=t2d-standard-8,rank=0,min-cpu-platform=MIN_CPU_PLATFORM"
 
      --instance-selection-machine-types=[MACHINE_TYPE,...]
         Machine types that are used to create VMs. If not provided, the machine
@@ -338,6 +340,13 @@ FLAGS
             selected zones. The distribution is even when the number of managed
             instances does not differ by more than 1 between any two zones.
             Recommended for highly available serving workloads.
+
+     --template=TEMPLATE
+        Specifies the instance template that will replace the existing template
+        used by the MIG. The MIG then uses this new template to create
+        instances. Specifying the new template overrides any template versions
+        that you've set for the MIG. Specify either a global or a regional
+        instance template.
 
      At most one of these can be specified:
 
