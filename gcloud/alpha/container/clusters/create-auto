@@ -7,6 +7,7 @@ SYNOPSIS
         [--anonymous-authentication-config=ANONYMOUS_AUTHENTICATION_CONFIG]
         [--async] [--auto-monitoring-scope=AUTO_MONITORING_SCOPE]
         [--autopilot-general-profile=AUTOPILOT_GENERAL_PROFILE]
+        [--autopilot-privileged-admission=[ALLOWLIST_PATHS,...]]
         [--autoprovisioning-enable-insecure-kubelet-readonly-port]
         [--autoprovisioning-network-tags=TAGS,[TAGS,...]]
         [--autoprovisioning-resource-manager-tags=[KEY=VALUE,...]]
@@ -17,7 +18,8 @@ SYNOPSIS
         [--containerd-config-from-file=PATH_TO_FILE]
         [--create-subnetwork=[KEY=VALUE,...]]
         [--database-encryption-key=DATABASE_ENCRYPTION_KEY]
-        [--disable-l4-lb-firewall-reconciliation] [--enable-ambient]
+        [--disable-l4-lb-firewall-reconciliation] [--disable-multi-nic-lustre]
+        [--enable-agent-sandbox] [--enable-ambient-networking]
         [--enable-authorized-networks-on-private-endpoint] [--enable-auto-ipam]
         [--enable-backup-restore] [--enable-cilium-clusterwide-network-policy]
         [--enable-confidential-nodes] [--enable-default-compute-class]
@@ -29,9 +31,10 @@ SYNOPSIS
         [--enable-legacy-lustre-port] [--enable-lustre-csi-driver]
         [--enable-master-global-access] [--enable-multi-networking]
         [--enable-ray-cluster-logging] [--enable-ray-cluster-monitoring]
-        [--enable-ray-operator] [--fleet-project=PROJECT_ID_OR_NUMBER]
-        [--hpa-profile=HPA_PROFILE] [--labels=[KEY=VALUE,...]]
-        [--logging=[COMPONENT,...]] [--managed-otel-scope=MANAGED_OTEL_SCOPE]
+        [--enable-ray-operator] [--enable-scheduled-upgrades]
+        [--fleet-project=PROJECT_ID_OR_NUMBER] [--hpa-profile=HPA_PROFILE]
+        [--labels=[KEY=VALUE,...]] [--logging=[COMPONENT,...]]
+        [--managed-otel-scope=MANAGED_OTEL_SCOPE]
         [--membership-type=MEMBERSHIP_TYPE] [--monitoring=[COMPONENT,...]]
         [--network=NETWORK] [--private-endpoint-subnetwork=NAME]
         [--release-channel=CHANNEL] [--security-group=SECURITY_GROUP]
@@ -64,6 +67,7 @@ SYNOPSIS
         [--enable-secret-sync --enable-secret-sync-rotation
           --secret-sync-rotation-interval=SECRET_SYNC_ROTATION_INTERVAL]
         [--location=LOCATION | --region=REGION | --zone=ZONE, -z ZONE]
+        [--maintenance-minor-version-disruption-interval=MAINTENANCE_MINOR_VERSION_DISRUPTION_INTERVAL --maintenance-patch-version-disruption-interval=MAINTENANCE_PATCH_VERSION_DISRUPTION_INTERVAL]
         [--scopes=[SCOPE,...];
           default="gke-default" --service-account=SERVICE_ACCOUNT]
         [GCLOUD_WIDE_FLAG ...]
@@ -116,6 +120,73 @@ FLAGS
         none and no-performance. If none is used, the cluster will use the
         Autopilot default configuration. AUTOPILOT_GENERAL_PROFILE must be one
         of: none, no-performance.
+
+     --autopilot-privileged-admission=[ALLOWLIST_PATHS,...]
+        Specifies which privileged workload allowlist paths can be referenced
+        and installed by AllowlistSynchronizers in Autopilot modes.
+
+        The value is a comma-separated list of paths in the format:
+
+        ◆ gke://<partner_name>/<app_name>/<allowlist_path> for Autopilot
+          partner allowlists
+        ◆ gs://<bucket_name>/<allowlist_path> for user allowlists
+
+        By default, all GKE-managed allowlists (gke://*) are authorized. See
+        https://cloud.google.com/kubernetes-engine/docs/resources/autopilot-partners
+        for all supported Autopilot partner allowlists. When setting this flag,
+        be careful to explicitly specify gke://* in addition to other entries
+        if you rely on this default behavior.
+
+        Wildcards (*) are supported. For example, if gke://* is authorized,
+        then AllowlistSynchronizers can be used to install
+        gke://partner1/allowlist1.yaml and gke://partner2/allowlist2.yaml.
+
+        Note: Use of user allowlists (gs://) requires special permissions and
+        is only available to a subset of high tier customers. Please contact
+        your account team for more information.
+
+        Examples:
+
+        Allow all GKE-managed allowlists (default behavior):
+
+            $ gcloud alpha container clusters create-auto \
+                --autopilot-privileged-admission=gke://*
+
+        Authorize only allowlists from a GKE Autopilot partner:
+
+            $ gcloud alpha container clusters create-auto \
+                --autopilot-privileged-admission=gke://my-partner/*
+
+        Authorize only a singular user-owned allowlist
+
+            $ gcloud alpha container clusters create-auto \
+                --autopilot-privileged-admission=gs://my-bucket/allowlists/\
+            my-allowlist.yaml
+
+        Authorize all user-owned allowlists under a given path:
+
+            $ gcloud alpha container clusters create-auto \
+                --autopilot-privileged-admission=gs://my-bucket/*
+
+        Authorize all GKE-managed allowlists and a specific user-owned
+        allowlist:
+
+            $ gcloud alpha container clusters create-auto \
+                --autopilot-privileged-admission=gke://*,gs://my-bucket/\
+            allowlists/my-allowlist.yaml
+
+        Disable allowlist installation entirely:
+
+            $ gcloud alpha container clusters create-auto \
+                --autopilot-privileged-admission=""
+
+        Exercise caution when using this flag on an existing cluster. Upon
+        updates, existing AllowlistSynchronizers will uninstall allowlists that
+        are no longer authorized.
+
+        For instructions on installing allowlists in the cluster after
+        authorization, please refer to:
+        https://cloud.google.com/kubernetes-engine/docs/how-to/run-autopilot-partner-workloads
 
      --autoprovisioning-enable-insecure-kubelet-readonly-port
         Enables the Kubelet's insecure read only port for Autoprovisioned Node
@@ -274,7 +345,15 @@ FLAGS
         Disable reconciliation on the cluster for L4 Load Balancer VPC
         firewalls targeting ingress traffic.
 
-     --enable-ambient
+     --disable-multi-nic-lustre
+        Disable the Lustre CSI driver to automatically detect and configure all
+        suitable network interfaces on a node for Lustre IO.
+
+     --enable-agent-sandbox
+        Enable the Agent Sandbox feature on the cluster. Use
+        --no-enable-agent-sandbox to disable.
+
+     --enable-ambient-networking
         Enable Ambient Networking on the cluster.
 
      --enable-authorized-networks-on-private-endpoint
@@ -378,6 +457,12 @@ FLAGS
      --enable-ray-operator
         Enable the Ray Operator GKE add-on. This add-on is disabled by default.
 
+     --enable-scheduled-upgrades
+        Enables the scheduled upgrades feature for the cluster.
+
+        When enabled, automatic cluster control plane upgrades will only occur
+        when you receive notice at least 72 hours beforehand.
+
      --fleet-project=PROJECT_ID_OR_NUMBER
         Sets fleet host project for the cluster. If specified, the current
         cluster will be registered as a fleet membership under the fleet host
@@ -402,7 +487,8 @@ FLAGS
 
      --logging=[COMPONENT,...]
         Set the components that have logging enabled. Valid component values
-        are: SYSTEM, WORKLOAD, API_SERVER, CONTROLLER_MANAGER, SCHEDULER
+        are: SYSTEM, WORKLOAD, API_SERVER, CONTROLLER_MANAGER, SCHEDULER,
+        KCP_HPA
 
         The default is SYSTEM,WORKLOAD. If this flag is set, then SYSTEM must
         be included.
@@ -417,7 +503,7 @@ FLAGS
                 --logging=SYSTEM,WORKLOAD
             $ gcloud alpha container clusters create-auto \
                 --logging=SYSTEM,WORKLOAD,API_SERVER,CONTROLLER_MANAGER,\
-            SCHEDULER
+            SCHEDULER,KCP_HPA
 
      --managed-otel-scope=MANAGED_OTEL_SCOPE
         Specifies the scope of Managed OpenTelemetry within the cluster.
@@ -444,6 +530,10 @@ FLAGS
         are: SYSTEM, WORKLOAD (Deprecated), NONE, API_SERVER,
         CONTROLLER_MANAGER, SCHEDULER, DAEMONSET, DEPLOYMENT, HPA, POD,
         STATEFULSET, STORAGE, CADVISOR, KUBELET, DCGM, JOBSET
+
+        Note: DAEMONSET, DEPLOYMENT, HPA, POD, STATEFULSET, STORAGE, CADVISOR,
+        KUBELET, DCGM, and JOBSET require Google Managed Prometheus to be
+        enabled.
 
         For more information, see
         https://cloud.google.com/kubernetes-engine/docs/how-to/configure-metrics#available-metrics
@@ -799,6 +889,16 @@ FLAGS
        --zone=ZONE, -z ZONE
           Compute zone (e.g. us-central1-a) for a zonal cluster. Overrides the
           default compute/zone property value for this command invocation.
+
+     Flags for cluster disruption budget configuration:
+
+     --maintenance-minor-version-disruption-interval=MAINTENANCE_MINOR_VERSION_DISRUPTION_INTERVAL
+        Set the minimum interval of time between minor version cluster
+        upgrades.
+
+     --maintenance-patch-version-disruption-interval=MAINTENANCE_PATCH_VERSION_DISRUPTION_INTERVAL
+        Set the minimum interval of time between patch version cluster
+        upgrades.
 
      Options to specify the node identity.
 

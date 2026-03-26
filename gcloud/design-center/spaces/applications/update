@@ -7,6 +7,7 @@ SYNOPSIS
         [--deployment-project=DEPLOYMENT_PROJECT]
         [--deployment-region=DEPLOYMENT_REGION] [--description=DESCRIPTION]
         [--display-name=DISPLAY_NAME] [--[no-]import-existing-resources]
+        [--params-update-strategy=PARAMS_UPDATE_STRATEGY]
         [--service-account=SERVICE_ACCOUNT] [--type=TYPE]
         [--app-parameters=[key=KEY],[value=VALUE]
           | --add-app-parameters=[key=KEY],[value=VALUE] --clear-app-parameters
@@ -37,16 +38,24 @@ SYNOPSIS
           --[no-]criticality-mission-critical
           --criticality-type=CRITICALITY_TYPE
           --environment=ENVIRONMENT --environment-type=ENVIRONMENT_TYPE]
+        [--clear-composite-application-parameters
+          --composite-application-parameters-service-account-map=[COMPOSITE_APPLICATION_PARAMETERS_SERVICE_ACCOUNT_MAP,
+          ...]
+          | --update-composite-application-parameters-service-account-map=[UPDATE_COMPOSITE_APPLICATION_PARAMETERS_SERVICE_ACCOUNT_MAP,
+          ...] --clear-composite-application-parameters-service-account-map
+          | --remove-composite-application-parameters-service-account-map=REMOVE_COMPOSITE_APPLICATION_PARAMETERS_SERVICE_ACCOUNT_MAP]
         [--clear-deployment-target
           --gke-deployment-target-cluster-self-link=GKE_DEPLOYMENT_TARGET_CLUSTER_SELF_LINK --gke-deployment-target-kubernetes-service-account=GKE_DEPLOYMENT_TARGET_KUBERNETES_SERVICE_ACCOUNT --[no-]gke-deployment-target-kubernetes-service-account-creation --gke-deployment-target-namespace=GKE_DEPLOYMENT_TARGET_NAMESPACE]
         [--clear-scope --scope-type=SCOPE_TYPE]
         [--clear-source
           --source-application-template-revision=SOURCE_APPLICATION_TEMPLATE_REVISION | --source-shared-template-revision-uri=SOURCE_SHARED_TEMPLATE_REVISION_URI]
-        [--component-parameters=[component=COMPONENT],[parameters=PARAMETERS]
-          | --add-component-parameters=[component=COMPONENT],
-          [parameters=PARAMETERS] --clear-component-parameters
-          | --remove-component-parameters=[component=COMPONENT],
-          [parameters=PARAMETERS]]
+        [--component-parameters=[applicationInfo=APPLICATIONINFO],
+          [component=COMPONENT],[parameters=PARAMETERS]
+          | --add-component-parameters=[applicationInfo=APPLICATIONINFO],
+          [component=COMPONENT],[parameters=PARAMETERS]
+          --clear-component-parameters
+          | --remove-component-parameters=[applicationInfo=APPLICATIONINFO],
+          [component=COMPONENT],[parameters=PARAMETERS]]
         [--connection-configs=[connectionUri=CONNECTIONURI],
           [destinationComponentParameters=DESTINATIONCOMPONENTPARAMETERS],
           [sourceComponentParameters=SOURCECOMPONENTPARAMETERS]
@@ -176,6 +185,14 @@ FLAGS
         Import existing resources into the application. Use
         --import-existing-resources to enable and
         --no-import-existing-resources to disable.
+
+     --params-update-strategy=PARAMS_UPDATE_STRATEGY
+        Specifies the strategy to use when updating the application parameters
+        while updating the application template revision.
+        PARAMS_UPDATE_STRATEGY must be (only one value is supported):
+
+         replace
+            Replaces the existing field values with the provided ones.
 
      --service-account=SERVICE_ACCOUNT
         Your own service account that you use to deploy an application.
@@ -603,6 +620,91 @@ FLAGS
          test
             Test environment.
 
+     Holds parameters that are specific to composite applications.
+
+     --clear-composite-application-parameters
+        Set application.compositeApplicationParameters back to default value.
+
+     Update composite_application_parameters_service_account_map.
+
+     At most one of these can be specified:
+
+       --composite-application-parameters-service-account-map=[COMPOSITE_APPLICATION_PARAMETERS_SERVICE_ACCOUNT_MAP,...]
+          Set composite_application_parameters_service_account_map to new
+          value. A map from a component's URI to the deployment service account
+          for composite application. key format:
+          projects/{project}/locations/{location}/spaces/{space}/applicationTemplates/{application_template}/components/{component}
+          value format: projects/{project}/serviceAccounts/{email_address}.
+
+           KEY
+              Sets KEY value.
+
+           VALUE
+              Sets VALUE value.
+
+          Shorthand Example:
+
+              --composite-application-parameters-service-account-map=string=string
+
+          JSON Example:
+
+              --composite-application-parameters-service-account-map='{"string": "string"}'
+
+          File Example:
+
+              --composite-application-parameters-service-account-map=path_to_file.(yaml|json)
+
+       Or at least one of these can be specified:
+
+         --update-composite-application-parameters-service-account-map=[UPDATE_COMPOSITE_APPLICATION_PARAMETERS_SERVICE_ACCOUNT_MAP,...]
+            Update composite_application_parameters_service_account_map value
+            or add key value pair. A map from a component's URI to the
+            deployment service account for composite application. key format:
+            projects/{project}/locations/{location}/spaces/{space}/applicationTemplates/{application_template}/components/{component}
+            value format: projects/{project}/serviceAccounts/{email_address}.
+
+             KEY
+                Sets KEY value.
+
+             VALUE
+                Sets VALUE value.
+
+            Shorthand Example:
+
+                --update-composite-application-parameters-service-account-map=string=string
+
+            JSON Example:
+
+                --update-composite-application-parameters-service-account-map='{"string": "string"}'
+
+            File Example:
+
+                --update-composite-application-parameters-service-account-map=path_to_file.(yaml|json)
+
+         At most one of these can be specified:
+
+           --clear-composite-application-parameters-service-account-map
+              Clear composite_application_parameters_service_account_map value
+              and set to empty map.
+
+           --remove-composite-application-parameters-service-account-map=REMOVE_COMPOSITE_APPLICATION_PARAMETERS_SERVICE_ACCOUNT_MAP
+              Remove existing value from map
+              composite_application_parameters_service_account_map. Sets
+              remove_composite_application_parameters_service_account_map
+              value.
+
+              Shorthand Example:
+
+                  --remove-composite-application-parameters-service-account-map=string,string
+
+              JSON Example:
+
+                  --remove-composite-application-parameters-service-account-map=["string"]
+
+              File Example:
+
+                  --remove-composite-application-parameters-service-account-map=path_to_file.(yaml|json)
+
      The deployment target of the application.
 
      --clear-deployment-target
@@ -662,9 +764,112 @@ FLAGS
 
      At most one of these can be specified:
 
-       --component-parameters=[component=COMPONENT],[parameters=PARAMETERS]
+       --component-parameters=[applicationInfo=APPLICATIONINFO],[component=COMPONENT],[parameters=PARAMETERS]
           Set component_parameters to new value. A list of component parameters
           to associate with the application.
+
+           applicationInfo
+              The application associated with the component.
+
+               apphubApplicationId
+                  The application ID of the apphub application. The ID must be
+                  1-63 characters long and should match the regular expression
+                  ^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$.
+
+               attributes
+                  Attributes of apphub application.
+
+                   businessOwners
+                      Business team that ensures user needs are met and value
+                      is delivered.
+
+                       channel
+                          Communication channel of the contacts.
+
+                           uri
+                              URI of the channel.
+
+                       displayName
+                          Contact's name. Can have a maximum length of 63
+                          characters.
+
+                       email
+                          Email address of the contacts.
+
+                   criticality
+                      User-defined criticality information.
+
+                       level
+                          Criticality level. Can contain only lowercase
+                          letters, numeric characters, underscores, and dashes.
+                          Can have a maximum length of 63 characters.
+                          Deprecated: Please refer to type instead.
+
+                       missionCritical
+                          Indicates mission-critical Application, Service, or
+                          Workload. Deprecated: Please refer to type instead.
+
+                       type
+                          Criticality Type.
+
+                   developerOwners
+                      Developer team that owns development and coding.
+
+                       channel
+                          Communication channel of the contacts.
+
+                           uri
+                              URI of the channel.
+
+                       displayName
+                          Contact's name. Can have a maximum length of 63
+                          characters.
+
+                       email
+                          Email address of the contacts.
+
+                   environment
+                      User-defined environment information.
+
+                       environment
+                          Environment name. Can contain only lowercase letters,
+                          numeric characters, underscores, and dashes. Can have
+                          a maximum length of 63 characters. Deprecated: Please
+                          refer to type instead.
+
+                       type
+                          Environment Type.
+
+                   operatorOwners
+                      Operator team that ensures runtime and operations.
+
+                       channel
+                          Communication channel of the contacts.
+
+                           uri
+                              URI of the channel.
+
+                       displayName
+                          Contact's name. Can have a maximum length of 63
+                          characters.
+
+                       email
+                          Email address of the contacts.
+
+               deploymentRegion
+                  Deployment region for the component. If the scope is set to
+                  REGIONAL, then the apphub application is created in this
+                  region, e.g. us-central1.
+
+               displayName
+                  Display name for the application. The number of characters
+                  should be less than 64 characters.
+
+               scope
+                  Scope of apphub application.
+
+                   type
+                      Scope Type.
 
            component
               The name of the component parameter.
@@ -680,11 +885,11 @@ FLAGS
 
           Shorthand Example:
 
-              --component-parameters=component=string,parameters=[{key=string,value={...}}] --component-parameters=component=string,parameters=[{key=string,value={...}}]
+              --component-parameters=applicationInfo={apphubApplicationId=string,attributes={businessOwners=[{channel={uri=string},displayName=string,email=string}],criticality={level=string,missionCritical=boolean,type=string},developerOwners=[{channel={uri=string},displayName=string,email=string}],environment={environment=string,type=string},operatorOwners=[{channel={uri=string},displayName=string,email=string}]},deploymentRegion=string,displayName=string,scope={type=string}},component=string,parameters=[{key=string,value={...}}] --component-parameters=applicationInfo={apphubApplicationId=string,attributes={businessOwners=[{channel={uri=string},displayName=string,email=string}],criticality={level=string,missionCritical=boolean,type=string},developerOwners=[{channel={uri=string},displayName=string,email=string}],environment={environment=string,type=string},operatorOwners=[{channel={uri=string},displayName=string,email=string}]},deploymentRegion=string,displayName=string,scope={type=string}},component=string,parameters=[{key=string,value={...}}]
 
           JSON Example:
 
-              --component-parameters='[{"component": "string", "parameters": [{"key": "string", "value": {...}}]}]'
+              --component-parameters='[{"applicationInfo": {"apphubApplicationId": "string", "attributes": {"businessOwners": [{"channel": {"uri": "string"}, "displayName": "string", "email": "string"}], "criticality": {"level": "string", "missionCritical": boolean, "type": "string"}, "developerOwners": [{"channel": {"uri": "string"}, "displayName": "string", "email": "string"}], "environment": {"environment": "string", "type": "string"}, "operatorOwners": [{"channel": {"uri": "string"}, "displayName": "string", "email": "string"}]}, "deploymentRegion": "string", "displayName": "string", "scope": {"type": "string"}}, "component": "string", "parameters": [{"key": "string", "value": {...}}]}]'
 
           File Example:
 
@@ -692,9 +897,112 @@ FLAGS
 
        Or at least one of these can be specified:
 
-         --add-component-parameters=[component=COMPONENT],[parameters=PARAMETERS]
+         --add-component-parameters=[applicationInfo=APPLICATIONINFO],[component=COMPONENT],[parameters=PARAMETERS]
             Add new value to component_parameters list. A list of component
             parameters to associate with the application.
+
+             applicationInfo
+                The application associated with the component.
+
+                 apphubApplicationId
+                    The application ID of the apphub application. The ID must
+                    be 1-63 characters long and should match the regular
+                    expression ^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$.
+
+                 attributes
+                    Attributes of apphub application.
+
+                     businessOwners
+                        Business team that ensures user needs are met and value
+                        is delivered.
+
+                         channel
+                            Communication channel of the contacts.
+
+                             uri
+                                URI of the channel.
+
+                         displayName
+                            Contact's name. Can have a maximum length of 63
+                            characters.
+
+                         email
+                            Email address of the contacts.
+
+                     criticality
+                        User-defined criticality information.
+
+                         level
+                            Criticality level. Can contain only lowercase
+                            letters, numeric characters, underscores, and
+                            dashes. Can have a maximum length of 63 characters.
+                            Deprecated: Please refer to type instead.
+
+                         missionCritical
+                            Indicates mission-critical Application, Service, or
+                            Workload. Deprecated: Please refer to type instead.
+
+                         type
+                            Criticality Type.
+
+                     developerOwners
+                        Developer team that owns development and coding.
+
+                         channel
+                            Communication channel of the contacts.
+
+                             uri
+                                URI of the channel.
+
+                         displayName
+                            Contact's name. Can have a maximum length of 63
+                            characters.
+
+                         email
+                            Email address of the contacts.
+
+                     environment
+                        User-defined environment information.
+
+                         environment
+                            Environment name. Can contain only lowercase
+                            letters, numeric characters, underscores, and
+                            dashes. Can have a maximum length of 63 characters.
+                            Deprecated: Please refer to type instead.
+
+                         type
+                            Environment Type.
+
+                     operatorOwners
+                        Operator team that ensures runtime and operations.
+
+                         channel
+                            Communication channel of the contacts.
+
+                             uri
+                                URI of the channel.
+
+                         displayName
+                            Contact's name. Can have a maximum length of 63
+                            characters.
+
+                         email
+                            Email address of the contacts.
+
+                 deploymentRegion
+                    Deployment region for the component. If the scope is set to
+                    REGIONAL, then the apphub application is created in this
+                    region, e.g. us-central1.
+
+                 displayName
+                    Display name for the application. The number of characters
+                    should be less than 64 characters.
+
+                 scope
+                    Scope of apphub application.
+
+                     type
+                        Scope Type.
 
              component
                 The name of the component parameter.
@@ -710,11 +1018,11 @@ FLAGS
 
             Shorthand Example:
 
-                --add-component-parameters=component=string,parameters=[{key=string,value={...}}] --add-component-parameters=component=string,parameters=[{key=string,value={...}}]
+                --add-component-parameters=applicationInfo={apphubApplicationId=string,attributes={businessOwners=[{channel={uri=string},displayName=string,email=string}],criticality={level=string,missionCritical=boolean,type=string},developerOwners=[{channel={uri=string},displayName=string,email=string}],environment={environment=string,type=string},operatorOwners=[{channel={uri=string},displayName=string,email=string}]},deploymentRegion=string,displayName=string,scope={type=string}},component=string,parameters=[{key=string,value={...}}] --add-component-parameters=applicationInfo={apphubApplicationId=string,attributes={businessOwners=[{channel={uri=string},displayName=string,email=string}],criticality={level=string,missionCritical=boolean,type=string},developerOwners=[{channel={uri=string},displayName=string,email=string}],environment={environment=string,type=string},operatorOwners=[{channel={uri=string},displayName=string,email=string}]},deploymentRegion=string,displayName=string,scope={type=string}},component=string,parameters=[{key=string,value={...}}]
 
             JSON Example:
 
-                --add-component-parameters='[{"component": "string", "parameters": [{"key": "string", "value": {...}}]}]'
+                --add-component-parameters='[{"applicationInfo": {"apphubApplicationId": "string", "attributes": {"businessOwners": [{"channel": {"uri": "string"}, "displayName": "string", "email": "string"}], "criticality": {"level": "string", "missionCritical": boolean, "type": "string"}, "developerOwners": [{"channel": {"uri": "string"}, "displayName": "string", "email": "string"}], "environment": {"environment": "string", "type": "string"}, "operatorOwners": [{"channel": {"uri": "string"}, "displayName": "string", "email": "string"}]}, "deploymentRegion": "string", "displayName": "string", "scope": {"type": "string"}}, "component": "string", "parameters": [{"key": "string", "value": {...}}]}]'
 
             File Example:
 
@@ -725,9 +1033,115 @@ FLAGS
            --clear-component-parameters
               Clear component_parameters value and set to empty list.
 
-           --remove-component-parameters=[component=COMPONENT],[parameters=PARAMETERS]
+           --remove-component-parameters=[applicationInfo=APPLICATIONINFO],[component=COMPONENT],[parameters=PARAMETERS]
               Remove existing value from component_parameters list. A list of
               component parameters to associate with the application.
+
+               applicationInfo
+                  The application associated with the component.
+
+                   apphubApplicationId
+                      The application ID of the apphub application. The ID must
+                      be 1-63 characters long and should match the regular
+                      expression ^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$.
+
+                   attributes
+                      Attributes of apphub application.
+
+                       businessOwners
+                          Business team that ensures user needs are met and
+                          value is delivered.
+
+                           channel
+                              Communication channel of the contacts.
+
+                               uri
+                                  URI of the channel.
+
+                           displayName
+                              Contact's name. Can have a maximum length of 63
+                              characters.
+
+                           email
+                              Email address of the contacts.
+
+                       criticality
+                          User-defined criticality information.
+
+                           level
+                              Criticality level. Can contain only lowercase
+                              letters, numeric characters, underscores, and
+                              dashes. Can have a maximum length of 63
+                              characters. Deprecated: Please refer to type
+                              instead.
+
+                           missionCritical
+                              Indicates mission-critical Application, Service,
+                              or Workload. Deprecated: Please refer to type
+                              instead.
+
+                           type
+                              Criticality Type.
+
+                       developerOwners
+                          Developer team that owns development and coding.
+
+                           channel
+                              Communication channel of the contacts.
+
+                               uri
+                                  URI of the channel.
+
+                           displayName
+                              Contact's name. Can have a maximum length of 63
+                              characters.
+
+                           email
+                              Email address of the contacts.
+
+                       environment
+                          User-defined environment information.
+
+                           environment
+                              Environment name. Can contain only lowercase
+                              letters, numeric characters, underscores, and
+                              dashes. Can have a maximum length of 63
+                              characters. Deprecated: Please refer to type
+                              instead.
+
+                           type
+                              Environment Type.
+
+                       operatorOwners
+                          Operator team that ensures runtime and operations.
+
+                           channel
+                              Communication channel of the contacts.
+
+                               uri
+                                  URI of the channel.
+
+                           displayName
+                              Contact's name. Can have a maximum length of 63
+                              characters.
+
+                           email
+                              Email address of the contacts.
+
+                   deploymentRegion
+                      Deployment region for the component. If the scope is set
+                      to REGIONAL, then the apphub application is created in
+                      this region, e.g. us-central1.
+
+                   displayName
+                      Display name for the application. The number of
+                      characters should be less than 64 characters.
+
+                   scope
+                      Scope of apphub application.
+
+                       type
+                          Scope Type.
 
                component
                   The name of the component parameter.
@@ -743,11 +1157,11 @@ FLAGS
 
               Shorthand Example:
 
-                  --remove-component-parameters=component=string,parameters=[{key=string,value={...}}] --remove-component-parameters=component=string,parameters=[{key=string,value={...}}]
+                  --remove-component-parameters=applicationInfo={apphubApplicationId=string,attributes={businessOwners=[{channel={uri=string},displayName=string,email=string}],criticality={level=string,missionCritical=boolean,type=string},developerOwners=[{channel={uri=string},displayName=string,email=string}],environment={environment=string,type=string},operatorOwners=[{channel={uri=string},displayName=string,email=string}]},deploymentRegion=string,displayName=string,scope={type=string}},component=string,parameters=[{key=string,value={...}}] --remove-component-parameters=applicationInfo={apphubApplicationId=string,attributes={businessOwners=[{channel={uri=string},displayName=string,email=string}],criticality={level=string,missionCritical=boolean,type=string},developerOwners=[{channel={uri=string},displayName=string,email=string}],environment={environment=string,type=string},operatorOwners=[{channel={uri=string},displayName=string,email=string}]},deploymentRegion=string,displayName=string,scope={type=string}},component=string,parameters=[{key=string,value={...}}]
 
               JSON Example:
 
-                  --remove-component-parameters='[{"component": "string", "parameters": [{"key": "string", "value": {...}}]}]'
+                  --remove-component-parameters='[{"applicationInfo": {"apphubApplicationId": "string", "attributes": {"businessOwners": [{"channel": {"uri": "string"}, "displayName": "string", "email": "string"}], "criticality": {"level": "string", "missionCritical": boolean, "type": "string"}, "developerOwners": [{"channel": {"uri": "string"}, "displayName": "string", "email": "string"}], "environment": {"environment": "string", "type": "string"}, "operatorOwners": [{"channel": {"uri": "string"}, "displayName": "string", "email": "string"}]}, "deploymentRegion": "string", "displayName": "string", "scope": {"type": "string"}}, "component": "string", "parameters": [{"key": "string", "value": {...}}]}]'
 
               File Example:
 

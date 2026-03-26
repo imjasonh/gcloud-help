@@ -14,6 +14,7 @@ SYNOPSIS
         [--anonymous-authentication-config=ANONYMOUS_AUTHENTICATION_CONFIG]
         [--async] [--auto-monitoring-scope=AUTO_MONITORING_SCOPE]
         [--autopilot-general-profile=AUTOPILOT_GENERAL_PROFILE]
+        [--autopilot-privileged-admission=[ALLOWLIST_PATHS,...]]
         [--autopilot-workload-policies=WORKLOAD_POLICIES]
         [--autoprovisioning-enable-insecure-kubelet-readonly-port]
         [--autoprovisioning-network-tags=TAGS,[TAGS,...]]
@@ -31,8 +32,9 @@ SYNOPSIS
         [--database-encryption-key=DATABASE_ENCRYPTION_KEY]
         [--default-max-pods-per-node=DEFAULT_MAX_PODS_PER_NODE]
         [--disable-default-snat] [--disable-l4-lb-firewall-reconciliation]
-        [--disable-pod-cidr-overprovision] [--disk-size=DISK_SIZE]
-        [--disk-type=DISK_TYPE]
+        [--disable-multi-nic-lustre] [--disable-pod-cidr-overprovision]
+        [--disk-size=DISK_SIZE] [--disk-type=DISK_TYPE]
+        [--enable-agent-sandbox] [--enable-ambient-networking]
         [--enable-authorized-networks-on-private-endpoint] [--enable-auto-ipam]
         [--enable-autorepair] [--no-enable-autoupgrade]
         [--enable-cilium-clusterwide-network-policy] [--enable-cloud-logging]
@@ -56,8 +58,9 @@ SYNOPSIS
         [--enable-multi-networking] [--enable-nested-virtualization]
         [--enable-network-policy] [--enable-pod-security-policy]
         [--enable-ray-cluster-logging] [--enable-ray-cluster-monitoring]
-        [--enable-service-externalips] [--enable-shielded-nodes]
-        [--enable-stackdriver-kubernetes] [--enable-vertical-pod-autoscaling]
+        [--enable-scheduled-upgrades] [--enable-service-externalips]
+        [--enable-shielded-nodes] [--enable-stackdriver-kubernetes]
+        [--enable-vertical-pod-autoscaling]
         [--fleet-project=PROJECT_ID_OR_NUMBER] [--gateway-api=GATEWAY_API]
         [--hpa-profile=HPA_PROFILE] [--identity-provider=IDENTITY_PROVIDER]
         [--image-type=IMAGE_TYPE]
@@ -154,6 +157,7 @@ SYNOPSIS
           | --local-nvme-ssd-block[=[count=COUNT]]
           | --local-ssd-count=LOCAL_SSD_COUNT]
         [--location=LOCATION | --region=REGION | --zone=ZONE, -z ZONE]
+        [--maintenance-minor-version-disruption-interval=MAINTENANCE_MINOR_VERSION_DISRUPTION_INTERVAL --maintenance-patch-version-disruption-interval=MAINTENANCE_PATCH_VERSION_DISRUPTION_INTERVAL]
         [--maintenance-window=START_TIME | --maintenance-window-end=TIME_STAMP
           --maintenance-window-recurrence=RRULE
           --maintenance-window-start=TIME_STAMP]
@@ -284,6 +288,73 @@ FLAGS
         none and no-performance. If none is used, the cluster will use the
         Autopilot default configuration. AUTOPILOT_GENERAL_PROFILE must be one
         of: none, no-performance.
+
+     --autopilot-privileged-admission=[ALLOWLIST_PATHS,...]
+        Specifies which privileged workload allowlist paths can be referenced
+        and installed by AllowlistSynchronizers in Autopilot modes.
+
+        The value is a comma-separated list of paths in the format:
+
+        ◆ gke://<partner_name>/<app_name>/<allowlist_path> for Autopilot
+          partner allowlists
+        ◆ gs://<bucket_name>/<allowlist_path> for user allowlists
+
+        By default, all GKE-managed allowlists (gke://*) are authorized. See
+        https://cloud.google.com/kubernetes-engine/docs/resources/autopilot-partners
+        for all supported Autopilot partner allowlists. When setting this flag,
+        be careful to explicitly specify gke://* in addition to other entries
+        if you rely on this default behavior.
+
+        Wildcards (*) are supported. For example, if gke://* is authorized,
+        then AllowlistSynchronizers can be used to install
+        gke://partner1/allowlist1.yaml and gke://partner2/allowlist2.yaml.
+
+        Note: Use of user allowlists (gs://) requires special permissions and
+        is only available to a subset of high tier customers. Please contact
+        your account team for more information.
+
+        Examples:
+
+        Allow all GKE-managed allowlists (default behavior):
+
+            $ gcloud beta container clusters create \
+                --autopilot-privileged-admission=gke://*
+
+        Authorize only allowlists from a GKE Autopilot partner:
+
+            $ gcloud beta container clusters create \
+                --autopilot-privileged-admission=gke://my-partner/*
+
+        Authorize only a singular user-owned allowlist
+
+            $ gcloud beta container clusters create \
+                --autopilot-privileged-admission=gs://my-bucket/allowlists/\
+            my-allowlist.yaml
+
+        Authorize all user-owned allowlists under a given path:
+
+            $ gcloud beta container clusters create \
+                --autopilot-privileged-admission=gs://my-bucket/*
+
+        Authorize all GKE-managed allowlists and a specific user-owned
+        allowlist:
+
+            $ gcloud beta container clusters create \
+                --autopilot-privileged-admission=gke://*,gs://my-bucket/\
+            allowlists/my-allowlist.yaml
+
+        Disable allowlist installation entirely:
+
+            $ gcloud beta container clusters create \
+                --autopilot-privileged-admission=""
+
+        Exercise caution when using this flag on an existing cluster. Upon
+        updates, existing AllowlistSynchronizers will uninstall allowlists that
+        are no longer authorized.
+
+        For instructions on installing allowlists in the cluster after
+        authorization, please refer to:
+        https://cloud.google.com/kubernetes-engine/docs/how-to/run-autopilot-partner-workloads
 
      --autopilot-workload-policies=WORKLOAD_POLICIES
         Add Autopilot workload policies to the cluster.
@@ -509,6 +580,10 @@ FLAGS
         Disable reconciliation on the cluster for L4 Load Balancer VPC
         firewalls targeting ingress traffic.
 
+     --disable-multi-nic-lustre
+        Disable the Lustre CSI driver to automatically detect and configure all
+        suitable network interfaces on a node for Lustre IO.
+
      --disable-pod-cidr-overprovision
         Disables pod cidr overprovision on nodes. Pod cidr overprovisioning is
         enabled by default.
@@ -521,6 +596,13 @@ FLAGS
         pd-balanced. For versions earlier than 1.24, defaults to pd-standard.
         DISK_TYPE must be one of: pd-standard, pd-ssd, pd-balanced,
         hyperdisk-balanced, hyperdisk-extreme, hyperdisk-throughput.
+
+     --enable-agent-sandbox
+        Enable the Agent Sandbox feature on the cluster. Use
+        --no-enable-agent-sandbox to disable.
+
+     --enable-ambient-networking
+        Enable Ambient Networking on the cluster.
 
      --enable-authorized-networks-on-private-endpoint
         Enable enforcement of --master-authorized-networks CIDR ranges for
@@ -823,6 +905,12 @@ FLAGS
      --enable-ray-cluster-monitoring
         Enable automatic metrics collection for Ray clusters.
 
+     --enable-scheduled-upgrades
+        Enables the scheduled upgrades feature for the cluster.
+
+        When enabled, automatic cluster control plane upgrades will only occur
+        when you receive notice at least 72 hours beforehand.
+
      --enable-service-externalips
         Enables use of services with externalIPs field.
 
@@ -939,7 +1027,8 @@ FLAGS
 
      --logging=[COMPONENT,...]
         Set the components that have logging enabled. Valid component values
-        are: SYSTEM, WORKLOAD, API_SERVER, CONTROLLER_MANAGER, SCHEDULER, NONE
+        are: SYSTEM, WORKLOAD, API_SERVER, CONTROLLER_MANAGER, SCHEDULER,
+        KCP_HPA, NONE
 
         For more information, see
         https://cloud.google.com/kubernetes-engine/docs/concepts/about-logs#available-logs
@@ -1104,6 +1193,10 @@ FLAGS
         are: SYSTEM, WORKLOAD (Deprecated), NONE, API_SERVER,
         CONTROLLER_MANAGER, SCHEDULER, DAEMONSET, DEPLOYMENT, HPA, POD,
         STATEFULSET, STORAGE, CADVISOR, KUBELET, DCGM, JOBSET
+
+        Note: DAEMONSET, DEPLOYMENT, HPA, POD, STATEFULSET, STORAGE, CADVISOR,
+        KUBELET, DCGM, and JOBSET require Google Managed Prometheus to be
+        enabled.
 
         For more information, see
         https://cloud.google.com/kubernetes-engine/docs/how-to/configure-metrics#available-metrics
@@ -1450,7 +1543,11 @@ FLAGS
               topologyManager:
                 policy: BestEffort
                 scope: pod
+              crashLoopBackOff:
+                maxContainerRestartPeriod: '300s'
             linuxConfig:
+              accurateTimeConfig:
+                enablePtpKvmTimeSync: true
               sysctl:
                 net.core.somaxconn: '2048'
                 net.ipv4.tcp_rmem: '4096 87380 6291456'
@@ -1530,6 +1627,8 @@ FLAGS
           singleProcessOomKill                    true or false
           maxParallelImagePulls                   integer (The value must be
                                                   between [2, 5].)
+          crashLoopBackOff                        specify crashloopbackoff
+                                                  thresholds
 
         List of supported keys in memoryManager in 'kubeletConfig'.
 
@@ -1628,6 +1727,16 @@ FLAGS
                                      minimum reclaim threshold for pid
                                      available. The value must be positive and
                                      no more than 10%.)
+
+        List of supported keys in crashLoopBackOff in 'kubeletConfig'.
+
+          KEY                                         VALUE
+          maxContainerRestartPeriod                   duration (e.g., '30s',
+                                                      '1m'. The maximum duration
+                                                      the backoff delay can
+                                                      accrue to for container
+                                                      restarts. The value must
+                                                      be between [1s, 300s].)
 
         List of supported sysctls in 'linuxConfig'.
 
@@ -1755,6 +1864,11 @@ FLAGS
                                                               [10, 3000]
           vm.min_free_kbytes                                  Must be between
                                                               [67584, 1048576]
+
+        List of supported keys in 'accurateTimeConfig' under 'linuxConfig'.
+
+          KEY                                         VALUE
+          enablePtpKvmTimeSync                        boolean
 
         List of supported hugepage size in 'hugepageConfig'.
 
@@ -2663,6 +2777,16 @@ FLAGS
        --zone=ZONE, -z ZONE
           Compute zone (e.g. us-central1-a) for a zonal cluster. Overrides the
           default compute/zone property value for this command invocation.
+
+     Flags for cluster disruption budget configuration:
+
+     --maintenance-minor-version-disruption-interval=MAINTENANCE_MINOR_VERSION_DISRUPTION_INTERVAL
+        Set the minimum interval of time between minor version cluster
+        upgrades.
+
+     --maintenance-patch-version-disruption-interval=MAINTENANCE_PATCH_VERSION_DISRUPTION_INTERVAL
+        Set the minimum interval of time between patch version cluster
+        upgrades.
 
      One of either maintenance-window or the group of maintenance-window flags
      can be set.

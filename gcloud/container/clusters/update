@@ -6,6 +6,7 @@ SYNOPSIS
     gcloud container clusters update NAME
         (--anonymous-authentication-config=ANONYMOUS_AUTHENTICATION_CONFIG
           | --autopilot-general-profile=AUTOPILOT_GENERAL_PROFILE
+          | --autopilot-privileged-admission=[ALLOWLIST_PATHS,...]
           | --autopilot-workload-policies=WORKLOAD_POLICIES
           | --autoprovisioning-cgroup-mode=AUTOPROVISIONING_CGROUP_MODE
           | --autoprovisioning-enable-insecure-kubelet-readonly-port
@@ -16,7 +17,7 @@ SYNOPSIS
           | --containerd-config-from-file=PATH_TO_FILE
           | --database-encryption-key=DATABASE_ENCRYPTION_KEY
           | --disable-database-encryption | --disable-default-snat
-          | --disable-workload-identity
+          | --disable-multi-nic-lustre | --disable-workload-identity
           | --[no-]enable-autopilot-compatibility-auditing
           | --enable-autoscaling
           | --[no-]enable-cilium-clusterwide-network-policy
@@ -67,37 +68,9 @@ SYNOPSIS
           | --enable-binauthz | --clear-fleet-project --enable-fleet
           --fleet-project=PROJECT_ID_OR_NUMBER
           --membership-type=MEMBERSHIP_TYPE --unset-membership-type
-          | --clear-maintenance-window | --remove-maintenance-exclusion=NAME
-          | [(--add-maintenance-exclusion-end=TIME_STAMP
-          | --add-maintenance-exclusion-until-end-of-support)
-          : --add-maintenance-exclusion-name=NAME
-          --add-maintenance-exclusion-scope=SCOPE
-          --add-maintenance-exclusion-start=TIME_STAMP]
-          | --maintenance-window-end=TIME_STAMP
-          --maintenance-window-recurrence=RRULE
-          --maintenance-window-start=TIME_STAMP
-          | --clear-resource-usage-bigquery-dataset
-          | --enable-network-egress-metering
-          --enable-resource-consumption-metering
-          --resource-usage-bigquery-dataset=RESOURCE_USAGE_BIGQUERY_DATASET
-          | --cluster-dns=CLUSTER_DNS --cluster-dns-domain=CLUSTER_DNS_DOMAIN
-          --cluster-dns-scope=CLUSTER_DNS_SCOPE
-          --additive-vpc-scope-dns-domain=ADDITIVE_VPC_SCOPE_DNS_DOMAIN
-          | --disable-additive-vpc-scope
-          | --dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE
-          | --disable-dataplane-v2-flow-observability
-          | --enable-dataplane-v2-flow-observability
-          --disable-dataplane-v2-metrics | --enable-dataplane-v2-metrics
-          | --disable-auto-ipam | --enable-auto-ipam
-          | --disable-l4-lb-firewall-reconciliation
-          | --enable-l4-lb-firewall-reconciliation
-          | --enable-authorized-networks-on-private-endpoint
-          --enable-dns-access --enable-google-cloud-access --enable-ip-access
-          --enable-k8s-certs-via-dns --enable-k8s-tokens-via-dns
-          --enable-master-global-access --enable-private-endpoint
-          --enable-master-authorized-networks
-          --master-authorized-networks=NETWORK,[NETWORK,...]
-          | [--enable-autoprovisioning
+          | --clear-maintenance-minor-version-disruption-interval
+          | --maintenance-minor-version-disruption-interval=MAINTENANCE_MINOR_VERSION_DISRUPTION_INTERVAL --clear-maintenance-patch-version-disruption-interval | --maintenance-patch-version-disruption-interval=MAINTENANCE_PATCH_VERSION_DISRUPTION_INTERVAL | --clear-maintenance-window | --remove-maintenance-exclusion=NAME | [(--add-maintenance-exclusion-end=TIME_STAMP | --add-maintenance-exclusion-until-end-of-support) : --add-maintenance-exclusion-name=NAME --add-maintenance-exclusion-scope=SCOPE --add-maintenance-exclusion-start=TIME_STAMP] | --maintenance-window-end=TIME_STAMP --maintenance-window-recurrence=RRULE --maintenance-window-start=TIME_STAMP | --clear-resource-usage-bigquery-dataset | --enable-network-egress-metering --enable-resource-consumption-metering --resource-usage-bigquery-dataset=RESOURCE_USAGE_BIGQUERY_DATASET | --cluster-dns=CLUSTER_DNS --cluster-dns-domain=CLUSTER_DNS_DOMAIN --cluster-dns-scope=CLUSTER_DNS_SCOPE --additive-vpc-scope-dns-domain=ADDITIVE_VPC_SCOPE_DNS_DOMAIN | --disable-additive-vpc-scope | --dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE | --disable-dataplane-v2-flow-observability | --enable-dataplane-v2-flow-observability --disable-dataplane-v2-metrics | --enable-dataplane-v2-metrics | --disable-auto-ipam | --enable-auto-ipam | --disable-l4-lb-firewall-reconciliation | --enable-l4-lb-firewall-reconciliation | --enable-authorized-networks-on-private-endpoint --enable-dns-access --enable-google-cloud-access --enable-ip-access --enable-k8s-certs-via-dns --enable-k8s-tokens-via-dns --enable-master-global-access --enable-private-endpoint --enable-master-authorized-networks --master-authorized-networks=NETWORK,
+          [NETWORK,...] | [--enable-autoprovisioning
           : --autoprovisioning-config-file=PATH_TO_FILE
           | --autoprovisioning-image-type=AUTOPROVISIONING_IMAGE_TYPE
           --autoprovisioning-locations=ZONE,[ZONE,...]
@@ -167,6 +140,73 @@ REQUIRED FLAGS
           are none and no-performance. If none is used, the cluster will use
           the Autopilot default configuration. AUTOPILOT_GENERAL_PROFILE must
           be one of: none, no-performance.
+
+       --autopilot-privileged-admission=[ALLOWLIST_PATHS,...]
+          Specifies which privileged workload allowlist paths can be referenced
+          and installed by AllowlistSynchronizers in Autopilot modes.
+
+          The value is a comma-separated list of paths in the format:
+
+          ▸ gke://<partner_name>/<app_name>/<allowlist_path> for Autopilot
+            partner allowlists
+          ▸ gs://<bucket_name>/<allowlist_path> for user allowlists
+
+          By default, all GKE-managed allowlists (gke://*) are authorized. See
+          https://cloud.google.com/kubernetes-engine/docs/resources/autopilot-partners
+          for all supported Autopilot partner allowlists. When setting this
+          flag, be careful to explicitly specify gke://* in addition to other
+          entries if you rely on this default behavior.
+
+          Wildcards (*) are supported. For example, if gke://* is authorized,
+          then AllowlistSynchronizers can be used to install
+          gke://partner1/allowlist1.yaml and gke://partner2/allowlist2.yaml.
+
+          Note: Use of user allowlists (gs://) requires special permissions and
+          is only available to a subset of high tier customers. Please contact
+          your account team for more information.
+
+          Examples:
+
+          Allow all GKE-managed allowlists (default behavior):
+
+              $ gcloud container clusters update \
+                  --autopilot-privileged-admission=gke://*
+
+          Authorize only allowlists from a GKE Autopilot partner:
+
+              $ gcloud container clusters update \
+                  --autopilot-privileged-admission=gke://my-partner/*
+
+          Authorize only a singular user-owned allowlist
+
+              $ gcloud container clusters update \
+                  --autopilot-privileged-admission=gs://my-bucket/allowlists/\
+              my-allowlist.yaml
+
+          Authorize all user-owned allowlists under a given path:
+
+              $ gcloud container clusters update \
+                  --autopilot-privileged-admission=gs://my-bucket/*
+
+          Authorize all GKE-managed allowlists and a specific user-owned
+          allowlist:
+
+              $ gcloud container clusters update \
+                  --autopilot-privileged-admission=gke://*,gs://my-bucket/\
+              allowlists/my-allowlist.yaml
+
+          Disable allowlist installation entirely:
+
+              $ gcloud container clusters update \
+                  --autopilot-privileged-admission=""
+
+          Exercise caution when using this flag on an existing cluster. Upon
+          updates, existing AllowlistSynchronizers will uninstall allowlists
+          that are no longer authorized.
+
+          For instructions on installing allowlists in the cluster after
+          authorization, please refer to:
+          https://cloud.google.com/kubernetes-engine/docs/how-to/run-autopilot-partner-workloads
 
        --autopilot-workload-policies=WORKLOAD_POLICIES
           Add Autopilot workload policies to the cluster.
@@ -339,6 +379,10 @@ REQUIRED FLAGS
           clusters, which are inherently VPC-native. Thus,
           --disable-default-snat requires that the cluster was created with
           both --enable-ip-alias and --enable-private-nodes.
+
+       --disable-multi-nic-lustre
+          Disable the Lustre CSI driver to automatically detect and configure
+          all suitable network interfaces on a node for Lustre IO.
 
        --disable-workload-identity
           Disable Workload Identity on the cluster.
@@ -935,7 +979,7 @@ REQUIRED FLAGS
          --logging=[COMPONENT,...]
             Set the components that have logging enabled. Valid component
             values are: SYSTEM, WORKLOAD, API_SERVER, CONTROLLER_MANAGER,
-            SCHEDULER, NONE
+            SCHEDULER, KCP_HPA, NONE
 
             For more information, see
             https://cloud.google.com/kubernetes-engine/docs/concepts/about-logs#available-logs
@@ -952,6 +996,10 @@ REQUIRED FLAGS
             values are: SYSTEM, WORKLOAD (Deprecated), NONE, API_SERVER,
             CONTROLLER_MANAGER, SCHEDULER, DAEMONSET, DEPLOYMENT, HPA, POD,
             STATEFULSET, STORAGE, CADVISOR, KUBELET, DCGM, JOBSET
+
+            Note: DAEMONSET, DEPLOYMENT, HPA, POD, STATEFULSET, STORAGE,
+            CADVISOR, KUBELET, DCGM, and JOBSET require Google Managed
+            Prometheus to be enabled.
 
             For more information, see
             https://cloud.google.com/kubernetes-engine/docs/how-to/configure-metrics#available-metrics
@@ -1028,6 +1076,30 @@ REQUIRED FLAGS
             Set the membership type for the cluster's fleet membership to
             empty. Example: $ gcloud container clusters update
             --unset-membership-type
+
+       Or at least one of these can be specified:
+
+         Flags for cluster disruption budget configuration:
+
+         At most one of these can be specified:
+
+           --clear-maintenance-minor-version-disruption-interval
+              Restore the default values for the minimum interval of time
+              between minor version cluster upgrades.
+
+           --maintenance-minor-version-disruption-interval=MAINTENANCE_MINOR_VERSION_DISRUPTION_INTERVAL
+              Set the minimum interval of time between minor version cluster
+              upgrades.
+
+         At most one of these can be specified:
+
+           --clear-maintenance-patch-version-disruption-interval
+              Restore the default values for the minimum interval of time
+              between patch version cluster upgrades.
+
+           --maintenance-patch-version-disruption-interval=MAINTENANCE_PATCH_VERSION_DISRUPTION_INTERVAL
+              Set the minimum interval of time between patch version cluster
+              upgrades.
 
        Or at most one of these can be specified:
 

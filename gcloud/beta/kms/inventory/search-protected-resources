@@ -3,8 +3,7 @@ NAME
         resources protected by a key
 
 SYNOPSIS
-    gcloud beta kms inventory search-protected-resources
-        --scope=ORGANIZATION_ID
+    gcloud beta kms inventory search-protected-resources --scope=SEARCH_SCOPE
         (--keyname=KEYNAME : --keyring=KEYRING --location=LOCATION)
         [--resource-types=[RESOURCE_TYPES,...]] [--filter=EXPRESSION]
         [--limit=LIMIT] [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [--uri]
@@ -12,18 +11,30 @@ SYNOPSIS
 
 DESCRIPTION
     (BETA) gcloud beta kms inventory search-protected-resources returns a list
-    of the resources a key is protecting within the specified organization.
+    of the resources a key is protecting within the specified organization or
+    project.
 
 EXAMPLES
-    To view the protected resources for the key puppy and organization number
-    1234 run:
+    To view the protected resources for the key
+    projects/test-prj/locations/us/keyRings/us-keyring/cryptoKeys/us-key within
+    organization number 1234 run:
 
         $ gcloud beta kms inventory search-protected-resources \
-            --keyname=puppy --scope=1234
+            --keyname=projects/test-prj/locations/us/keyRings/us-keyring/\
+        cryptoKeys/us-key --scope=organizations/1234
+
+    To view the protected resources for the key
+    projects/test-prj/locations/us/keyRings/us-keyring/cryptoKeys/us-key within
+    project number 2345 run:
+
+        $ gcloud beta kms inventory search-protected-resources \
+            --keyname=projects/test-prj/locations/us/keyRings/us-keyring/\
+        cryptoKeys/us-key --scope=projects/2345
 
 REQUIRED FLAGS
-     --scope=ORGANIZATION_ID
-        Organization ID.
+     --scope=SEARCH_SCOPE
+        The scope of the search, which can be an organization ID or a project
+        ID or a project number.
 
      Key resource - The KMS key resource. The arguments in this group can be
      used to specify the attributes of this resource. (NOTE) Some attributes

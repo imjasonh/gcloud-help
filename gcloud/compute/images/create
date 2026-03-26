@@ -13,6 +13,7 @@ SYNOPSIS
         [--key-exchange-key-file=[KEK_VALUE,...]] [--labels=[KEY=VALUE,...]]
         [--licenses=[LICENSES,...]] [--platform-key-file=PLATFORM_KEY_FILE]
         [--no-require-csek-key-create]
+        [--resource-manager-tags=[KEY=VALUE,...]]
         [--signature-database-file=[DB_VALUE,...]]
         [--source-disk-project=SOURCE_DISK_PROJECT]
         [--source-disk-zone=SOURCE_DISK_ZONE]
@@ -99,10 +100,17 @@ REQUIRED FLAGS
           destination image.
 
        --source-uri=SOURCE_URI
-          The full Cloud Storage URI where the disk image is stored. This file
-          must be a gzip-compressed tarball whose name ends in .tar.gz. For
-          more information about Cloud Storage URIs, see
-          https://cloud.google.com/storage/docs/request-endpoints#json-api.
+          The full Cloud Storage URI or Artifact Registry path where the raw
+          disk image archive is stored. This file must be a gzip-compressed
+          tarball whose name ends in .tar.gz or a valid Artifact Registry
+          generic repository path. For more information about Cloud Storage
+          URIs, see
+          https://cloud.google.com/storage/docs/request-endpoints#json-api. If
+          an Artifact Registry path is provided, it must be a valid Artifact
+          Registry generic repository path in the format:
+          projects/<project>/locations/<locations>/repositories/<repo>/packages/<package>/versions/<version_id>
+          or
+          projects/<project>/locations/<locations>/repositories/<repo>/packages/<package>/versions/<version_id>@dirsum_sha256:<hex_value>
 
 OPTIONAL FLAGS
      --architecture=ARCHITECTURE
@@ -180,6 +188,9 @@ OPTIONAL FLAGS
         https://cloud.google.com/compute/docs/disks/customer-supplied-encryption
         for more details. Enabled by default, use --no-require-csek-key-create
         to disable.
+
+     --resource-manager-tags=[KEY=VALUE,...]
+        A comma-separated list of Resource Manager tags to apply to the image.
 
      --signature-database-file=[DB_VALUE,...]
         Comma-separated list of file paths that point to valid X.509

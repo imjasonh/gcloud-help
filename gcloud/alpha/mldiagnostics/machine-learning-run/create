@@ -6,15 +6,16 @@ SYNOPSIS
     gcloud alpha mldiagnostics machine-learning-run create
         (MACHINE_LEARNING_RUN : --location=LOCATION) [--async]
         [--display-name=DISPLAY_NAME] [--gcs-path=GCS_PATH]
-        [--labels=[LABELS,...]] [--orchestrator=ORCHESTRATOR; default="gke"]
+        [--labels=[LABELS,...]] [--orchestrator=ORCHESTRATOR]
         [--run-group=RUN_GROUP] [--run-phase=RUN_PHASE; default="active"]
         [--tools=[xprof=XPROF]; default="xprof"]
         [--configs-hardware=[CONFIGS_HARDWARE,...]
           --configs-software=[CONFIGS_SOFTWARE,...]
           --configs-user=[CONFIGS_USER,...]]
         [--gke-cluster-name=GKE_CLUSTER_NAME --gke-kind=GKE_KIND
-          --gke-namespace=GKE_NAMESPACE --gke-workload-name=GKE_WORKLOAD_NAME]
-        [GCLOUD_WIDE_FLAG ...]
+          --gke-namespace=GKE_NAMESPACE
+          --gke-workload-create-time=GKE_WORKLOAD_CREATE_TIME
+          --gke-workload-name=GKE_WORKLOAD_NAME] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Create a machine learning run.
@@ -22,11 +23,38 @@ DESCRIPTION
 EXAMPLES
     To create the new machine learning run, run:
 
-        $ gcloud alpha mldiagnostics machine-learning-run create my-run \
-          --location=us-central1 --gcs-path=gs://my-bucket/my-run \
-          --gke-cluster-name=projects/my-project/locations/us-central1/\
-        clusters/my-cluster --gke-workload-name=my-workload --gke-kind=Job \
-            --gke-namespace=default
+        $ gcloud alpha mldiagnostics machine-learning-run create \
+          gcloud-cli-run-id-01 --orchestrator gke \
+          --run-group group-gcloud-cli --tools xprof \
+          --gcs-path gs://diagon-prod-data-bucket \
+          --display-name gcloud-cli-run \
+          --gke-cluster-name \
+          projects/PROJECT_ID/locations/us-central1/clusters/\
+        mldiag-prod-gke-cluster \
+            projects/PROJECT_ID/locations/us-central1/clusters/\
+        mldiag-prod-gke-cluster --gke-namespace diagon \
+            --gke-workload-name mldiag-prod-demo-jobset --gke-kind JobSet \
+            --gke-workload-create-time 2026-02-20T06:00:00Z \
+            --labels "created_by"="cli" --run-phase ACTIVE
+
+        Sample output:
+          Create request issued for: [gcloud-cli-run-id-01]
+          Waiting for operation [projects/PROJECT_ID/locations/us-central1/operations/operation-1770308728284-64a161ee4640d-38e79884-425e56e2] to complete...done.
+          Created machine_learning_run [gcloud-cli-run-id-01].
+
+        If user want to list all the profiler session capture in Google Cloud Storage bucket (recursively), create a special machine learning run with a special lable `list_existing_sessions_only` as shown below:
+
+        $ gcloud alpha mldiagnostics machine-learning-run create \
+          gcloud-cli-run-id-02 --run-group group-gcloud-cli \
+          --gcs-path gs://diagon-prod-data-bucket/my-parent-directory \
+          --display-name gcloud-cli-run-02 --labels "created_by"="cli" \
+          --labels "list_existing_sessions_only"="true"
+
+        This will create a machine learning run in COMPLETED state without any workload
+        details. User can navigate to the profiler list page to see all the
+        profiler sessions captured under gs://diagon-prod-data-bucket/my-parent-directory (recursively).
+        User can visualize any profiler session by passing the link and share it with others.
+        No further update is possible for this machine learning run as it is marked as COMPLETED.
 
 POSITIONAL ARGUMENTS
      Machine learning run resource - Identifier. The name of the Machine
@@ -100,9 +128,8 @@ FLAGS
 
             --labels=path_to_file.(yaml|json)
 
-     --orchestrator=ORCHESTRATOR; default="gke"
-        The orchestrator used for the run. If not specified, gke will be used
-        by default. ORCHESTRATOR must be one of:
+     --orchestrator=ORCHESTRATOR
+        The orchestrator used for the run. ORCHESTRATOR must be one of:
 
          gce
             Google Compute Engine orchestrator.
@@ -233,26 +260,17 @@ FLAGS
         The cluster of the workload. Example - /projects/<project
         id>/locations/<location>/clusters/<cluster name>
 
-        This flag argument must be specified if any of the other arguments in
-        this group are specified.
-
      --gke-kind=GKE_KIND
         The kind of the workload. Example - JobSet
-
-        This flag argument must be specified if any of the other arguments in
-        this group are specified.
 
      --gke-namespace=GKE_NAMESPACE
         The namespace of the workload. Example - default
 
-        This flag argument must be specified if any of the other arguments in
-        this group are specified.
+     --gke-workload-create-time=GKE_WORKLOAD_CREATE_TIME
+        The create timestamp of the workload. Example - 2026-02-20T06:00:00Z
 
      --gke-workload-name=GKE_WORKLOAD_NAME
         The identifier of the workload. Example - jobset-abcd
-
-        This flag argument must be specified if any of the other arguments in
-        this group are specified.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

@@ -21,6 +21,7 @@ SYNOPSIS
           [auto-delete=AUTO-DELETE],[interface-name=INTERFACE-NAME]]
         [--stopped-size=STOPPED_SIZE] [--suspended-size=SUSPENDED_SIZE]
         [--target-distribution-shape=SHAPE] [--target-pool=[TARGET_POOL,...]]
+        [--target-size-policy-mode=TARGET_SIZE_POLICY_MODE]
         [--workload-policy=WORKLOAD_POLICY] [--zones=ZONE,[ZONE,...]]
         [--health-check=HEALTH_CHECK | --http-health-check=HTTP_HEALTH_CHECK
           | --https-health-check=HTTPS_HEALTH_CHECK]
@@ -137,8 +138,8 @@ OPTIONAL FLAGS
         --instance-selection="name=instance-selection-1,machine-type=e2-standard-8,machine-type=t2d-standard-8,rank=0"
 
      --instance-selection-machine-types=[MACHINE_TYPE,...]
-        Machine types that are used to create VMs. If not provided, the machine
-        type specified in the instance template is used.
+        A single selection of machine types. If not provided, the machine type
+        specified in the instance template is used.
 
      --list-managed-instances-results=MODE
         Pagination behavior for the group's listManagedInstances API method.
@@ -299,6 +300,20 @@ OPTIONAL FLAGS
      --target-pool=[TARGET_POOL,...]
         Specifies any target pools you want the instances of this managed
         instance group to be part of.
+
+     --target-size-policy-mode=TARGET_SIZE_POLICY_MODE
+        Specifies the mode in which the MIG creates VMs in the group.
+        TARGET_SIZE_POLICY_MODE must be one of:
+
+         bulk
+            MIG creates VMs all at once. If the MIG cannot create any VM to
+            meet the specified ``size``, then the MIG waits until the resources
+            become available to create all VMs.
+         individual
+            (Default) MIG creates VMs individually. If the MIG cannot create
+            all VMs to meet the specified ``size``, then it creates VMs for
+            which resources are available and continues to attempt to create
+            the remaining ones until the target size is met.
 
      --workload-policy=WORKLOAD_POLICY
         Specifies the workload policy for the managed instance group. It can be

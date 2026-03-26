@@ -1,0 +1,729 @@
+NAME
+    gcloud alpha apihub apis create - create apis
+
+SYNOPSIS
+    gcloud alpha apihub apis create --display-name=DISPLAY_NAME [--api=API]
+        [--attributes=[ATTRIBUTES,...]] [--description=DESCRIPTION]
+        [--documentation-external-uri=DOCUMENTATION_EXTERNAL_URI]
+        [--fingerprint=FINGERPRINT] [--location=LOCATION]
+        [--selected-version=SELECTED_VERSION]
+        [--api-functional-requirements-enum-values=[description=DESCRIPTION],
+          [displayName=DISPLAYNAME],[id=ID],[immutable=IMMUTABLE]
+          | --api-functional-requirements-json-values=[API_FUNCTIONAL_REQUIREMENTS_JSON_VALUES,
+          ...]
+          | --api-functional-requirements-string-values=[API_FUNCTIONAL_REQUIREMENTS_STRING_VALUES,
+          ...]
+          | --api-functional-requirements-uri-values=[API_FUNCTIONAL_REQUIREMENTS_URI_VALUES,
+          ...]]
+        [--api-requirements-enum-values=[description=DESCRIPTION],
+          [displayName=DISPLAYNAME],[id=ID],[immutable=IMMUTABLE]
+          | --api-requirements-json-values=[API_REQUIREMENTS_JSON_VALUES,...]
+          | --api-requirements-string-values=[API_REQUIREMENTS_STRING_VALUES,
+          ...]
+          | --api-requirements-uri-values=[API_REQUIREMENTS_URI_VALUES,...]]
+        [--api-style-enum-values=[description=DESCRIPTION],
+          [displayName=DISPLAYNAME],[id=ID],[immutable=IMMUTABLE]
+          | --api-style-json-values=[API_STYLE_JSON_VALUES,...]
+          | --api-style-string-values=[API_STYLE_STRING_VALUES,...]
+          | --api-style-uri-values=[API_STYLE_URI_VALUES,...]]
+        [--api-technical-requirements-enum-values=[description=DESCRIPTION],
+          [displayName=DISPLAYNAME],[id=ID],[immutable=IMMUTABLE]
+          | --api-technical-requirements-json-values=[API_TECHNICAL_REQUIREMENTS_JSON_VALUES,
+          ...]
+          | --api-technical-requirements-string-values=[API_TECHNICAL_REQUIREMENTS_STRING_VALUES,
+          ...]
+          | --api-technical-requirements-uri-values=[API_TECHNICAL_REQUIREMENTS_URI_VALUES,
+          ...]]
+        [--business-unit-enum-values=[description=DESCRIPTION],
+          [displayName=DISPLAYNAME],[id=ID],[immutable=IMMUTABLE]
+          | --business-unit-json-values=[BUSINESS_UNIT_JSON_VALUES,...]
+          | --business-unit-string-values=[BUSINESS_UNIT_STRING_VALUES,...]
+          | --business-unit-uri-values=[BUSINESS_UNIT_URI_VALUES,...]]
+        [--maturity-level-enum-values=[description=DESCRIPTION],
+          [displayName=DISPLAYNAME],[id=ID],[immutable=IMMUTABLE]
+          | --maturity-level-json-values=[MATURITY_LEVEL_JSON_VALUES,...]
+          | --maturity-level-string-values=[MATURITY_LEVEL_STRING_VALUES,...]
+          | --maturity-level-uri-values=[MATURITY_LEVEL_URI_VALUES,...]]
+        [--owner-email=OWNER_EMAIL : --owner-display-name=OWNER_DISPLAY_NAME]
+        [--target-user-enum-values=[description=DESCRIPTION],
+          [displayName=DISPLAYNAME],[id=ID],[immutable=IMMUTABLE]
+          | --target-user-json-values=[TARGET_USER_JSON_VALUES,...]
+          | --target-user-string-values=[TARGET_USER_STRING_VALUES,...]
+          | --target-user-uri-values=[TARGET_USER_URI_VALUES,...]]
+        [--team-enum-values=[description=DESCRIPTION],
+          [displayName=DISPLAYNAME],[id=ID],[immutable=IMMUTABLE]
+          | --team-json-values=[TEAM_JSON_VALUES,...]
+          | --team-string-values=[TEAM_STRING_VALUES,...]
+          | --team-uri-values=[TEAM_URI_VALUES,...]] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Create an api
+
+    Note: The positional argument for API ID is currently not supported. Please
+    use the --api flag to specify the API ID.
+
+EXAMPLES
+    To create an API with the ID my-api, run:
+
+        $ gcloud alpha apihub apis create --api=my-api \
+            --display-name="My API" --project=my-project \
+            --location=us-central1
+
+REQUIRED FLAGS
+     --display-name=DISPLAY_NAME
+        The display name of the API resource.
+
+OPTIONAL FLAGS
+     --api=API
+        For resources [api, selected-version], provides fallback value for
+        resource api attribute. When the resource's full URI path is not
+        provided, api will fallback to this flag value.
+
+     --attributes=[ATTRIBUTES,...]
+        The list of user defined attributes associated with the API resource.
+        The key is the attribute name. It will be of the format:
+        projects/{project}/locations/{location}/attributes/{attribute}. The
+        value is the attribute values associated with the resource.
+
+         KEY
+            Sets KEY value.
+
+         VALUE
+            Sets VALUE value.
+
+             enumValues
+                The attribute values associated with a resource in case
+                attribute data type is enum.
+
+                 values
+                    The attribute values in case attribute data type is enum.
+
+                     description
+                        The detailed description of the allowed value.
+
+                     displayName
+                        The display name of the allowed value.
+
+                     id
+                        The ID of the allowed value.
+                        ▹ If provided, the same will be used. The service
+                          will throw an error if the specified id is already
+                          used by another allowed value in the same attribute
+                          resource.
+                        ▹ If not provided, a system generated id derived from
+                          the display name will be used. In this case, the
+                          service will handle conflict resolution by adding a
+                          system generated suffix in case of duplicates.
+
+                        This value should be 4-63 characters, and valid
+                        characters are /[a-z][0-9]-/.
+
+                     immutable
+                        When set to true, the allowed value cannot be updated
+                        or deleted by the user. It can only be true for System
+                        defined attributes.
+
+             jsonValues
+                The attribute values associated with a resource in case
+                attribute data type is JSON.
+
+                 values
+                    The attribute values in case attribute data type is string
+                    or JSON.
+
+             stringValues
+                The attribute values associated with a resource in case
+                attribute data type is string.
+
+                 values
+                    The attribute values in case attribute data type is string
+                    or JSON.
+
+             uriValues
+                The attribute values associated with a resource in case
+                attribute data type is URL, URI or IP, like
+                gs://bucket-name/object-name.
+
+                 values
+                    The attribute values in case attribute data type is string
+                    or JSON.
+
+        Shorthand Example:
+
+            --attributes=string={enumValues={values=[{description=string,displayName=string,id=string,immutable=boolean}]},jsonValues={values=[string]},stringValues={values=[string]},uriValues={values=[string]}}
+
+        JSON Example:
+
+            --attributes='{"string": {"enumValues": {"values": [{"description": "string", "displayName": "string", "id": "string", "immutable": boolean}]}, "jsonValues": {"values": ["string"]}, "stringValues": {"values": ["string"]}, "uriValues": {"values": ["string"]}}}'
+
+        File Example:
+
+            --attributes=path_to_file.(yaml|json)
+
+     --description=DESCRIPTION
+        The description of the API resource.
+
+     Documentation details.
+
+     --documentation-external-uri=DOCUMENTATION_EXTERNAL_URI
+        The uri of the externally hosted documentation.
+
+     --fingerprint=FINGERPRINT
+        Fingerprint of the API resource. This must be unique for each API
+        resource. It can neither be unset nor be updated to an existing
+        fingerprint of another API resource.
+
+     --location=LOCATION
+        For resources [api, selected-version], provides fallback value for
+        resource location attribute. When the resource's full URI path is not
+        provided, location will fallback to this flag value.
+
+     Version resource - The selected version for an API resource. This can be
+     used when special handling is needed on client side for particular version
+     of the API. Format is
+     projects/{project}/locations/{location}/apis/{api}/versions/{version} This
+     represents a Cloud resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument --selected-version on the command line with a
+        fully specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument --selected-version on the command line with a
+        fully specified name;
+      ◆ provide the argument --location on the command line.
+
+     To set the api attribute:
+      ◆ provide the argument --selected-version on the command line with a
+        fully specified name;
+      ◆ provide the argument --api on the command line.
+
+     --selected-version=SELECTED_VERSION
+        ID of the version or fully qualified identifier for the version.
+
+        To set the version attribute:
+        ◆ provide the argument --selected-version on the command line.
+
+     The attribute values associated with resource.
+
+     Arguments for the Value.
+
+     At most one of these can be specified:
+
+       The attribute values of data type enum.
+
+       --api-functional-requirements-enum-values=[description=DESCRIPTION],[displayName=DISPLAYNAME],[id=ID],[immutable=IMMUTABLE]
+          Required, The attribute values in case attribute data type is enum.
+
+           description
+              The detailed description of the allowed value.
+
+           displayName
+              The display name of the allowed value.
+
+           id
+              The ID of the allowed value.
+              ▫ If provided, the same will be used. The service will throw an
+                error if the specified id is already used by another allowed
+                value in the same attribute resource.
+              ▫ If not provided, a system generated id derived from the
+                display name will be used. In this case, the service will
+                handle conflict resolution by adding a system generated suffix
+                in case of duplicates.
+
+              This value should be 4-63 characters, and valid characters are
+              /[a-z][0-9]-/.
+
+           immutable
+              When set to true, the allowed value cannot be updated or deleted
+              by the user. It can only be true for System defined attributes.
+
+          Shorthand Example:
+
+              --api-functional-requirements-enum-values=description=string,displayName=string,id=string,immutable=boolean --api-functional-requirements-enum-values=description=string,displayName=string,id=string,immutable=boolean
+
+          JSON Example:
+
+              --api-functional-requirements-enum-values='[{"description": "string", "displayName": "string", "id": "string", "immutable": boolean}]'
+
+          File Example:
+
+              --api-functional-requirements-enum-values=path_to_file.(yaml|json)
+
+       The attribute values of data type string or JSON.
+
+       --api-functional-requirements-json-values=[API_FUNCTIONAL_REQUIREMENTS_JSON_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+       The attribute values of data type string or JSON.
+
+       --api-functional-requirements-string-values=[API_FUNCTIONAL_REQUIREMENTS_STRING_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+       The attribute values of data type string or JSON.
+
+       --api-functional-requirements-uri-values=[API_FUNCTIONAL_REQUIREMENTS_URI_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+     The attribute values associated with resource.
+
+     Arguments for the Value.
+
+     At most one of these can be specified:
+
+       The attribute values of data type enum.
+
+       --api-requirements-enum-values=[description=DESCRIPTION],[displayName=DISPLAYNAME],[id=ID],[immutable=IMMUTABLE]
+          Required, The attribute values in case attribute data type is enum.
+
+           description
+              The detailed description of the allowed value.
+
+           displayName
+              The display name of the allowed value.
+
+           id
+              The ID of the allowed value.
+              ▫ If provided, the same will be used. The service will throw an
+                error if the specified id is already used by another allowed
+                value in the same attribute resource.
+              ▫ If not provided, a system generated id derived from the
+                display name will be used. In this case, the service will
+                handle conflict resolution by adding a system generated suffix
+                in case of duplicates.
+
+              This value should be 4-63 characters, and valid characters are
+              /[a-z][0-9]-/.
+
+           immutable
+              When set to true, the allowed value cannot be updated or deleted
+              by the user. It can only be true for System defined attributes.
+
+          Shorthand Example:
+
+              --api-requirements-enum-values=description=string,displayName=string,id=string,immutable=boolean --api-requirements-enum-values=description=string,displayName=string,id=string,immutable=boolean
+
+          JSON Example:
+
+              --api-requirements-enum-values='[{"description": "string", "displayName": "string", "id": "string", "immutable": boolean}]'
+
+          File Example:
+
+              --api-requirements-enum-values=path_to_file.(yaml|json)
+
+       The attribute values of data type string or JSON.
+
+       --api-requirements-json-values=[API_REQUIREMENTS_JSON_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+       The attribute values of data type string or JSON.
+
+       --api-requirements-string-values=[API_REQUIREMENTS_STRING_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+       The attribute values of data type string or JSON.
+
+       --api-requirements-uri-values=[API_REQUIREMENTS_URI_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+     The attribute values associated with resource.
+
+     Arguments for the Value.
+
+     At most one of these can be specified:
+
+       The attribute values of data type enum.
+
+       --api-style-enum-values=[description=DESCRIPTION],[displayName=DISPLAYNAME],[id=ID],[immutable=IMMUTABLE]
+          Required, The attribute values in case attribute data type is enum.
+
+           description
+              The detailed description of the allowed value.
+
+           displayName
+              The display name of the allowed value.
+
+           id
+              The ID of the allowed value.
+              ▫ If provided, the same will be used. The service will throw an
+                error if the specified id is already used by another allowed
+                value in the same attribute resource.
+              ▫ If not provided, a system generated id derived from the
+                display name will be used. In this case, the service will
+                handle conflict resolution by adding a system generated suffix
+                in case of duplicates.
+
+              This value should be 4-63 characters, and valid characters are
+              /[a-z][0-9]-/.
+
+           immutable
+              When set to true, the allowed value cannot be updated or deleted
+              by the user. It can only be true for System defined attributes.
+
+          Shorthand Example:
+
+              --api-style-enum-values=description=string,displayName=string,id=string,immutable=boolean --api-style-enum-values=description=string,displayName=string,id=string,immutable=boolean
+
+          JSON Example:
+
+              --api-style-enum-values='[{"description": "string", "displayName": "string", "id": "string", "immutable": boolean}]'
+
+          File Example:
+
+              --api-style-enum-values=path_to_file.(yaml|json)
+
+       The attribute values of data type string or JSON.
+
+       --api-style-json-values=[API_STYLE_JSON_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+       The attribute values of data type string or JSON.
+
+       --api-style-string-values=[API_STYLE_STRING_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+       The attribute values of data type string or JSON.
+
+       --api-style-uri-values=[API_STYLE_URI_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+     The attribute values associated with resource.
+
+     Arguments for the Value.
+
+     At most one of these can be specified:
+
+       The attribute values of data type enum.
+
+       --api-technical-requirements-enum-values=[description=DESCRIPTION],[displayName=DISPLAYNAME],[id=ID],[immutable=IMMUTABLE]
+          Required, The attribute values in case attribute data type is enum.
+
+           description
+              The detailed description of the allowed value.
+
+           displayName
+              The display name of the allowed value.
+
+           id
+              The ID of the allowed value.
+              ▫ If provided, the same will be used. The service will throw an
+                error if the specified id is already used by another allowed
+                value in the same attribute resource.
+              ▫ If not provided, a system generated id derived from the
+                display name will be used. In this case, the service will
+                handle conflict resolution by adding a system generated suffix
+                in case of duplicates.
+
+              This value should be 4-63 characters, and valid characters are
+              /[a-z][0-9]-/.
+
+           immutable
+              When set to true, the allowed value cannot be updated or deleted
+              by the user. It can only be true for System defined attributes.
+
+          Shorthand Example:
+
+              --api-technical-requirements-enum-values=description=string,displayName=string,id=string,immutable=boolean --api-technical-requirements-enum-values=description=string,displayName=string,id=string,immutable=boolean
+
+          JSON Example:
+
+              --api-technical-requirements-enum-values='[{"description": "string", "displayName": "string", "id": "string", "immutable": boolean}]'
+
+          File Example:
+
+              --api-technical-requirements-enum-values=path_to_file.(yaml|json)
+
+       The attribute values of data type string or JSON.
+
+       --api-technical-requirements-json-values=[API_TECHNICAL_REQUIREMENTS_JSON_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+       The attribute values of data type string or JSON.
+
+       --api-technical-requirements-string-values=[API_TECHNICAL_REQUIREMENTS_STRING_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+       The attribute values of data type string or JSON.
+
+       --api-technical-requirements-uri-values=[API_TECHNICAL_REQUIREMENTS_URI_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+     The attribute values associated with resource.
+
+     Arguments for the Value.
+
+     At most one of these can be specified:
+
+       The attribute values of data type enum.
+
+       --business-unit-enum-values=[description=DESCRIPTION],[displayName=DISPLAYNAME],[id=ID],[immutable=IMMUTABLE]
+          Required, The attribute values in case attribute data type is enum.
+
+           description
+              The detailed description of the allowed value.
+
+           displayName
+              The display name of the allowed value.
+
+           id
+              The ID of the allowed value.
+              ▫ If provided, the same will be used. The service will throw an
+                error if the specified id is already used by another allowed
+                value in the same attribute resource.
+              ▫ If not provided, a system generated id derived from the
+                display name will be used. In this case, the service will
+                handle conflict resolution by adding a system generated suffix
+                in case of duplicates.
+
+              This value should be 4-63 characters, and valid characters are
+              /[a-z][0-9]-/.
+
+           immutable
+              When set to true, the allowed value cannot be updated or deleted
+              by the user. It can only be true for System defined attributes.
+
+          Shorthand Example:
+
+              --business-unit-enum-values=description=string,displayName=string,id=string,immutable=boolean --business-unit-enum-values=description=string,displayName=string,id=string,immutable=boolean
+
+          JSON Example:
+
+              --business-unit-enum-values='[{"description": "string", "displayName": "string", "id": "string", "immutable": boolean}]'
+
+          File Example:
+
+              --business-unit-enum-values=path_to_file.(yaml|json)
+
+       The attribute values of data type string or JSON.
+
+       --business-unit-json-values=[BUSINESS_UNIT_JSON_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+       The attribute values of data type string or JSON.
+
+       --business-unit-string-values=[BUSINESS_UNIT_STRING_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+       The attribute values of data type string or JSON.
+
+       --business-unit-uri-values=[BUSINESS_UNIT_URI_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+     The attribute values associated with resource.
+
+     Arguments for the Value.
+
+     At most one of these can be specified:
+
+       The attribute values of data type enum.
+
+       --maturity-level-enum-values=[description=DESCRIPTION],[displayName=DISPLAYNAME],[id=ID],[immutable=IMMUTABLE]
+          Required, The attribute values in case attribute data type is enum.
+
+           description
+              The detailed description of the allowed value.
+
+           displayName
+              The display name of the allowed value.
+
+           id
+              The ID of the allowed value.
+              ▫ If provided, the same will be used. The service will throw an
+                error if the specified id is already used by another allowed
+                value in the same attribute resource.
+              ▫ If not provided, a system generated id derived from the
+                display name will be used. In this case, the service will
+                handle conflict resolution by adding a system generated suffix
+                in case of duplicates.
+
+              This value should be 4-63 characters, and valid characters are
+              /[a-z][0-9]-/.
+
+           immutable
+              When set to true, the allowed value cannot be updated or deleted
+              by the user. It can only be true for System defined attributes.
+
+          Shorthand Example:
+
+              --maturity-level-enum-values=description=string,displayName=string,id=string,immutable=boolean --maturity-level-enum-values=description=string,displayName=string,id=string,immutable=boolean
+
+          JSON Example:
+
+              --maturity-level-enum-values='[{"description": "string", "displayName": "string", "id": "string", "immutable": boolean}]'
+
+          File Example:
+
+              --maturity-level-enum-values=path_to_file.(yaml|json)
+
+       The attribute values of data type string or JSON.
+
+       --maturity-level-json-values=[MATURITY_LEVEL_JSON_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+       The attribute values of data type string or JSON.
+
+       --maturity-level-string-values=[MATURITY_LEVEL_STRING_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+       The attribute values of data type string or JSON.
+
+       --maturity-level-uri-values=[MATURITY_LEVEL_URI_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+     Owner details.
+
+     --owner-email=OWNER_EMAIL
+        The email of the owner.
+
+        This flag argument must be specified if any of the other arguments in
+        this group are specified.
+
+     --owner-display-name=OWNER_DISPLAY_NAME
+        The name of the owner.
+
+     The attribute values associated with resource.
+
+     Arguments for the Value.
+
+     At most one of these can be specified:
+
+       The attribute values of data type enum.
+
+       --target-user-enum-values=[description=DESCRIPTION],[displayName=DISPLAYNAME],[id=ID],[immutable=IMMUTABLE]
+          Required, The attribute values in case attribute data type is enum.
+
+           description
+              The detailed description of the allowed value.
+
+           displayName
+              The display name of the allowed value.
+
+           id
+              The ID of the allowed value.
+              ▫ If provided, the same will be used. The service will throw an
+                error if the specified id is already used by another allowed
+                value in the same attribute resource.
+              ▫ If not provided, a system generated id derived from the
+                display name will be used. In this case, the service will
+                handle conflict resolution by adding a system generated suffix
+                in case of duplicates.
+
+              This value should be 4-63 characters, and valid characters are
+              /[a-z][0-9]-/.
+
+           immutable
+              When set to true, the allowed value cannot be updated or deleted
+              by the user. It can only be true for System defined attributes.
+
+          Shorthand Example:
+
+              --target-user-enum-values=description=string,displayName=string,id=string,immutable=boolean --target-user-enum-values=description=string,displayName=string,id=string,immutable=boolean
+
+          JSON Example:
+
+              --target-user-enum-values='[{"description": "string", "displayName": "string", "id": "string", "immutable": boolean}]'
+
+          File Example:
+
+              --target-user-enum-values=path_to_file.(yaml|json)
+
+       The attribute values of data type string or JSON.
+
+       --target-user-json-values=[TARGET_USER_JSON_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+       The attribute values of data type string or JSON.
+
+       --target-user-string-values=[TARGET_USER_STRING_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+       The attribute values of data type string or JSON.
+
+       --target-user-uri-values=[TARGET_USER_URI_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+     The attribute values associated with resource.
+
+     Arguments for the Value.
+
+     At most one of these can be specified:
+
+       The attribute values of data type enum.
+
+       --team-enum-values=[description=DESCRIPTION],[displayName=DISPLAYNAME],[id=ID],[immutable=IMMUTABLE]
+          Required, The attribute values in case attribute data type is enum.
+
+           description
+              The detailed description of the allowed value.
+
+           displayName
+              The display name of the allowed value.
+
+           id
+              The ID of the allowed value.
+              ▫ If provided, the same will be used. The service will throw an
+                error if the specified id is already used by another allowed
+                value in the same attribute resource.
+              ▫ If not provided, a system generated id derived from the
+                display name will be used. In this case, the service will
+                handle conflict resolution by adding a system generated suffix
+                in case of duplicates.
+
+              This value should be 4-63 characters, and valid characters are
+              /[a-z][0-9]-/.
+
+           immutable
+              When set to true, the allowed value cannot be updated or deleted
+              by the user. It can only be true for System defined attributes.
+
+          Shorthand Example:
+
+              --team-enum-values=description=string,displayName=string,id=string,immutable=boolean --team-enum-values=description=string,displayName=string,id=string,immutable=boolean
+
+          JSON Example:
+
+              --team-enum-values='[{"description": "string", "displayName": "string", "id": "string", "immutable": boolean}]'
+
+          File Example:
+
+              --team-enum-values=path_to_file.(yaml|json)
+
+       The attribute values of data type string or JSON.
+
+       --team-json-values=[TEAM_JSON_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+       The attribute values of data type string or JSON.
+
+       --team-string-values=[TEAM_STRING_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+       The attribute values of data type string or JSON.
+
+       --team-uri-values=[TEAM_URI_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the apihub/v1 API. The full documentation for this API
+    can be found at:
+    https://cloud.google.com/apigee/docs/api-hub/what-is-api-hub
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. This variant is also available:
+
+        $ gcloud apihub apis create
+

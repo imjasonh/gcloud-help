@@ -4,8 +4,8 @@ NAME
 
 SYNOPSIS
     gcloud beta vector-search collections data-objects batch-delete
-        --requests=[name=NAME] (--collection=COLLECTION : --location=LOCATION)
-        [GCLOUD_WIDE_FLAG ...]
+        --requests=[etag=ETAG],[name=NAME]
+        (--collection=COLLECTION : --location=LOCATION) [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) Delete a batch of data objects.
@@ -22,9 +22,14 @@ EXAMPLES
         s/my-do-b2"}]' --project=my-project
 
 REQUIRED FLAGS
-     --requests=[name=NAME]
+     --requests=[etag=ETAG],[name=NAME]
         Required, The request message specifying the resources to delete. A
         maximum of 1000 DataObjects can be deleted in a batch.
+
+         etag
+            The current etag of the DataObject. If an etag is provided and does
+            not match the current etag of the DataObject, deletion will be
+            blocked and an ABORTED error will be returned.
 
          name
             The name of the DataObject resource to be deleted. Format:
@@ -32,11 +37,11 @@ REQUIRED FLAGS
 
         Shorthand Example:
 
-            --requests=name=string --requests=name=string
+            --requests=etag=string,name=string --requests=etag=string,name=string
 
         JSON Example:
 
-            --requests='[{"name": "string"}]'
+            --requests='[{"etag": "string", "name": "string"}]'
 
         File Example:
 
@@ -89,5 +94,8 @@ API REFERENCE
     https://docs.cloud.google.com/vertex-ai/docs/vector-search-2/overview
 
 NOTES
-    This command is currently in beta and might change without notice.
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud vector-search collections data-objects batch-delete
 

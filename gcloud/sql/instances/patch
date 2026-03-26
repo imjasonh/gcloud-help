@@ -15,6 +15,7 @@ SYNOPSIS
         [--clear-active-directory-dns-servers]
         [--clear-failover-dr-replica-name] [--clear-password-policy]
         [--connector-enforcement=CONNECTOR_ENFORCEMENT] [--cpu=CPU]
+        [--data-api-access=DATA_API_ACCESS]
         [--database-version=DATABASE_VERSION] [--[no-]deletion-protection]
         [--deny-maintenance-period-end-date=DENY_MAINTENANCE_PERIOD_END_DATE]
         [--deny-maintenance-period-start-date=DENY_MAINTENANCE_PERIOD_START_DATE]
@@ -33,6 +34,7 @@ SYNOPSIS
         [--final-backup-retention-days=FINAL_BACKUP_RETENTION_DAYS]
         [--follow-gae-app=FOLLOW_GAE_APP]
         [--[no-]include-replicas-for-major-version-upgrade]
+        [--[no-]insights-config-enhanced-query-insights-enabled]
         [--[no-]insights-config-query-insights-enabled]
         [--insights-config-query-plans-per-minute=INSIGHTS_CONFIG_QUERY_PLANS_PER_MINUTE]
         [--insights-config-query-string-length=INSIGHTS_CONFIG_QUERY_STRING_LENGTH]
@@ -50,6 +52,7 @@ SYNOPSIS
         [--password-policy-password-change-interval=PASSWORD_POLICY_PASSWORD_CHANGE_INTERVAL]
         [--password-policy-reuse-interval=PASSWORD_POLICY_REUSE_INTERVAL]
         [--pricing-plan=PRICING_PLAN, -p PRICING_PLAN]
+        [--reconcile-psa-networking]
         [--[no-]recreate-replicas-on-primary-crash]
         [--remove-deny-maintenance-period] [--replication=REPLICATION]
         [--[no-]require-ssl] [--[no-]retain-backups-on-delete]
@@ -199,6 +202,19 @@ FLAGS
         should not be used when creating an Enterprise Plus edition, as the
         machine configuration is determined by the --tier flag instead.
 
+     --data-api-access=DATA_API_ACCESS
+        Controls connectivity to the instance using ExecuteSql API.
+        DATA_API_ACCESS must be one of:
+
+         ALLOW_DATA_API
+            Allow using ExecuteSql API to connect to the instance. For Private
+            IP instances, this will allow authorized users to access the
+            instance from the public internet using ExecuteSql API.
+         DATA_API_ACCESS_UNSPECIFIED
+            Unspecified mode, effectively the same as DISALLOW_DATA_API.
+         DISALLOW_DATA_API
+            Disallow using ExecuteSql API to connect to the instance.
+
      --database-version=DATABASE_VERSION
         The database engine type and versions. If left unspecified, no changes
         occur. See the list of database versions at
@@ -312,7 +328,7 @@ FLAGS
      --final-backup-retention-days=FINAL_BACKUP_RETENTION_DAYS
         Specifies number of days to retain final backup. The valid range is
         between 1 and 365. For instances managed by BackupDR, the valid range
-        is between 1 day and 99 years. Default value is 30 days.
+        is between 1 day and 10 years (3653 days). Default value is 30 days.
 
      --follow-gae-app=FOLLOW_GAE_APP
         First Generation instances only. The App Engine app this instance
@@ -326,6 +342,13 @@ FLAGS
         enable and --no-include-replicas-for-major--version-upgrade to disable.
         Use --include-replicas-for-major-version-upgrade to enable and
         --no-include-replicas-for-major-version-upgrade to disable.
+
+     --[no-]insights-config-enhanced-query-insights-enabled
+        Enable enhanced query insights for Enterprise Plus edition to provide
+        more detailed query analytics.
+
+        Use --insights-config-enhanced-query-insights-enabled to enable and
+        --no-insights-config-enhanced-query-insights-enabled to disable.
 
      --[no-]insights-config-query-insights-enabled
         Enable query insights feature to provide query and query plan
@@ -452,6 +475,12 @@ FLAGS
      --pricing-plan=PRICING_PLAN, -p PRICING_PLAN
         First Generation instances only. The pricing plan for this instance.
         PRICING_PLAN must be one of: PER_USE, PACKAGE.
+
+     --reconcile-psa-networking
+        Reconciles the instance's PSA networking configuration. If the instance
+        is already on a PSA network, the DNS zone and records associated with
+        the PSA write endpoint are either added if missing or updated if
+        incorrect.
 
      --[no-]recreate-replicas-on-primary-crash
         Allow/Disallow replica recreation when a primary MySQL instance

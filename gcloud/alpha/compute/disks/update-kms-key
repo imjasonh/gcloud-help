@@ -1,15 +1,17 @@
 NAME
-    gcloud alpha compute disks update-kms-key - rotate the KMS key of a
-        persistent disk to the primary version
+    gcloud alpha compute disks update-kms-key - update the KMS key of a
+        persistent disk
 
 SYNOPSIS
     gcloud alpha compute disks update-kms-key DISK_NAME
+        [--kms-key=KMS_KEY : --kms-keyring=KMS_KEYRING
+          --kms-location=KMS_LOCATION --kms-project=KMS_PROJECT]
         [--region=REGION | --zone=ZONE] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) * gcloud alpha compute disks update-kms-key * updates the KMS key
     of a Compute Engine persistent disk by rotating it to the primary version
-    of the key.
+    of the key or to the primary version of a new KMS key.
 
 EXAMPLES
     To rotate the KMS key of a disk named example-disk-1 to the primary
@@ -18,11 +20,59 @@ EXAMPLES
         $ gcloud alpha compute disks update-kms-key example-disk-1 \
             --zone us-central1-a
 
+    To change the KMS key of a disk named example-disk-2 to a new KMS key named
+    example-key in a key ring named example-key-ring in the global scope, run:
+
+        $ gcloud alpha compute disks update-kms-key example-disk-2 \
+            --zone us-central1-a --kms-key example-key \
+            --kms-keyring example-key-ring --kms-location global
+
 POSITIONAL ARGUMENTS
      DISK_NAME
         Name of the disk to operate on.
 
 FLAGS
+     Key resource - The Cloud KMS (Key Management Service) cryptokey that will
+     be used to protect the disk. The 'Compute Engine Service Agent' service
+     account must hold permission 'Cloud KMS CryptoKey Encrypter/Decrypter'.
+     The arguments in this group can be used to specify the attributes of this
+     resource.
+
+     --kms-key=KMS_KEY
+        ID of the key or fully qualified identifier for the key.
+
+        To set the kms-key attribute:
+        ◆ provide the argument --kms-key on the command line.
+
+        This flag argument must be specified if any of the other arguments in
+        this group are specified.
+
+     --kms-keyring=KMS_KEYRING
+        The KMS keyring of the key.
+
+        To set the kms-keyring attribute:
+        ◆ provide the argument --kms-key on the command line with a fully
+          specified name;
+        ◆ provide the argument --kms-keyring on the command line.
+
+     --kms-location=KMS_LOCATION
+        The Google Cloud location for the key.
+
+        To set the kms-location attribute:
+        ◆ provide the argument --kms-key on the command line with a fully
+          specified name;
+        ◆ provide the argument --kms-location on the command line;
+        ◆ provide the argument --region on the command line.
+
+     --kms-project=KMS_PROJECT
+        The Google Cloud project for the key.
+
+        To set the kms-project attribute:
+        ◆ provide the argument --kms-key on the command line with a fully
+          specified name;
+        ◆ provide the argument --kms-project on the command line;
+        ◆ set the property core/project.
+
      At most one of these can be specified:
 
        --region=REGION

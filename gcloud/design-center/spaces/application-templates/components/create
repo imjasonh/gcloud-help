@@ -8,7 +8,17 @@ SYNOPSIS
           --location=LOCATION --space=SPACE)
         --shared-template-revision-uri=SHARED_TEMPLATE_REVISION_URI
         [--display-name=DISPLAY_NAME] [--parameters=[key=KEY],[value=VALUE]]
-        [GCLOUD_WIDE_FLAG ...]
+        [[--application-info-apphub-id=APPLICATION_INFO_APPHUB_ID
+          : --application-info-deployment-region=APPLICATION_INFO_DEPLOYMENT_REGION --application-info-display-name=APPLICATION_INFO_DISPLAY_NAME --scope-type=SCOPE_TYPE --attributes-business-owners=[channel=CHANNEL],
+          [displayName=DISPLAYNAME],[email=EMAIL]
+          --attributes-developer-owners=[channel=CHANNEL],
+          [displayName=DISPLAYNAME],[email=EMAIL]
+          --attributes-operator-owners=[channel=CHANNEL],
+          [displayName=DISPLAYNAME],[email=EMAIL]
+          [--criticality-type=CRITICALITY_TYPE
+          : --criticality-level=CRITICALITY_LEVEL
+          --criticality-mission-critical] [--environment-type=ENVIRONMENT_TYPE
+          : --environment=ENVIRONMENT]]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Create a component in an application template.
@@ -194,6 +204,167 @@ OPTIONAL FLAGS
         File Example:
 
             --parameters=path_to_file.(yaml|json)
+
+     This captures the apphub application details associated with the
+     component.
+
+     --application-info-apphub-id=APPLICATION_INFO_APPHUB_ID
+        The application ID of the apphub application. The ID must be 1-63
+        characters long and should match the regular expression
+        ^[a-z]([a-z0-9-]{0,61}[a-z0-9])?$.
+
+        This flag argument must be specified if any of the other arguments in
+        this group are specified.
+
+     --application-info-deployment-region=APPLICATION_INFO_DEPLOYMENT_REGION
+        Deployment region for the component. If the scope is set to REGIONAL,
+        then the apphub application is created in this region, e.g.
+        us-central1.
+
+     --application-info-display-name=APPLICATION_INFO_DISPLAY_NAME
+        Display name for the application. The number of characters should be
+        less than 64 characters.
+
+     Scope of an application.
+
+     --scope-type=SCOPE_TYPE
+        Scope Type. SCOPE_TYPE must be one of:
+
+         global
+            Global type.
+         regional
+            Regional type.
+
+     Consumer provided attributes.
+
+     --attributes-business-owners=[channel=CHANNEL],[displayName=DISPLAYNAME],[email=EMAIL]
+        Business team that ensures user needs are met and value is delivered.
+
+         channel
+            Communication channel of the contacts.
+
+             uri
+                URI of the channel.
+
+         displayName
+            Contact's name. Can have a maximum length of 63 characters.
+
+         email
+            Email address of the contacts.
+
+        Shorthand Example:
+
+            --attributes-business-owners=channel={uri=string},displayName=string,email=string --attributes-business-owners=channel={uri=string},displayName=string,email=string
+
+        JSON Example:
+
+            --attributes-business-owners='[{"channel": {"uri": "string"}, "displayName": "string", "email": "string"}]'
+
+        File Example:
+
+            --attributes-business-owners=path_to_file.(yaml|json)
+
+     --attributes-developer-owners=[channel=CHANNEL],[displayName=DISPLAYNAME],[email=EMAIL]
+        Developer team that owns development and coding.
+
+         channel
+            Communication channel of the contacts.
+
+             uri
+                URI of the channel.
+
+         displayName
+            Contact's name. Can have a maximum length of 63 characters.
+
+         email
+            Email address of the contacts.
+
+        Shorthand Example:
+
+            --attributes-developer-owners=channel={uri=string},displayName=string,email=string --attributes-developer-owners=channel={uri=string},displayName=string,email=string
+
+        JSON Example:
+
+            --attributes-developer-owners='[{"channel": {"uri": "string"}, "displayName": "string", "email": "string"}]'
+
+        File Example:
+
+            --attributes-developer-owners=path_to_file.(yaml|json)
+
+     --attributes-operator-owners=[channel=CHANNEL],[displayName=DISPLAYNAME],[email=EMAIL]
+        Operator team that ensures runtime and operations.
+
+         channel
+            Communication channel of the contacts.
+
+             uri
+                URI of the channel.
+
+         displayName
+            Contact's name. Can have a maximum length of 63 characters.
+
+         email
+            Email address of the contacts.
+
+        Shorthand Example:
+
+            --attributes-operator-owners=channel={uri=string},displayName=string,email=string --attributes-operator-owners=channel={uri=string},displayName=string,email=string
+
+        JSON Example:
+
+            --attributes-operator-owners='[{"channel": {"uri": "string"}, "displayName": "string", "email": "string"}]'
+
+        File Example:
+
+            --attributes-operator-owners=path_to_file.(yaml|json)
+
+     Criticality of the Application, Service, or Workload
+
+     --criticality-type=CRITICALITY_TYPE
+        Criticality Type. CRITICALITY_TYPE must be one of:
+
+         high
+            High impact.
+         low
+            Low impact.
+         medium
+            Medium impact.
+         mission-critical
+            Mission critical service, application or workload.
+
+        This flag argument must be specified if any of the other arguments in
+        this group are specified.
+
+     --criticality-level=CRITICALITY_LEVEL
+        Criticality level. Can contain only lowercase letters, numeric
+        characters, underscores, and dashes. Can have a maximum length of 63
+        characters. Deprecated: Please refer to type instead.
+
+     --criticality-mission-critical
+        Indicates mission-critical Application, Service, or Workload.
+        Deprecated: Please refer to type instead.
+
+     Environment of the Application, Service, or Workload
+
+     --environment-type=ENVIRONMENT_TYPE
+        Environment Type. ENVIRONMENT_TYPE must be one of:
+
+         development
+            Development environment.
+         production
+            Production environment.
+         staging
+            Staging environment.
+         test
+            Test environment.
+
+        This flag argument must be specified if any of the other arguments in
+        this group are specified.
+
+     --environment=ENVIRONMENT
+        Environment name. Can contain only lowercase letters, numeric
+        characters, underscores, and dashes. Can have a maximum length of 63
+        characters. Deprecated: Please refer to type instead.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

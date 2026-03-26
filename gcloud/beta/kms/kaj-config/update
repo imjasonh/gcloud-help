@@ -1,0 +1,111 @@
+NAME
+    gcloud beta kms kaj-config update - updates the
+        KeyAccessJustificationsPolicyConfig of an organization/folder/project
+
+SYNOPSIS
+    gcloud beta kms kaj-config update
+        (--folder=FOLDER | --organization=ORGANIZATION | --project=PROJECT_ID)
+        [--allowed-access-reasons=[ALLOWED_ACCESS_REASONS,...]
+          | --reset-kaj-policy-config] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) gcloud beta kms kaj-config update can be used to update the
+    KeyAccessJustificationsPolicyConfig of an organization/folder/project. This
+    command includes adding/removing allowed KAJ enums to/from a
+    KeyAccessJustificationsPolicyConfig. Clearing all allowed KAJ enums is also
+    supported. Note that an empty KeyAccessJustificationsPolicyConfig is an
+    "allow-all" policy, i.e. any KAJ enums are allowed in this kajPolicyConfig.
+
+    For details about KAJ enums, please check
+    https://cloud.google.com/assured-workloads/key-access-justifications/docs/justification-codes
+
+    Note that on successful completion, this command does not display the
+    updated resource by default. To view the updated
+    KeyAccessJustificationsPolicyConfig, use the --format flag, for example,
+    --format=yaml.
+
+EXAMPLES
+    The following command will set the KeyAccessJustificationsPolicyConfig of
+    folders/123 with CUSTOMER_INITIATED_ACCESS:
+
+        $ gcloud beta kms kaj-config update --folder=123 \
+            --allowed-access-reasons=customer-initiated-access
+
+    To update the policy for project 'abc' with CUSTOMER_INITIATED_ACCESS and
+    display the updated configuration as YAML, run:
+
+        $ gcloud beta kms kaj-config update --project=abc \
+            --allowed-access-reasons=customer-initiated-access --format=yaml
+
+    The following command resets the KeyAccessJustificationsPolicyConfig in
+    organizations/123 to a default value (allow-all access reasons).
+
+        $ gcloud beta kms kaj-config update --organizations=123 \
+            --reset-kaj-policy-config
+
+REQUIRED FLAGS
+     The parent of KajPolicyConfig.
+
+     Exactly one of these must be specified:
+
+       --folder=FOLDER
+          The ID of the folder under which the KajPolicyConfig exists. Use this
+          flag only if KajPolicyConfig is directly under a folder.
+
+       --organization=ORGANIZATION
+          The ID of the organization under which the KajPolicyConfig exists.
+          Use this flag only if KajPolicyConfig is directly under an
+          organization.
+
+       --project=PROJECT_ID
+          The ID of the project underwhich the KajPolicyConfig exists. Use this
+          flag only if KajPolicyConfig is directly under a project.
+
+          The Google Cloud project ID to use for this invocation. If omitted,
+          then the current project is assumed; the current project can be
+          listed using gcloud config list --format='text(core.project)' and can
+          be set using gcloud config set project PROJECTID.
+
+          --project and its fallback core/project property play two roles in
+          the invocation. It specifies the project of the resource to operate
+          on. It also specifies the project for API enablement check, quota,
+          and billing. To specify a different project for quota and billing,
+          use --billing-project or billing/quota_project property.
+
+OPTIONAL FLAGS
+     Updates of KAJ Policy Config.
+
+     At most one of these can be specified:
+
+       --allowed-access-reasons=[ALLOWED_ACCESS_REASONS,...]
+          List of allowed Key Access Justifications access reasons in this KAJ
+          Policy Config. This flag cannot be empty, if being set. For more
+          information about justification codes, see
+          https://cloud.google.com/assured-workloads/key-access-justifications/docs/justification-codes.
+          ALLOWED_ACCESS_REASONS must be one of:
+          customer-authorized-workflow-servicing, customer-initiated-access,
+          customer-initiated-support, google-initiated-review,
+          google-initiated-service, google-initiated-system-operation,
+          google-response-to-production-alert,
+          modified-customer-initiated-access,
+          modified-google-initiated-system-operation, reason-not-expected,
+          reason-unspecified, third-party-data-request.
+
+       --reset-kaj-policy-config
+          Reset KAJ Policy Config to empty. An empty KAJ Policy Config allows
+          all access reasons.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud alpha kms kaj-config update
+

@@ -3,9 +3,9 @@ NAME
         Managed Lustre instance
 
 SYNOPSIS
-    gcloud alpha lustre instances update INSTANCE [--async]
-        [--capacity-gib=CAPACITY_GIB] [--description=DESCRIPTION]
-        [--[no-]gke-support-enabled] [--location=LOCATION]
+    gcloud alpha lustre instances update (INSTANCE : --location=LOCATION)
+        [--async] [--capacity-gib=CAPACITY_GIB] [--description=DESCRIPTION]
+        [--[no-]gke-support-enabled]
         [--per-unit-storage-throughput=PER_UNIT_STORAGE_THROUGHPUT]
         [--placement-policy=PLACEMENT_POLICY] [--request-id=REQUEST_ID]
         [--clear- --default-squash-gid=DEFAULT_SQUASH_GID
@@ -24,7 +24,22 @@ SYNOPSIS
           [ipAddressRanges=IPADDRESSRANGES],
           [mountableSubdirectories=MOUNTABLESUBDIRECTORIES],[name=NAME],
           [squashGid=SQUASHGID],[squashMode=SQUASHMODE],[squashUid=SQUASHUID]]
-        [--clear-source-backup | --source-backup=SOURCE_BACKUP]
+        [--clear-dynamic-tier-options
+          --dynamic-tier-options-mode=DYNAMIC_TIER_OPTIONS_MODE]
+        [--clear-maintenance-policy
+          --maintenance-policy-exclusion-window=[endDate=ENDDATE],
+          [startDate=STARTDATE],[time=TIME]
+          | --add-maintenance-policy-exclusion-window=[endDate=ENDDATE],
+          [startDate=STARTDATE],[time=TIME]
+          --clear-maintenance-policy-exclusion-window
+          | --remove-maintenance-policy-exclusion-window=[endDate=ENDDATE],
+          [startDate=STARTDATE],[time=TIME]
+          --maintenance-policy-weekly-windows=[dayOfWeek=DAYOFWEEK],
+          [startTime=STARTTIME]
+          | --add-maintenance-policy-weekly-windows=[dayOfWeek=DAYOFWEEK],
+          [startTime=STARTTIME] --clear-maintenance-policy-weekly-windows
+          | --remove-maintenance-policy-weekly-windows=[dayOfWeek=DAYOFWEEK],
+          [startTime=STARTTIME]]
         [--labels=[LABELS,...]
           | --update-labels=[UPDATE_LABELS,...] --clear-labels
           | --remove-labels=REMOVE_LABELS] [GCLOUD_WIDE_FLAG ...]
@@ -40,20 +55,16 @@ EXAMPLES
             --location=us-central1-a --description="<updated description>"
 
 POSITIONAL ARGUMENTS
-     Instance resource - Identifier. The name of the instance. This represents
-     a Cloud resource. (NOTE) Some attributes are not given arguments in this
-     group but can be set in other ways.
+     Instance resource - Identifier. The name of the instance. The arguments in
+     this group can be used to specify the attributes of this resource. (NOTE)
+     Some attributes are not given arguments in this group but can be set in
+     other ways.
 
      To set the project attribute:
       ◆ provide the argument instance on the command line with a fully
         specified name;
       ◆ provide the argument --project on the command line;
       ◆ set the property core/project.
-
-     To set the location attribute:
-      ◆ provide the argument instance on the command line with a fully
-        specified name;
-      ◆ provide the argument --location on the command line.
 
      This must be specified.
 
@@ -62,6 +73,17 @@ POSITIONAL ARGUMENTS
 
           To set the instance attribute:
           ▸ provide the argument instance on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          The location id of the instance resource.
+
+          To set the location attribute:
+          ▸ provide the argument instance on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line.
 
 FLAGS
      --async
@@ -84,11 +106,6 @@ FLAGS
         default, GKE clients are not supported. Deprecated. No longer required
         for GKE instance creation. Use --gke-support-enabled to enable and
         --no-gke-support-enabled to disable.
-
-     --location=LOCATION
-        For resources [instance, source-backup], provides fallback value for
-        resource location attribute. When the resource's full URI path is not
-        provided, location will fallback to this flag value.
 
      --per-unit-storage-throughput=PER_UNIT_STORAGE_THROUGHPUT
         The throughput of the instance in MBps per TiB. Valid values are 125,
@@ -342,39 +359,399 @@ FLAGS
 
                   --remove-access-rules=path_to_file.(yaml|json)
 
-     Arguments for the source backup.
+     Dynamic tier options for a Managed Lustre instance.
 
-     Update source_backup.
+     --clear-dynamic-tier-options
+        Set instance.dynamicTierOptions back to default value.
+
+     --dynamic-tier-options-mode=DYNAMIC_TIER_OPTIONS_MODE
+        The dynamic tier mode of the instance. DYNAMIC_TIER_OPTIONS_MODE must
+        be one of:
+
+         default-cache
+            The dynamic tier is enabled with a default cache configuration.
+         disabled
+            The dynamic tier is explicitly disabled.
+
+     Defines a maintenance policy for a resource.
+
+     --clear-maintenance-policy
+        Set instance.maintenancePolicy back to default value.
+
+     Update maintenance_policy_exclusion_window.
 
      At most one of these can be specified:
 
-       --clear-source-backup
-          Clear source_backup value and set to null.
+       --maintenance-policy-exclusion-window=[endDate=ENDDATE],[startDate=STARTDATE],[time=TIME]
+          Set maintenance_policy_exclusion_window to new value. The exclusion
+          windows for the instance. Currently limited to 1 window.
 
-       Backup resource - Set source_backup to new value.
+           endDate
+              End date of the exclusion period in UTC time zone. This date is
+              inclusive.
 
-       The source backup used to create the instance. Only set this field if
-       the instance is being created from a backup. Format:
-       projects/{project}/locations/{location}/backups/{backup} This represents
-       a Cloud resource. (NOTE) Some attributes are not given arguments in this
-       group but can be set in other ways.
+               day
+                  Day of a month. Must be from 1 to 31 and valid for the year
+                  and month, or 0 to specify a year by itself or a year and
+                  month where the day isn't significant.
 
-       To set the project attribute:
-        ▸ provide the argument --source-backup on the command line with a
-          fully specified name;
-        ▸ provide the argument --project on the command line;
-        ▸ set the property core/project.
+               month
+                  Month of a year. Must be from 1 to 12, or 0 to specify a year
+                  without a month and day.
 
-       To set the location attribute:
-        ▸ provide the argument --source-backup on the command line with a
-          fully specified name;
-        ▸ provide the argument --location on the command line.
+               year
+                  Year of the date. Must be from 1 to 9999, or 0 to specify a
+                  date without a year.
 
-       --source-backup=SOURCE_BACKUP
-          ID of the backup or fully qualified identifier for the backup.
+           startDate
+              Start date of the exclusion period in UTC time zone. This date is
+              inclusive.
 
-          To set the backup attribute:
-          ▸ provide the argument --source-backup on the command line.
+               day
+                  Day of a month. Must be from 1 to 31 and valid for the year
+                  and month, or 0 to specify a year by itself or a year and
+                  month where the day isn't significant.
+
+               month
+                  Month of a year. Must be from 1 to 12, or 0 to specify a year
+                  without a month and day.
+
+               year
+                  Year of the date. Must be from 1 to 9999, or 0 to specify a
+                  date without a year.
+
+           time
+              Time in UTC when the exclusion window starts on start_date and
+              ends on end_date. This can be:
+              ▫ Full time OR
+              ▫ All zeros for 00:00:00 UTC.
+
+               hours
+                  Hours of a day in 24 hour format. Must be greater than or
+                  equal to 0 and typically must be less than or equal to 23. An
+                  API may choose to allow the value "24:00:00" for scenarios
+                  like business closing time.
+
+               minutes
+                  Minutes of an hour. Must be greater than or equal to 0 and
+                  less than or equal to 59.
+
+               nanos
+                  Fractions of seconds, in nanoseconds. Must be greater than or
+                  equal to 0 and less than or equal to 999,999,999.
+
+               seconds
+                  Seconds of a minute. Must be greater than or equal to 0 and
+                  typically must be less than or equal to 59. An API may allow
+                  the value 60 if it allows leap-seconds.
+
+          Shorthand Example:
+
+              --maintenance-policy-exclusion-window=endDate={day=int,month=int,year=int},startDate={day=int,month=int,year=int},time={hours=int,minutes=int,nanos=int,seconds=int} --maintenance-policy-exclusion-window=endDate={day=int,month=int,year=int},startDate={day=int,month=int,year=int},time={hours=int,minutes=int,nanos=int,seconds=int}
+
+          JSON Example:
+
+              --maintenance-policy-exclusion-window='[{"endDate": {"day": int, "month": int, "year": int}, "startDate": {"day": int, "month": int, "year": int}, "time": {"hours": int, "minutes": int, "nanos": int, "seconds": int}}]'
+
+          File Example:
+
+              --maintenance-policy-exclusion-window=path_to_file.(yaml|json)
+
+       Or at least one of these can be specified:
+
+         --add-maintenance-policy-exclusion-window=[endDate=ENDDATE],[startDate=STARTDATE],[time=TIME]
+            Add new value to maintenance_policy_exclusion_window list. The
+            exclusion windows for the instance. Currently limited to 1 window.
+
+             endDate
+                End date of the exclusion period in UTC time zone. This date is
+                inclusive.
+
+                 day
+                    Day of a month. Must be from 1 to 31 and valid for the year
+                    and month, or 0 to specify a year by itself or a year and
+                    month where the day isn't significant.
+
+                 month
+                    Month of a year. Must be from 1 to 12, or 0 to specify a
+                    year without a month and day.
+
+                 year
+                    Year of the date. Must be from 1 to 9999, or 0 to specify a
+                    date without a year.
+
+             startDate
+                Start date of the exclusion period in UTC time zone. This date
+                is inclusive.
+
+                 day
+                    Day of a month. Must be from 1 to 31 and valid for the year
+                    and month, or 0 to specify a year by itself or a year and
+                    month where the day isn't significant.
+
+                 month
+                    Month of a year. Must be from 1 to 12, or 0 to specify a
+                    year without a month and day.
+
+                 year
+                    Year of the date. Must be from 1 to 9999, or 0 to specify a
+                    date without a year.
+
+             time
+                Time in UTC when the exclusion window starts on start_date and
+                ends on end_date. This can be:
+                ◇ Full time OR
+                ◇ All zeros for 00:00:00 UTC.
+
+                 hours
+                    Hours of a day in 24 hour format. Must be greater than or
+                    equal to 0 and typically must be less than or equal to 23.
+                    An API may choose to allow the value "24:00:00" for
+                    scenarios like business closing time.
+
+                 minutes
+                    Minutes of an hour. Must be greater than or equal to 0 and
+                    less than or equal to 59.
+
+                 nanos
+                    Fractions of seconds, in nanoseconds. Must be greater than
+                    or equal to 0 and less than or equal to 999,999,999.
+
+                 seconds
+                    Seconds of a minute. Must be greater than or equal to 0 and
+                    typically must be less than or equal to 59. An API may
+                    allow the value 60 if it allows leap-seconds.
+
+            Shorthand Example:
+
+                --add-maintenance-policy-exclusion-window=endDate={day=int,month=int,year=int},startDate={day=int,month=int,year=int},time={hours=int,minutes=int,nanos=int,seconds=int} --add-maintenance-policy-exclusion-window=endDate={day=int,month=int,year=int},startDate={day=int,month=int,year=int},time={hours=int,minutes=int,nanos=int,seconds=int}
+
+            JSON Example:
+
+                --add-maintenance-policy-exclusion-window='[{"endDate": {"day": int, "month": int, "year": int}, "startDate": {"day": int, "month": int, "year": int}, "time": {"hours": int, "minutes": int, "nanos": int, "seconds": int}}]'
+
+            File Example:
+
+                --add-maintenance-policy-exclusion-window=path_to_file.(yaml|json)
+
+         At most one of these can be specified:
+
+           --clear-maintenance-policy-exclusion-window
+              Clear maintenance_policy_exclusion_window value and set to empty
+              list.
+
+           --remove-maintenance-policy-exclusion-window=[endDate=ENDDATE],[startDate=STARTDATE],[time=TIME]
+              Remove existing value from maintenance_policy_exclusion_window
+              list. The exclusion windows for the instance. Currently limited
+              to 1 window.
+
+               endDate
+                  End date of the exclusion period in UTC time zone. This date
+                  is inclusive.
+
+                   day
+                      Day of a month. Must be from 1 to 31 and valid for the
+                      year and month, or 0 to specify a year by itself or a
+                      year and month where the day isn't significant.
+
+                   month
+                      Month of a year. Must be from 1 to 12, or 0 to specify a
+                      year without a month and day.
+
+                   year
+                      Year of the date. Must be from 1 to 9999, or 0 to specify
+                      a date without a year.
+
+               startDate
+                  Start date of the exclusion period in UTC time zone. This
+                  date is inclusive.
+
+                   day
+                      Day of a month. Must be from 1 to 31 and valid for the
+                      year and month, or 0 to specify a year by itself or a
+                      year and month where the day isn't significant.
+
+                   month
+                      Month of a year. Must be from 1 to 12, or 0 to specify a
+                      year without a month and day.
+
+                   year
+                      Year of the date. Must be from 1 to 9999, or 0 to specify
+                      a date without a year.
+
+               time
+                  Time in UTC when the exclusion window starts on start_date
+                  and ends on end_date. This can be:
+                  ▹ Full time OR
+                  ▹ All zeros for 00:00:00 UTC.
+
+                   hours
+                      Hours of a day in 24 hour format. Must be greater than or
+                      equal to 0 and typically must be less than or equal to
+                      23. An API may choose to allow the value "24:00:00" for
+                      scenarios like business closing time.
+
+                   minutes
+                      Minutes of an hour. Must be greater than or equal to 0
+                      and less than or equal to 59.
+
+                   nanos
+                      Fractions of seconds, in nanoseconds. Must be greater
+                      than or equal to 0 and less than or equal to 999,999,999.
+
+                   seconds
+                      Seconds of a minute. Must be greater than or equal to 0
+                      and typically must be less than or equal to 59. An API
+                      may allow the value 60 if it allows leap-seconds.
+
+              Shorthand Example:
+
+                  --remove-maintenance-policy-exclusion-window=endDate={day=int,month=int,year=int},startDate={day=int,month=int,year=int},time={hours=int,minutes=int,nanos=int,seconds=int} --remove-maintenance-policy-exclusion-window=endDate={day=int,month=int,year=int},startDate={day=int,month=int,year=int},time={hours=int,minutes=int,nanos=int,seconds=int}
+
+              JSON Example:
+
+                  --remove-maintenance-policy-exclusion-window='[{"endDate": {"day": int, "month": int, "year": int}, "startDate": {"day": int, "month": int, "year": int}, "time": {"hours": int, "minutes": int, "nanos": int, "seconds": int}}]'
+
+              File Example:
+
+                  --remove-maintenance-policy-exclusion-window=path_to_file.(yaml|json)
+
+     Update maintenance_policy_weekly_windows.
+
+     At most one of these can be specified:
+
+       --maintenance-policy-weekly-windows=[dayOfWeek=DAYOFWEEK],[startTime=STARTTIME]
+          Set maintenance_policy_weekly_windows to new value. The weekly
+          maintenance windows for the instance. Currently limited to 1 window.
+
+           dayOfWeek
+              Day of the week for the maintenance window.
+
+           startTime
+              Start time of the maintenance window in UTC time zone.
+
+               hours
+                  Hours of a day in 24 hour format. Must be greater than or
+                  equal to 0 and typically must be less than or equal to 23. An
+                  API may choose to allow the value "24:00:00" for scenarios
+                  like business closing time.
+
+               minutes
+                  Minutes of an hour. Must be greater than or equal to 0 and
+                  less than or equal to 59.
+
+               nanos
+                  Fractions of seconds, in nanoseconds. Must be greater than or
+                  equal to 0 and less than or equal to 999,999,999.
+
+               seconds
+                  Seconds of a minute. Must be greater than or equal to 0 and
+                  typically must be less than or equal to 59. An API may allow
+                  the value 60 if it allows leap-seconds.
+
+          Shorthand Example:
+
+              --maintenance-policy-weekly-windows=dayOfWeek=string,startTime={hours=int,minutes=int,nanos=int,seconds=int} --maintenance-policy-weekly-windows=dayOfWeek=string,startTime={hours=int,minutes=int,nanos=int,seconds=int}
+
+          JSON Example:
+
+              --maintenance-policy-weekly-windows='[{"dayOfWeek": "string", "startTime": {"hours": int, "minutes": int, "nanos": int, "seconds": int}}]'
+
+          File Example:
+
+              --maintenance-policy-weekly-windows=path_to_file.(yaml|json)
+
+       Or at least one of these can be specified:
+
+         --add-maintenance-policy-weekly-windows=[dayOfWeek=DAYOFWEEK],[startTime=STARTTIME]
+            Add new value to maintenance_policy_weekly_windows list. The weekly
+            maintenance windows for the instance. Currently limited to 1
+            window.
+
+             dayOfWeek
+                Day of the week for the maintenance window.
+
+             startTime
+                Start time of the maintenance window in UTC time zone.
+
+                 hours
+                    Hours of a day in 24 hour format. Must be greater than or
+                    equal to 0 and typically must be less than or equal to 23.
+                    An API may choose to allow the value "24:00:00" for
+                    scenarios like business closing time.
+
+                 minutes
+                    Minutes of an hour. Must be greater than or equal to 0 and
+                    less than or equal to 59.
+
+                 nanos
+                    Fractions of seconds, in nanoseconds. Must be greater than
+                    or equal to 0 and less than or equal to 999,999,999.
+
+                 seconds
+                    Seconds of a minute. Must be greater than or equal to 0 and
+                    typically must be less than or equal to 59. An API may
+                    allow the value 60 if it allows leap-seconds.
+
+            Shorthand Example:
+
+                --add-maintenance-policy-weekly-windows=dayOfWeek=string,startTime={hours=int,minutes=int,nanos=int,seconds=int} --add-maintenance-policy-weekly-windows=dayOfWeek=string,startTime={hours=int,minutes=int,nanos=int,seconds=int}
+
+            JSON Example:
+
+                --add-maintenance-policy-weekly-windows='[{"dayOfWeek": "string", "startTime": {"hours": int, "minutes": int, "nanos": int, "seconds": int}}]'
+
+            File Example:
+
+                --add-maintenance-policy-weekly-windows=path_to_file.(yaml|json)
+
+         At most one of these can be specified:
+
+           --clear-maintenance-policy-weekly-windows
+              Clear maintenance_policy_weekly_windows value and set to empty
+              list.
+
+           --remove-maintenance-policy-weekly-windows=[dayOfWeek=DAYOFWEEK],[startTime=STARTTIME]
+              Remove existing value from maintenance_policy_weekly_windows
+              list. The weekly maintenance windows for the instance. Currently
+              limited to 1 window.
+
+               dayOfWeek
+                  Day of the week for the maintenance window.
+
+               startTime
+                  Start time of the maintenance window in UTC time zone.
+
+                   hours
+                      Hours of a day in 24 hour format. Must be greater than or
+                      equal to 0 and typically must be less than or equal to
+                      23. An API may choose to allow the value "24:00:00" for
+                      scenarios like business closing time.
+
+                   minutes
+                      Minutes of an hour. Must be greater than or equal to 0
+                      and less than or equal to 59.
+
+                   nanos
+                      Fractions of seconds, in nanoseconds. Must be greater
+                      than or equal to 0 and less than or equal to 999,999,999.
+
+                   seconds
+                      Seconds of a minute. Must be greater than or equal to 0
+                      and typically must be less than or equal to 59. An API
+                      may allow the value 60 if it allows leap-seconds.
+
+              Shorthand Example:
+
+                  --remove-maintenance-policy-weekly-windows=dayOfWeek=string,startTime={hours=int,minutes=int,nanos=int,seconds=int} --remove-maintenance-policy-weekly-windows=dayOfWeek=string,startTime={hours=int,minutes=int,nanos=int,seconds=int}
+
+              JSON Example:
+
+                  --remove-maintenance-policy-weekly-windows='[{"dayOfWeek": "string", "startTime": {"hours": int, "minutes": int, "nanos": int, "seconds": int}}]'
+
+              File Example:
+
+                  --remove-maintenance-policy-weekly-windows=path_to_file.(yaml|json)
 
      Update labels.
 

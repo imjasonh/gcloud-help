@@ -4,15 +4,20 @@ NAME
 SYNOPSIS
     gcloud lustre instances create (INSTANCE : --location=LOCATION)
         --capacity-gib=CAPACITY_GIB --filesystem=FILESYSTEM --network=NETWORK
-        --per-unit-storage-throughput=PER_UNIT_STORAGE_THROUGHPUT [--async]
-        [--description=DESCRIPTION] [--gke-support-enabled] [--kms-key=KMS_KEY]
-        [--labels=[LABELS,...]] [--placement-policy=PLACEMENT_POLICY]
-        [--request-id=REQUEST_ID]
+        [--async] [--description=DESCRIPTION]
+        [--dynamic-tier-options-mode=DYNAMIC_TIER_OPTIONS_MODE]
+        [--gke-support-enabled] [--kms-key=KMS_KEY] [--labels=[LABELS,...]]
+        [--per-unit-storage-throughput=PER_UNIT_STORAGE_THROUGHPUT]
+        [--placement-policy=PLACEMENT_POLICY] [--request-id=REQUEST_ID]
         [[--default-squash-mode=DEFAULT_SQUASH_MODE
           : --access-rules=[ipAddressRanges=IPADDRESSRANGES],
           [name=NAME],[squashMode=SQUASHMODE]
           --default-squash-gid=DEFAULT_SQUASH_GID
-          --default-squash-uid=DEFAULT_SQUASH_UID]] [GCLOUD_WIDE_FLAG ...]
+          --default-squash-uid=DEFAULT_SQUASH_UID]]
+        [[--maintenance-policy-weekly-windows=[dayOfWeek=DAYOFWEEK],
+          [startTime=STARTTIME]
+          : --maintenance-policy-exclusion-window=[endDate=ENDDATE],
+          [startDate=STARTDATE],[time=TIME]]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Creates a Managed Lustre instance.
@@ -60,7 +65,7 @@ POSITIONAL ARGUMENTS
 REQUIRED FLAGS
      --capacity-gib=CAPACITY_GIB
         The storage capacity of the instance in gibibytes (GiB). Allowed values
-        are from 18000 to 7632000, depending on the perUnitStorageThroughput.
+        are from 9000 to 7632000, depending on the perUnitStorageThroughput.
         See Performance tiers and maximum storage capacities
         (https://cloud.google.com/managed-lustre/docs/create-instance#performance-tiers)
         for specific minimums, maximums, and step sizes for each performance
@@ -91,12 +96,6 @@ REQUIRED FLAGS
           To set the network attribute:
           ▸ provide the argument --network on the command line.
 
-     --per-unit-storage-throughput=PER_UNIT_STORAGE_THROUGHPUT
-        The throughput of the instance in MBps per TiB. Valid values are 125,
-        250, 500, 1000. See Performance tiers and maximum storage capacities
-        (https://cloud.google.com/managed-lustre/docs/create-instance#performance-tiers)
-        for more information.
-
 OPTIONAL FLAGS
      --async
         Return immediately, without waiting for the operation in progress to
@@ -104,6 +103,17 @@ OPTIONAL FLAGS
 
      --description=DESCRIPTION
         A user-readable description of the instance.
+
+     Dynamic tier options for a Managed Lustre instance.
+
+     --dynamic-tier-options-mode=DYNAMIC_TIER_OPTIONS_MODE
+        The dynamic tier mode of the instance. DYNAMIC_TIER_OPTIONS_MODE must
+        be one of:
+
+         default-cache
+            The dynamic tier is enabled.
+         disabled
+            The dynamic tier is explicitly disabled.
 
      --gke-support-enabled
         Indicates whether you want to enable support for GKE clients. By
@@ -139,6 +149,15 @@ OPTIONAL FLAGS
         File Example:
 
             --labels=path_to_file.(yaml|json)
+
+     --per-unit-storage-throughput=PER_UNIT_STORAGE_THROUGHPUT
+        The throughput of the instance in MBps per TiB. Valid values are 125,
+        250, 500, 1000. See Performance tiers and maximum storage capacities
+        (https://cloud.google.com/managed-lustre/docs/create-instance#performance-tiers)
+        for more information.
+
+        If the instance is using the Dynamic tier, this field must not be set
+        or must be set to zero.
 
      --placement-policy=PLACEMENT_POLICY
         The placement policy name for the instance in the format of
@@ -239,6 +258,126 @@ OPTIONAL FLAGS
         applies to all root users connecting from clients that are not matched
         by any of the access rules. If not set, the default is 0 (no UID
         squash).
+
+     Defines a maintenance policy for a resource.
+
+     --maintenance-policy-weekly-windows=[dayOfWeek=DAYOFWEEK],[startTime=STARTTIME]
+        Required, The weekly maintenance windows for the instance. Currently
+        limited to 1 window.
+
+         dayOfWeek
+            Day of the week for the maintenance window.
+
+         startTime
+            Start time of the maintenance window in UTC time zone.
+
+             hours
+                Hours of a day in 24 hour format. Must be greater than or equal
+                to 0 and typically must be less than or equal to 23. An API may
+                choose to allow the value "24:00:00" for scenarios like
+                business closing time.
+
+             minutes
+                Minutes of an hour. Must be greater than or equal to 0 and less
+                than or equal to 59.
+
+             nanos
+                Fractions of seconds, in nanoseconds. Must be greater than or
+                equal to 0 and less than or equal to 999,999,999.
+
+             seconds
+                Seconds of a minute. Must be greater than or equal to 0 and
+                typically must be less than or equal to 59. An API may allow
+                the value 60 if it allows leap-seconds.
+
+        Shorthand Example:
+
+            --maintenance-policy-weekly-windows=dayOfWeek=string,startTime={hours=int,minutes=int,nanos=int,seconds=int} --maintenance-policy-weekly-windows=dayOfWeek=string,startTime={hours=int,minutes=int,nanos=int,seconds=int}
+
+        JSON Example:
+
+            --maintenance-policy-weekly-windows='[{"dayOfWeek": "string", "startTime": {"hours": int, "minutes": int, "nanos": int, "seconds": int}}]'
+
+        File Example:
+
+            --maintenance-policy-weekly-windows=path_to_file.(yaml|json)
+
+        This flag argument must be specified if any of the other arguments in
+        this group are specified.
+
+     --maintenance-policy-exclusion-window=[endDate=ENDDATE],[startDate=STARTDATE],[time=TIME]
+        The exclusion windows for the instance. Currently limited to 1 window.
+
+         endDate
+            End date of the exclusion period in UTC time zone. This date is
+            inclusive.
+
+             day
+                Day of a month. Must be from 1 to 31 and valid for the year and
+                month, or 0 to specify a year by itself or a year and month
+                where the day isn't significant.
+
+             month
+                Month of a year. Must be from 1 to 12, or 0 to specify a year
+                without a month and day.
+
+             year
+                Year of the date. Must be from 1 to 9999, or 0 to specify a
+                date without a year.
+
+         startDate
+            Start date of the exclusion period in UTC time zone. This date is
+            inclusive.
+
+             day
+                Day of a month. Must be from 1 to 31 and valid for the year and
+                month, or 0 to specify a year by itself or a year and month
+                where the day isn't significant.
+
+             month
+                Month of a year. Must be from 1 to 12, or 0 to specify a year
+                without a month and day.
+
+             year
+                Year of the date. Must be from 1 to 9999, or 0 to specify a
+                date without a year.
+
+         time
+            Time in UTC when the exclusion window starts on start_date and ends
+            on end_date. This can be:
+            ▸ Full time OR
+            ▸ All zeros for 00:00:00 UTC.
+
+             hours
+                Hours of a day in 24 hour format. Must be greater than or equal
+                to 0 and typically must be less than or equal to 23. An API may
+                choose to allow the value "24:00:00" for scenarios like
+                business closing time.
+
+             minutes
+                Minutes of an hour. Must be greater than or equal to 0 and less
+                than or equal to 59.
+
+             nanos
+                Fractions of seconds, in nanoseconds. Must be greater than or
+                equal to 0 and less than or equal to 999,999,999.
+
+             seconds
+                Seconds of a minute. Must be greater than or equal to 0 and
+                typically must be less than or equal to 59. An API may allow
+                the value 60 if it allows leap-seconds.
+
+        Shorthand Example:
+
+            --maintenance-policy-exclusion-window=endDate={day=int,month=int,year=int},startDate={day=int,month=int,year=int},time={hours=int,minutes=int,nanos=int,seconds=int} --maintenance-policy-exclusion-window=endDate={day=int,month=int,year=int},startDate={day=int,month=int,year=int},time={hours=int,minutes=int,nanos=int,seconds=int}
+
+        JSON Example:
+
+            --maintenance-policy-exclusion-window='[{"endDate": {"day": int, "month": int, "year": int}, "startDate": {"day": int, "month": int, "year": int}, "time": {"hours": int, "minutes": int, "nanos": int, "seconds": int}}]'
+
+        File Example:
+
+            --maintenance-policy-exclusion-window=path_to_file.(yaml|json)
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

@@ -6,11 +6,7 @@ SYNOPSIS
     gcloud beta vector-search collections data-objects batch-search
         --collection=COLLECTION --location=LOCATION
         --searches-from-file=SEARCHES_FROM_FILE
-        [[(--rrf-weights=[WEIGHT,...]
-          | [--vertex-ranker-model=VERTEX_RANKER_MODEL
-          --vertex-ranker-query=VERTEX_RANKER_QUERY
-          : --vertex-ranker-content-template=VERTEX_RANKER_CONTENT_TEMPLATE
-          --vertex-ranker-title-template=VERTEX_RANKER_TITLE_TEMPLATE])
+        [[--rrf-weights=[WEIGHT,...]
           : --combine-output-data-fields=[DATA_OUTPUT_FIELD,...]
           --combine-output-metadata-fields=[METADATA_OUTPUT_FIELD,...]
           --combine-output-vector-fields=[VECTOR_OUTPUT_FIELD,...]
@@ -55,10 +51,26 @@ REQUIRED FLAGS
         Path to a JSON file containing a list of searches. Each element in list
         should be a JSON object representing a Search message, e.g.,
         {"semanticSearch": {"searchText": "...", "searchField": "..."}}. Keys
-        must be camelCase as in API definition.
+        must be camelCase as in API definition. Example file content: [ {
+        "vectorSearch": { "vector": { "values": [ 1, 2, 3, 4 ] },
+        "searchField": "genre_embedding", "topK": 10, "outputFields": {
+        "dataFields": [ "director", "genre", "title", "year" ] } } }, {
+        "semanticSearch": { "searchText": "sci-fi movie", "searchField":
+        "plot_embedding", "taskType": "SEMANTIC_SIMILARITY", "topK": 10 } }, {
+        "textSearch": { "searchText": "movie 1", "dataFieldNames": ["title"],
+        "topK": 10 } } ]
 
 OPTIONAL FLAGS
      Combine Results Options
+
+     Ranker
+
+     This must be specified.
+
+       RRF Ranker
+
+       --rrf-weights=[WEIGHT,...]
+          RRF weights for combining results.
 
      --combine-output-data-fields=[DATA_OUTPUT_FIELD,...]
         List of data fields to include in combined output.
@@ -72,35 +84,6 @@ OPTIONAL FLAGS
      --combine-top-k=COMBINE_TOP_K
         Top K results to return when combining results.
 
-     Ranker
-
-     Exactly one of these must be specified:
-
-       RRF Ranker
-
-       --rrf-weights=[WEIGHT,...]
-          RRF weights for combining results.
-
-       Vertex Ranker
-
-       --vertex-ranker-model=VERTEX_RANKER_MODEL
-          Vertex ranker model
-
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
-
-       --vertex-ranker-query=VERTEX_RANKER_QUERY
-          Vertex ranker query
-
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
-
-       --vertex-ranker-content-template=VERTEX_RANKER_CONTENT_TEMPLATE
-          Vertex ranker content template
-
-       --vertex-ranker-title-template=VERTEX_RANKER_TITLE_TEMPLATE
-          Vertex ranker title template
-
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
     --billing-project, --configuration, --flags-file, --flatten, --format,
@@ -110,5 +93,8 @@ GCLOUD WIDE FLAGS
     Run $ gcloud help for details.
 
 NOTES
-    This command is currently in beta and might change without notice.
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud vector-search collections data-objects batch-search
 

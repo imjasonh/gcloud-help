@@ -9,6 +9,7 @@ SYNOPSIS
         [--default-storage-class=DEFAULT_STORAGE_CLASS,
           -c DEFAULT_STORAGE_CLASS, -s DEFAULT_STORAGE_CLASS]
         [--enable-hierarchical-namespace] [--enable-per-object-retention]
+        [--encryption-enforcement-file=ENCRYPTION_ENFORCEMENT_FILE]
         [--ip-filter-file=IP_FILTER_FILE] [--lifecycle-file=LIFECYCLE_FILE]
         [--location=LOCATION, -l LOCATION]
         [--[no-]pap, --[no-]public-access-prevention]
@@ -65,6 +66,43 @@ FLAGS
      --enable-per-object-retention
         Enables each object in the bucket to have its own retention settings,
         which prevents deletion until stored for a specific length of time.
+
+     --encryption-enforcement-file=ENCRYPTION_ENFORCEMENT_FILE
+        Sets the encryption enforcement configuration for the bucket from a
+        JSON file. This configuration determines restrictions on the types of
+        encryption (GMEK, CMEK, CSEK) allowed for new objects created in the
+        bucket.
+
+        The JSON file should contain an object with keys among
+        "gmekEnforcement", "cmekEnforcement", and "csekEnforcement". Each of
+        these keys, if present, should have a "restrictionMode" key,
+        determining whether the corresponding encryption type should be allowed
+        or restricted for new objects.
+
+        Valid values for "restrictionMode" are:
+        ◆ "NotRestricted": The encryption type is allowed for new objects.
+        ◆ "FullyRestricted": The encryption type is not allowed for new
+          objects.
+
+        Example JSON file content, to enforce only CMEK for new objects:
+
+            {
+              "gmekEnforcement": {
+                "restrictionMode": "FullyRestricted"
+              },
+              "cmekEnforcement": {
+                "restrictionMode": "NotRestricted"
+              },
+              "csekEnforcement": {
+                "restrictionMode": "FullyRestricted"
+              }
+            }
+
+        Omitted keys will not be sent in the API request. To clear restrictions
+        for a specific encryption-type during an update, set its
+        "restrictionMode" to "NotRestricted". For example, to clear any
+        restrictions on GMEK: { "gmekEnforcement": { "restrictionMode":
+        "NotRestricted" } }
 
      --ip-filter-file=IP_FILTER_FILE
         Sets the IP filter for the bucket. The IP filter is a list of ip ranges

@@ -1,28 +1,43 @@
 NAME
-    gcloud alpha mldiagnostics profiler-session capture - create profiler
+    gcloud alpha mldiagnostics profiler-session capture - capture profiler
         sessions
 
 SYNOPSIS
     gcloud alpha mldiagnostics profiler-session capture PROFILER_SESSION
-        --duration=DURATION [--async]
+        --duration=DURATION --targets=[TARGETS,...] [--async]
         [--device-tracer-level=DEVICE_TRACER_LEVEL;
           default="device-tracer-level-enabled"]
         [--host-tracer-level=HOST_TRACER_LEVEL;
           default="host-tracer-level-info"] [--is-trace-enabled]
         [--location=LOCATION] [--machine-learning-run=MACHINE_LEARNING_RUN]
         [--python-tracer-level=PYTHON_TRACER_LEVEL;
-          default="python-tracer-level-disabled"] [--targets=[TARGETS,...]]
-        [GCLOUD_WIDE_FLAG ...]
+          default="python-tracer-level-disabled"] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) Create a profiler session
+    (ALPHA) Capture a profiler session
 
 EXAMPLES
-    To create the profiler session, run:
+    To capture the profiler session, run:
 
         $ gcloud alpha mldiagnostics profiler-session capture \
-          --location=us-central1 --machine-learning-run=my-ml-run \
-          --targets=my-target-1
+          on-demand-session --location=us-central1 \
+          --machine-learning-run=my-ml-run \
+          --targets mldiag-prod-demo-jobset-tpu-slice-0-0-qmx7s \
+          --duration 5000ms
+
+        Sample output:
+          Request issued for: [on-demand-session]
+          Waiting for operation [projects/PROJECT_ID/locations/us-central1operations/operation-1770310771938-64a1698b41364-06f905e7-8eab435b] to complete...done.
+          createTime: '2026-02-05T16:59:32.307511739Z'
+          deviceTracerLevel: DEVICE_TRACER_LEVEL_ENABLED
+          duration: 5000s
+          etag: d3f59473-ad4c-47f3-b64b-6855575ab622
+          hostTracerLevel: HOST_TRACER_LEVEL_INFO
+          name: projects/PROJECT_ID/locations/us-central1machineLearningRuns/mldiag-prod-cluster-diagon-jobset-mldiag-prod-demo-jobset-20260205-164642/profilerSessions/on-demand-session
+          profilerTargets:
+          - projects/PROJECT_ID/locations/us-central1machineLearningRuns/mldiag-prod-cluster-diagon-jobset-mldiag-prod-demo-jobset-20260205-164642/profilerTargets/mldiag-prod-demo-jobset-tpu-slice-0-0-qmx7s
+          pythonTracerLevel: PYTHON_TRACER_LEVEL_DISABLED
+          storageFolderUri: gs://diagon-prod-data/mldiag-prod-cluster-diagon-jobset-mldiag-prod-demo-jobset-20260205-164642          ```
 
 POSITIONAL ARGUMENTS
      ProfilerSession resource - Identifier. The name of the profiler session.
@@ -60,6 +75,36 @@ POSITIONAL ARGUMENTS
 REQUIRED FLAGS
      --duration=DURATION
         Duration for the profiler session.
+
+     ProfilerTarget resource - Profiler targets on which profiler session to be
+     started. This represents a Cloud resource. (NOTE) Some attributes are not
+     given arguments in this group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument --targets on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument --targets on the command line with a fully
+        specified name;
+      ◆ provide the argument --location on the command line;
+      ◆ set the property compute/region.
+
+     To set the machine-learning-run attribute:
+      ◆ provide the argument --targets on the command line with a fully
+        specified name;
+      ◆ provide the argument --machine-learning-run on the command line.
+
+     This must be specified.
+
+       --targets=[TARGETS,...]
+          IDs of the profilerTargets or fully qualified identifiers for the
+          profilerTargets.
+
+          To set the profiler-target attribute:
+          ▸ provide the argument --targets on the command line.
 
 OPTIONAL FLAGS
      --async
@@ -113,36 +158,6 @@ OPTIONAL FLAGS
             Tracer level is disabled.
          python-tracer-level-enabled
             Tracer level is enabled.
-
-     ProfilerTarget resource - List of profiler targets. Targets on which
-     profiler session to be started. If empty, control plan shall start
-     profiler session on all the targets associated with ML Run. This
-     represents a Cloud resource. (NOTE) Some attributes are not given
-     arguments in this group but can be set in other ways.
-
-     To set the project attribute:
-      ◆ provide the argument --targets on the command line with a fully
-        specified name;
-      ◆ provide the argument --project on the command line;
-      ◆ set the property core/project.
-
-     To set the location attribute:
-      ◆ provide the argument --targets on the command line with a fully
-        specified name;
-      ◆ provide the argument --location on the command line;
-      ◆ set the property compute/region.
-
-     To set the machine-learning-run attribute:
-      ◆ provide the argument --targets on the command line with a fully
-        specified name;
-      ◆ provide the argument --machine-learning-run on the command line.
-
-     --targets=[TARGETS,...]
-        IDs of the profilerTargets or fully qualified identifiers for the
-        profilerTargets.
-
-        To set the profiler-target attribute:
-        ◆ provide the argument --targets on the command line.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

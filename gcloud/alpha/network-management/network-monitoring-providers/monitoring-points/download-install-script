@@ -1,0 +1,151 @@
+NAME
+    gcloud alpha network-management network-monitoring-providers
+        monitoring-points download-install-script - download an installation
+        script for a Monitoring Point
+
+SYNOPSIS
+    gcloud alpha network-management network-monitoring-providers
+        monitoring-points download-install-script --hostname=HOSTNAME
+        --location=LOCATION --monitoring-point-type=MONITORING_POINT_TYPE
+        --network-monitoring-provider=NETWORK_MONITORING_PROVIDER
+        --output-file=OUTPUT_FILE [--ntp-server-address=NTP_SERVER_ADDRESS]
+        [--ntp-server-secondary-address=NTP_SERVER_SECONDARY_ADDRESS]
+        [--password=PASSWORD] [--time-zone=TIME_ZONE] [--use-dhcp]
+        [--dns-server-address=DNS_SERVER_ADDRESS
+          --dns-server-secondary-address=DNS_SERVER_SECONDARY_ADDRESS
+          --domain=DOMAIN --gateway-address=GATEWAY_ADDRESS
+          --netmask=NETMASK --static-ip-address=STATIC_IP_ADDRESS]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Downloads an installation script for a Monitoring Point for a given
+    Network Monitoring Provider.
+
+    The command downloads a tarball for --monitoring-point-type=container or
+    --monitoring-point-type=helm, or a zip file for --monitoring-point-type=kvm
+    or --monitoring-point-type=vmware.
+
+    The --network-monitoring-provider, --location, --monitoring-point-type, and
+    --hostname arguments are required for all Monitoring Points. Additional
+    arguments depend on the value of --monitoring-point-type.
+
+    If --monitoring-point-type=container or --monitoring-point-type=helm is
+    specified, no other flags are required, and flags like --password,
+    --time-zone, --use-dhcp, and --static-ip-address are not allowed.
+
+    If --monitoring-point-type=kvm or --monitoring-point-type=vmware is
+    specified, --password and --time-zone are also required. You must also
+    specify either --use-dhcp for DHCP configurations or --static-ip-address
+    for static IP configurations. If using --static-ip-address,
+    --gateway-address and --dns-server-address are also required.
+
+EXAMPLES
+    To download the install script for a Monitoring Point of type container,
+    run:
+
+        $ gcloud alpha network-management network-monitoring-providers \
+            monitoring-points download-install-script \
+            --network-monitoring-provider=my-provider --location=global \
+            --monitoring-point-type=container \
+            --hostname=container-hostname \
+            --output-file=compose.container-hostname.tar.gz
+
+    To download the install script for a Monitoring Point of type kvm using
+    DHCP, run:
+
+        $ gcloud alpha network-management network-monitoring-providers \
+            monitoring-points download-install-script \
+            --network-monitoring-provider=my-provider --location=global \
+            --monitoring-point-type=kvm --hostname=kvm-hostname \
+            --password=my-password --time-zone=America/Los_Angeles \
+            --use-dhcp --output-file=kvm.kvm-hostname.zip
+
+    To download the install script for a Monitoring Point of type vmware using
+    a static IP, run:
+
+        $ gcloud alpha network-management network-monitoring-providers \
+            monitoring-points download-install-script \
+            --network-monitoring-provider=my-provider --location=global \
+            --monitoring-point-type=vmware --hostname=vmware-hostname \
+            --password=my-password --time-zone=America/Los_Angeles \
+            --static-ip-address=192.168.1.100 --netmask=255.255.255.0 \
+            --gateway-address=192.168.1.1 --dns-server-address=8.8.8.8 \
+            --output-file=vmwareApplianceConfig.zip
+
+REQUIRED FLAGS
+     --hostname=HOSTNAME
+        The hostname of the Monitoring Point (example: test-vm).
+
+     --location=LOCATION
+        The location of the Network Monitoring Provider (example:, global).
+
+     --monitoring-point-type=MONITORING_POINT_TYPE
+        The type of the Monitoring Point. MONITORING_POINT_TYPE must be one of:
+        container, helm, kvm, vmware.
+
+     --network-monitoring-provider=NETWORK_MONITORING_PROVIDER
+        The ID of the Network Monitoring Provider.
+
+     --output-file=OUTPUT_FILE
+        The path to save the downloaded install script.
+
+OPTIONAL FLAGS
+     --ntp-server-address=NTP_SERVER_ADDRESS
+        Primary NTP server address (IP address or FQDN). Allowed for types KVM
+        and VMWARE only.
+
+     --ntp-server-secondary-address=NTP_SERVER_SECONDARY_ADDRESS
+        Secondary NTP server address (IP address or FQDN). Allowed for types
+        KVM and VMWARE only.
+
+     --password=PASSWORD
+        Password for logging into the Monitoring Point. Required for types KVM
+        and VMWARE, not allowed for CONTAINER.
+
+     --time-zone=TIME_ZONE
+        Time zone ID for the Monitoring Point (example: America/Los_Angeles).
+        Required for types KVM and VMWARE, not allowed for CONTAINER.
+
+     --use-dhcp
+        Whether to use DHCP for IP address configuration. Allowed for types KVM
+        and VMWARE only.
+
+     Static IP address configuration. Allowed for types KVM and VMWARE only.
+
+     --dns-server-address=DNS_SERVER_ADDRESS
+        Primary DNS server address. Required if --static-ip-address is
+        specified.
+
+     --dns-server-secondary-address=DNS_SERVER_SECONDARY_ADDRESS
+        Secondary DNS server address. Used with --static-ip-address.
+
+     --domain=DOMAIN
+        Domain name of the Monitoring Point. Used with --static-ip-address.
+
+     --gateway-address=GATEWAY_ADDRESS
+        Gateway IP address. Required if --static-ip-address is specified.
+
+     --netmask=NETMASK
+        Network mask (example: "255.255.255.0"). Used with --static-ip-address.
+
+     --static-ip-address=STATIC_IP_ADDRESS
+        Static IP address of the Monitoring Point. If specified,
+        --gateway-address and --dns-server-address are required.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+BRIEF
+    Download an installation script for a Monitoring Point.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

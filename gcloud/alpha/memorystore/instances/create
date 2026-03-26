@@ -13,8 +13,9 @@ SYNOPSIS
         [--mode=MODE] [--node-type=NODE_TYPE] [--ondemand-maintenance]
         [--psc-auto-connections=[network=NETWORK],
           [port=PORT],[projectId=PROJECTID]] [--replica-count=REPLICA_COUNT]
-        [--request-id=REQUEST_ID] [--shard-count=SHARD_COUNT]
-        [--simulate-maintenance-event]
+        [--request-id=REQUEST_ID] [--rotate-server-certificate]
+        [--server-ca-mode=SERVER_CA_MODE] [--server-ca-pool=SERVER_CA_POOL]
+        [--shard-count=SHARD_COUNT] [--simulate-maintenance-event]
         [--transit-encryption-mode=TRANSIT_ENCRYPTION_MODE]
         [--aof-config-append-fsync=AOF_CONFIG_APPEND_FSYNC
           --persistence-config-mode=PERSISTENCE_CONFIG_MODE
@@ -316,6 +317,38 @@ FLAGS
 
         The request ID must be a valid UUID with the exception that zero UUID
         is not supported (00000000-0000-0000-0000-000000000000).
+
+     Arguments for the rotate server certificate.
+
+     --rotate-server-certificate
+        Rotate the server certificates.
+
+     Arguments for the server ca mode.
+
+     --server-ca-mode=SERVER_CA_MODE
+        The Server CA mode for the instance. SERVER_CA_MODE must be one of:
+
+         customer-managed-cas-ca
+            The instance uses a customer-managed CA from CAS.
+         google-managed-per-instance-ca
+            Each instance has its own Google-managed CA.
+         google-managed-shared-ca
+            The instance uses a Google-managed shared CA for the instance's
+            region.
+         server-ca-mode-customer-managed-cas-ca
+            Deprecated: Use CUSTOMER_MANAGED_CAS_CA instead.
+         server-ca-mode-google-managed-per-instance-ca
+            Deprecated: Use GOOGLE_MANAGED_PER_INSTANCE_CA instead.
+         server-ca-mode-google-managed-shared-ca
+            Deprecated: Use GOOGLE_MANAGED_SHARED_CA instead.
+
+     Arguments for the server ca pool.
+
+     --server-ca-pool=SERVER_CA_POOL
+        Customer-managed CA pool. The resource name of the Certificate
+        Authority Service (CAS) CA Pool. Required and only applicable when
+        --server-ca-mode is set to customer-managed-cas-ca. Format:
+        projects/{project}/locations/{region}/caPools/{ca_pool}
 
      --shard-count=SHARD_COUNT
         Number of shards for the instance.

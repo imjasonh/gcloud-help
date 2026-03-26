@@ -10,10 +10,6 @@ SYNOPSIS
         [--default-action-on-vm-failure=ACTION_ON_VM_FAILURE]
         [--description=DESCRIPTION] [--[no-]force-update-on-repair]
         [--initial-delay=INITIAL_DELAY] [--instance-redistribution-type=TYPE]
-        [--instance-selection=name=NAME,machine-type=MACHINE_TYPE[,
-          machine-type=MACHINE_TYPE...][,
-          rank=RANK][,min-cpu-platform=MIN_CPU_PLATFORM]]
-        [--instance-selection-machine-types=[MACHINE_TYPE,...]]
         [--list-managed-instances-results=MODE]
         [--on-repair-allow-changing-zone=ON_REPAIR_ALLOW_CHANGING_ZONE]
         [--resource-manager-tags=[KEY=VALUE,...]]
@@ -30,6 +26,10 @@ SYNOPSIS
         [--workload-policy=WORKLOAD_POLICY] [--zones=ZONE,[ZONE,...]]
         [--health-check=HEALTH_CHECK | --http-health-check=HTTP_HEALTH_CHECK
           | --https-health-check=HTTPS_HEALTH_CHECK]
+        [--instance-flexibility-policy=[INSTANCE_FLEXIBILITY_POLICY,...]
+          | --instance-selection=name=NAME,
+          machine-type=MACHINE_TYPE[,machine-type=MACHINE_TYPE...][,rank=RANK]
+          --instance-selection-machine-types=[MACHINE_TYPE,...]]
         [--region=REGION | --zone=ZONE]
         [--update-policy-max-surge=MAX_SURGE
           --update-policy-max-unavailable=MAX_UNAVAILABLE
@@ -153,15 +153,6 @@ OPTIONAL FLAGS
          proactive
             The managed instance group proactively redistributes instances to
             meet its target distribution.
-
-     --instance-selection=name=NAME,machine-type=MACHINE_TYPE[,machine-type=MACHINE_TYPE...][,rank=RANK][,min-cpu-platform=MIN_CPU_PLATFORM]
-        Named selection of machine types with an optional rank and minimum CPU
-        platform. For example,
-        --instance-selection="name=instance-selection-1,machine-type=e2-standard-8,machine-type=t2d-standard-8,rank=0,min-cpu-platform=MIN_CPU_PLATFORM"
-
-     --instance-selection-machine-types=[MACHINE_TYPE,...]
-        Machine types that are used to create VMs. If not provided, the machine
-        type specified in the instance template is used.
 
      --list-managed-instances-results=MODE
         Pagination behavior for the group's listManagedInstances API method.
@@ -348,9 +339,9 @@ OPTIONAL FLAGS
             become available to create all VMs.
          individual
             (Default) MIG creates VMs individually. If the MIG cannot create
-            any VM to meet the specified ``size``, then the MIG creates the VMs
-            for which resources are available. The MIG then attempts to create
-            the remaining VMs until the resources become available.
+            all VMs to meet the specified ``size``, then it creates VMs for
+            which resources are available and continues to attempt to create
+            the remaining ones until the target size is met.
 
      --workload-policy=WORKLOAD_POLICY
         Specifies the workload policy for the managed instance group. It can be
@@ -383,6 +374,31 @@ OPTIONAL FLAGS
           in this group.
 
           HttpsHealthCheck is deprecated. Use --health-check instead.
+
+     At most one of these can be specified:
+
+       --instance-flexibility-policy=[INSTANCE_FLEXIBILITY_POLICY,...]
+          Instance flexibility configuration containing the named selections of
+          machine types with optional ranks. This flag can contain multiple
+          instance selections. Use this flag to specify additional instance
+          overrides, such as minimum CPU platform and disks. For example,
+          --instance-flexibility-policy={"instanceSelections":{"instance-selection-1":{"rank":1,"machineTypes":["e2-standard-8","n1-standard-1"],"minCpuPlatform":"MIN_CPU_PLATFORM"
+          ,"disks":[{"deviceName":"disk-name","boot":true}]},{"instance-selection-2":{"rank":2,"machineTypes":["n1-standard-2"]}}}}
+
+          Instead of --instance-flexibility-policy flag, you can also use one
+          of the following flags to specify instance selections.
+
+       Or at least one of these can be specified:
+
+         --instance-selection=name=NAME,machine-type=MACHINE_TYPE[,machine-type=MACHINE_TYPE...][,rank=RANK]
+            Named selection of machine types with optional rank. Repeat this
+            flag for each selection of instances. You can use this flag for
+            overriding minimum CPU platform but not disks. For example,
+            --instance-selection="name=instance-selection-1,machine-type=e2-standard-8,machine-type=t2d-standard-8,rank=0,min-cpu-platform=MIN_CPU_PLATFORM"
+
+         --instance-selection-machine-types=[MACHINE_TYPE,...]
+            A single selection of machine types. If not provided, the machine
+            type specified in the instance template is used.
 
      At most one of these can be specified:
 

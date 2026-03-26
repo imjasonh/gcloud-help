@@ -11,10 +11,17 @@ SYNOPSIS
         [--ca-certificate=CA_CERTIFICATE : --ssl-type=SSL_TYPE
           --client-certificate=CLIENT_CERTIFICATE --private-key=PRIVATE_KEY]
         [--host=HOST --port=PORT
-          : --database=DATABASE --username=USERNAME (--password=PASSWORD
-          | --prompt-for-password)]
-        [--psc-service-attachment=PSC_SERVICE_ATTACHMENT
-          | --static-ip-connectivity] [GCLOUD_WIDE_FLAG ...]
+          : --database=DATABASE --enable-iam-authentication
+          | --username=USERNAME (--password=PASSWORD | --prompt-for-password)]
+        [--private-connection=PRIVATE_CONNECTION
+          | --psc-service-attachment=PSC_SERVICE_ATTACHMENT
+          | --static-ip-connectivity
+          | [--forward-ssh-hostname=FORWARD_SSH_HOSTNAME
+          --forward-ssh-username=FORWARD_SSH_USERNAME
+          (--forward-ssh-password=FORWARD_SSH_PASSWORD
+          | --forward-ssh-private-key=FORWARD_SSH_PRIVATE_KEY)
+          : --forward-ssh-port=FORWARD_SSH_PORT; default=22]]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Create a Database Migration Service connection profile for PostgreSQL.
@@ -149,25 +156,56 @@ FLAGS
 
      At most one of these can be specified:
 
-       --username=USERNAME
-          Username that Database Migration Service uses to connect to the
-          database. Database Migration Service encrypts the value when storing
-          it.
+       --enable-iam-authentication
+          Use IAM database authentication to connect to the database. The
+          username will be overridden by the DMS service agent principal. This
+          flag is only supported for PostgreSQL Destinations.
 
-          This flag argument must be specified if any of the other arguments in
-          this group are specified.
+       Or at least one of these can be specified:
 
-       Exactly one of these must be specified:
+         --username=USERNAME
+            Username that Database Migration Service uses to connect to the
+            database. Database Migration Service encrypts the value when
+            storing it.
 
-         --password=PASSWORD
-            Password for the user that Database Migration Service uses to
-            connect to the database. Database Migration Service encrypts the
-            value when storing it, and the field is not returned on request.
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
 
-         --prompt-for-password
-            Prompt for the password used to connect to the database.
+         Exactly one of these must be specified:
+
+           --password=PASSWORD
+              Password for the user that Database Migration Service uses to
+              connect to the database. Database Migration Service encrypts the
+              value when storing it, and the field is not returned on request.
+
+           --prompt-for-password
+              Prompt for the password used to connect to the database.
 
      At most one of these can be specified:
+
+         Private connection resource - Resource ID of the private connection.
+         This represents a Cloud resource. (NOTE) Some attributes are not given
+         arguments in this group but can be set in other ways.
+
+         To set the project attribute:
+         ▸ provide the argument --private-connection on the command line with
+           a fully specified name;
+         ▸ provide the argument --project on the command line;
+         ▸ set the property core/project.
+
+       To set the region attribute:
+        ▸ provide the argument --private-connection on the command line with
+          a fully specified name;
+        ▸ provide the argument --region on the command line.
+
+         --private-connection=PRIVATE_CONNECTION
+            ID of the private_connection or fully qualified identifier for the
+            private_connection.
+
+            To set the private_connection attribute:
+         ▸ provide the argument --private-connection on the command line.
+
+       Or at least one of these can be specified:
 
          Service attachment resource - Resource ID of the service attachment.
          This represents a Cloud resource. (NOTE) Some attributes are not given
@@ -193,6 +231,31 @@ FLAGS
 
        --static-ip-connectivity
           use static ip connectivity
+
+       Or at least one of these can be specified:
+
+         --forward-ssh-hostname=FORWARD_SSH_HOSTNAME
+            Hostname for the SSH tunnel.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --forward-ssh-username=FORWARD_SSH_USERNAME
+            Username for the SSH tunnel.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --forward-ssh-port=FORWARD_SSH_PORT; default=22
+            Port for the SSH tunnel, default value is 22.
+
+         Exactly one of these must be specified:
+
+           --forward-ssh-password=FORWARD_SSH_PASSWORD
+              SSH password.
+
+           --forward-ssh-private-key=FORWARD_SSH_PRIVATE_KEY
+              SSH private key..
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

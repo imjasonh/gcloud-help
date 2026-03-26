@@ -13,10 +13,13 @@ SYNOPSIS
         [--layer7-ddos-defense-auto-deploy-load-threshold=LAYER7_DDOS_DEFENSE_AUTO_DEPLOY_LOAD_THRESHOLD]
         [--layer7-ddos-defense-rule-visibility=VISIBILITY_TYPE]
         [--log-level=LOG_LEVEL]
+        [--network-ddos-adaptive-protection=NETWORK_DDOS_ADAPTIVE_PROTECTION]
         [--network-ddos-protection=NETWORK_DDOS_PROTECTION]
         [--recaptcha-redirect-site-key=RECAPTCHA_REDIRECT_SITE_KEY]
         [--request-body-inspection-size=REQUEST_BODY_INSPECTION_SIZE]
         [--user-ip-request-headers=[USER_IP_REQUEST_HEADER,...]]
+        [--clear-network-ddos-impacted-baseline-threshold
+          | --network-ddos-impacted-baseline-threshold=NETWORK_DDOS_IMPACTED_BASELINE_THRESHOLD]
         [--global | --region=REGION] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -75,6 +78,11 @@ FLAGS
         The level of detail to display for WAF logging. LOG_LEVEL must be one
         of: NORMAL, VERBOSE.
 
+     --network-ddos-adaptive-protection=NETWORK_DDOS_ADAPTIVE_PROTECTION
+        The DDoS adaptive protection level for network load balancing and
+        instances with external IPs. NETWORK_DDOS_ADAPTIVE_PROTECTION must be
+        one of: DISABLED, ENABLED, PREVIEW.
+
      --network-ddos-protection=NETWORK_DDOS_PROTECTION
         The DDoS protection level for network load balancing and instances with
         external IPs. NETWORK_DDOS_PROTECTION must be one of: STANDARD,
@@ -91,6 +99,29 @@ FLAGS
      --user-ip-request-headers=[USER_IP_REQUEST_HEADER,...]
         A comma-separated list of request header names to use for resolving the
         caller's user IP address.
+
+     At most one of these can be specified:
+
+       --clear-network-ddos-impacted-baseline-threshold
+          If provided, clears the Network DDoS impacted baseline threshold from
+          the security policy.
+
+       --network-ddos-impacted-baseline-threshold=NETWORK_DDOS_IMPACTED_BASELINE_THRESHOLD
+          DDoS Protection for Network Load Balancers (and VMs with public IPs)
+          builds DDoS mitigations that minimize collateral damage. It
+          quantifies this as the fraction of a non-abuse baseline that's
+          inadvertently blocked. Rules whose collateral damage exceeds
+          ddosImpactedBaselineThreshold will not be deployed. Using a lower
+          value will prioritize keeping collateral damage low, possibly at the
+          cost of its effectiveness in rate limiting some or all of the attack.
+          It should typically be unset, so Advanced DDoS (and Adaptive
+          Protection) uses the best mitigation it can find. Setting the
+          threshold is advised if there are logs for false positive detections
+          with high collateral damage, and will cause Advanced DDoS to attempt
+          to find a less aggressive rule that satisfies the constraint. If a
+          suitable rule cannot be found, the system falls back to either no
+          mitigation for smaller attacks or broader network throttles for
+          larger ones.
 
      At most one of these can be specified:
 

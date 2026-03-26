@@ -82,7 +82,7 @@ SYNOPSIS
         [--scopes=[SCOPE,...] | --no-scopes]
         [--service-account=SERVICE_ACCOUNT | --no-service-account]
         [--service-proxy=[enabled],[intercept-all-outbound-traffic],
-          [intercept-dns],[access-log=ACCESS-LOG],
+          [intercept-dns],[use-regional-control-plane],[access-log=ACCESS-LOG],
           [exclude-outbound-ip-ranges=EXCLUDE-OUTBOUND-IP-RANGES],
           [exclude-outbound-port-ranges=EXCLUDE-OUTBOUND-PORT-RANGES],
           [mesh=MESH],[network=NETWORK],[project-number=PROJECT-NUMBER],
@@ -874,8 +874,12 @@ FLAGS
         instances can not be restarted and will not migrate.
 
      --preemption-notice-duration=PREEMPTION_NOTICE_DURATION
-        Specifies the metadata preemption notice duration before the ACPI G2
-        soft off signal is triggered for Spot VMs. e.g. 120s.
+        Only allowed with --provisioning-model=SPOT. If provided, the
+        preemption notice will be triggered PREEMPTION_NOTICE_DURATION seconds
+        before the ACPI G2 soft off signal. Valid values for
+        PREEMPTION_NOTICE_DURATION are [0s,120s]; for example, specify 120s for
+        120 seconds. Otherwise, if this flag is omitted (default), there will
+        be no wait time before the ACPI G2 soft off signal is triggered.
 
      --private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE
         The private IPv6 Google access type for the VM.
@@ -1374,7 +1378,7 @@ FLAGS
        --no-service-account
           Create instance without service account
 
-     --service-proxy=[enabled],[intercept-all-outbound-traffic],[intercept-dns],[access-log=ACCESS-LOG],[exclude-outbound-ip-ranges=EXCLUDE-OUTBOUND-IP-RANGES],[exclude-outbound-port-ranges=EXCLUDE-OUTBOUND-PORT-RANGES],[mesh=MESH],[network=NETWORK],[project-number=PROJECT-NUMBER],[proxy-port=PROXY-PORT],[scope=SCOPE],[serving-ports=SERVING-PORTS],[source=SOURCE],[tracing=TRACING]
+     --service-proxy=[enabled],[intercept-all-outbound-traffic],[intercept-dns],[use-regional-control-plane],[access-log=ACCESS-LOG],[exclude-outbound-ip-ranges=EXCLUDE-OUTBOUND-IP-RANGES],[exclude-outbound-port-ranges=EXCLUDE-OUTBOUND-PORT-RANGES],[mesh=MESH],[network=NETWORK],[project-number=PROJECT-NUMBER],[proxy-port=PROXY-PORT],[scope=SCOPE],[serving-ports=SERVING-PORTS],[source=SOURCE],[tracing=TRACING]
         Controls whether the Traffic Director service proxy (Envoy) and agent
         are installed and configured on the VM. "cloud-platform" scope is
         enabled automatically to allow connections to the Traffic Director API.

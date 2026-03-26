@@ -4,10 +4,14 @@ NAME
 SYNOPSIS
     gcloud beta vector-search collections indexes create
         (INDEX : --collection=COLLECTION --location=LOCATION)
-        --index-field=INDEX_FIELD [--async] [--description=DESCRIPTION]
-        [--display-name=DISPLAY_NAME] [--distance-metric=DISTANCE_METRIC]
+        --index-field=INDEX_FIELD [--async]
+        [--dense-scann-feature-norm-type=DENSE_SCANN_FEATURE_NORM_TYPE]
+        [--description=DESCRIPTION] [--display-name=DISPLAY_NAME]
+        [--distance-metric=DISTANCE_METRIC]
         [--filter-fields=[FILTER_FIELDS,...]] [--labels=[LABELS,...]]
         [--request-id=REQUEST_ID] [--store-fields=[STORE_FIELDS,...]]
+        [--dedicated-infrastructure-mode=DEDICATED_INFRASTRUCTURE_MODE
+          --dedicated-infrastructure-autoscaling-spec-max-replica-count=DEDICATED_INFRASTRUCTURE_AUTOSCALING_SPEC_MAX_REPLICA_COUNT --dedicated-infrastructure-autoscaling-spec-min-replica-count=DEDICATED_INFRASTRUCTURE_AUTOSCALING_SPEC_MIN_REPLICA_COUNT]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -80,6 +84,18 @@ OPTIONAL FLAGS
         Return immediately, without waiting for the operation in progress to
         complete.
 
+     Arguments for the index type.
+
+     Dense ScaNN index configuration.
+
+     --dense-scann-feature-norm-type=DENSE_SCANN_FEATURE_NORM_TYPE
+        Feature norm type. DENSE_SCANN_FEATURE_NORM_TYPE must be one of:
+
+         none
+            No norm applied.
+         unit-l2-norm
+            Unit L2 norm.
+
      --description=DESCRIPTION
         User-specified description of the index
 
@@ -139,6 +155,33 @@ OPTIONAL FLAGS
      --store-fields=[STORE_FIELDS,...]
         The fields to push into the index to enable inline data retrieval.
 
+     Arguments for the infra type.
+
+     Represents dedicated infrastructure for the index.
+
+     Arguments for the mode.
+
+     --dedicated-infrastructure-mode=DEDICATED_INFRASTRUCTURE_MODE
+        Mode of the dedicated infrastructure. DEDICATED_INFRASTRUCTURE_MODE
+        must be one of:
+
+         performance-optimized
+            This is Performance optimized on E2 or equivalent family.
+         storage-optimized
+            This is storage optimized variation.
+
+     Specification for autoscaling.
+
+     --dedicated-infrastructure-autoscaling-spec-max-replica-count=DEDICATED_INFRASTRUCTURE_AUTOSCALING_SPEC_MAX_REPLICA_COUNT
+        The maximum number of replicas. Must be >= min_replica_count and <=
+        1000. For the v1beta version, if not set or set to 0, defaults to the
+        greater of min_replica_count and 5. For all other versions, if not set
+        or set to 0, defaults to the greater of min_replica_count and 2.
+
+     --dedicated-infrastructure-autoscaling-spec-min-replica-count=DEDICATED_INFRASTRUCTURE_AUTOSCALING_SPEC_MIN_REPLICA_COUNT
+        The minimum number of replicas. If not set or set to 0, defaults to 2.
+        Must be >= 1 and <= 1000.
+
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,
     --billing-project, --configuration, --flags-file, --flatten, --format,
@@ -153,5 +196,8 @@ API REFERENCE
     https://docs.cloud.google.com/vertex-ai/docs/vector-search-2/overview
 
 NOTES
-    This command is currently in beta and might change without notice.
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud vector-search collections indexes create
 

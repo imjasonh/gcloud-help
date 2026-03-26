@@ -2,20 +2,24 @@ NAME
     gcloud alpha lustre instances create - creates a Managed Lustre instance
 
 SYNOPSIS
-    gcloud alpha lustre instances create INSTANCE --capacity-gib=CAPACITY_GIB
-        --filesystem=FILESYSTEM --network=NETWORK [--async]
-        [--description=DESCRIPTION] [--gke-support-enabled] [--kms-key=KMS_KEY]
-        [--labels=[LABELS,...]] [--location=LOCATION]
+    gcloud alpha lustre instances create (INSTANCE : --location=LOCATION)
+        --capacity-gib=CAPACITY_GIB --filesystem=FILESYSTEM --network=NETWORK
+        [--async] [--description=DESCRIPTION]
+        [--dynamic-tier-options-mode=DYNAMIC_TIER_OPTIONS_MODE]
+        [--gke-support-enabled] [--kms-key=KMS_KEY] [--labels=[LABELS,...]]
         [--per-unit-storage-throughput=PER_UNIT_STORAGE_THROUGHPUT]
         [--placement-policy=PLACEMENT_POLICY] [--request-id=REQUEST_ID]
-        [--source-backup=SOURCE_BACKUP]
         [[--default-squash-mode=DEFAULT_SQUASH_MODE
           : --access-rules=[accessMode=ACCESSMODE],
           [ipAddressRanges=IPADDRESSRANGES],
           [mountableSubdirectories=MOUNTABLESUBDIRECTORIES],[name=NAME],
           [squashGid=SQUASHGID],[squashMode=SQUASHMODE],[squashUid=SQUASHUID]
           --default-squash-gid=DEFAULT_SQUASH_GID
-          --default-squash-uid=DEFAULT_SQUASH_UID]] [GCLOUD_WIDE_FLAG ...]
+          --default-squash-uid=DEFAULT_SQUASH_UID]]
+        [[--maintenance-policy-weekly-windows=[dayOfWeek=DAYOFWEEK],
+          [startTime=STARTTIME]
+          : --maintenance-policy-exclusion-window=[endDate=ENDDATE],
+          [startDate=STARTDATE],[time=TIME]]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Creates a Managed Lustre instance.
@@ -30,20 +34,16 @@ EXAMPLES
             --filesystem=lustrefs --per-unit-storage-throughput=1000
 
 POSITIONAL ARGUMENTS
-     Instance resource - Identifier. The name of the instance. This represents
-     a Cloud resource. (NOTE) Some attributes are not given arguments in this
-     group but can be set in other ways.
+     Instance resource - Identifier. The name of the instance. The arguments in
+     this group can be used to specify the attributes of this resource. (NOTE)
+     Some attributes are not given arguments in this group but can be set in
+     other ways.
 
      To set the project attribute:
       ◆ provide the argument instance on the command line with a fully
         specified name;
       ◆ provide the argument --project on the command line;
       ◆ set the property core/project.
-
-     To set the location attribute:
-      ◆ provide the argument instance on the command line with a fully
-        specified name;
-      ◆ provide the argument --location on the command line.
 
      This must be specified.
 
@@ -52,6 +52,17 @@ POSITIONAL ARGUMENTS
 
           To set the instance attribute:
           ▸ provide the argument instance on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          The location id of the instance resource.
+
+          To set the location attribute:
+          ▸ provide the argument instance on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line.
 
 REQUIRED FLAGS
      --capacity-gib=CAPACITY_GIB
@@ -95,6 +106,17 @@ OPTIONAL FLAGS
      --description=DESCRIPTION
         A user-readable description of the instance.
 
+     Dynamic tier options for a Managed Lustre instance.
+
+     --dynamic-tier-options-mode=DYNAMIC_TIER_OPTIONS_MODE
+        The dynamic tier mode of the instance. DYNAMIC_TIER_OPTIONS_MODE must
+        be one of:
+
+         default-cache
+            The dynamic tier is enabled with a default cache configuration.
+         disabled
+            The dynamic tier is explicitly disabled.
+
      --gke-support-enabled
         Indicates whether you want to enable support for GKE clients. By
         default, GKE clients are not supported. Deprecated. No longer required
@@ -130,11 +152,6 @@ OPTIONAL FLAGS
 
             --labels=path_to_file.(yaml|json)
 
-     --location=LOCATION
-        For resources [instance, source-backup], provides fallback value for
-        resource location attribute. When the resource's full URI path is not
-        provided, location will fallback to this flag value.
-
      --per-unit-storage-throughput=PER_UNIT_STORAGE_THROUGHPUT
         The throughput of the instance in MBps per TiB. Valid values are 125,
         250, 500, 1000. See Performance tiers and maximum storage capacities
@@ -159,31 +176,6 @@ OPTIONAL FLAGS
 
         The request ID must be a valid UUID with the exception that zero UUID
         is not supported (00000000-0000-0000-0000-000000000000).
-
-     Arguments for the source backup.
-
-     Backup resource - The source backup used to create the instance. Only set
-     this field if the instance is being created from a backup. Format:
-     projects/{project}/locations/{location}/backups/{backup} This represents a
-     Cloud resource. (NOTE) Some attributes are not given arguments in this
-     group but can be set in other ways.
-
-     To set the project attribute:
-      ◆ provide the argument --source-backup on the command line with a fully
-        specified name;
-      ◆ provide the argument --project on the command line;
-      ◆ set the property core/project.
-
-     To set the location attribute:
-      ◆ provide the argument --source-backup on the command line with a fully
-        specified name;
-      ◆ provide the argument --location on the command line.
-
-     --source-backup=SOURCE_BACKUP
-        ID of the backup or fully qualified identifier for the backup.
-
-        To set the backup attribute:
-        ◆ provide the argument --source-backup on the command line.
 
      IP-based access rules for the Managed Lustre instance. These options
      define the root user squash configuration.
@@ -289,6 +281,126 @@ OPTIONAL FLAGS
         applies to all root users connecting from clients that are not matched
         by any of the access rules. If not set, the default is 0 (no UID
         squash).
+
+     Defines a maintenance policy for a resource.
+
+     --maintenance-policy-weekly-windows=[dayOfWeek=DAYOFWEEK],[startTime=STARTTIME]
+        Required, The weekly maintenance windows for the instance. Currently
+        limited to 1 window.
+
+         dayOfWeek
+            Day of the week for the maintenance window.
+
+         startTime
+            Start time of the maintenance window in UTC time zone.
+
+             hours
+                Hours of a day in 24 hour format. Must be greater than or equal
+                to 0 and typically must be less than or equal to 23. An API may
+                choose to allow the value "24:00:00" for scenarios like
+                business closing time.
+
+             minutes
+                Minutes of an hour. Must be greater than or equal to 0 and less
+                than or equal to 59.
+
+             nanos
+                Fractions of seconds, in nanoseconds. Must be greater than or
+                equal to 0 and less than or equal to 999,999,999.
+
+             seconds
+                Seconds of a minute. Must be greater than or equal to 0 and
+                typically must be less than or equal to 59. An API may allow
+                the value 60 if it allows leap-seconds.
+
+        Shorthand Example:
+
+            --maintenance-policy-weekly-windows=dayOfWeek=string,startTime={hours=int,minutes=int,nanos=int,seconds=int} --maintenance-policy-weekly-windows=dayOfWeek=string,startTime={hours=int,minutes=int,nanos=int,seconds=int}
+
+        JSON Example:
+
+            --maintenance-policy-weekly-windows='[{"dayOfWeek": "string", "startTime": {"hours": int, "minutes": int, "nanos": int, "seconds": int}}]'
+
+        File Example:
+
+            --maintenance-policy-weekly-windows=path_to_file.(yaml|json)
+
+        This flag argument must be specified if any of the other arguments in
+        this group are specified.
+
+     --maintenance-policy-exclusion-window=[endDate=ENDDATE],[startDate=STARTDATE],[time=TIME]
+        The exclusion windows for the instance. Currently limited to 1 window.
+
+         endDate
+            End date of the exclusion period in UTC time zone. This date is
+            inclusive.
+
+             day
+                Day of a month. Must be from 1 to 31 and valid for the year and
+                month, or 0 to specify a year by itself or a year and month
+                where the day isn't significant.
+
+             month
+                Month of a year. Must be from 1 to 12, or 0 to specify a year
+                without a month and day.
+
+             year
+                Year of the date. Must be from 1 to 9999, or 0 to specify a
+                date without a year.
+
+         startDate
+            Start date of the exclusion period in UTC time zone. This date is
+            inclusive.
+
+             day
+                Day of a month. Must be from 1 to 31 and valid for the year and
+                month, or 0 to specify a year by itself or a year and month
+                where the day isn't significant.
+
+             month
+                Month of a year. Must be from 1 to 12, or 0 to specify a year
+                without a month and day.
+
+             year
+                Year of the date. Must be from 1 to 9999, or 0 to specify a
+                date without a year.
+
+         time
+            Time in UTC when the exclusion window starts on start_date and ends
+            on end_date. This can be:
+            ▸ Full time OR
+            ▸ All zeros for 00:00:00 UTC.
+
+             hours
+                Hours of a day in 24 hour format. Must be greater than or equal
+                to 0 and typically must be less than or equal to 23. An API may
+                choose to allow the value "24:00:00" for scenarios like
+                business closing time.
+
+             minutes
+                Minutes of an hour. Must be greater than or equal to 0 and less
+                than or equal to 59.
+
+             nanos
+                Fractions of seconds, in nanoseconds. Must be greater than or
+                equal to 0 and less than or equal to 999,999,999.
+
+             seconds
+                Seconds of a minute. Must be greater than or equal to 0 and
+                typically must be less than or equal to 59. An API may allow
+                the value 60 if it allows leap-seconds.
+
+        Shorthand Example:
+
+            --maintenance-policy-exclusion-window=endDate={day=int,month=int,year=int},startDate={day=int,month=int,year=int},time={hours=int,minutes=int,nanos=int,seconds=int} --maintenance-policy-exclusion-window=endDate={day=int,month=int,year=int},startDate={day=int,month=int,year=int},time={hours=int,minutes=int,nanos=int,seconds=int}
+
+        JSON Example:
+
+            --maintenance-policy-exclusion-window='[{"endDate": {"day": int, "month": int, "year": int}, "startDate": {"day": int, "month": int, "year": int}, "time": {"hours": int, "minutes": int, "nanos": int, "seconds": int}}]'
+
+        File Example:
+
+            --maintenance-policy-exclusion-window=path_to_file.(yaml|json)
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

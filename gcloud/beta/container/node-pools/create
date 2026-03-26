@@ -20,6 +20,7 @@ SYNOPSIS
         [--boot-disk-provisioned-iops=BOOT_DISK_PROVISIONED_IOPS]
         [--boot-disk-provisioned-throughput=BOOT_DISK_PROVISIONED_THROUGHPUT]
         [--cluster=CLUSTER] [--confidential-node-type=CONFIDENTIAL_NODE_TYPE]
+        [--consolidation-delay=CONSOLIDATION_DELAY]
         [--containerd-config-from-file=PATH_TO_FILE]
         [--data-cache-count=DATA_CACHE_COUNT]
         [--disable-pod-cidr-overprovision] [--disk-size=DISK_SIZE]
@@ -238,6 +239,13 @@ FLAGS
         Nodes will create nodes using Confidential VM
         https://docs.cloud.google.com/compute/docs/about-confidential-vm.
         CONFIDENTIAL_NODE_TYPE must be one of: sev, sev_snp, tdx, disabled.
+
+     --consolidation-delay=CONSOLIDATION_DELAY
+        Set the duration after which the Cluster Autoscaler can scale down
+        underutilized nodes.
+
+            $ gcloud beta container node-pools create node-pool-1 \
+                --cluster=example-cluster --consolidation-delay=3600s
 
      --containerd-config-from-file=PATH_TO_FILE
         Path of the YAML file that contains containerd configuration entries
@@ -836,7 +844,11 @@ FLAGS
               topologyManager:
                 policy: BestEffort
                 scope: pod
+              crashLoopBackOff:
+                maxContainerRestartPeriod: '300s'
             linuxConfig:
+              accurateTimeConfig:
+                enablePtpKvmTimeSync: true
               sysctl:
                 net.core.somaxconn: '2048'
                 net.ipv4.tcp_rmem: '4096 87380 6291456'
@@ -916,6 +928,8 @@ FLAGS
           singleProcessOomKill                    true or false
           maxParallelImagePulls                   integer (The value must be
                                                   between [2, 5].)
+          crashLoopBackOff                        specify crashloopbackoff
+                                                  thresholds
 
         List of supported keys in memoryManager in 'kubeletConfig'.
 
@@ -1014,6 +1028,16 @@ FLAGS
                                      minimum reclaim threshold for pid
                                      available. The value must be positive and
                                      no more than 10%.)
+
+        List of supported keys in crashLoopBackOff in 'kubeletConfig'.
+
+          KEY                                         VALUE
+          maxContainerRestartPeriod                   duration (e.g., '30s',
+                                                      '1m'. The maximum duration
+                                                      the backoff delay can
+                                                      accrue to for container
+                                                      restarts. The value must
+                                                      be between [1s, 300s].)
 
         List of supported sysctls in 'linuxConfig'.
 
@@ -1141,6 +1165,11 @@ FLAGS
                                                               [10, 3000]
           vm.min_free_kbytes                                  Must be between
                                                               [67584, 1048576]
+
+        List of supported keys in 'accurateTimeConfig' under 'linuxConfig'.
+
+          KEY                                         VALUE
+          enablePtpKvmTimeSync                        boolean
 
         List of supported hugepage size in 'hugepageConfig'.
 

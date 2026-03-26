@@ -1,0 +1,523 @@
+NAME
+    gcloud apihub deployments create - create a Deployment
+
+SYNOPSIS
+    gcloud apihub deployments create (DEPLOYMENT : --location=LOCATION)
+        --display-name=DISPLAY_NAME --endpoints=[ENDPOINTS,...]
+        --resource-uri=RESOURCE_URI
+        (--deployment-type-enum-values=[description=DESCRIPTION],
+          [displayName=DISPLAYNAME],[id=ID],[immutable=IMMUTABLE]
+          | --deployment-type-json-values=[DEPLOYMENT_TYPE_JSON_VALUES,...]
+          | --deployment-type-string-values=[DEPLOYMENT_TYPE_STRING_VALUES,...]
+          | --deployment-type-uri-values=[DEPLOYMENT_TYPE_URI_VALUES,...])
+        [--attributes=[ATTRIBUTES,...]] [--description=DESCRIPTION]
+        [--documentation-external-uri=DOCUMENTATION_EXTERNAL_URI]
+        [--source-environment=SOURCE_ENVIRONMENT]
+        [--source-project=SOURCE_PROJECT]
+        [--environment-enum-values=[description=DESCRIPTION],
+          [displayName=DISPLAYNAME],[id=ID],[immutable=IMMUTABLE]
+          | --environment-json-values=[ENVIRONMENT_JSON_VALUES,...]
+          | --environment-string-values=[ENVIRONMENT_STRING_VALUES,...]
+          | --environment-uri-values=[ENVIRONMENT_URI_VALUES,...]]
+        [--management-url-enum-values=[description=DESCRIPTION],
+          [displayName=DISPLAYNAME],[id=ID],[immutable=IMMUTABLE]
+          | --management-url-json-values=[MANAGEMENT_URL_JSON_VALUES,...]
+          | --management-url-string-values=[MANAGEMENT_URL_STRING_VALUES,...]
+          | --management-url-uri-values=[MANAGEMENT_URL_URI_VALUES,...]]
+        [--slo-enum-values=[description=DESCRIPTION],
+          [displayName=DISPLAYNAME],[id=ID],[immutable=IMMUTABLE]
+          | --slo-json-values=[SLO_JSON_VALUES,...]
+          | --slo-string-values=[SLO_STRING_VALUES,...]
+          | --slo-uri-values=[SLO_URI_VALUES,...]]
+        [--source-uri-enum-values=[description=DESCRIPTION],
+          [displayName=DISPLAYNAME],[id=ID],[immutable=IMMUTABLE]
+          | --source-uri-json-values=[SOURCE_URI_JSON_VALUES,...]
+          | --source-uri-string-values=[SOURCE_URI_STRING_VALUES,...]
+          | --source-uri-values=[SOURCE_URI_VALUES,...]] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Create a deployment
+
+EXAMPLES
+    To create a deployment with the ID my-deployment, run:
+
+        $ gcloud apihub deployments create --deployment=my-deployment \
+            --display-name="My Deployment" --deployment-type=apigee \
+            --project=my-project --location=us-central1
+
+POSITIONAL ARGUMENTS
+     Deployment resource - Identifier. The name of the deployment.
+
+     Format: projects/{project}/locations/{location}/deployments/{deployment}
+     The arguments in this group can be used to specify the attributes of this
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument deployment on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       DEPLOYMENT
+          ID of the deployment or fully qualified identifier for the
+          deployment.
+
+          To set the deployment attribute:
+          ▸ provide the argument deployment on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          The location id of the deployment resource.
+
+          To set the location attribute:
+          ▸ provide the argument deployment on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line.
+
+REQUIRED FLAGS
+     --display-name=DISPLAY_NAME
+        The display name of the deployment.
+
+     --endpoints=[ENDPOINTS,...]
+        The endpoints at which this deployment resource is listening for API
+        requests. This could be a list of complete URIs, hostnames or an IP
+        addresses.
+
+     --resource-uri=RESOURCE_URI
+        The resource URI identifies the deployment within its gateway. For
+        Apigee gateways, its recommended to use the format:
+        organizations/{org}/environments/{env}/apis/{api}. For ex: if a proxy
+        with name orders is deployed in staging environment of cymbal
+        organization, the resource URI would be:
+        organizations/cymbal/environments/staging/apis/orders.
+
+     The attribute values associated with resource.
+
+     This must be specified.
+
+       Arguments for the Value.
+
+       At most one of these can be specified:
+
+         The attribute values of data type enum.
+
+         --deployment-type-enum-values=[description=DESCRIPTION],[displayName=DISPLAYNAME],[id=ID],[immutable=IMMUTABLE]
+            Required, The attribute values in case attribute data type is enum.
+
+             description
+                The detailed description of the allowed value.
+
+             displayName
+                The display name of the allowed value.
+
+             id
+                The ID of the allowed value.
+                ◇ If provided, the same will be used. The service will throw
+                  an error if the specified id is already used by another
+                  allowed value in the same attribute resource.
+                ◇ If not provided, a system generated id derived from the
+                  display name will be used. In this case, the service will
+                  handle conflict resolution by adding a system generated
+                  suffix in case of duplicates.
+
+                This value should be 4-63 characters, and valid characters are
+                /[a-z][0-9]-/.
+
+             immutable
+                When set to true, the allowed value cannot be updated or
+                deleted by the user. It can only be true for System defined
+                attributes.
+
+            Shorthand Example:
+
+                --deployment-type-enum-values=description=string,displayName=string,id=string,immutable=boolean --deployment-type-enum-values=description=string,displayName=string,id=string,immutable=boolean
+
+            JSON Example:
+
+                --deployment-type-enum-values='[{"description": "string", "displayName": "string", "id": "string", "immutable": boolean}]'
+
+            File Example:
+
+                --deployment-type-enum-values=path_to_file.(yaml|json)
+
+         The attribute values of data type string or JSON.
+
+         --deployment-type-json-values=[DEPLOYMENT_TYPE_JSON_VALUES,...]
+            The attribute values in case attribute data type is string or JSON.
+
+         The attribute values of data type string or JSON.
+
+         --deployment-type-string-values=[DEPLOYMENT_TYPE_STRING_VALUES,...]
+            The attribute values in case attribute data type is string or JSON.
+
+         The attribute values of data type string or JSON.
+
+         --deployment-type-uri-values=[DEPLOYMENT_TYPE_URI_VALUES,...]
+            The attribute values in case attribute data type is string or JSON.
+
+OPTIONAL FLAGS
+     --attributes=[ATTRIBUTES,...]
+        The list of user defined attributes associated with the deployment
+        resource. The key is the attribute name. It will be of the format:
+        projects/{project}/locations/{location}/attributes/{attribute}. The
+        value is the attribute values associated with the resource.
+
+         KEY
+            Sets KEY value.
+
+         VALUE
+            Sets VALUE value.
+
+             enumValues
+                The attribute values associated with a resource in case
+                attribute data type is enum.
+
+                 values
+                    The attribute values in case attribute data type is enum.
+
+                     description
+                        The detailed description of the allowed value.
+
+                     displayName
+                        The display name of the allowed value.
+
+                     id
+                        The ID of the allowed value.
+                        ▹ If provided, the same will be used. The service
+                          will throw an error if the specified id is already
+                          used by another allowed value in the same attribute
+                          resource.
+                        ▹ If not provided, a system generated id derived from
+                          the display name will be used. In this case, the
+                          service will handle conflict resolution by adding a
+                          system generated suffix in case of duplicates.
+
+                        This value should be 4-63 characters, and valid
+                        characters are /[a-z][0-9]-/.
+
+                     immutable
+                        When set to true, the allowed value cannot be updated
+                        or deleted by the user. It can only be true for System
+                        defined attributes.
+
+             jsonValues
+                The attribute values associated with a resource in case
+                attribute data type is JSON.
+
+                 values
+                    The attribute values in case attribute data type is string
+                    or JSON.
+
+             stringValues
+                The attribute values associated with a resource in case
+                attribute data type is string.
+
+                 values
+                    The attribute values in case attribute data type is string
+                    or JSON.
+
+             uriValues
+                The attribute values associated with a resource in case
+                attribute data type is URL, URI or IP, like
+                gs://bucket-name/object-name.
+
+                 values
+                    The attribute values in case attribute data type is string
+                    or JSON.
+
+        Shorthand Example:
+
+            --attributes=string={enumValues={values=[{description=string,displayName=string,id=string,immutable=boolean}]},jsonValues={values=[string]},stringValues={values=[string]},uriValues={values=[string]}}
+
+        JSON Example:
+
+            --attributes='{"string": {"enumValues": {"values": [{"description": "string", "displayName": "string", "id": "string", "immutable": boolean}]}, "jsonValues": {"values": ["string"]}, "stringValues": {"values": ["string"]}, "uriValues": {"values": ["string"]}}}'
+
+        File Example:
+
+            --attributes=path_to_file.(yaml|json)
+
+     --description=DESCRIPTION
+        The description of the deployment.
+
+     Documentation details.
+
+     --documentation-external-uri=DOCUMENTATION_EXTERNAL_URI
+        The uri of the externally hosted documentation.
+
+     --source-environment=SOURCE_ENVIRONMENT
+        The environment at source for the deployment. For example: prod, dev,
+        staging, etc.
+
+     --source-project=SOURCE_PROJECT
+        The project to which the deployment belongs. For Google Cloud gateways,
+        this will refer to the project identifier. For others like Edge/OPDK,
+        this will refer to the org identifier.
+
+     The attribute values associated with resource.
+
+     Arguments for the Value.
+
+     At most one of these can be specified:
+
+       The attribute values of data type enum.
+
+       --environment-enum-values=[description=DESCRIPTION],[displayName=DISPLAYNAME],[id=ID],[immutable=IMMUTABLE]
+          Required, The attribute values in case attribute data type is enum.
+
+           description
+              The detailed description of the allowed value.
+
+           displayName
+              The display name of the allowed value.
+
+           id
+              The ID of the allowed value.
+              ▫ If provided, the same will be used. The service will throw an
+                error if the specified id is already used by another allowed
+                value in the same attribute resource.
+              ▫ If not provided, a system generated id derived from the
+                display name will be used. In this case, the service will
+                handle conflict resolution by adding a system generated suffix
+                in case of duplicates.
+
+              This value should be 4-63 characters, and valid characters are
+              /[a-z][0-9]-/.
+
+           immutable
+              When set to true, the allowed value cannot be updated or deleted
+              by the user. It can only be true for System defined attributes.
+
+          Shorthand Example:
+
+              --environment-enum-values=description=string,displayName=string,id=string,immutable=boolean --environment-enum-values=description=string,displayName=string,id=string,immutable=boolean
+
+          JSON Example:
+
+              --environment-enum-values='[{"description": "string", "displayName": "string", "id": "string", "immutable": boolean}]'
+
+          File Example:
+
+              --environment-enum-values=path_to_file.(yaml|json)
+
+       The attribute values of data type string or JSON.
+
+       --environment-json-values=[ENVIRONMENT_JSON_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+       The attribute values of data type string or JSON.
+
+       --environment-string-values=[ENVIRONMENT_STRING_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+       The attribute values of data type string or JSON.
+
+       --environment-uri-values=[ENVIRONMENT_URI_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+     The attribute values associated with resource.
+
+     Arguments for the Value.
+
+     At most one of these can be specified:
+
+       The attribute values of data type enum.
+
+       --management-url-enum-values=[description=DESCRIPTION],[displayName=DISPLAYNAME],[id=ID],[immutable=IMMUTABLE]
+          Required, The attribute values in case attribute data type is enum.
+
+           description
+              The detailed description of the allowed value.
+
+           displayName
+              The display name of the allowed value.
+
+           id
+              The ID of the allowed value.
+              ▫ If provided, the same will be used. The service will throw an
+                error if the specified id is already used by another allowed
+                value in the same attribute resource.
+              ▫ If not provided, a system generated id derived from the
+                display name will be used. In this case, the service will
+                handle conflict resolution by adding a system generated suffix
+                in case of duplicates.
+
+              This value should be 4-63 characters, and valid characters are
+              /[a-z][0-9]-/.
+
+           immutable
+              When set to true, the allowed value cannot be updated or deleted
+              by the user. It can only be true for System defined attributes.
+
+          Shorthand Example:
+
+              --management-url-enum-values=description=string,displayName=string,id=string,immutable=boolean --management-url-enum-values=description=string,displayName=string,id=string,immutable=boolean
+
+          JSON Example:
+
+              --management-url-enum-values='[{"description": "string", "displayName": "string", "id": "string", "immutable": boolean}]'
+
+          File Example:
+
+              --management-url-enum-values=path_to_file.(yaml|json)
+
+       The attribute values of data type string or JSON.
+
+       --management-url-json-values=[MANAGEMENT_URL_JSON_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+       The attribute values of data type string or JSON.
+
+       --management-url-string-values=[MANAGEMENT_URL_STRING_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+       The attribute values of data type string or JSON.
+
+       --management-url-uri-values=[MANAGEMENT_URL_URI_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+     The attribute values associated with resource.
+
+     Arguments for the Value.
+
+     At most one of these can be specified:
+
+       The attribute values of data type enum.
+
+       --slo-enum-values=[description=DESCRIPTION],[displayName=DISPLAYNAME],[id=ID],[immutable=IMMUTABLE]
+          Required, The attribute values in case attribute data type is enum.
+
+           description
+              The detailed description of the allowed value.
+
+           displayName
+              The display name of the allowed value.
+
+           id
+              The ID of the allowed value.
+              ▫ If provided, the same will be used. The service will throw an
+                error if the specified id is already used by another allowed
+                value in the same attribute resource.
+              ▫ If not provided, a system generated id derived from the
+                display name will be used. In this case, the service will
+                handle conflict resolution by adding a system generated suffix
+                in case of duplicates.
+
+              This value should be 4-63 characters, and valid characters are
+              /[a-z][0-9]-/.
+
+           immutable
+              When set to true, the allowed value cannot be updated or deleted
+              by the user. It can only be true for System defined attributes.
+
+          Shorthand Example:
+
+              --slo-enum-values=description=string,displayName=string,id=string,immutable=boolean --slo-enum-values=description=string,displayName=string,id=string,immutable=boolean
+
+          JSON Example:
+
+              --slo-enum-values='[{"description": "string", "displayName": "string", "id": "string", "immutable": boolean}]'
+
+          File Example:
+
+              --slo-enum-values=path_to_file.(yaml|json)
+
+       The attribute values of data type string or JSON.
+
+       --slo-json-values=[SLO_JSON_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+       The attribute values of data type string or JSON.
+
+       --slo-string-values=[SLO_STRING_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+       The attribute values of data type string or JSON.
+
+       --slo-uri-values=[SLO_URI_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+     The attribute values associated with resource.
+
+     Arguments for the Value.
+
+     At most one of these can be specified:
+
+       The attribute values of data type enum.
+
+       --source-uri-enum-values=[description=DESCRIPTION],[displayName=DISPLAYNAME],[id=ID],[immutable=IMMUTABLE]
+          Required, The attribute values in case attribute data type is enum.
+
+           description
+              The detailed description of the allowed value.
+
+           displayName
+              The display name of the allowed value.
+
+           id
+              The ID of the allowed value.
+              ▫ If provided, the same will be used. The service will throw an
+                error if the specified id is already used by another allowed
+                value in the same attribute resource.
+              ▫ If not provided, a system generated id derived from the
+                display name will be used. In this case, the service will
+                handle conflict resolution by adding a system generated suffix
+                in case of duplicates.
+
+              This value should be 4-63 characters, and valid characters are
+              /[a-z][0-9]-/.
+
+           immutable
+              When set to true, the allowed value cannot be updated or deleted
+              by the user. It can only be true for System defined attributes.
+
+          Shorthand Example:
+
+              --source-uri-enum-values=description=string,displayName=string,id=string,immutable=boolean --source-uri-enum-values=description=string,displayName=string,id=string,immutable=boolean
+
+          JSON Example:
+
+              --source-uri-enum-values='[{"description": "string", "displayName": "string", "id": "string", "immutable": boolean}]'
+
+          File Example:
+
+              --source-uri-enum-values=path_to_file.(yaml|json)
+
+       The attribute values of data type string or JSON.
+
+       --source-uri-json-values=[SOURCE_URI_JSON_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+       The attribute values of data type string or JSON.
+
+       --source-uri-string-values=[SOURCE_URI_STRING_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+       The attribute values of data type string or JSON.
+
+       --source-uri-values=[SOURCE_URI_VALUES,...]
+          The attribute values in case attribute data type is string or JSON.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the apihub/v1 API. The full documentation for this API
+    can be found at:
+    https://cloud.google.com/apigee/docs/api-hub/what-is-api-hub
+
+NOTES
+    This variant is also available:
+
+        $ gcloud alpha apihub deployments create
+
