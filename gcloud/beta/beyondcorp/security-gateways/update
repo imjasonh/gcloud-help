@@ -5,6 +5,7 @@ SYNOPSIS
     gcloud beta beyondcorp security-gateways update
         (SECURITY_GATEWAY : --location=LOCATION) [--async]
         [--display-name=DISPLAY_NAME] [--request-id=REQUEST_ID]
+        [--clear-logging | --logging=[LOGGING,...]]
         [--clear-proxy-protocol-config --[no-]proxy-protocol-config-client-ip
           --proxy-protocol-config-gateway-identity=PROXY_PROTOCOL_CONFIG_GATEWAY_IDENTITY --contextual-headers-output-type=CONTEXTUAL_HEADERS_OUTPUT_TYPE --device-info-output-type=DEVICE_INFO_OUTPUT_TYPE --group-info-output-type=GROUP_INFO_OUTPUT_TYPE --user-info-output-type=USER_INFO_OUTPUT_TYPE --proxy-protocol-config-allowed-client-headers=[PROXY_PROTOCOL_CONFIG_ALLOWED_CLIENT_HEADERS,
           ...]
@@ -17,10 +18,12 @@ SYNOPSIS
           | --update-proxy-protocol-config-metadata-headers=[UPDATE_PROXY_PROTOCOL_CONFIG_METADATA_HEADERS,
           ...] --clear-proxy-protocol-config-metadata-headers
           | --remove-proxy-protocol-config-metadata-headers=REMOVE_PROXY_PROTOCOL_CONFIG_METADATA_HEADERS]
-        [--clear-service-discovery
-          --resource-override-path=RESOURCE_OVERRIDE_PATH]
         [--hubs=[HUBS,...] | --update-hubs=[UPDATE_HUBS,...] --clear-hubs
-          | --remove-hubs=REMOVE_HUBS] [GCLOUD_WIDE_FLAG ...]
+          | --remove-hubs=REMOVE_HUBS]
+        [--service-discovery=[apiGateway=APIGATEWAY]
+          | --clear-service-discovery
+          --resource-override-path=RESOURCE_OVERRIDE_PATH]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) Update a securityGateway
@@ -86,6 +89,33 @@ FLAGS
 
         The request ID must be a valid UUID with the exception that zero UUID
         is not supported (00000000-0000-0000-0000-000000000000).
+
+     Set the value of
+     googleCloudBeyondcorpSecuritygatewaysV1SecurityGateway.logging by using
+     flag [logging] or flags [].
+
+     At most one of these can be specified:
+
+         Configuration for Cloud Logging.
+
+         --clear-logging
+            Set googleCloudBeyondcorpSecuritygatewaysV1SecurityGateway.logging
+            back to default value.
+
+       --logging=[LOGGING,...]
+          Configuration for Cloud Logging.
+
+          Shorthand Example:
+
+              --logging=
+
+          JSON Example:
+
+              --logging={}
+
+          File Example:
+
+              --logging=path_to_file.(yaml|json)
 
      The configuration for the proxy.
 
@@ -260,20 +290,6 @@ FLAGS
 
                   --remove-proxy-protocol-config-metadata-headers=path_to_file.(yaml|json)
 
-     Settings related to the Service Discovery.
-
-     --clear-service-discovery
-        Set
-        googleCloudBeyondcorpSecuritygatewaysV1SecurityGateway.serviceDiscovery
-        back to default value.
-
-     If Service Discovery is done through API, defines its settings.
-
-     API operation descriptor.
-
-     --resource-override-path=RESOURCE_OVERRIDE_PATH
-        Contains the URI path fragment where HTTP request is sent.
-
      Update hubs.
 
      At most one of these can be specified:
@@ -344,6 +360,43 @@ FLAGS
               File Example:
 
                   --remove-hubs=path_to_file.(yaml|json)
+
+     Set the value of
+     googleCloudBeyondcorpSecuritygatewaysV1SecurityGateway.serviceDiscovery by
+     using flag [service-discovery] or flags [].
+
+     At most one of these can be specified:
+
+       --service-discovery=[apiGateway=APIGATEWAY]
+          Settings related to the Service Discovery.
+
+          Shorthand Example:
+
+              --service-discovery=apiGateway={resourceOverride={path=string}}
+
+          JSON Example:
+
+              --service-discovery='{"apiGateway": {"resourceOverride": {"path": "string"}}}'
+
+          File Example:
+
+              --service-discovery=path_to_file.(yaml|json)
+
+       Or at least one of these can be specified:
+
+         Settings related to the Service Discovery.
+
+         --clear-service-discovery
+            Set
+            googleCloudBeyondcorpSecuritygatewaysV1SecurityGateway.serviceDiscovery
+            back to default value.
+
+         If Service Discovery is done through API, defines its settings.
+
+         API operation descriptor.
+
+         --resource-override-path=RESOURCE_OVERRIDE_PATH
+            Contains the URI path fragment where HTTP request is sent.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

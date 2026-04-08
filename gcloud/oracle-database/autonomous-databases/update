@@ -5,9 +5,8 @@ NAME
 SYNOPSIS
     gcloud oracle-database autonomous-databases update AUTONOMOUS_DATABASE
         [--async] [--location=LOCATION] [--request-id=REQUEST_ID]
-        [--clear-properties --encryption-key-provider=ENCRYPTION_KEY_PROVIDER
-          --key-ring=KEY_RING --clear-encryption-key-kms
-          | --encryption-key-kms=ENCRYPTION_KEY_KMS]
+        [--clear-properties
+          --properties-local-adg-auto-failover-max-data-loss-limit-duration=PROPERTIES_LOCAL_ADG_AUTO_FAILOVER_MAX_DATA_LOSS_LIMIT_DURATION --[no-]properties-local-data-guard-enabled --encryption-key-provider=ENCRYPTION_KEY_PROVIDER --key-ring=KEY_RING --clear-encryption-key-kms | --encryption-key-kms=ENCRYPTION_KEY_KMS]
         [--labels=[LABELS,...]
           | --update-labels=[UPDATE_LABELS,...] --clear-labels
           | --remove-labels=REMOVE_LABELS] [GCLOUD_WIDE_FLAG ...]
@@ -26,6 +25,30 @@ EXAMPLES
             --properties-encryption-key-provider=GOOGLE_MANAGED \
             --properties-encryption-key-kms-key=projects/project-id/\
         locations/us-east4/keyRings/keyring/cryptoKeys/key
+
+    To enable Local Data Guard on an AutonomousDatabase with id my-instance in
+    the location us-east4 and set the auto failover max data loss limit to 0,
+    run:
+
+        $ gcloud oracle-database autonomous-databases update my-instance \
+            --location=us-east4 --properties-local-data-guard-enabled=true \
+            --properties-local-adg-auto-failover-max-data-loss-limit-duratio\
+        n=0
+
+    To update Local Data Guard settings on an AutonomousDatabase with id
+    my-instance in the location us-east4 and set the auto failover max data
+    loss limit to 60 seconds, run:
+
+        $ gcloud oracle-database autonomous-databases update my-instance \
+            --location=us-east4 \
+            --properties-local-adg-auto-failover-max-data-loss-limit-duratio\
+        n=60
+
+    To disable Local Data Guard on an AutonomousDatabase with id my-instance in
+    the location us-east4, run:
+
+        $ gcloud oracle-database autonomous-databases update my-instance \
+            --location=us-east4 --properties-local-data-guard-enabled=false
 
 POSITIONAL ARGUMENTS
      AutonomousDatabase resource - Identifier. The name of the Autonomous
@@ -79,6 +102,21 @@ FLAGS
 
      --clear-properties
         Set autonomousDatabase.properties back to default value.
+
+     Arguments for the local adg auto failover max data loss limit duration.
+
+     --properties-local-adg-auto-failover-max-data-loss-limit-duration=PROPERTIES_LOCAL_ADG_AUTO_FAILOVER_MAX_DATA_LOSS_LIMIT_DURATION
+        This field indicates the maximum data loss limit for an Autonomous
+        Database, in seconds.
+
+     Arguments for the local data guard enabled.
+
+     --[no-]properties-local-data-guard-enabled
+        Indicates whether the Autonomous Database has a local (in-region)
+        standby database. Not applicable to cross-region Data Guard or
+        dedicated Exadata infrastructure. Use
+        --properties-local-data-guard-enabled to enable and
+        --no-properties-local-data-guard-enabled to disable.
 
      The encryption key used to encrypt the Autonomous Database.
 

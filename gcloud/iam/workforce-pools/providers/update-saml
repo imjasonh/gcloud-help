@@ -8,14 +8,14 @@ SYNOPSIS
         [--async] [--attribute-condition=ATTRIBUTE_CONDITION]
         [--attribute-mapping=[KEY=VALUE,...]] [--description=DESCRIPTION]
         [--detailed-audit-logging] [--disabled] [--display-name=DISPLAY_NAME]
-        [--idp-metadata-path=PATH_TO_FILE] [--scim-usage=SCIM_USAGE]
+        [--idp-metadata-path=PATH_TO_FILE]
         [--clear-extended-attributes-config
           | --extended-attributes-client-id=EXTENDED_ATTRIBUTES_CLIENT_ID
           --extended-attributes-client-secret-value=EXTENDED_ATTRIBUTES_CLIENT_SECRET_VALUE --extended-attributes-filter=EXTENDED_ATTRIBUTES_FILTER --extended-attributes-issuer-uri=EXTENDED_ATTRIBUTES_ISSUER_URI --extended-attributes-type=EXTENDED_ATTRIBUTES_TYPE]
         [--clear-extra-attributes-config
           | --extra-attributes-client-id=EXTRA_ATTRIBUTES_CLIENT_ID
           --extra-attributes-client-secret-value=EXTRA_ATTRIBUTES_CLIENT_SECRET_VALUE --extra-attributes-filter=EXTRA_ATTRIBUTES_FILTER --extra-attributes-issuer-uri=EXTRA_ATTRIBUTES_ISSUER_URI --extra-attributes-type=EXTRA_ATTRIBUTES_TYPE]
-        [GCLOUD_WIDE_FLAG ...]
+        [--clear-scim-usage | --scim-usage=SCIM_USAGE] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Update a new SAML workforce pool provider.
@@ -199,21 +199,6 @@ FLAGS
         Use a full or relative path to a local file containing the value of
         idp_metadata_path.
 
-     --scim-usage=SCIM_USAGE
-        Specifies whether the workforce identity pool provider uses
-        SCIM-managed groups instead of the google.groups attribute mapping for
-        authorization checks.
-
-        The scim_usage and extended_attributes_oauth2_client fields are
-        mutually exclusive. A request that enables both fields on the same
-        workforce identity pool provider will produce an error.
-
-        Use enabled-for-groups to enable SCIM-managed groups. Use
-        scim-usage-unspecified to disable SCIM-managed groups.
-
-        SCIM_USAGE must be one of: enabled-for-groups,
-        enabled-for-users-groups, scim-usage-unspecified.
-
      At most one of these can be specified:
 
        --clear-extended-attributes-config
@@ -324,6 +309,26 @@ FLAGS
             fetched. EXTRA_ATTRIBUTES_TYPE must be one of:
             attributes-type-unspecified, azure-ad-groups-display-name,
             azure-ad-groups-id, azure-ad-groups-mail.
+
+     At most one of these can be specified:
+
+       --clear-scim-usage
+          Clear the SCIM usage configuration, resetting it to unspecified.
+
+       --scim-usage=SCIM_USAGE
+          Specifies whether the workforce identity pool provider uses
+          SCIM-managed groups instead of the google.groups attribute mapping
+          for authorization checks.
+
+          The scim_usage and extended_attributes_oauth2_client fields are
+          mutually exclusive. A request that enables both fields on the same
+          workforce identity pool provider will produce an error.
+
+          Use enabled-for-groups to enable SCIM-managed groups. Use
+          scim-usage-unspecified to disable SCIM-managed groups.
+
+          SCIM_USAGE must be one of: enabled-for-groups,
+          scim-usage-unspecified.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

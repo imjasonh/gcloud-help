@@ -1,0 +1,114 @@
+NAME
+    gcloud alpha alloydb connect - connect to an AlloyDB instance using the
+        AlloyDB Auth Proxy
+
+SYNOPSIS
+    gcloud alpha alloydb connect INSTANCE --cluster=CLUSTER --region=REGION
+        [--database=DATABASE, -d DATABASE] [--port=PORT; default=9471]
+        [--auto-iam-authn | --user=USER, -u USER] [--psc | --public-ip]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Connects to an AlloyDB instance using the AlloyDB Auth Proxy and
+    psql.
+
+EXAMPLES
+    To connect to an AlloyDB instance using the postgres user and database over
+    private IP, run:
+
+        $ gcloud alpha alloydb connect my-instance --cluster=my-cluster \
+            --region=us-central1
+
+    To connect over public IP, run:
+
+        $ gcloud alpha alloydb connect my-instance --cluster=my-cluster \
+            --region=us-central1 --public-ip
+
+    To connect over Private Service Connect, run:
+
+        $ gcloud alpha alloydb connect my-instance --cluster=my-cluster \
+            --region=us-central1 --psc
+
+    To connect with a particular user and database, run:
+
+        $ gcloud alpha alloydb connect my-instance --cluster=my-cluster \
+            --region=us-central1 --user mydbuser --database mydatabase
+
+    To connect with Auto IAM Authentication using your authenticated gcloud
+    user, run
+
+        $ gcloud alpha alloydb connect my-instance --cluster=my-cluster \
+            --region=us-central1 --auto-iam-authn
+
+    To use an impersonated service account with the AlloyDB Auth Proxy, run:
+
+        $ gcloud alpha alloydb connect my-instance --cluster=my-cluster \
+            --region=us-central1 \
+            --impersonate-service-account \
+            impersonated@myproject.iam.gserviceaccount.com
+
+    NOTE: the impersonated service account will be used by the Auth Proxy to
+    retrieve connection info, but will not be used for authenticating to the
+    database. To also authenticate to the database as the impersonated user,
+    add the --auto-iam-authn flag.
+
+    To use an impersonated service account with the AlloyDB Auth Proxy and
+    authenticate to your database with the same impersonated user, run:
+
+        $ gcloud alpha alloydb connect my-instance --cluster=my-cluster \
+            --region=us-central1 \
+            --impersonate-service-account \
+            impersonated@myproject.iam.gserviceaccount.com --auto-iam-authn
+
+POSITIONAL ARGUMENTS
+     INSTANCE
+        AlloyDB instance ID
+
+REQUIRED FLAGS
+     --cluster=CLUSTER
+        AlloyDB cluster ID
+
+     --region=REGION
+        Regional location (e.g. asia-east1, us-east1). See the full list of
+        regions at https://cloud.google.com/sql/docs/instance-locations.
+
+OPTIONAL FLAGS
+     --database=DATABASE, -d DATABASE
+        The AlloyDB database to connect to
+
+     --port=PORT; default=9471
+        Port number used by the AlloyDB Auth Proxy to start a localhost
+        listener
+
+     At most one of these can be specified:
+
+       --auto-iam-authn
+          Enables Auto IAM authentication
+
+       --user=USER, -u USER
+          Built-in database user to connect to the database as
+
+     At most one of these can be specified:
+
+       --psc
+          Connect to the AlloyDB instance using Private Service Connect.
+
+       --public-ip
+          Connect to the AlloyDB instance with Public IP
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist. This variant is also available:
+
+        $ gcloud beta alloydb connect
+

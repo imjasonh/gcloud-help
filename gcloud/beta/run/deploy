@@ -7,7 +7,7 @@ SYNOPSIS
         [--clear-vpc-connector] [--concurrency=CONCURRENCY]
         [--container=CONTAINER] [--[no-]cpu-boost] [--[no-]cpu-throttling]
         [--[no-]default-url] [--[no-]deploy-health-check]
-        [--description=DESCRIPTION]
+        [--description=DESCRIPTION] [--endpoint-mode=ENDPOINT_MODE]
         [--execution-environment=EXECUTION_ENVIRONMENT] [--gpu-type=GPU_TYPE]
         [--[no-]gpu-zonal-redundancy] [--[no-]iap]
         [--ingress=INGRESS; default="all"] [--[no-]invoker-iam-check]
@@ -35,7 +35,7 @@ SYNOPSIS
           --readiness-probe=[KEY=VALUE,...]
           --remove-volume-mount=[MOUNT_PATH,...]
           --startup-probe=[KEY=VALUE,...]
-          --[no-]use-http2 --base-image=BASE_IMAGE
+          --[no-]use-http2 --workdir=WORKDIR --base-image=BASE_IMAGE
           | --clear-base-image --build-env-vars-file=FILE_PATH
           | --clear-build-env-vars | --set-build-env-vars=[KEY=VALUE,...]
           | --remove-build-env-vars=[KEY,...]
@@ -165,6 +165,24 @@ FLAGS
 
      --description=DESCRIPTION
         Provides an optional, human-readable description of the service.
+
+     --endpoint-mode=ENDPOINT_MODE
+        Specifies endpoint mode for a given command. Regional endpoints provide
+        enhanced data residency and reliability by ensuring your request is
+        handled entirely within the specified Google Cloud region. This differs
+        from global endpoints, which may process parts of the request outside
+        the target region. Overrides the default regional/endpoint_mode
+        property value for this command invocation. ENDPOINT_MODE must be one
+        of:
+
+         global
+            (Default) Use global rather than regional endpoints.
+         regional
+            Only use regional endpoints. An error will be raised if a regional
+            endpoint is not available for a given command.
+         regional-preferred
+            Use regional endpoints when available, otherwise use global
+            endpoints. Recommended for most users.
 
      --execution-environment=EXECUTION_ENVIRONMENT
         Selects the execution environment where the application will run.
@@ -383,6 +401,17 @@ FLAGS
           multi-container services, specify the mount-path parameter under the
           --add-volume-mount flag.
 
+        ephemeral-disk: A volume that stores data on a temporary disk. With
+        this type of volume, data is not shared between instances and all data
+        will be lost when the instance it is on is terminated. Additional keys:
+        ◆ mount-path: (optional) The path at which the volume should be
+          mounted. The mount-path parameter is only supported for single
+          container services which do not make use of the --container flag. For
+          multi-container services, specify the mount-path parameter under the
+          --add-volume-mount flag.
+        ◆ size: (optional) A quantity representing the amount of disk space
+          allocated to this volume, such as "10Gi" or "100G".
+
         in-memory: An ephemeral volume that stores data in the instance's
         memory. With this type of volume, data is not shared between instances
         and all data will be lost when the instance it is on is terminated.
@@ -523,6 +552,11 @@ FLAGS
      --[no-]use-http2
         Whether to use HTTP/2 for connections to the service. Use --use-http2
         to enable and --no-use-http2 to disable.
+
+     --workdir=WORKDIR
+        Working directory of the container process. If not specified, the
+        container image's default working directory is used. To reset this
+        field to its default, pass an empty string.
 
      At most one of these can be specified:
 
@@ -805,6 +839,12 @@ GCLOUD WIDE FLAGS
     --trace-token, --user-output-enabled, --verbosity.
 
     Run $ gcloud help for details.
+
+REGIONAL ENDPOINTS
+    This command supports regional endpoints. To use regional endpoints for
+    this command, use the --endpoint-mode=regional-preferred flag. To use
+    regional endpoints by default, run $ gcloud config set
+    regional/endpoint_mode regional-preferred.
 
 NOTES
     This command is currently in beta and might change without notice. These

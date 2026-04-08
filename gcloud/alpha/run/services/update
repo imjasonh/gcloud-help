@@ -8,6 +8,7 @@ SYNOPSIS
         [--concurrency=CONCURRENCY] [--container=CONTAINER] [--[no-]cpu-boost]
         [--[no-]cpu-throttling] [--[no-]default-url]
         [--[no-]deploy-health-check] [--description=DESCRIPTION]
+        [--endpoint-mode=ENDPOINT_MODE]
         [--execution-environment=EXECUTION_ENVIRONMENT] [--gpu-type=GPU_TYPE]
         [--[no-]gpu-zonal-redundancy] [--[no-]iap]
         [--ingress=INGRESS; default="all"] [--[no-]invoker-iam-check]
@@ -36,7 +37,8 @@ SYNOPSIS
           --liveness-probe=[KEY=VALUE,...] --memory=MEMORY --port=PORT
           --readiness-probe=[KEY=VALUE,...]
           --remove-volume-mount=[MOUNT_PATH,...]
-          --startup-probe=[KEY=VALUE,...] --[no-]use-http2 --clear-env-vars
+          --startup-probe=[KEY=VALUE,...]
+          --[no-]use-http2 --workdir=WORKDIR --clear-env-vars
           | --env-vars-file=FILE_PATH | --set-env-vars=[KEY=VALUE,...]
           | --remove-env-vars=[KEY,...]
           --update-env-vars=[KEY=VALUE,...] --clear-secrets
@@ -145,6 +147,24 @@ FLAGS
      --description=DESCRIPTION
         Provides an optional, human-readable description of the service.
 
+     --endpoint-mode=ENDPOINT_MODE
+        Specifies endpoint mode for a given command. Regional endpoints provide
+        enhanced data residency and reliability by ensuring your request is
+        handled entirely within the specified Google Cloud region. This differs
+        from global endpoints, which may process parts of the request outside
+        the target region. Overrides the default regional/endpoint_mode
+        property value for this command invocation. ENDPOINT_MODE must be one
+        of:
+
+         global
+            (Default) Use global rather than regional endpoints.
+         regional
+            Only use regional endpoints. An error will be raised if a regional
+            endpoint is not available for a given command.
+         regional-preferred
+            Use regional endpoints when available, otherwise use global
+            endpoints. Recommended for most users.
+
      --execution-environment=EXECUTION_ENVIRONMENT
         Selects the execution environment where the application will run.
         EXECUTION_ENVIRONMENT must be one of:
@@ -241,16 +261,20 @@ FLAGS
         scaling with the given integer as a fixed instance count.
 
      --scaling-concurrency-target=SCALING_CONCURRENCY_TARGET
-        A value between 0.1 and 0.95 that indicates the target concurrency
-        utilization where a new instance should be started. Also accepts
-        "default" to restore the default value or "disabled" to disable
-        concurrency utilization scaling. If not set, the default value is 0.6.
+        This represents the concurrency utilization target threshold for
+        scaling up new instances. Set any value between 0.1 and 0.95 inclusive.
+        To unset this field, pass the special value "default". To disable this
+        scaling factor, pass the value "disabled". Please note that values are
+        rounded at the second decimal place, and that CPU and concurrency
+        scaling cannot both be disabled.
 
      --scaling-cpu-target=SCALING_CPU_TARGET
-        A value between 0.1 and 0.95 that indicates the target CPU utilization
-        where a new instance should be started. Also accepts "default" to
-        restore the default value or "disabled" to disable CPU utilization
-        scaling. If not set, the default value is 0.6.
+        This represents the CPU utilization target threshold for scaling up new
+        instances. Set any value between 0.1 and 0.95 inclusive. To unset this
+        field, pass the special value "default". To disable this scaling
+        factor, pass the value "disabled". Please note that values are rounded
+        at the second decimal place, and that CPU and concurrency scaling
+        cannot both be disabled.
 
      --service-account=SERVICE_ACCOUNT
         the email address of an IAM service account associated with the
@@ -392,7 +416,7 @@ FLAGS
           multi-container services, specify the mount-path parameter under the
           --add-volume-mount flag.
         ◆ size: (optional) A quantity representing the amount of disk space
-          allocated to this volume, such as "512Mi" or "3G".
+          allocated to this volume, such as "10Gi" or "100G".
 
         in-memory: An ephemeral volume that stores data in the instance's
         memory. With this type of volume, data is not shared between instances
@@ -552,6 +576,11 @@ FLAGS
      --[no-]use-http2
         Whether to use HTTP/2 for connections to the service. Use --use-http2
         to enable and --no-use-http2 to disable.
+
+     --workdir=WORKDIR
+        Working directory of the container process. If not specified, the
+        container image's default working directory is used. To reset this
+        field to its default, pass an empty string.
 
      At most one of these can be specified:
 
@@ -727,6 +756,12 @@ GCLOUD WIDE FLAGS
     --trace-token, --user-output-enabled, --verbosity.
 
     Run $ gcloud help for details.
+
+REGIONAL ENDPOINTS
+    This command supports regional endpoints. To use regional endpoints for
+    this command, use the --endpoint-mode=regional-preferred flag. To use
+    regional endpoints by default, run $ gcloud config set
+    regional/endpoint_mode regional-preferred.
 
 NOTES
     This command is currently in alpha and might change without notice. If this

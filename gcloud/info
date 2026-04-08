@@ -2,7 +2,8 @@ NAME
     gcloud info - display information about the current gcloud environment
 
 SYNOPSIS
-    gcloud info [--anonymize] [--run-diagnostics | --show-log]
+    gcloud info [--anonymize]
+        [--show-log | [--run-diagnostics : --check-certs=HOSTNAME]]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -18,6 +19,11 @@ EXAMPLES
 
         $ gcloud info --run-diagnostics
 
+    To troubleshoot certificate verification failures for a given host e.g.
+    compute.googleapis.com when using a proxy and custom CA certs, run:
+
+        $ gcloud info --run-diagnostics --check-certs=compute.googleapis.com
+
     To print the contents of the most recent log file, run:
 
         $ gcloud info --show-log
@@ -29,11 +35,19 @@ FLAGS
 
      At most one of these can be specified:
 
-       --run-diagnostics
-          Run diagnostics on your installation of the Google Cloud CLI.
-
        --show-log
           Print the contents of the last log file.
+
+       Or at least one of these can be specified:
+
+         --run-diagnostics
+            Run diagnostics on your installation of the Google Cloud CLI.
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --check-certs=HOSTNAME
+            Run diagnostics on the certificate chain for a given host.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

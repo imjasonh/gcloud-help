@@ -2,8 +2,8 @@ NAME
     gcloud beta memorystore instances create - create a Memorystore instance
 
 SYNOPSIS
-    gcloud beta memorystore instances create INSTANCE [--async]
-        [--async-instance-endpoints-deletion-enabled]
+    gcloud beta memorystore instances create INSTANCE [--acl-policy=ACL_POLICY]
+        [--async] [--async-instance-endpoints-deletion-enabled]
         [--authorization-mode=AUTHORIZATION_MODE]
         [--deletion-protection-enabled] [--endpoints=[connections=CONNECTIONS]]
         [--engine-configs=[ENGINE_CONFIGS,...]]
@@ -84,6 +84,30 @@ POSITIONAL ARGUMENTS
           ▸ provide the argument instance on the command line.
 
 FLAGS
+     Arguments for the acl policy.
+
+     AclPolicy resource - The ACL policy for the instance. Format:
+     projects/{project}/locations/{location}/aclPolicies/{acl_policy} This
+     represents a Cloud resource. (NOTE) Some attributes are not given
+     arguments in this group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument --acl-policy on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument --acl-policy on the command line with a fully
+        specified name;
+      ◆ provide the argument --location on the command line.
+
+     --acl-policy=ACL_POLICY
+        ID of the aclPolicy or fully qualified identifier for the aclPolicy.
+
+        To set the acl-policy attribute:
+        ◆ provide the argument --acl-policy on the command line.
+
      --async
         Return immediately, without waiting for the operation in progress to
         complete.
@@ -103,6 +127,8 @@ FLAGS
             Authorization disabled.
          iam-auth
             IAM basic authorization.
+         token-auth
+            Token based authorization.
 
      Arguments for the deletion protection enabled.
 
@@ -193,9 +219,10 @@ FLAGS
             --labels=path_to_file.(yaml|json)
 
      --location=LOCATION
-        For resources [instance, kms-key, primary-instance], provides fallback
-        value for resource location attribute. When the resource's full URI
-        path is not provided, location will fallback to this flag value.
+        For resources [instance, acl-policy, kms-key, primary-instance,
+        server-ca-pool], provides fallback value for resource location
+        attribute. When the resource's full URI path is not provided, location
+        will fallback to this flag value.
 
      Maintenance policy per instance.
 
@@ -344,11 +371,29 @@ FLAGS
 
      Arguments for the server ca pool.
 
+     CaPool resource - Customer-managed CA pool. The resource name of the
+     Certificate Authority Service (CAS) CA Pool. Required and only applicable
+     when --server-ca-mode is set to customer-managed-cas-ca. Format:
+     projects/{project}/locations/{region}/caPools/{ca_pool} This represents a
+     Cloud resource. (NOTE) Some attributes are not given arguments in this
+     group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument --server-ca-pool on the command line with a
+        fully specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument --server-ca-pool on the command line with a
+        fully specified name;
+      ◆ provide the argument --location on the command line.
+
      --server-ca-pool=SERVER_CA_POOL
-        Customer-managed CA pool. The resource name of the Certificate
-        Authority Service (CAS) CA Pool. Required and only applicable when
-        --server-ca-mode is set to customer-managed-cas-ca. Format:
-        projects/{project}/locations/{region}/caPools/{ca_pool}
+        ID of the caPool or fully qualified identifier for the caPool.
+
+        To set the ca-pool attribute:
+        ◆ provide the argument --server-ca-pool on the command line.
 
      --shard-count=SHARD_COUNT
         Number of shards for the instance.

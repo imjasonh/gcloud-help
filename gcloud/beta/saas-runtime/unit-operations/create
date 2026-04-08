@@ -6,7 +6,7 @@ SYNOPSIS
         [--cancel] [--labels=[LABELS,...]] [--location=LOCATION]
         [--parent-unit-operation=PARENT_UNIT_OPERATION] [--rollout=ROLLOUT]
         [--schedule-start-time=SCHEDULE_START_TIME]
-        [--deprovision | --provision
+        [--deprovision | --flag-update=FLAG_UPDATE | --provision
           --provision-input-variables=[type=TYPE],
           [value=VALUE],[variable=VARIABLE]
           --provision-release=PROVISION_RELEASE | --upgrade
@@ -102,10 +102,10 @@ OPTIONAL FLAGS
             --labels=path_to_file.(yaml|json)
 
      --location=LOCATION
-        For resources [parent-unit-operation, provision-release, rollout, unit,
-        unit_operation, upgrade-release], provides fallback value for resource
-        location attribute. When the resource's full URI path is not provided,
-        location will fallback to this flag value.
+        For resources [flag-update, parent-unit-operation, provision-release,
+        rollout, unit, unit_operation, upgrade-release], provides fallback
+        value for resource location attribute. When the resource's full URI
+        path is not provided, location will fallback to this flag value.
 
      ParentUnitOperation resource - Reference to parent resource: Unit
      Operation. If an operation needs to create other operations as part of its
@@ -172,6 +172,30 @@ OPTIONAL FLAGS
 
        --deprovision
           This flag can be used to specify an empty deprovision operation.
+
+       Flag update is the unit operation that pushes new flag values to Units.
+
+       FlagRelease resource - Flag release being applied by UnitOperation. This
+       represents a Cloud resource. (NOTE) Some attributes are not given
+       arguments in this group but can be set in other ways.
+
+       To set the project attribute:
+        ▸ provide the argument --flag-update on the command line with a fully
+          specified name;
+        ▸ provide the argument --project on the command line;
+        ▸ set the property core/project.
+
+       To set the location attribute:
+        ▸ provide the argument --flag-update on the command line with a fully
+          specified name;
+        ▸ provide the argument --location on the command line.
+
+       --flag-update=FLAG_UPDATE
+          ID of the flagRelease or fully qualified identifier for the
+          flagRelease.
+
+          To set the flag-release attribute:
+          ▸ provide the argument --flag-update on the command line.
 
        Provision is the unit operation that provision the underlying resources
        represented by a Unit. Can only execute if the Unit is not currently

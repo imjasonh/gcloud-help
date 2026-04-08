@@ -2,7 +2,8 @@ NAME
     gcloud beta saas-runtime rollouts create - create a Rollout
 
 SYNOPSIS
-    gcloud beta saas-runtime rollouts create ROLLOUT --release=RELEASE
+    gcloud beta saas-runtime rollouts create ROLLOUT
+        (--flag-release=FLAG_RELEASE | --release=RELEASE)
         [--labels=[LABELS,...]] [--location=LOCATION]
         [--rollout-kind=ROLLOUT_KIND]
         [--rollout-orchestration-strategy=ROLLOUT_ORCHESTRATION_STRATEGY]
@@ -44,11 +45,52 @@ POSITIONAL ARGUMENTS
           ▸ provide the argument rollout on the command line.
 
 REQUIRED FLAGS
-     --release=RELEASE
-        ID of the release or fully qualified identifier for the release.
+     Exactly one of these must be specified:
 
-        To set the release attribute:
-        ◆ provide the argument --release on the command line.
+       FlagRelease resource - Name of the Flag Release that gets rolled out to
+       target Units. Required if no other type of release is specified. This
+       represents a Cloud resource. (NOTE) Some attributes are not given
+       arguments in this group but can be set in other ways.
+
+       To set the project attribute:
+        ▸ provide the argument --flag-release on the command line with a
+          fully specified name;
+        ▸ provide the argument --project on the command line;
+        ▸ set the property core/project.
+
+       To set the location attribute:
+        ▸ provide the argument --flag-release on the command line with a
+          fully specified name;
+        ▸ provide the argument --location on the command line.
+
+       --flag-release=FLAG_RELEASE
+          ID of the flagRelease or fully qualified identifier for the
+          flagRelease.
+
+          To set the flag-release attribute:
+          ▸ provide the argument --flag-release on the command line.
+
+       Release resource - Name of the Release that gets rolled out to target
+       Units. Required if no other type of release is specified. This
+       represents a Cloud resource. (NOTE) Some attributes are not given
+       arguments in this group but can be set in other ways.
+
+       To set the project attribute:
+        ▸ provide the argument --release on the command line with a fully
+          specified name;
+        ▸ provide the argument --project on the command line;
+        ▸ set the property core/project.
+
+       To set the location attribute:
+        ▸ provide the argument --release on the command line with a fully
+          specified name;
+        ▸ provide the argument --location on the command line.
+
+       --release=RELEASE
+          ID of the release or fully qualified identifier for the release.
+
+          To set the release attribute:
+          ▸ provide the argument --release on the command line.
 
 OPTIONAL FLAGS
      --labels=[LABELS,...]
@@ -76,9 +118,10 @@ OPTIONAL FLAGS
             --labels=path_to_file.(yaml|json)
 
      --location=LOCATION
-        For resources [release, rollout, rollout-kind], provides fallback value
-        for resource location attribute. When the resource's full URI path is
-        not provided, location will fallback to this flag value.
+        For resources [flag-release, release, rollout, rollout-kind], provides
+        fallback value for resource location attribute. When the resource's
+        full URI path is not provided, location will fallback to this flag
+        value.
 
      RolloutKindId resource - Name of the RolloutKind this rollout is stemming
      from and adhering to. This represents a Cloud resource. (NOTE) Some

@@ -5,12 +5,14 @@ NAME
 SYNOPSIS
     gcloud beta memorystore instances update INSTANCE [--async]
         [--[no-]async-instance-endpoints-deletion-enabled]
-        [--[no-]deletion-protection-enabled] [--engine-version=ENGINE_VERSION]
-        [--location=LOCATION] [--maintenance-version=MAINTENANCE_VERSION]
-        [--mode=MODE] [--node-type=NODE_TYPE] [--[no-]ondemand-maintenance]
+        [--auth-mode=AUTH_MODE] [--[no-]deletion-protection-enabled]
+        [--engine-version=ENGINE_VERSION] [--location=LOCATION]
+        [--maintenance-version=MAINTENANCE_VERSION] [--mode=MODE]
+        [--node-type=NODE_TYPE] [--[no-]ondemand-maintenance]
         [--replica-count=REPLICA_COUNT] [--request-id=REQUEST_ID]
         [--[no-]rotate-server-certificate] [--shard-count=SHARD_COUNT]
         [--[no-]simulate-maintenance-event]
+        [--acl-policy=ACL_POLICY | --clear-acl-policy]
         [--aof-config-append-fsync=AOF_CONFIG_APPEND_FSYNC
           --clear-persistence-config
           --persistence-config-mode=PERSISTENCE_CONFIG_MODE
@@ -97,6 +99,14 @@ FLAGS
         --async-instance-endpoints-deletion-enabled to enable and
         --no-async-instance-endpoints-deletion-enabled to disable.
 
+     --auth-mode=AUTH_MODE
+        Authorization mode of the instance. AUTH_MODE must be one of:
+
+         auth-disabled
+            Authorization disabled.
+         token-auth
+            Token based authorization.
+
      Arguments for the deletion protection enabled.
 
      --[no-]deletion-protection-enabled
@@ -108,9 +118,10 @@ FLAGS
         Engine version of the instance.
 
      --location=LOCATION
-        For resources [instance, kms-key, primary-instance], provides fallback
-        value for resource location attribute. When the resource's full URI
-        path is not provided, location will fallback to this flag value.
+        For resources [instance, acl-policy, kms-key, primary-instance],
+        provides fallback value for resource location attribute. When the
+        resource's full URI path is not provided, location will fallback to
+        this flag value.
 
      Arguments for the maintenance version.
 
@@ -183,6 +194,39 @@ FLAGS
      --[no-]simulate-maintenance-event
         Simulate a maintenance event. Use --simulate-maintenance-event to
         enable and --no-simulate-maintenance-event to disable.
+
+     Arguments for the acl policy.
+
+     Update acl_policy.
+
+     At most one of these can be specified:
+
+       AclPolicy resource - Set acl_policy to new value.
+
+       The ACL policy for the instance. Format:
+       projects/{project}/locations/{location}/aclPolicies/{acl_policy} This
+       represents a Cloud resource. (NOTE) Some attributes are not given
+       arguments in this group but can be set in other ways.
+
+       To set the project attribute:
+        ▸ provide the argument --acl-policy on the command line with a fully
+          specified name;
+        ▸ provide the argument --project on the command line;
+        ▸ set the property core/project.
+
+       To set the location attribute:
+        ▸ provide the argument --acl-policy on the command line with a fully
+          specified name;
+        ▸ provide the argument --location on the command line.
+
+       --acl-policy=ACL_POLICY
+          ID of the aclPolicy or fully qualified identifier for the aclPolicy.
+
+          To set the acl-policy attribute:
+          ▸ provide the argument --acl-policy on the command line.
+
+       --clear-acl-policy
+          Clear acl_policy value and set to null.
 
      Represents persistence configuration for a instance.
 

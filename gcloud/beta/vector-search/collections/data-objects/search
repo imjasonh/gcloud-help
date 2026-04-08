@@ -17,7 +17,7 @@ SYNOPSIS
         [--output-data-fields=[DATA_OUTPUT_FIELD,...]
           --output-metadata-fields=[METADATA_OUTPUT_FIELD,...]
           --output-vector-fields=[VECTOR_OUTPUT_FIELD,...]]
-        [--use-knn | [--use-index=INDEX_NAME
+        [--use-knn | [--use-index=INDEX
           : --dense-scann-initial-candidate-count=CANDIDATE_COUNT
           --dense-scann-search-leaves-pct=PERCENTAGE]] [GCLOUD_WIDE_FLAG ...]
 
@@ -131,11 +131,27 @@ REQUIRED FLAGS
        --vector-from-file=VECTOR_FROM_FILE
           Path to a JSON file containing dense or sparse vector to search with.
 
-          Example file content for dense vector: { "dense": { "values": [ 0.7,
-          0.6, 0.5, 0.4 ] } }
+          ▸ Example file content for dense vector:
 
-          Example file content for sparse vector: { "sparse": { "indices": [1,
-          5, 10], "values": [0.1, 0.5, 0.21] } }
+              {
+                "dense": {
+                  "values": [
+                    0.7,
+                    0.6,
+                    0.5,
+                    0.4
+                  ]
+                }
+              }
+
+          ▸ Example file content for sparse vector:
+
+              {
+                "sparse": {
+                  "indices": [1, 5, 10],
+                  "values": [0.1, 0.5, 0.21]
+                }
+              }
 
           This flag argument must be specified if any of the other arguments in
           this group are specified.
@@ -184,19 +200,16 @@ OPTIONAL FLAGS
 
        --use-knn
           If set to true, the search will use the system's default K-Nearest
-          Neighbor (KNN) index engine.
-
-              This flag is compatible only with Semantic Search and Vector Search.
+          Neighbor (KNN) index engine. This flag is compatible only with
+          Semantic Search and Vector Search.
 
        Or at least one of these can be specified:
 
          Use Index Options
 
-         --use-index=INDEX_NAME
-            The resource name of the index to use for the search.
-
-            This flag is compatible only with Semantic Search and Vector
-            Search.
+         --use-index=INDEX
+            Full resource name or ID of the index to use for the search. This
+            flag is compatible only with Semantic Search and Vector Search.
 
             This flag argument must be specified if any of the other arguments
             in this group are specified.

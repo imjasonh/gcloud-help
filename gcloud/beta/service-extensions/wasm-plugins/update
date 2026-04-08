@@ -10,7 +10,10 @@ SYNOPSIS
         [--image=IMAGE
           --main-version=MAIN_VERSION --plugin-config=PLUGIN_CONFIG
           | --plugin-config-file=PATH_TO_FILE
-          | --plugin-config-uri=PLUGIN_CONFIG_URI] [GCLOUD_WIDE_FLAG ...]
+          | --plugin-config-uri=PLUGIN_CONFIG_URI]
+        [--kms-key-name=KMS_KEY_NAME : --kms-keyring=KMS_KEYRING
+          --kms-location=KMS_LOCATION --kms-project=KMS_PROJECT]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) Update an existing WasmPlugin resource and optionally create a
@@ -143,6 +146,46 @@ FLAGS
        --plugin-config-uri=PLUGIN_CONFIG_URI
           URI of the container image containing the plugin's runtime
           configuration, stored in the Artifact Registry.
+
+     Key resource - The Cloud KMS (Key Management Service) cryptokey that will
+     be used to protect the WasmPlugin. The 'Network Actions Service Agent'
+     service account must hold permission 'Cloud KMS CryptoKey
+     Encrypter/Decrypter'. The arguments in this group can be used to specify
+     the attributes of this resource.
+
+     --kms-key-name=KMS_KEY_NAME
+        ID of the key or fully qualified identifier for the key.
+
+        To set the kms-key attribute:
+        ◆ provide the argument --kms-key-name on the command line.
+
+        This flag argument must be specified if any of the other arguments in
+        this group are specified.
+
+     --kms-keyring=KMS_KEYRING
+        The KMS keyring of the key.
+
+        To set the kms-keyring attribute:
+        ◆ provide the argument --kms-key-name on the command line with a
+          fully specified name;
+        ◆ provide the argument --kms-keyring on the command line.
+
+     --kms-location=KMS_LOCATION
+        The Google Cloud location for the key.
+
+        To set the kms-location attribute:
+        ◆ provide the argument --kms-key-name on the command line with a
+          fully specified name;
+        ◆ provide the argument --kms-location on the command line.
+
+     --kms-project=KMS_PROJECT
+        The Google Cloud project for the key.
+
+        To set the kms-project attribute:
+        ◆ provide the argument --kms-key-name on the command line with a
+          fully specified name;
+        ◆ provide the argument --kms-project on the command line;
+        ◆ set the property core/project.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

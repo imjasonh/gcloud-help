@@ -4,19 +4,12 @@ NAME
 
 SYNOPSIS
     gcloud beta run services proxy (SERVICE : --namespace=NAMESPACE)
-        [--port=PORT] [--region=REGION] [--tag=TAG] [--token=TOKEN]
-        [GCLOUD_WIDE_FLAG ...]
+        [--endpoint-mode=ENDPOINT_MODE] [--port=PORT] [--region=REGION]
+        [--tag=TAG] [--token=TOKEN] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (BETA) Runs a server on localhost that proxies requests to the specified
-    Cloud Run Service with credentials attached.
-
-    You can use this to test services protected with IAM authentication.
-
-    The Cloud Run service must be reachable from the machine running this
-    command. For example, if the Cloud Run Service is configured to only allow
-    internal ingress, this command will not work from outside the service's VPC
-    network.
+    (BETA) Proxy a service to localhost authenticating as the active account or
+    with the specified token.
 
 EXAMPLES
     To proxy the service 'my-service' at localhost port 8080:
@@ -57,6 +50,24 @@ POSITIONAL ARGUMENTS
           ▸ set the property core/project.
 
 FLAGS
+     --endpoint-mode=ENDPOINT_MODE
+        Specifies endpoint mode for a given command. Regional endpoints provide
+        enhanced data residency and reliability by ensuring your request is
+        handled entirely within the specified Google Cloud region. This differs
+        from global endpoints, which may process parts of the request outside
+        the target region. Overrides the default regional/endpoint_mode
+        property value for this command invocation. ENDPOINT_MODE must be one
+        of:
+
+         global
+            (Default) Use global rather than regional endpoints.
+         regional
+            Only use regional endpoints. An error will be raised if a regional
+            endpoint is not available for a given command.
+         regional-preferred
+            Use regional endpoints when available, otherwise use global
+            endpoints. Recommended for most users.
+
      --port=PORT
         Local port number to expose the proxied service. If not specified, it
         will be set to 8080.
@@ -85,6 +96,12 @@ GCLOUD WIDE FLAGS
     --trace-token, --user-output-enabled, --verbosity.
 
     Run $ gcloud help for details.
+
+REGIONAL ENDPOINTS
+    This command supports regional endpoints. To use regional endpoints for
+    this command, use the --endpoint-mode=regional-preferred flag. To use
+    regional endpoints by default, run $ gcloud config set
+    regional/endpoint_mode regional-preferred.
 
 NOTES
     This command is currently in beta and might change without notice. These

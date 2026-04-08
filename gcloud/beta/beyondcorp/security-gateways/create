@@ -5,15 +5,16 @@ SYNOPSIS
     gcloud beta beyondcorp security-gateways create
         (SECURITY_GATEWAY : --location=LOCATION) [--async]
         [--display-name=DISPLAY_NAME] [--hubs=[HUBS,...]]
-        [--request-id=REQUEST_ID]
-        [--resource-override-path=RESOURCE_OVERRIDE_PATH]
+        [--logging=[LOGGING,...]] [--request-id=REQUEST_ID]
         [--proxy-protocol-config-allowed-client-headers=[PROXY_PROTOCOL_CONFIG_ALLOWED_CLIENT_HEADERS,
           ...] --proxy-protocol-config-client-ip
           --proxy-protocol-config-gateway-identity=PROXY_PROTOCOL_CONFIG_GATEWAY_IDENTITY --proxy-protocol-config-metadata-headers=[PROXY_PROTOCOL_CONFIG_METADATA_HEADERS,
           ...] --contextual-headers-output-type=CONTEXTUAL_HEADERS_OUTPUT_TYPE
           --device-info-output-type=DEVICE_INFO_OUTPUT_TYPE
           --group-info-output-type=GROUP_INFO_OUTPUT_TYPE
-          --user-info-output-type=USER_INFO_OUTPUT_TYPE] [GCLOUD_WIDE_FLAG ...]
+          --user-info-output-type=USER_INFO_OUTPUT_TYPE]
+        [--resource-override-path=RESOURCE_OVERRIDE_PATH
+          | --service-discovery=[apiGateway=APIGATEWAY]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) Create a securityGateway
@@ -87,24 +88,26 @@ FLAGS
 
             --hubs=path_to_file.(yaml|json)
 
+     --logging=[LOGGING,...]
+        Configuration for Cloud Logging.
+
+        Shorthand Example:
+
+            --logging=
+
+        JSON Example:
+
+            --logging={}
+
+        File Example:
+
+            --logging=path_to_file.(yaml|json)
+
      --request-id=REQUEST_ID
         An optional request ID to identify requests. Specify a unique request
         ID so that if you must retry your request, the server will know to
         ignore the request if it has already been completed. The server will
         guarantee that for at least 60 minutes since the first request.
-
-     Settings related to the Service Discovery.
-
-     If Service Discovery is done through API, defines its settings.
-
-     This must be specified.
-
-       API operation descriptor.
-
-       This must be specified.
-
-         --resource-override-path=RESOURCE_OVERRIDE_PATH
-            Contains the URI path fragment where HTTP request is sent.
 
      The configuration for the proxy.
 
@@ -197,6 +200,36 @@ FLAGS
             Explicitly disable header output.
          protobuf
             Protobuf output type.
+
+     Set the value of
+     googleCloudBeyondcorpSecuritygatewaysV1SecurityGateway.serviceDiscovery by
+     using flag [service-discovery] or flags [].
+
+     At most one of these can be specified:
+
+         Settings related to the Service Discovery.
+
+         If Service Discovery is done through API, defines its settings.
+
+         API operation descriptor.
+
+         --resource-override-path=RESOURCE_OVERRIDE_PATH
+            Contains the URI path fragment where HTTP request is sent.
+
+       --service-discovery=[apiGateway=APIGATEWAY]
+          Settings related to the Service Discovery.
+
+          Shorthand Example:
+
+              --service-discovery=apiGateway={resourceOverride={path=string}}
+
+          JSON Example:
+
+              --service-discovery='{"apiGateway": {"resourceOverride": {"path": "string"}}}'
+
+          File Example:
+
+              --service-discovery=path_to_file.(yaml|json)
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

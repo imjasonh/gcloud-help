@@ -24,21 +24,24 @@ EXAMPLES
             --collection=my-collection --location=us-central1 \
             --searches-from-file=searches.json
 
-    Example searches.json: [        {
-          "semanticSearch": {
-            "searchText": "sci-fi movie",
-            "searchField": "vector1",
-            "topK": 10
+    Example searches.json:
+
+        [
+          {
+            "semanticSearch": {
+              "searchText": "sci-fi movie",
+              "searchField": "vector1",
+              "topK": 10
+            }
+          },
+          {
+            "vectorSearch": {
+              "searchField": "vector2",
+              "topK": 5,
+              "vector": { "values": [0.1, 0.2, 0.3] }
+            }
           }
-        },
-        {
-          "vectorSearch": {
-            "searchField": "vector2",
-            "topK": 5,
-            "vector": { "values": [0.1, 0.2, 0.3] }
-          }
-        }
-    ]
+        ]
 
 REQUIRED FLAGS
      --collection=COLLECTION
@@ -51,14 +54,47 @@ REQUIRED FLAGS
         Path to a JSON file containing a list of searches. Each element in list
         should be a JSON object representing a Search message, e.g.,
         {"semanticSearch": {"searchText": "...", "searchField": "..."}}. Keys
-        must be camelCase as in API definition. Example file content: [ {
-        "vectorSearch": { "vector": { "values": [ 1, 2, 3, 4 ] },
-        "searchField": "genre_embedding", "topK": 10, "outputFields": {
-        "dataFields": [ "director", "genre", "title", "year" ] } } }, {
-        "semanticSearch": { "searchText": "sci-fi movie", "searchField":
-        "plot_embedding", "taskType": "SEMANTIC_SIMILARITY", "topK": 10 } }, {
-        "textSearch": { "searchText": "movie 1", "dataFieldNames": ["title"],
-        "topK": 10 } } ]
+        must be camelCase as in API definition. Example file content:
+
+            [
+              {
+                "vectorSearch": {
+                  "vector": {
+                    "values": [
+                      1,
+                      2,
+                      3,
+                      4
+                    ]
+                  },
+                  "searchField": "genre_embedding",
+                  "topK": 10,
+                  "outputFields": {
+                    "dataFields": [
+                      "director",
+                      "genre",
+                      "title",
+                      "year"
+                    ]
+                  }
+                }
+              },
+              {
+                "semanticSearch": {
+                  "searchText": "sci-fi movie",
+                  "searchField": "plot_embedding",
+                  "taskType": "SEMANTIC_SIMILARITY",
+                  "topK": 10
+                }
+              },
+              {
+                "textSearch": {
+                  "searchText": "movie 1",
+                  "dataFieldNames": ["title"],
+                  "topK": 10
+                }
+              }
+            ]
 
 OPTIONAL FLAGS
      Combine Results Options

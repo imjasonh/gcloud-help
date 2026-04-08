@@ -1,0 +1,105 @@
+NAME
+    gcloud beta memorystore instances start-migration - start migration for a
+        Memorystore instance
+
+SYNOPSIS
+    gcloud beta memorystore instances start-migration
+        (INSTANCE : --location=LOCATION)
+        --self-managed-source-ip-address=SELF_MANAGED_SOURCE_IP_ADDRESS
+        --self-managed-source-network-attachment=SELF_MANAGED_SOURCE_NETWORK_ATTACHMENT
+        --self-managed-source-port=SELF_MANAGED_SOURCE_PORT [--async]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Start migration for a Memorystore instance.
+
+EXAMPLES
+    To start migration of a source instance running at IP address 10.0.0.1 and
+    port 6379 to a Memorystore instance named my-instance in region
+    us-central1, run:
+
+        $ gcloud beta memorystore instances start-migration my-instance \
+            --project=my-project --location=us-central1 \
+            --self-managed-source-ip-address=10.0.0.1 \
+            --self-managed-source-port=6379 \
+            --self-managed-source-network-attachment=projects/my-project/\
+        regions/us-central1/networkAttachments/my-network-attachment
+
+POSITIONAL ARGUMENTS
+     Instance resource - The resource name of the instance to start migration
+     on. Format: projects/{project}/locations/{location}/instances/{instance}
+     The arguments in this group can be used to specify the attributes of this
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument instance on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       INSTANCE
+          ID of the instance or fully qualified identifier for the instance.
+
+          To set the instance attribute:
+          ▸ provide the argument instance on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          The location id of the instance resource.
+
+          To set the location attribute:
+          ▸ provide the argument instance on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line.
+
+REQUIRED FLAGS
+     --self-managed-source-ip-address=SELF_MANAGED_SOURCE_IP_ADDRESS
+        The IP address of the source instance. This IP address should be a
+        stable IP address that can be accessed by the Memorystore instance
+        throughout the migration process.
+
+     --self-managed-source-network-attachment=SELF_MANAGED_SOURCE_NETWORK_ATTACHMENT
+        The resource name of the Private Service Connect Network Attachment
+        used to establish connectivity to the source instance. This network
+        attachment has the following requirements: 1. It must be in the same
+        project as the Memorystore instance. 2. It must be in the same region
+        as the Memorystore instance. 3. The subnet attached to the network
+        attachment must be in the same VPC network as the source instance
+        nodes.
+
+        Format:
+        projects/{project}/regions/{region}/networkAttachments/{network_attachment}
+
+     --self-managed-source-port=SELF_MANAGED_SOURCE_PORT
+        The port of the source instance. This port should be a stable port that
+        can be accessed by the Memorystore instance throughout the migration
+        process.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the memorystore/v1beta API. The full documentation for
+    this API can be found at: https://cloud.google.com/memorystore/
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud alpha memorystore instances start-migration
+

@@ -4,10 +4,11 @@ NAME
 SYNOPSIS
     gcloud alpha run instances create [INSTANCE] [--async]
         [--binary-authorization=POLICY] [--breakglass=JUSTIFICATION]
-        [--container=CONTAINER] [--gpu-type=GPU_TYPE]
-        [--[no-]gpu-zonal-redundancy] [--ingress=INGRESS; default="all"]
-        [--[no-]invoker-iam-check] [--key=KEY] [--labels=[KEY=VALUE,...]]
-        [--region=REGION] [--service-account=SERVICE_ACCOUNT]
+        [--container=CONTAINER] [--endpoint-mode=ENDPOINT_MODE]
+        [--gpu-type=GPU_TYPE] [--[no-]gpu-zonal-redundancy]
+        [--ingress=INGRESS; default="all"] [--[no-]invoker-iam-check]
+        [--key=KEY] [--labels=[KEY=VALUE,...]] [--region=REGION]
+        [--service-account=SERVICE_ACCOUNT]
         [--set-cloudsql-instances=[CLOUDSQL-INSTANCES,...]] [--timeout=TIMEOUT]
         [--vpc-connector=VPC_CONNECTOR] [--vpc-egress=VPC_EGRESS]
         [--add-volume=[KEY=VALUE,...]
@@ -79,6 +80,24 @@ FLAGS
 
         Flags that are not container-specific must be specified before
         --container.
+
+     --endpoint-mode=ENDPOINT_MODE
+        Specifies endpoint mode for a given command. Regional endpoints provide
+        enhanced data residency and reliability by ensuring your request is
+        handled entirely within the specified Google Cloud region. This differs
+        from global endpoints, which may process parts of the request outside
+        the target region. Overrides the default regional/endpoint_mode
+        property value for this command invocation. ENDPOINT_MODE must be one
+        of:
+
+         global
+            (Default) Use global rather than regional endpoints.
+         regional
+            Only use regional endpoints. An error will be raised if a regional
+            endpoint is not available for a given command.
+         regional-preferred
+            Use regional endpoints when available, otherwise use global
+            endpoints. Recommended for most users.
 
      --gpu-type=GPU_TYPE
         The GPU type to use.
@@ -212,7 +231,7 @@ FLAGS
           multi-container services, specify the mount-path parameter under the
           --add-volume-mount flag.
         ◆ size: (optional) A quantity representing the amount of disk space
-          allocated to this volume, such as "512Mi" or "3G".
+          allocated to this volume, such as "10Gi" or "100G".
 
         in-memory: An ephemeral volume that stores data in the instance's
         memory. With this type of volume, data is not shared between instances
@@ -423,6 +442,12 @@ GCLOUD WIDE FLAGS
     --trace-token, --user-output-enabled, --verbosity.
 
     Run $ gcloud help for details.
+
+REGIONAL ENDPOINTS
+    This command supports regional endpoints. To use regional endpoints for
+    this command, use the --endpoint-mode=regional-preferred flag. To use
+    regional endpoints by default, run $ gcloud config set
+    regional/endpoint_mode regional-preferred.
 
 NOTES
     This command is currently in alpha and might change without notice. If this

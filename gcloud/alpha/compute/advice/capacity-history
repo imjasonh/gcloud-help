@@ -1,0 +1,101 @@
+NAME
+    gcloud alpha compute advice capacity-history - show historical data on Spot
+        VMs preemption and price
+
+SYNOPSIS
+    gcloud alpha compute advice capacity-history --machine-type=MACHINE_TYPE
+        --provisioning-model=PROVISIONING_MODEL --types=HISTORY_TYPE,[...]
+        (--region=REGION | --zone=ZONE) [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Show historical data on Spot VMs preemption and price.
+
+    Use this command to retrieve historical data on Spot VM preemption and
+    price for a specific machine type and location. By analyzing historical
+    trends, you can choose configurations for creating new VM instances that
+    increase stability or lower your costs.
+
+EXAMPLES
+    To check recent price history for n2-standard-32 Spot VMs in us-central1,
+    run the following command:
+
+        $ gcloud alpha compute advice capacity-history \
+            --provisioning-model=SPOT --machine-type=n2-standard-32 \
+            --types=PRICE --region=us-central1
+
+    To check recent preemption and price history for n2-standard-32 Spot VMs in
+    us-central1-a, run the following command:
+
+        $ gcloud alpha compute advice capacity-history \
+            --provisioning-model=SPOT --machine-type=n2-standard-32 \
+            --types=PREEMPTION,PRICE --zone=us-central1-a
+
+REQUIRED FLAGS
+     --machine-type=MACHINE_TYPE
+        The machine type for the VM, such as n2-standard-4.
+
+     --provisioning-model=PROVISIONING_MODEL
+        Specifies the provisioning model. PROVISIONING_MODEL must be (only one
+        value is supported):
+
+         SPOT
+            Compute Engine may preempt a Spot VM whenever it needs capacity.
+            Because Spot VMs don't have a guaranteed runtime, they come at a
+            discounted price.
+
+     --types=HISTORY_TYPE,[...]
+        Specifies types of the request query. HISTORY_TYPE must be one of:
+
+         PREEMPTION
+            Historical preemption rates for Spot VMs, calculated as the number
+            of Spot VMs preempted by Compute Engine divided by the total number
+            of Spot VMs suspended, stopped, or deleted by users, or stopped or
+            deleted resulting from preemption. The rate is expressed in decimal
+            numbers. For more information about the preemption process, see:
+            https://docs.cloud.google.com/compute/docs/instances/spot#preemption
+         PRICE
+            Historical Spot VMs prices in USD. For more information about Spot
+            VMs pricing, see:
+            https://docs.cloud.google.com/compute/docs/instances/spot#pricing
+
+     Exactly one of these must be specified:
+
+       --region=REGION
+          Region of the advice to get history. If not specified, you might be
+          prompted to select a region (interactive mode only).
+
+          To avoid prompting when this flag is omitted, you can set the
+          compute/region property:
+
+              $ gcloud config set compute/region REGION
+
+          A list of regions can be fetched by running:
+
+              $ gcloud compute regions list
+
+          To unset the property, run:
+
+              $ gcloud config unset compute/region
+
+          Alternatively, the region can be stored in the environment variable
+          CLOUDSDK_COMPUTE_REGION.
+
+       --zone=ZONE
+          The zone to query within the specified region, for example,
+          us-central1-a. If omitted, you will view history across all zones in
+          the region.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

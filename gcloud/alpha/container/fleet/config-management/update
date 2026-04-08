@@ -5,7 +5,8 @@ NAME
 SYNOPSIS
     gcloud alpha container fleet config-management update
         (--fleet-default-member-config=FLEET_DEFAULT_MEMBER_CONFIG
-          | [(--config=CONFIG | --origin=ORIGIN) : --all-memberships
+          | [(--config=CONFIG | --origin=ORIGIN
+          | --version=VERSION) : --all-memberships
           | [--memberships=[MEMBERSHIPS,...] : --location=LOCATION]])
         [GCLOUD_WIDE_FLAG ...]
 
@@ -13,10 +14,12 @@ DESCRIPTION
     (ALPHA) Update the Config Management feature.
 
     gcloud alpha container fleet config-management update replaces the apply
-    command. It accepts the describe command output as input to ease
-    configuration updates, supports a --fleet-default-member-config flag, and
-    can update multiple --memberships. This command will gradually introduce
-    all the apply command flags and graduate to GA.
+    and upgrade commands for feature updates. The update command streamlines
+    partial configuration changes by accepting the describe command output as
+    input. In addition to the plural --memberships and --all-memberships flags,
+    the command also supports a --version flag dedicated to upgrades that
+    operates independently of the --config flag. This command errors if the
+    feature does not exist.
 
 EXAMPLES
     To update only the Config Sync sync directory on an existing membership
@@ -29,6 +32,11 @@ EXAMPLES
 
         $ gcloud alpha container fleet config-management update \
             --config=config.yaml --memberships=example-membership-1
+
+    To update the Config Sync version for all memberships to ${VERSION}, run:
+
+        $ gcloud alpha container fleet config-management update \
+            --version="${VERSION}" --all-memberships
 
     To update the fleet-default membership configuration
     (https://docs.cloud.google.com/kubernetes-engine/fleet-management/docs/manage-features)
@@ -74,7 +82,8 @@ REQUIRED FLAGS
 
        Or at least one of these can be specified:
 
-         Membership configuration flags.
+         MEMBERSHIP CONFIGURATION FLAGS. Updates membership configuration(s),
+         but does not wait for the resulting on-cluster changes to complete.
 
          Exactly one of these must be specified:
 
@@ -113,6 +122,37 @@ REQUIRED FLAGS
               Errors if the fleet-default membership configuration is not set;
               see the --fleet-default-member-config flag. ORIGIN must be (only
               one value is supported): fleet.
+
+           Or at least one of these can be specified:
+
+             PER-FIELD FLAGS. Updates a single field and preserves all other
+             existing configuration fields for target membership(s). Use the
+             --config flag to update other configuration fields.
+
+             Warns if the configSync field is not enabled. Only if the
+             configSync field is enabled according to the configSync.enabled
+             field description
+             (https://docs.cloud.google.com/kubernetes-engine/fleet-management/docs/reference/rpc/google.cloud.gkehub.configmanagement.v2alpha#google.cloud.gkehub.configmanagement.v2alpha.ConfigSync)
+             does the feature install and manage Config Sync based on the
+             membership configuration field values. Use --verbosity=error to
+             suppress the warning.
+
+             --version=VERSION
+                Version of Config Sync to update the target membership
+                configuration(s) to. Upgrades Config Sync if the configSync
+                field is enabled, and logs a warning otherwise. See the
+                PER-FIELD FLAGS section above for details. To bypass the
+                upgrade confirmation prompt, use --quiet. Find supported
+                versions and the default version behavior in the version field
+                description
+                (https://docs.cloud.google.com/kubernetes-engine/fleet-management/docs/reference/rpc/google.cloud.gkehub.configmanagement.v2alpha#spec).
+
+                To upgrade all memberships to the latest version, unless the
+                configSync field is not enabled for any membership, for which
+                the flag will log a warning, run:
+
+                    $ gcloud alpha container fleet config-management update \
+                        --version="" --all-memberships
 
          At most one of these can be specified:
 
