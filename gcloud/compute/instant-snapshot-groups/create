@@ -1,0 +1,93 @@
+NAME
+    gcloud compute instant-snapshot-groups create - create a Compute Engine
+        consistency group of instant snapshots
+
+SYNOPSIS
+    gcloud compute instant-snapshot-groups create INSTANT_SNAPSHOT_GROUP_NAME
+        --source-consistency-group=SOURCE_CONSISTENCY_GROUP
+        [--region=REGION | --zone=ZONE] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    gcloud compute instant-snapshot-groups create creates an instant snapshot
+    group of the consistency group. An Instant Snapshot Group is a Point In
+    Time view of the constituent disks of a Consistency Group, they are stored
+    in-place as Instant Snapshots on the corresponding disks.
+
+EXAMPLES
+    To create an instant snapshot group 'my-instant-snapshot-group' in zone
+    'us-east1-a' from a consistency group 'my-consistency-group' in region
+    'us-east1', run:        $ gcloud compute instant-snapshot-groups create \
+          my-instant-snapshot-group --zone us-east1-a \
+          --source-consistency-group=regions/us-east1/resourcePolicies/\
+        policy1
+
+POSITIONAL ARGUMENTS
+     INSTANT_SNAPSHOT_GROUP_NAME
+        Name of the instant snapshot group to create.
+
+REQUIRED FLAGS
+     --source-consistency-group=SOURCE_CONSISTENCY_GROUP
+        Specifies the source consistency group resource policy. The value
+        should be the relative name of the resource policy, in the format
+        ``regions/REGION/resourcePolicies/POLICY_NAME``. The resource policy is
+        always in the same region as the source disks.
+
+OPTIONAL FLAGS
+     At most one of these can be specified:
+
+       --region=REGION
+          Region of the instant snapshot group to create. If not specified, you
+          might be prompted to select a region (interactive mode only).
+
+          To avoid prompting when this flag is omitted, you can set the
+          compute/region property:
+
+              $ gcloud config set compute/region REGION
+
+          A list of regions can be fetched by running:
+
+              $ gcloud compute regions list
+
+          To unset the property, run:
+
+              $ gcloud config unset compute/region
+
+          Alternatively, the region can be stored in the environment variable
+          CLOUDSDK_COMPUTE_REGION.
+
+       --zone=ZONE
+          Zone of the instant snapshot group to create. If not specified and
+          the compute/zone property isn't set, you might be prompted to select
+          a zone (interactive mode only).
+
+          To avoid prompting when this flag is omitted, you can set the
+          compute/zone property:
+
+              $ gcloud config set compute/zone ZONE
+
+          A list of zones can be fetched by running:
+
+              $ gcloud compute zones list
+
+          To unset the property, run:
+
+              $ gcloud config unset compute/zone
+
+          Alternatively, the zone can be stored in the environment variable
+          CLOUDSDK_COMPUTE_ZONE.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    These variants are also available:
+
+        $ gcloud alpha compute instant-snapshot-groups create
+
+        $ gcloud beta compute instant-snapshot-groups create
+

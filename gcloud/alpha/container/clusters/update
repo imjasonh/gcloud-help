@@ -15,6 +15,7 @@ SYNOPSIS
           | --autoscaling-profile=AUTOSCALING_PROFILE
           | --complete-credential-rotation | --complete-ip-rotation
           | --containerd-config-from-file=PATH_TO_FILE
+          | --control-plane-egress=CONTROL_PLANE_EGRESS
           | --database-encryption-key=DATABASE_ENCRYPTION_KEY
           | --disable-database-encryption | --disable-default-snat
           | --disable-multi-nic-lustre | --disable-workload-identity
@@ -42,6 +43,7 @@ SYNOPSIS
           | --in-transit-encryption=IN_TRANSIT_ENCRYPTION
           | --logging-variant=LOGGING_VARIANT | --maintenance-window=START_TIME
           | --network-performance-configs=[PROPERTY1=VALUE1,...]
+          | --node-pool-upgrade-concurrency-config=[max-count=MAX-COUNT]
           | --notification-config=[pubsub=ENABLED|DISABLED,
           pubsub-topic=TOPIC,...] | --patch-update=[PATCH_UPDATE]
           | --private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE
@@ -352,6 +354,23 @@ REQUIRED FLAGS
 
           Use a full or relative path to a local file containing the value of
           containerd_config.
+
+       --control-plane-egress=CONTROL_PLANE_EGRESS
+          Configures the egress policy for the GKE control plane to control
+          outbound traffic from the kube-apiserver. CONTROL_PLANE_EGRESS must
+          be one of:
+
+           NONE
+              (Recommended) Provides maximum security. This mode removes the
+              control plane's public IP address and blocks all outbound traffic
+              from the kube-apiserver by default, preventing unexpected data
+              exfiltration. Webhooks that use clientConfig.url will be
+              disabled. Essential GKE-managed services are still permitted to
+              function via an internal allowlist.
+           VIA_CONTROL_PLANE
+              (Default) Maintains backward compatibility. The control plane
+              retains its public IP address and allows egress traffic from the
+              kube-apiserver.
 
        --database-encryption-key=DATABASE_ENCRYPTION_KEY
           Enable Database Encryption.
@@ -696,6 +715,18 @@ REQUIRED FLAGS
               See
               https://cloud.google.com/compute/docs/networking/configure-vm-with-high-bandwidth-configuration
               for more information.
+
+       --node-pool-upgrade-concurrency-config=[max-count=MAX-COUNT]
+          Configure the concurrency settings for node pool auto upgrades.
+
+          Examples:
+
+              $ gcloud alpha container clusters update example-cluster \
+                  --node-pool-upgrade-concurrency-config=max-count=10
+
+           max-count
+              The maximum number of node pools to upgrade concurrently. The
+              maximum allowed value is 100.
 
        --notification-config=[pubsub=ENABLED|DISABLED,pubsub-topic=TOPIC,...]
           The notification configuration of the cluster. GKE supports
@@ -1686,12 +1717,14 @@ REQUIRED FLAGS
                 Maximum number of cores in the cluster.
 
                 Maximum number of cores to which the cluster can scale.
+                Required to be set when --enable-autoprovisioning is used.
 
              --max-memory=MAX_MEMORY
                 Maximum memory in the cluster.
 
                 Maximum number of gigabytes of memory to which the cluster can
-                scale.
+                scale. Required to be set when --enable-autoprovisioning is
+                used.
 
              --min-cpu=MIN_CPU
                 Minimum number of cores in the cluster.

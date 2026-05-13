@@ -27,6 +27,7 @@ SYNOPSIS
         [--cluster-version=CLUSTER_VERSION]
         [--confidential-node-type=CONFIDENTIAL_NODE_TYPE]
         [--containerd-config-from-file=PATH_TO_FILE]
+        [--control-plane-egress=CONTROL_PLANE_EGRESS]
         [--create-subnetwork=[KEY=VALUE,...]]
         [--data-cache-count=DATA_CACHE_COUNT]
         [--database-encryption-key=DATABASE_ENCRYPTION_KEY]
@@ -81,8 +82,10 @@ SYNOPSIS
         [--min-cpu-platform=PLATFORM] [--monitoring=[COMPONENT,...]]
         [--network=NETWORK]
         [--network-performance-configs=[PROPERTY1=VALUE1,...]]
-        [--node-labels=[NODE_LABEL,...]] [--node-taints=[NODE_TAINT,...]]
-        [--node-version=NODE_VERSION]
+        [--node-architecture-taint-behavior=NODE_ARCHITECTURE_TAINT_BEHAVIOR]
+        [--node-labels=[NODE_LABEL,...]]
+        [--node-pool-upgrade-concurrency-config=[max-count=MAX-COUNT]]
+        [--node-taints=[NODE_TAINT,...]] [--node-version=NODE_VERSION]
         [--notification-config=[pubsub=ENABLED|DISABLED,
           pubsub-topic=TOPIC,...]] [--num-nodes=NUM_NODES; default=3]
         [--patch-update=[PATCH_UPDATE]]
@@ -496,6 +499,23 @@ FLAGS
 
         Use a full or relative path to a local file containing the value of
         containerd_config.
+
+     --control-plane-egress=CONTROL_PLANE_EGRESS
+        Configures the egress policy for the GKE control plane to control
+        outbound traffic from the kube-apiserver. CONTROL_PLANE_EGRESS must be
+        one of:
+
+         NONE
+            (Recommended) Provides maximum security. This mode removes the
+            control plane's public IP address and blocks all outbound traffic
+            from the kube-apiserver by default, preventing unexpected data
+            exfiltration. Webhooks that use clientConfig.url will be disabled.
+            Essential GKE-managed services are still permitted to function via
+            an internal allowlist.
+         VIA_CONTROL_PLANE
+            (Default) Maintains backward compatibility. The control plane
+            retains its public IP address and allows egress traffic from the
+            kube-apiserver.
 
      --create-subnetwork=[KEY=VALUE,...]
         Create a new subnetwork for the cluster. The name and range of the
@@ -1233,6 +1253,26 @@ FLAGS
             https://cloud.google.com/compute/docs/networking/configure-vm-with-high-bandwidth-configuration
             for more information.
 
+     --node-architecture-taint-behavior=NODE_ARCHITECTURE_TAINT_BEHAVIOR
+        Control how architecture taint should be applied to nodes in default
+        node pool(s) in new cluster.
+
+            Supported values:
+              * unspecified: Default behavior, currently the same as `arm`.
+              * arm: kubernetes.io/arch=arm:NoSchedule taint will be added for ARM nodes.
+              * none: No architecture taint will be applied.
+
+        Examples:
+
+            $ gcloud beta container clusters create example-cluster \
+                --node-architecture-taint-behavior=none
+
+        To read more about node-taints, see
+        https://cloud.google.com/kubernetes-engine/docs/node-taints.
+
+        NODE_ARCHITECTURE_TAINT_BEHAVIOR must be one of: unspecified, arm,
+        none.
+
      --node-labels=[NODE_LABEL,...]
         Applies the given Kubernetes labels on all nodes in the new node pool.
 
@@ -1253,6 +1293,18 @@ FLAGS
         and resources with one another and manage resource lifecycles, are
         different from Google Kubernetes Engine labels that are used for the
         purpose of tracking billing and usage information.
+
+     --node-pool-upgrade-concurrency-config=[max-count=MAX-COUNT]
+        Configure the concurrency settings for node pool auto upgrades.
+
+        Examples:
+
+            $ gcloud beta container clusters create example-cluster \
+                --node-pool-upgrade-concurrency-config=max-count=10
+
+         max-count
+            The maximum number of node pools to upgrade concurrently. The
+            maximum allowed value is 100.
 
      --node-taints=[NODE_TAINT,...]
         Applies the given kubernetes taints on all nodes in default node
@@ -1795,6 +1847,12 @@ FLAGS
                                                               'veno',
                                                               'westwood',
                                                               'yeah'.
+          net.ipv4.neigh.default.gc_thresh1                   Must be between
+                                                              [0, 262144]
+          net.ipv4.neigh.default.gc_thresh2                   Must be between
+                                                              [512, 524288]
+          net.ipv4.neigh.default.gc_thresh3                   Must be between
+                                                              [1024, 1048576]
           net.netfilter.nf_conntrack_max                      Must be between
                                                               [65536, 4194304]
           net.netfilter.nf_conntrack_buckets                  Must be between
@@ -1810,6 +1868,10 @@ FLAGS
           net.netfilter.nf_conntrack_tcp_timeout_established  Must be between
                                                               [600, 86400]
           net.netfilter.nf_conntrack_acct                     Must be {0, 1}
+          kernel.keys.maxkeys                                 Must be between
+                                                              [200, 1048576]
+          kernel.keys.maxbytes                                Must be between
+                                                              [20000, 2097152]
           kernel.shmmni                                       Must be between
                                                               [4096, 32768]
           kernel.shmmax                                       Must be between
@@ -2405,13 +2467,14 @@ FLAGS
          --max-cpu=MAX_CPU
             Maximum number of cores in the cluster.
 
-            Maximum number of cores to which the cluster can scale.
+            Maximum number of cores to which the cluster can scale. Required to
+            be set when --enable-autoprovisioning is used.
 
          --max-memory=MAX_MEMORY
             Maximum memory in the cluster.
 
             Maximum number of gigabytes of memory to which the cluster can
-            scale.
+            scale. Required to be set when --enable-autoprovisioning is used.
 
          --min-cpu=MIN_CPU
             Minimum number of cores in the cluster.

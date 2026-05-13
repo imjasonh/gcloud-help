@@ -28,7 +28,12 @@ EXAMPLES
             example-interconnect-group --interconnect-type=DEDICATED \
             --link-type=LINK_TYPE_ETHERNET_10G_LR --requested-link-count=1 \
             --facility=iad-1 --interconnect="name=interconnect1" \
-            --interconnect="name=interconnect2"
+            --interconnect="name=interconnect2,facility=iad-5467"
+
+    Note that facility is required for each member interconnect.
+    interconnect1's facility is set to the default value iad-1 and
+    interconnect2's facility is overridden to iad-5467 in the --interconnect
+    flag.
 
 POSITIONAL ARGUMENTS
      NAME
@@ -44,12 +49,9 @@ REQUIRED FLAGS
         must be specified. These flags are defined as a comma separated list of
         flag=value pairs.
 
-        Example: --interconnect
-        name=interconnect1,facility=iad-1,description="my
-        interconnect",link-type=LINK_TYPE_ETHERNET_10G_LR,requested-link-count=1,
-        interconnect-type=DEDICATED,admin-enabled,
-        noc-contact-email=noc@google.com,customer-name=customer-name
-        requested-features=MACSEC:CROSS_SITE_NETWORK
+        Example:
+
+            --interconnect name=interconnect1,facility=iad-1,description="my interconnect",link-type=LINK_TYPE_ETHERNET_10G_LR,requested-link-count=1,interconnect-type=DEDICATED,admin-enabled,noc-contact-email=noc@google.com,customer-name=customer-name,requested-features=MACSEC:CROSS_SITE_NETWORK
 
         Note that for multiple requested-features, use a colon (:) as the
         delimiter, as the comma is used to separate the flags. Similarly, if
@@ -135,6 +137,21 @@ GCLOUD WIDE FLAGS
     --trace-token, --user-output-enabled, --verbosity.
 
     Run $ gcloud help for details.
+
+DEFAULTABLE PER-INTERCONNECT FLAGS
+    All flags except --intent-mismatch-behavior in the OPTIONAL FLAGS section
+    are defaultable per-interconnect. This means that you can set a default
+    value by using these flags, or you can override the value for each
+    interconnect by using the --interconnect flag.
+
+    Furthermore, if the default values for the following flags are not
+    specified, then they must be specified per-interconnect in the
+    --interconnect flag:
+
+      ▪ --facility
+      ▪ --interconnect-type
+      ▪ --link-type
+      ▪ --requested-link-count
 
 NOTES
     This command is currently in alpha and might change without notice. If this

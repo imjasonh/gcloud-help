@@ -8,6 +8,7 @@ SYNOPSIS
         --target-distribution-shape=TARGET_DISTRIBUTION_SHAPE
         (--instance-selection=INSTANCE_SELECTION
           --instance-selection-machine-types=[MACHINE_TYPE,...])
+        [--accelerator-topology=ACCELERATOR_TOPOLOGY]
         [--max-run-duration=MAX_RUN_DURATION] [--region=REGION]
         [--zones=[ZONE,...]] [GCLOUD_WIDE_FLAG ...]
 
@@ -47,7 +48,8 @@ EXAMPLES
             --provisioning-model="FLEX_START" --max-run-duration=1d \
             --size=10 \
             --instance-selection-machine-types="ct5lp-hightpu-4t" \
-            --target-distribution-shape="any-single-zone"
+            --target-distribution-shape="any-single-zone" \
+            --accelerator-topology="2x2"
 
 REQUIRED FLAGS
      --provisioning-model=PROVISIONING_MODEL
@@ -72,9 +74,7 @@ REQUIRED FLAGS
          ANY
             When you specify ANY for VM instance creation across multiple
             zones, you specify that you want to create your VM instances in one
-            or more zones based on resource availability, and to use any
-            unused, matching reservation in your project. Use ANY for batch
-            workloads that don't require high availability.
+            or more zones based on resource availability.
          ANY_SINGLE_ZONE
             When you specify ANY_SINGLE_ZONE for VM instance creation, you
             specify that you want to create all VM instances in a single
@@ -84,6 +84,12 @@ REQUIRED FLAGS
             prevent Compute Engine from creating all your requested VM
             instances. Use ANY_SINGLE_ZONE when the VM instances in your
             workloads need to frequently communicate among each other.
+         BALANCED
+            Prioritizes provisioning VMs in zones where resources are
+            available. Compute Engine then distributes VMs as evenly as
+            possible across zones. If resources are unavailable in one or more
+            zones, then the actual distribution might be uneven. Use BALANCED
+            to minimize the impact of zonal failures.
 
      Specifies the machine types for which advice is being sought.
 
@@ -98,6 +104,10 @@ REQUIRED FLAGS
           creating virtual machines.
 
 OPTIONAL FLAGS
+     --accelerator-topology=ACCELERATOR_TOPOLOGY
+        Topology required to create a partition for VMs that have
+        interconnected GPUs or TPUs. For example, 2x2 for ct5l-hightpu-4t.
+
      --max-run-duration=MAX_RUN_DURATION
         Maximum duration for which the requested VMs can run. This flag must be
         used when the requested provisioning model is FLEX_START.

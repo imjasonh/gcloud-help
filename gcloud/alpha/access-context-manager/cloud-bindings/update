@@ -19,8 +19,8 @@ DESCRIPTION
     run level, scoped access settings, session settings, restricted client
     application client IDs, and restricted client application names. They can't
     all be empty. Session settings are incompatible with restricted client
-    application client IDs/names; please use scoped access settings to bind
-    session settings to an application.
+    application client IDs/names; use scoped access settings to bind session
+    settings to an application.
 
 EXAMPLES
     To update an existing access binding, run:
@@ -61,6 +61,12 @@ EXAMPLES
 
     Note this is only possible for scoped access settings that exclusively hold
     session settings.
+
+    To update a cloud access binding for all workforce identities in a given
+    org, run:
+
+        $ gcloud alpha access-context-manager cloud-bindings update \
+            --binding=my-binding-id --binding-file='binding.yaml'
 
     To update session settings, run:
 
@@ -115,12 +121,14 @@ OPTIONAL FLAGS
         settings (i.e no access levels).
 
      --binding-file=YAML_FILE
-        Path to the file that contains a Google Cloud Platform user access
-        binding.
+        Path to the file that contains a Google Cloud user access binding.
 
         This file contains a YAML-compliant object representing a
         GcpUserAccessBinding (as described in the API reference) containing
-        ScopedAccessSettings only. No other binding fields are allowed.
+        ScopedAccessSettings only. No other binding fields are allowed. For
+        bindings tied to all workforce identities in a given org, the
+        ScopedAccessSettings must only contain sessionSettings within the
+        activeSettings list. No other fields are allowed.
 
         The file content replaces the corresponding fields in the existing
         binding. Unless --append is specified. See --append help text for more
@@ -129,27 +137,34 @@ OPTIONAL FLAGS
      --dry-run-level=[DRY_RUN_LEVEL,...]
         The dry run access level that replaces the existing dry run level for
         the given binding. The input must be the full identifier of an access
-        level, such as accessPolicies/123/accessLevels/new-def.
+        level, such as accessPolicies/123/accessLevels/new-def. This parameter
+        is not supported for bindings tied to all workforce identities in an
+        organization.
 
      --level=[LEVEL,...]
         The access level that replaces the existing level for the given
         binding. The input must be the full identifier of an access level, such
-        as accessPolicies/123/accessLevels/new-abc.
+        as accessPolicies/123/accessLevels/new-abc. This parameter is not
+        supported for bindings tied to all workforce identities in an
+        organization.
 
      --restricted-client-application-client-ids=[RESTRICTED_CLIENT_APPLICATION_CLIENT_IDS,...]
         The application client IDs that replace the existing application client
-        IDs for the restricted client applications in the given binding.
+        IDs for the restricted client applications in the given binding. This
+        parameter is not supported for bindings tied to all workforce
+        identities in an organization.
 
      --restricted-client-application-names=[RESTRICTED_CLIENT_APPLICATION_NAMES,...]
         The application names that replace the existing application names for
-        the restricted client applications in the given binding.
+        the restricted client applications in the given binding. This parameter
+        is not supported for bindings tied to all workforce identities in an
+        organization.
 
      --session-length=SESSION_LENGTH
         The maximum lifetime of a user session provided as an ISO 8601 duration
         string. For first-party users, this must be at least one hour or zero
-        seconds, and no more than twenty-four hours. For third-party users,
-        this can be up to 90 days, or 14 days for Cloud Console. Granularity is
-        limited to seconds.
+        seconds, and no more than twenty-four hours. This field is not allowed
+        for bindings tied to Principals.
 
         When --session-length=0 users in the group attached to this binding
         will have infinite session length, effectively disabling the session
@@ -162,13 +177,21 @@ OPTIONAL FLAGS
 
         Setting --session-reauth-method when --session-length is empty raises
         an error. Cannot set --session-length on restricted client
-        applications; please use scoped access settings.
+        applications; use scoped access settings. This parameter is not
+        supported for bindings tied to all workforce identities in an
+        organization. For bindings tied to all workforce identities in an
+        organization, session settings can be configured by including them in
+        the binding-file.
 
      --session-reauth-method=SESSION_REAUTH_METHOD; default="login"
         Specifies the security check a user must undergo when their session
         expires. Defaults to --session-reauth-method=LOGIN if unspecified and
         --session-length is set. Cannot be used when --session-length is empty
-        or 0. SESSION_REAUTH_METHOD must be one of:
+        or 0. This parameter is not supported for bindings tied to all
+        workforce identities in an organization. For bindings tied to all
+        workforce identities in an organization, session settings can be
+        configured by including them in the binding-file. SESSION_REAUTH_METHOD
+        must be one of:
 
          login
             The user will be prompted to perform regular login. Users who are

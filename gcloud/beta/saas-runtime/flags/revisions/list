@@ -1,5 +1,5 @@
 NAME
-    gcloud beta saas-runtime flags revisions list - list Flags Revisions
+    gcloud beta saas-runtime flags revisions list - list Flag Revisions
 
 SYNOPSIS
     gcloud beta saas-runtime flags revisions list [--location=LOCATION]
@@ -7,15 +7,40 @@ SYNOPSIS
         [--sort-by=[FIELD,...]] [--uri] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (BETA) List Flags Revisions
+    (BETA) List all flag revisions available in a specific location. Flag
+    revisions are immutable, point-in-time snapshots of a flag's configuration.
+
+    Use this command to audit configuration history, verify revision creation
+    success, or identify specific revision IDs for manual recovery or inclusion
+    in a Flag Release.
 
 EXAMPLES
-    To list Flags Revisions, run:
+    To list all flag revisions across all locations in the current project,
+    run:
 
         $ gcloud beta saas-runtime flags revisions list
 
+    To list all flag revisions in the global location, run:
+
+        $ gcloud beta saas-runtime flags revisions list --location=global
+
+    To list revisions specifically for a flag named my-flag, run:
+
+        $ gcloud beta saas-runtime flags revisions list --location=global \
+          --filter="flag:my-flag"
+
+    To list the 5 most recent revisions to identify the latest configuration
+    state, run:
+
+        $ gcloud beta saas-runtime flags revisions list --location=global \
+          --limit=5 --sort-by=~createTime
+
+    To list revisions and output in JSON format for automation/scripting, run:
+
+        $ gcloud beta saas-runtime flags revisions list --format=json
+
 FLAGS
-     Location resource - Parent value for ListFlagRevisionsRequest This
+     Location resource - Location in which to list Flag Revisions. This
      represents a Cloud resource. (NOTE) Some attributes are not given
      arguments in this group but can be set in other ways.
 

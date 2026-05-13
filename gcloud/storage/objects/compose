@@ -4,7 +4,7 @@ NAME
 
 SYNOPSIS
     gcloud storage objects compose SOURCE [SOURCE ...] DESTINATION
-        [--additional-headers=HEADER=VALUE]
+        [--additional-headers=HEADER=VALUE] [--delete-source-objects]
         [--clear-custom-contexts
           | --custom-contexts=[CUSTOM_CONTEXTS_KEYS_AND_VALUES,...]
           | --custom-contexts-file=CUSTOM_CONTEXTS_FILE]
@@ -37,6 +37,13 @@ EXAMPLES
             gs://bucket/b.txt gs://bucket/target.txt \
             --custom-contexts=key1=value1,key2=value2
 
+    The following command creates a new object target.txt by concatenating
+    a.txt and b.txt, and deletes the source objects after a successful
+    composition:
+
+        $ gcloud storage objects compose gs://bucket/a.txt \
+            gs://bucket/b.txt gs://bucket/target.txt --delete-source-objects
+
 POSITIONAL ARGUMENTS
      SOURCE [SOURCE ...]
         The list of source objects that will be concatenated into a single
@@ -51,6 +58,11 @@ FLAGS
         separated list of key=value pairs, e.g. header1=value1,header2=value2.
         Overrides the default storage/additional_headers property value for
         this command invocation.
+
+     --delete-source-objects
+        If set, the source objects will be deleted after a successful
+        composition. Note that this deletion bypasses the soft delete policy if
+        configured on the bucket.
 
 OBJECT CONTEXTS FLAGS
      Group that allow users to handle object contexts.

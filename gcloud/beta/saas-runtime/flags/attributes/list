@@ -7,12 +7,38 @@ SYNOPSIS
         [--sort-by=[FIELD,...]] [--uri] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (BETA) List Flags Attributes
+    (BETA) List Flag Attributes available in a specific location for your SaaS
+    offerings.
+
+    Use this command to audit available attributes (such as userID or tenantID)
+    used in feature flag evaluation specs to determine variant assignment.
+    These attributes are typically defined in the global location and must
+    exist before they can be referenced in a flag's evaluation criteria.
 
 EXAMPLES
-    To list all Flags Attributes, run:
+    To list all Flag Attributes across all locations in the current project,
+    run:
 
         $ gcloud beta saas-runtime flags attributes list
+
+    To list Flag Attributes for a specific location (e.g., global), run:
+
+        $ gcloud beta saas-runtime flags attributes list --location=global
+
+    To find a specific attribute by its key (e.g., userID), run:
+
+        $ gcloud beta saas-runtime flags attributes list \
+          --filter="key:userID"
+
+    To get the full resource URIs for use in a flag's evaluation-spec JSON,
+    run:
+
+        $ gcloud beta saas-runtime flags attributes list --location=global \
+          --uri
+
+    To list attributes and output in JSON format for automation/scripting, run:
+
+        $ gcloud beta saas-runtime flags attributes list --format=json
 
 FLAGS
      Location resource - Location in which to list Flag Attributes. This

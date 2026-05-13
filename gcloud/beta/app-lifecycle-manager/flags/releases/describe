@@ -1,18 +1,40 @@
 NAME
     gcloud beta app-lifecycle-manager flags releases describe - describe Flag
-        Revision
+        Release
 
 SYNOPSIS
     gcloud beta app-lifecycle-manager flags releases describe
         (FLAG_RELEASE : --location=LOCATION) [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (BETA) Describe a Flag Release
+    (BETA) Show detailed information about a Flag Release resource.
+
+    A Flag Release is a configuration snapshot that groups one or more Flag
+    Revisions for a specific UnitKind. This command retrieves the list of
+    revisions, target UnitKind, and other metadata. It is the primary tool for
+    auditing the content of a rollout.
+
+    For automated processing, use --format=json or --format=yaml to retrieve
+    the structured representation of the release, which can be used to
+    programmatically verify rollout configurations or generate recovery
+    scripts.
 
 EXAMPLES
-    To describe a Flag Release, run:
+    To describe a Flag Release named my-release in the global location, run:
 
-        $ gcloud beta app-lifecycle-manager flags releases describe
+        $ gcloud beta app-lifecycle-manager flags releases describe \
+          my-release --location=global
+
+    To describe a Flag Release using its fully qualified resource name, run:
+
+        $ gcloud beta app-lifecycle-manager flags releases describe \
+          projects/my-project/locations/global/flagReleases/my-release
+
+    To inspect the revisions in JSON format for automated auditing or recovery,
+    run:
+
+        $ gcloud beta app-lifecycle-manager flags releases describe \
+          my-release --location=global --format=json
 
 POSITIONAL ARGUMENTS
      FlagRelease resource - Flag Release ID of the Flag Release to describe.

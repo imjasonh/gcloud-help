@@ -16,7 +16,9 @@ SYNOPSIS
         [--cluster-ipv4-cidr=CLUSTER_IPV4_CIDR]
         [--cluster-secondary-range-name=NAME]
         [--cluster-version=CLUSTER_VERSION]
+        [--confidential-node-type=CONFIDENTIAL_NODE_TYPE]
         [--containerd-config-from-file=PATH_TO_FILE]
+        [--control-plane-egress=CONTROL_PLANE_EGRESS]
         [--create-subnetwork=[KEY=VALUE,...]]
         [--database-encryption-key=DATABASE_ENCRYPTION_KEY]
         [--disable-l4-lb-firewall-reconciliation] [--disable-multi-nic-lustre]
@@ -51,6 +53,7 @@ SYNOPSIS
         [--dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE
           | --disable-dataplane-v2-flow-observability
           | --enable-dataplane-v2-flow-observability]
+        [--disable-pod-snapshots | --enable-pod-snapshots]
         [--enable-insecure-binding-system-authenticated
           --enable-insecure-binding-system-unauthenticated]
         [--enable-master-authorized-networks
@@ -280,6 +283,12 @@ FLAGS
 
             $ gcloud container get-server-config
 
+     --confidential-node-type=CONFIDENTIAL_NODE_TYPE
+        Enable confidential nodes for the cluster. Enabling Confidential Nodes
+        will create nodes using Confidential VM
+        https://docs.cloud.google.com/compute/docs/about-confidential-vm.
+        CONFIDENTIAL_NODE_TYPE must be one of: sev, sev_snp, tdx.
+
      --containerd-config-from-file=PATH_TO_FILE
         Path of the YAML file that contains containerd configuration entries
         like configuring access to private image registries.
@@ -293,6 +302,23 @@ FLAGS
 
         Use a full or relative path to a local file containing the value of
         containerd_config.
+
+     --control-plane-egress=CONTROL_PLANE_EGRESS
+        Configures the egress policy for the GKE control plane to control
+        outbound traffic from the kube-apiserver. CONTROL_PLANE_EGRESS must be
+        one of:
+
+         NONE
+            (Recommended) Provides maximum security. This mode removes the
+            control plane's public IP address and blocks all outbound traffic
+            from the kube-apiserver by default, preventing unexpected data
+            exfiltration. Webhooks that use clientConfig.url will be disabled.
+            Essential GKE-managed services are still permitted to function via
+            an internal allowlist.
+         VIA_CONTROL_PLANE
+            (Default) Maintains backward compatibility. The control plane
+            retains its public IP address and allows egress traffic from the
+            kube-apiserver.
 
      --create-subnetwork=[KEY=VALUE,...]
         Create a new subnetwork for the cluster. The name and range of the
@@ -734,6 +760,14 @@ FLAGS
        --enable-dataplane-v2-flow-observability
           Enables Advanced Datapath Observability which allows for a real-time
           view into pod-to-pod traffic within your cluster.
+
+     At most one of these can be specified:
+
+       --disable-pod-snapshots
+          Disable the Pod Snapshot feature on the cluster.
+
+       --enable-pod-snapshots
+          Enable the Pod Snapshot feature on the cluster.
 
      --enable-insecure-binding-system-authenticated
         Allow using system:authenticated as a subject in ClusterRoleBindings

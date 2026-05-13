@@ -4,9 +4,10 @@ NAME
 SYNOPSIS
     gcloud vector-search collections create (COLLECTION : --location=LOCATION)
         [--async] [--data-schema=DATA_SCHEMA] [--description=DESCRIPTION]
-        [--display-name=DISPLAY_NAME] [--labels=[LABELS,...]]
-        [--request-id=REQUEST_ID] [--vector-schema=[VECTOR_SCHEMA,...]]
-        [GCLOUD_WIDE_FLAG ...]
+        [--display-name=DISPLAY_NAME]
+        [--encryption-spec-crypto-key-name=ENCRYPTION_SPEC_CRYPTO_KEY_NAME]
+        [--labels=[LABELS,...]] [--request-id=REQUEST_ID]
+        [--vector-schema=[VECTOR_SCHEMA,...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Create a collection.
@@ -31,6 +32,18 @@ EXAMPLES
             --vector-schema='{"plot_embedding":{"denseVector":{"dimensions":\
         3}},"genre_embedding":{"denseVector":{"dimensions":4}},"sparse_embed\
         ding":{"sparseVector":{}}}' --project=my-project
+
+    To create a CMEK-encrypted collection my-collection in project my-project
+    and location us-central1 to store dense embedding vectors with 100
+    dimensions, run:
+
+        $ gcloud vector-search collections create my-collection \
+            --location=us-central1 --display-name='My Collection' \
+            --vector-schema='{"my-embedding-field": {"denseVector":
+         {"dimensions": 100}}}' \
+            --encryption-spec-crypto-key-name='projects/my-project/locations\
+        /us-central1/keyRings/my-key-ring/cryptoKeys/my-key' \
+            --project=my-project
 
 POSITIONAL ARGUMENTS
      Collection resource - Identifier. name of resource The arguments in this
@@ -79,6 +92,16 @@ FLAGS
 
      --display-name=DISPLAY_NAME
         User-specified display name of the collection
+
+     Represents a customer-managed encryption key specification that can be
+     applied to a Vector Search collection.
+
+     --encryption-spec-crypto-key-name=ENCRYPTION_SPEC_CRYPTO_KEY_NAME
+        Resource name of the Cloud KMS key used to protect the resource.
+
+        The Cloud KMS key must be in the same region as the resource. It must
+        have the format
+        projects/{project}/locations/{location}/keyRings/{key_ring}/cryptoKeys/{crypto_key}.
 
      --labels=[LABELS,...]
         Labels as key value pairs.

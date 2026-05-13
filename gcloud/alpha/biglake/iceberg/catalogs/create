@@ -6,8 +6,13 @@ SYNOPSIS
     gcloud alpha biglake iceberg catalogs create CATALOG
         --catalog-type=CATALOG_TYPE
         [--credential-mode=CREDENTIAL_MODE; default="end-user"]
-        [--description=DESCRIPTION] [--primary-location=PRIMARY_LOCATION]
-        [GCLOUD_WIDE_FLAG ...]
+        [--description=DESCRIPTION]
+        [--federated-catalog-type=FEDERATED_CATALOG_TYPE]
+        [--namespace-filters=[NAMESPACE,...]]
+        [--primary-location=PRIMARY_LOCATION]
+        [--refresh-interval=REFRESH_INTERVAL] [--secret-name=SECRET_NAME]
+        [--unity-catalog-name=UNITY_CATALOG_NAME]
+        [--unity-instance-name=UNITY_INSTANCE_NAME] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Create a BigLake Iceberg REST catalog.
@@ -23,6 +28,15 @@ EXAMPLES
 
         $ gcloud alpha biglake iceberg catalogs create my-catalog-bucket \
             --catalog-type=gcs-bucket --credential-mode=vended-credentials
+
+    To create a unity federated catalog my-federated-catalog, run:
+
+        $ gcloud alpha biglake iceberg catalogs create \
+            my-federated-catalog --catalog-type=federated \
+            --federated-catalog-type=unity \
+            --secret-name=projects/my-project/locations/us/secrets/\
+        my-secret --unity-instance-name=instance.cloud.databricks.com \
+            --unity-catalog-name=my-catalog --primary-location=us
 
 POSITIONAL ARGUMENTS
      Catalog resource - The Iceberg Catalog to create. This represents a Cloud
@@ -62,12 +76,39 @@ OPTIONAL FLAGS
             Use vended credentials to access the catalog.
 
      --description=DESCRIPTION
-        Description of the resource being created.
+        Description of the resource.
+
+     --federated-catalog-type=FEDERATED_CATALOG_TYPE
+        Type of the federated catalog. FEDERATED_CATALOG_TYPE must be (only one
+        value is supported): unity.
+
+     --namespace-filters=[NAMESPACE,...]
+        Filters to determine which namespaces are included in the refresh
+        process. Empty list means include all namespaces.
 
      --primary-location=PRIMARY_LOCATION
         Primary location for mirroring the remote catalog metadata. It must be
         a BigLake-supported location, and it should be proximate to the remote
         catalog's location for better performance and lower cost.
+
+     --refresh-interval=REFRESH_INTERVAL
+        The interval for refreshing metadata from the remote catalog (e.g.,
+        "1hr5m30s"). Defaults to seconds if no unit is specified. If unset, the
+        refresh interval will be set to 0s (background refresh disabled).
+
+     --secret-name=SECRET_NAME
+        The secret resource name in Secret Manager, in the format
+        projects/{project_id}/locations/{location}/secrets/{secret_id} or
+        projects/{project_id}/locations/{location}/secrets/{secret_id}/versions/{version_id}.
+
+     --unity-catalog-name=UNITY_CATALOG_NAME
+        Name of the catalog in Unity Catalog.
+
+     --unity-instance-name=UNITY_INSTANCE_NAME
+        The instance name is the first part of the URL when you log into your
+        Databricks deployment. For example, for a Databricks on Google Cloud
+        workspace URL https://1.1.gcp.databricks.com, the instance name is
+        1.1.gcp.databricks.com.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

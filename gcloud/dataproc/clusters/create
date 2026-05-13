@@ -16,10 +16,12 @@ SYNOPSIS
         [--driver-pool-machine-type=DRIVER_POOL_MACHINE_TYPE]
         [--driver-pool-min-cpu-platform=PLATFORM]
         [--driver-pool-size=DRIVER_POOL_SIZE] [--enable-component-gateway]
+        [--engine=ENGINE]
         [--initialization-action-timeout=TIMEOUT; default="10m"]
         [--initialization-actions=CLOUD_STORAGE_URI,[...]]
         [--labels=[KEY=VALUE,...]]
         [--master-accelerator=[type=TYPE,[count=COUNT],...]]
+        [--master-attached-disks=MASTER_ATTACHED_DISKS]
         [--master-boot-disk-provisioned-iops=MASTER_BOOT_DISK_PROVISIONED_IOPS]
         [--master-boot-disk-provisioned-throughput=MASTER_BOOT_DISK_PROVISIONED_THROUGHPUT]
         [--master-boot-disk-size=MASTER_BOOT_DISK_SIZE]
@@ -38,6 +40,7 @@ SYNOPSIS
         [--private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE]
         [--properties=[PREFIX:PROPERTY=VALUE,...]]
         [--secondary-worker-accelerator=[type=TYPE,[count=COUNT],...]]
+        [--secondary-worker-attached-disks=SECONDARY_WORKER_ATTACHED_DISKS]
         [--secondary-worker-boot-disk-size=SECONDARY_WORKER_BOOT_DISK_SIZE]
         [--secondary-worker-boot-disk-type=SECONDARY_WORKER_BOOT_DISK_TYPE]
         [--secondary-worker-local-ssd-interface=SECONDARY_WORKER_LOCAL_SSD_INTERFACE]
@@ -47,8 +50,9 @@ SYNOPSIS
         [--secondary-worker-standard-capacity-percent-above-base=SECONDARY_WORKER_STANDARD_CAPACITY_PERCENT_ABOVE_BASE]
         [--shielded-integrity-monitoring] [--shielded-secure-boot]
         [--shielded-vtpm] [--stop-max-idle=STOP_MAX_IDLE]
-        [--temp-bucket=TEMP_BUCKET] [--tier=TIER]
+        [--temp-bucket=TEMP_BUCKET]
         [--worker-accelerator=[type=TYPE,[count=COUNT],...]]
+        [--worker-attached-disks=WORKER_ATTACHED_DISKS]
         [--worker-boot-disk-provisioned-iops=WORKER_BOOT_DISK_PROVISIONED_IOPS]
         [--worker-boot-disk-provisioned-throughput=WORKER_BOOT_DISK_PROVISIONED_THROUGHPUT]
         [--worker-boot-disk-size=WORKER_BOOT_DISK_SIZE]
@@ -235,6 +239,9 @@ FLAGS
         Enable access to the web UIs of selected components on the cluster
         through the component gateway.
 
+     --engine=ENGINE
+        Cluster engine. ENGINE must be one of: default, lightning.
+
      --initialization-action-timeout=TIMEOUT; default="10m"
         The maximum duration of each initialization action. See $ gcloud topic
         datetimes for information on duration formats.
@@ -262,6 +269,42 @@ FLAGS
          count
             The number of accelerators to attach to each instance. The default
             value is 1.
+
+     --master-attached-disks=MASTER_ATTACHED_DISKS
+        A list of disk configurations to attach to each instance in this group.
+        Disk configurations are separated by semicolons. Each disk
+        configuration is a comma-separated list of the following parameters.
+
+            type - required
+               The type of disk to attach to the instances
+               (https://cloud.google.com/compute/docs/disks/hyperdisks).
+               Allowed disk types are: hyperdisk-balanced, hyperdisk-extreme,
+               hyperdisk-ml, hyperdisk-throughput.
+
+            size - optional
+               The size of the disk. The value must be a whole number followed by
+               a size unit GB for gigabyte, or TB for terabyte. For example,
+               10GB produces a 10 gigabyte disk.
+
+            iops - optional
+               Indicates the IOPS
+               (https://cloud.google.com/compute/docs/disks/hyperdisks#iops) to
+               provision for the attached hyperdisk. This parameter sets the limit
+               for disk I/O operations per second.
+
+            throughput - optional
+               Indicates the throughput
+               (https://cloud.google.com/compute/docs/disks/hyperdisks#throughput)
+               to provision for the attached hyperdisk. This parameter sets the
+               limit for throughput in MiB per second.
+
+            Example:
+              type='hyperdisk-balanced,iops=5000,throughput=200,size=100G;type=hyperdisk-throughput,size=9000G'
+
+            Attaches two disks to the instances. The first disk is a
+            hyperdisk-balanced disk with 5000 IOPS, 200 MiB/s throughput, and 100
+            GiB size. The second disk is a hyperdisk-throughput disk with 9000
+            GiB size.
 
      --master-boot-disk-provisioned-iops=MASTER_BOOT_DISK_PROVISIONED_IOPS
         Indicates the IOPS
@@ -401,6 +444,42 @@ FLAGS
             The number of accelerators to attach to each instance. The default
             value is 1.
 
+     --secondary-worker-attached-disks=SECONDARY_WORKER_ATTACHED_DISKS
+        A list of disk configurations to attach to each instance in this group.
+        Disk configurations are separated by semicolons. Each disk
+        configuration is a comma-separated list of the following parameters.
+
+            type - required
+               The type of disk to attach to the instances
+               (https://cloud.google.com/compute/docs/disks/hyperdisks).
+               Allowed disk types are: hyperdisk-balanced, hyperdisk-extreme,
+               hyperdisk-ml, hyperdisk-throughput.
+
+            size - optional
+               The size of the disk. The value must be a whole number followed by
+               a size unit GB for gigabyte, or TB for terabyte. For example,
+               10GB produces a 10 gigabyte disk.
+
+            iops - optional
+               Indicates the IOPS
+               (https://cloud.google.com/compute/docs/disks/hyperdisks#iops) to
+               provision for the attached hyperdisk. This parameter sets the limit
+               for disk I/O operations per second.
+
+            throughput - optional
+               Indicates the throughput
+               (https://cloud.google.com/compute/docs/disks/hyperdisks#throughput)
+               to provision for the attached hyperdisk. This parameter sets the
+               limit for throughput in MiB per second.
+
+            Example:
+              type='hyperdisk-balanced,iops=5000,throughput=200,size=100G;type=hyperdisk-throughput,size=9000G'
+
+            Attaches two disks to the instances. The first disk is a
+            hyperdisk-balanced disk with 5000 IOPS, 200 MiB/s throughput, and 100
+            GiB size. The second disk is a hyperdisk-throughput disk with 9000
+            GiB size.
+
      --secondary-worker-boot-disk-size=SECONDARY_WORKER_BOOT_DISK_SIZE
         The size of the boot disk. The value must be a whole number followed by
         a size unit of KB for kilobyte, MB for megabyte, GB for gigabyte, or TB
@@ -463,9 +542,6 @@ FLAGS
         The Google Cloud Storage bucket to use by default to store ephemeral
         cluster and jobs data, such as Spark and MapReduce history files.
 
-     --tier=TIER
-        Cluster tier. TIER must be one of: premium, standard.
-
      --worker-accelerator=[type=TYPE,[count=COUNT],...]
         Attaches accelerators, such as GPUs, to the worker instance(s).
 
@@ -477,6 +553,42 @@ FLAGS
          count
             The number of accelerators to attach to each instance. The default
             value is 1.
+
+     --worker-attached-disks=WORKER_ATTACHED_DISKS
+        A list of disk configurations to attach to each instance in this group.
+        Disk configurations are separated by semicolons. Each disk
+        configuration is a comma-separated list of the following parameters.
+
+            type - required
+               The type of disk to attach to the instances
+               (https://cloud.google.com/compute/docs/disks/hyperdisks).
+               Allowed disk types are: hyperdisk-balanced, hyperdisk-extreme,
+               hyperdisk-ml, hyperdisk-throughput.
+
+            size - optional
+               The size of the disk. The value must be a whole number followed by
+               a size unit GB for gigabyte, or TB for terabyte. For example,
+               10GB produces a 10 gigabyte disk.
+
+            iops - optional
+               Indicates the IOPS
+               (https://cloud.google.com/compute/docs/disks/hyperdisks#iops) to
+               provision for the attached hyperdisk. This parameter sets the limit
+               for disk I/O operations per second.
+
+            throughput - optional
+               Indicates the throughput
+               (https://cloud.google.com/compute/docs/disks/hyperdisks#throughput)
+               to provision for the attached hyperdisk. This parameter sets the
+               limit for throughput in MiB per second.
+
+            Example:
+              type='hyperdisk-balanced,iops=5000,throughput=200,size=100G;type=hyperdisk-throughput,size=9000G'
+
+            Attaches two disks to the instances. The first disk is a
+            hyperdisk-balanced disk with 5000 IOPS, 200 MiB/s throughput, and 100
+            GiB size. The second disk is a hyperdisk-throughput disk with 9000
+            GiB size.
 
      --worker-boot-disk-provisioned-iops=WORKER_BOOT_DISK_PROVISIONED_IOPS
         Indicates the IOPS

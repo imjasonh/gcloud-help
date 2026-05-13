@@ -13,13 +13,13 @@ SYNOPSIS
         [--[no-]gpu-zonal-redundancy] [--[no-]iap]
         [--ingress=INGRESS; default="all"] [--[no-]invoker-iam-check]
         [--max=MAX] [--max-instances=MAX_INSTANCES] [--mesh=MESH] [--min=MIN]
-        [--min-instances=MIN_INSTANCES] [--region=REGION] [--regions=REGIONS]
-        [--remove-containers=[CONTAINER,...]]
+        [--min-instances=MIN_INSTANCES] [--public] [--region=REGION]
+        [--regions=REGIONS] [--remove-containers=[CONTAINER,...]]
         [--revision-suffix=REVISION_SUFFIX] [--scaling=SCALING]
         [--scaling-concurrency-target=SCALING_CONCURRENCY_TARGET]
         [--scaling-cpu-target=SCALING_CPU_TARGET]
         [--service-account=SERVICE_ACCOUNT] [--[no-]session-affinity]
-        [--tag=TAG] [--timeout=TIMEOUT] [--no-traffic]
+        [--[no-]ssh] [--tag=TAG] [--timeout=TIMEOUT] [--no-traffic]
         [--vpc-connector=VPC_CONNECTOR] [--vpc-egress=VPC_EGRESS]
         [--add-cloudsql-instances=[CLOUDSQL-INSTANCES,...]
           | --clear-cloudsql-instances
@@ -285,6 +285,10 @@ FLAGS
         --min to set the minimum number of instances across all revisions of
         the Service which may be modified dynamically.
 
+     --public
+        Make the service public by disabling invoker IAM checks and IAP.
+        Equivalent to setting --no-invoker-iam-check and --no-iap.
+
      --region=REGION
         Region in which the resource can be found. Alternatively, set the
         property [run/region].
@@ -332,6 +336,10 @@ FLAGS
      --[no-]session-affinity
         Whether to enable session affinity for connections to the service. Use
         --session-affinity to enable and --no-session-affinity to disable.
+
+     --[no-]ssh
+        Whether to enable SSH access to the service's container instancesfor
+        inspection and debugging. Use --ssh to enable and --no-ssh to disable.
 
      --tag=TAG
         Traffic tag to assign to the newly created revision.

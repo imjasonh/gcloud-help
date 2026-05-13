@@ -9,8 +9,10 @@ SYNOPSIS
         [--row-key-schema-definition-file=ROW_KEY_SCHEMA_DEFINITION_FILE]
         [--row-key-schema-pre-encoded-bytes] [--splits=[SPLITS,...]]
         [--tiered-storage-infrequent-access-older-than=TIERED_STORAGE_INFREQUENT_ACCESS_OLDER_THAN]
-        [--automated-backup-retention-period=AUTOMATED_BACKUP_RETENTION_PERIOD
-          | --enable-automated-backup] [GCLOUD_WIDE_FLAG ...]
+        [--enable-automated-backup
+          | --automated-backup-locations=[LOCATION,...]
+          --automated-backup-retention-period=AUTOMATED_BACKUP_RETENTION_PERIOD]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Create a new Cloud Bigtable table.
@@ -78,6 +80,13 @@ EXAMPLES
         $ gcloud alpha bigtable tables create my-table \
             --instance=my-instance --column-families="my-family" \
             --automated-backup-retention_period=30d
+
+    To create a table my-table with a custom automated backup policy configured
+    to take backups in only us-central1-b and us-east1-c, run:
+
+        $ gcloud alpha bigtable tables create my-table \
+            --instance=my-instance \
+            --automated-backup-locations=us-central1-b,us-east1-c
 
 POSITIONAL ARGUMENTS
      Table resource - Cloud Bigtable table to create. The arguments in this
@@ -167,14 +176,27 @@ OPTIONAL FLAGS
 
      At most one of these can be specified:
 
-       --automated-backup-retention-period=AUTOMATED_BACKUP_RETENTION_PERIOD
-          The retention period of automated backup in the format of 30d for 30
-          days. Min retention period is 3d and max is 90d. Setting this flag
-          will enable automated backup for the table.
-
        --enable-automated-backup
           Once set, enables the default automated backup policy
           (retention_period=7d, frequency=1d) for the table.
+
+       Or at least one of these can be specified:
+
+         Group for automated backup policy parameters.
+
+         --automated-backup-locations=[LOCATION,...]
+            List of Cloud Bigtable zones where automated backups are allowed to
+            be created. If empty, automated backups will be created in all
+            zones of the instance. Locations are in the format
+            projects/{project}/locations/{zone}. Setting this flag will enable
+            automated backup for the table. If automated backup retention
+            period is not specified, it defaults to 7 days.
+
+         --automated-backup-retention-period=AUTOMATED_BACKUP_RETENTION_PERIOD
+            The retention period of automated backup in the format of 30d for
+            30 days. Min retention period is 3d and max is 90d. Setting this
+            flag will enable automated backup for the table. If automated
+            backup retention period is not specified, it defaults to 7 days.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

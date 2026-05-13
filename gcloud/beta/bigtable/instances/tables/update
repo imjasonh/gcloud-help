@@ -6,7 +6,9 @@ SYNOPSIS
     gcloud beta bigtable instances tables update (TABLE : --instance=INSTANCE)
         [--async] [--deletion-protection] [--row-key-schema-pre-encoded-bytes]
         [--automated-backup-retention-period=AUTOMATED_BACKUP_RETENTION_PERIOD
-          | --disable-automated-backup | --enable-automated-backup]
+          --automated-backup-locations=[LOCATION,...]
+          | --clear-automated-backup-locations | --disable-automated-backup
+          | --enable-automated-backup]
         [--change-stream-retention-period=CHANGE_STREAM_RETENTION_PERIOD
           | --clear-change-stream-retention-period]
         [--clear-row-key-schema
@@ -56,7 +58,19 @@ EXAMPLES
     retain backups for 30 days, run:
 
         $ gcloud beta bigtable instances tables update my-table \
-            --instance=my-instance --automated-backup-retention_period=30d
+            --instance=my-instance --automated-backup-retention-period=30d
+
+    To enable or update a custom automated backup policy and configure it to
+    take backups in only us-central1-b and us-east1-c, run:
+
+        $ gcloud beta bigtable instances tables update my-table \
+            --instance=my-instance \
+            --automated-backup-locations=us-central1-b,us-east1-c
+
+    To empty the automated backup locations list, run:
+
+        $ gcloud beta bigtable instances tables update my-table \
+            --instance=my-instance --clear-automated-backup-locations
 
 POSITIONAL ARGUMENTS
      Table resource - Cloud Bigtable table to update. The arguments in this
@@ -109,19 +123,35 @@ FLAGS
 
      At most one of these can be specified:
 
+       Group for automated backup policy parameters.
+
        --automated-backup-retention-period=AUTOMATED_BACKUP_RETENTION_PERIOD
           The retention period of automated backup in the format of 30d for 30
           days. Min retention period is 3d and max is 90d. Setting this flag
           will enable automated backup for the table.
 
-       --disable-automated-backup
-          Once set, disables automated backup policy for the table.
+       At most one of these can be specified:
 
-       --enable-automated-backup
-          Once set, enables the default automated backup policy
-          (retention_period=7d, frequency=1d) for the table. Note: If a table
-          has automated backup enabled, this flag resets it to the default
-          policy.
+         --automated-backup-locations=[LOCATION,...]
+            List of Cloud Bigtable zones where automated backups are allowed to
+            be created. If empty, automated backups will be created in all
+            zones of the instance. Locations are in the format
+            projects/{project}/locations/{zone}. Setting this flag will enable
+            automated backup for the table.
+
+         --clear-automated-backup-locations
+            Empty the automated backup locations list if populated.
+
+       At most one of these can be specified:
+
+         --disable-automated-backup
+            Once set, disables automated backup policy for the table.
+
+         --enable-automated-backup
+            Once set, enables the default automated backup policy
+            (retention_period=7d, frequency=1d) for the table. Note: If a table
+            has automated backup enabled, this flag resets it to the default
+            policy.
 
      At most one of these can be specified:
 

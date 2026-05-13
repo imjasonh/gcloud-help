@@ -6,16 +6,27 @@ SYNOPSIS
     gcloud beta app-lifecycle-manager flags releases create FLAG_RELEASE
         --unit-kind=UNIT_KIND [--annotations=[ANNOTATIONS,...]]
         [--labels=[LABELS,...]] [--location=LOCATION]
+        [--obsolete-flags=[OBSOLETE_FLAGS,...]]
         [--all-flags | --flag-sets=[FLAG_SETS,...]
           | --revisions=[REVISIONS,...]] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (BETA) Create a Flag Release.
+    (BETA) Create a new Flag Release resource. A Flag Release defines a
+    specific set of flag revisions to be applied to a UnitKind. It serves as
+    the immutable input for a Rollout.
 
 EXAMPLES
-    To create a Flag Release, run:
+    To create a targeted Flag Release for specific flag revisions, run:
 
-        $ gcloud beta app-lifecycle-manager flags releases create
+        $ gcloud beta app-lifecycle-manager flags releases create \
+          my-release --unit-kind=my-unit-kind --revisions=rev-1,rev-2 \
+          --location=global
+
+    To create a Flag Release that includes all current flags in a UnitKind,
+    run:
+
+        $ gcloud beta app-lifecycle-manager flags releases create \
+          full-sync --unit-kind=my-unit-kind --all-flags --location=global
 
 POSITIONAL ARGUMENTS
      FlagRelease resource - ID of the Flag Release:
@@ -118,9 +129,33 @@ OPTIONAL FLAGS
             --labels=path_to_file.(yaml|json)
 
      --location=LOCATION
-        For resources [flag_release, revisions, unit-kind], provides fallback
-        value for resource location attribute. When the resource's full URI
-        path is not provided, location will fallback to this flag value.
+        For resources [flag_release, obsolete-flags, revisions, unit-kind],
+        provides fallback value for resource location attribute. When the
+        resource's full URI path is not provided, location will fallback to
+        this flag value.
+
+     Flag resource - Flags (IDs) to be removed from the given UnitKind and all
+     the related Units. If Flag (ID) is provided here, its Flag Revisions will
+     be removed from the UnitKind and Units. This represents a Cloud resource.
+     (NOTE) Some attributes are not given arguments in this group but can be
+     set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument --obsolete-flags on the command line with a
+        fully specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     To set the location attribute:
+      ◆ provide the argument --obsolete-flags on the command line with a
+        fully specified name;
+      ◆ provide the argument --location on the command line.
+
+     --obsolete-flags=[OBSOLETE_FLAGS,...]
+        IDs of the flags or fully qualified identifiers for the flags.
+
+        To set the flag attribute:
+        ◆ provide the argument --obsolete-flags on the command line.
 
      Flags for specifying the content of the release. You can use only one of
      the following flags.

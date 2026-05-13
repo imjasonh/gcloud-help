@@ -5,20 +5,43 @@ SYNOPSIS
     gcloud beta app-lifecycle-manager flags create FLAG
         --flag-value-type=FLAG_VALUE_TYPE --key=KEY --unit-kind=UNIT_KIND
         [--annotations=[ANNOTATIONS,...]] [--description=DESCRIPTION]
-        [--evaluation-spec=[defaultTarget=DEFAULTTARGET]] [--flag-set=FLAG_SET]
-        [--labels=[LABELS,...]] [--location=LOCATION] [--state=STATE]
+        [--evaluation-spec=[allocations=ALLOCATIONS],
+          [attributes=ATTRIBUTES],[defaultTarget=DEFAULTTARGET],[rules=RULES]]
+        [--flag-set=FLAG_SET] [--labels=[LABELS,...]] [--location=LOCATION]
+        [--state=STATE]
         [--variants=[booleanValue=BOOLEANVALUE],[description=DESCRIPTION],
           [doubleValue=DOUBLEVALUE],
           [id=ID],[integerValue=INTEGERVALUE],[stringValue=STRINGVALUE]]
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (BETA) Create a Flag
+    (BETA) Create a new feature flag resource. Flags define toggleable features
+    or configurations that can be evaluated at runtime by applications.
 
 EXAMPLES
-    To create a Flag, run:
+    To create a simple boolean flag with a default Disabled state, run:
 
-        $ gcloud beta app-lifecycle-manager flags create
+        $ gcloud beta app-lifecycle-manager flags create my-feature-flag \
+          --key=enable_new_feature --flag-value-type=bool \
+          --unit-kind=my-service-unit \
+          --variants='[{"id": "Enabled", "booleanValue": true}, {"id":
+        "Disabled", "booleanValue": false}]' \
+           --evaluation-spec='{"defaultTarget": "Disabled"}' \
+           --location=global
+
+    To create a percentage rollout (10% Enabled) using a userID attribute, run:
+
+        $ gcloud beta app-lifecycle-manager flags create beta-feature \
+          --key=beta_rollout --flag-value-type=bool \
+          --unit-kind=my-service-unit \
+          --variants='[{"id": "Enabled", "booleanValue": true}, {"id":
+        "Disabled", "booleanValue": false}]' \
+           --evaluation-spec='{"allocations": [{"id": "p10",
+        "randomizedOn": "userID", "slots": [{"variant": "Disabled",
+        "weight": 90}, {"variant": "Enabled", "weight": 10}]}],
+        "defaultTarget": "p10", "attributes":
+        ["projects/my-project/locations/global/flagAttributes/id-attr"]}' \
+           --location=global
 
 POSITIONAL ARGUMENTS
      Flag resource - ID of the Flag:
@@ -116,19 +139,62 @@ OPTIONAL FLAGS
      --description=DESCRIPTION
         A description of the flag. Max length: 500 bytes.
 
-     --evaluation-spec=[defaultTarget=DEFAULTTARGET]
+     --evaluation-spec=[allocations=ALLOCATIONS],[attributes=ATTRIBUTES],[defaultTarget=DEFAULTTARGET],[rules=RULES]
         Specification of how the Flag value should be evaluated.
+
+         allocations
+            A list of allocations.
+
+             description
+                A description of the allocation. Max length: 500 bytes.
+
+             id
+                Id of the allocation. Max length: 128 bytes.
+
+             randomizedOn
+                Key of the context attribute that is used for traffic
+                splitting.
+
+             slots
+                Slots defines the weighted distribution of variants.
+
+                 variant
+                    Variant of the allocation slot.
+
+                 weight
+                    Weight defines the proportion of traffic to allocate to the
+                    variant, relative to other slots in the same allocation.
+
+         attributes
+            Names of the context attributes that are used in the evaluation
+            rules and allocations.
 
          defaultTarget
             Default variant for the flag.
 
+         rules
+            Define the logic for evaluating the flag against a given context.
+            The rules are evaluated sequentially in their specified order.
+
+             condition
+                A Common Expression Language (CEL cel.dev) expression evaluated
+                against the evaluation context. For example: plan == "premium"
+                && country == "DE".
+
+             id
+                A unique identifier for the rule.
+
+             target
+                The ID of the variant to return if the condition evaluates to
+                true.
+
         Shorthand Example:
 
-            --evaluation-spec=defaultTarget=string
+            --evaluation-spec=allocations=[{description=string,id=string,randomizedOn=string,slots=[{variant=string,weight=int}]}],attributes=[string],defaultTarget=string,rules=[{condition=string,id=string,target=string}]
 
         JSON Example:
 
-            --evaluation-spec='{"defaultTarget": "string"}'
+            --evaluation-spec='{"allocations": [{"description": "string", "id": "string", "randomizedOn": "string", "slots": [{"variant": "string", "weight": int}]}], "attributes": ["string"], "defaultTarget": "string", "rules": [{"condition": "string", "id": "string", "target": "string"}]}'
 
         File Example:
 

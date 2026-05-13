@@ -5,10 +5,25 @@ NAME
 SYNOPSIS
     gcloud alpha biglake iceberg catalogs update CATALOG
         [--credential-mode=CREDENTIAL_MODE; default="end-user"]
-        [--description=DESCRIPTION] [GCLOUD_WIDE_FLAG ...]
+        [--description=DESCRIPTION] [--namespace-filters=[NAMESPACE,...]]
+        [--refresh-interval=REFRESH_INTERVAL] [--secret-name=SECRET_NAME]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (ALPHA) Update a BigLake Iceberg REST catalog.
+
+EXAMPLES
+    To update the description of a catalog my-catalog, run:
+
+        $ gcloud alpha biglake iceberg catalogs update my-catalog \
+            --description="updated description"
+
+    To update the refresh interval and namespace filters for a federated
+    catalog my-federated-catalog, run:
+
+        $ gcloud alpha biglake iceberg catalogs update \
+            my-federated-catalog --refresh-interval=1h \
+            --namespace-filters=db1,db2
 
 POSITIONAL ARGUMENTS
      Catalog resource - The Iceberg Catalog to update. This represents a Cloud
@@ -40,7 +55,21 @@ FLAGS
             Use vended credentials to access the catalog.
 
      --description=DESCRIPTION
-        Description of the resource being created.
+        Description of the resource.
+
+     --namespace-filters=[NAMESPACE,...]
+        Filters to determine which namespaces are included in the refresh
+        process. Empty list means include all namespaces.
+
+     --refresh-interval=REFRESH_INTERVAL
+        Interval for refreshing metadata from the remote catalog (e.g.,
+        "1hr5m30s"). Defaults to seconds if no unit is specified. If unset, the
+        refresh interval will be set to 0s (background refresh disabled).
+
+     --secret-name=SECRET_NAME
+        Resource name of the Secret Manager secret, in the format
+        projects/{project_id}/locations/{location}/secrets/{secret_id} or
+        projects/{project_id}/locations/{location}/secrets/{secret_id}/versions/{version_id}.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

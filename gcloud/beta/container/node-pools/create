@@ -44,6 +44,7 @@ SYNOPSIS
         [--metadata-from-file=KEY=LOCAL_FILE_PATH,[...]]
         [--min-cpu-platform=PLATFORM]
         [--network-performance-configs=[PROPERTY=VALUE,...]]
+        [--node-architecture-taint-behavior=NODE_ARCHITECTURE_TAINT_BEHAVIOR]
         [--node-group=NODE_GROUP] [--node-labels=[NODE_LABEL,...]]
         [--node-locations=ZONE,[ZONE,...]]
         [--node-pool-soak-duration=NODE_POOL_SOAK_DURATION]
@@ -63,7 +64,7 @@ SYNOPSIS
         [--standard-rollout-policy=[batch-node-count=BATCH_NODE_COUNT,
           batch-percent=BATCH_NODE_PERCENTAGE,
           batch-soak-duration=BATCH_SOAK_DURATION,...]]
-        [--storage-pools=STORAGE_POOL,[...]]
+        [--storage-pools=STORAGE_POOL,[...]] [--subnetwork=SUBNETWORK]
         [--system-config-from-file=PATH_TO_FILE] [--tags=TAG,[TAG,...]]
         [--threads-per-core=THREADS_PER_CORE] [--tpu-topology=TPU_TOPOLOGY]
         [--windows-os-version=WINDOWS_OS_VERSION]
@@ -559,6 +560,27 @@ FLAGS
             external IP destinations. The following tier values are allowed:
             [TIER_UNSPECIFIED,TIER_1]
 
+     --node-architecture-taint-behavior=NODE_ARCHITECTURE_TAINT_BEHAVIOR
+        Control how architecture taint should be applied to nodes in a new node
+        pool.
+
+            Supported values:
+              * unspecified: Default behavior, currently the same as `arm`.
+              * arm: kubernetes.io/arch=arm:NoSchedule taint will be added for ARM nodes.
+              * none: No architecture taint will be applied.
+
+        Examples:
+
+            $ gcloud beta container node-pools create node-pool-1 \
+                --cluster=example-cluster \
+                --node-architecture-taint-behavior=none
+
+        To read more about node-taints, see
+        https://cloud.google.com/kubernetes-engine/docs/node-taints.
+
+        NODE_ARCHITECTURE_TAINT_BEHAVIOR must be one of: unspecified, arm,
+        none.
+
      --node-group=NODE_GROUP
         Assign instances of this pool to run on the specified Google Compute
         Engine node group. This is useful for running workloads on sole tenant
@@ -831,6 +853,14 @@ FLAGS
         STORAGE_POOL must be in the format
         projects/project/zones/zone/storagePools/storagePool
 
+     --subnetwork=SUBNETWORK
+        The subnetwork to use for nodes. This subnetwork must exist in the
+        cluster's list of additional subnetworks.
+
+        If not specified, the node pool's node IP addresses are allocated from
+        the least utilized subnet and its secondary range. See details at
+        https://cloud.google.com/kubernetes-engine/docs/how-to/multi-subnet-clusters#create-node-pool
+
      --system-config-from-file=PATH_TO_FILE
         Path of the YAML/JSON file that contains the node configuration,
         including Linux kernel parameters (sysctls) and kubelet configs.
@@ -1089,6 +1119,12 @@ FLAGS
                                                               'veno',
                                                               'westwood',
                                                               'yeah'.
+          net.ipv4.neigh.default.gc_thresh1                   Must be between
+                                                              [0, 262144]
+          net.ipv4.neigh.default.gc_thresh2                   Must be between
+                                                              [512, 524288]
+          net.ipv4.neigh.default.gc_thresh3                   Must be between
+                                                              [1024, 1048576]
           net.netfilter.nf_conntrack_max                      Must be between
                                                               [65536, 4194304]
           net.netfilter.nf_conntrack_buckets                  Must be between
@@ -1104,6 +1140,10 @@ FLAGS
           net.netfilter.nf_conntrack_tcp_timeout_established  Must be between
                                                               [600, 86400]
           net.netfilter.nf_conntrack_acct                     Must be {0, 1}
+          kernel.keys.maxkeys                                 Must be between
+                                                              [200, 1048576]
+          kernel.keys.maxbytes                                Must be between
+                                                              [20000, 2097152]
           kernel.shmmni                                       Must be between
                                                               [4096, 32768]
           kernel.shmmax                                       Must be between

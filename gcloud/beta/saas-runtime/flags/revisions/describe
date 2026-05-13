@@ -6,18 +6,40 @@ SYNOPSIS
         (FLAG_REVISION : --location=LOCATION) [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (BETA) Describe a Flag Revision
+    (BETA) Show detailed information about a flag revision resource.
+
+    This command retrieves the complete configuration of a specific flag
+    revision. It is the primary tool for auditing historical flag definitions
+    and inspecting snapshots before they are included in a Flag Release.
+
+    For automated processing, use --format=json or --format=yaml to retrieve
+    the structured representation of the revision's evaluation logic, which can
+    be used to programmatically verify configurations.
 
 EXAMPLES
-    To describe a Flag Revision, run:
+    To describe a flag revision named my-revision-v1 in the global location,
+    run:
 
-        $ gcloud beta saas-runtime flags revisions describe
+        $ gcloud beta saas-runtime flags revisions describe my-revision-v1 \
+          --location=global
+
+    To describe a flag revision using its fully qualified resource name, run:
+
+        $ gcloud beta saas-runtime flags revisions describe \
+          projects/my-project/locations/global/flagRevisions/\
+        my-revision-v1
+
+    To inspect the revision configuration in JSON format for automated
+    auditing, run:
+
+        $ gcloud beta saas-runtime flags revisions describe my-revision-v1 \
+          --location=global --format=json
 
 POSITIONAL ARGUMENTS
-     FlagRevision resource - Flag Revision ID of the Flag Revision to describe.
-     The arguments in this group can be used to specify the attributes of this
-     resource. (NOTE) Some attributes are not given arguments in this group but
-     can be set in other ways.
+     FlagRevision resource - Flag Revision ID of the Flag Revision to describe
+     or the fully qualified resource name. The arguments in this group can be
+     used to specify the attributes of this resource. (NOTE) Some attributes
+     are not given arguments in this group but can be set in other ways.
 
      To set the project attribute:
       ◆ provide the argument flag_revision on the command line with a fully

@@ -6,12 +6,28 @@ SYNOPSIS
         (FLAG_RELEASE : --location=LOCATION) [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (BETA) Delete a Flag Release
+    (BETA) Delete a Flag Release resource.
+
+    Flag Releases are resources that groups one or more FlagRevision resources
+    that are intended to be deployed together as a single payload for a
+    Rollout.
+
+    The safe deletion workflow is:
+
+        1. Ensure no active Rollouts reference this Flag Release.
+        2. Run this `delete` command to permanently remove the Flag Release.
 
 EXAMPLES
-    To delete a Flag Release, run:
+    To delete a Flag Release named 'v1-release' in the 'global' location, run:
 
-        $ gcloud beta saas-runtime flags releases delete
+        $ gcloud beta saas-runtime flags releases delete v1-release \
+          --location=global
+
+    To delete a Flag Release using a fully qualified resource name (useful for
+    automation), run:
+
+        $ gcloud beta saas-runtime flags releases delete \
+          projects/my-project/locations/global/flagReleases/v1-release
 
 POSITIONAL ARGUMENTS
      FlagRelease resource - Flag Release ID of the Flag Release to delete. The

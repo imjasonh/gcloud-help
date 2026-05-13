@@ -7,10 +7,12 @@ SYNOPSIS
         [--description=DESCRIPTION] [--disable-remote-validation]
         [--immutable-tags]
         [--remote-password-secret-version=REMOTE_PASSWORD_SECRET_VERSION]
-        [--remote-username=REMOTE_USERNAME] [--update-labels=[KEY=VALUE,...]]
-        [--upstream-policy-file=FILE]
+        [--remote-username=REMOTE_USERNAME] [--severity=SEVERITY]
+        [--update-labels=[KEY=VALUE,...]] [--upstream-policy-file=FILE]
         [--allow-vulnerability-scanning | --disable-vulnerability-scanning]
-        [--clear-labels | --remove-labels=[KEY,...]] [GCLOUD_WIDE_FLAG ...]
+        [--clear-labels | --remove-labels=[KEY,...]]
+        [--clear-platform-logs | --disable-platform-logs
+          | --enable-platform-logs] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     Update the description or labels for an Artifact Registry repository.
@@ -82,6 +84,15 @@ FLAGS
      --remote-username=REMOTE_USERNAME
         Remote Repository upstream registry username.
 
+     --severity=SEVERITY
+        The minimum severity level of logs to generate. This flag is only
+        applicable when using --enable-platform-logs. SEVERITY must be one of:
+
+         error
+            Log events with severity ERROR or higher.
+         info
+            Log events with severity INFO or higher.
+
      --update-labels=[KEY=VALUE,...]
         List of label KEY=VALUE pairs to update. If a label exists, its value
         is modified. Otherwise, a new label is created.
@@ -125,6 +136,18 @@ FLAGS
           List of label keys to remove. If a label does not exist it is
           silently ignored. If --update-labels is also specified then
           --update-labels is applied first.
+
+     At most one of these can be specified:
+
+       --clear-platform-logs
+          Clear platform logging settings for the repository to fall back to
+          project settings.
+
+       --disable-platform-logs
+          Disable platform logging for the repository.
+
+       --enable-platform-logs
+          Enable platform logging for the repository.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

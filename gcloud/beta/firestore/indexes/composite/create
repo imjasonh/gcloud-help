@@ -4,13 +4,16 @@ NAME
 
 SYNOPSIS
     gcloud beta firestore indexes composite create
-        --field-config=[array-config=ARRAY-CONFIG],
-          [field-path=FIELD-PATH],[order=ORDER],[vector-config=VECTOR-CONFIG]
+        --field-config=[array-config=ARRAY-CONFIG],[field-path=FIELD-PATH],
+          [order=ORDER],
+          [search-config=SEARCH-CONFIG],[vector-config=VECTOR-CONFIG]
         (--collection-group=COLLECTION_GROUP : --database=DATABASE)
         [--api-scope=API_SCOPE; default="any-api"] [--async]
         [--density=DENSITY] [--multikey]
-        [--query-scope=QUERY_SCOPE; default="collection"] [--unique]
-        [GCLOUD_WIDE_FLAG ...]
+        [--query-scope=QUERY_SCOPE; default="collection"]
+        [--search-index-options=[text-language=TEXT-LANGUAGE],
+          [text-language-override-field-path=TEXT-LANGUAGE-OVERRIDE-FIELD-PATH]]
+        [--unique] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) Create a new composite index.
@@ -31,7 +34,7 @@ EXAMPLES
             --field-config=field-path=timestamp,order=descending
 
 REQUIRED FLAGS
-     --field-config=[array-config=ARRAY-CONFIG],[field-path=FIELD-PATH],[order=ORDER],[vector-config=VECTOR-CONFIG]
+     --field-config=[array-config=ARRAY-CONFIG],[field-path=FIELD-PATH],[order=ORDER],[search-config=SEARCH-CONFIG],[vector-config=VECTOR-CONFIG]
         Required, Configuration for an index field.
 
          array-config
@@ -47,6 +50,53 @@ REQUIRED FLAGS
             Exactly one of 'order', 'array-config', or 'vector-config' must be
             specified.
 
+         search-config
+            Specifies the configuration for a search field. An index definition
+            must contain either only 'search-config' fields or only non
+            'search-config' fields.
+
+            Examples:
+
+            Text search:
+
+                --field-config=field-path=title,search-config='{"text-spec": {"index-specs": [{"index-type": "TOKENIZED", "match-type": "MATCH_GLOBALLY"}]}}'
+
+            Geo search:
+
+                --field-config=field-path=location,search-config='{"geo-spec": {"geo-json-indexing-disabled": true}}'
+
+            With file:
+
+                --field-config=field-path=text,search-config='/path/to/configs/search-config.json'
+
+            For complex configurations, it is recommended to use a file.
+
+             geo-spec
+                Optional. The specification for building a geo search index for
+                a field.
+
+                 geo-json-indexing-disabled
+                    Optional. Disables geoJSON indexing for the field. By
+                    default, geoJSON points are indexed.
+
+             text-spec
+                Optional. The specification for building a text search index
+                for a field.
+
+                 index-specs
+                    Optional. Array of specifications for how the field should
+                    be indexed.
+
+                     index-type
+                        Required. How to index the text field value. Valid
+                        options are:
+                        ▹ TOKENIZED: Field values are tokenized.
+
+                     match-type
+                        Required. How to match the text field value. Valid
+                        options are:
+                        ▹ MATCH_GLOBALLY: Match on any indexed field.
+
          vector-config
             Specifies the configuration for a vector field. Exactly one of
             'order', 'array-config', or 'vector-config' must be specified.
@@ -59,11 +109,11 @@ REQUIRED FLAGS
 
         Shorthand Example:
 
-            --field-config=array-config=string,field-path=string,order=string,vector-config={dimension=int,flat} --field-config=array-config=string,field-path=string,order=string,vector-config={dimension=int,flat}
+            --field-config=array-config=string,field-path=string,order=string,search-config={geo-spec={geo-json-indexing-disabled=boolean},text-spec={index-specs=[{index-type=string,match-type=string}]}},vector-config={dimension=int,flat} --field-config=array-config=string,field-path=string,order=string,search-config={geo-spec={geo-json-indexing-disabled=boolean},text-spec={index-specs=[{index-type=string,match-type=string}]}},vector-config={dimension=int,flat}
 
         JSON Example:
 
-            --field-config='[{"array-config": "string", "field-path": "string", "order": "string", "vector-config": {"dimension": int, "flat": {}}}]'
+            --field-config='[{"array-config": "string", "field-path": "string", "order": "string", "search-config": {"geo-spec": {"geo-json-indexing-disabled": boolean}, "text-spec": {"index-specs": [{"index-type": "string", "match-type": "string"}]}}, "vector-config": {"dimension": int, "flat": {}}}]'
 
         File Example:
 
@@ -121,11 +171,41 @@ OPTIONAL FLAGS
         index. For multikey indexes, at most one of the paths in the index
         definition reach or traverse an array, except via an explicit array
         index. Violations will result in errors. Note this field only applies
-        to index with MONGODB_COMPATIBLE_API ApiScope.
+        to index with 'MONGODB_COMPATIBLE_API' ApiScope.
 
      --query-scope=QUERY_SCOPE; default="collection"
         Query scope the index applies to. QUERY_SCOPE must be one of:
         collection, collection-group, collection-recursive.
+
+     --search-index-options=[text-language=TEXT-LANGUAGE],[text-language-override-field-path=TEXT-LANGUAGE-OVERRIDE-FIELD-PATH]
+        Optional. Configuration options for search indexes.
+
+         text-language
+            Optional. The language to use for text search indexes. Used as the
+            default language if not overridden at the document level by
+            specifying the 'text-language-override-field-path'. The language is
+            specified as a BCP 47 language code. For indexes with
+            'MONGODB_COMPATIBLE_API' ApiScope: If unspecified, the default
+            language is English. For indexes with 'ANY_API' ApiScope: If
+            unspecified, the default behavior is autodetect.
+
+         text-language-override-field-path
+            Optional. The field in the document that specifies which language
+            to use for that specific document. If unspecified, the language is
+            taken from the 'language' document field if it exists or from
+            'text-language' if it does not.
+
+        Shorthand Example:
+
+            --search-index-options=text-language=string,text-language-override-field-path=string
+
+        JSON Example:
+
+            --search-index-options='{"text-language": "string", "text-language-override-field-path": "string"}'
+
+        File Example:
+
+            --search-index-options=path_to_file.(yaml|json)
 
      --unique
         Optional. Whether it is an unique index. Unique index ensures all

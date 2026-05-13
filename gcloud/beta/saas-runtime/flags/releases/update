@@ -1,5 +1,5 @@
 NAME
-    gcloud beta saas-runtime flags releases update - update Flag Release
+    gcloud beta saas-runtime flags releases update - update a Flag Release
 
 SYNOPSIS
     gcloud beta saas-runtime flags releases update
@@ -12,12 +12,23 @@ SYNOPSIS
           | --remove-labels=REMOVE_LABELS] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (BETA) Update a Flag Release
+    (BETA) Update the administrative metadata of an existing Flag Release. This
+    command modifies the resource's labels (for categorization and filtering)
+    and annotations (for external tool metadata).
+
+    Note that Flag Releases are immutable snapshots of flag configurations.
+    This command does not modify the flag revisions or the associated UnitKind.
+    To change the flag logic or revisions associated with a UnitKind, you must
+    create a new Flag Release and initiate a Rollout. This architecture ensures
+    that once a release is created, its behavioral payload remains constant
+    while allowing for operational metadata updates.
 
 EXAMPLES
-    To update a Flag Release, run:
+    To update labels and annotations for a flag release, run:
 
-        $ gcloud beta saas-runtime flags releases update
+        $ gcloud beta saas-runtime flags releases update my-release \
+          --location=us-central1 --labels=env=prod \
+          --annotations=ticket=123
 
 POSITIONAL ARGUMENTS
      FlagRelease resource - ID of the Flag Release:

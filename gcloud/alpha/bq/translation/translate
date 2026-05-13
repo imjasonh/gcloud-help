@@ -4,8 +4,11 @@ NAME
 
 SYNOPSIS
     gcloud alpha bq translation translate --location=LOCATION
-        --source-dialect=SOURCE_DIALECT [--input-file=INPUT_FILE]
+        --source-dialect=SOURCE_DIALECT --target-dialect=TARGET_DIALECT
+        [--explanation-output-file=EXPLANATION_OUTPUT_FILE]
+        [--input-file=INPUT_FILE] [--metadata-gcs-uri=METADATA_GCS_URI]
         [--output-file=OUTPUT_FILE]
+        [--translation-config-files=[CONFIG_FILE,...]]
         [--translation-log-file=TRANSLATION_LOG_FILE] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
@@ -33,16 +36,33 @@ REQUIRED FLAGS
         Google Cloud Storage location to use for the translation.
 
      --source-dialect=SOURCE_DIALECT
-        Source dialect of the query.
+        Source dialect of the query. See supported dialects in
+        https://docs.cloud.google.com/bigquery/docs/batch-sql-translator#supported_sql_dialects
+
+     --target-dialect=TARGET_DIALECT
+        Target dialect of the query. See supported dialects in
+        https://docs.cloud.google.com/bigquery/docs/batch-sql-translator#supported_sql_dialects
 
 OPTIONAL FLAGS
+     --explanation-output-file=EXPLANATION_OUTPUT_FILE
+        File to which to write the translation explanation.
+
      --input-file=INPUT_FILE
         File from which to read the SQL query to translate. Can be piped
         through stdin as well.
 
+     --metadata-gcs-uri=METADATA_GCS_URI
+        Cloud Storage URI for the metadata zip file.
+
      --output-file=OUTPUT_FILE
         File to which to write the translated SQL. Writes to stdout if not
         provided or if set to ``-''.
+
+     --translation-config-files=[CONFIG_FILE,...]
+        A comma-separated list of paths to YAML configuration files. File names
+        must end with .config.yaml. See
+        https://docs.cloud.google.com/bigquery/docs/config-yaml-translation for
+        more details.
 
      --translation-log-file=TRANSLATION_LOG_FILE
         File to which to write the translation logs.

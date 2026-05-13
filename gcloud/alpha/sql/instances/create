@@ -33,6 +33,7 @@ SYNOPSIS
         [--[no-]enable-data-cache] [--[no-]enable-dataplex-integration]
         [--[no-]enable-google-ml-integration] [--enable-google-private-path]
         [--enable-password-policy] [--enable-point-in-time-recovery]
+        [--[no-]enable-psc-auto-dns] [--[no-]enable-psc-write-endpoint-dns]
         [--enforce-new-sql-network-architecture]
         [--failover-replica-name=FAILOVER_REPLICA_NAME] [--[no-]final-backup]
         [--final-backup-retention-days=FINAL_BACKUP_RETENTION_DAYS]
@@ -365,6 +366,16 @@ FLAGS
         backups enabled to use. Make sure storage can support at least 7 days
         of logs.
 
+     --[no-]enable-psc-auto-dns
+        Enable per instance DNS records for PSC auto-connections. Use
+        --enable-psc-auto-dns to enable and --no-enable-psc-auto-dns to
+        disable.
+
+     --[no-]enable-psc-write-endpoint-dns
+        Enable the global DNS record pointing to the primary, for Enterprise
+        Plus edition only. Use --enable-psc-write-endpoint-dns to enable and
+        --no-enable-psc-write-endpoint-dns to disable.
+
      --enforce-new-sql-network-architecture
         Force the instance to use the new network architecture.
 
@@ -521,9 +532,19 @@ FLAGS
         MySQL instance. The input should be in a format of key=value. Available
         case-sensitive keys are: enabled (boolean), probing-interval-seconds
         (integer), probe-threshold (integer), running-threads-threshold
-        (integer), seconds-behind-source-threshold (integer), and
-        transaction-duration-threshold (integer). Example:
-        --performance-capture-config enabled=true,probe-threshold=5
+        (integer), seconds-behind-source-threshold (integer),
+        transaction-duration-threshold (integer),
+        cpu-utilization-threshold-percent (integer),
+        memory-usage-threshold-percent (integer),
+        transaction-lock-wait-threshold-count (integer),
+        semaphore-wait-threshold-count (integer),
+        history-list-length-threshold-count (integer),
+        transaction-kill-threshold-seconds (integer), transaction-kill-type
+        (string), transaction-kill-excluded-user-hosts (string,
+        semicolon-separated list) Example: --performance-capture-config
+        enabled=true,probe-threshold=5, cpu-utilization-threshold-percent=80,
+        transaction-kill-excluded-user-hosts=user1@host1;user2@%,
+        transaction-kill-type=READ_ONLY_TRANSACTIONS
 
      --psc-auto-connections=[network=NETWORK],[project=PROJECT]
         A comma-separated list of networks or network-project pairs. Each

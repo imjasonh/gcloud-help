@@ -15,7 +15,9 @@ SYNOPSIS
         [--cluster-ipv4-cidr=CLUSTER_IPV4_CIDR]
         [--cluster-secondary-range-name=NAME]
         [--cluster-version=CLUSTER_VERSION]
+        [--confidential-node-type=CONFIDENTIAL_NODE_TYPE]
         [--containerd-config-from-file=PATH_TO_FILE]
+        [--control-plane-egress=CONTROL_PLANE_EGRESS]
         [--create-subnetwork=[KEY=VALUE,...]]
         [--database-encryption-key=DATABASE_ENCRYPTION_KEY]
         [--disable-l4-lb-firewall-reconciliation] [--disable-multi-nic-lustre]
@@ -36,11 +38,13 @@ SYNOPSIS
         [--hpa-profile=HPA_PROFILE] [--labels=[KEY=VALUE,...]]
         [--logging=[COMPONENT,...]] [--managed-otel-scope=MANAGED_OTEL_SCOPE]
         [--membership-type=MEMBERSHIP_TYPE] [--monitoring=[COMPONENT,...]]
-        [--network=NETWORK] [--private-endpoint-subnetwork=NAME]
-        [--release-channel=CHANNEL] [--security-group=SECURITY_GROUP]
-        [--security-posture=SECURITY_POSTURE] [--services-ipv4-cidr=CIDR]
-        [--services-secondary-range-name=NAME] [--subnetwork=SUBNETWORK]
-        [--tier=TIER] [--workload-policies=WORKLOAD_POLICIES]
+        [--network=NETWORK]
+        [--node-pool-upgrade-concurrency-config=[max-count=MAX-COUNT]]
+        [--private-endpoint-subnetwork=NAME] [--release-channel=CHANNEL]
+        [--security-group=SECURITY_GROUP] [--security-posture=SECURITY_POSTURE]
+        [--services-ipv4-cidr=CIDR] [--services-secondary-range-name=NAME]
+        [--subnetwork=SUBNETWORK] [--tier=TIER]
+        [--workload-policies=WORKLOAD_POLICIES]
         [--workload-vulnerability-scanning=WORKLOAD_VULNERABILITY_SCANNING]
         [--additive-vpc-scope-dns-domain=ADDITIVE_VPC_SCOPE_DNS_DOMAIN
           | --disable-additive-vpc-scope]
@@ -281,6 +285,12 @@ FLAGS
 
             $ gcloud container get-server-config
 
+     --confidential-node-type=CONFIDENTIAL_NODE_TYPE
+        Enable confidential nodes for the cluster. Enabling Confidential Nodes
+        will create nodes using Confidential VM
+        https://docs.cloud.google.com/compute/docs/about-confidential-vm.
+        CONFIDENTIAL_NODE_TYPE must be one of: sev, sev_snp, tdx.
+
      --containerd-config-from-file=PATH_TO_FILE
         Path of the YAML file that contains containerd configuration entries
         like configuring access to private image registries.
@@ -294,6 +304,23 @@ FLAGS
 
         Use a full or relative path to a local file containing the value of
         containerd_config.
+
+     --control-plane-egress=CONTROL_PLANE_EGRESS
+        Configures the egress policy for the GKE control plane to control
+        outbound traffic from the kube-apiserver. CONTROL_PLANE_EGRESS must be
+        one of:
+
+         NONE
+            (Recommended) Provides maximum security. This mode removes the
+            control plane's public IP address and blocks all outbound traffic
+            from the kube-apiserver by default, preventing unexpected data
+            exfiltration. Webhooks that use clientConfig.url will be disabled.
+            Essential GKE-managed services are still permitted to function via
+            an internal allowlist.
+         VIA_CONTROL_PLANE
+            (Default) Maintains backward compatibility. The control plane
+            retains its public IP address and allows egress traffic from the
+            kube-apiserver.
 
      --create-subnetwork=[KEY=VALUE,...]
         Create a new subnetwork for the cluster. The name and range of the
@@ -554,6 +581,18 @@ FLAGS
         The Compute Engine Network that the cluster will connect to. Google
         Kubernetes Engine will use this network when creating routes and
         firewalls for the clusters. Defaults to the 'default' network.
+
+     --node-pool-upgrade-concurrency-config=[max-count=MAX-COUNT]
+        Configure the concurrency settings for node pool auto upgrades.
+
+        Examples:
+
+            $ gcloud alpha container clusters create-auto example-cluster \
+                --node-pool-upgrade-concurrency-config=max-count=10
+
+         max-count
+            The maximum number of node pools to upgrade concurrently. The
+            maximum allowed value is 100.
 
      --private-endpoint-subnetwork=NAME
         Sets the subnetwork GKE uses to provision the control plane's private

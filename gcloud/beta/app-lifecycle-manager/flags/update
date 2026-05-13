@@ -3,7 +3,8 @@ NAME
 
 SYNOPSIS
     gcloud beta app-lifecycle-manager flags update (FLAG : --location=LOCATION)
-        [--evaluation-spec=[defaultTarget=DEFAULTTARGET],[variants=VARIANTS]]
+        [--evaluation-spec=[allocations=ALLOCATIONS],
+          [attributes=ATTRIBUTES],[defaultTarget=DEFAULTTARGET],[rules=RULES]]
         [--state=STATE]
         [--variants=[booleanValue=BOOLEANVALUE],[description=DESCRIPTION],
           [doubleValue=DOUBLEVALUE],
@@ -18,12 +19,68 @@ SYNOPSIS
           | --remove-labels=REMOVE_LABELS] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (BETA) Update a Flag
+    (BETA) Update the definition of a feature flag. This command modifies the
+    flag's configuration such as variants, evaluation logic, or metadata within
+    its parent UnitKind.
+
+    Feature flags follow a lifecycle managed through their state:
+
+    The in-development state is the initial state for a feature flag. It
+    indicates that the flag is currently being defined, variants are being
+    added, and evaluation logic is being refined. Flags in this state are
+    typically used for initial setup and testing and are not yet intended for
+    production rollouts.
+
+    The active state is the default state for a feature flag. It signifies that
+    the flag is in use, authorized for production rollouts, and actively being
+    evaluated by application services. Active flags are included in
+    configuration manifests and release snapshots for the fleet.
+
+    The sunsetting state indicates that a feature flag is being phased out. It
+    serves as a signal to engineering teams that the code associated with the
+    flag should be removed. While still functional, sunsetting flags should not
+    be used for new feature logic and are candidates for future cleanup.
+
+    When a flag is no longer needed, its state can be updated to cleanup.
+    Performing a rollout with a flag in this state will remove all its
+    revisions from the Units. This is a mandatory step in the flag deletion
+    flow.
+
+    Note that updating a flag definition does not immediately change the flag's
+    value in production units. To apply these changes to your fleet, you must
+    subsequently create a new FlagRelease and initiate a Rollout. This
+    architecture enables the decoupling of feature releases from code
+    deployments, facilitating safe, progressive rollouts and instant rollbacks.
 
 EXAMPLES
-    To update a Flag, run:
+    To initialize a flag in the in-development state for testing, run:
 
-        $ gcloud beta app-lifecycle-manager flags update
+        $ gcloud beta app-lifecycle-manager flags update my-flag \
+          --location=global --state=in-development
+
+    To guarantee a flag is active for a new production rollout, run:
+
+        $ gcloud beta app-lifecycle-manager flags update my-flag \
+          --location=global --state=active
+
+    To update the variants of a boolean flag, run:
+
+        $ gcloud beta app-lifecycle-manager flags update my-flag \
+          --location=global \
+          --variants='[{"id": "Enabled", "booleanValue": true}, {"id":
+        "Disabled", "booleanValue": false}]'
+
+    To mark a flag as sunsetting to signal code removal, run:
+
+        $ gcloud beta app-lifecycle-manager flags update my-flag \
+          --location=global --state=sunsetting \
+          --description="Feature fully launched. Starting code removal."
+
+    To mark a flag for cleanup (remove from Units in the next rollout), run:
+
+        $ gcloud beta app-lifecycle-manager flags update my-flag \
+          --location=global --state=cleanup \
+          --description="Ready for permanent deletion."
 
 POSITIONAL ARGUMENTS
      Flag resource - ID of the Flag:
@@ -61,29 +118,62 @@ POSITIONAL ARGUMENTS
           ▸ provide the argument --location on the command line.
 
 FLAGS
-     --evaluation-spec=[defaultTarget=DEFAULTTARGET],[variants=VARIANTS]
+     --evaluation-spec=[allocations=ALLOCATIONS],[attributes=ATTRIBUTES],[defaultTarget=DEFAULTTARGET],[rules=RULES]
         Specification of how the Flag value should be evaluated.
+
+         allocations
+            A list of allocations.
+
+             description
+                A description of the allocation. Max length: 500 bytes.
+
+             id
+                Id of the allocation. Max length: 128 bytes.
+
+             randomizedOn
+                Key of the context attribute that is used for traffic
+                splitting.
+
+             slots
+                Slots defines the weighted distribution of variants.
+
+                 variant
+                    Variant of the allocation slot.
+
+                 weight
+                    Weight defines the proportion of traffic to allocate to the
+                    variant, relative to other slots in the same allocation.
+
+         attributes
+            Names of the context attributes that are used in the evaluation
+            rules and allocations.
 
          defaultTarget
             Default variant for the flag.
 
-         variants
-            A list of variants. Variant is an identifier for a value (name
-            assigned to a value).
+         rules
+            Define the logic for evaluating the flag against a given context.
+            The rules are evaluated sequentially in their specified order.
 
-             boolValue
-                Value is a single boolean flag value for the variant.
+             condition
+                A Common Expression Language (CEL cel.dev) expression evaluated
+                against the evaluation context. For example: plan == "premium"
+                && country == "DE".
 
-             name
-                Name of the variant. Max length: 128 bytes.
+             id
+                A unique identifier for the rule.
+
+             target
+                The ID of the variant to return if the condition evaluates to
+                true.
 
         Shorthand Example:
 
-            --evaluation-spec=defaultTarget=string,variants=[{boolValue=boolean,name=string}]
+            --evaluation-spec=allocations=[{description=string,id=string,randomizedOn=string,slots=[{variant=string,weight=int}]}],attributes=[string],defaultTarget=string,rules=[{condition=string,id=string,target=string}]
 
         JSON Example:
 
-            --evaluation-spec='{"defaultTarget": "string", "variants": [{"boolValue": boolean, "name": "string"}]}'
+            --evaluation-spec='{"allocations": [{"description": "string", "id": "string", "randomizedOn": "string", "slots": [{"variant": "string", "weight": int}]}], "attributes": ["string"], "defaultTarget": "string", "rules": [{"condition": "string", "id": "string", "target": "string"}]}'
 
         File Example:
 

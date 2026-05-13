@@ -1,0 +1,116 @@
+NAME
+    gcloud beta app-optimize reports create - creates an AppOptimize Report
+
+SYNOPSIS
+    gcloud beta app-optimize reports create (REPORT : --location=LOCATION)
+        --dimensions=[DIMENSIONS,...] --metrics=[METRICS,...] [--async]
+        [--report-filter=REPORT_FILTER]
+        [--scopes=[application=APPLICATION],[project=PROJECT]]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Creates a report with the requested dimensions, metrics, and filters
+    for a specific Scope (i.e. Project or Application).
+
+EXAMPLES
+    To create a report called 'my-report' for a scope with project as
+    'my-project' with resource and cost metrics:        $ gcloud beta app-optimize reports create \
+            --dimensions=resource,product --metrics=cost \
+            --scope=projects=my-project --location=global my-report
+
+POSITIONAL ARGUMENTS
+     Report resource - Identifier. The name of this report. The arguments in
+     this group can be used to specify the attributes of this resource. (NOTE)
+     Some attributes are not given arguments in this group but can be set in
+     other ways.
+
+     To set the project attribute:
+      ◆ provide the argument report on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       REPORT
+          ID of the report or fully qualified identifier for the report.
+
+          To set the report attribute:
+          ▸ provide the argument report on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          The location id of the report resource.
+
+          To set the location attribute:
+          ▸ provide the argument report on the command line with a fully
+            specified name;
+          ▸ provide the argument --location on the command line.
+
+REQUIRED FLAGS
+     --dimensions=[DIMENSIONS,...]
+        The list of dimensions to include in the report. The list of dimensions
+        to include in the report. Supported values: application, day, hour,
+        month, product, project, resource, resource_type, sku. (default:
+        'product,resource') (a comma separated list)
+
+     --metrics=[METRICS,...]
+        The list of metrics to include in the report. The list of metrics to
+        include in the report. Supported values: cost,
+        cpu_allocation_core_seconds, cpu_mean_utilization, cpu_p95_utilization,
+        cpu_usage_core_seconds, memory_allocation_byte_seconds,
+        memory_mean_utilization, memory_p95_utilization,
+        memory_usage_byte_seconds (default: 'cost') (a comma separated list)
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+     --report-filter=REPORT_FILTER
+        The Common Expression Language (CEL) filter to apply to the report.
+
+     --scopes=[application=APPLICATION],[project=PROJECT]
+        The resource containers for which to fetch data. Default is the project
+        specified in the report's parent.
+
+         application
+            An App Hub Application to fetch data from.
+
+            Format:
+            "projects/{project}/locations/{location}/applications/{application}".
+
+         project
+            A Google Cloud Platform project to fetch data from.
+
+            Format: "projects/{project}".
+
+        Shorthand Example:
+
+            --scopes=application=string,project=string --scopes=application=string,project=string
+
+        JSON Example:
+
+            --scopes='[{"application": "string", "project": "string"}]'
+
+        File Example:
+
+            --scopes=path_to_file.(yaml|json)
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the appoptimize/v1beta API. The full documentation for
+    this API can be found at: https://cloud.google.com/hub/docs/optimize
+
+NOTES
+    This command is currently in beta and might change without notice.
+

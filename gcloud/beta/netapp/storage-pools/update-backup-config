@@ -1,0 +1,97 @@
+NAME
+    gcloud beta netapp storage-pools update-backup-config - a command to update
+        backup config of a volume in an ONTAP-mode Storage Pool
+
+SYNOPSIS
+    gcloud beta netapp storage-pools update-backup-config
+        (STORAGE_POOL : --location=LOCATION)
+        --backup-config=[backup-policies=BACKUP-POLICIES],
+          [backup-vault=BACKUP-VAULT],
+          [enable-scheduled-backups=ENABLE-SCHEDULED-BACKUPS]
+        --volume-uuid=VOLUME_UUID [--async] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (BETA) Updates the backup configuration of a volume within the specified
+    Storage Pool.
+
+EXAMPLES
+    The following command updates the backup configuration of a volume with
+    UUID 5dc61a44-3d99-11f1-b8ff-39021cc41d7a in an ONTAP-mode Storage Pool
+    named NAME.
+
+        $ gcloud beta netapp storage-pools update-backup-config NAME \
+          --location=us-central1 \
+          --volume-uuid=5dc61a44-3d99-11f1-b8ff-39021cc41d7a \
+          --backup-config=backup-vault=my-vault,\
+        enable-scheduled-backups=true
+
+POSITIONAL ARGUMENTS
+     Storage pool resource - The Storage Pool. The arguments in this group can
+     be used to specify the attributes of this resource. (NOTE) Some attributes
+     are not given arguments in this group but can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument storage_pool on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       STORAGE_POOL
+          ID of the storage_pool or fully qualified identifier for the
+          storage_pool.
+
+          To set the storage_pool attribute:
+          ▸ provide the argument storage_pool on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          The location of the storage_pool.
+
+          To set the location attribute:
+          ▸ provide the argument storage_pool on the command line with a
+            fully specified name;
+          ▸ provide the argument --location on the command line;
+          ▸ set the property netapp/location.
+
+REQUIRED FLAGS
+     --backup-config=[backup-policies=BACKUP-POLICIES],[backup-vault=BACKUP-VAULT],[enable-scheduled-backups=ENABLE-SCHEDULED-BACKUPS]
+        Backup Config contains backup related config on a volume in ONTAP-mode
+        Storage Pool.
+
+        Backup Config will have the following format
+        --backup-config=backup-policies=BACKUP_POLICIES,
+        backup-vault=BACKUP_VAULT_NAME,
+        enable-scheduled-backups=ENABLE_SCHEDULED_BACKUPS
+
+        backup-policies is a pound-separated (#) list of backup policy names,
+        backup-vault can include a single backup-vault resource name, and
+        enable-scheduled-backups is a Boolean value indicating whether or not
+        scheduled backups are enabled on the volume in the ONTAP-mode Storage
+        Pool.
+
+     --volume-uuid=VOLUME_UUID
+        The UUID of the volume to update backup config for.
+
+OPTIONAL FLAGS
+     --async
+        Return immediately, without waiting for the operation in progress to
+        complete.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+NOTES
+    This command is currently in beta and might change without notice. This
+    variant is also available:
+
+        $ gcloud alpha netapp storage-pools update-backup-config
+

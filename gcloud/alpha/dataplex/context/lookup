@@ -1,20 +1,22 @@
 NAME
-    gcloud alpha dataplex context lookup - looks up LLM context for data assets
+    gcloud alpha dataplex context lookup - looks up metadata that can be used
+        as context by agents
 
 SYNOPSIS
     gcloud alpha dataplex context lookup --resources=[RESOURCES,...]
-        [--location=LOCATION] [GCLOUD_WIDE_FLAG ...]
+        [--context-format=CONTEXT_FORMAT; default="yaml"] [--location=LOCATION]
+        [--options=OPTIONS] [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    (ALPHA) Looks up LLM context for data assets.
+    (ALPHA) Looks up metadata that can be used as context by agents.
 
     Fetches detailed contextual metadata for the specified data assets. Data
-    assets can be identified by their Dataplex entry name, source system
-    resource name or fully qualified name. The returned context can include
-    schema, descriptions, business annotations, data quality insights, and
-    relationships, structured for application use. This output is particularly
-    useful for providing grounding to Large Language Models (LLMs), enabling
-    more accurate and context-aware interactions with your data.
+    assets can be identified by their Dataplex entry name. The returned context
+    can include schema, descriptions, business annotations, data quality
+    insights, and relationships, structured for application use. This output is
+    particularly useful for providing grounding to Large Language Models
+    (LLMs), enabling more accurate and context-aware interactions with your
+    data.
 
 EXAMPLES
     To look up Dataplex Context for BigQuery tables 'table1' and 'table2' in
@@ -39,14 +41,14 @@ EXAMPLES
 
 REQUIRED FLAGS
      --resources=[RESOURCES,...]
-        The identifier describing the resource,
-        ◆ in the form of a entry name, or
-        ◆ in the form of a linked resource name, or
-        ◆ in the form of a fully qualified name. Examples:
-        ◆ projects/{project}/locations/{location}/entryGroups/{entry_group}/entries/{entry}
-        ◆ bigquery:{project}.{dataset}.{table}
+        The identifier describing the resource, for example:
+        projects/{project}/locations/{location}/entryGroups/{entry_group}/entries/{entry}
 
 OPTIONAL FLAGS
+     --context-format=CONTEXT_FORMAT; default="yaml"
+        The output format of the command. CONTEXT_FORMAT must be one of: json,
+        xml, yaml.
+
      Location resource - The Dataplex location for the context lookup. If not
      specified, the location will be taken from the dataplex/location property
      in your gcloud configuration. This represents a Cloud resource. (NOTE)
@@ -66,6 +68,10 @@ OPTIONAL FLAGS
         To set the location attribute:
         ◆ provide the argument --location on the command line;
         ◆ set the property dataplex/location.
+
+     --options=OPTIONS
+        Additional options for the command. This can be provided as a JSON
+        string. Example: --options='{"key": "value"}'
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

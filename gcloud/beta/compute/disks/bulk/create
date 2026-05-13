@@ -1,16 +1,19 @@
 NAME
     gcloud beta compute disks bulk create - create multiple Compute Engine
-        disks
+        disks or a consistency group of instant snapshots
 
 SYNOPSIS
-    gcloud beta compute disks bulk create
-        --source-consistency-group-policy=SOURCE_CONSISTENCY_GROUP_POLICY
-        (--region=REGION | --zone=ZONE) [GCLOUD_WIDE_FLAG ...]
+    gcloud beta compute disks bulk create (--region=REGION | --zone=ZONE)
+        [--source-consistency-group-policy=SOURCE_CONSISTENCY_GROUP_POLICY]
+        [--source-instant-snapshot-group=SOURCE_INSTANT_SNAPSHOT_GROUP]
+        [--source-instant-snapshot-group-region=SOURCE_INSTANT_SNAPSHOT_GROUP_REGION | --source-instant-snapshot-group-zone=SOURCE_INSTANT_SNAPSHOT_GROUP_ZONE]
+        [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
     (BETA) gcloud beta compute disks bulk create facilitates the creation of
     multiple Compute Engine disks with a single command. This includes cloning
-    a set of Async PD secondary disks with the same consistency group policy.
+    a set of Async PD secondary disks with the same consistency group policy or
+    a consistency group of instant snapshots.
 
 EXAMPLES
     To consistently clone secondary disks with the same consistency group
@@ -24,16 +27,12 @@ EXAMPLES
             --zone=us-central1-a
 
 REQUIRED FLAGS
-     --source-consistency-group-policy=SOURCE_CONSISTENCY_GROUP_POLICY
-        URL of the source consistency group resource policy. The resource
-        policy is always the same region as the source disks.
-
      Exactly one of these must be specified:
 
        --region=REGION
-          Target region of the created disks, which currently must be the same
-          as the source region. If not specified, you might be prompted to
-          select a region (interactive mode only).
+          The region in which to create the disks, which must be the same as
+          the source region. If not specified, you might be prompted to select
+          a region (interactive mode only).
 
           To avoid prompting when this flag is omitted, you can set the
           compute/region property:
@@ -52,8 +51,8 @@ REQUIRED FLAGS
           CLOUDSDK_COMPUTE_REGION.
 
        --zone=ZONE
-          Target zone of the created disks, which currently must be the same as
-          the source zone. If not specified and the compute/zone property isn't
+          The zone in which to create the disks, which must be the same as the
+          source zone. If not specified and the compute/zone property isn't
           set, you might be prompted to select a zone (interactive mode only).
 
           To avoid prompting when this flag is omitted, you can set the
@@ -71,6 +70,29 @@ REQUIRED FLAGS
 
           Alternatively, the zone can be stored in the environment variable
           CLOUDSDK_COMPUTE_ZONE.
+
+OPTIONAL FLAGS
+     --source-consistency-group-policy=SOURCE_CONSISTENCY_GROUP_POLICY
+        URL of the format regions/<REGION>/resourcePolicies/<RESOURCE_POLICY>
+        of the source consistency group resource policy. The resource policy is
+        always in the same region as the source disks.
+
+     --source-instant-snapshot-group=SOURCE_INSTANT_SNAPSHOT_GROUP
+        URL of the format
+        regions/<REGION>/instantSnapshotGroups/<INSTANT_SNAPSHOT_GROUP> or
+        zones/<ZONE>/instantSnapshotGroups/<INSTANT_SNAPSHOT_GROUP> of the
+        source consistency group of instant snapshots used to create the disks.
+
+     At most one of these can be specified:
+
+       --source-instant-snapshot-group-region=SOURCE_INSTANT_SNAPSHOT_GROUP_REGION
+          Region of the source instant snapshot group to operate on. Overrides
+          the default compute/region property value for this command
+          invocation.
+
+       --source-instant-snapshot-group-zone=SOURCE_INSTANT_SNAPSHOT_GROUP_ZONE
+          Zone of the source instant snapshot group to operate on. Overrides
+          the default compute/zone property value for this command invocation.
 
 GCLOUD WIDE FLAGS
     These flags are available to all commands: --access-token-file, --account,

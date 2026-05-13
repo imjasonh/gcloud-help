@@ -20,6 +20,7 @@ SYNOPSIS
           | --logging-variant=LOGGING_VARIANT
           | --max-run-duration=MAX_RUN_DURATION
           | --network-performance-configs=[PROPERTY=VALUE,...]
+          | --node-architecture-taint-behavior=NODE_ARCHITECTURE_TAINT_BEHAVIOR
           | --node-labels=[NODE_LABEL,...] | --node-locations=ZONE,[ZONE,...]
           | --node-taints=[NODE_TAINT,...]
           | --resource-manager-tags=[KEY=VALUE,...]
@@ -236,6 +237,27 @@ REQUIRED FLAGS
               VM, regardless of whether the traffic is going to internal IP or
               external IP destinations. The following tier values are allowed:
               [TIER_UNSPECIFIED,TIER_1]
+
+       --node-architecture-taint-behavior=NODE_ARCHITECTURE_TAINT_BEHAVIOR
+          Control how architecture taint should be applied to nodes in an
+          existing node pool.
+
+              Supported values:
+                * unspecified: Default behavior, currently the same as `arm`.
+                * arm: kubernetes.io/arch=arm:NoSchedule taint will be added for ARM nodes.
+                * none: No architecture taint will be applied.
+
+          Examples:
+
+              $ gcloud alpha container node-pools update node-pool-1 \
+                  --cluster=example-cluster \
+                  --node-architecture-taint-behavior=none
+
+          To read more about node-taints, see
+          https://cloud.google.com/kubernetes-engine/docs/node-taints.
+
+          NODE_ARCHITECTURE_TAINT_BEHAVIOR must be one of: unspecified, arm,
+          none.
 
        --node-labels=[NODE_LABEL,...]
           Replaces all the user specified Kubernetes labels on all nodes in an
@@ -595,6 +617,12 @@ REQUIRED FLAGS
                                                                 'veno',
                                                                 'westwood',
                                                                 'yeah'.
+            net.ipv4.neigh.default.gc_thresh1                   Must be between
+                                                                [0, 262144]
+            net.ipv4.neigh.default.gc_thresh2                   Must be between
+                                                                [512, 524288]
+            net.ipv4.neigh.default.gc_thresh3                   Must be between
+                                                                [1024, 1048576]
             net.netfilter.nf_conntrack_max                      Must be between
                                                                 [65536, 4194304]
             net.netfilter.nf_conntrack_buckets                  Must be between
@@ -612,6 +640,10 @@ REQUIRED FLAGS
             net.netfilter.nf_conntrack_tcp_timeout_established  Must be between
                                                                 [600, 86400]
             net.netfilter.nf_conntrack_acct                     Must be {0, 1}
+            kernel.keys.maxkeys                                 Must be between
+                                                                [200, 1048576]
+            kernel.keys.maxbytes                                Must be between
+                                                                [20000, 2097152]
             kernel.shmmni                                       Must be between
                                                                 [4096, 32768]
             kernel.shmmax                                       Must be between

@@ -1,5 +1,6 @@
 NAME
-    gcloud oracle-database gi-versions minor-versions list - list minorVersions
+    gcloud oracle-database gi-versions minor-versions list - list minor
+        versions
 
 SYNOPSIS
     gcloud oracle-database gi-versions minor-versions list
@@ -8,20 +9,29 @@ SYNOPSIS
         [GCLOUD_WIDE_FLAG ...]
 
 DESCRIPTION
-    List minorVersions
+    Lists all minor versions for the specified Grid Infrastructure version and
+    location.
 
 EXAMPLES
-    To list all minorVersions, run:
+    To list all minor versions for a Grid Infrastructure version with ID
+    19.0.0.0 in the location us-east4, run:
 
-        $ gcloud oracle-database gi-versions minor-versions list
+        $ gcloud oracle-database gi-versions minor-versions list \
+          --gi-version=19.0.0.0 --location=us-east4
+
+    To list all minor versions for a given shape family with ID EXADATA.X9M in
+    the location us-east4 and Grid Infrastructure version with ID 19.0.0.0,
+    run:
+
+        $ gcloud oracle-database gi-versions minor-versions list \
+          --gi-version=19.0.0.0 --location=us-east4 \
+          --filter='shape_family="EXADATA.X9M"'
 
 REQUIRED FLAGS
-     GiVersion resource - The parent value for the MinorVersion resource with
-     the format:
-     projects/{project}/locations/{location}/giVersions/{gi_version} The
-     arguments in this group can be used to specify the attributes of this
-     resource. (NOTE) Some attributes are not given arguments in this group but
-     can be set in other ways.
+     Gi version resource - The GI version you want to list the minor versions
+     for. The arguments in this group can be used to specify the attributes of
+     this resource. (NOTE) Some attributes are not given arguments in this
+     group but can be set in other ways.
 
      To set the project attribute:
       ◆ provide the argument --gi-version on the command line with a fully
@@ -32,7 +42,8 @@ REQUIRED FLAGS
      This must be specified.
 
        --gi-version=GI_VERSION
-          ID of the giVersion or fully qualified identifier for the giVersion.
+          ID of the gi-version or fully qualified identifier for the
+          gi-version.
 
           To set the gi-version attribute:
           ▸ provide the argument --gi-version on the command line.
@@ -41,7 +52,7 @@ REQUIRED FLAGS
           this group are specified.
 
        --location=LOCATION
-          The location id of the giVersion resource.
+          The Cloud location for the gi-version.
 
           To set the location attribute:
           ▸ provide the argument --gi-version on the command line with a
@@ -50,11 +61,7 @@ REQUIRED FLAGS
 
 LIST COMMAND FLAGS
      --filter=EXPRESSION
-        Apply a Boolean filter EXPRESSION to each resource item to be listed.
-        If the expression evaluates True, then that item is listed. For more
-        details and examples of filter expressions, run $ gcloud topic filters.
-        This flag interacts with other flags that are applied in this order:
-        --flatten, --sort-by, --filter, --limit.
+        Apply a filter in the format: --filter='shape_family="EXADATA.X9M"'
 
      --limit=LIMIT
         Maximum number of resources to list. The default is unlimited. This
@@ -87,7 +94,3 @@ GCLOUD WIDE FLAGS
     --trace-token, --user-output-enabled, --verbosity.
 
     Run $ gcloud help for details.
-
-API REFERENCE
-    This command uses the oracledatabase/v1 API. The full documentation for
-    this API can be found at: https://cloud.google.com/oracle/database/docs

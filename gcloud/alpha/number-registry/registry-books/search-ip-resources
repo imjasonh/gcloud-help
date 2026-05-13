@@ -1,0 +1,115 @@
+NAME
+    gcloud alpha number-registry registry-books search-ip-resources - search IP
+        resources in a registry book
+
+SYNOPSIS
+    gcloud alpha number-registry registry-books search-ip-resources
+        (REGISTRY_BOOK : --location=LOCATION) [--query=QUERY]
+        [--show-utilization] [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Search IP resources in a registry book using IP address, IP
+    version, attributes, etc.
+
+EXAMPLES
+    To search for an ip address across ranges in a registry book run:
+
+        $ gcloud alpha number-registry registry-books search-ip-resources \
+            my-registry-book --location=global \
+            --query="ip_address=10.0.0.1 AND ip_version=IPV4"
+
+    To search for a range in a registry book with text in its attributes run:
+
+        $ gcloud alpha number-registry registry-books search-ip-resources \
+            my-registry-book --location=global --query="attribute_text=foo"
+
+    To search for a range in a registry book with exact text in its attributes
+    run:
+
+        $ gcloud alpha number-registry registry-books search-ip-resources \
+            my-registry-book --location=global --query="attribute:(foo=bar)"
+
+    To additionally show the utilization of a range in a registry book run:
+
+        $ gcloud alpha number-registry registry-books search-ip-resources \
+            my-registry-book --location=global \
+            --query="ip_address=10.0.0.1 AND ip_version=IPV4" \
+            --show-utilization
+
+POSITIONAL ARGUMENTS
+     RegistryBook resource - The name of the RegistryBook to search in. The
+     arguments in this group can be used to specify the attributes of this
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument registry_book on the command line with a fully
+        specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       REGISTRY_BOOK
+          ID of the registryBook or fully qualified identifier for the
+          registryBook.
+
+          To set the registry_book attribute:
+          ▸ provide the argument registry_book on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          The location id of the registryBook resource.
+
+          To set the location attribute:
+          ▸ provide the argument registry_book on the command line with a
+            fully specified name;
+          ▸ provide the argument --location on the command line.
+
+FLAGS
+     --query=QUERY
+        Search query. This string filters resources in an AIP-160-like format.
+        It has some limitations. You can only specify top level conjunctions or
+        attribute level negations. Each restriction can only be used once
+        except the attribute restriction. The available restrictions are:
+        ◆ realm: The realm name to search in.
+        ◆ ip_address: The IP address to search for within ranges.
+        ◆ ip_version: The IP version to filter by (e.g., "IPV4", "IPV6").
+        ◆ attribute_text: The attribute text to search for within ranges.
+        ◆ attribute: The attribute key and value to filter by.
+
+        Only one of attribute_text or multiple attribute filters can be
+        specified. Examples:
+        ◆ realm=test-realm
+        ◆ realm=test-realm AND ip_address=10.0.0.0
+        ◆ realm=test-realm AND ip_version=IPV6
+        ◆ realm=test-realm AND attribute_text=test
+        ◆ ip_address=10.0.0.0 AND attribute:(key1=value1) AND
+          attribute:(key2=value2)
+        ◆ attribute_text=test AND
+          parent_range=projects/123/locations/global/discoveredRanges/test-parent-range
+
+     --show-utilization
+        Whether to show the utilization of the ranges in the response.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the cloudnumberregistry/v1alpha API. The full
+    documentation for this API can be found at:
+    https://docs.cloud.google.com/number-registry/reference/rest
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

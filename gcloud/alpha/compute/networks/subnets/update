@@ -11,17 +11,21 @@ SYNOPSIS
         [--flow-sampling=FLOW_SAMPLING]
         [--internal-ipv6-prefix=INTERNAL_IPV6_PREFIX]
         [--ip-collection=IP_COLLECTION] [--ipv6-access-type=IPV6_ACCESS_TYPE]
+        [--ipv6-network-tier=IPV6_NETWORK_TIER]
         [--logging-aggregation-interval=LOGGING_AGGREGATION_INTERVAL]
         [--logging-filter-expr=LOGGING_FILTER_EXPR]
         [--logging-flow-sampling=LOGGING_FLOW_SAMPLING]
         [--logging-metadata=LOGGING_METADATA]
         [--logging-metadata-fields=[METADATA_FIELD,...]] [--metadata=METADATA]
         [--region=REGION] [--stack-type=STACK_TYPE]
-        [--add-secondary-ranges=PROPERTY=VALUE,[...]
+        [--add-secondary-ipv6-range=rangeName=RANGE_NAME,
+          ipv6CidrRange=IPV6_RANGE,ipCollection=IP_COLLECTION,[...]
+          | --add-secondary-ranges=PROPERTY=VALUE,[...]
           | --[no-]allow-cidr-routes-overlap | --[no-]enable-flow-logs
           | --[no-]enable-private-ip-google-access
           | --private-ipv6-google-access-type=PRIVATE_IPV6_GOOGLE_ACCESS_TYPE
           | --purpose=PURPOSE
+          | --remove-secondary-ipv6-range=RANGE_NAME,[RANGE_NAME,...]
           | --remove-secondary-ranges=RANGE_NAME,[RANGE_NAME,...]
           | --role=ROLE] [GCLOUD_WIDE_FLAG ...]
 
@@ -113,6 +117,10 @@ FLAGS
          INTERNAL
             VMs in this subnet can have internal IPv6.
 
+     --ipv6-network-tier=IPV6_NETWORK_TIER
+        The network tier for EXTERNAL IPv6 addresses in this subnetwork.
+        IPV6_NETWORK_TIER must be one of: PREMIUM, STANDARD.
+
      --logging-aggregation-interval=LOGGING_AGGREGATION_INTERVAL
         Can only be specified if VPC Flow Logs for this subnetwork is enabled.
         Toggles the aggregation interval for collecting flow logs. Increasing
@@ -181,6 +189,9 @@ FLAGS
 
      At most one of these can be specified:
 
+       --add-secondary-ipv6-range=rangeName=RANGE_NAME,ipv6CidrRange=IPV6_RANGE,ipCollection=IP_COLLECTION,[...]
+          Adds a secondary IPv6 range to the subnetwork.
+
        --add-secondary-ranges=PROPERTY=VALUE,[...]
           Adds secondary IP ranges to the subnetwork for use in IP aliasing.
 
@@ -223,6 +234,9 @@ FLAGS
               The proxy-only subnet for regional HTTP(S) load balancers. Only
               INTERNAL_HTTPS_LOAD_BALANCER subnets can be changed to
               REGIONAL_MANAGED_PROXY.
+
+       --remove-secondary-ipv6-range=RANGE_NAME,[RANGE_NAME,...]
+          Removes secondary IPv6 ranges from the subnetwork.
 
        --remove-secondary-ranges=RANGE_NAME,[RANGE_NAME,...]
           Removes secondary ranges from the subnetwork.

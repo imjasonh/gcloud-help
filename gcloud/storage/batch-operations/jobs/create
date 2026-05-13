@@ -3,9 +3,9 @@ NAME
         job
 
 SYNOPSIS
-    gcloud storage batch-operations jobs create BATCH_JOB --bucket=BUCKET
-        (--included-object-prefixes=[PREFIXES,...]
-          | --manifest-location=MANIFEST_LOCATION)
+    gcloud storage batch-operations jobs create BATCH_JOB
+        (--bucket=BUCKET (--included-object-prefixes=[PREFIXES,...]
+          | --manifest-location=MANIFEST_LOCATION))
         (--put-metadata=KEY=VALUE,[KEY=VALUE,...]
           | --rewrite-object=KEY=VALUE,[KEY=VALUE,...]
           | --clear-all-object-custom-contexts
@@ -95,26 +95,33 @@ POSITIONAL ARGUMENTS
           ▸ provide the argument batch_job on the command line.
 
 REQUIRED FLAGS
-     --bucket=BUCKET
-        Bucket containing the objects that the batch job will operate on.
+     This must be specified.
 
-     Source specifying objects to perform batch operations on. Must be one of
-     --manifest-location=``MANIFEST_LOCATION or
-     --included-object-prefixes=``COMMA_SEPARATED_PREFIXES
+       Use bucket(s) as the source.
 
-     Exactly one of these must be specified:
+       --bucket=BUCKET
+          Bucket containing the objects that the batch job will operate on.
 
-       --included-object-prefixes=[PREFIXES,...]
-          A comma-separated list of object prefixes to describe the objects
-          being transformed. An empty string means all objects in the bucket.
+          This flag argument must be specified if any of the other arguments in
+          this group are specified.
 
-       --manifest-location=MANIFEST_LOCATION
-          An absolute path to the manifest source file in a Google Cloud
-          Storage bucket. The file must be a CSV file where each row specifies
-          the object details i.e. ProjectId, BucketId, and Name. Generation may
-          optionally be specified. When generation is not specified, the live
-          object is acted upon. Format:
-          --manifest-location=gs://bucket_name/path/manifest_name.csv
+       Source specifying objects to perform batch operations on. Must be one of
+       --manifest-location=``MANIFEST_LOCATION or
+       --included-object-prefixes=``COMMA_SEPARATED_PREFIXES
+
+       Exactly one of these must be specified:
+
+         --included-object-prefixes=[PREFIXES,...]
+            A comma-separated list of object prefixes to describe the objects
+            being transformed. An empty string means all objects in the bucket.
+
+         --manifest-location=MANIFEST_LOCATION
+            An absolute path to the manifest source file in a Google Cloud
+            Storage bucket. The file must be a CSV file where each row
+            specifies the object details i.e. ProjectId, BucketId, and Name.
+            Generation may optionally be specified. When generation is not
+            specified, the live object is acted upon. Format:
+            --manifest-location=gs://bucket_name/path/manifest_name.csv
 
      Transformation to be performed on the objects.
 

@@ -1,0 +1,101 @@
+NAME
+    gcloud logging saved-queries create - create a Logging saved query
+
+SYNOPSIS
+    gcloud logging saved-queries create --display-name=DISPLAY_NAME
+        --location=LOCATION --visibility=VISIBILITY
+        (--sql-query-text=SQL_QUERY_TEXT | --log-filter=LOG_FILTER
+          --summary-fields=SUMMARY_FIELDS --summary-field-end=SUMMARY_FIELD_END
+          | --summary-field-start=SUMMARY_FIELD_START)
+        [--description=DESCRIPTION] [--id=ID]
+        [--billing-account=BILLING_ACCOUNT_ID | --folder=FOLDER_ID
+          | --organization=ORGANIZATION_ID | --project=PROJECT_ID]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    Create a saved query.
+
+EXAMPLES
+    To create a saved query in a project, run:
+
+        $ gcloud logging saved-queries create --id=my-saved-query \
+           --location=global --display-name="My saved query" \
+           --visibility=private --sql-query-text="SELECT * FROM my_table"
+
+REQUIRED FLAGS
+     --display-name=DISPLAY_NAME
+        Display name for the saved query.
+
+     --location=LOCATION
+        Location to create the saved query in.
+
+     --visibility=VISIBILITY
+        Visibility of the saved query. VISIBILITY must be one of: private,
+        shared.
+
+     Exactly one of these must be specified:
+
+       --sql-query-text=SQL_QUERY_TEXT
+          SQL query text.
+
+       Or at least one of these can be specified:
+
+         --log-filter=LOG_FILTER
+            Filter expression for the log-based query.
+
+         --summary-fields=SUMMARY_FIELDS
+            Comma-separated list of fields to include in the summary. This flag
+            must be specified if --summary-field-start or --summary-field-end
+            are provided.
+
+         At most one of these can be specified:
+
+           --summary-field-end=SUMMARY_FIELD_END
+              Setting for number of characters to display for each summary
+              field: characters will be counted from the end of the string.
+              Requires the --summary-fields flag to be specified as well.
+
+           --summary-field-start=SUMMARY_FIELD_START
+              Setting for number of characters to display for each summary
+              field: characters will be counted from the start of the string.
+              Requires the --summary-fields flag to be specified as well.
+
+OPTIONAL FLAGS
+     --description=DESCRIPTION
+        A textual description for the saved query.
+
+     --id=ID
+        ID of the saved query to create.
+
+     At most one of these can be specified:
+
+       --billing-account=BILLING_ACCOUNT_ID
+          Billing account of the saved query to create.
+
+       --folder=FOLDER_ID
+          Folder of the saved query to create.
+
+       --organization=ORGANIZATION_ID
+          Organization of the saved query to create.
+
+       --project=PROJECT_ID
+          Project of the saved query to create.
+
+          The Google Cloud project ID to use for this invocation. If omitted,
+          then the current project is assumed; the current project can be
+          listed using gcloud config list --format='text(core.project)' and can
+          be set using gcloud config set project PROJECTID.
+
+          --project and its fallback core/project property play two roles in
+          the invocation. It specifies the project of the resource to operate
+          on. It also specifies the project for API enablement check, quota,
+          and billing. To specify a different project for quota and billing,
+          use --billing-project or billing/quota_project property.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.

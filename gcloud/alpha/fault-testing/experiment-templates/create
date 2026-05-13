@@ -1,0 +1,160 @@
+NAME
+    gcloud alpha fault-testing experiment-templates create - create an
+        experiment template
+
+SYNOPSIS
+    gcloud alpha fault-testing experiment-templates create
+        (EXPERIMENT_TEMPLATE : --location=LOCATION) --duration=DURATION
+        (--cloud-sql-failover-instance=CLOUD_SQL_FAILOVER_INSTANCE
+          | [--l7-lb-http-fault-forwarding-rule=L7_LB_HTTP_FAULT_FORWARDING_RULE : --l7-lb-http-fault-backend-service=L7_LB_HTTP_FAULT_BACKEND_SERVICE --l7-lb-http-fault-abort-percentage=L7_LB_HTTP_FAULT_ABORT_PERCENTAGE --l7-lb-http-fault-abort-status-code=L7_LB_HTTP_FAULT_ABORT_STATUS_CODE | --l7-lb-http-fault-delay=L7_LB_HTTP_FAULT_DELAY --l7-lb-http-fault-delay-percentage=L7_LB_HTTP_FAULT_DELAY_PERCENTAGE])
+        [--description=DESCRIPTION] [--display-name=DISPLAY_NAME]
+        [GCLOUD_WIDE_FLAG ...]
+
+DESCRIPTION
+    (ALPHA) Create an experiment template.
+
+EXAMPLES
+    To create an experiment template test-template-id in location asia-east1
+    with display name test-template with a duration of 100s using Cloud SQL
+    failover instance test-cloud-sql-instance in project test-project run:
+
+        $ gcloud alpha fault-testing experiment-templates create \
+            test-template-id --location=asia-east1 \
+            --display-name=test-template --duration=100s \
+            --cloud-sql-failover-instance="projects/test-project/instances/t\
+        est-cloud-sql-instance"
+
+POSITIONAL ARGUMENTS
+     ExperimentTemplate resource - Identifier. The resource name of this
+     experiment template. Format:
+     projects/{project}/locations/{location}/experimentTemplates/{experiment_template}
+     The arguments in this group can be used to specify the attributes of this
+     resource. (NOTE) Some attributes are not given arguments in this group but
+     can be set in other ways.
+
+     To set the project attribute:
+      ◆ provide the argument experiment_template on the command line with a
+        fully specified name;
+      ◆ provide the argument --project on the command line;
+      ◆ set the property core/project.
+
+     This must be specified.
+
+       EXPERIMENT_TEMPLATE
+          ID of the experimentTemplate or fully qualified identifier for the
+          experimentTemplate.
+
+          To set the experiment_template attribute:
+          ▸ provide the argument experiment_template on the command line.
+
+          This positional argument must be specified if any of the other
+          arguments in this group are specified.
+
+       --location=LOCATION
+          The location id of the experimentTemplate resource.
+
+          To set the location attribute:
+          ▸ provide the argument experiment_template on the command line with
+            a fully specified name;
+          ▸ provide the argument --location on the command line.
+
+REQUIRED FLAGS
+     --duration=DURATION
+        How long the experiment is intended to run. Min duration is 0, max is
+        10 days.
+
+     The action to be performed by the experiment.
+
+     This must be specified.
+
+       Arguments for the action.
+
+       At most one of these can be specified:
+
+         CloudSQLFailover causes a Cloud SQL primary instance to fail over to
+         another instance.
+
+         --cloud-sql-failover-instance=CLOUD_SQL_FAILOVER_INSTANCE
+            The identifying name of the Cloud SQL instance to fail over.
+            Format: projects/{project}/instances/{instance}
+
+         Injection of HTTP faults into a layer 7 load balancer.
+
+         --l7-lb-http-fault-forwarding-rule=L7_LB_HTTP_FAULT_FORWARDING_RULE
+            The identifying name of the forwarding rule resource where the
+            faults will be injected. Format:
+            projects/{project}/regions/{region}/forwardingRules/{forwarding_rule}
+            or projects/{project}/global/forwardingRules/{forwarding_rule}
+
+            This flag argument must be specified if any of the other arguments
+            in this group are specified.
+
+         --l7-lb-http-fault-backend-service=L7_LB_HTTP_FAULT_BACKEND_SERVICE
+            Optional identifying name of the backend service to inject faults
+            into. Format:
+            projects/{project}/regions/{region}/backendServices/{backend_service}
+            or projects/{project}/global/backendServices/{backend_service} If
+            not specified, all backend services connected to the
+            forwarding_rule will be affected.
+
+         Arguments for the fault.
+
+         At most one of these can be specified:
+
+           Artificially return a specific HTTP status code for a percentage of
+           requests.
+
+           --l7-lb-http-fault-abort-percentage=L7_LB_HTTP_FAULT_ABORT_PERCENTAGE
+              Percentage of requests to abort, in the range 0 to 100,
+              inclusive.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --l7-lb-http-fault-abort-status-code=L7_LB_HTTP_FAULT_ABORT_STATUS_CODE
+              HTTP status code to return. In the range 500 to 599, inclusive.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           Artificially delay HTTP responses for a percentage of requests.
+
+           --l7-lb-http-fault-delay=L7_LB_HTTP_FAULT_DELAY
+              Delay duration.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --l7-lb-http-fault-delay-percentage=L7_LB_HTTP_FAULT_DELAY_PERCENTAGE
+              Percentage of requests to delay, in the range 0 to 100,
+              inclusive.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+OPTIONAL FLAGS
+     --description=DESCRIPTION
+        Optional user-provided description or notes. Min length 0. Max length
+        2000.
+
+     --display-name=DISPLAY_NAME
+        Human-readable template name. Min length 0, max 1000.
+
+GCLOUD WIDE FLAGS
+    These flags are available to all commands: --access-token-file, --account,
+    --billing-project, --configuration, --flags-file, --flatten, --format,
+    --help, --impersonate-service-account, --log-http, --project, --quiet,
+    --trace-token, --user-output-enabled, --verbosity.
+
+    Run $ gcloud help for details.
+
+API REFERENCE
+    This command uses the faulttesting/v1alpha API. The full documentation for
+    this API can be found at:
+
+NOTES
+    This command is currently in alpha and might change without notice. If this
+    command fails with API permission errors despite specifying the correct
+    project, you might be trying to access an API with an invitation-only early
+    access allowlist.
+

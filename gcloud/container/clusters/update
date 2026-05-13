@@ -15,6 +15,7 @@ SYNOPSIS
           | --autoscaling-profile=AUTOSCALING_PROFILE
           | --complete-credential-rotation | --complete-ip-rotation
           | --containerd-config-from-file=PATH_TO_FILE
+          | --control-plane-egress=CONTROL_PLANE_EGRESS
           | --database-encryption-key=DATABASE_ENCRYPTION_KEY
           | --disable-database-encryption | --disable-default-snat
           | --disable-multi-nic-lustre | --disable-workload-identity
@@ -69,9 +70,9 @@ SYNOPSIS
           --fleet-project=PROJECT_ID_OR_NUMBER
           --membership-type=MEMBERSHIP_TYPE --unset-membership-type
           | --clear-maintenance-minor-version-disruption-interval
-          | --maintenance-minor-version-disruption-interval=MAINTENANCE_MINOR_VERSION_DISRUPTION_INTERVAL --clear-maintenance-patch-version-disruption-interval | --maintenance-patch-version-disruption-interval=MAINTENANCE_PATCH_VERSION_DISRUPTION_INTERVAL | --clear-maintenance-window | --remove-maintenance-exclusion=NAME | [(--add-maintenance-exclusion-end=TIME_STAMP | --add-maintenance-exclusion-until-end-of-support) : --add-maintenance-exclusion-name=NAME --add-maintenance-exclusion-scope=SCOPE --add-maintenance-exclusion-start=TIME_STAMP] | --maintenance-window-end=TIME_STAMP --maintenance-window-recurrence=RRULE --maintenance-window-start=TIME_STAMP | --clear-resource-usage-bigquery-dataset | --enable-network-egress-metering --enable-resource-consumption-metering --resource-usage-bigquery-dataset=RESOURCE_USAGE_BIGQUERY_DATASET | --cluster-dns=CLUSTER_DNS --cluster-dns-domain=CLUSTER_DNS_DOMAIN --cluster-dns-scope=CLUSTER_DNS_SCOPE --additive-vpc-scope-dns-domain=ADDITIVE_VPC_SCOPE_DNS_DOMAIN | --disable-additive-vpc-scope | --dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE | --disable-dataplane-v2-flow-observability | --enable-dataplane-v2-flow-observability --disable-dataplane-v2-metrics | --enable-dataplane-v2-metrics | --disable-auto-ipam | --enable-auto-ipam | --disable-l4-lb-firewall-reconciliation | --enable-l4-lb-firewall-reconciliation | --enable-authorized-networks-on-private-endpoint --enable-dns-access --enable-google-cloud-access --enable-ip-access --enable-k8s-certs-via-dns --enable-k8s-tokens-via-dns --enable-master-global-access --enable-private-endpoint --enable-master-authorized-networks --master-authorized-networks=NETWORK,
-          [NETWORK,...] | [--enable-autoprovisioning
-          : --autoprovisioning-config-file=PATH_TO_FILE
+          | --maintenance-minor-version-disruption-interval=MAINTENANCE_MINOR_VERSION_DISRUPTION_INTERVAL --clear-maintenance-patch-version-disruption-interval | --maintenance-patch-version-disruption-interval=MAINTENANCE_PATCH_VERSION_DISRUPTION_INTERVAL | --clear-maintenance-window | --remove-maintenance-exclusion=NAME | [(--add-maintenance-exclusion-end=TIME_STAMP | --add-maintenance-exclusion-until-end-of-support) : --add-maintenance-exclusion-name=NAME --add-maintenance-exclusion-scope=SCOPE --add-maintenance-exclusion-start=TIME_STAMP] | --maintenance-window-end=TIME_STAMP --maintenance-window-recurrence=RRULE --maintenance-window-start=TIME_STAMP | --clear-resource-usage-bigquery-dataset | --enable-network-egress-metering --enable-resource-consumption-metering --resource-usage-bigquery-dataset=RESOURCE_USAGE_BIGQUERY_DATASET | --cluster-dns=CLUSTER_DNS --cluster-dns-domain=CLUSTER_DNS_DOMAIN --cluster-dns-scope=CLUSTER_DNS_SCOPE --additive-vpc-scope-dns-domain=ADDITIVE_VPC_SCOPE_DNS_DOMAIN | --disable-additive-vpc-scope | --dataplane-v2-observability-mode=DATAPLANE_V2_OBSERVABILITY_MODE | --disable-dataplane-v2-flow-observability | --enable-dataplane-v2-flow-observability --disable-dataplane-v2-metrics | --enable-dataplane-v2-metrics | --disable-auto-ipam | --enable-auto-ipam | --disable-l4-lb-firewall-reconciliation | --enable-l4-lb-firewall-reconciliation | --disable-pod-snapshots | --enable-pod-snapshots | --enable-authorized-networks-on-private-endpoint --enable-dns-access --enable-google-cloud-access --enable-ip-access --enable-k8s-certs-via-dns --enable-k8s-tokens-via-dns --enable-master-global-access --enable-private-endpoint --enable-master-authorized-networks --master-authorized-networks=NETWORK,
+          [NETWORK,...] | --enable-autoprovisioning
+          --autoprovisioning-config-file=PATH_TO_FILE
           | --autoprovisioning-image-type=AUTOPROVISIONING_IMAGE_TYPE
           --autoprovisioning-locations=ZONE,[ZONE,...]
           --autoprovisioning-min-cpu-platform=PLATFORM --max-cpu=MAX_CPU
@@ -86,7 +87,7 @@ SYNOPSIS
           --enable-autoprovisioning-autorepair
           --enable-autoprovisioning-autoupgrade
           [--max-accelerator=[type=TYPE,count=COUNT,...]
-          : --min-accelerator=[type=TYPE,count=COUNT,...]]]
+          : --min-accelerator=[type=TYPE,count=COUNT,...]]
           | --enable-insecure-binding-system-authenticated
           --enable-insecure-binding-system-unauthenticated
           | --logging-service=LOGGING_SERVICE
@@ -342,6 +343,23 @@ REQUIRED FLAGS
 
           Use a full or relative path to a local file containing the value of
           containerd_config.
+
+       --control-plane-egress=CONTROL_PLANE_EGRESS
+          Configures the egress policy for the GKE control plane to control
+          outbound traffic from the kube-apiserver. CONTROL_PLANE_EGRESS must
+          be one of:
+
+           NONE
+              (Recommended) Provides maximum security. This mode removes the
+              control plane's public IP address and blocks all outbound traffic
+              from the kube-apiserver by default, preventing unexpected data
+              exfiltration. Webhooks that use clientConfig.url will be
+              disabled. Essential GKE-managed services are still permitted to
+              function via an internal allowlist.
+           VIA_CONTROL_PLANE
+              (Default) Maintains backward compatibility. The control plane
+              retains its public IP address and allows egress traffic from the
+              kube-apiserver.
 
        --database-encryption-key=DATABASE_ENCRYPTION_KEY
           Enable Database Encryption.
@@ -1366,6 +1384,14 @@ REQUIRED FLAGS
             firewalls targeting ingress traffic. L4 LB VPC firewall
             reconciliation is enabled by default.
 
+       Or at most one of these can be specified:
+
+         --disable-pod-snapshots
+            Disable the Pod Snapshot feature on the cluster.
+
+         --enable-pod-snapshots
+            Enable the Pod Snapshot feature on the cluster.
+
        Or at least one of these can be specified:
 
          --enable-authorized-networks-on-private-endpoint
@@ -1437,9 +1463,6 @@ REQUIRED FLAGS
 
             Cluster Autoscaler will be able to create new node pools. Requires
             maximum CPU and memory limits to be specified.
-
-            This flag argument must be specified if any of the other arguments
-            in this group are specified.
 
          At most one of these can be specified:
 
@@ -1543,12 +1566,14 @@ REQUIRED FLAGS
                 Maximum number of cores in the cluster.
 
                 Maximum number of cores to which the cluster can scale.
+                Required to be set when --enable-autoprovisioning is used.
 
              --max-memory=MAX_MEMORY
                 Maximum memory in the cluster.
 
                 Maximum number of gigabytes of memory to which the cluster can
-                scale.
+                scale. Required to be set when --enable-autoprovisioning is
+                used.
 
              --min-cpu=MIN_CPU
                 Minimum number of cores in the cluster.

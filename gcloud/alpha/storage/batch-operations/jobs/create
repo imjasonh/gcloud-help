@@ -4,9 +4,13 @@ NAME
 
 SYNOPSIS
     gcloud alpha storage batch-operations jobs create BATCH_JOB
-        (--bucket=BUCKET | --bucket-list=[BUCKETS,...])
-        (--included-object-prefixes=[PREFIXES,...]
+        ((--bucket=BUCKET | --bucket-list=[BUCKETS,...])
+          (--included-object-prefixes=[PREFIXES,...]
           | --manifest-location=MANIFEST_LOCATION)
+          | --dry-run-job-id=DRY_RUN_JOB_ID
+          | [--insights-dataset-config=INSIGHTS_DATASET_CONFIG
+          --target-project=TARGET_PROJECT
+          : --bucket-filters=BUCKET_FILTERS --object-filters=OBJECT_FILTERS])
         (--put-metadata=KEY=VALUE,[KEY=VALUE,...]
           | --rewrite-object=KEY=VALUE,[KEY=VALUE,...]
           | --clear-all-object-custom-contexts
@@ -71,6 +75,18 @@ EXAMPLES
           --put-metadata=Content-Disposition=inline,Content-Language=en \
           --log-actions=transform --log-action-states=succeeded,failed
 
+    The following example command creates a batch job, named my-job, that uses
+    a project as the source and updates object retention:
+
+        $ gcloud alpha storage batch-operations jobs create my-job \
+          --target-project=my-project \
+          --insights-dataset-config=projects/my-project/locations/\
+        us-central1/datasetConfigs/my-config \
+            --bucket-filters="bucket_name == 'my-bucket'" \
+            --object-filters="size > 100" \
+            --put-metadata=Retain-Until=2025-01-01T00:00:00Z,\
+        Retention-Mode=locked
+
 POSITIONAL ARGUMENTS
      Batch job resource - The batch job to create. This represents a Cloud
      resource. (NOTE) Some attributes are not given arguments in this group but
@@ -96,32 +112,73 @@ POSITIONAL ARGUMENTS
           ▸ provide the argument batch_job on the command line.
 
 REQUIRED FLAGS
-     Exactly one of these must be specified:
-
-       --bucket=BUCKET
-          Bucket containing the objects that the batch job will operate on.
-
-       --bucket-list=[BUCKETS,...]
-          List of buckets containing the objects that the batch job will
-          operate on.
-
-     Source specifying objects to perform batch operations on. Must be one of
-     --manifest-location=``MANIFEST_LOCATION or
-     --included-object-prefixes=``COMMA_SEPARATED_PREFIXES
+     Source specifying objects to perform batch operations on. You can specify
+     either a bucket-based source or a project-based source.
 
      Exactly one of these must be specified:
 
-       --included-object-prefixes=[PREFIXES,...]
-          A comma-separated list of object prefixes to describe the objects
-          being transformed. An empty string means all objects in the bucket.
+       Use bucket(s) as the source.
 
-       --manifest-location=MANIFEST_LOCATION
-          An absolute path to the manifest source file in a Google Cloud
-          Storage bucket. The file must be a CSV file where each row specifies
-          the object details i.e. ProjectId, BucketId, and Name. Generation may
-          optionally be specified. When generation is not specified, the live
-          object is acted upon. Format:
-          --manifest-location=gs://bucket_name/path/manifest_name.csv
+       Exactly one of these must be specified:
+
+         --bucket=BUCKET
+            Bucket containing the objects that the batch job will operate on.
+
+         --bucket-list=[BUCKETS,...]
+            List of buckets containing the objects that the batch job will
+            operate on.
+
+       Source specifying objects to perform batch operations on. Must be one of
+       --manifest-location=``MANIFEST_LOCATION or
+       --included-object-prefixes=``COMMA_SEPARATED_PREFIXES
+
+       Exactly one of these must be specified:
+
+         --included-object-prefixes=[PREFIXES,...]
+            A comma-separated list of object prefixes to describe the objects
+            being transformed. An empty string means all objects in the bucket.
+
+         --manifest-location=MANIFEST_LOCATION
+            An absolute path to the manifest source file in a Google Cloud
+            Storage bucket. The file must be a CSV file where each row
+            specifies the object details i.e. ProjectId, BucketId, and Name.
+            Generation may optionally be specified. When generation is not
+            specified, the live object is acted upon. Format:
+            --manifest-location=gs://bucket_name/path/manifest_name.csv
+
+       Use a project as the source.
+
+       At most one of these can be specified:
+
+         --dry-run-job-id=DRY_RUN_JOB_ID
+            The unique identifier of a dry run job to use as the baseline.
+            Specifying this ID ensures the job is executed against the same set
+            of objects validated during the dry run.
+
+         Or at least one of these can be specified:
+
+           --insights-dataset-config=INSIGHTS_DATASET_CONFIG
+              The resource identifier of the Storage Insights dataset
+              configuration. Format:
+              projects/{project}/locations/{location}/datasetConfigs/{datasetConfig}
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --target-project=TARGET_PROJECT
+              Project name of the objects to be transformed. e.g. my-project or
+              123456.
+
+              This flag argument must be specified if any of the other
+              arguments in this group are specified.
+
+           --bucket-filters=BUCKET_FILTERS
+              Filters expressed in Common Expression Language (CEL) to apply to
+              buckets. E.g. "bucket_name == 'my-bucket'".
+
+           --object-filters=OBJECT_FILTERS
+              Filters expressed in Common Expression Language (CEL) to apply to
+              objects. E.g. "size > 100".
 
      Transformation to be performed on the objects.
 
